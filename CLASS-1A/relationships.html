@@ -295,6 +295,32 @@
   #tm-next-btn:hover { opacity: 0.85; }
   #tm-skip-dead { font-size: 11px; display: flex; align-items: center; gap: 5px; color: var(--text-muted); cursor: pointer; user-select: none; }
 
+  /* quick roll + damage editor */
+  .tm-zone { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+  .tm-zone-title { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; }
+  .tm-dice-tray { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
+  .tm-die { width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 7px; background: var(--surface); color: var(--text-muted); font-size: 11px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 0.1s, background 0.1s, color 0.1s; }
+  .tm-die:hover { border-color: var(--purple); color: var(--purple-text); background: var(--purple-light); }
+  .tm-die.selected { border-color: var(--purple); background: var(--purple-light); color: var(--purple-text); }
+  .tm-roll-row { display: flex; gap: 6px; align-items: center; }
+  .tm-mod-input { width: 52px; padding: 5px 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); font-size: 12px; text-align: center; outline: none; }
+  .tm-mod-input:focus { border-color: var(--purple); }
+  .tm-go-btn { padding: 5px 14px; background: var(--purple); color: #fff; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .tm-go-btn:hover { opacity: 0.85; }
+  .tm-go-btn:disabled { opacity: 0.35; cursor: default; }
+  #tm-quick-result { font-size: 13px; color: var(--text-dim); margin-left: 6px; font-weight: 500; }
+  .tm-quick-crit { color: var(--green-text); font-weight: 700; }
+  .tm-quick-fumble { color: var(--red-text); font-weight: 700; }
+  .tm-hp-editor { display: flex; gap: 6px; align-items: center; }
+  .tm-hp-inp { width: 64px; padding: 5px 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); font-size: 13px; text-align: center; outline: none; font-weight: 600; }
+  .tm-hp-inp:focus { border-color: var(--purple); }
+  .tm-dmg-btn { padding: 5px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; background: var(--surface); }
+  .tm-dmg-btn.dmg { color: var(--red-text); border-color: var(--red); }
+  .tm-dmg-btn.dmg:hover { background: var(--red-light); }
+  .tm-dmg-btn.heal { color: var(--green-text); border-color: var(--green); }
+  .tm-dmg-btn.heal:hover { background: var(--green-light); }
+  #tm-hp-feedback { font-size: 11px; color: var(--text-dim); margin-left: 4px; }
+
   /* ── Save bar ─────────────────────────────────────────── */
   #save-bar { display: flex; align-items: center; gap: 8px; padding: 7px 20px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
   #save-bar span { font-size: 11px; color: var(--text-dim); }
@@ -440,10 +466,37 @@
           <div class="tm-hp-bar-wrap"><div class="tm-hp-bar" id="tm-hp-bar"></div></div>
           <div class="tm-stats-row" id="tm-stats"></div>
           <div class="tm-conditions" id="tm-conditions"></div>
-          <div id="tm-attack-zone">
-            <div class="tm-attack-title">Attack</div>
+          <div id="tm-attack-zone" class="tm-zone">
+            <div class="tm-zone-title">Attack</div>
             <button id="tm-roll-btn" onclick="modalRollAttack()">⚔ Roll Attack</button>
             <div id="tm-roll-result"></div>
+          </div>
+
+          <div class="tm-zone">
+            <div class="tm-zone-title">Quick Roll</div>
+            <div class="tm-dice-tray">
+              <button class="tm-die" onclick="tmSelectDie(4,this)">d4</button>
+              <button class="tm-die" onclick="tmSelectDie(6,this)">d6</button>
+              <button class="tm-die" onclick="tmSelectDie(8,this)">d8</button>
+              <button class="tm-die" onclick="tmSelectDie(10,this)">d10</button>
+              <button class="tm-die" onclick="tmSelectDie(12,this)">d12</button>
+              <button class="tm-die" onclick="tmSelectDie(20,this)">d20</button>
+            </div>
+            <div class="tm-roll-row">
+              <input class="tm-mod-input" id="tm-qr-mod" type="number" value="0" placeholder="mod" title="Modifier">
+              <button class="tm-go-btn" id="tm-qr-btn" onclick="tmQuickRoll()" disabled>Roll</button>
+              <span id="tm-quick-result">—</span>
+            </div>
+          </div>
+
+          <div class="tm-zone">
+            <div class="tm-zone-title">HP Editor</div>
+            <div class="tm-hp-editor">
+              <input class="tm-hp-inp" id="tm-hp-inp" type="number" min="1" placeholder="amt" title="Amount">
+              <button class="tm-dmg-btn dmg" onclick="tmApplyHp('dmg')" title="Apply damage">− Dmg</button>
+              <button class="tm-dmg-btn heal" onclick="tmApplyHp('heal')" title="Apply healing">+ Heal</button>
+              <span id="tm-hp-feedback"></span>
+            </div>
           </div>
         </div>
         <div id="turn-modal-footer">
@@ -1249,10 +1302,12 @@ function encAddEnemy() {
 
 /* ── Turn Modal ───────────────────────────────────────── */
 let modalAttackResult = null;
+let tmSelectedDie = null;
 
 function openTurnModal() {
   if (!encounter.combatants.length) return;
   modalAttackResult = null;
+  tmSelectedDie = null;
   document.getElementById('turn-modal-overlay').classList.add('open');
   updateTurnModal();
 }
@@ -1265,6 +1320,13 @@ function closeTurnModal() {
 function modalNextTurn() {
   encNextTurn();
   modalAttackResult = null;
+  tmSelectedDie = null;
+  document.querySelectorAll('.tm-die').forEach(b => b.classList.remove('selected'));
+  document.getElementById('tm-qr-btn').disabled = true;
+  document.getElementById('tm-quick-result').textContent = '—';
+  document.getElementById('tm-quick-result').className = '';
+  document.getElementById('tm-hp-inp').value = '';
+  document.getElementById('tm-hp-feedback').textContent = '';
   // Skip dead combatants if checkbox is on
   if (document.getElementById('tm-skip-dead-chk').checked) {
     let safety = encounter.combatants.length;
@@ -1392,6 +1454,61 @@ function renderModalAttackResult() {
     <span class="${rollClass}">d20: ${e.roll} — ${label}</span>
     <span style="font-size:11px;color:var(--text-dim);">${crit?'Critical hit!':fumble?'Fumble!':hit?`hits (AC ${e.ac})`:`misses (AC ${e.ac})`}</span>
   </div>`;
+}
+
+/* ── Quick Roll ───────────────────────────────────────── */
+function tmSelectDie(sides, btn) {
+  tmSelectedDie = sides;
+  document.querySelectorAll('.tm-die').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('tm-qr-btn').disabled = false;
+}
+
+function tmQuickRoll() {
+  if (!tmSelectedDie) return;
+  const mod = parseInt(document.getElementById('tm-qr-mod').value) || 0;
+  const roll = Math.floor(Math.random() * tmSelectedDie) + 1;
+  const total = roll + mod;
+  const isCrit = tmSelectedDie === 20 && roll === 20;
+  const isFumble = tmSelectedDie === 20 && roll === 1;
+  const modStr = mod > 0 ? `+${mod}` : mod < 0 ? `${mod}` : '';
+  const el = document.getElementById('tm-quick-result');
+  el.className = isCrit ? 'tm-quick-crit' : isFumble ? 'tm-quick-fumble' : '';
+  const label = isCrit ? ' ★ CRIT' : isFumble ? ' ☠ FUMBLE' : '';
+  el.textContent = `${total}${modStr ? ` (${roll}${modStr})` : ''}${label}`;
+}
+
+/* ── HP Editor (modal) ────────────────────────────────── */
+function tmApplyHp(mode) {
+  const c = encounter.combatants[encounter.currentIndex];
+  if (!c) return;
+  const val = parseInt(document.getElementById('tm-hp-inp').value);
+  if (!val || val <= 0) { document.getElementById('tm-hp-feedback').textContent = 'Enter an amount'; return; }
+
+  const before = c.hp;
+  if (mode === 'dmg') {
+    c.hp = Math.max(0, c.hp - val);
+  } else {
+    c.hp = Math.min(c.maxHp, c.hp + val);
+  }
+  const delta = c.hp - before;
+  encSave();
+  renderEncHpRow(c.id);
+
+  // Update modal HP bar + stat chip live
+  const pct = c.maxHp > 0 ? (c.hp / c.maxHp) * 100 : 0;
+  const barColor = pct > 50 ? 'var(--green)' : pct > 25 ? 'var(--amber)' : 'var(--red)';
+  document.getElementById('tm-hp-bar').style.cssText = `width:${pct}%;background:${barColor};`;
+  document.getElementById('tm-stats').querySelector('.tm-stat-val').innerHTML =
+    `<span style="color:${barColor}">${c.hp}</span><span style="font-size:11px;font-weight:400;color:var(--text-dim)">/${c.maxHp}</span>`;
+
+  // Feedback
+  const fb = document.getElementById('tm-hp-feedback');
+  fb.style.color = delta < 0 ? 'var(--red-text)' : 'var(--green-text)';
+  fb.textContent = delta < 0 ? `−${Math.abs(delta)} → ${c.hp} HP` : delta > 0 ? `+${delta} → ${c.hp} HP` : 'No change';
+  document.getElementById('tm-hp-inp').value = '';
+
+  if (c.hp === 0) document.getElementById('tm-dead-badge').style.display = 'inline-block';
 }
 
 /* ── Export / Import ──────────────────────────────────── */

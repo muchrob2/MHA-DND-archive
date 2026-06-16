@@ -1009,12 +1009,17 @@ function encAddEnemy() {
 
 /* ── Init ──────────────────────────────────────────────── */
 (async () => {
-  const [charsRes, relsRes, enemiesRes] = await Promise.all([
-    fetch('/api/characters'), fetch('/api/relationships'), fetch('/api/campaign/enemies')
+  const [rosterRes, relsRes, enemiesRes] = await Promise.all([
+    fetch('roster.json'), fetch('relationships.json'), fetch('../CAMPAIGN/enemies.json')
   ]);
-  CHARACTERS = await charsRes.json();
+  const roster = await rosterRes.json();
   rels = await relsRes.json();
   try { const ed = await enemiesRes.json(); ENEMIES = ed.enemies || []; } catch {}
+  CHARACTERS = (await Promise.all(
+    (roster.students || []).filter(s => s.file).map(s =>
+      fetch(s.file).then(r => r.json()).then(c => { c._file = s.file; c._roster_id = s.id; return c; }).catch(() => null)
+    )
+  )).filter(Boolean);
   CHARACTERS.sort((a, b) => { if (a.is_pc !== b.is_pc) return a.is_pc ? -1 : 1; return a._roster_id - b._roster_id; });
   selected = CHARACTERS[0];
   encLoad();

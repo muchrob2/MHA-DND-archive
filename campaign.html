@@ -124,7 +124,7 @@
 </head>
 <body>
 <div id="topbar">
-  <a id="back-btn" href="/">← Dashboard</a>
+  <a id="back-btn" href="index.html">← Dashboard</a>
   <div class="tab-bar">
     <button class="tab-btn" onclick="loadFile('arc')" id="tab-arc">Arc Overview</button>
     <button class="tab-btn" onclick="loadFile('tier1')" id="tab-tier1">Tier 1 Detail</button>
@@ -159,7 +159,7 @@ async function loadFile(file) {
 
   // Fetch if not cached
   if (!cache[file]) {
-    const res = await fetch('/api/campaign/'+file);
+    const res = await fetch('CAMPAIGN/'+file+'.json');
     cache[file] = await res.json();
   }
   const data = cache[file];
@@ -175,7 +175,7 @@ async function loadFile(file) {
   el.classList.add('active');
 
   // Update URL without reload
-  history.replaceState(null, '', '/campaign?file='+file);
+  history.replaceState(null, '', '?file='+file);
 }
 
 /* ─── ARC ─────────────────────────────────────────────── */

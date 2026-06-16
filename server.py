@@ -24,7 +24,7 @@ INDEX_FILE = ROOT / "index.html"
 CAMPAIGN_FILE = ROOT / "campaign.html"
 
 CHAR_FILE_RE = re.compile(r"^/api/character/([a-z0-9_]+\.json)$")
-CAMPAIGN_FILE_RE = re.compile(r"^/api/campaign/(arc|world|teachers|villains)$")
+CAMPAIGN_FILE_RE = re.compile(r"^/api/campaign/(arc|world|teachers|villains|tier1|enemies|class1b)$")
 RULEBOOK_FILE_RE = re.compile(r"^/rulebooks/(.+\.pdf)$")
 
 MIME = {".html": "text/html; charset=utf-8", ".json": "application/json; charset=utf-8", ".pdf": "application/pdf"}

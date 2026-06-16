@@ -324,9 +324,14 @@
         <button class="enc-btn danger" onclick="encReset()">Reset Encounter</button>
       </div>
       <div id="enc-add-bar">
-        <span style="font-size:11px;color:var(--text-dim);font-weight:600;">Add from roster:</span>
+        <span style="font-size:11px;color:var(--text-dim);font-weight:600;">Roster:</span>
         <select id="enc-roster-select"><option value="">— choose —</option></select>
         <button class="enc-btn" onclick="encAddFromRoster()">Add</button>
+        <div class="add-sep"></div>
+        <span style="font-size:11px;color:var(--text-dim);font-weight:600;">Enemy:</span>
+        <select id="enc-enemy-select" style="max-width:240px"><option value="">— choose —</option></select>
+        <input type="number" id="enc-enemy-qty" value="1" min="1" max="10" title="Quantity" style="width:44px;padding:5px 4px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:12px;">
+        <button class="enc-btn" onclick="encAddEnemy()">Add</button>
         <div class="add-sep"></div>
         <span style="font-size:11px;color:var(--text-dim);font-weight:600;">Custom:</span>
         <input type="text" id="enc-custom-name" placeholder="Name">
@@ -350,6 +355,7 @@ const CONDITIONS = ['Blinded','Charmed','Deafened','Exhausted','Frightened','Gra
   'Incapacitated','Invisible','Paralyzed','Poisoned','Prone','Restrained','Stunned','Unconscious'];
 
 let CHARACTERS = [];
+let ENEMIES = [];
 let selected = null;
 let activeTab = 'personality';
 let rels = {};
@@ -961,15 +967,59 @@ function renderEncounter() {
   }).join('');
 }
 
+/* ── Enemy preset ─────────────────────────────────────────── */
+function buildEnemySelect() {
+  const sel = document.getElementById('enc-enemy-select');
+  if (!sel || !ENEMIES.length) return;
+  const cats = [...new Set(ENEMIES.map(e => e.category))];
+  sel.innerHTML = '<option value="">— choose —</option>';
+  for (const cat of cats) {
+    const grp = document.createElement('optgroup');
+    grp.label = cat;
+    for (const e of ENEMIES.filter(x => x.category === cat)) {
+      const opt = document.createElement('option');
+      opt.value = e.id;
+      opt.textContent = `${e.name} (CR ${e.cr}, HP ${e.hp}, AC ${e.ac})`;
+      grp.appendChild(opt);
+    }
+    sel.appendChild(grp);
+  }
+}
+
+function encAddEnemy() {
+  const sel = document.getElementById('enc-enemy-select');
+  const qty = Math.max(1, Math.min(10, parseInt(document.getElementById('enc-enemy-qty').value) || 1));
+  const id = sel.value;
+  if (!id) return;
+  const e = ENEMIES.find(x => x.id === id);
+  if (!e) return;
+  for (let i = 0; i < qty; i++) {
+    const suffix = qty > 1 ? ` #${i+1}` : '';
+    encounter.combatants.push({
+      id: encId(), name: e.name + suffix, initiative: 0,
+      hp: e.hp, maxHp: e.hp, ac: e.ac, conditions: [],
+      notes: '', rosterId: null, isPC: false,
+      quirk: `CR ${e.cr} · ${e.category}`,
+      condOpen: false, editingHp: false, dexMod: e.dex_mod || 0
+    });
+  }
+  sel.value = '';
+  encSave(); renderEncounter();
+}
+
 /* ── Init ──────────────────────────────────────────────── */
 (async () => {
-  const [charsRes, relsRes] = await Promise.all([fetch('/api/characters'), fetch('/api/relationships')]);
+  const [charsRes, relsRes, enemiesRes] = await Promise.all([
+    fetch('/api/characters'), fetch('/api/relationships'), fetch('/api/campaign/enemies')
+  ]);
   CHARACTERS = await charsRes.json();
   rels = await relsRes.json();
+  try { const ed = await enemiesRes.json(); ENEMIES = ed.enemies || []; } catch {}
   CHARACTERS.sort((a, b) => { if (a.is_pc !== b.is_pc) return a.is_pc ? -1 : 1; return a._roster_id - b._roster_id; });
   selected = CHARACTERS[0];
   encLoad();
   renderSidebar();
+  buildEnemySelect();
   renderProfile();
   renderRelationships();
   renderEncounter();

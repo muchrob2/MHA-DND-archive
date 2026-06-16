@@ -1,0 +1,304 @@
+{
+  "categories": ["Exam / Training", "The Chain", "Villain", "Boss"],
+  "enemies": [
+    {
+      "id": "combat_drone_mk1",
+      "name": "Combat Drone Mk.I",
+      "category": "Exam / Training",
+      "cr": "1/4",
+      "tier": 1,
+      "description": "Standard exam drone. Bipedal chassis, rubber-coated shock emitters. Non-lethal by design but hits hard enough to matter. Moves in arcs, fires on nearest student.",
+      "hp": 12,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": { "STR": 12, "DEX": 12, "CON": 12, "INT": 4, "WIS": 8, "CHA": 1 },
+      "attacks": [
+        { "name": "Shock Blast", "to_hit": "+3", "damage": "1d6 lightning", "range": "30 ft", "notes": "Non-lethal" }
+      ],
+      "traits": [
+        "Non-lethal: all damage dealt reduces HP but targets don't die — they're knocked out at 0",
+        "Constructed: immune to charm, fear, and poison",
+        "Exam Point: destroying one grants 1 point toward exam score"
+      ],
+      "tactics": "Moves toward nearest student and fires. No target priority logic. Will not pursue fleeing students — just acquires new target. Trivially easy to trick."
+    },
+    {
+      "id": "combat_drone_mk2",
+      "name": "Combat Drone Mk.II",
+      "category": "Exam / Training",
+      "cr": "1",
+      "tier": 1,
+      "description": "Heavier exam drone. Armoured plating, dual shock emitters, and a missile pod that makes students reconsider their positioning. Worth three times the points.",
+      "hp": 30,
+      "ac": 15,
+      "speed": "25 ft",
+      "dex_mod": 1,
+      "ability_scores": { "STR": 15, "DEX": 12, "CON": 15, "INT": 4, "WIS": 8, "CHA": 1 },
+      "attacks": [
+        { "name": "Dual Shock Blast", "to_hit": "+4", "damage": "2d6 lightning", "range": "30 ft", "notes": "Non-lethal" },
+        { "name": "Missile Burst", "to_hit": null, "damage": "2d4 bludgeoning", "range": "30 ft, 10 ft radius", "notes": "DC 13 DEX save, half on success. Recharge 5-6. Non-lethal." }
+      ],
+      "traits": [
+        "Non-lethal: all damage is non-lethal",
+        "Constructed: immune to charm, fear, and poison",
+        "Armoured: resistant to piercing damage",
+        "Exam Point: destroying one grants 3 points"
+      ],
+      "tactics": "Prioritises students who destroyed Mk.I drones (most threatening student by score). Uses Missile Burst when 2+ students are within 10ft of each other. Retreats 10ft before firing if adjacent."
+    },
+    {
+      "id": "sentinel_boss_drone",
+      "name": "Sentinel Boss Drone",
+      "category": "Boss",
+      "cr": "3",
+      "tier": 1,
+      "description": "The finale of the entrance exam. A large, heavily armoured command drone that drops into the arena when Oshiro judges the class is ready to be tested as a unit. Designed to be unable to solo — the class must cooperate to bring it down.",
+      "hp": 72,
+      "ac": 17,
+      "speed": "20 ft",
+      "dex_mod": 0,
+      "ability_scores": { "STR": 20, "DEX": 10, "CON": 18, "INT": 6, "WIS": 10, "CHA": 1 },
+      "attacks": [
+        { "name": "Railgun Burst", "to_hit": "+6", "damage": "3d8 lightning", "range": "60 ft", "notes": "Non-lethal. Targets 1 creature." },
+        { "name": "Stomp", "to_hit": "+6", "damage": "2d10 bludgeoning", "range": "5 ft, 10 ft radius", "notes": "DC 14 STR save or knocked prone. Non-lethal." },
+        { "name": "Suppression Field", "to_hit": null, "damage": "none", "range": "30 ft radius aura (bonus action)", "notes": "Area becomes difficult terrain while active. Students must use double movement to close distance. Toggle on/off each turn." }
+      ],
+      "traits": [
+        "Non-lethal: all damage is non-lethal",
+        "Constructed: immune to charm, fear, and poison",
+        "Phase Armour: resistant to all damage until its HP drops below 40, then loses this trait",
+        "Exam Point: destroying it grants 10 points, split among students who dealt the final 20 HP",
+        "Designed to Force Cooperation: its Suppression Field punishes solo attackers — it takes focused burst damage from multiple directions to break through efficiently"
+      ],
+      "tactics": "Activates Suppression Field immediately. Targets the highest-scoring student with Railgun Burst. Uses Stomp when students cluster. The intent is not to 'win' but to hold out long enough that students must coordinate. Drops Suppression Field when below 20 HP — its last attempt to lure students in for a final Stomp."
+    },
+    {
+      "id": "chain_grunt",
+      "name": "Chain Grunt",
+      "category": "The Chain",
+      "cr": "1/4",
+      "tier": 1,
+      "description": "Low-level Chain muscle. No quirk. Hired for physical work — moving things, intimidating people, holding doors. Knows enough not to ask questions and not enough to be a real threat to a student.",
+      "hp": 16,
+      "ac": 12,
+      "speed": "30 ft",
+      "dex_mod": 0,
+      "ability_scores": { "STR": 15, "DEX": 10, "CON": 14, "INT": 9, "WIS": 10, "CHA": 8 },
+      "attacks": [
+        { "name": "Baton", "to_hit": "+4", "damage": "1d6+2 bludgeoning", "range": "5 ft" },
+        { "name": "Grab", "to_hit": "+4", "damage": "0 + grappled", "range": "5 ft", "notes": "DC 12 STR to escape. While grappled, target is restrained and can't move." }
+      ],
+      "traits": [
+        "Pack Fighter: deals +1d4 damage when adjacent ally is also in melee",
+        "Surrender Threshold: at 0 HP, doesn't die — immediately surrenders and spills nothing useful ('I just do pickup and delivery, I swear')"
+      ],
+      "tactics": "Tries to grapple the smallest-looking student so an ally can beat on them. Not courageous — will flee at 5HP if no Chain enforcer is present to stop them."
+    },
+    {
+      "id": "chain_enforcer",
+      "name": "Chain Enforcer",
+      "category": "The Chain",
+      "cr": "1",
+      "tier": 1,
+      "description": "Mid-tier Chain operative. Has a minor quirk and uses it. Knows the organisation's first-layer structure — cells, not leadership. Disciplined enough not to run, smart enough to know when a fight is lost.",
+      "hp": 38,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": { "STR": 16, "DEX": 12, "CON": 15, "INT": 11, "WIS": 12, "CHA": 10 },
+      "attacks": [
+        { "name": "Reinforced Fist", "to_hit": "+5", "damage": "1d8+3 bludgeoning", "range": "5 ft" },
+        { "name": "Shockwave Clap (Quirk)", "to_hit": null, "damage": "2d6 thunder", "range": "15 ft cone", "notes": "DC 13 STR save or pushed 10 ft. Recharge 5-6." }
+      ],
+      "traits": [
+        "Hardened: resistant to bludgeoning damage",
+        "Command Presence: Chain Grunts within 30 ft can't be frightened and deal +1d4 damage",
+        "Composure: advantage on saves against fear and charm"
+      ],
+      "tactics": "Gets into melee and holds position. Uses Shockwave Clap when 2+ students are adjacent. Will not abandon wounded allies — will drag them away before retreating. If captured: gives false name, asks for a lawyer, says nothing about the Chain beyond 'I'm a freelancer.'"
+    },
+    {
+      "id": "chain_hardskin",
+      "name": "Chain Hardskin",
+      "category": "The Chain",
+      "cr": "1",
+      "tier": 1,
+      "description": "A Chain quirk-user with hardening ability. Dense, slow, nearly impossible to hurt with normal attacks. Has a Chain tattoo partially visible under a collar if someone looks. Doesn't know who Undertow is — just knows who pays them.",
+      "hp": 42,
+      "ac": 16,
+      "speed": "25 ft",
+      "dex_mod": -1,
+      "ability_scores": { "STR": 18, "DEX": 8, "CON": 18, "INT": 9, "WIS": 10, "CHA": 8 },
+      "attacks": [
+        { "name": "Reinforced Strike", "to_hit": "+6", "damage": "1d10+4 bludgeoning", "range": "5 ft" },
+        { "name": "Hardened Rush", "to_hit": "+6", "damage": "2d6+4 bludgeoning", "range": "Charge up to 20 ft then strike", "notes": "Target makes DC 14 STR save or knocked prone. Can only be used if Hardskin moved at least 10 ft." }
+      ],
+      "traits": [
+        "Skin of Steel: resistant to bludgeoning, slashing, and piercing damage from non-magical sources",
+        "Quirk Weakness: vulnerable to lightning damage (double damage)",
+        "Chain Mark: a partial tattoo is visible under the collar. DC 15 Perception to spot, DC 12 Investigation to identify as an organisation mark.",
+        "Immovable: immune to the prone condition while Hardskin stance is active (toggle off as bonus action)"
+      ],
+      "tactics": "Absorbs hits without flinching, trying to demoralise students. Aims for Hardened Rush to knock someone prone, then stands over them. Doesn't talk during a fight. If students discover the lightning weakness, their satisfaction is visible even through the stoicism."
+    },
+    {
+      "id": "chain_blaster",
+      "name": "Chain Blaster",
+      "category": "The Chain",
+      "cr": "1",
+      "tier": 1,
+      "description": "Long-range Chain operative. Energy projection quirk. Prefers distance and cover. Hired for jobs that need firepower without getting close. Nervous when cornered.",
+      "hp": 24,
+      "ac": 12,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": { "STR": 9, "DEX": 14, "CON": 12, "INT": 11, "WIS": 12, "CHA": 10 },
+      "attacks": [
+        { "name": "Energy Bolt", "to_hit": "+4", "damage": "1d10 radiant", "range": "60 ft" },
+        { "name": "Multi-Bolt", "to_hit": "+4 per bolt", "damage": "1d6 radiant per bolt", "range": "60 ft", "notes": "Fires 3 bolts, each must target a different creature. Bonus action." }
+      ],
+      "traits": [
+        "Overcharge: when at 10 HP or below, attacks deal +1d6 damage but Blaster takes 1d4 recoil damage each time they attack",
+        "Cover Seeker: while behind half or full cover, attack rolls against Blaster are made at disadvantage"
+      ],
+      "tactics": "Stays at maximum range. Uses Multi-Bolt to spread pressure across multiple students. Fires from behind cover if possible. At 10 HP, enters Overcharge — becomes more dangerous but is now hurting themselves. Will try to run if cover is removed or students close to melee."
+    },
+    {
+      "id": "hired_muscle",
+      "name": "Hired Muscle",
+      "category": "Villain",
+      "cr": "1/2",
+      "tier": 1,
+      "description": "No quirk, no organisation affiliation, just size and experience. Hired for intimidation or physical enforcement. Treats this like a professional job — no more violence than contracted, no personal grudges.",
+      "hp": 32,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 0,
+      "ability_scores": { "STR": 18, "DEX": 10, "CON": 16, "INT": 10, "WIS": 11, "CHA": 9 },
+      "attacks": [
+        { "name": "Heavy Fist", "to_hit": "+6", "damage": "1d8+4 bludgeoning", "range": "5 ft" },
+        { "name": "Haymaker", "to_hit": "+6", "damage": "2d8+4 bludgeoning", "range": "5 ft", "notes": "Once per combat. On hit, target is stunned until end of their next turn (DC 14 CON save to negate stun)." }
+      ],
+      "traits": [
+        "Shrug It Off: once per short rest, reduce incoming damage by 1d6+2 as a reaction",
+        "Professional: will not attack fallen, unconscious opponents unless instructed. Not a monster — just employed."
+      ],
+      "tactics": "Targets whoever looks most dangerous. Uses Haymaker immediately against the most mobile student. If the job is clearly lost, stops fighting and says 'I'm done.' — he considers a fight professionally over when the odds are obvious. Will cooperate with authorities if his employer is dead or gone."
+    },
+    {
+      "id": "street_villain",
+      "name": "Street Villain",
+      "category": "Villain",
+      "cr": "1/4",
+      "tier": 1,
+      "description": "An unlicensed quirk user in over their head. Desperate, not dangerous. Usually committing crimes out of necessity rather than ideology. High role-play potential. Low threat. The kind of encounter that teaches students about the grey zones.",
+      "hp": 14,
+      "ac": 11,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": { "STR": 11, "DEX": 12, "CON": 10, "INT": 10, "WIS": 9, "CHA": 9 },
+      "attacks": [
+        { "name": "Desperate Strike", "to_hit": "+3", "damage": "1d6 bludgeoning or by quirk", "range": "5 ft or 20 ft" }
+      ],
+      "traits": [
+        "Minor Quirk (DM chooses): weak energy burst (1d4 fire, 20ft), minor hardening (+1 AC, 1 minute), brief invisibility (1 round, recharge on 5-6), minor levitation (hover 5ft, move 20ft, no weight-bearing)",
+        "Panicked: disadvantage on attacks if reduced below half HP",
+        "Wants Out: will attempt to flee if an escape route opens. If cornered, surrenders. Will talk if treated well — might mention neighbourhood changes, the Chain's name if they've heard it."
+      ],
+      "tactics": "Erratic. Uses quirk first, panics when it doesn't work, tries to run. Best encounter resolution is often social rather than combat. Has information if students choose de-escalation."
+    },
+    {
+      "id": "speedster_villain",
+      "name": "Speedster Villain",
+      "category": "Villain",
+      "cr": "1",
+      "tier": 1,
+      "description": "Fast, aggressive, overconfident. Thinks speed is an automatic win. Hasn't fought Ren. Will learn something today.",
+      "hp": 26,
+      "ac": 14,
+      "speed": "50 ft",
+      "dex_mod": 4,
+      "ability_scores": { "STR": 12, "DEX": 18, "CON": 13, "INT": 10, "WIS": 10, "CHA": 12 },
+      "attacks": [
+        { "name": "Rapid Strike", "to_hit": "+6", "damage": "1d6+4 bludgeoning", "range": "5 ft", "notes": "Can attack twice (Extra Attack)." },
+        { "name": "Blitz", "to_hit": "+6", "damage": "2d6+4 bludgeoning", "range": "Move up to full speed in straight line then strike", "notes": "Target makes DC 14 DEX save or knocked prone. Can be used once per turn as part of movement." }
+      ],
+      "traits": [
+        "Evasion: when subjected to a DEX save for half damage, takes no damage on success and half on failure",
+        "Fleet-Footed: opportunity attacks against this creature have disadvantage",
+        "Overconfident: if this villain goes 2 rounds without being hit, they become reckless (attacks at advantage but attack rolls against them also have advantage)"
+      ],
+      "tactics": "Opens with Blitz to establish dominance. Rapid Strikes from multiple angles. Never stays in one place. Gets cocky if no one can land hits. Actually vulnerable to anything that locks movement — grapple, restraint, or Ren just being faster."
+    },
+    {
+      "id": "bruiser_villain",
+      "name": "Bruiser Villain",
+      "category": "Villain",
+      "cr": "2",
+      "tier": 1,
+      "description": "A heavyweight quirk-user — growth and density enhancement. Hits like a structure. Thinks like a sledgehammer. End-of-Tier-1 or early-Tier-2 threat. Not appropriate as a first encounter.",
+      "hp": 58,
+      "ac": 15,
+      "speed": "30 ft (40 ft in Titan form)",
+      "dex_mod": -1,
+      "ability_scores": { "STR": 20, "DEX": 8, "CON": 18, "INT": 8, "WIS": 9, "CHA": 10 },
+      "attacks": [
+        { "name": "Slam", "to_hit": "+7", "damage": "2d8+5 bludgeoning", "range": "5 ft (10 ft in Titan form)" },
+        { "name": "Ground Pound", "to_hit": null, "damage": "3d6 bludgeoning", "range": "10 ft radius", "notes": "DC 15 STR save or knocked prone. Recharge 5-6." }
+      ],
+      "traits": [
+        "Titan Form (Quirk): as a bonus action, grows to 10ft. Gains +2 AC (total 17), attacks deal +1d6, reach becomes 10ft. Reverts if knocked unconscious.",
+        "Resilient: at the start of each turn, the first 3 damage from any source is ignored (not resistance — flat reduction)",
+        "Slow Burn: takes 2 full rounds to warm into Titan Form. Uses it immediately on round 1 — be ready by round 3."
+      ],
+      "tactics": "Activates Titan Form immediately. Focuses one target to maximum effect — doesn't split attention. Uses Ground Pound when students cluster trying to flank. The fight against this enemy is about positioning, burst damage windows, and not letting anyone get isolated."
+    },
+    {
+      "id": "trickster_villain",
+      "name": "Trickster Villain",
+      "category": "Villain",
+      "cr": "1/2",
+      "tier": 1,
+      "description": "Illusion quirk. Annoying, evasive, difficult to pin down. Creates confusion rather than damage. The kind of villain who makes students feel like they're losing until someone figures out the trick.",
+      "hp": 22,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": { "STR": 9, "DEX": 14, "CON": 11, "INT": 14, "WIS": 12, "CHA": 15 },
+      "attacks": [
+        { "name": "Blade", "to_hit": "+4", "damage": "1d6+2 piercing", "range": "5 ft" },
+        { "name": "Illusion Burst", "to_hit": null, "damage": "Blinded condition", "range": "1 creature within 30 ft", "notes": "DC 13 INT save or blinded until end of next turn. Bonus action." }
+      ],
+      "traits": [
+        "Mirror Image: creates 3 illusory duplicates at the start of combat. When attacked, roll 1d4 — on a 1, the real Trickster is hit. On 2-4, a duplicate is struck and destroyed. Recharge 5-6.",
+        "Displacement: while Mirror Image is active, can use a reaction to move 15 ft without provoking opportunity attacks"
+      ],
+      "tactics": "Creates Mirror Image immediately. Uses Illusion Burst on the most dangerous student. Stays mobile, never adjacent if possible. The fight has a clear solution — dealing with duplicates, identifying the real target — and the satisfaction is in finding it."
+    },
+    {
+      "id": "training_arena_bot",
+      "name": "Training Arena Bot",
+      "category": "Exam / Training",
+      "cr": "1",
+      "tier": 1,
+      "description": "Heavy training robot used in formal combat drills. Armoured, slow, and telegraphs its attacks — designed to teach students positioning and timing rather than to win. Used in Capture the Flag and Combat Training arcs as demonstration or obstacle.",
+      "hp": 40,
+      "ac": 16,
+      "speed": "20 ft",
+      "dex_mod": -1,
+      "ability_scores": { "STR": 18, "DEX": 8, "CON": 18, "INT": 4, "WIS": 8, "CHA": 1 },
+      "attacks": [
+        { "name": "Heavy Piston", "to_hit": "+6", "damage": "1d12+4 bludgeoning", "range": "5 ft", "notes": "Non-lethal. DM announces the target one round before the attack — the bot telegraphs its strikes." },
+        { "name": "Suppression Burst", "to_hit": null, "damage": "2d6 bludgeoning", "range": "15 ft cone", "notes": "DC 13 STR save or pushed 10 ft. Non-lethal. Recharge 5-6." }
+      ],
+      "traits": [
+        "Armoured Shell: resistant to bludgeoning and piercing damage",
+        "Slow: cannot take reactions or opportunity attacks",
+        "Non-lethal: all damage is non-lethal",
+        "Telegraphed: at the end of the bot's turn, DM announces which target it will attack next round. This is the training mechanic — students should be reacting to that information."
+      ],
+      "tactics": "Slow advance. Announces target one round ahead. Uses Suppression Burst when students stop moving. Not designed to win — designed to teach."
+    }
+  ]
+}

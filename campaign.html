@@ -127,17 +127,21 @@
   <a id="back-btn" href="/">← Dashboard</a>
   <div class="tab-bar">
     <button class="tab-btn" onclick="loadFile('arc')" id="tab-arc">Arc Overview</button>
+    <button class="tab-btn" onclick="loadFile('tier1')" id="tab-tier1">Tier 1 Detail</button>
     <button class="tab-btn" onclick="loadFile('world')" id="tab-world">World</button>
     <button class="tab-btn" onclick="loadFile('teachers')" id="tab-teachers">Teachers</button>
     <button class="tab-btn" onclick="loadFile('villains')" id="tab-villains">Villains</button>
+    <button class="tab-btn" onclick="loadFile('class1b')" id="tab-class1b">Class 1-B</button>
   </div>
 </div>
 <div id="content">
   <div id="loading">Loading…</div>
   <div class="page" id="page-arc"></div>
+  <div class="page" id="page-tier1"></div>
   <div class="page" id="page-world"></div>
   <div class="page" id="page-teachers"></div>
   <div class="page" id="page-villains"></div>
+  <div class="page" id="page-class1b"></div>
 </div>
 
 <script>
@@ -163,9 +167,11 @@ async function loadFile(file) {
 
   const el = document.getElementById('page-'+file);
   if (file === 'arc') renderArc(data, el);
+  else if (file === 'tier1') renderTier1(data, el);
   else if (file === 'world') renderWorld(data, el);
   else if (file === 'teachers') renderTeachers(data, el);
   else if (file === 'villains') renderVillains(data, el);
+  else if (file === 'class1b') renderClass1B(data, el);
   el.classList.add('active');
 
   // Update URL without reload
@@ -381,6 +387,194 @@ function toggleCollapse(id, btn) {
   const open = el.classList.toggle('open');
   const label = btn.textContent.replace(/^[▶▼] /,'');
   btn.textContent = (open ? '▼ ' : '▶ ') + label;
+}
+
+/* ─── TIER 1 ──────────────────────────────────────────── */
+function renderTier1(data, el) {
+  const ARC_COLORS = ['tag-purple','tag-teal','tag-amber','tag-red'];
+  let html = `<div class="page-title">Tier 1 — ${escHtml(data.title)}</div>
+    <div class="page-sub">Levels ${escHtml(data.levels)} · ${escHtml(data.session_estimate||'')} · ${escHtml(data.tone||'')}</div>`;
+
+  if (data.dm_overview) {
+    html += `<div class="dm-note" style="margin-bottom:20px;"><strong>DM overview:</strong> ${escHtml(data.dm_overview)}</div>`;
+  }
+
+  for (const [arcIdx, arc] of (data.arcs||[]).entries()) {
+    const color = ARC_COLORS[arcIdx % ARC_COLORS.length];
+    const arcBodyId = 'arc-body-'+arcIdx;
+    html += `<div class="card" style="margin-bottom:16px;">
+      <div class="tier-header">
+        <span class="tier-badge" style="background:var(--purple-light);color:var(--purple-text)">Arc ${arcIdx+1}</span>
+        <span class="tier-title">${escHtml(arc.name)}</span>
+        <span class="tier-levels">${escHtml(arc.sessions||'')} session${arc.sessions==='1'?'':arc.sessions?'s':''}</span>
+      </div>
+      <div class="tier-tone">${escHtml(arc.summary||'')}</div>
+      ${arc.dm_setup?`<div class="dm-note" style="margin-bottom:10px;"><strong>DM setup:</strong> ${escHtml(arc.dm_setup)}</div>`:''}`;
+
+    // Major beats
+    if (arc.major_beats?.length) {
+      html += `<div class="section-label" style="margin-top:10px">Major beats</div>`;
+      for (const beat of arc.major_beats) {
+        const beatId = 'beat-'+Math.random().toString(36).slice(2);
+        html += `<div class="arc-card">
+          <div class="arc-name">${escHtml(beat.name)}</div>
+          <div class="arc-desc">${escHtml(beat.description||'')}</div>
+          ${beat.dm_notes?`<div class="dm-note" style="margin-top:6px;"><strong>DM:</strong> ${escHtml(beat.dm_notes)}</div>`:''}
+          ${beat.player_hooks && Object.keys(beat.player_hooks).length
+            ? `<span class="beats-toggle" onclick="toggleBeats('${beatId}',this)">▶ Player hooks (${Object.keys(beat.player_hooks).length})</span>
+               <ul class="beats-list" id="${beatId}">${Object.entries(beat.player_hooks).map(([k,v])=>`<li><strong>${escHtml(k)}:</strong> ${escHtml(v)}</li>`).join('')}</ul>`
+            : ''}
+        </div>`;
+      }
+    }
+
+    // Minor beats
+    if (arc.minor_beats?.length) {
+      const minorId = 'minor-'+Math.random().toString(36).slice(2);
+      html += `<div class="section-label" style="margin-top:10px">Minor beats</div>
+        <span class="beats-toggle" onclick="toggleBeats('${minorId}',this)">▶ Show all (${arc.minor_beats.length})</span>
+        <ul class="beats-list" id="${minorId}">${arc.minor_beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}</ul>`;
+    }
+
+    // NPC Interactions
+    if (arc.npc_interactions?.length) {
+      html += `<div class="section-label" style="margin-top:10px">NPC interactions</div>`;
+      for (const npc of arc.npc_interactions) {
+        const npcId = 'npc-'+Math.random().toString(36).slice(2);
+        html += `<div class="arc-card">
+          <div class="arc-name">${escHtml(npc.npc)}</div>
+          <div class="arc-type">${escHtml(npc.context||'')}</div>
+          ${npc.key_moment?`<div class="arc-desc" style="margin-top:6px;">${escHtml(npc.key_moment)}</div>`:''}
+          ${npc.dm_dialogue?`<span class="beats-toggle" onclick="toggleBeats('${npcId}',this)">▶ Dialogue &amp; notes</span>
+            <ul class="beats-list" id="${npcId}"><li style="list-style:none;padding-left:0">${escHtml(npc.dm_dialogue)}</li>
+            ${npc.trigger?`<li style="list-style:none;padding-left:0;margin-top:6px;color:var(--text-dim);font-size:11px;">${escHtml(npc.trigger)}</li>`:''}
+            </ul>`:''}
+        </div>`;
+      }
+    }
+
+    // Encounters
+    if (arc.encounters?.length) {
+      html += `<div class="section-label" style="margin-top:10px">Encounters</div>`;
+      for (const enc of arc.encounters) {
+        const encId2 = 'enc2-'+Math.random().toString(36).slice(2);
+        html += `<div class="arc-card" style="border-left:3px solid var(--red);">
+          <div class="arc-name">${escHtml(enc.name)}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
+            <span class="tag tag-red">⚔ ${escHtml(enc.enemies||'')}</span>
+          </div>
+          ${enc.terrain?`<div class="arc-desc" style="margin-top:6px;"><strong>Terrain:</strong> ${escHtml(enc.terrain)}</div>`:''}
+          <span class="beats-toggle" onclick="toggleBeats('${encId2}',this)">▶ Setup &amp; tactics</span>
+          <ul class="beats-list" id="${encId2}">
+            ${enc.setup?`<li><strong>Setup:</strong> ${escHtml(enc.setup)}</li>`:''}
+            ${enc.tactics?`<li><strong>Tactics:</strong> ${escHtml(enc.tactics)}</li>`:''}
+            ${enc.dm_notes?`<li><strong>DM notes:</strong> ${escHtml(enc.dm_notes)}</li>`:''}
+            ${enc.rewards?`<li><strong>Rewards:</strong> ${escHtml(enc.rewards)}</li>`:''}
+          </ul>
+        </div>`;
+      }
+    }
+
+    // Foreshadowing
+    if (arc.foreshadowing?.length) {
+      const fsId = 'fs-'+Math.random().toString(36).slice(2);
+      html += `<div class="section-label" style="margin-top:10px">Foreshadowing</div>
+        <span class="beats-toggle" onclick="toggleBeats('${fsId}',this)">▶ Seeds (${arc.foreshadowing.length})</span>
+        <ul class="beats-list" id="${fsId}">${arc.foreshadowing.map(f=>`<li>${escHtml(f)}</li>`).join('')}</ul>`;
+    }
+
+    // Class 1-B seeds
+    if (arc.class1b_seeds?.length) {
+      const cbId = 'cb-'+Math.random().toString(36).slice(2);
+      html += `<div class="section-label" style="margin-top:10px">Class 1-B seeds</div>
+        <span class="beats-toggle" onclick="toggleBeats('${cbId}',this)">▶ Foreshadowing (${arc.class1b_seeds.length})</span>
+        <ul class="beats-list" id="${cbId}">${arc.class1b_seeds.map(s=>`<li>${escHtml(s)}</li>`).join('')}</ul>`;
+    }
+
+    html += `</div>`;
+  }
+  el.innerHTML = html;
+}
+
+/* ─── CLASS 1-B ───────────────────────────────────────── */
+function renderClass1B(data, el) {
+  const STAT_KEYS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
+  let html = `<div class="page-title">Class 1-B</div>
+    <div class="page-sub">${escHtml(data.reputation||'')}</div>`;
+
+  if (data.teacher) html += `<div class="dm-note" style="margin-bottom:12px;"><strong>Teacher:</strong> ${escHtml(data.teacher)}</div>`;
+  if (data.sports_festival_note) html += `<div class="weakness-block" style="margin-bottom:12px;"><strong>Sports Festival:</strong> ${escHtml(data.sports_festival_note)}</div>`;
+
+  // Tier 1 introduction guide
+  if (data.tier1_introduction_guide) {
+    const introId = 'intro-'+Math.random().toString(36).slice(2);
+    html += `<div class="card" style="margin-bottom:16px;">
+      <div class="card-title">Tier 1 Introduction Guide</div>
+      <div class="card-body">${escHtml(data.dm_overview||'')}</div>
+      <span class="collapse-btn" onclick="toggleCollapse('${introId}',this)">▶ Per-arc introduction notes</span>
+      <div class="collapsible" id="${introId}">`;
+    for (const [k,v] of Object.entries(data.tier1_introduction_guide)) {
+      html += `<div class="person-section"><div class="person-section-label">${escHtml(k.replace(/_/g,' '))}</div>
+        <div class="person-section-body">${escHtml(v)}</div></div>`;
+    }
+    html += `</div></div>`;
+  }
+
+  html += `<div class="section-label">Students</div>`;
+
+  for (const s of (data.students||[])) {
+    const sb = s.stat_block||{};
+    const detailId = 's1b-'+Math.random().toString(36).slice(2);
+    html += `<div class="person-card">
+      <div class="person-avatar av-npc" style="background:var(--teal-light);color:var(--teal-text)">${initials(s.name)}</div>
+      <div>
+        <div class="person-name">${escHtml(s.name)}</div>
+        <div class="person-alias">${escHtml(s.quirk||'')} · ${escHtml(s.quirk_type||'')}</div>
+        <div class="person-tags">
+          <span class="tag tag-teal">${escHtml(s.quirk||'')}</span>
+          ${s.rival_in_1a?`<span class="tag tag-purple">Rivals: ${escHtml(s.rival_in_1a)}</span>`:''}
+        </div>
+        <div class="person-section">
+          <div class="person-section-label">Quirk</div>
+          <div class="person-section-body">${escHtml(s.quirk_summary||'')}</div>
+        </div>
+        <div class="person-section">
+          <div class="person-section-label">Personality</div>
+          <div class="person-section-body">${escHtml(s.personality||'')}</div>
+        </div>
+        <div class="person-section">
+          <div class="person-section-label">Rivalry with ${escHtml(s.rival_in_1a||'')}</div>
+          <div class="person-section-body">${escHtml(s.rivalry_dynamic||'')}</div>
+        </div>
+        <div class="person-section">
+          <div class="person-section-label">Tier 1 appearance</div>
+          <div class="person-section-body">${escHtml(s.tier1_appearance||'')}</div>
+        </div>
+        <span class="collapse-btn" onclick="toggleCollapse('${detailId}',this)">▶ Sports festival role, stat block &amp; signature moves</span>
+        <div class="collapsible" id="${detailId}">
+          ${s.sports_festival_role?`<div class="person-section">
+            <div class="person-section-label">Sports festival role</div>
+            <div class="person-section-body">${escHtml(s.sports_festival_role)}</div>
+          </div>`:''}
+          ${s.dm_notes?`<div class="dm-note"><strong>DM notes:</strong> ${escHtml(s.dm_notes)}</div>`:''}
+          ${Object.keys(sb).length?`<div class="person-section">
+            <div class="person-section-label">Stat block</div>
+            <div class="stat-grid">
+              ${sb.level!=null?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${sb.level}</span></div>`:''}
+              ${sb.HP!=null?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${sb.HP}</span></div>`:''}
+              ${sb.AC!=null?`<div class="stat-chip"><span class="stat-chip-label">AC</span><span class="stat-chip-val">${sb.AC}</span></div>`:''}
+              ${STAT_KEYS.map(k=>sb[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${sb[k]}</span></div>`:'').join('')}
+            </div>
+          </div>`:''}
+          ${s.signature_moves?.length?`<div class="person-section">
+            <div class="person-section-label">Signature moves</div>
+            <ul style="margin-top:4px;padding-left:16px;">${s.signature_moves.map(m=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">${escHtml(m)}</li>`).join('')}</ul>
+          </div>`:''}
+        </div>
+      </div>
+    </div>`;
+  }
+  el.innerHTML = html;
 }
 
 /* ─── Init ─────────────────────────────────────────────── */

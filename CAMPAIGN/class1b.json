@@ -1,0 +1,141 @@
+{
+  "class": "1-B",
+  "teacher": "Matsunami Goro (Hero name: 'Scaffold' — Quirk: Construct, builds rigid scaffolding structures from ambient minerals. Methodical, patient, and quietly competitive about his class.)",
+  "reputation": "The class that almost made it to 1-A. Their entrance exam scores were comparable — in some technical categories, better. Matsunami runs a tighter ship than Oshiro. 1-B students know their fundamentals cold before they start improvising. Less chaos, more precision. They watch 1-A the way you watch someone doing something impressive badly.",
+  "sports_festival_note": "Tier 2, Arc 1. Class 1-B enter the Sports Festival as the school's open secret — everyone's picked a 1-A favourite, nobody's thought hard about 1-B. That's exactly how Matsunami wants it. He has drilled his students on 1-A's quirks from the entrance exam footage. This is the arc where 1-B stops being background noise.",
+  "dm_overview": "Introduce 1-B students gradually through Tier 1 — brief corridor encounters, overheard conversations, cafeteria sightings. None of them are villains. None of them are friends yet. They're rivals in the classical sense: people who make your students better by existing. By the time the Sports Festival starts, players should have a clear read on at least 3-4 of these students and be genuinely unsure who's going to win.",
+  "tier1_introduction_guide": {
+    "arc1_entrance_exam": "The results board after the exam shows Class 1-A and 1-B scores in adjacent columns. 1-B's top score (Morida: 84 pts) is visible. Whether it beats or matches 1-A's best depends on the session. Fujisaki mentions '1-B had a different site this year — quieter, but thorough.' Oshiro says nothing about 1-B. He doesn't need to.",
+    "arc2_dorm_life": "Morida and Yashiro are visible in the cafeteria. Morida's tray is geometrically arranged. He looks at the 1-A table once, says nothing. Yashiro catches the eye of whoever's watching and winks. The practice room booking shows 1-B has 6am slots every weekday. Ogiwara's warmup shakes the building at 7am. The class notices.",
+    "arc3_capture_the_flag": "Ogiwara is watching through the observation window. When a student looks over, he gives a slow thumbs up. It's impossible to tell if it's sincere or condescending. Oshiro drops the line: 'Class 1-B had three students who topped this score in their equivalent drill. That's your benchmark.'",
+    "arc4_agency_visit": "Kitamura Sora is at the same agency district for a different internship. If the class encounters her: she's carrying precisely folded documents, gives the impression she's been there three days, and has a 10-second corridor interaction before continuing. She doesn't introduce herself. Her name badge faces inward. If a student catches a glimpse: Kitamura, S., Class 1-B."
+  },
+  "students": [
+    {
+      "name": "Morida Takeshi",
+      "quirk": "Ironclad",
+      "quirk_type": "Transformation",
+      "quirk_summary": "Full-body metallic plating. Morida's skin hardens into dense, layered steel armour that he can extend or retract at will. At full hardening he's nearly impervious to physical attacks. At partial hardening he trades some protection for mobility. He cannot harden his eyes — his one consistent weak point.",
+      "personality": "Disciplined, methodical, and quietly contemptuous of flashy quirk use. He respects results and is suspicious of anything he can't measure. Doesn't talk during a fight. Will compliment a student after if they earned it — which sounds like 'That was efficient.' He means it as high praise.",
+      "rival_in_1a": "Izuto Kutsu",
+      "rivalry_dynamic": "Engine vs Wall. Izuto's raw output vs Morida's near-absolute defence. The central question is whether Izuto can generate enough force to crack the armour before Morida just outlasts him. Morida has already figured out Izuto's timing. Izuto hasn't thought about Morida at all yet.",
+      "sports_festival_role": "The unmovable object in direct contests. Morida's goal in every event is to simply not be eliminated. He doesn't need points — he needs to still be standing when everyone else isn't. He and Izuto will meet in the tournament bracket. That fight is the centrepiece of the Sports Festival arc.",
+      "tier1_appearance": "Cafeteria during dorm move-in. Perfectly level tray. Makes eye contact with no one. Once, in the corridor, he passes Izuto without acknowledging him. Izuto doesn't notice. Morida does.",
+      "dm_notes": "Morida is not a villain and not a bad person. He's the structural version of Masahata — someone who sees everything as a competition and is usually right about where everyone stands. Let him be correct. Let his correctness be slightly annoying. The payoff is at the Sports Festival when his certainty runs into Izuto's stubbornness.",
+      "stat_block": {
+        "level": 3, "HP": 28, "AC": 18,
+        "STR": 17, "DEX": 9, "CON": 18, "INT": 12, "WIS": 13, "CHA": 9, "TECH": 10
+      },
+      "signature_moves": [
+        "Iron Stance: as a bonus action, increase AC by 2 until start of next turn (total AC 20). Speed drops to 0.",
+        "Armour Crash: full hardening bull rush — move 20ft in a line, +6 to hit, 2d8+3 bludgeoning, DC 14 STR save or knocked prone. Recharge 5-6.",
+        "Selective Hardening: can harden specific body parts — hardened fist deals +1d6 on a hit. Always on."
+      ]
+    },
+    {
+      "name": "Yashiro Fumiko",
+      "quirk": "Blink",
+      "quirk_type": "Transformation",
+      "quirk_summary": "Short-range teleportation. Yashiro can teleport up to 10 ft in any direction as a free action. Longer jumps (up to 30ft) require a bonus action and a 3-round cooldown. She can't blink through solid objects but can blink around corners she can see around. She uses this continuously and casually, which is deeply disorienting to fight.",
+      "personality": "Smug, playful, treats combat like a game she's already won. Finds 1-A's chaos endearing in the way that people find puppies endearing — they're trying so hard. Genuinely likes competition. Would rather lose a good fight than win a boring one. Her competitive sincerity is the thing that catches people off guard — they expect cheap tricks and get instead a student who is actually, seriously fast.",
+      "rival_in_1a": "Ren Suzuki",
+      "rivalry_dynamic": "Speed vs Evasion. Ren is faster in a straight line. Yashiro can't be chased in one. The question is whether Ren can close to a range where his attacks land before she blinks out. She's studied his Overclock pattern. He doesn't know she exists yet.",
+      "sports_festival_role": "The worst person to be paired against in any containment event — she just isn't there. She's going to be in the tournament bracket and her match against Ren is the one that players will talk about afterwards regardless of who wins.",
+      "tier1_appearance": "First spotted vanishing around a corner that didn't have a turn in it. If a student catches her eye in the cafeteria, she winks and blinks to three seats over without using the gap.",
+      "dm_notes": "Yashiro is genuinely fun to run. She should feel slippery and quick, not cheap. There's always a clear solution to fighting her — the 3-round cooldown on long jumps, the can't-blink-through-solids rule — but finding it under pressure is hard. She and Ren actually like each other by the end of the Festival. Neither admits it.",
+      "stat_block": {
+        "level": 3, "HP": 22, "AC": 15,
+        "STR": 10, "DEX": 18, "CON": 12, "INT": 13, "WIS": 14, "CHA": 14, "TECH": 11
+      },
+      "signature_moves": [
+        "Blink Step (Free): teleport up to 10 ft as part of movement. Can do this each turn without cost.",
+        "Long Jump (Bonus action): teleport up to 30ft. 3-round cooldown.",
+        "Phantom Strike: teleports adjacent to a target, attacks, then blinks 10ft away as part of the same action. Doesn't provoke opportunity attacks from that target."
+      ]
+    },
+    {
+      "name": "Denma Sora",
+      "quirk": "Gravity Well",
+      "quirk_type": "Emitter",
+      "quirk_summary": "Creates localised gravitational anomalies. Denma can designate a 10ft sphere within 60ft as either a high-gravity zone (things pulled toward its centre) or a low-gravity zone (things float away from it). Maintaining a zone requires concentration. He can have two zones active simultaneously at full concentration, but cannot attack while doing so.",
+      "personality": "Quiet. Unsettling. Speaks in short declarative sentences and rarely finishes thoughts that the other person can follow anyway. Not cold — just somewhere else most of the time. Will talk at length about gravitational physics and the difference between mass and weight in a way that is technically correct and socially obliterating. The moments where he's actually paying attention to a person are rare and feel significant.",
+      "rival_in_1a": "Chosen Tadachi",
+      "rivalry_dynamic": "Both manipulate the battlefield rather than dealing direct damage. Chosen builds stress, breaks people down. Denma controls movement, removes options. Their rivalry is philosophical more than physical — two students who win through mechanism rather than power. At the Festival: both will try to make the other fight on their terms. Neither will fully succeed.",
+      "sports_festival_role": "The wildcard in every group event. His zones control the field in ways that benefit teammates and punish enemies. In the tournament bracket, he's dangerous specifically because he doesn't need to beat you — he just needs you to be in the wrong place. Almost everyone underestimates the range.",
+      "tier1_appearance": "A practice room booking under 1-B's name. Inside: twelve thumbtacks floating 2mm off the board, perfectly static. No explanation. The room smells faintly of ozone.",
+      "dm_notes": "Denma is designed to be memorable through strangeness rather than threat. His encounters in Tier 1 should be brief and odd — a glance, a sentence, something not quite right about gravity in his vicinity. Save his actual fighting capability for the Festival. He should feel like a puzzle that hasn't been asked yet.",
+      "stat_block": {
+        "level": 3, "HP": 20, "AC": 13,
+        "STR": 9, "DEX": 13, "CON": 11, "INT": 17, "WIS": 15, "CHA": 10, "TECH": 16
+      },
+      "signature_moves": [
+        "Gravity Zone (Action): designate a 10ft sphere within 60ft as high-gravity (creatures pulled to centre, speed halved) or low-gravity (creatures float up 5ft, speed halved in different axis). Concentration, 1 minute.",
+        "Dual Field: maintain two zones simultaneously. Cannot attack or take bonus actions while sustaining both.",
+        "Crush Point: collapse a high-gravity zone onto a single target. DC 14 STR save or restrained for 1 round and takes 2d6 force damage. Destroys the zone."
+      ]
+    },
+    {
+      "name": "Ogiwara Bunta",
+      "quirk": "Seismic",
+      "quirk_type": "Emitter",
+      "quirk_summary": "Stomping generates seismic shockwaves radiating outward from the impact point. The harder the impact, the wider and stronger the wave. Scaling: a normal stomp creates a 10ft tremor. A running jump stomp creates a 20ft, 2d6-damage wave that leaves difficult terrain. Doesn't work if he can't make physical ground contact.",
+      "personality": "Loud. Genuinely, physically loud — his voice carries without him trying. Enthusiastic competitor in the way that makes it fun to lose to him because he's so happy about having a real contest. No subtlety. No hidden agenda. Will shake your hand and mean it. Will also absolutely try to put you through the floor.",
+      "rival_in_1a": "Toshida Shogoro",
+      "rivalry_dynamic": "Sound vs Seismic. Both create broad-area chaos. Both are physically enormous and running at things is their default strategy. They'll either be best friends or destroy each other immediately at the Festival — the exact circumstances of their first meeting will determine which. Either outcome is correct.",
+      "sports_festival_role": "Devastating in group events that require movement or terrain control. In the tournament bracket, he's the crowd favourite — his Seismic stomps create visible, dramatic shockwaves that the audience loves. Weakness: if someone gets him airborne, his quirk is useless. Not a weakness he's addressed.",
+      "tier1_appearance": "Two 7am shockwaves on move-in morning, felt through the dorm floor. If confronted: 'Warmup.' Delivered as a complete explanation. Gives the thumbs up through the Capture the Flag observation window — entirely genuine, completely unreadable.",
+      "dm_notes": "Ogiwara is the relief. Run every Tier 1 scene with him as a moment of levity. He has no secrets, no agenda, no hidden depth to excavate. His arc at the Sports Festival is uncomplicated: he wants to test himself against Toshida. Give him that fight and let it be excellent.",
+      "stat_block": {
+        "level": 3, "HP": 30, "AC": 13,
+        "STR": 18, "DEX": 10, "CON": 17, "INT": 9, "WIS": 11, "CHA": 14, "TECH": 9
+      },
+      "signature_moves": [
+        "Seismic Stomp: stomp creates a 10ft radius tremor. Creatures in range make DC 13 STR save or fall prone.",
+        "Running Stomp: move at least 20ft and jump-stomp. 20ft radius, 2d6 bludgeoning, DC 14 STR save or prone. Difficult terrain left behind. Recharge 5-6.",
+        "Ground Lock: repeated stomps keep a 15ft area in constant low-level tremor. Difficult terrain as long as Ogiwara concentrates (bonus action each round to maintain)."
+      ]
+    },
+    {
+      "name": "Nashiro Aoi",
+      "quirk": "Copycast",
+      "quirk_type": "Emitter",
+      "quirk_summary": "Projects photorealistic visual and audio illusions of anything she's previously observed. Detail and scale are limited only by her observation — she's observed a lot. The illusions are convincing enough to fool casual inspection. They fall apart under direct physical interaction (touching one reveals nothing is there) or exceptionally high INT saves. She cannot duplicate herself convincingly.",
+      "personality": "Theatrical. Observant in the way that only people who spend a lot of time watching other people are. In public she's performing — always, slightly, a version of herself edited for the room. In private (which almost never happens with 1-A) she's dry and tired in an interesting way. She's been reading Class 1-A since the results board. She can do a note-perfect impression of Oshiro.",
+      "rival_in_1a": "Kazama Kenji",
+      "rivalry_dynamic": "Fire counters illusion directly — Hellflame's light burns away visual deception, and its heat reveals physical reality by scorching anything not truly present. Nashiro knows this and has spent considerable time figuring out how to use it. Kazama doesn't know she exists yet. Their Sports Festival match, if it happens, is about whether Nashiro can win before Kazama figures out the counter.",
+      "sports_festival_role": "Nightmarish in group events that involve information — she can create false obstacles, fake teammates, phantom threats. In the tournament bracket, she's a puzzle encounter: students need to identify the real threat under the illusion layer while fighting something that might not be there at all.",
+      "tier1_appearance": "A 1-A student is certain they saw Hamagawa in the corridor. They didn't. Hamagawa was in class. Nobody can prove it was Nashiro. If directly confronted: 'I don't know what you're referring to.' She says it as Oshiro.",
+      "dm_notes": "Nashiro is a slow-burn reveal. Her Tier 1 appearances should all be deniable — the class sees something that might be an illusion or might not be. By the Sports Festival, players should be actively second-guessing information, which is exactly where she wants them.",
+      "stat_block": {
+        "level": 3, "HP": 19, "AC": 13,
+        "STR": 9, "DEX": 14, "CON": 10, "INT": 16, "WIS": 15, "CHA": 17, "TECH": 12
+      },
+      "signature_moves": [
+        "Copycast Illusion (Action): create a detailed visual and audio illusion of any observed scene or creature within 60ft. DC 15 INT save to see through. Concentration.",
+        "Burst Illusion (Bonus action): flash a sudden, shocking false image — DC 13 WIS save or frightened for 1 round. Single use, then 1-round cooldown.",
+        "Mirror Self: creates a convincing illusory duplicate. Attackers must make DC 14 INT check to target the real Nashiro — on fail, they target the illusion. 3 charges, depletes on failed saves."
+      ]
+    },
+    {
+      "name": "Kitamura Sora",
+      "quirk": "Threadline",
+      "quirk_type": "Emitter",
+      "quirk_summary": "Generates high-tensile monofilament wire from her fingertips. The wire is nearly invisible under normal light, can support 400kg, and cuts through soft materials cleanly. She can extend up to 40 metres simultaneously, maintain up to 8 independent strands, and recall them instantly. Setting a wire trap in a room takes her approximately six seconds. She has timed this.",
+      "personality": "Precise. Economical. Considers Class 1-A's operational style inefficient in the way an architect considers a building that keeps falling down. She isn't contemptuous — she's concerned, professionally. Has extremely strong opinions about workspace organisation and does not volunteer them unsolicited. Will volunteer them if asked. Has very few opinions about things she considers not her domain. Says 'Yes.' and 'No.' as complete sentences.",
+      "rival_in_1a": "Nakaya Emari",
+      "rivalry_dynamic": "Size vs Thread. Nakaya's enlargement makes her a large target — and large targets are exactly what Threadline is designed for. The wire scales to the problem. Nakaya's advantage is that at sufficient size, she can just walk through the trap, wires and all — but that leaves marks. Their rivalry is about Nakaya learning that raw scale has hard limits.",
+      "sports_festival_role": "Devastating in any event with structure — she pre-rigs environments during setup phases. In group contests, she's invisible until suddenly four students are tripped simultaneously. In the tournament bracket, she's the student everyone is afraid to face because they've seen her work and don't know where the wire is.",
+      "tier1_appearance": "Corridor encounter during the Agency Visit arc. 10 seconds. She's carrying precisely folded documents, doesn't introduce herself, continues walking. Her name badge faces inward. If a student catches a glimpse: Kitamura, S., 1-B. The practice room she used before leaving has three wire patterns still hanging in the air — invisible until the light catches them.",
+      "dm_notes": "Kitamura is the student who makes players feel like they've been outplayed by something they didn't see coming. Her Tier 1 presence should be minimal and precise — the corridor encounter, the wire patterns. Nothing else. By the Sports Festival, her reputation has been built entirely by absence. The fight against her should be the one that makes players think hard about the environment before they enter it.",
+      "stat_block": {
+        "level": 3, "HP": 21, "AC": 14,
+        "STR": 10, "DEX": 17, "CON": 11, "INT": 15, "WIS": 16, "CHA": 11, "TECH": 14
+      },
+      "signature_moves": [
+        "Threadline Trap (Action or Reaction): rig a 10ft section of terrain with wire. Any creature moving through makes DC 14 DEX save or restrained. Invisible until triggered (DC 16 Perception to spot beforehand).",
+        "Wire Bind: rapid wire application to a single target. DC 13 DEX save or restrained. On a fail, DC 14 STR to break free (action). Range 20ft.",
+        "Retraction Burst: instantly recall all wires simultaneously — any creature currently restrained takes 1d6 slashing damage as wires snap taut before releasing."
+      ]
+    }
+  ]
+}

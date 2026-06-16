@@ -371,8 +371,10 @@ function renderVillains(data, el) {
               ${STAT_KEYS.map(k=>sb[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${sb[k]}</span></div>`:'').join('')}
             </div>
           </div>`:''}
-          ${Object.keys(dmn).length?`<div class="dm-note"><strong>DM notes</strong><br>${
-            Object.entries(dmn).map(([k,val])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(val))}`).join('<br>')
+          ${v.dm_notes?`<div class="dm-note"><strong>DM notes</strong><br>${
+            typeof dmn === 'string'
+              ? escHtml(dmn)
+              : Object.entries(dmn).map(([k,val])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(val))}`).join('<br>')
           }</div>`:''}
           ${v.arc_role?`<div class="warning-note"><strong>Arc role:</strong> ${escHtml(v.arc_role)}</div>`:''}
         </div>

@@ -2,11 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "relationship-tracker",
+      "name": "mha-dnd",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["server.py"],
-      "autoPort": true,
-      "port": 5001
+      "runtimeArgs": ["-m", "http.server", "8765"],
+      "port": 8765
     }
   ]
 }

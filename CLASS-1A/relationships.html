@@ -220,6 +220,81 @@
   .cond-option.active { background: var(--amber-light); color: var(--amber-text); border-color: var(--amber); font-weight: 500; }
   .enc-empty { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 13px; }
 
+  /* ── Teams ────────────────────────────────────────────── */
+  .team-dot {
+    width: 18px; height: 18px; border-radius: 50%; cursor: pointer; flex-shrink: 0;
+    border: 2px solid var(--border-strong); background: var(--surface2);
+    transition: transform 0.12s; display: inline-block;
+  }
+  .team-dot:hover { transform: scale(1.25); }
+  .team-dot.assigned { border-color: transparent; }
+
+  /* ── Attack log ───────────────────────────────────────── */
+  #enc-log {
+    flex-shrink: 0; max-height: 90px; overflow-y: auto;
+    border-bottom: 1px solid var(--border); background: var(--surface2); padding: 0 20px;
+  }
+  .log-entry {
+    font-size: 11px; padding: 4px 0; border-bottom: 1px solid var(--border);
+    color: var(--text-muted); display: flex; align-items: center; gap: 6px;
+  }
+  .log-entry:last-child { border-bottom: none; }
+  .log-name { font-weight: 600; color: var(--text); }
+  .log-roll { font-weight: 700; padding: 0 5px; border-radius: 3px; font-size: 10px; }
+  .log-hit  { background: var(--green-light);  color: var(--green-text); }
+  .log-miss { background: var(--red-light);    color: var(--red-text); }
+  .log-crit { background: var(--amber-light);  color: var(--amber-text); }
+  .log-none { font-size: 11px; color: var(--text-dim); padding: 6px 0; font-style: italic; }
+
+  /* ── Turn Modal ───────────────────────────────────────── */
+  #turn-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,0,0,0.55); backdrop-filter: blur(3px);
+    align-items: center; justify-content: center;
+  }
+  #turn-modal-overlay.open { display: flex; }
+  #turn-modal {
+    background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: 18px; width: 420px; max-width: calc(100vw - 40px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4); overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  #turn-modal-header {
+    display: flex; align-items: center; padding: 14px 18px 12px;
+    border-bottom: 1px solid var(--border); gap: 10px; flex-shrink: 0;
+  }
+  #turn-modal-round { font-size: 11px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; }
+  #turn-modal-close { margin-left: auto; width: 28px; height: 28px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); color: var(--text-muted); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  #turn-modal-close:hover { color: var(--text); background: var(--surface); }
+  #turn-modal-body { padding: 20px 20px 0; }
+  .tm-combatant-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .tm-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; flex-shrink: 0; }
+  .tm-name { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .tm-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .tm-hp-bar-wrap { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+  .tm-hp-bar { height: 100%; border-radius: 3px; transition: width 0.3s, background 0.3s; }
+  .tm-stats-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tm-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; text-align: center; min-width: 52px; }
+  .tm-stat-label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .tm-stat-val { font-size: 18px; font-weight: 700; }
+  .tm-conditions { display: flex; flex-wrap: wrap; gap: 4px; min-height: 20px; margin-bottom: 14px; }
+  #tm-attack-zone { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+  .tm-attack-title { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 10px; }
+  #tm-roll-btn { padding: 8px 20px; background: var(--purple); color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.1s; }
+  #tm-roll-btn:hover { opacity: 0.85; }
+  #tm-roll-result { margin-top: 10px; font-size: 13px; min-height: 20px; }
+  .tm-result-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tm-result-arrow { color: var(--text-dim); }
+  .tm-result-target { font-weight: 600; }
+  #turn-modal-footer {
+    display: flex; align-items: center; gap: 10px; padding: 14px 20px;
+    border-top: 1px solid var(--border); flex-shrink: 0; background: var(--surface2);
+  }
+  #tm-dead-badge { font-size: 11px; color: var(--red-text); background: var(--red-light); padding: 2px 8px; border-radius: 4px; font-weight: 600; display: none; }
+  #tm-next-btn { margin-left: auto; padding: 9px 22px; background: var(--purple); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.1s; }
+  #tm-next-btn:hover { opacity: 0.85; }
+  #tm-skip-dead { font-size: 11px; display: flex; align-items: center; gap: 5px; color: var(--text-muted); cursor: pointer; user-select: none; }
+
   /* ── Save bar ─────────────────────────────────────────── */
   #save-bar { display: flex; align-items: center; gap: 8px; padding: 7px 20px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
   #save-bar span { font-size: 11px; color: var(--text-dim); }
@@ -324,6 +399,7 @@
         <button class="enc-btn" onclick="encSortByInit()">Sort by Initiative</button>
         <button class="enc-btn" onclick="encRollAllInit()">Roll All Initiative</button>
         <div style="flex:1"></div>
+        <button class="enc-btn" onclick="openTurnModal()" title="Run turns in a focused modal" style="font-weight:600;">▶ Turn Mode</button>
         <button class="enc-btn danger" onclick="encReset()">Reset Encounter</button>
       </div>
       <div id="enc-add-bar">
@@ -342,12 +418,52 @@
         <input type="number" id="enc-custom-ac" placeholder="AC" min="1">
         <button class="enc-btn" onclick="encAddCustom()">Add</button>
       </div>
+      <div id="enc-log"><div class="log-none">No attacks yet this encounter.</div></div>
       <div id="enc-list"><div class="enc-empty">No combatants. Add characters from the roster or add custom enemies above.</div></div>
+    </div>
+
+    <!-- ── Turn Modal ── -->
+    <div id="turn-modal-overlay" onclick="if(event.target===this)closeTurnModal()">
+      <div id="turn-modal">
+        <div id="turn-modal-header">
+          <span id="turn-modal-round">Round 1 · Turn 1 of 0</span>
+          <button id="turn-modal-close" onclick="closeTurnModal()" title="Close">✕</button>
+        </div>
+        <div id="turn-modal-body">
+          <div class="tm-combatant-header">
+            <div class="tm-avatar" id="tm-avatar"></div>
+            <div>
+              <div class="tm-name" id="tm-name"></div>
+              <div class="tm-sub" id="tm-sub"></div>
+            </div>
+          </div>
+          <div class="tm-hp-bar-wrap"><div class="tm-hp-bar" id="tm-hp-bar"></div></div>
+          <div class="tm-stats-row" id="tm-stats"></div>
+          <div class="tm-conditions" id="tm-conditions"></div>
+          <div id="tm-attack-zone">
+            <div class="tm-attack-title">Attack</div>
+            <button id="tm-roll-btn" onclick="modalRollAttack()">⚔ Roll Attack</button>
+            <div id="tm-roll-result"></div>
+          </div>
+        </div>
+        <div id="turn-modal-footer">
+          <label class="tm-skip-dead">
+            <input type="checkbox" id="tm-skip-dead-chk" checked style="accent-color:var(--purple)">
+            Skip dead
+          </label>
+          <span id="tm-dead-badge">☠ Downed</span>
+          <button id="tm-next-btn" onclick="modalNextTurn()">End Turn →</button>
+        </div>
+      </div>
     </div>
 
     <div id="save-bar">
       <span>Saves to <code style="font-size:11px;background:var(--surface2);padding:1px 5px;border-radius:4px">CLASS-1A/</code> character files &amp; relationships.json</span>
-      <span id="save-status"></span>
+      <div style="display:flex;gap:6px;margin-left:auto;align-items:center;">
+        <button onclick="exportData()" style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Download a backup of all character data">↓ Export</button>
+        <label style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Restore from a previously exported backup">↑ Import<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
+        <span id="save-status"></span>
+      </div>
     </div>
   </div>
 </div>
@@ -736,8 +852,22 @@ function renderDiceHistory() {
 /* ══════════════════════════════════════════════════════════
    ENCOUNTER TRACKER
 ══════════════════════════════════════════════════════════ */
+const TEAM_COLORS = [
+  { name: 'Red',    bg: '#D94040', light: 'rgba(217,64,64,0.12)'  },
+  { name: 'Blue',   bg: '#2563EB', light: 'rgba(37,99,235,0.10)'  },
+  { name: 'Green',  bg: '#2D9F4E', light: 'rgba(45,159,78,0.10)'  },
+  { name: 'Orange', bg: '#E07020', light: 'rgba(224,112,32,0.10)' },
+  { name: 'Purple', bg: '#8B47D4', light: 'rgba(139,71,212,0.10)' },
+  { name: 'Teal',   bg: '#0E9E85', light: 'rgba(14,158,133,0.10)' },
+  { name: 'Pink',   bg: '#C4438C', light: 'rgba(196,67,140,0.10)' },
+  { name: 'Yellow', bg: '#C49A0A', light: 'rgba(196,154,10,0.10)' },
+  { name: 'Cyan',   bg: '#0891B2', light: 'rgba(8,145,178,0.10)'  },
+  { name: 'Lime',   bg: '#65A30D', light: 'rgba(101,163,13,0.10)' },
+];
+
 let encounter = { round: 1, currentIndex: 0, combatants: [] };
 let _encId = 0;
+let attackLog = [];
 
 function encId() { return ++_encId; }
 
@@ -759,7 +889,7 @@ function encAddFromRoster() {
   encounter.combatants.push({
     id: encId(), name: c.name, initiative: 0, hp: c.HP || 10, maxHp: c.HP || 10,
     ac: c.AC || 10, conditions: [], notes: '', rosterId: id, isPC: !!c.is_pc,
-    quirk: c.quirk, condOpen: false, editingHp: false, dexMod
+    quirk: c.quirk, condOpen: false, editingHp: false, dexMod, team: null
   });
   sel.value = '';
   encSave(); renderEncounter();
@@ -772,7 +902,7 @@ function encAddCustom() {
   if (!name) { document.getElementById('enc-custom-name').focus(); return; }
   encounter.combatants.push({
     id: encId(), name, initiative: 0, hp, maxHp: hp, ac, conditions: [],
-    notes: '', rosterId: null, isPC: false, quirk: '', condOpen: false, editingHp: false, dexMod: 0
+    notes: '', rosterId: null, isPC: false, quirk: '', condOpen: false, editingHp: false, dexMod: 0, team: null
   });
   document.getElementById('enc-custom-name').value = '';
   document.getElementById('enc-custom-hp').value = '';
@@ -826,7 +956,8 @@ function encPrevTurn() {
 function encReset() {
   if (!confirm('Reset encounter? This will clear all combatants and round count.')) return;
   encounter = { round: 1, currentIndex: 0, combatants: [] };
-  encSave(); document.getElementById('enc-round-num').textContent = 1; renderEncounter();
+  attackLog = [];
+  encSave(); document.getElementById('enc-round-num').textContent = 1; renderEncounter(); renderAttackLog();
 }
 
 function encAdjustHp(id, delta) {
@@ -919,6 +1050,14 @@ function renderEncHpRow(id) {
     </div>`;
 }
 
+function teamDotHtml(c) {
+  if (c.team === null || c.team === undefined) {
+    return `<span class="team-dot" onclick="encCycleTeam(${c.id})" title="No team — click to assign"></span>`;
+  }
+  const t = TEAM_COLORS[c.team];
+  return `<span class="team-dot assigned" onclick="encCycleTeam(${c.id})" title="${t.name} team — click to change" style="background:${t.bg}"></span>`;
+}
+
 function renderEncounter() {
   document.getElementById('enc-round-num').textContent = encounter.round;
   const list = document.getElementById('enc-list');
@@ -932,14 +1071,17 @@ function renderEncounter() {
     const pct = c.maxHp > 0 ? (c.hp / c.maxHp) * 100 : 0;
     const barColor = pct > 50 ? 'var(--green)' : pct > 25 ? 'var(--amber)' : 'var(--red)';
     const typeLabel = c.isPC ? 'PC' : c.quirk || 'NPC';
-    return `<div class="enc-row${isCurrent?' current-turn':''}${isDead?' is-dead':''}" id="enc-row-${c.id}" style="grid-template-columns:52px 1fr 1fr 32px;display:grid;flex-direction:unset;">
+    const team = (c.team !== null && c.team !== undefined) ? TEAM_COLORS[c.team] : null;
+    const borderColor = team ? team.bg : isCurrent ? 'var(--purple)' : 'transparent';
+    const rowBg = isCurrent ? (team ? team.light : 'var(--purple-light)') : (team ? team.light : '');
+    return `<div class="enc-row${isDead?' is-dead':''}" id="enc-row-${c.id}" style="border-left-color:${borderColor};${rowBg?'background:'+rowBg+';':''}grid-template-columns:52px 1fr 1fr 52px;display:grid;flex-direction:unset;">
       <div class="enc-init">
         <label>Init</label>
         <input type="number" value="${c.initiative}" onchange="encSetInit(${c.id},this.value)">
       </div>
       <div class="enc-name-col">
-        <div class="enc-name">${escHtml(c.name)}${isCurrent?' ◀':''}</div>
-        <div class="enc-name-sub">${escHtml(typeLabel)}</div>
+        <div class="enc-name" style="display:flex;align-items:center;gap:6px;">${teamDotHtml(c)}${escHtml(c.name)}${isCurrent?' ◀':''}</div>
+        <div class="enc-name-sub">${escHtml(typeLabel)}${team ? ` · <span style="color:${team.bg};font-weight:600;">${team.name}</span>` : ''}</div>
         <div class="enc-conditions" id="enc-pill-${c.id}">${renderCondPills(c)}</div>
         <div class="cond-selector${c.condOpen?' open':''}" id="enc-conds-${c.id}">${renderCondOptions(c)}</div>
       </div>
@@ -963,9 +1105,80 @@ function renderEncounter() {
       </div>
       <div class="enc-actions">
         <div style="font-size:11px;font-weight:600;color:var(--text-dim);">AC ${c.ac}</div>
+        <button class="icon-btn" onclick="encRandomAttack(${c.id})" title="Random attack against an enemy">⚔</button>
         <button class="icon-btn" onclick="encToggleCond(${c.id})" title="Conditions">⚡</button>
         <button class="icon-btn remove" onclick="encRemove(${c.id})" title="Remove">✕</button>
       </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── Teams ────────────────────────────────────────────────── */
+function encCycleTeam(id) {
+  const c = encounter.combatants.find(x => x.id === id);
+  if (!c) return;
+  if (c.team === null || c.team === undefined) {
+    c.team = 0;
+  } else if (c.team >= TEAM_COLORS.length - 1) {
+    c.team = null;
+  } else {
+    c.team++;
+  }
+  encSave(); renderEncounter();
+}
+
+/* ── Random Attack ────────────────────────────────────────── */
+function encRandomAttack(attackerId) {
+  const attacker = encounter.combatants.find(x => x.id === attackerId);
+  if (!attacker) return;
+
+  const targets = encounter.combatants.filter(t => {
+    if (t.id === attackerId) return false;
+    if (t.hp === 0) return false;
+    if (attacker.team !== null && attacker.team !== undefined &&
+        t.team !== null && t.team !== undefined &&
+        t.team === attacker.team) return false;
+    return true;
+  });
+
+  if (!targets.length) {
+    addAttackLog({ attacker: attacker.name, target: null, roll: null, ac: null });
+    return;
+  }
+
+  const target = targets[Math.floor(Math.random() * targets.length)];
+  const roll = Math.floor(Math.random() * 20) + 1;
+  addAttackLog({ attacker: attacker.name, target: target.name, roll, ac: target.ac });
+}
+
+function addAttackLog(entry) {
+  attackLog.unshift(entry);
+  if (attackLog.length > 8) attackLog.pop();
+  renderAttackLog();
+}
+
+function renderAttackLog() {
+  const el = document.getElementById('enc-log');
+  if (!attackLog.length) {
+    el.innerHTML = '<div class="log-none">No attacks yet this encounter.</div>';
+    return;
+  }
+  el.innerHTML = attackLog.map(e => {
+    if (!e.target) {
+      return `<div class="log-entry"><span class="log-name">${escHtml(e.attacker)}</span> — no valid targets</div>`;
+    }
+    const hit = e.roll >= e.ac;
+    const crit = e.roll === 20;
+    const fumble = e.roll === 1;
+    const rollClass = crit ? 'log-roll log-crit' : fumble ? 'log-roll log-miss' : hit ? 'log-roll log-hit' : 'log-roll log-miss';
+    const label = crit ? '★ CRIT' : fumble ? '☠ FUMBLE' : hit ? 'HIT' : 'MISS';
+    const outcome = crit ? 'Critical hit!' : fumble ? 'Fumble!' : hit ? `hits (AC ${e.ac})` : `misses (AC ${e.ac})`;
+    return `<div class="log-entry">
+      <span class="log-name">${escHtml(e.attacker)}</span>
+      <span style="color:var(--text-dim)">→</span>
+      <span class="log-name">${escHtml(e.target)}</span>
+      <span class="${rollClass}">d20: ${e.roll} — ${label}</span>
+      <span style="color:var(--text-dim)">${outcome}</span>
     </div>`;
   }).join('');
 }
@@ -1003,7 +1216,7 @@ function encAddEnemy() {
       hp: e.hp, maxHp: e.hp, ac: e.ac, conditions: [],
       notes: '', rosterId: null, isPC: false,
       quirk: `CR ${e.cr} · ${e.category}`,
-      condOpen: false, editingHp: false, dexMod: e.dex_mod || 0
+      condOpen: false, editingHp: false, dexMod: e.dex_mod || 0, team: null
     });
   }
   sel.value = '';
@@ -1033,6 +1246,190 @@ function encAddEnemy() {
   renderEncounter();
   setSaveStatus('saved', '');
 })();
+
+/* ── Turn Modal ───────────────────────────────────────── */
+let modalAttackResult = null;
+
+function openTurnModal() {
+  if (!encounter.combatants.length) return;
+  modalAttackResult = null;
+  document.getElementById('turn-modal-overlay').classList.add('open');
+  updateTurnModal();
+}
+
+function closeTurnModal() {
+  document.getElementById('turn-modal-overlay').classList.remove('open');
+  modalAttackResult = null;
+}
+
+function modalNextTurn() {
+  encNextTurn();
+  modalAttackResult = null;
+  // Skip dead combatants if checkbox is on
+  if (document.getElementById('tm-skip-dead-chk').checked) {
+    let safety = encounter.combatants.length;
+    while (safety-- > 0 && encounter.combatants.length) {
+      const c = encounter.combatants[encounter.currentIndex];
+      if (c && c.hp > 0) break;
+      encNextTurn();
+    }
+  }
+  updateTurnModal();
+}
+
+function updateTurnModal() {
+  const combatants = encounter.combatants;
+  if (!combatants.length) { closeTurnModal(); return; }
+
+  const c = combatants[encounter.currentIndex];
+  const total = combatants.length;
+  const turnNum = encounter.currentIndex + 1;
+  const isDead = c.hp === 0;
+  const team = (c.team !== null && c.team !== undefined) ? TEAM_COLORS[c.team] : null;
+  const pct = c.maxHp > 0 ? (c.hp / c.maxHp) * 100 : 0;
+  const barColor = pct > 50 ? 'var(--green)' : pct > 25 ? 'var(--amber)' : 'var(--red)';
+
+  // Header
+  document.getElementById('turn-modal-round').textContent =
+    `Round ${encounter.round} · Turn ${turnNum} of ${total}`;
+
+  // Avatar
+  const avatarEl = document.getElementById('tm-avatar');
+  const avatarColor = team ? team.bg : 'var(--purple)';
+  const avatarBg = team ? team.light : 'var(--purple-light)';
+  avatarEl.style.cssText = `background:${avatarBg};color:${avatarColor};`;
+  avatarEl.textContent = c.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+
+  // Name + sub
+  document.getElementById('tm-name').textContent = c.name;
+  const typeLabel = c.isPC ? 'PC' : c.quirk || 'NPC';
+  const teamLabel = team ? ` · ${team.name} team` : '';
+  document.getElementById('tm-sub').innerHTML =
+    `${escHtml(typeLabel)}${teamLabel ? `<span style="color:${team.bg};font-weight:600;">${escHtml(teamLabel)}</span>` : ''}`;
+
+  // HP bar
+  document.getElementById('tm-hp-bar').style.cssText = `width:${pct}%;background:${barColor};`;
+
+  // Stats chips
+  document.getElementById('tm-stats').innerHTML = `
+    <div class="tm-stat">
+      <div class="tm-stat-label">HP</div>
+      <div class="tm-stat-val" style="color:${barColor}">${c.hp}<span style="font-size:11px;font-weight:400;color:var(--text-dim)">/${c.maxHp}</span></div>
+    </div>
+    <div class="tm-stat">
+      <div class="tm-stat-label">AC</div>
+      <div class="tm-stat-val">${c.ac}</div>
+    </div>
+    <div class="tm-stat">
+      <div class="tm-stat-label">Init</div>
+      <div class="tm-stat-val">${c.initiative}</div>
+    </div>
+    ${c.dexMod !== undefined ? `<div class="tm-stat">
+      <div class="tm-stat-label">Dex Mod</div>
+      <div class="tm-stat-val">${c.dexMod >= 0 ? '+' : ''}${c.dexMod}</div>
+    </div>` : ''}
+  `;
+
+  // Conditions
+  const condEl = document.getElementById('tm-conditions');
+  condEl.innerHTML = (c.conditions && c.conditions.length)
+    ? c.conditions.map(cond => `<span class="cond-pill" style="cursor:default">${escHtml(cond)}</span>`).join('')
+    : `<span style="font-size:11px;color:var(--text-dim);">No conditions</span>`;
+
+  // Dead badge
+  document.getElementById('tm-dead-badge').style.display = isDead ? 'inline-block' : 'none';
+
+  // Attack zone
+  document.getElementById('tm-roll-btn').disabled = isDead;
+  document.getElementById('tm-roll-btn').style.opacity = isDead ? '0.4' : '1';
+  renderModalAttackResult();
+
+  // Next button label: last combatant wraps to next round
+  const isLast = encounter.currentIndex === combatants.length - 1;
+  document.getElementById('tm-next-btn').textContent = isLast ? 'End Turn · Next Round →' : 'End Turn →';
+}
+
+function modalRollAttack() {
+  const c = encounter.combatants[encounter.currentIndex];
+  if (!c || c.hp === 0) return;
+
+  const targets = encounter.combatants.filter(t => {
+    if (t.id === c.id) return false;
+    if (t.hp === 0) return false;
+    if (c.team !== null && c.team !== undefined &&
+        t.team !== null && t.team !== undefined &&
+        t.team === c.team) return false;
+    return true;
+  });
+
+  if (!targets.length) {
+    modalAttackResult = { attacker: c.name, target: null, roll: null, ac: null };
+  } else {
+    const target = targets[Math.floor(Math.random() * targets.length)];
+    const roll = Math.floor(Math.random() * 20) + 1;
+    modalAttackResult = { attacker: c.name, target: target.name, roll, ac: target.ac };
+    addAttackLog(modalAttackResult);
+  }
+  renderModalAttackResult();
+}
+
+function renderModalAttackResult() {
+  const el = document.getElementById('tm-roll-result');
+  if (!modalAttackResult) { el.innerHTML = ''; return; }
+  const e = modalAttackResult;
+  if (!e.target) {
+    el.innerHTML = `<div class="tm-result-row" style="color:var(--text-dim);font-size:12px;">No valid targets</div>`;
+    return;
+  }
+  const hit = e.roll >= e.ac;
+  const crit = e.roll === 20;
+  const fumble = e.roll === 1;
+  const rollClass = crit ? 'log-roll log-crit' : fumble ? 'log-roll log-miss' : hit ? 'log-roll log-hit' : 'log-roll log-miss';
+  const label = crit ? '★ CRIT' : fumble ? '☠ FUMBLE' : hit ? 'HIT' : 'MISS';
+  el.innerHTML = `<div class="tm-result-row" style="margin-top:4px;">
+    <span class="tm-result-arrow">→</span>
+    <span class="tm-result-target">${escHtml(e.target)}</span>
+    <span class="${rollClass}">d20: ${e.roll} — ${label}</span>
+    <span style="font-size:11px;color:var(--text-dim);">${crit?'Critical hit!':fumble?'Fumble!':hit?`hits (AC ${e.ac})`:`misses (AC ${e.ac})`}</span>
+  </div>`;
+}
+
+/* ── Export / Import ──────────────────────────────────── */
+async function exportData() {
+  setSaveStatus('saving', 'Exporting…');
+  try {
+    const r = await fetch('/api/export');
+    if (!r.ok) throw new Error(await r.text());
+    const blob = await r.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const date = new Date().toISOString().slice(0, 10);
+    a.href = url; a.download = `mha-dnd-backup-${date}.json`;
+    a.click(); URL.revokeObjectURL(url);
+    setSaveStatus('saved', 'Exported ✓');
+  } catch (e) {
+    setSaveStatus('error', 'Export failed');
+  }
+}
+
+async function importData(input) {
+  const file = input.files[0];
+  if (!file) return;
+  input.value = '';
+  if (!confirm(`Import "${file.name}"? This will overwrite all current character data and relationships.`)) return;
+  setSaveStatus('saving', 'Importing…');
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    const r = await fetch('/api/import', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    const result = await r.json();
+    if (!r.ok) throw new Error(result.error || 'Import failed');
+    setSaveStatus('saved', 'Imported ✓ — reloading…');
+    setTimeout(() => location.reload(), 800);
+  } catch (e) {
+    setSaveStatus('error', 'Import failed: ' + e.message);
+  }
+}
 </script>
 </body>
 </html>

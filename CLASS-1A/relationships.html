@@ -483,6 +483,11 @@
               <button class="tm-die" onclick="tmSelectDie(20,this)">d20</button>
             </div>
             <div class="tm-roll-row">
+              <div style="display:flex;align-items:center;gap:3px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:2px 4px;">
+                <button onclick="tmAdjQty(-1)" style="width:20px;height:20px;border:none;background:none;color:var(--text-muted);font-size:14px;cursor:pointer;line-height:1;padding:0;">−</button>
+                <span id="tm-qr-qty" style="font-size:12px;font-weight:600;min-width:14px;text-align:center;">1</span>
+                <button onclick="tmAdjQty(1)"  style="width:20px;height:20px;border:none;background:none;color:var(--text-muted);font-size:14px;cursor:pointer;line-height:1;padding:0;">+</button>
+              </div>
               <input class="tm-mod-input" id="tm-qr-mod" type="number" value="0" placeholder="mod" title="Modifier">
               <button class="tm-go-btn" id="tm-qr-btn" onclick="tmQuickRoll()" disabled>Roll</button>
               <span id="tm-quick-result">—</span>
@@ -1321,10 +1326,12 @@ function modalNextTurn() {
   encNextTurn();
   modalAttackResult = null;
   tmSelectedDie = null;
+  tmDiceQty = 1;
   document.querySelectorAll('.tm-die').forEach(b => b.classList.remove('selected'));
   document.getElementById('tm-qr-btn').disabled = true;
   document.getElementById('tm-quick-result').textContent = '—';
   document.getElementById('tm-quick-result').className = '';
+  document.getElementById('tm-qr-qty').textContent = '1';
   document.getElementById('tm-hp-inp').value = '';
   document.getElementById('tm-hp-feedback').textContent = '';
   // Skip dead combatants if checkbox is on
@@ -1457,6 +1464,13 @@ function renderModalAttackResult() {
 }
 
 /* ── Quick Roll ───────────────────────────────────────── */
+let tmDiceQty = 1;
+
+function tmAdjQty(delta) {
+  tmDiceQty = Math.max(1, Math.min(20, tmDiceQty + delta));
+  document.getElementById('tm-qr-qty').textContent = tmDiceQty;
+}
+
 function tmSelectDie(sides, btn) {
   tmSelectedDie = sides;
   document.querySelectorAll('.tm-die').forEach(b => b.classList.remove('selected'));
@@ -1466,16 +1480,19 @@ function tmSelectDie(sides, btn) {
 
 function tmQuickRoll() {
   if (!tmSelectedDie) return;
+  const qty = tmDiceQty;
   const mod = parseInt(document.getElementById('tm-qr-mod').value) || 0;
-  const roll = Math.floor(Math.random() * tmSelectedDie) + 1;
-  const total = roll + mod;
-  const isCrit = tmSelectedDie === 20 && roll === 20;
-  const isFumble = tmSelectedDie === 20 && roll === 1;
+  const rolls = Array.from({ length: qty }, () => Math.floor(Math.random() * tmSelectedDie) + 1);
+  const sum = rolls.reduce((a, b) => a + b, 0);
+  const total = sum + mod;
+  const isCrit = tmSelectedDie === 20 && qty === 1 && rolls[0] === 20;
+  const isFumble = tmSelectedDie === 20 && qty === 1 && rolls[0] === 1;
   const modStr = mod > 0 ? `+${mod}` : mod < 0 ? `${mod}` : '';
+  const breakdown = qty > 1 ? `[${rolls.join('+')}]${modStr}` : `${rolls[0]}${modStr}`;
   const el = document.getElementById('tm-quick-result');
   el.className = isCrit ? 'tm-quick-crit' : isFumble ? 'tm-quick-fumble' : '';
   const label = isCrit ? ' ★ CRIT' : isFumble ? ' ☠ FUMBLE' : '';
-  el.textContent = `${total}${modStr ? ` (${roll}${modStr})` : ''}${label}`;
+  el.textContent = `${total} (${breakdown})${label}`;
 }
 
 /* ── HP Editor (modal) ────────────────────────────────── */

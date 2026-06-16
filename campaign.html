@@ -159,7 +159,7 @@ async function loadFile(file) {
 
   // Fetch if not cached
   if (!cache[file]) {
-    const res = await fetch('CAMPAIGN/'+file+'.json');
+    const res = await fetch('CAMPAIGN/'+file+'.json', {cache: 'no-cache'});
     cache[file] = await res.json();
   }
   const data = cache[file];
@@ -314,73 +314,102 @@ function renderTeachers(data, el) {
 }
 
 /* ─── VILLAINS ────────────────────────────────────────── */
-function renderVillains(data, el) {
+function renderVillainCard(v, accentColor) {
   const STAT_KEYS = ['STR','DEX','CON','INT','WIS'];
-  const org = data.organisation||{};
-  let html = `<div class="page-title">Villains — The Chain</div>
-    <div class="page-sub">${escHtml(org.description||'')}</div>`;
-
-  if (org.structure||org.public_awareness) {
-    html += `<div class="card" style="margin-bottom:20px;">`;
-    if (org.structure) html += `<div class="kv-row"><div class="kv-key">Structure</div><div class="kv-val">${escHtml(org.structure)}</div></div>`;
-    if (org.public_awareness) html += `<div class="kv-row"><div class="kv-key">Public awareness</div><div class="kv-val">${escHtml(org.public_awareness)}</div></div>`;
-    html += `</div>`;
-  }
-
-  html += `<div class="section-label">Members</div>`;
-
-  for (const v of (data.villains||[])) {
-    const sb = v.stat_block||{};
-    const dmn = v.dm_notes||{};
-    const detailId = 'vd-'+Math.random().toString(36).slice(2);
-    html += `<div class="person-card">
-      <div class="person-avatar av-villain">${initials(v.name)}</div>
-      <div>
-        <div class="person-name">${escHtml(v.name)}</div>
-        <div class="person-alias">${v.alias?`"${escHtml(v.alias)}"`:''}</div>
-        <div class="person-role">${escHtml(v.role||'')}</div>
-        <div class="person-tags">
-          <span class="tag tag-red">${escHtml(v.quirk||'')}</span>
-          <span class="tag tag-amber">${escHtml(v.quirk_rarity||'')}</span>
-          <span class="tag tag-purple">${escHtml(v.quirk_type||'')}</span>
-        </div>
-        ${v.quirk_summary?`<div class="person-section">
-          <div class="person-section-label">Quirk</div>
-          <div class="person-section-body">${escHtml(v.quirk_summary)}</div>
-        </div>`:''}
-        <div class="person-section">
-          <div class="person-section-label">Appearance</div>
-          <div class="person-section-body">${escHtml(v.appearance||'')}</div>
-        </div>
-        <div class="person-section">
-          <div class="person-section-label">Personality</div>
-          <div class="person-section-body">${escHtml(v.personality||'')}</div>
-        </div>
-        <span class="collapse-btn" onclick="toggleCollapse('${detailId}',this)">▶ Stat block, combat &amp; DM notes</span>
-        <div class="collapsible" id="${detailId}">
-          ${v.combat_style?`<div class="person-section">
-            <div class="person-section-label">Combat style</div>
-            <div class="person-section-body">${escHtml(v.combat_style)}</div>
-          </div>`:''}
-          ${Object.keys(sb).length?`<div class="person-section">
-            <div class="person-section-label">Stat block</div>
-            <div class="stat-grid">
-              ${sb.level?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${sb.level}</span></div>`:''}
-              ${sb.HP?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${sb.HP}</span></div>`:''}
-              ${sb.AC?`<div class="stat-chip"><span class="stat-chip-label">AC</span><span class="stat-chip-val">${sb.AC}</span></div>`:''}
-              ${STAT_KEYS.map(k=>sb[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${sb[k]}</span></div>`:'').join('')}
-            </div>
-          </div>`:''}
-          ${v.dm_notes?`<div class="dm-note"><strong>DM notes</strong><br>${
-            typeof dmn === 'string'
-              ? escHtml(dmn)
-              : Object.entries(dmn).map(([k,val])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(val))}`).join('<br>')
-          }</div>`:''}
-          ${v.arc_role?`<div class="warning-note"><strong>Arc role:</strong> ${escHtml(v.arc_role)}</div>`:''}
-        </div>
+  const sb = v.stat_block||{};
+  const dmn = v.dm_notes||{};
+  const detailId = 'vd-'+Math.random().toString(36).slice(2);
+  const avatarStyle = accentColor
+    ? `background:${accentColor}22;color:${accentColor};`
+    : '';
+  return `<div class="person-card">
+    <div class="person-avatar av-villain" style="${avatarStyle}">${initials(v.name)}</div>
+    <div>
+      <div class="person-name">${escHtml(v.name)}</div>
+      <div class="person-alias">${v.alias?`"${escHtml(v.alias)}"`:''}</div>
+      <div class="person-role">${escHtml(v.role||'')}</div>
+      <div class="person-tags">
+        <span class="tag tag-red">${escHtml(v.quirk||'')}</span>
+        <span class="tag tag-amber">${escHtml(v.quirk_rarity||'')}</span>
+        <span class="tag tag-purple">${escHtml(v.quirk_type||'')}</span>
       </div>
-    </div>`;
+      ${v.quirk_summary?`<div class="person-section">
+        <div class="person-section-label">Quirk</div>
+        <div class="person-section-body">${escHtml(v.quirk_summary)}</div>
+      </div>`:''}
+      <div class="person-section">
+        <div class="person-section-label">Appearance</div>
+        <div class="person-section-body">${escHtml(v.appearance||'')}</div>
+      </div>
+      <div class="person-section">
+        <div class="person-section-label">Personality</div>
+        <div class="person-section-body">${escHtml(v.personality||'')}</div>
+      </div>
+      <span class="collapse-btn" onclick="toggleCollapse('${detailId}',this)">▶ Stat block, combat &amp; DM notes</span>
+      <div class="collapsible" id="${detailId}">
+        ${v.combat_style?`<div class="person-section">
+          <div class="person-section-label">Combat style</div>
+          <div class="person-section-body">${escHtml(v.combat_style)}</div>
+        </div>`:''}
+        ${Object.keys(sb).length?`<div class="person-section">
+          <div class="person-section-label">Stat block</div>
+          <div class="stat-grid">
+            ${sb.level?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${sb.level}</span></div>`:''}
+            ${sb.HP?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${sb.HP}</span></div>`:''}
+            ${sb.AC?`<div class="stat-chip"><span class="stat-chip-label">AC</span><span class="stat-chip-val">${sb.AC}</span></div>`:''}
+            ${STAT_KEYS.map(k=>sb[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${sb[k]}</span></div>`:'').join('')}
+          </div>
+        </div>`:''}
+        ${v.campaign_appearances?`<div class="person-section">
+          <div class="person-section-label">Campaign appearances</div>
+          ${Object.entries(v.campaign_appearances).map(([t,txt])=>`
+            <div class="kv-row"><div class="kv-key">${escHtml(t.replace('_',' '))}</div><div class="kv-val" style="font-size:12px;">${escHtml(txt)}</div></div>
+          `).join('')}
+        </div>`:''}
+        ${v.dm_notes?`<div class="dm-note"><strong>DM notes</strong><br>${
+          typeof dmn === 'string'
+            ? escHtml(dmn)
+            : Object.entries(dmn).map(([k,val])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(val))}`).join('<br>')
+        }</div>`:''}
+        ${v.arc_role?`<div class="warning-note"><strong>Arc role:</strong> ${escHtml(v.arc_role)}</div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderFactionBlock(faction) {
+  const color = faction.colour || '#E24B4A';
+  let html = `<div class="card" style="margin-bottom:24px;border-left:4px solid ${color};">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+      <span style="width:12px;height:12px;border-radius:50%;background:${color};flex-shrink:0;display:inline-block;"></span>
+      <span style="font-size:16px;font-weight:700;">${escHtml(faction.name)}</span>
+      ${faction.tier_introduced?`<span class="tag tag-purple" style="margin-left:auto;">Introduced Tier ${faction.tier_introduced}</span>`:''}
+    </div>
+    <div style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:10px;">${escHtml(faction.description||'')}</div>`;
+  if (faction.structure) html += `<div class="kv-row"><div class="kv-key">Structure</div><div class="kv-val" style="font-size:12px;">${escHtml(faction.structure)}</div></div>`;
+  if (faction.public_awareness) html += `<div class="kv-row"><div class="kv-key">Public awareness</div><div class="kv-val" style="font-size:12px;">${escHtml(faction.public_awareness)}</div></div>`;
+  html += `</div>`;
+  html += `<div class="section-label" style="color:${color};">${escHtml(faction.name)} — Members</div>`;
+  for (const v of (faction.villains||[])) html += renderVillainCard(v, color);
+  return html;
+}
+
+function renderVillains(data, el) {
+  let html = `<div class="page-title">Villain Factions</div>
+    <div class="page-sub">Three organisations operating in Murano — The Chain, Null Signal, and Fracture</div>`;
+
+  // Multi-faction format
+  if (data.factions && data.factions.length) {
+    for (const faction of data.factions) {
+      html += renderFactionBlock(faction);
+    }
+  } else {
+    // Fallback: legacy single-org format
+    const org = data.organisation||{};
+    const fakeFaction = { name: org.name||'The Chain', description: org.description, structure: org.structure, public_awareness: org.public_awareness, colour: '#E24B4A', villains: data.villains||[] };
+    html += renderFactionBlock(fakeFaction);
   }
+
   el.innerHTML = html;
 }
 

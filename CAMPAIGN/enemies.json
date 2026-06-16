@@ -1,5 +1,10 @@
 {
-  "categories": ["Exam / Training", "The Chain", "Villain", "Boss"],
+  "categories": [
+    "Exam / Training",
+    "The Chain",
+    "Villain",
+    "Boss"
+  ],
   "enemies": [
     {
       "id": "combat_drone_mk1",
@@ -12,9 +17,22 @@
       "ac": 13,
       "speed": "30 ft",
       "dex_mod": 1,
-      "ability_scores": { "STR": 12, "DEX": 12, "CON": 12, "INT": 4, "WIS": 8, "CHA": 1 },
+      "ability_scores": {
+        "STR": 12,
+        "DEX": 12,
+        "CON": 12,
+        "INT": 4,
+        "WIS": 8,
+        "CHA": 1
+      },
       "attacks": [
-        { "name": "Shock Blast", "to_hit": "+3", "damage": "1d6 lightning", "range": "30 ft", "notes": "Non-lethal" }
+        {
+          "name": "Shock Blast",
+          "to_hit": "+3",
+          "damage": "1d6 lightning",
+          "range": "30 ft",
+          "notes": "Non-lethal"
+        }
       ],
       "traits": [
         "Non-lethal: all damage dealt reduces HP but targets don't die — they're knocked out at 0",
@@ -34,10 +52,29 @@
       "ac": 15,
       "speed": "25 ft",
       "dex_mod": 1,
-      "ability_scores": { "STR": 15, "DEX": 12, "CON": 15, "INT": 4, "WIS": 8, "CHA": 1 },
+      "ability_scores": {
+        "STR": 15,
+        "DEX": 12,
+        "CON": 15,
+        "INT": 4,
+        "WIS": 8,
+        "CHA": 1
+      },
       "attacks": [
-        { "name": "Dual Shock Blast", "to_hit": "+4", "damage": "2d6 lightning", "range": "30 ft", "notes": "Non-lethal" },
-        { "name": "Missile Burst", "to_hit": null, "damage": "2d4 bludgeoning", "range": "30 ft, 10 ft radius", "notes": "DC 13 DEX save, half on success. Recharge 5-6. Non-lethal." }
+        {
+          "name": "Dual Shock Blast",
+          "to_hit": "+4",
+          "damage": "2d6 lightning",
+          "range": "30 ft",
+          "notes": "Non-lethal"
+        },
+        {
+          "name": "Missile Burst",
+          "to_hit": null,
+          "damage": "2d4 bludgeoning",
+          "range": "30 ft, 10 ft radius",
+          "notes": "DC 13 DEX save, half on success. Recharge 5-6. Non-lethal."
+        }
       ],
       "traits": [
         "Non-lethal: all damage is non-lethal",
@@ -58,11 +95,36 @@
       "ac": 17,
       "speed": "20 ft",
       "dex_mod": 0,
-      "ability_scores": { "STR": 20, "DEX": 10, "CON": 18, "INT": 6, "WIS": 10, "CHA": 1 },
+      "ability_scores": {
+        "STR": 20,
+        "DEX": 10,
+        "CON": 18,
+        "INT": 6,
+        "WIS": 10,
+        "CHA": 1
+      },
       "attacks": [
-        { "name": "Railgun Burst", "to_hit": "+6", "damage": "3d8 lightning", "range": "60 ft", "notes": "Non-lethal. Targets 1 creature." },
-        { "name": "Stomp", "to_hit": "+6", "damage": "2d10 bludgeoning", "range": "5 ft, 10 ft radius", "notes": "DC 14 STR save or knocked prone. Non-lethal." },
-        { "name": "Suppression Field", "to_hit": null, "damage": "none", "range": "30 ft radius aura (bonus action)", "notes": "Area becomes difficult terrain while active. Students must use double movement to close distance. Toggle on/off each turn." }
+        {
+          "name": "Railgun Burst",
+          "to_hit": "+6",
+          "damage": "3d8 lightning",
+          "range": "60 ft",
+          "notes": "Non-lethal. Targets 1 creature."
+        },
+        {
+          "name": "Stomp",
+          "to_hit": "+6",
+          "damage": "2d10 bludgeoning",
+          "range": "5 ft, 10 ft radius",
+          "notes": "DC 14 STR save or knocked prone. Non-lethal."
+        },
+        {
+          "name": "Suppression Field",
+          "to_hit": null,
+          "damage": "none",
+          "range": "30 ft radius aura (bonus action)",
+          "notes": "Area becomes difficult terrain while active. Students must use double movement to close distance. Toggle on/off each turn."
+        }
       ],
       "traits": [
         "Non-lethal: all damage is non-lethal",
@@ -84,10 +146,28 @@
       "ac": 12,
       "speed": "30 ft",
       "dex_mod": 0,
-      "ability_scores": { "STR": 15, "DEX": 10, "CON": 14, "INT": 9, "WIS": 10, "CHA": 8 },
+      "ability_scores": {
+        "STR": 15,
+        "DEX": 10,
+        "CON": 14,
+        "INT": 9,
+        "WIS": 10,
+        "CHA": 8
+      },
       "attacks": [
-        { "name": "Baton", "to_hit": "+4", "damage": "1d6+2 bludgeoning", "range": "5 ft" },
-        { "name": "Grab", "to_hit": "+4", "damage": "0 + grappled", "range": "5 ft", "notes": "DC 12 STR to escape. While grappled, target is restrained and can't move." }
+        {
+          "name": "Baton",
+          "to_hit": "+4",
+          "damage": "1d6+2 bludgeoning",
+          "range": "5 ft"
+        },
+        {
+          "name": "Grab",
+          "to_hit": "+4",
+          "damage": "0 + grappled",
+          "range": "5 ft",
+          "notes": "DC 12 STR to escape. While grappled, target is restrained and can't move."
+        }
       ],
       "traits": [
         "Pack Fighter: deals +1d4 damage when adjacent ally is also in melee",
@@ -106,10 +186,28 @@
       "ac": 14,
       "speed": "30 ft",
       "dex_mod": 1,
-      "ability_scores": { "STR": 16, "DEX": 12, "CON": 15, "INT": 11, "WIS": 12, "CHA": 10 },
+      "ability_scores": {
+        "STR": 16,
+        "DEX": 12,
+        "CON": 15,
+        "INT": 11,
+        "WIS": 12,
+        "CHA": 10
+      },
       "attacks": [
-        { "name": "Reinforced Fist", "to_hit": "+5", "damage": "1d8+3 bludgeoning", "range": "5 ft" },
-        { "name": "Shockwave Clap (Quirk)", "to_hit": null, "damage": "2d6 thunder", "range": "15 ft cone", "notes": "DC 13 STR save or pushed 10 ft. Recharge 5-6." }
+        {
+          "name": "Reinforced Fist",
+          "to_hit": "+5",
+          "damage": "1d8+3 bludgeoning",
+          "range": "5 ft"
+        },
+        {
+          "name": "Shockwave Clap (Quirk)",
+          "to_hit": null,
+          "damage": "2d6 thunder",
+          "range": "15 ft cone",
+          "notes": "DC 13 STR save or pushed 10 ft. Recharge 5-6."
+        }
       ],
       "traits": [
         "Hardened: resistant to bludgeoning damage",
@@ -129,10 +227,28 @@
       "ac": 16,
       "speed": "25 ft",
       "dex_mod": -1,
-      "ability_scores": { "STR": 18, "DEX": 8, "CON": 18, "INT": 9, "WIS": 10, "CHA": 8 },
+      "ability_scores": {
+        "STR": 18,
+        "DEX": 8,
+        "CON": 18,
+        "INT": 9,
+        "WIS": 10,
+        "CHA": 8
+      },
       "attacks": [
-        { "name": "Reinforced Strike", "to_hit": "+6", "damage": "1d10+4 bludgeoning", "range": "5 ft" },
-        { "name": "Hardened Rush", "to_hit": "+6", "damage": "2d6+4 bludgeoning", "range": "Charge up to 20 ft then strike", "notes": "Target makes DC 14 STR save or knocked prone. Can only be used if Hardskin moved at least 10 ft." }
+        {
+          "name": "Reinforced Strike",
+          "to_hit": "+6",
+          "damage": "1d10+4 bludgeoning",
+          "range": "5 ft"
+        },
+        {
+          "name": "Hardened Rush",
+          "to_hit": "+6",
+          "damage": "2d6+4 bludgeoning",
+          "range": "Charge up to 20 ft then strike",
+          "notes": "Target makes DC 14 STR save or knocked prone. Can only be used if Hardskin moved at least 10 ft."
+        }
       ],
       "traits": [
         "Skin of Steel: resistant to bludgeoning, slashing, and piercing damage from non-magical sources",
@@ -153,10 +269,28 @@
       "ac": 12,
       "speed": "30 ft",
       "dex_mod": 2,
-      "ability_scores": { "STR": 9, "DEX": 14, "CON": 12, "INT": 11, "WIS": 12, "CHA": 10 },
+      "ability_scores": {
+        "STR": 9,
+        "DEX": 14,
+        "CON": 12,
+        "INT": 11,
+        "WIS": 12,
+        "CHA": 10
+      },
       "attacks": [
-        { "name": "Energy Bolt", "to_hit": "+4", "damage": "1d10 radiant", "range": "60 ft" },
-        { "name": "Multi-Bolt", "to_hit": "+4 per bolt", "damage": "1d6 radiant per bolt", "range": "60 ft", "notes": "Fires 3 bolts, each must target a different creature. Bonus action." }
+        {
+          "name": "Energy Bolt",
+          "to_hit": "+4",
+          "damage": "1d10 radiant",
+          "range": "60 ft"
+        },
+        {
+          "name": "Multi-Bolt",
+          "to_hit": "+4 per bolt",
+          "damage": "1d6 radiant per bolt",
+          "range": "60 ft",
+          "notes": "Fires 3 bolts, each must target a different creature. Bonus action."
+        }
       ],
       "traits": [
         "Overcharge: when at 10 HP or below, attacks deal +1d6 damage but Blaster takes 1d4 recoil damage each time they attack",
@@ -175,10 +309,28 @@
       "ac": 13,
       "speed": "30 ft",
       "dex_mod": 0,
-      "ability_scores": { "STR": 18, "DEX": 10, "CON": 16, "INT": 10, "WIS": 11, "CHA": 9 },
+      "ability_scores": {
+        "STR": 18,
+        "DEX": 10,
+        "CON": 16,
+        "INT": 10,
+        "WIS": 11,
+        "CHA": 9
+      },
       "attacks": [
-        { "name": "Heavy Fist", "to_hit": "+6", "damage": "1d8+4 bludgeoning", "range": "5 ft" },
-        { "name": "Haymaker", "to_hit": "+6", "damage": "2d8+4 bludgeoning", "range": "5 ft", "notes": "Once per combat. On hit, target is stunned until end of their next turn (DC 14 CON save to negate stun)." }
+        {
+          "name": "Heavy Fist",
+          "to_hit": "+6",
+          "damage": "1d8+4 bludgeoning",
+          "range": "5 ft"
+        },
+        {
+          "name": "Haymaker",
+          "to_hit": "+6",
+          "damage": "2d8+4 bludgeoning",
+          "range": "5 ft",
+          "notes": "Once per combat. On hit, target is stunned until end of their next turn (DC 14 CON save to negate stun)."
+        }
       ],
       "traits": [
         "Shrug It Off: once per short rest, reduce incoming damage by 1d6+2 as a reaction",
@@ -197,9 +349,21 @@
       "ac": 11,
       "speed": "30 ft",
       "dex_mod": 1,
-      "ability_scores": { "STR": 11, "DEX": 12, "CON": 10, "INT": 10, "WIS": 9, "CHA": 9 },
+      "ability_scores": {
+        "STR": 11,
+        "DEX": 12,
+        "CON": 10,
+        "INT": 10,
+        "WIS": 9,
+        "CHA": 9
+      },
       "attacks": [
-        { "name": "Desperate Strike", "to_hit": "+3", "damage": "1d6 bludgeoning or by quirk", "range": "5 ft or 20 ft" }
+        {
+          "name": "Desperate Strike",
+          "to_hit": "+3",
+          "damage": "1d6 bludgeoning or by quirk",
+          "range": "5 ft or 20 ft"
+        }
       ],
       "traits": [
         "Minor Quirk (DM chooses): weak energy burst (1d4 fire, 20ft), minor hardening (+1 AC, 1 minute), brief invisibility (1 round, recharge on 5-6), minor levitation (hover 5ft, move 20ft, no weight-bearing)",
@@ -219,10 +383,29 @@
       "ac": 14,
       "speed": "50 ft",
       "dex_mod": 4,
-      "ability_scores": { "STR": 12, "DEX": 18, "CON": 13, "INT": 10, "WIS": 10, "CHA": 12 },
+      "ability_scores": {
+        "STR": 12,
+        "DEX": 18,
+        "CON": 13,
+        "INT": 10,
+        "WIS": 10,
+        "CHA": 12
+      },
       "attacks": [
-        { "name": "Rapid Strike", "to_hit": "+6", "damage": "1d6+4 bludgeoning", "range": "5 ft", "notes": "Can attack twice (Extra Attack)." },
-        { "name": "Blitz", "to_hit": "+6", "damage": "2d6+4 bludgeoning", "range": "Move up to full speed in straight line then strike", "notes": "Target makes DC 14 DEX save or knocked prone. Can be used once per turn as part of movement." }
+        {
+          "name": "Rapid Strike",
+          "to_hit": "+6",
+          "damage": "1d6+4 bludgeoning",
+          "range": "5 ft",
+          "notes": "Can attack twice (Extra Attack)."
+        },
+        {
+          "name": "Blitz",
+          "to_hit": "+6",
+          "damage": "2d6+4 bludgeoning",
+          "range": "Move up to full speed in straight line then strike",
+          "notes": "Target makes DC 14 DEX save or knocked prone. Can be used once per turn as part of movement."
+        }
       ],
       "traits": [
         "Evasion: when subjected to a DEX save for half damage, takes no damage on success and half on failure",
@@ -242,10 +425,28 @@
       "ac": 15,
       "speed": "30 ft (40 ft in Titan form)",
       "dex_mod": -1,
-      "ability_scores": { "STR": 20, "DEX": 8, "CON": 18, "INT": 8, "WIS": 9, "CHA": 10 },
+      "ability_scores": {
+        "STR": 20,
+        "DEX": 8,
+        "CON": 18,
+        "INT": 8,
+        "WIS": 9,
+        "CHA": 10
+      },
       "attacks": [
-        { "name": "Slam", "to_hit": "+7", "damage": "2d8+5 bludgeoning", "range": "5 ft (10 ft in Titan form)" },
-        { "name": "Ground Pound", "to_hit": null, "damage": "3d6 bludgeoning", "range": "10 ft radius", "notes": "DC 15 STR save or knocked prone. Recharge 5-6." }
+        {
+          "name": "Slam",
+          "to_hit": "+7",
+          "damage": "2d8+5 bludgeoning",
+          "range": "5 ft (10 ft in Titan form)"
+        },
+        {
+          "name": "Ground Pound",
+          "to_hit": null,
+          "damage": "3d6 bludgeoning",
+          "range": "10 ft radius",
+          "notes": "DC 15 STR save or knocked prone. Recharge 5-6."
+        }
       ],
       "traits": [
         "Titan Form (Quirk): as a bonus action, grows to 10ft. Gains +2 AC (total 17), attacks deal +1d6, reach becomes 10ft. Reverts if knocked unconscious.",
@@ -265,10 +466,28 @@
       "ac": 13,
       "speed": "30 ft",
       "dex_mod": 2,
-      "ability_scores": { "STR": 9, "DEX": 14, "CON": 11, "INT": 14, "WIS": 12, "CHA": 15 },
+      "ability_scores": {
+        "STR": 9,
+        "DEX": 14,
+        "CON": 11,
+        "INT": 14,
+        "WIS": 12,
+        "CHA": 15
+      },
       "attacks": [
-        { "name": "Blade", "to_hit": "+4", "damage": "1d6+2 piercing", "range": "5 ft" },
-        { "name": "Illusion Burst", "to_hit": null, "damage": "Blinded condition", "range": "1 creature within 30 ft", "notes": "DC 13 INT save or blinded until end of next turn. Bonus action." }
+        {
+          "name": "Blade",
+          "to_hit": "+4",
+          "damage": "1d6+2 piercing",
+          "range": "5 ft"
+        },
+        {
+          "name": "Illusion Burst",
+          "to_hit": null,
+          "damage": "Blinded condition",
+          "range": "1 creature within 30 ft",
+          "notes": "DC 13 INT save or blinded until end of next turn. Bonus action."
+        }
       ],
       "traits": [
         "Mirror Image: creates 3 illusory duplicates at the start of combat. When attacked, roll 1d4 — on a 1, the real Trickster is hit. On 2-4, a duplicate is struck and destroyed. Recharge 5-6.",
@@ -287,10 +506,29 @@
       "ac": 16,
       "speed": "20 ft",
       "dex_mod": -1,
-      "ability_scores": { "STR": 18, "DEX": 8, "CON": 18, "INT": 4, "WIS": 8, "CHA": 1 },
+      "ability_scores": {
+        "STR": 18,
+        "DEX": 8,
+        "CON": 18,
+        "INT": 4,
+        "WIS": 8,
+        "CHA": 1
+      },
       "attacks": [
-        { "name": "Heavy Piston", "to_hit": "+6", "damage": "1d12+4 bludgeoning", "range": "5 ft", "notes": "Non-lethal. DM announces the target one round before the attack — the bot telegraphs its strikes." },
-        { "name": "Suppression Burst", "to_hit": null, "damage": "2d6 bludgeoning", "range": "15 ft cone", "notes": "DC 13 STR save or pushed 10 ft. Non-lethal. Recharge 5-6." }
+        {
+          "name": "Heavy Piston",
+          "to_hit": "+6",
+          "damage": "1d12+4 bludgeoning",
+          "range": "5 ft",
+          "notes": "Non-lethal. DM announces the target one round before the attack — the bot telegraphs its strikes."
+        },
+        {
+          "name": "Suppression Burst",
+          "to_hit": null,
+          "damage": "2d6 bludgeoning",
+          "range": "15 ft cone",
+          "notes": "DC 13 STR save or pushed 10 ft. Non-lethal. Recharge 5-6."
+        }
       ],
       "traits": [
         "Armoured Shell: resistant to bludgeoning and piercing damage",
@@ -299,6 +537,398 @@
         "Telegraphed: at the end of the bot's turn, DM announces which target it will attack next round. This is the training mechanic — students should be reacting to that information."
       ],
       "tactics": "Slow advance. Announces target one round ahead. Uses Suppression Burst when students stop moving. Not designed to win — designed to teach."
+    },
+    {
+      "id": "ns_analyst",
+      "name": "Null Signal Analyst",
+      "category": "Null Signal",
+      "cr": "1/2",
+      "tier": 2,
+      "description": "Low-level field operative. Observes, documents, and backs up Specialists. Usually armed with a suppression baton and a data capture device. They are paid to not ask questions.",
+      "hp": 22,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": {
+        "STR": 11,
+        "DEX": 14,
+        "CON": 12,
+        "INT": 13,
+        "WIS": 11,
+        "CHA": 10
+      },
+      "attacks": [
+        {
+          "name": "Suppression Baton",
+          "to_hit": "+4",
+          "damage": "1d6+2 bludgeoning",
+          "range": "5 ft",
+          "notes": "On hit, target makes DC 12 CON save or their quirk use costs an additional action until end of next turn."
+        },
+        {
+          "name": "Tranq Dart",
+          "to_hit": "+4",
+          "damage": "1d4 piercing + DC 12 CON save or Poisoned for 1 minute",
+          "range": "30 ft",
+          "notes": "Single use per encounter."
+        }
+      ],
+      "traits": [
+        "Cell Discipline: Will not retreat unless half the cell is down. Breaks routing saves at advantage.",
+        "Data Collar: Carries a device that transmits biometric data on any quirk user they touch to Null Signal. Destroying it (AC 10, 5 HP) stops the feed."
+      ],
+      "tactics": "Hangs back at 20-30 ft. Uses Tranq Dart early to create a poisoned target for the Specialist to focus. Never engages in melee unless forced."
+    },
+    {
+      "id": "ns_specialist",
+      "name": "Null Signal Specialist",
+      "category": "Null Signal",
+      "cr": "2",
+      "tier": 2,
+      "description": "Mid-rank operative with a suppression quirk or suppression tech equivalent. Acquisition's primary field unit. Trained in restraint and extraction — these people have done this before.",
+      "hp": 52,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 15,
+        "CON": 14,
+        "INT": 14,
+        "WIS": 12,
+        "CHA": 11
+      },
+      "attacks": [
+        {
+          "name": "Restraint Cuffs",
+          "to_hit": "+5",
+          "damage": "none",
+          "range": "5 ft (grapple)",
+          "notes": "On successful grapple, target is also Restrained. DC 14 STR to break. Cuffs have 20 HP and resistance to all damage."
+        },
+        {
+          "name": "Suppression Pulse (Tech)",
+          "to_hit": null,
+          "damage": "none",
+          "range": "15 ft cone",
+          "notes": "All creatures in cone make DC 13 CON save or their quirk is suppressed for 1 round. Recharge 5-6."
+        },
+        {
+          "name": "Baton Strike",
+          "to_hit": "+5",
+          "damage": "2d6+2 bludgeoning",
+          "range": "5 ft",
+          "notes": ""
+        }
+      ],
+      "traits": [
+        "Extraction Priority: If a target is Restrained and below half HP, Specialist attempts extraction (removing target from combat) instead of attacking. Requires one full action and no other threats adjacent.",
+        "Coordinated Takedown: When attacking a target already grappled by an ally, gains advantage on the attack roll."
+      ],
+      "tactics": "Moves to grapple the most quirk-dependent PC. Calls Analysts to screen. Uses Suppression Pulse to create a window, then immediately closes to grapple. Works in pairs when possible."
+    },
+    {
+      "id": "ns_operative",
+      "name": "Null Signal Operative",
+      "category": "Null Signal",
+      "cr": "4",
+      "tier": 3,
+      "description": "Elite field agent. Each Operative has a notable combat quirk and has been briefed on the target's abilities. They are not mercenaries — they are invested in the outcome.",
+      "hp": 90,
+      "ac": 16,
+      "speed": "35 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 16,
+        "DEX": 17,
+        "CON": 16,
+        "INT": 15,
+        "WIS": 14,
+        "CHA": 13
+      },
+      "attacks": [
+        {
+          "name": "Quirk Strike",
+          "to_hit": "+7",
+          "damage": "3d8+4 (type varies by Operative)",
+          "range": "varies",
+          "notes": "The DM should choose a specific quirk for each Operative — treat as a flavoured version of the damage type."
+        },
+        {
+          "name": "Counter Protocol",
+          "to_hit": null,
+          "damage": "reaction",
+          "range": "self",
+          "notes": "When targeted by a quirk attack, Operative may make a DC 14 INT save. On success, halves incoming damage and identifies the quirk's weakness."
+        },
+        {
+          "name": "Multiattack",
+          "to_hit": null,
+          "damage": "none",
+          "range": "self",
+          "notes": "Makes two Quirk Strike attacks per action."
+        }
+      ],
+      "traits": [
+        "Briefed: Operative has full dossiers on Class 1-A PCs. On the first round, they correctly predict the PC's most likely action and are not surprised by it.",
+        "Field Professionalism: Immune to Frightened. Advantage on saves against Charmed.",
+        "Tactical Comm: As a bonus action, can relay target intel — all Null Signal allies gain advantage on their next attack against one target this turn."
+      ],
+      "tactics": "Opens by identifying the most dangerous PC and calling it out to the cell. Uses Counter Protocol aggressively — these people have fought quirk users before. Protects Analysts from focus fire."
+    },
+    {
+      "id": "splice_boss",
+      "name": "Splice (Ryo Karashi)",
+      "category": "Null Signal",
+      "cr": "8",
+      "tier": 3,
+      "description": "Head of Acquisition. Boss encounter. Prefers incapacitation to damage — he wants the class intact for study. Should be fought with his Operatives screening for him.",
+      "hp": 105,
+      "ac": 15,
+      "speed": "35 ft",
+      "dex_mod": 4,
+      "ability_scores": {
+        "STR": 17,
+        "DEX": 18,
+        "CON": 16,
+        "INT": 15,
+        "WIS": 13,
+        "CHA": 14
+      },
+      "attacks": [
+        {
+          "name": "Modification Touch",
+          "to_hit": "+8",
+          "damage": "2d6+4 necrotic",
+          "range": "5 ft",
+          "notes": "Target makes DC 16 CON save or suffers one of: Disadvantage on attacks, halved speed, or must drop held item. Gloves off: +1d8 necrotic."
+        },
+        {
+          "name": "Self-Reshape (Bonus)",
+          "to_hit": null,
+          "damage": "none",
+          "range": "self",
+          "notes": "Extend reach by 5 ft OR gain +3 AC until start of next turn."
+        },
+        {
+          "name": "Acquisition Protocol",
+          "to_hit": null,
+          "damage": "Paralysed",
+          "range": "grapple",
+          "notes": "Grappled target: DC 16 CON save or Paralysed until end of next turn. Splice can't move while using this."
+        },
+        {
+          "name": "Multiattack",
+          "to_hit": null,
+          "damage": "none",
+          "range": "self",
+          "notes": "Two Modification Touch attacks."
+        }
+      ],
+      "traits": [
+        "Glove Removal: Splice starts with gloves on. Removing them (bonus action) adds 1d8 necrotic to Modification Touch. He only does this when forced.",
+        "Briefed: Has dossiers on all PCs. On round 1, correctly anticipates the most dangerous PC's action.",
+        "Acquisition Priority: Below 40 HP, Splice stops attacking and attempts to withdraw with any incapacitated target he can carry."
+      ],
+      "tactics": "Stays mobile, probes for grapple opportunities. Screened by Operatives. Targets support-role PCs or anyone already debuffed. Removes gloves at 50% HP. Attempts extraction if he has a paralysed target — he'd rather leave with one subject than fight to the end."
+    },
+    {
+      "id": "fracture_member",
+      "name": "Fracture Cell Member",
+      "category": "Fracture",
+      "cr": "1/4",
+      "tier": 1,
+      "description": "A true believer. Mostly young adults with minor or mid-range quirks who feel the system has failed them. They are not trained fighters. Some are scared. Most are angry. A few are genuinely dangerous. They wear a jagged-line symbol somewhere on their person.",
+      "hp": 18,
+      "ac": 12,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 12,
+        "DEX": 12,
+        "CON": 12,
+        "INT": 10,
+        "WIS": 10,
+        "CHA": 11
+      },
+      "attacks": [
+        {
+          "name": "Quirk Attack (Minor)",
+          "to_hit": "+3",
+          "damage": "1d8 (type varies)",
+          "range": "varies",
+          "notes": "Roll a d6 to determine damage type: 1-2 bludgeoning, 3-4 fire, 5 lightning, 6 slashing."
+        },
+        {
+          "name": "Improvised Weapon",
+          "to_hit": "+3",
+          "damage": "1d6+1 bludgeoning",
+          "range": "5 ft",
+          "notes": "Used as fallback."
+        }
+      ],
+      "traits": [
+        "Ideology Check: When a PC attempts to talk them down (CHA check DC 12), a Cell Member may hesitate — losing their action that turn but not fully standing down. DC 16 causes them to withdraw.",
+        "Not a Killer: Will not make attacks that could kill a downed target. Breaks from combat if forced into lethal choices.",
+        "Cell Loyalty: Has disadvantage on saves against being frightened by the class, but advantage if a Cell Leader is present."
+      ],
+      "tactics": "Attacks in groups. Stays near Cell Leader if one is present. Easy to talk down if approached with genuine engagement rather than force. Will scatter if their leader is defeated."
+    },
+    {
+      "id": "fracture_cell_leader",
+      "name": "Fracture Cell Leader",
+      "category": "Fracture",
+      "cr": "2",
+      "tier": 2,
+      "description": "Experienced member with a solid combat quirk and genuine tactical sense. Leads a cell of 4-8 members. Protective of their people — this shapes their decisions more than ideology does.",
+      "hp": 58,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 15,
+        "CON": 14,
+        "INT": 13,
+        "WIS": 13,
+        "CHA": 14
+      },
+      "attacks": [
+        {
+          "name": "Quirk Strike",
+          "to_hit": "+5",
+          "damage": "2d8+3 (type varies)",
+          "range": "varies",
+          "notes": ""
+        },
+        {
+          "name": "Multiattack",
+          "to_hit": null,
+          "damage": "none",
+          "range": "self",
+          "notes": "Two Quirk Strikes."
+        }
+      ],
+      "traits": [
+        "Rally: As a bonus action, Cell Leader grants all Fracture Cell Members within 30 ft advantage on their next attack roll or saving throw.",
+        "Protect the People: If a Cell Member is downed, Cell Leader immediately targets whoever downed them, gaining advantage on attacks against that target for 1 round.",
+        "Ideological Argument: A PC who succeeds on a CHA (Persuasion) DC 15 check can force the Cell Leader to hesitate for 1 round. DC 20 ends the encounter without combat. This resets if the class is overtly aggressive.",
+        "Never Surrenders Alone: Will not surrender while any Cell Members are still up and able to retreat."
+      ],
+      "tactics": "Positions behind Cell Members. Uses Rally at the start of combat. Targets the PC who's doing the most damage to their team. Willing to end the fight via argument if approached correctly — but only if the class hasn't already hurt someone they care about."
+    },
+    {
+      "id": "voltage_boss",
+      "name": "Voltage (Daisuke Ren)",
+      "category": "Fracture",
+      "cr": "7",
+      "tier": 3,
+      "description": "Co-founder of Fracture. Boss encounter. Tactically intelligent — he reads the class and adapts. Use him to punish overconfidence. He fights to protect, not to win, which makes him unpredictable.",
+      "hp": 115,
+      "ac": 14,
+      "speed": "35 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 16,
+        "CON": 16,
+        "INT": 13,
+        "WIS": 15,
+        "CHA": 12
+      },
+      "attacks": [
+        {
+          "name": "Shock Strike",
+          "to_hit": "+6",
+          "damage": "2d8+3 lightning",
+          "range": "5 ft",
+          "notes": "Target makes DC 16 CON save or movement halved until end of next turn."
+        },
+        {
+          "name": "Chain Discharge",
+          "to_hit": null,
+          "damage": "3d8 lightning",
+          "range": "15 ft cone from surface",
+          "notes": "DC 16 DEX save. On fail: full damage + Stunned until end of next turn. Half on success."
+        },
+        {
+          "name": "Paralytic Surge",
+          "to_hit": null,
+          "damage": "Paralysed",
+          "range": "touch",
+          "notes": "Once per short rest. DC 16 CON save or Paralysed for 1 minute. Save repeats at end of each turn."
+        },
+        {
+          "name": "Multiattack",
+          "to_hit": null,
+          "damage": "none",
+          "range": "self",
+          "notes": "Two Shock Strikes."
+        }
+      ],
+      "traits": [
+        "Grounded: Immune to lightning damage. Advantage on saves against quirks affecting the nervous system.",
+        "Environmental Read: Voltage starts combat by identifying conductive surfaces (metal fences, wet ground, pipes). He has advantage on Chain Discharge attacks if he set up his position before combat started.",
+        "Adaptive: After the first round, Voltage correctly identifies the class's most powerful combo and positions to break it.",
+        "Protective Priority: If Shard or a Cell Leader is present and drops below 30 HP, Voltage immediately moves to their position and uses Paralytic Surge on whoever threatens them."
+      ],
+      "tactics": "Picks his ground before combat if possible. Opens with Chain Discharge on clustered PCs. Targets fire or sonic quirk users who can arc through conductive surfaces. Knows Hellflame can't run electricity through its fire — uses that. Willing to take a hit to get Paralytic Surge off on the biggest threat."
+    },
+    {
+      "id": "shard_boss",
+      "name": "Shard (Maki Torune)",
+      "category": "Fracture",
+      "cr": "6",
+      "tier": 3,
+      "description": "Co-founder of Fracture. Boss encounter. She doesn't want to fight. She will fight. Area control specialist — the encounter is as much about navigating her Glass Field as defeating her. She should have talking opportunities built in.",
+      "hp": 88,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 11,
+        "DEX": 17,
+        "CON": 14,
+        "INT": 16,
+        "WIS": 14,
+        "CHA": 18
+      },
+      "attacks": [
+        {
+          "name": "Glass Volley",
+          "to_hit": "+7",
+          "damage": "3d6 slashing",
+          "range": "60 ft",
+          "notes": "Can target 2 creatures within 5 ft of each other as one action."
+        },
+        {
+          "name": "Glass Field",
+          "to_hit": null,
+          "damage": "1d4 slashing per 5 ft",
+          "range": "20 ft radius within 40 ft",
+          "notes": "Difficult terrain, 1 minute. Action to place."
+        },
+        {
+          "name": "Barrier (Reaction)",
+          "to_hit": null,
+          "damage": "none",
+          "range": "self",
+          "notes": "Glass wall: 10 ft wide, 10 ft tall, 30 HP. Must destroy barrier to hit her."
+        },
+        {
+          "name": "Glass Rain",
+          "to_hit": null,
+          "damage": "5d6 slashing",
+          "range": "30 ft radius",
+          "notes": "Recharge 5-6. DC 16 DEX save or take full damage + begin bleeding (1d4/turn, action to stop). Half on success, no bleed."
+        }
+      ],
+      "traits": [
+        "Won't Kill: Shard does not make attacks that would reduce a target to 0 HP if she knows they're already below half health. She will incapacitate, not kill.",
+        "Debate Opening: Once per encounter, as an action, Shard stops fighting and addresses one PC directly. That PC makes a DC 14 WIS save. On fail, they are compelled to respond for 1 round (can't attack Shard, can still defend). On success, they are unaffected but Shard gains no further debate opportunities.",
+        "Glass Sight: Shard has tremorsense 30 ft via vibrations through her glass. Invisible creatures don't gain advantage against her within this range if they're standing on her glass."
+      ],
+      "tactics": "Opens with Glass Field to control the space. Uses Barrier reactively to buy time for talking. Glass Volley at range. Uses Glass Rain when cornered. Always tries to create one conversation — if a PC engages honestly, she responds in kind, even mid-fight."
     }
   ]
 }

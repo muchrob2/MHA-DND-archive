@@ -25,6 +25,7 @@ CAMPAIGN_FILE = ROOT / "campaign.html"
 
 CHAR_FILE_RE = re.compile(r"^/api/character/([a-z0-9_]+\.json)$")
 CAMPAIGN_FILE_RE = re.compile(r"^/api/campaign/(arc|world|teachers|villains|tier1|enemies|class1b)$")
+EXPORT_VERSION = 1
 RULEBOOK_FILE_RE = re.compile(r"^/rulebooks/(.+\.pdf)$")
 
 MIME = {".html": "text/html; charset=utf-8", ".json": "application/json; charset=utf-8", ".pdf": "application/pdf"}
@@ -69,6 +70,39 @@ def save_character(filename, data):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
+def build_export():
+    import datetime
+    characters = {}
+    roster = json.loads(ROSTER_FILE.read_text(encoding="utf-8"))
+    for student in roster.get("students", []):
+        fname = student.get("file")
+        if fname:
+            fpath = CLASS_DIR / fname
+            if fpath.exists():
+                characters[fname] = json.loads(fpath.read_text(encoding="utf-8"))
+    return {
+        "version": EXPORT_VERSION,
+        "exported_at": datetime.datetime.utcnow().isoformat() + "Z",
+        "relationships": load_relationships(),
+        "characters": characters,
+    }
+
+
+def apply_import(data):
+    if data.get("version") != EXPORT_VERSION:
+        raise ValueError(f"Unsupported export version: {data.get('version')}")
+    errors = []
+    if "relationships" in data:
+        save_relationships(data["relationships"])
+    for fname, char_data in data.get("characters", {}).items():
+        try:
+            save_character(fname, char_data)
+        except (ValueError, FileNotFoundError, OSError) as e:
+            errors.append(f"{fname}: {e}")
+    if errors:
+        raise ValueError("Some files failed to import: " + "; ".join(errors))
+
+
 class Handler(http.server.BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         print(f"  {self.address_string()} {fmt % args}")
@@ -105,6 +139,21 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         if path == "/api/relationships":
             self.send_json(200, load_relationships())
+            return
+
+        if path == "/api/export":
+            try:
+                bundle = build_export()
+                body = json.dumps(bundle, indent=2, ensure_ascii=False).encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.send_header("Content-Disposition", "attachment; filename=\"mha-dnd-backup.json\"")
+                self.send_header("Content-Length", len(body))
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(body)
+            except Exception as e:
+                self.send_json(500, {"error": str(e)})
             return
 
         if path == "/api/characters":
@@ -165,6 +214,15 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 save_character(filename, data)
                 self.send_json(200, {"ok": True})
             except (json.JSONDecodeError, ValueError, FileNotFoundError, OSError) as e:
+                self.send_json(400, {"error": str(e)})
+            return
+
+        if path == "/api/import":
+            try:
+                data = json.loads(body.decode("utf-8"))
+                apply_import(data)
+                self.send_json(200, {"ok": True})
+            except (json.JSONDecodeError, ValueError, OSError) as e:
                 self.send_json(400, {"error": str(e)})
             return
 

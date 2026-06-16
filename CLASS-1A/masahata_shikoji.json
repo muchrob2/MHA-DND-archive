@@ -1,0 +1,83 @@
+{
+  "name": "Masahata Shikoji",
+  "is_pc": false,
+  "gender": "Male",
+  "height": "4'10\"",
+  "body_type": "Chubby",
+  "physiology": "Standard",
+  "quirk": "Water Gun",
+  "quirk_rarity": "Common",
+  "quirk_type": "Emitter",
+  "appearance": {
+    "hair": "Brown, curly, voluminous. Takes up substantial space relative to his height.",
+    "build": "Chubby and short. The shortest person in the class.",
+    "other": "Often damp from using his quirk in training. Has a printed ranking chart. He updates it. He laminates it. It lives on the fridge."
+  },
+  "personality": {
+    "summary": "Arrogant in a specific, sustained, completely committed way. Believes with complete sincerity that he is the best member of Class 1-A, and maintains evidence of this belief in laminated form. Loud. Annoying to people who don't understand him and also to people who do. Has not, at any point, questioned whether his ranking chart makes him popular. It does not make him popular.",
+    "in_class": "Raises his hand to answer every question. Is correct slightly more often than seems fair. Mentions his ranking any time a ranking is mentioned.",
+    "in_combat": "Aggressive and vocal about his own performance during combat. Surprisingly effective. His Water Gun's pressure tier system actually scales well and he understands how to use it.",
+    "quirk_of_character": "He is annoying and he is also correct, sometimes, and the class hates that. He tracks their performances more carefully than anyone else does — which means he occasionally gives genuinely useful feedback, entirely without warmth."
+  },
+  "ability_scores": {
+    "note": "CON primary (Water Gun depends on hydration and internal pressure — CON governs both mechanics and physical resilience). DEX secondary for ranged accuracy.",
+    "STR": 8,
+    "DEX": 13,
+    "CON": 15,
+    "INT": 10,
+    "WIS": 12,
+    "CHA": 13,
+    "TECH": 14
+  },
+  "modifiers": {
+    "STR": -1,
+    "DEX": 1,
+    "CON": 2,
+    "INT": 0,
+    "WIS": 1,
+    "CHA": 1,
+    "TECH": 2
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Constitution",
+  "quirk_save_DC": 12,
+  "HP": 11,
+  "AC": 12,
+  "speed": "30 ft",
+  "suggested_class": "Quirk Savant",
+  "class_note": "Quirk Savant enhances his pressure tier scaling and gives him more uses of his high-tier abilities per rest.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Water Gun",
+    "weakness": "Depends on hydration. Dehydration makes higher tiers unstable or unavailable. Extreme cold reduces output efficiency. Prolonged use risks internal strain.",
+    "pressure_tier_system": "Tiers unlock as character levels increase. Higher tiers deal more damage and knockback but strain the user.",
+    "abilities": [
+      {
+        "name": "Spray Shot (Tier 1)",
+        "type": "Attack",
+        "description": "3d6 cold + 3d4 piercing. No knockback. Available from level 1."
+      },
+      {
+        "name": "Jet Blast (Tier 2)",
+        "type": "Attack",
+        "description": "4d6 cold + 4d4 piercing. 5 ft knockback. Available from level 2."
+      },
+      {
+        "name": "Pressurized Stream (Tier 3)",
+        "type": "Attack",
+        "description": "5d6 cold + 5d4 piercing. 10 ft knockback. Available from level 3."
+      },
+      {
+        "name": "Hydro Cannon (Tier 4+)",
+        "type": "Attack",
+        "description": "Scales further at higher levels. See Quirk Compendium for full tier table."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Sustained ranged pressure and knockback control. His tier system means he gets more useful as a fight drags on and enemies are repositioned by the knockback. Pair him with students who benefit from enemies being knocked into position.",
+    "social_role": "Class irritant with accidental utility. He notices things. He's wrong about what they mean socially but accurate about the data. Other students hate having to admit he was right.",
+    "growth_arc": "Masahata's arc is about whether his sincerity is worth anything. He genuinely believes in the class's strength — he just expresses this through endless ranking. A moment where his data actually saves someone is quietly redemptive.",
+    "weakness_to_exploit": "Short, limited physical durability, poor STR. In close range he's outclassed. Any enemy that can get past his water pressure and get hands on him has a major advantage."
+  }
+}

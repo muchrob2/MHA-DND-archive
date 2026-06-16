@@ -1,0 +1,77 @@
+{
+  "name": "Setaka Toko",
+  "is_pc": false,
+  "gender": "Male",
+  "height": "6'8\"",
+  "body_type": "Muscular",
+  "physiology": "Heteromorph",
+  "quirk": "Iron Ball",
+  "quirk_rarity": "Common",
+  "quirk_type": "Mutant",
+  "appearance": {
+    "hair": "Turquoise, spiky, voluminous. Does not match the rest of his presentation but he likes it.",
+    "build": "Enormous. Heavily muscular. The tallest person in the class by several inches.",
+    "other": "Iron cannon barrels protrude from his knuckles — two per hand, thick and heavy. Always present. He learned to type, open doors, and do most things as a child with them. His handshake is famous."
+  },
+  "personality": {
+    "summary": "Respectful and honourable. He means what he says, does what he says he'll do, and treats everyone with equal genuine courtesy — classmates, teachers, opponents in a training exercise, the cafeteria staff. This is not a performance or a strategy. He was raised this way and considers it the obvious way to be.",
+    "in_class": "Polite, punctual, prepared. Helps people without being asked when he notices they could use it.",
+    "in_combat": "Formal in a way that's slightly unusual for combat — announces his attack before it lands if there's time, acknowledges good moves from opponents. People find this unsettling.",
+    "quirk_of_character": "He writes thank-you notes. Physical ones. He carries cards. Other students have received these after normal interactions that Setaka found meaningful."
+  },
+  "ability_scores": {
+    "note": "STR primary — Iron Ball's cannon fire and close-range strikes are raw physical projection. CON secondary for sustained combat durability at his size.",
+    "STR": 15,
+    "DEX": 10,
+    "CON": 14,
+    "INT": 12,
+    "WIS": 13,
+    "CHA": 13,
+    "TECH": 8
+  },
+  "modifiers": {
+    "STR": 2,
+    "DEX": 0,
+    "CON": 2,
+    "INT": 1,
+    "WIS": 1,
+    "CHA": 1,
+    "TECH": -1
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Strength",
+  "quirk_save_DC": 12,
+  "HP": 12,
+  "AC": 14,
+  "speed": "30 ft",
+  "suggested_class": "Heroic Vanguard",
+  "class_note": "Heroic Vanguard → Unarmed Style. His cannon barrels are natural weapons and his kit suits sustained melee with ranged burst capacity.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Iron Ball",
+    "weakness": "Cannon barrels have limited shots per short rest (proficiency bonus). Overuse results in significant recoil that Setaka absorbs — too many shots causes self-inflicted bludgeoning damage. Barrels need to cool between volleys.",
+    "abilities": [
+      {
+        "name": "Iron Knuckle",
+        "type": "Attack",
+        "description": "Natural weapon unarmed strike with cannon-barrel knuckles. 2d8 + STR modifier bludgeoning damage. 5 ft reach. On hit, target makes STR save vs Quirk DC or is pushed 10 feet."
+      },
+      {
+        "name": "Cannon Fire",
+        "type": "Attack (ranged, 60/120 ft)",
+        "description": "Fire a compressed iron ball from one knuckle-cannon. 3d10 bludgeoning damage. Recharge 1/short rest per barrel (2 shots per hand). On hit, target and any creature within 5 ft of target make DEX save vs Quirk DC or take 1d6 splash damage."
+      },
+      {
+        "name": "Broadside",
+        "type": "Action (all 4 cannons, recharge long rest)",
+        "description": "Fire all four cannon barrels simultaneously at up to four targets within 60 ft. Each target: 3d10 bludgeoning damage, DEX save vs Quirk DC or knocked prone. After use, Setaka takes 2d6 bludgeoning self-damage from recoil and his speed is reduced by 10 ft until end of next turn."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Durable melee fighter with limited-use ranged burst capability. He's the class's tank with the ability to suddenly become a sniper for a couple of rounds. Broadside is his set-piece move — save it for moments where knocking four things prone at once will turn a fight.",
+    "social_role": "Moral north star. When the class is considering doing something questionable, Setaka doesn't lecture — he just says what he would do, clearly, and moves on. The contrast is felt.",
+    "growth_arc": "His honour code will be genuinely tested. A situation where following it perfectly causes real harm, or where breaking it slightly could prevent something bad. He will make a decision. He will live with it.",
+    "weakness_to_exploit": "Limited cannon shots means extended fights deplete his ranged options. DEX is average — he's not particularly mobile. After Broadside, he's vulnerable and slower."
+  }
+}

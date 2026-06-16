@@ -1,0 +1,67 @@
+{
+  "name": "Kinosho Kochimiko",
+  "is_pc": false,
+  "gender": "Female",
+  "height": "5'4\"",
+  "body_type": "Athletic",
+  "physiology": "Standard",
+  "quirk": "Neutralization",
+  "quirk_rarity": "Rare",
+  "quirk_type": "Emitter",
+  "appearance": {
+    "hair": "Pink. Usually slightly messy from the latest nap.",
+    "build": "Athletic but you wouldn't know it from her resting posture, which is 'recently collapsed on a surface.'",
+    "other": "Almost always has visible under-eye shadows. Carries a small blanket in her bag. This is not unusual or a surprise to anyone."
+  },
+  "personality": {
+    "summary": "A strategic genius with extraordinary common sense who deploys both properties almost exclusively in service of finding the optimal napping location. When she does decide to engage with a problem, she solves it completely, accurately, and in about 45 seconds. Then she goes back to sleep. The class is both annoyed by and completely dependent on this.",
+    "in_class": "Apparently asleep. Answers questions correctly when called on without opening her eyes fully. The teachers have made peace with this.",
+    "in_combat": "Alert, quiet, and precise. Neutralization requires direct physical contact so she has to actually move, which she does when it matters. Very fast over short distances.",
+    "quirk_of_character": "She predicted the outcome of the capture-the-flag exercise in advance, told no one, and was completely correct. She did this to verify a hypothesis. The hypothesis was: no one would believe her. She was right."
+  },
+  "ability_scores": {
+    "note": "INT primary (Neutralization is a precise biological override — requires understanding of Quirk Factor mechanics and anatomical targeting). WIS secondary for strategic awareness.",
+    "STR": 8,
+    "DEX": 12,
+    "CON": 13,
+    "INT": 15,
+    "WIS": 14,
+    "CHA": 10,
+    "TECH": 13
+  },
+  "modifiers": {
+    "STR": -1,
+    "DEX": 1,
+    "CON": 1,
+    "INT": 2,
+    "WIS": 2,
+    "CHA": 0,
+    "TECH": 1
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Intelligence",
+  "quirk_save_DC": 12,
+  "HP": 9,
+  "AC": 12,
+  "speed": "30 ft",
+  "suggested_class": "Combat Analyst",
+  "class_note": "Combat Analyst's read-the-field and reactive features suit a character whose primary contribution is disabling the enemy's greatest strength.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Neutralization",
+    "weakness": "Must use right arm for activation. If right arm is injured, restrained, or severed, the quirk cannot be used. 1-hour cooldown after each successful suppression — attempting earlier deals 2d10 true damage and stuns until end of next turn.",
+    "abilities": [
+      {
+        "name": "Nullification",
+        "type": "Action (touch, right arm)",
+        "description": "Touch a creature with right arm. Target's Quirk is entirely suppressed for 2-4 hours — all passive, triggered, or sustained effects are nullified. This includes immunities, regeneration, elemental forms, transformation states, and active quirk enhancements. Continuous physical contact extends to maximum 24 hours. While suppressed, target also temporarily loses all Quirk drawbacks (biological reset). If used on a target under Overmodification, forcibly ends the enhancement immediately, reverting all boosted stats. Quirkless individuals are immune."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Counter-pick. Against any villain whose combat effectiveness depends on their quirk — Flashpoint, Undertow, Kuma — Kinosho is the answer, if she can get close enough to touch them. Her combat role is making other people's problems disappear. Then she goes to find a chair.",
+    "social_role": "The class's lazily accurate oracle. She is rarely wrong. She rarely tells people what she knows until asked. When asked, she tells them completely, without editorialising, and lets them deal with the information.",
+    "growth_arc": "Her disengagement is partly genuine (she's tired) and partly protective (if she cares less, losing matters less). A key moment is something going wrong that she could have prevented if she'd said something earlier. She doesn't punish herself about it — but she adjusts.",
+    "weakness_to_exploit": "Range. She has to touch someone. Against any villain with long-range attacks or who can keep distance, she's in genuine danger. Also: the cooldown means she cannot suppress two targets in rapid succession."
+  }
+}

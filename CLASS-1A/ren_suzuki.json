@@ -1,0 +1,85 @@
+{
+  "name": "Ren Suzuki",
+  "is_pc": true,
+  "gender": "Male",
+  "height": "5'11\"",
+  "body_type": "Athletic",
+  "physiology": "Standard",
+  "quirk": "Overclock",
+  "quirk_rarity": "Rare",
+  "quirk_type": "Transformation",
+  "appearance": {
+    "hair": "Black, spiky. Looks like it was styled that way but wasn't — it just does that.",
+    "build": "Athletic and lean. Built for speed.",
+    "other": "When Overclock activates, fine electric-blue lines trace along his veins and skin for the duration. His eyes shift slightly — pupils dilate, focus sharpens. He moves differently — not faster from the outside in normal mode, but the anticipation and precision of his movement changes."
+  },
+  "personality": {
+    "summary": "Brave in a way that looks like recklessness and occasionally is. Sarcastic reflex over genuine nastiness — he deflects with jokes rather than sitting with weight. Underneath: he takes being a hero seriously and is quietly terrified of not being good enough for it, which he'd never say directly. He'd make a quip instead.",
+    "in_class": "Half-attentive. Does better than his attention level suggests he should. Has a quick answer for everything and occasionally the quick answer is right.",
+    "in_combat": "Aggressive entry, reads the situation mid-fight and adjusts. The bravery is real — he'll go first into something scary. The sarcasm continues during fights, which baffles enemies.",
+    "quirk_of_character": "He keeps a running count of things that should have stopped him but didn't. He refers to this as 'empirical evidence that worrying is pointless.' Chosen has pointed out that this is not what empirical means. Ren does not care."
+  },
+  "ability_scores": {
+    "note": "DEX primary — Overclock is a speed and reflex amplification quirk, DEX governs both mechanics and combat output. TECH secondary for the biological monitoring Overclock requires (knowing when you're hitting your limits).",
+    "STR": 10,
+    "DEX": 15,
+    "CON": 13,
+    "INT": 13,
+    "WIS": 12,
+    "CHA": 8,
+    "TECH": 14
+  },
+  "modifiers": {
+    "STR": 0,
+    "DEX": 2,
+    "CON": 1,
+    "INT": 1,
+    "WIS": 1,
+    "CHA": -1,
+    "TECH": 2
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Dexterity",
+  "quirk_save_DC": 13,
+  "HP": 10,
+  "AC": 13,
+  "speed": "30 ft",
+  "suggested_class": "Heroic Vanguard",
+  "class_note": "Heroic Vanguard → Speedster Style. Overclock's speed amplification and reaction enhancement are the Speedster's core gameplay loop.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Overclock",
+    "weakness": "Overclock burns stamina fast. Extended use causes Overmodification risk — past safe limits, CON saves or take self-damage. At maximum output, movement drops to 0 after Overclock ends for 1 round (crash).",
+    "abilities": [
+      {
+        "name": "Overclock: Standard",
+        "type": "Bonus Action",
+        "description": "Activate Overclock. Movement speed doubled for 1 minute. +2 to all DEX-based checks and saves. All attacks gain +1 to hit. Take an additional attack as part of the Attack action. Concentration: if Ren takes damage while active, he makes a CON save (DC 12) or the effect drops."
+      },
+      {
+        "name": "Overclock: High Gear",
+        "type": "Action (replaces Standard activation, unlocks at level 5)",
+        "description": "Movement speed tripled. +4 to all DEX-based checks and saves. Take two additional attacks as part of the Attack action. Lasts 3 rounds. After High Gear ends, speed is 0 for 1 round and Ren takes 2d8 true damage (crash)."
+      },
+      {
+        "name": "Reaction Surge",
+        "type": "Reaction",
+        "description": "When an attack roll targeting Ren is made, activate to gain +4 AC against that attack and immediately move up to 15 ft. Usable once per short rest."
+      }
+    ]
+  },
+  "player_notes": {
+    "role_summary": "The class's speed-striker. Overclock makes you fast — your window is short, your burst is high, and your crash is real. Standard activation is bread and butter. High Gear is the big play. Know your stamina limits.",
+    "social_position": "Natural team frontman by accident rather than design — he goes in first, which people interpret as leadership. He finds this funny and slightly uncomfortable.",
+    "growth_hook": "His sarcasm is armour for the specific fear of not being enough. As the stakes escalate, moments where the joke doesn't land — or where he just can't make one — are the ones that matter.",
+    "suggested_background": "Street-level neighbourhood in Murano's port district. Hero worship baked in, because he watched heroes work growing up."
+  },
+  "dm_notes": {
+    "combat_role": "First-in speed-striker. He opens fights fast, creates pressure, and forces enemies to commit before the rest of the class arrives. The crash mechanic means enemies who survive his Overclock window are in a better position — track this.",
+    "social_role": "The deflector. He keeps things light when they get heavy. The party relies on this; they also sometimes need someone to make them stop and take something seriously.",
+    "growth_arc": "First into every danger. At some point the danger wins a round. How he responds to that is his arc.",
+    "weakness_to_exploit": "Low STR and CHA — he's not a brawler and he's not a negotiator. The Overclock crash is a real vulnerability in extended fights. In Tier 3 and 4, enemies will learn to outlast his Overclock window."
+  },
+  "_file": "ren_suzuki.json",
+  "_roster_id": 17
+}

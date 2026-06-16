@@ -1,0 +1,72 @@
+{
+  "name": "Toragi Kayo",
+  "is_pc": false,
+  "gender": "Male",
+  "height": "6'0\"",
+  "body_type": "Muscular",
+  "physiology": "Standard",
+  "quirk": "Twin Impact",
+  "quirk_rarity": "Rare",
+  "quirk_type": "Emitter",
+  "appearance": {
+    "hair": "Half yellow, half red — split down the middle. Natural. Nobody asks about it anymore.",
+    "build": "Tall and solidly muscular. Presence in a room before he speaks.",
+    "other": "Moves carefully. He's broken things by accident before — tables, doorknobs, once a sink — and that's made him deliberate about it. His strikes look controlled because they have to be."
+  },
+  "personality": {
+    "summary": "Intimidating exterior, genuinely awkward interior. He looks like the class's most dangerous fighter and he is, but he's also the person most likely to apologise for interrupting you and then stand there unsure whether to leave. He has a hard time starting conversations. He has no trouble finishing a fight.",
+    "in_class": "Quiet, attentive. Sits near the back. Takes good notes in small careful handwriting.",
+    "in_combat": "Different person. Not aggressive — precise. He knows what his quirk does and he uses it deliberately. The intimidating part isn't the look on his face. It's the fact that he can hit the same spot twice.",
+    "quirk_of_character": "He prepares small gifts sometimes — nothing elaborate, just food or a pencil or something useful — and then cannot figure out how to give them. Yoshibara once found three of these things on her desk with no note."
+  },
+  "ability_scores": {
+    "note": "DEX primary (Twin Impact requires extreme precision — hitting the same exact point twice in sequence demands fine motor control beyond raw strength). CON secondary for sustained engagement.",
+    "STR": 13,
+    "DEX": 15,
+    "CON": 14,
+    "INT": 10,
+    "WIS": 12,
+    "CHA": 8,
+    "TECH": 13
+  },
+  "modifiers": {
+    "STR": 1,
+    "DEX": 2,
+    "CON": 2,
+    "INT": 0,
+    "WIS": 1,
+    "CHA": -1,
+    "TECH": 1
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Dexterity",
+  "quirk_save_DC": 12,
+  "HP": 11,
+  "AC": 13,
+  "speed": "30 ft",
+  "suggested_class": "Heroic Vanguard",
+  "class_note": "Heroic Vanguard → Reckless Attacker Style. Twin Impact's double-strike mechanic synergises with the subclass's high-risk, high-reward approach.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Twin Impact",
+    "weakness": "Quirk only triggers when a second strike lands within 1 round of the first, and both strikes must be aimed at the same target. Missing either strike means no amplification. Cooldown 2 turns after activation.",
+    "abilities": [
+      {
+        "name": "Impact Doubling",
+        "type": "Passive",
+        "description": "When Toragi strikes the same target twice in one round (action + bonus action, or two-weapon), the second strike triggers Impact Doubling: the second hit deals double damage and forces a CON save vs Quirk DC. Fail: target is stunned until the end of their next turn. Success: target is rattled (disadvantage on their next attack)."
+      },
+      {
+        "name": "Seismic Follow",
+        "type": "Reaction",
+        "description": "After landing a first hit, immediately declare Seismic Follow. The second hit this round applies a shockwave — all creatures within 10 ft of the target take 2d6 bludgeoning damage and make DEX save vs Quirk DC or fall prone."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "High single-target burst damage with AoE follow-through. His rotation is first hit → Seismic Follow → Impact Doubling stun. If it lands, the target is done. If it doesn't, he's exposed.",
+    "social_role": "Unexpected emotional anchor. When something happens to the class — a bad training result, a fight between classmates, real danger — Toragi doesn't have the words, but he shows up. People feel it.",
+    "growth_arc": "Learning that being intimidating isn't the problem; assuming everyone else is afraid of him is. A classmate who isn't afraid of him and genuinely enjoys his company changes how he sees himself.",
+    "weakness_to_exploit": "His quirk requires two precise hits on the same target. Enemies who move, teleport, or have high DEX saves can break his combo. His CHA is low — in social-heavy scenes he's at a disadvantage."
+  }
+}

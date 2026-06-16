@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 1-A — DM Toolkit</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f8f7f5; --surface: #ffffff; --surface2: #f2f1ef;
+    --border: rgba(0,0,0,0.10); --border-strong: rgba(0,0,0,0.18);
+    --text: #1a1a1a; --text-muted: #5f5e5a; --text-dim: #9a9890;
+    --purple: #534AB7; --purple-light: #EEEDFE; --purple-text: #3C3489;
+    --teal: #1D9E75; --teal-light: #E1F5EE; --teal-text: #085041;
+    --red: #E24B4A; --red-light: #FCEBEB; --red-text: #A32D2D;
+    --amber: #BA7517; --amber-light: #FAEEDA; --amber-text: #633806;
+    --green: #639922; --green-light: #EAF3DE; --green-text: #27500A;
+    --radius: 8px; --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18; --surface: #242422; --surface2: #2e2e2c;
+      --border: rgba(255,255,255,0.10); --border-strong: rgba(255,255,255,0.18);
+      --text: #e8e7e4; --text-muted: #a8a7a3; --text-dim: #6a6965;
+      --purple-light: #26215C; --purple-text: #AFA9EC;
+      --teal-light: #04342C; --teal-text: #9FE1CB;
+      --red-light: #501313; --red-text: #F09595;
+      --amber-light: #412402; --amber-text: #FAC775;
+      --green-light: #173404; --green-text: #C0DD97;
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; height: 100vh; overflow: hidden; }
+  #app { display: grid; grid-template-columns: 240px 1fr; height: 100vh; }
+
+  /* ── Sidebar ──────────────────────────────────────────── */
+  #sidebar { background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+  #sidebar-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  #sidebar-header h1 { font-size: 13px; font-weight: 600; }
+  #sidebar-header p { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
+  #search { margin: 8px 12px; padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); color: var(--text); font-size: 12px; width: calc(100% - 24px); outline: none; }
+  #search:focus { border-color: var(--purple); }
+  #char-list { overflow-y: auto; flex: 1; }
+  .section-label { padding: 6px 16px 2px; font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.07em; text-transform: uppercase; }
+  .char-item { display: flex; align-items: center; gap: 10px; padding: 8px 14px; cursor: pointer; border-left: 2px solid transparent; transition: background 0.1s; }
+  .char-item:hover { background: var(--surface2); }
+  .char-item.active { background: var(--purple-light); border-left-color: var(--purple); }
+  .char-item.active .char-name { color: var(--purple-text); }
+  .char-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; flex-shrink: 0; }
+  .av-pc { background: var(--purple-light); color: var(--purple-text); }
+  .av-npc { background: var(--teal-light); color: var(--teal-text); }
+  .char-info .char-name { font-size: 12px; font-weight: 500; }
+  .char-info .char-quirk { font-size: 11px; color: var(--text-muted); }
+
+  /* ── Main nav ─────────────────────────────────────────── */
+  #main { display: flex; flex-direction: column; overflow: hidden; }
+  #main-nav { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .nav-btn { padding: 10px 20px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--text-muted); border-bottom: 2px solid transparent; transition: color 0.1s; }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
+  .main-view { display: none; flex: 1; overflow: hidden; flex-direction: column; }
+  .main-view.active { display: flex; }
+
+  /* ── Profile (Characters view) ────────────────────────── */
+  #profile { flex-shrink: 0; background: var(--surface); border-bottom: 1px solid var(--border); }
+  #profile-inner { padding: 14px 20px 10px; display: flex; gap: 16px; align-items: flex-start; }
+  #profile-avatar { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 600; flex-shrink: 0; }
+  #profile-body { flex: 1; min-width: 0; }
+  #profile-name { font-size: 19px; font-weight: 600; }
+  #profile-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  #tags-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; align-items: center; }
+  .tag { font-size: 11px; padding: 2px 7px; border-radius: 4px; border: 1px solid var(--border); color: var(--text-muted); background: var(--surface2); }
+  .tag-pc { background: var(--purple-light); color: var(--purple-text); border-color: transparent; font-weight: 600; }
+  .edit-wrap { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--text-muted); background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; }
+  .edit-wrap label { white-space: nowrap; }
+  .stat-input { width: 38px; padding: 1px 2px; border: none; background: transparent; color: var(--text); font-size: 11px; font-weight: 600; outline: none; text-align: center; }
+  .stat-input:focus { color: var(--purple); }
+  .class-input { width: 130px; padding: 1px 2px; border: none; background: transparent; color: var(--text); font-size: 11px; font-weight: 600; outline: none; }
+  .class-input:focus { color: var(--purple); }
+  #scores-row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .score-block { display: flex; flex-direction: column; align-items: center; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 4px 7px; min-width: 44px; }
+  .score-label { font-size: 9px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; }
+  .score-val-input { width: 36px; font-size: 15px; font-weight: 700; color: var(--text); text-align: center; border: none; background: transparent; outline: none; padding: 0; }
+  .score-val-input:focus { color: var(--purple); }
+  .score-mod { font-size: 10px; color: var(--text-muted); }
+  #profile-tabs { display: flex; border-top: 1px solid var(--border); }
+  .tab-btn { padding: 7px 14px; font-size: 12px; cursor: pointer; border: none; background: none; color: var(--text-muted); border-bottom: 2px solid transparent; font-weight: 500; }
+  .tab-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
+  #tab-content { padding: 12px 20px; font-size: 13px; color: var(--text-muted); line-height: 1.6; max-height: 130px; overflow-y: auto; background: var(--surface); border-bottom: 1px solid var(--border); }
+  #tab-content.tab-quirk { max-height: 280px; }
+  .quirk-header { margin-bottom: 8px; }
+  .quirk-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .quirk-meta { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
+  .weakness-block { background: var(--red-light); border-left: 3px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; padding: 6px 10px; margin-bottom: 8px; font-size: 12px; color: var(--red-text); }
+  .ability-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 10px; margin-bottom: 6px; }
+  .ability-card:last-child { margin-bottom: 0; }
+  .ability-card.locked { opacity: 0.42; border-style: dashed; }
+  .ability-card.locked .ability-name { color: var(--text-muted); }
+  .ability-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .ability-type { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; background: var(--purple-light); color: var(--purple-text); font-weight: 500; margin-left: 6px; vertical-align: middle; }
+  .ability-desc { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
+  .lock-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; padding: 1px 7px; border-radius: 3px; background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); margin-left: 6px; vertical-align: middle; }
+  .upgrade-note { font-size: 11px; color: var(--teal); margin-top: 5px; padding-top: 5px; border-top: 1px solid var(--border); font-style: italic; }
+  .player-note { background: var(--amber-light); border-left: 3px solid var(--amber); border-radius: 0 var(--radius) var(--radius) 0; padding: 6px 10px; margin-top: 8px; font-size: 12px; color: var(--text-muted); }
+  .player-note strong { color: var(--text); }
+
+  /* ── Relationships ────────────────────────────────────── */
+  #rel-section { flex: 1; overflow-y: auto; }
+  #rel-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px 8px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 10; }
+  #rel-header h2 { font-size: 13px; font-weight: 600; }
+  #rel-legend { display: flex; gap: 12px; }
+  .leg { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-muted); }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+  #rel-list { padding: 0 20px 24px; }
+  .rel-row { display: grid; grid-template-columns: 180px 1fr 52px; align-items: start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .rel-row:last-child { border-bottom: none; }
+  .rel-char-name { font-size: 13px; font-weight: 500; }
+  .rel-char-quirk { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .rel-controls { display: flex; flex-direction: column; gap: 4px; }
+  .slider-wrap { display: flex; align-items: center; gap: 8px; }
+  .rel-slider { flex: 1; accent-color: var(--purple); cursor: pointer; }
+  .rel-score { font-size: 14px; font-weight: 600; text-align: center; padding-top: 2px; min-width: 32px; }
+  .score-neg { color: var(--red); }
+  .score-zero { color: var(--text-dim); }
+  .score-pos { color: var(--purple); }
+  .rel-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); padding: 0 1px; }
+  .rel-note { font-size: 12px; padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); color: var(--text); width: 100%; resize: none; outline: none; font-family: inherit; min-height: 28px; }
+  .rel-note:focus { border-color: var(--purple); background: var(--surface); }
+
+  /* ── Dice view ────────────────────────────────────────── */
+  #view-dice { padding: 24px; overflow-y: auto; gap: 20px; }
+  .dice-section-title { font-size: 11px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 10px; }
+  .dice-tray { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+  .die-btn { width: 64px; height: 64px; border: 2px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: border-color 0.1s, background 0.1s; }
+  .die-btn:hover { border-color: var(--purple); background: var(--purple-light); color: var(--purple-text); }
+  .die-btn.selected { border-color: var(--purple); background: var(--purple-light); color: var(--purple-text); }
+  .die-btn .die-face { font-size: 22px; }
+  .dice-controls { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+  .counter-group { display: flex; align-items: center; gap: 8px; }
+  .counter-label { font-size: 12px; color: var(--text-muted); }
+  .counter-btn { width: 28px; height: 28px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); color: var(--text); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
+  .counter-btn:hover { background: var(--surface); border-color: var(--border-strong); }
+  .counter-val { font-size: 15px; font-weight: 600; min-width: 28px; text-align: center; }
+  .roll-btn { padding: 10px 28px; background: var(--purple); color: #fff; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.1s; }
+  .roll-btn:hover { opacity: 0.85; }
+  .dice-result { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 20px; min-height: 88px; display: flex; align-items: center; gap: 20px; }
+  .result-number { font-size: 52px; font-weight: 700; color: var(--text); line-height: 1; min-width: 80px; }
+  .result-number.crit { color: var(--green); }
+  .result-number.fumble { color: var(--red); }
+  .result-detail { font-size: 13px; color: var(--text-muted); }
+  .result-label { font-size: 11px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .result-breakdown { font-size: 14px; color: var(--text); margin-top: 2px; }
+  .crit-label { font-size: 12px; font-weight: 600; color: var(--green); margin-top: 4px; }
+  .fumble-label { font-size: 12px; font-weight: 600; color: var(--red); margin-top: 4px; }
+  .dice-history { display: flex; flex-direction: column; gap: 4px; }
+  .history-row { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); font-size: 12px; }
+  .history-die { font-size: 11px; font-weight: 600; color: var(--purple-text); background: var(--purple-light); padding: 1px 6px; border-radius: 3px; }
+  .history-total { font-size: 14px; font-weight: 700; color: var(--text); min-width: 32px; }
+  .history-breakdown { color: var(--text-muted); flex: 1; }
+  .history-crit { color: var(--green); font-weight: 600; }
+  .history-fumble { color: var(--red); font-weight: 600; }
+
+  /* ── Encounter view ───────────────────────────────────── */
+  #view-encounter { overflow: hidden; }
+  #enc-header { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; flex-wrap: wrap; }
+  .enc-round { font-size: 13px; font-weight: 600; color: var(--text); }
+  .enc-round span { color: var(--purple); }
+  .enc-btn { padding: 5px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface2); color: var(--text); font-size: 12px; font-weight: 500; cursor: pointer; }
+  .enc-btn:hover { background: var(--border); }
+  .enc-btn.primary { background: var(--purple); color: #fff; border-color: transparent; }
+  .enc-btn.primary:hover { opacity: 0.85; }
+  .enc-btn.danger { color: var(--red); }
+  #enc-add-bar { display: flex; gap: 8px; padding: 10px 20px; border-bottom: 1px solid var(--border); background: var(--bg); flex-shrink: 0; flex-wrap: wrap; align-items: center; }
+  #enc-add-bar select, #enc-add-bar input { padding: 5px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: 12px; outline: none; }
+  #enc-add-bar select:focus, #enc-add-bar input:focus { border-color: var(--purple); }
+  #enc-add-bar input[type=number] { width: 60px; }
+  #enc-add-bar input[type=text] { width: 110px; }
+  .add-sep { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
+  #enc-list { flex: 1; overflow-y: auto; padding: 12px 20px; display: flex; flex-direction: column; gap: 6px; }
+  .enc-row { display: grid; grid-template-columns: 52px 1fr 1fr 52px; gap: 10px; align-items: center; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); border-left: 3px solid transparent; }
+  .enc-row.current-turn { border-left-color: var(--purple); background: var(--purple-light); }
+  .enc-row.is-dead { opacity: 0.45; }
+  .enc-init { display: flex; flex-direction: column; align-items: center; }
+  .enc-init label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+  .enc-init input { width: 40px; text-align: center; font-size: 16px; font-weight: 700; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); padding: 3px; outline: none; }
+  .enc-init input:focus { border-color: var(--purple); }
+  .enc-name-col { display: flex; flex-direction: column; gap: 4px; }
+  .enc-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .enc-name-sub { font-size: 11px; color: var(--text-muted); }
+  .enc-conditions { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
+  .cond-pill { font-size: 10px; padding: 1px 6px; border-radius: 10px; background: var(--amber-light); color: var(--amber-text); cursor: pointer; font-weight: 500; border: 1px solid transparent; }
+  .cond-pill:hover { border-color: var(--amber); }
+  .enc-hp-col { display: flex; flex-direction: column; gap: 4px; }
+  .hp-bar-wrap { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .hp-bar { height: 100%; border-radius: 2px; background: var(--green); transition: width 0.2s, background 0.2s; }
+  .hp-controls { display: flex; align-items: center; gap: 4px; }
+  .hp-adj-btn { width: 22px; height: 22px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface2); color: var(--text); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; padding: 0; }
+  .hp-adj-btn:hover { background: var(--surface); }
+  .hp-adj-btn.heal { color: var(--green); }
+  .hp-adj-btn.dmg { color: var(--red); }
+  .hp-display { font-size: 12px; font-weight: 600; color: var(--text); min-width: 52px; text-align: center; cursor: pointer; }
+  .hp-display:hover { color: var(--purple); }
+  .hp-input-wrap { display: flex; align-items: center; gap: 2px; }
+  .hp-current-input { width: 36px; text-align: center; font-size: 12px; font-weight: 600; border: 1px solid var(--purple); border-radius: 4px; background: var(--surface); color: var(--text); padding: 2px; outline: none; }
+  .hp-apply { display: flex; gap: 4px; }
+  .hp-apply input { width: 50px; padding: 3px 6px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: 12px; text-align: center; outline: none; }
+  .hp-apply input:focus { border-color: var(--purple); }
+  .enc-ac { display: flex; flex-direction: column; align-items: center; }
+  .enc-ac label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .enc-ac span { font-size: 16px; font-weight: 700; }
+  .enc-actions { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+  .icon-btn { width: 26px; height: 26px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); color: var(--text-muted); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .icon-btn:hover { color: var(--text); background: var(--surface); }
+  .icon-btn.remove:hover { color: var(--red); border-color: var(--red); }
+  .cond-selector { display: none; flex-wrap: wrap; gap: 4px; padding: 8px 14px; border-top: 1px solid var(--border); grid-column: 1 / -1; }
+  .cond-selector.open { display: flex; }
+  .cond-option { font-size: 11px; padding: 2px 8px; border-radius: 10px; cursor: pointer; border: 1px solid var(--border); background: var(--surface2); color: var(--text-muted); }
+  .cond-option:hover { border-color: var(--amber); color: var(--amber-text); background: var(--amber-light); }
+  .cond-option.active { background: var(--amber-light); color: var(--amber-text); border-color: var(--amber); font-weight: 500; }
+  .enc-empty { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 13px; }
+
+  /* ── Save bar ─────────────────────────────────────────── */
+  #save-bar { display: flex; align-items: center; gap: 8px; padding: 7px 20px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
+  #save-bar span { font-size: 11px; color: var(--text-dim); }
+  #save-status { margin-left: auto; font-size: 11px; color: var(--text-dim); transition: color 0.3s; }
+  #save-status.saving { color: var(--amber); }
+  #save-status.saved { color: var(--teal); }
+  #save-status.error { color: var(--red); }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="sidebar">
+    <div id="sidebar-header">
+      <h1>Class 1-A</h1>
+      <p>U.A. High — Hero Course</p>
+    </div>
+    <input id="search" type="search" placeholder="Search characters..." oninput="filterList(this.value)">
+    <div id="char-list"></div>
+  </div>
+
+  <div id="main">
+    <div id="main-nav">
+      <button class="nav-btn active" onclick="setView('character')">Characters</button>
+      <button class="nav-btn" onclick="setView('dice')">Dice Roller</button>
+      <button class="nav-btn" onclick="setView('encounter')">Encounter</button>
+    </div>
+
+    <!-- ── Character view ── -->
+    <div id="view-character" class="main-view active">
+      <div id="profile">
+        <div id="profile-inner">
+          <div id="profile-avatar"></div>
+          <div id="profile-body">
+            <div id="profile-name"></div>
+            <div id="profile-sub"></div>
+            <div id="tags-row"></div>
+            <div id="scores-row"></div>
+          </div>
+        </div>
+        <div id="profile-tabs">
+          <button class="tab-btn active" onclick="showTab('personality')">Personality</button>
+          <button class="tab-btn" onclick="showTab('appearance')">Appearance</button>
+          <button class="tab-btn" onclick="showTab('combat')">Combat role</button>
+          <button class="tab-btn" onclick="showTab('social')">Social role</button>
+          <button class="tab-btn" onclick="showTab('quirk')">Quirk</button>
+        </div>
+        <div id="tab-content"></div>
+      </div>
+      <div id="rel-section">
+        <div id="rel-header">
+          <h2 id="rel-heading">Relationships</h2>
+          <div id="rel-legend">
+            <div class="leg"><div class="leg-dot" style="background:var(--red)"></div>Hostile</div>
+            <div class="leg"><div class="leg-dot" style="background:var(--text-dim)"></div>Neutral</div>
+            <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Positive</div>
+          </div>
+        </div>
+        <div id="rel-list"></div>
+      </div>
+    </div>
+
+    <!-- ── Dice Roller view ── -->
+    <div id="view-dice" class="main-view">
+      <p class="dice-section-title" style="padding:24px 24px 0">Choose die</p>
+      <div class="dice-tray" style="padding:0 24px">
+        <button class="die-btn selected" onclick="selectDie(4, this)"><span class="die-face">⟁</span>d4</button>
+        <button class="die-btn" onclick="selectDie(6, this)"><span class="die-face">⬡</span>d6</button>
+        <button class="die-btn" onclick="selectDie(8, this)"><span class="die-face">◆</span>d8</button>
+        <button class="die-btn" onclick="selectDie(10, this)"><span class="die-face">◈</span>d10</button>
+        <button class="die-btn" onclick="selectDie(12, this)"><span class="die-face">⬠</span>d12</button>
+        <button class="die-btn" onclick="selectDie(20, this)"><span class="die-face">⬟</span>d20</button>
+      </div>
+      <div class="dice-controls" style="padding:16px 24px 0">
+        <div class="counter-group">
+          <span class="counter-label">Dice</span>
+          <button class="counter-btn" onclick="adjustDice(-1)">−</button>
+          <span class="counter-val" id="dice-count">1</span>
+          <button class="counter-btn" onclick="adjustDice(1)">+</button>
+        </div>
+        <div class="counter-group">
+          <span class="counter-label">Modifier</span>
+          <button class="counter-btn" onclick="adjustMod(-1)">−</button>
+          <span class="counter-val" id="dice-mod">0</span>
+          <button class="counter-btn" onclick="adjustMod(1)">+</button>
+        </div>
+        <button class="roll-btn" onclick="rollDice()" id="roll-btn">Roll 1d4</button>
+      </div>
+      <div class="dice-result" style="margin:16px 24px 0" id="dice-result">
+        <div style="color:var(--text-dim);font-size:13px;">Select a die and roll</div>
+      </div>
+      <p class="dice-section-title" style="padding:0 24px 6px">Recent rolls</p>
+      <div class="dice-history" style="padding:0 24px 24px" id="dice-history"></div>
+    </div>
+
+    <!-- ── Encounter view ── -->
+    <div id="view-encounter" class="main-view">
+      <div id="enc-header">
+        <span class="enc-round">Round <span id="enc-round-num">1</span></span>
+        <button class="enc-btn" onclick="encPrevTurn()">← Prev</button>
+        <button class="enc-btn primary" onclick="encNextTurn()">Next Turn →</button>
+        <button class="enc-btn" onclick="encSortByInit()">Sort by Initiative</button>
+        <button class="enc-btn" onclick="encRollAllInit()">Roll All Initiative</button>
+        <div style="flex:1"></div>
+        <button class="enc-btn danger" onclick="encReset()">Reset Encounter</button>
+      </div>
+      <div id="enc-add-bar">
+        <span style="font-size:11px;color:var(--text-dim);font-weight:600;">Add from roster:</span>
+        <select id="enc-roster-select"><option value="">— choose —</option></select>
+        <button class="enc-btn" onclick="encAddFromRoster()">Add</button>
+        <div class="add-sep"></div>
+        <span style="font-size:11px;color:var(--text-dim);font-weight:600;">Custom:</span>
+        <input type="text" id="enc-custom-name" placeholder="Name">
+        <input type="number" id="enc-custom-hp" placeholder="HP" min="1">
+        <input type="number" id="enc-custom-ac" placeholder="AC" min="1">
+        <button class="enc-btn" onclick="encAddCustom()">Add</button>
+      </div>
+      <div id="enc-list"><div class="enc-empty">No combatants. Add characters from the roster or add custom enemies above.</div></div>
+    </div>
+
+    <div id="save-bar">
+      <span>Saves to <code style="font-size:11px;background:var(--surface2);padding:1px 5px;border-radius:4px">CLASS-1A/</code> character files &amp; relationships.json</span>
+      <span id="save-status"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+const STAT_KEYS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
+const CONDITIONS = ['Blinded','Charmed','Deafened','Exhausted','Frightened','Grappled',
+  'Incapacitated','Invisible','Paralyzed','Poisoned','Prone','Restrained','Stunned','Unconscious'];
+
+let CHARACTERS = [];
+let selected = null;
+let activeTab = 'personality';
+let rels = {};
+let relSaveTimer = null;
+let charSaveTimers = {};
+let currentView = 'character';
+
+/* ── Save status ──────────────────────────────────────── */
+function setSaveStatus(state, text) {
+  const el = document.getElementById('save-status');
+  el.className = state;
+  el.textContent = text;
+}
+
+/* ── View switching ───────────────────────────────────── */
+function setView(view) {
+  currentView = view;
+  document.querySelectorAll('.main-view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', ['character','dice','encounter'][i] === view);
+  });
+}
+
+/* ── Relationships persistence ────────────────────────── */
+function relKey(from, to) { return from + ':' + to; }
+function getRel(fromId, toId) { return rels[relKey(fromId, toId)] || { score: 0, note: '' }; }
+
+function setRelScore(fromId, toId, score) {
+  const k = relKey(fromId, toId);
+  rels[k] = rels[k] || { score: 0, note: '' };
+  rels[k].score = parseInt(score);
+  updateScoreDisplay(fromId, toId, score);
+  scheduleRelSave();
+}
+function setRelNote(fromId, toId, note) {
+  const k = relKey(fromId, toId);
+  rels[k] = rels[k] || { score: 0, note: '' };
+  rels[k].note = note;
+  scheduleRelSave();
+}
+function scheduleRelSave() {
+  clearTimeout(relSaveTimer);
+  setSaveStatus('saving', 'Saving…');
+  relSaveTimer = setTimeout(async () => {
+    try {
+      const r = await fetch('/api/relationships', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(rels) });
+      setSaveStatus(r.ok ? 'saved' : 'error', r.ok ? 'Saved '+new Date().toLocaleTimeString() : 'Save failed');
+    } catch { setSaveStatus('error','Offline — not saved'); }
+  }, 400);
+}
+function updateScoreDisplay(fromId, toId, score) {
+  const el = document.getElementById('score-'+fromId+'-'+toId);
+  if (!el) return;
+  score = parseInt(score);
+  el.textContent = score > 0 ? '+'+score : ''+score;
+  el.className = 'rel-score '+(score<0?'score-neg':score>0?'score-pos':'score-zero');
+}
+
+/* ── Character persistence ────────────────────────────── */
+function scheduleCharSave(c) {
+  clearTimeout(charSaveTimers[c._file]);
+  setSaveStatus('saving', 'Saving…');
+  charSaveTimers[c._file] = setTimeout(async () => {
+    try {
+      const r = await fetch('/api/character/'+c._file, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(c) });
+      setSaveStatus(r.ok?'saved':'error', r.ok?'Saved '+new Date().toLocaleTimeString():'Save failed');
+    } catch { setSaveStatus('error','Offline — not saved'); }
+  }, 500);
+}
+function onStatChange(field, value, isFloat) {
+  const c = selected;
+  const num = isFloat ? parseFloat(value) : parseInt(value);
+  if (isNaN(num)) return;
+  c[field] = num;
+  scheduleCharSave(c);
+  if (field === 'level' && activeTab === 'quirk') showTab('quirk');
+}
+function onAbilityScoreChange(key, value) {
+  const c = selected;
+  const num = parseInt(value);
+  if (isNaN(num)) return;
+  c.ability_scores[key] = num;
+  const mod = Math.floor((num - 10) / 2);
+  c.modifiers[key] = mod;
+  const modEl = document.getElementById('mod-'+key);
+  if (modEl) modEl.textContent = (mod>=0?'+':'')+mod;
+  scheduleCharSave(c);
+}
+function onClassChange(value) { selected.suggested_class = value; scheduleCharSave(selected); }
+
+/* ── Sidebar ──────────────────────────────────────────── */
+function initials(name) { return name.split(' ').slice(0,2).map(w=>w[0]).join(''); }
+
+function renderSidebar() {
+  const pcs = CHARACTERS.filter(c => c.is_pc);
+  const npcs = CHARACTERS.filter(c => !c.is_pc);
+  let html = '<div class="section-label">Player Characters</div>';
+  for (const c of pcs) html += charItem(c);
+  html += '<div class="section-label">Class 1-A</div>';
+  for (const c of npcs) html += charItem(c);
+  document.getElementById('char-list').innerHTML = html;
+
+  // Populate encounter roster select
+  const sel = document.getElementById('enc-roster-select');
+  sel.innerHTML = '<option value="">— choose —</option>';
+  for (const c of CHARACTERS) {
+    const opt = document.createElement('option');
+    opt.value = c._roster_id;
+    opt.textContent = c.name + ' (' + c.quirk + ')';
+    sel.appendChild(opt);
+  }
+}
+
+function charItem(c) {
+  const av = c.is_pc ? 'av-pc' : 'av-npc';
+  const active = selected && c._roster_id === selected._roster_id ? ' active' : '';
+  return `<div class="char-item${active}" onclick="selectChar(${c._roster_id})" id="item-${c._roster_id}">
+    <div class="char-avatar ${av}">${initials(c.name)}</div>
+    <div class="char-info"><div class="char-name">${c.name}</div><div class="char-quirk">${c.quirk}</div></div>
+  </div>`;
+}
+
+function selectChar(id) {
+  selected = CHARACTERS.find(c => c._roster_id === id);
+  document.querySelectorAll('.char-item').forEach(el => el.classList.remove('active'));
+  const item = document.getElementById('item-'+id);
+  if (item) item.classList.add('active');
+  activeTab = 'personality';
+  renderProfile();
+  renderRelationships();
+  setView('character');
+}
+
+function filterList(q) {
+  const query = q.toLowerCase();
+  document.querySelectorAll('.char-item').forEach(el => {
+    const name = el.querySelector('.char-name').textContent.toLowerCase();
+    const quirk = el.querySelector('.char-quirk').textContent.toLowerCase();
+    el.style.display = (name.includes(query)||quirk.includes(query)) ? '' : 'none';
+  });
+  document.querySelectorAll('.section-label').forEach(el => el.style.display = q ? 'none' : '');
+}
+
+/* ── Profile ──────────────────────────────────────────── */
+function renderProfile() {
+  const c = selected;
+  const avEl = document.getElementById('profile-avatar');
+  avEl.textContent = initials(c.name);
+  avEl.style.background = c.is_pc ? 'var(--purple-light)' : 'var(--teal-light)';
+  avEl.style.color = c.is_pc ? 'var(--purple-text)' : 'var(--teal-text)';
+  document.getElementById('profile-name').textContent = c.name;
+  document.getElementById('profile-sub').textContent = c.quirk+' · '+(c.physiology||'')+' · '+(c.height||'')+' · '+(c.gender||'');
+
+  const tags = document.getElementById('tags-row');
+  let tagHtml = '';
+  if (c.is_pc) tagHtml += '<span class="tag tag-pc">PC</span>';
+  tagHtml += `<div class="edit-wrap"><label>Lv</label><input class="stat-input" type="number" min="1" max="20" value="${c.level||1}" onchange="onStatChange('level',this.value,false)" title="Level"></div>`;
+  tagHtml += `<div class="edit-wrap"><label>HP</label><input class="stat-input" type="number" min="1" value="${c.HP||10}" onchange="onStatChange('HP',this.value,false)" title="Max HP"></div>`;
+  tagHtml += `<div class="edit-wrap"><label>AC</label><input class="stat-input" type="number" min="1" value="${c.AC||10}" onchange="onStatChange('AC',this.value,false)" title="Armour Class"></div>`;
+  tagHtml += `<div class="edit-wrap"><label>Class</label><input class="class-input" type="text" value="${escHtml(c.suggested_class||'')}" onchange="onClassChange(this.value)" title="Class"></div>`;
+  tags.innerHTML = tagHtml;
+
+  const sc = c.ability_scores || {};
+  const mo = c.modifiers || {};
+  document.getElementById('scores-row').innerHTML = STAT_KEYS.map(k => {
+    const val = sc[k] ?? 10;
+    const mod = mo[k] ?? Math.floor((val-10)/2);
+    return `<div class="score-block">
+      <span class="score-label">${k}</span>
+      <input class="score-val-input" type="number" min="1" max="30" value="${val}" onchange="onAbilityScoreChange('${k}',this.value)" title="${k}">
+      <span class="score-mod" id="mod-${k}">${(mod>=0?'+':'')+mod}</span>
+    </div>`;
+  }).join('');
+
+  showTab(activeTab);
+}
+
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function showTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().toLowerCase().replace(' ','')===tab.replace(' ',''));
+  });
+  const c = selected;
+  const p = c.personality || {};
+  const app = c.appearance || {};
+  const dm = c.dm_notes || {};
+  const tabContent = document.getElementById('tab-content');
+  tabContent.classList.remove('tab-quirk');
+  if (tab==='personality') { tabContent.textContent = p.summary||''; return; }
+  if (tab==='appearance') { tabContent.textContent = [app.hair,app.build,app.other].filter(Boolean).join(' — '); return; }
+  if (tab==='combat') { tabContent.textContent = dm.combat_role||''; return; }
+  if (tab==='social') { tabContent.textContent = dm.social_role||''; return; }
+  if (tab==='quirk') { renderQuirkTab(c); return; }
+}
+
+/* ── Quirk tab ────────────────────────────────────────── */
+function parseRequiredLevel(ab) {
+  const haystack = ((ab.type||'')+' '+(ab.description||'')).toLowerCase();
+  for (const re of [/unlocks at level (\d+)/,/available from level (\d+)/,/\(level (\d+)\)/]) {
+    const m = haystack.match(re);
+    if (m) return parseInt(m[1]);
+  }
+  return 1;
+}
+function currentUpgradeNote(desc, charLevel) {
+  if (!desc) return null;
+  const re = /At level (\d+):([^.]+)\./gi;
+  let match, best = null;
+  while ((match = re.exec(desc)) !== null) {
+    if (parseInt(match[1]) <= charLevel) best = `Level ${match[1]} upgrade active: ${match[2].trim()}`;
+  }
+  return best;
+}
+
+function renderQuirkTab(c) {
+  const qm = c.quirk_mechanics || {};
+  const pn = c.player_notes || {};
+  const charLevel = c.level || 1;
+  const SKIP = new Set(['name','type','description']);
+  const EXTRA = { unarmed_strike:'Unarmed strike', damage:'Damage', pressure_tier_system:'Pressure tier' };
+
+  let html = `<div class="quirk-header">
+    <span class="quirk-name">${escHtml(c.quirk)}</span>
+    <span class="quirk-meta"> · ${escHtml(c.quirk_type||'')} · ${escHtml(c.quirk_rarity||'')} · Save DC ${c.quirk_save_DC||'—'} (${escHtml(c.quirk_ability||'')})</span>
+  </div>`;
+  if (qm.source) html += `<div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">Source: ${escHtml(qm.source)}</div>`;
+  if (qm.weakness) html += `<div class="weakness-block"><strong>Weakness:</strong> ${escHtml(qm.weakness)}</div>`;
+  if (qm.pressure_tier_system) html += `<div class="ability-card" style="background:var(--surface2);">
+    <span class="ability-name">Pressure tier system</span>
+    <div class="ability-desc">${escHtml(qm.pressure_tier_system)}</div></div>`;
+
+  for (const ab of (qm.abilities||[])) {
+    const reqLevel = parseRequiredLevel(ab);
+    const locked = reqLevel > charLevel;
+    html += `<div class="ability-card${locked?' locked':''}">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+        <span class="ability-name">${escHtml(ab.name)}</span>
+        <span class="ability-type">${escHtml(ab.type||'')}</span>
+        ${locked
+          ? `<span class="lock-badge">🔒 Unlocks at level ${reqLevel}</span>`
+          : reqLevel>1
+            ? `<span class="lock-badge" style="background:var(--teal-light);color:var(--teal-text);border-color:transparent;">✓ Unlocked lv ${reqLevel}</span>`
+            : ''}
+      </div>
+      <div class="ability-desc">${escHtml(ab.description||'')}</div>`;
+    if (!locked) {
+      const note = currentUpgradeNote(ab.description, charLevel);
+      if (note) html += `<div class="upgrade-note">${escHtml(note)}</div>`;
+    }
+    for (const [key, val] of Object.entries(ab)) {
+      if (SKIP.has(key)||val===null||val===undefined||val==='') continue;
+      const label = EXTRA[key]||key.replace(/_/g,' ');
+      html += `<div style="margin-top:5px;padding-top:5px;border-top:1px solid var(--border);">
+        <span style="font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;">${escHtml(label)}</span>
+        <div class="ability-desc" style="margin-top:2px;">${escHtml(String(val))}</div></div>`;
+    }
+    html += `</div>`;
+  }
+  if (pn.role_summary) html += `<div class="player-note"><strong>Player note:</strong> ${escHtml(pn.role_summary)}</div>`;
+  if (pn.growth_hook) html += `<div class="player-note" style="margin-top:6px;"><strong>Growth hook:</strong> ${escHtml(pn.growth_hook)}</div>`;
+
+  const el = document.getElementById('tab-content');
+  el.innerHTML = html;
+  el.classList.add('tab-quirk');
+}
+
+/* ── Relationships ────────────────────────────────────── */
+function renderRelationships() {
+  const c = selected;
+  document.getElementById('rel-heading').textContent = c.name+"'s view of classmates";
+  const others = CHARACTERS.filter(o => o._roster_id !== c._roster_id);
+  let html = '';
+  for (const o of others) {
+    const rel = getRel(c._roster_id, o._roster_id);
+    const score = rel.score||0;
+    const scoreStr = score>0?'+'+score:''+score;
+    const scoreClass = score<0?'score-neg':score>0?'score-pos':'score-zero';
+    const av = o.is_pc?'av-pc':'av-npc';
+    html += `<div class="rel-row">
+      <div><div style="display:flex;align-items:center;gap:6px">
+        <div class="char-avatar ${av}" style="width:24px;height:24px;font-size:9px;flex-shrink:0">${initials(o.name)}</div>
+        <div><div class="rel-char-name">${o.name}</div><div class="rel-char-quirk">${o.quirk}${o.is_pc?' · PC':''}</div></div>
+      </div></div>
+      <div class="rel-controls">
+        <div class="slider-wrap"><input type="range" class="rel-slider" min="-10" max="10" step="1" value="${score}" oninput="setRelScore(${c._roster_id},${o._roster_id},this.value)"></div>
+        <div class="rel-labels"><span>hate −10</span><span>0</span><span>love +10</span></div>
+        <textarea class="rel-note" rows="1" placeholder="Add a note…" oninput="setRelNote(${c._roster_id},${o._roster_id},this.value)">${escHtml(rel.note||'')}</textarea>
+      </div>
+      <div class="rel-score ${scoreClass}" id="score-${c._roster_id}-${o._roster_id}">${scoreStr}</div>
+    </div>`;
+  }
+  document.getElementById('rel-list').innerHTML = html;
+}
+
+/* ══════════════════════════════════════════════════════════
+   DICE ROLLER
+══════════════════════════════════════════════════════════ */
+let diceState = { sides: 4, count: 1, mod: 0 };
+let diceHistory = [];
+
+function selectDie(sides, btn) {
+  diceState.sides = sides;
+  document.querySelectorAll('.die-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateRollBtn();
+}
+function adjustDice(delta) {
+  diceState.count = Math.max(1, Math.min(20, diceState.count + delta));
+  document.getElementById('dice-count').textContent = diceState.count;
+  updateRollBtn();
+}
+function adjustMod(delta) {
+  diceState.mod = Math.max(-20, Math.min(20, diceState.mod + delta));
+  const el = document.getElementById('dice-mod');
+  el.textContent = diceState.mod >= 0 ? '+'+diceState.mod : ''+diceState.mod;
+  updateRollBtn();
+}
+function updateRollBtn() {
+  const { count, sides, mod } = diceState;
+  let label = `Roll ${count}d${sides}`;
+  if (mod > 0) label += ` +${mod}`;
+  else if (mod < 0) label += ` ${mod}`;
+  document.getElementById('roll-btn').textContent = label;
+}
+
+function rollDice() {
+  const { count, sides, mod } = diceState;
+  const rolls = Array.from({ length: count }, () => Math.floor(Math.random() * sides) + 1);
+  const total = rolls.reduce((a, b) => a + b, 0) + mod;
+  const isCrit = sides === 20 && count === 1 && rolls[0] === 20;
+  const isFumble = sides === 20 && count === 1 && rolls[0] === 1;
+  const label = `${count}d${sides}${mod>=0?'+'+mod:mod!==0?mod:''}`.replace('+0','');
+
+  const entry = { label, rolls, mod, total, isCrit, isFumble };
+  diceHistory.unshift(entry);
+  if (diceHistory.length > 12) diceHistory.pop();
+
+  renderDiceResult(entry);
+  renderDiceHistory();
+}
+
+function renderDiceResult(e) {
+  const modStr = e.mod > 0 ? ` + ${e.mod}` : e.mod < 0 ? ` − ${Math.abs(e.mod)}` : '';
+  const rollStr = e.rolls.join(', ') + modStr;
+  const numClass = e.isCrit ? 'crit' : e.isFumble ? 'fumble' : '';
+  const badge = e.isCrit ? '<div class="crit-label">★ Critical!</div>' : e.isFumble ? '<div class="fumble-label">☠ Fumble!</div>' : '';
+  document.getElementById('dice-result').innerHTML = `
+    <div class="result-number ${numClass}">${e.total}</div>
+    <div class="result-detail">
+      <div class="result-label">${e.label}</div>
+      <div class="result-breakdown">${escHtml(rollStr)}</div>
+      ${badge}
+    </div>`;
+}
+
+function renderDiceHistory() {
+  const el = document.getElementById('dice-history');
+  if (!diceHistory.length) { el.innerHTML = ''; return; }
+  el.innerHTML = diceHistory.map(e => {
+    const modStr = e.mod > 0 ? ` +${e.mod}` : e.mod < 0 ? ` ${e.mod}` : '';
+    const breakdown = e.rolls.join(', ') + modStr;
+    const badge = e.isCrit ? '<span class="history-crit">★ Crit</span>' : e.isFumble ? '<span class="history-fumble">☠ Fumble</span>' : '';
+    return `<div class="history-row">
+      <span class="history-die">${e.label}</span>
+      <span class="history-total">${e.total}</span>
+      <span class="history-breakdown">${escHtml(breakdown)}</span>
+      ${badge}
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   ENCOUNTER TRACKER
+══════════════════════════════════════════════════════════ */
+let encounter = { round: 1, currentIndex: 0, combatants: [] };
+let _encId = 0;
+
+function encId() { return ++_encId; }
+
+function encSave() { localStorage.setItem('mha_encounter_v1', JSON.stringify(encounter)); }
+function encLoad() {
+  try {
+    const raw = localStorage.getItem('mha_encounter_v1');
+    if (raw) encounter = JSON.parse(raw);
+  } catch {}
+}
+
+function encAddFromRoster() {
+  const sel = document.getElementById('enc-roster-select');
+  const id = parseInt(sel.value);
+  if (!id) return;
+  const c = CHARACTERS.find(x => x._roster_id === id);
+  if (!c) return;
+  const dexMod = (c.modifiers || {}).DEX ?? 0;
+  encounter.combatants.push({
+    id: encId(), name: c.name, initiative: 0, hp: c.HP || 10, maxHp: c.HP || 10,
+    ac: c.AC || 10, conditions: [], notes: '', rosterId: id, isPC: !!c.is_pc,
+    quirk: c.quirk, condOpen: false, editingHp: false, dexMod
+  });
+  sel.value = '';
+  encSave(); renderEncounter();
+}
+
+function encAddCustom() {
+  const name = document.getElementById('enc-custom-name').value.trim();
+  const hp = parseInt(document.getElementById('enc-custom-hp').value) || 10;
+  const ac = parseInt(document.getElementById('enc-custom-ac').value) || 10;
+  if (!name) { document.getElementById('enc-custom-name').focus(); return; }
+  encounter.combatants.push({
+    id: encId(), name, initiative: 0, hp, maxHp: hp, ac, conditions: [],
+    notes: '', rosterId: null, isPC: false, quirk: '', condOpen: false, editingHp: false, dexMod: 0
+  });
+  document.getElementById('enc-custom-name').value = '';
+  document.getElementById('enc-custom-hp').value = '';
+  document.getElementById('enc-custom-ac').value = '';
+  encSave(); renderEncounter();
+}
+
+function encRemove(id) {
+  encounter.combatants = encounter.combatants.filter(c => c.id !== id);
+  if (encounter.currentIndex >= encounter.combatants.length) encounter.currentIndex = 0;
+  encSave(); renderEncounter();
+}
+
+function encSetInit(id, val) {
+  const c = encounter.combatants.find(x => x.id === id);
+  if (c) { c.initiative = parseInt(val) || 0; encSave(); }
+}
+
+function encSortByInit() {
+  encounter.combatants.sort((a, b) => b.initiative - a.initiative);
+  encounter.currentIndex = 0;
+  encSave(); renderEncounter();
+}
+
+function encRollAllInit() {
+  for (const c of encounter.combatants) {
+    c.initiative = Math.floor(Math.random() * 20) + 1 + c.dexMod;
+  }
+  encSortByInit();
+}
+
+function encNextTurn() {
+  if (!encounter.combatants.length) return;
+  encounter.currentIndex = (encounter.currentIndex + 1) % encounter.combatants.length;
+  if (encounter.currentIndex === 0) encounter.round++;
+  document.getElementById('enc-round-num').textContent = encounter.round;
+  encSave(); renderEncounter();
+}
+
+function encPrevTurn() {
+  if (!encounter.combatants.length) return;
+  if (encounter.currentIndex === 0) {
+    if (encounter.round > 1) { encounter.round--; encounter.currentIndex = encounter.combatants.length - 1; }
+  } else {
+    encounter.currentIndex--;
+  }
+  document.getElementById('enc-round-num').textContent = encounter.round;
+  encSave(); renderEncounter();
+}
+
+function encReset() {
+  if (!confirm('Reset encounter? This will clear all combatants and round count.')) return;
+  encounter = { round: 1, currentIndex: 0, combatants: [] };
+  encSave(); document.getElementById('enc-round-num').textContent = 1; renderEncounter();
+}
+
+function encAdjustHp(id, delta) {
+  const c = encounter.combatants.find(x => x.id === id);
+  if (!c) return;
+  c.hp = Math.max(0, Math.min(c.maxHp, c.hp + delta));
+  encSave(); renderEncHpRow(id);
+}
+
+function encApplyDmg(id) {
+  const inp = document.getElementById('enc-dmg-inp-'+id);
+  const val = parseInt(inp?.value);
+  if (!isNaN(val) && val > 0) { encAdjustHp(id, -val); if (inp) inp.value = ''; }
+}
+function encApplyHeal(id) {
+  const inp = document.getElementById('enc-heal-inp-'+id);
+  const val = parseInt(inp?.value);
+  if (!isNaN(val) && val > 0) { encAdjustHp(id, val); if (inp) inp.value = ''; }
+}
+
+function encSetHpDirect(id, val) {
+  const c = encounter.combatants.find(x => x.id === id);
+  if (!c) return;
+  const num = parseInt(val);
+  if (!isNaN(num)) c.hp = Math.max(0, Math.min(c.maxHp, num));
+  c.editingHp = false;
+  encSave(); renderEncHpRow(id);
+}
+
+function encToggleCond(id) {
+  const c = encounter.combatants.find(x => x.id === id);
+  if (!c) return;
+  c.condOpen = !c.condOpen;
+  const el = document.getElementById('enc-conds-'+id);
+  if (el) el.classList.toggle('open', c.condOpen);
+}
+
+function encToggleCondition(id, cond) {
+  const c = encounter.combatants.find(x => x.id === id);
+  if (!c) return;
+  if (!Array.isArray(c.conditions)) c.conditions = [];
+  const idx = c.conditions.indexOf(cond);
+  if (idx >= 0) c.conditions.splice(idx, 1);
+  else c.conditions.push(cond);
+  encSave();
+  // Re-render just the conditions area
+  const pillsEl = document.getElementById('enc-pill-'+id);
+  if (pillsEl) pillsEl.innerHTML = renderCondPills(c);
+  const condEl = document.getElementById('enc-conds-'+id);
+  if (condEl) condEl.innerHTML = renderCondOptions(c);
+}
+
+function renderCondPills(c) {
+  if (!c.conditions.length) return `<span style="font-size:10px;color:var(--text-dim);">no conditions</span>`;
+  return c.conditions.map(cond =>
+    `<span class="cond-pill" onclick="encToggleCondition(${c.id},'${cond}')">${cond} ×</span>`
+  ).join('');
+}
+
+function renderCondOptions(c) {
+  return CONDITIONS.map(cond => {
+    const active = c.conditions.includes(cond) ? ' active' : '';
+    return `<span class="cond-option${active}" onclick="encToggleCondition(${c.id},'${cond}')">${cond}</span>`;
+  }).join('');
+}
+
+function renderEncHpRow(id) {
+  const c = encounter.combatants.find(x => x.id === id);
+  if (!c) return;
+  const el = document.getElementById('enc-hp-'+id);
+  if (!el) return;
+  const pct = c.maxHp > 0 ? (c.hp / c.maxHp) * 100 : 0;
+  const barColor = pct > 50 ? 'var(--green)' : pct > 25 ? 'var(--amber)' : 'var(--red)';
+  el.innerHTML = `
+    <div class="hp-bar-wrap"><div class="hp-bar" style="width:${pct}%;background:${barColor}"></div></div>
+    <div class="hp-controls">
+      <input id="enc-dmg-inp-${c.id}" type="number" min="1" placeholder="dmg" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
+        onkeydown="if(event.key==='Enter')encApplyDmg(${c.id})">
+      <button class="hp-adj-btn dmg" onclick="encApplyDmg(${c.id})" title="Apply damage">−</button>
+      <span class="hp-display" onclick="this.style.display='none';document.getElementById('enc-hp-edit-${c.id}').style.display='flex'">
+        ${c.hp}/${c.maxHp}
+      </span>
+      <span id="enc-hp-edit-${c.id}" style="display:none;align-items:center;gap:3px;">
+        <input class="hp-current-input" type="number" value="${c.hp}" min="0" max="${c.maxHp}"
+          onblur="encSetHpDirect(${c.id},this.value)" onkeydown="if(event.key==='Enter')encSetHpDirect(${c.id},this.value)">
+      </span>
+      <button class="hp-adj-btn heal" onclick="encApplyHeal(${c.id})" title="Apply healing">+</button>
+      <input id="enc-heal-inp-${c.id}" type="number" min="1" placeholder="heal" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
+        onkeydown="if(event.key==='Enter')encApplyHeal(${c.id})">
+    </div>`;
+}
+
+function renderEncounter() {
+  document.getElementById('enc-round-num').textContent = encounter.round;
+  const list = document.getElementById('enc-list');
+  if (!encounter.combatants.length) {
+    list.innerHTML = '<div class="enc-empty">No combatants. Add characters from the roster or add custom enemies above.</div>';
+    return;
+  }
+  list.innerHTML = encounter.combatants.map((c, idx) => {
+    const isCurrent = idx === encounter.currentIndex;
+    const isDead = c.hp === 0;
+    const pct = c.maxHp > 0 ? (c.hp / c.maxHp) * 100 : 0;
+    const barColor = pct > 50 ? 'var(--green)' : pct > 25 ? 'var(--amber)' : 'var(--red)';
+    const typeLabel = c.isPC ? 'PC' : c.quirk || 'NPC';
+    return `<div class="enc-row${isCurrent?' current-turn':''}${isDead?' is-dead':''}" id="enc-row-${c.id}" style="grid-template-columns:52px 1fr 1fr 32px;display:grid;flex-direction:unset;">
+      <div class="enc-init">
+        <label>Init</label>
+        <input type="number" value="${c.initiative}" onchange="encSetInit(${c.id},this.value)">
+      </div>
+      <div class="enc-name-col">
+        <div class="enc-name">${escHtml(c.name)}${isCurrent?' ◀':''}</div>
+        <div class="enc-name-sub">${escHtml(typeLabel)}</div>
+        <div class="enc-conditions" id="enc-pill-${c.id}">${renderCondPills(c)}</div>
+        <div class="cond-selector${c.condOpen?' open':''}" id="enc-conds-${c.id}">${renderCondOptions(c)}</div>
+      </div>
+      <div class="enc-hp-col" id="enc-hp-${c.id}">
+        <div class="hp-bar-wrap"><div class="hp-bar" style="width:${pct}%;background:${barColor}"></div></div>
+        <div class="hp-controls">
+          <input id="enc-dmg-inp-${c.id}" type="number" min="1" placeholder="dmg" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
+            onkeydown="if(event.key==='Enter')encApplyDmg(${c.id})">
+          <button class="hp-adj-btn dmg" onclick="encApplyDmg(${c.id})" title="Apply damage">−</button>
+          <span class="hp-display" onclick="this.style.display='none';document.getElementById('enc-hp-edit-${c.id}').style.display='flex'">
+            ${c.hp}/${c.maxHp}
+          </span>
+          <span id="enc-hp-edit-${c.id}" style="display:none;align-items:center;gap:3px;">
+            <input class="hp-current-input" type="number" value="${c.hp}" min="0" max="${c.maxHp}"
+              onblur="encSetHpDirect(${c.id},this.value)" onkeydown="if(event.key==='Enter')encSetHpDirect(${c.id},this.value)">
+          </span>
+          <button class="hp-adj-btn heal" onclick="encApplyHeal(${c.id})" title="Apply healing">+</button>
+          <input id="enc-heal-inp-${c.id}" type="number" min="1" placeholder="heal" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
+            onkeydown="if(event.key==='Enter')encApplyHeal(${c.id})">
+        </div>
+      </div>
+      <div class="enc-actions">
+        <div style="font-size:11px;font-weight:600;color:var(--text-dim);">AC ${c.ac}</div>
+        <button class="icon-btn" onclick="encToggleCond(${c.id})" title="Conditions">⚡</button>
+        <button class="icon-btn remove" onclick="encRemove(${c.id})" title="Remove">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── Init ──────────────────────────────────────────────── */
+(async () => {
+  const [charsRes, relsRes] = await Promise.all([fetch('/api/characters'), fetch('/api/relationships')]);
+  CHARACTERS = await charsRes.json();
+  rels = await relsRes.json();
+  CHARACTERS.sort((a, b) => { if (a.is_pc !== b.is_pc) return a.is_pc ? -1 : 1; return a._roster_id - b._roster_id; });
+  selected = CHARACTERS[0];
+  encLoad();
+  renderSidebar();
+  renderProfile();
+  renderRelationships();
+  renderEncounter();
+  setSaveStatus('saved', '');
+})();
+</script>
+</body>
+</html>

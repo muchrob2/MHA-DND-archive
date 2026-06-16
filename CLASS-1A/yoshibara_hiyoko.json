@@ -1,0 +1,73 @@
+{
+  "name": "Yoshibara Hiyoko",
+  "is_pc": false,
+  "gender": "Female",
+  "height": "5'6\"",
+  "body_type": "Athletic",
+  "physiology": "Standard",
+  "quirk": "Double",
+  "quirk_rarity": "Very Rare",
+  "quirk_type": "Emitter",
+  "appearance": {
+    "hair": "Orange. Kept loose. Easy to identify in a crowd, which is relevant because she sometimes needs to be distinguished from her clone.",
+    "build": "Athletic and quick. Moves with a lot of energy.",
+    "other": "Her clone looks exactly like her. They have the same expressions and the same voice. This has caused confusion in the dorms on multiple occasions."
+  },
+  "personality": {
+    "summary": "Funny and friendly under normal circumstances. Gets wound up faster than anyone else in the class and then explodes with genuine anger — not malicious, just sudden and total. Recovers quickly and without residual bitterness.",
+    "in_class": "Chatty and engaged. Asks follow-up questions. Will absolutely make a joke during a lecture if she thinks of a good one.",
+    "in_combat": "Chaotic and effective. Her clone fights with her own instincts. They don't always agree on tactics. This is sometimes a problem and sometimes the most effective thing in the room.",
+    "quirk_of_character": "Her clone has the exact same personality, which means two Hiyokos is simply more of everything — more jokes, more warmth, more sudden explosions of anger. The clone doesn't experience this as strange. Neither does she."
+  },
+  "ability_scores": {
+    "note": "CHA primary (Double is personality/charisma-resonant; clone retains her abilities and personality). INT secondary (understanding clone mechanics requires precise mental control).",
+    "STR": 10,
+    "DEX": 13,
+    "CON": 12,
+    "INT": 14,
+    "WIS": 13,
+    "CHA": 15,
+    "TECH": 8
+  },
+  "modifiers": {
+    "STR": 0,
+    "DEX": 1,
+    "CON": 1,
+    "INT": 2,
+    "WIS": 1,
+    "CHA": 2,
+    "TECH": -1
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Charisma",
+  "quirk_save_DC": 12,
+  "HP": 9,
+  "AC": 12,
+  "speed": "30 ft",
+  "suggested_class": "Combat Analyst",
+  "class_note": "Combat Analyst's ability to read and react to battle conditions suits her clone-coordination tactics. She is directing two bodies' worth of action.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Double",
+    "weakness": "Creating perfect clones requires precise measurements of the target. If measurements are inaccurate or the user fails a DC 14 History check after 1 hour of study, clones are imperfect: last only 1 minute, deal two fewer damage dice, have -5 HP. Clones don't carry equipment or weapons.",
+    "abilities": [
+      {
+        "name": "Duplicate",
+        "type": "Action",
+        "description": "Create a clone of a creature (self or touched target with precise measurements). Max 2 clones at once. Each clone: retains original's abilities/personality/memories, acts independently with full action/bonus action/reaction, moves at same speed. Clone HP: first clone = your HP, each subsequent = half previous (min 1). Clone deals one fewer damage die. Up to 10 clones controlled at once via bonus action; uncontrolled clones Dodge.",
+        "lead_clone_bonus": "When multiple clones attack the same target, the lead gains +1 to hit and +1 damage per additional clone aiding."
+      },
+      {
+        "name": "Sad Man's Parade",
+        "type": "Action (unlocks at level 10)",
+        "description": "Create two clones; doubling count each subsequent turn for 2 minutes. Max theoretical: 1 billion clones. Once per short rest."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Flexible — can use clone for flanking, distraction, cover, or raw additional attacks. Her most effective tactic is clone + self attacking separate targets to split enemy attention.",
+    "social_role": "Entertainment and chaos, reliably. Her clone at a party is simply more of a good time. Her clone during a serious meeting is Hiyoko's problem to manage.",
+    "growth_arc": "The clone is not just a tool — it's her. Moments where the clone says something she wouldn't have said aloud, or vice versa, are the interesting ones. At what point does the clone start having independent preferences?",
+    "weakness_to_exploit": "The clone can be targeted and killed. Losing a clone mid-combat has no mechanical consequence beyond losing its actions — but it hits her emotionally in a way she doesn't always show."
+  }
+}

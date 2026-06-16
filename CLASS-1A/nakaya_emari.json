@@ -1,0 +1,77 @@
+{
+  "name": "Nakaya Emari",
+  "is_pc": false,
+  "gender": "Female",
+  "height": "5'5\"",
+  "body_type": "Muscular",
+  "physiology": "Standard",
+  "quirk": "Size",
+  "quirk_rarity": "Uncommon",
+  "quirk_type": "Emitter",
+  "appearance": {
+    "hair": "Black. Usually tied back for practical reasons.",
+    "build": "Muscular and solid. She looks like someone who enjoys lifting things.",
+    "other": "Hands are notable — she's used Size on her own equipment enough times that she's careful about where she puts them near anything small. There is an oversized common room couch incident that remains undiscussed."
+  },
+  "personality": {
+    "summary": "Giggly. Genuinely delighted by most things. Finds fun in any situation and is passionate about whatever currently has her attention. The energy of someone who has decided life is good and intends to keep deciding this.",
+    "in_class": "Engaged and enthusiastic. Laughs too loudly at her own jokes. Takes notes with enormous enthusiasm.",
+    "in_combat": "Enthusiastic there too, which is slightly alarming in context. Enjoys the puzzle of which thing to make larger.",
+    "quirk_of_character": "She made the common room couch larger as a genuine kindness — it was too small for Samitsu. She did not check if the larger couch would fit through the door before making it larger. It did not fit through the door."
+  },
+  "ability_scores": {
+    "note": "INT primary (Size is object manipulation through understanding — emitter type requiring precise mental control of dimensional properties). STR secondary for physical utility.",
+    "STR": 13,
+    "DEX": 12,
+    "CON": 14,
+    "INT": 15,
+    "WIS": 13,
+    "CHA": 10,
+    "TECH": 8
+  },
+  "modifiers": {
+    "STR": 1,
+    "DEX": 1,
+    "CON": 2,
+    "INT": 2,
+    "WIS": 1,
+    "CHA": 0,
+    "TECH": -1
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Intelligence",
+  "quirk_save_DC": 12,
+  "HP": 10,
+  "AC": 12,
+  "speed": "30 ft",
+  "suggested_class": "Quirk Savant",
+  "class_note": "Her quirk is non-combat-attack utility — Quirk Savant's enhanced quirk control and uses let her maximise environmental manipulation.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Size",
+    "weakness": "Requires direct hand contact with all five fingers. Cannot affect living creatures.",
+    "abilities": [
+      {
+        "name": "Size Manipulation",
+        "type": "Action",
+        "description": "Increase or decrease an object by one size category. Each size category increased: +1 damage die, range +5 feet. Effect lasts 1 hour."
+      },
+      {
+        "name": "Massive Growth",
+        "type": "Action",
+        "description": "Triple an object's size, up to Gargantuan, for 2 minutes. All creatures within 30 ft radius of the object make DEX save vs Quirk DC. Fail: knocked prone under the object, take object's normal damage + 3 additional dice. Success: half damage, not prone. Crushed creatures make STR save vs Quirk DC to free themselves. Structure damage is tripled."
+      },
+      {
+        "name": "Miniaturize",
+        "type": "Full Turn Action",
+        "description": "Shrink an object to Tiny for 2 minutes. Creatures holding or using it make DEX save vs Quirk DC or drop it. Miniaturized objects can't be used until returned to normal size."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Environmental control and improvised heavy weaponry. She turns the battlefield into her toolkit — a car becomes a boulder, a boulder becomes enormous, a doorframe becomes impassable. Highest battlefield creativity ceiling in the class.",
+    "social_role": "The class's chaos magnet (affectionate). Whenever something goes entertainingly wrong, Emari is usually near it. Her delight in these moments is infectious.",
+    "growth_arc": "Learning to slow down before applying her quirk. Her instinct is always 'make it bigger' — the character arc is developing judgment about when bigger is actually better.",
+    "weakness_to_exploit": "Requires physical touch for the quirk. If her hands are restrained or she can't reach an object, her primary combat utility vanishes. She's not a strong melee fighter without quirk support."
+  }
+}

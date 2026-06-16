@@ -1,0 +1,83 @@
+{
+  "name": "Kazama Kenji",
+  "is_pc": true,
+  "gender": "Male",
+  "height": "6'1\"",
+  "body_type": "Athletic",
+  "physiology": "Standard",
+  "quirk": "Hellflame",
+  "quirk_rarity": "Rare",
+  "quirk_type": "Emitter",
+  "appearance": {
+    "hair": "Dirty blonde. Slightly longer, usually pushed back. Scar running along his left cheek — old, healed smooth, from before U.A.",
+    "build": "Athletic and tall. Good posture. Looks like someone who takes himself seriously without being arrogant about it.",
+    "other": "His Hellflame manifests blue-white — much hotter than standard fire emitters, which run orange or red. The colour difference is visible from a distance. He doesn't comment on it."
+  },
+  "personality": {
+    "summary": "Kind as a primary mode and a little cocky about specific things — namely his quirk output, which is genuinely impressive, and his tactical sense, which is somewhat more mixed. The kindness is the more important quality and he's not fully aware of how much the class relies on it.",
+    "in_class": "Attentive, good student. Helps classmates who are struggling without making it a big deal.",
+    "in_combat": "Controlled and confident. Knows what his flame can do and uses it efficiently. The cockiness shows most here, in the comfortable way he moves when fighting.",
+    "quirk_of_character": "He's aware of the scar and aware that people are curious about it. He's never volunteered the story, but he's also never refused to answer if someone asks directly. Most people never ask directly."
+  },
+  "ability_scores": {
+    "note": "DEX primary — Hellflame emitter requires precise control of heat output direction and intensity. CON secondary for sustained high-temperature output without self-immolation.",
+    "STR": 12,
+    "DEX": 15,
+    "CON": 13,
+    "INT": 13,
+    "WIS": 10,
+    "CHA": 14,
+    "TECH": 8
+  },
+  "modifiers": {
+    "STR": 1,
+    "DEX": 2,
+    "CON": 1,
+    "INT": 1,
+    "WIS": 0,
+    "CHA": 2,
+    "TECH": -1
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Dexterity",
+  "quirk_save_DC": 12,
+  "HP": 10,
+  "AC": 13,
+  "speed": "30 ft",
+  "suggested_class": "Quirk Savant",
+  "class_note": "Quirk Savant's enhanced quirk output and additional uses per rest suit Hellflame's sustained-fire playstyle. Alternatively Heroic Vanguard → Reckless Attacker for a closer-range approach.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Hellflame",
+    "weakness": "Hellflame produces extreme heat — even Kazama is not fully immune to it at maximum output. Sustained use without rest risks internal heat damage. Rain, extreme cold, or anti-fire environments reduce output.",
+    "abilities": [
+      {
+        "name": "Hellflame Jet",
+        "type": "Attack (ranged, 60 ft)",
+        "description": "Emit a concentrated stream of blue-white flame. 3d8 fire damage. DEX save vs Quirk DC or target is set ablaze (1d6 fire per round until extinguished by action). At level 5: 4d8. At level 10: 5d8."
+      },
+      {
+        "name": "Hellflame Burst",
+        "type": "Action",
+        "description": "Release a 30-foot cone of superheated flame. DEX save vs Quirk DC. Fail: 4d6 fire damage, set ablaze. Success: half damage, not ablaze. Structures in the cone take triple damage."
+      },
+      {
+        "name": "Heat Wall",
+        "type": "Action",
+        "description": "Construct a 20-ft long, 10-ft tall barrier of sustained flame. Lasts until Kazama's concentration ends or 1 minute. Creatures entering or starting turns in the wall take 3d6 fire damage. Ranged attacks through the wall have disadvantage due to heat distortion."
+      }
+    ]
+  },
+  "player_notes": {
+    "role_summary": "Primary fire blaster. Your quirk is straightforward in the best way: aim and apply heat. Jet for single-target, Burst for groups, Heat Wall for area control. Manage your heat level — you have good output but it's not unlimited.",
+    "social_position": "Naturally well-regarded in the class. People are drawn to him, which he's somewhat aware of and doesn't exploit. He's genuinely just kind.",
+    "growth_hook": "The scar is a story. The story is about a moment he didn't act when he should have, or couldn't, or chose wrong. When it comes out — if it comes out — it reframes some of his confidence.",
+    "suggested_background": "Middle-class family in Murano. Has a younger sibling. Hero school was the plan from early on, never a question."
+  },
+  "dm_notes": {
+    "combat_role": "The class's primary ranged damage dealer. His Burst and Jet give consistent fire damage output. Heat Wall is a major battlefield shaping tool — it changes where everyone can go.",
+    "social_role": "Emotional glue. The class likes him. He's kind, he's readable, he's dependable. When classmates fight, Kenji is usually the one who quietly helps both sides down without making it about himself.",
+    "growth_arc": "The scar, and whatever it means. It's something he survived — possibly something someone else didn't. The campaign should give that story room at the right moment.",
+    "weakness_to_exploit": "Low TECH and WIS — he's not a technical problem-solver and he doesn't always read situations accurately on first pass. Rain or cold environments limit his output. Sustained fights drain him faster than burst engagements."
+  }
+}

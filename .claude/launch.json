@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "relationship-tracker",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["server.py"],
+      "autoPort": true,
+      "port": 5001
+    }
+  ]
+}

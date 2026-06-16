@@ -1,0 +1,72 @@
+{
+  "name": "Ichitaka Shijime",
+  "is_pc": false,
+  "gender": "Male",
+  "height": "5'7\"",
+  "body_type": "Athletic",
+  "physiology": "Standard",
+  "quirk": "Hologram",
+  "quirk_rarity": "Common",
+  "quirk_type": "Emitter",
+  "appearance": {
+    "hair": "Blonde slickback. Looks intentional at all times.",
+    "build": "Athletic, well-proportioned. Carries himself like someone who knows they look good.",
+    "other": "His holograms appear from his hands, extending outward and taking form quickly. The images are vivid and three-dimensional."
+  },
+  "personality": {
+    "summary": "Genius and he knows it, thoroughly. Treats everyone equally — which means everyone gets the same mildly superior baseline courtesy regardless of their actual standing. The snobbishness is architectural rather than mean: he simply operates from the assumption that he is smarter than everyone else, and in many situations, this is accurate enough to be annoying. Not cruel. Genuinely fair.",
+    "in_class": "Takes notes once, perfectly, then listens. Has been known to correct teachers. Has been occasionally correct when doing so.",
+    "in_combat": "Precise and planned. Uses holograms to redirect attention, create tactical confusion, and support the class's actual attackers.",
+    "quirk_of_character": "He occasionally creates small holograms for no reason — a bird perched on his desk, a flame, something abstract. He doesn't explain these. They're practice, but they look like art."
+  },
+  "ability_scores": {
+    "note": "INT primary (Hologram requires concentration, mental projection, and understanding of what you're projecting). CHA secondary (convincing illusions benefit from understanding of what people believe).",
+    "STR": 8,
+    "DEX": 13,
+    "CON": 10,
+    "INT": 15,
+    "WIS": 13,
+    "CHA": 14,
+    "TECH": 12
+  },
+  "modifiers": {
+    "STR": -1,
+    "DEX": 1,
+    "CON": 0,
+    "INT": 2,
+    "WIS": 1,
+    "CHA": 2,
+    "TECH": 1
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Intelligence",
+  "quirk_save_DC": 12,
+  "HP": 8,
+  "AC": 12,
+  "speed": "30 ft",
+  "suggested_class": "Combat Analyst",
+  "class_note": "Combat Analyst's ability to read combat states and respond strategically suits his illusion-and-redirect playstyle.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Hologram",
+    "weakness": "Holograms cannot interact with the environment. All active holograms vanish if the user moves more than 60 feet on their turn or takes more than level + 10 damage. Strong winds, explosions, or heavy environmental force can also disperse projections.",
+    "abilities": [
+      {
+        "name": "Hologram Creation",
+        "type": "Action",
+        "description": "Create a holographic image of any creature, object, or scene within 30 feet. No physical form — cannot interact with environment. Can move, glow, or emit sound while concentration is maintained. Size limit: 10 ft at level 5, 20 ft at level 10, 30 ft at level 15, 40 ft at level 20. Creatures interacting with hologram make INT (Investigation) check vs Quirk DC. Fail: believe it's real and may become frightened if intimidating."
+      },
+      {
+        "name": "Emergency Signal",
+        "type": "Action",
+        "description": "Create a large, bright hologram visible up to 2 miles under clear conditions. Displays symbols, words, or moving images. Lasts 10 minutes or until dismissed. Useful for distress signals, distractions, or battlefield communication."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Deception and misdirection. He creates false targets to split enemy attention, fake threats to force enemies into bad positions, and support illusions that let allies get into position. Highest tactical ceiling in the class if given time to think.",
+    "social_role": "The class's reluctant expert. When someone needs to understand something complicated, they go to Ichitaka. He explains it clearly and with barely concealed condescension. The explanation is always correct.",
+    "growth_arc": "His equal treatment of everyone is a form of distancing — he doesn't actually let people close. A key moment: something he can't solve alone and has to trust someone else with the execution.",
+    "weakness_to_exploit": "Extremely low STR and HP. Any enemy that closes the distance and gets physical has a significant advantage. His holograms provide no protection — they're purely offensive/support tools."
+  }
+}

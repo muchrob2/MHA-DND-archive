@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MHA D&D — DM Dashboard</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f8f7f5; --surface: #ffffff; --surface2: #f2f1ef;
+    --border: rgba(0,0,0,0.10); --border-strong: rgba(0,0,0,0.18);
+    --text: #1a1a1a; --text-muted: #5f5e5a; --text-dim: #9a9890;
+    --purple: #534AB7; --purple-light: #EEEDFE; --purple-text: #3C3489;
+    --teal: #1D9E75; --teal-light: #E1F5EE; --teal-text: #085041;
+    --red: #E24B4A; --red-light: #FCEBEB; --red-text: #A32D2D;
+    --amber: #BA7517; --amber-light: #FAEEDA; --amber-text: #633806;
+    --green: #639922; --green-light: #EAF3DE; --green-text: #27500A;
+    --radius: 10px; --radius-lg: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18; --surface: #242422; --surface2: #2e2e2c;
+      --border: rgba(255,255,255,0.10); --border-strong: rgba(255,255,255,0.18);
+      --text: #e8e7e4; --text-muted: #a8a7a3; --text-dim: #6a6965;
+      --purple-light: #26215C; --purple-text: #AFA9EC;
+      --teal-light: #04342C; --teal-text: #9FE1CB;
+      --red-light: #501313; --red-text: #F09595;
+      --amber-light: #412402; --amber-text: #FAC775;
+      --green-light: #173404; --green-text: #C0DD97;
+    }
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 32px 48px 28px;
+  }
+  .header-inner { max-width: 960px; margin: 0 auto; }
+  .header-label { font-size: 11px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  header h1 { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
+  header p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ── Content ── */
+  main { max-width: 960px; margin: 0 auto; padding: 40px 48px 60px; }
+
+  .section-title {
+    font-size: 11px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 14px; margin-top: 36px;
+  }
+  .section-title:first-child { margin-top: 0; }
+
+  /* ── Card grid ── */
+  .card-grid { display: grid; gap: 12px; }
+  .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+  @media (max-width: 700px) {
+    main { padding: 24px 20px 48px; }
+    header { padding: 24px 20px 20px; }
+    .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) {
+    .card-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ── Card ── */
+  .card {
+    display: block; text-decoration: none; color: inherit;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 20px 22px;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+    cursor: pointer;
+  }
+  .card:hover {
+    border-color: var(--purple); transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(83,74,183,0.12);
+  }
+  .card-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 12px;
+  }
+  .card-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .card-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .card-meta { font-size: 11px; color: var(--text-dim); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+
+  /* ── Colour variants ── */
+  .icon-purple { background: var(--purple-light); }
+  .icon-teal   { background: var(--teal-light); }
+  .icon-red    { background: var(--red-light); }
+  .icon-amber  { background: var(--amber-light); }
+  .icon-green  { background: var(--green-light); }
+
+  /* ── Hero card (full width) ── */
+  .card-hero {
+    display: flex; gap: 20px; align-items: center;
+    padding: 24px 28px;
+  }
+  .card-hero .card-icon { width: 52px; height: 52px; font-size: 26px; flex-shrink: 0; margin-bottom: 0; }
+  .card-hero-body { flex: 1; }
+  .card-hero .card-title { font-size: 17px; }
+  .card-hero-arrow { font-size: 20px; color: var(--text-dim); flex-shrink: 0; }
+  .card-hero:hover .card-hero-arrow { color: var(--purple); }
+
+  /* ── Divider ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="header-label">DM Dashboard</div>
+    <h1>My Hero Academia D&amp;D</h1>
+    <p>MHA5e Campaign — Class 1-A, U.A. High School, Murano</p>
+  </div>
+</header>
+
+<main>
+  <!-- Class 1-A app -->
+  <p class="section-title">Class 1-A</p>
+  <div class="card-grid">
+    <a class="card card-hero" href="/relationships">
+      <div class="card-icon icon-purple">🎓</div>
+      <div class="card-hero-body">
+        <div class="card-title">Class 1-A Toolkit</div>
+        <div class="card-desc">Character profiles, editable stats, quirk mechanics, relationship tracker, dice roller, and encounter manager</div>
+        <div class="card-meta">20 students · Editable · Auto-saves</div>
+      </div>
+      <div class="card-hero-arrow">→</div>
+    </a>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Campaign -->
+  <p class="section-title">Campaign</p>
+  <div class="card-grid card-grid-2">
+    <a class="card" href="/campaign?file=arc">
+      <div class="card-icon icon-purple">🗺</div>
+      <div class="card-title">Arc Overview</div>
+      <div class="card-desc">All four campaign tiers, arcs, key beats, and the escalating Chain storyline</div>
+      <div class="card-meta">Tiers 1–4 · 16 arcs</div>
+    </a>
+    <a class="card" href="/campaign?file=world">
+      <div class="card-icon icon-teal">🏙</div>
+      <div class="card-title">World Reference</div>
+      <div class="card-desc">U.A. High, Murano city, hero society, student life, and rules notes</div>
+      <div class="card-meta">Setting · Society · Daily life</div>
+    </a>
+    <a class="card" href="/campaign?file=teachers">
+      <div class="card-icon icon-amber">🧑‍🏫</div>
+      <div class="card-title">Teachers</div>
+      <div class="card-desc">Faculty profiles — quirks, personalities, teaching styles, and DM notes for 5 teachers</div>
+      <div class="card-meta">5 teachers · Oshiro, Fujisaki, and more</div>
+    </a>
+    <a class="card" href="/campaign?file=villains">
+      <div class="card-icon icon-red">⛓</div>
+      <div class="card-title">Villains — The Chain</div>
+      <div class="card-desc">The villain organisation, leadership profiles, stat blocks, and arc roles</div>
+      <div class="card-meta">4 villains · Undertow, Flashpoint, Riddle, Kuma</div>
+    </a>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Rulebooks -->
+  <p class="section-title">Rulebooks</p>
+  <div class="card-grid card-grid-2">
+    <a class="card" href="/rulebooks/My%20Hero%20Academia_%20Offical%20Handbook%20-%20The%20Homebrewery.pdf" target="_blank">
+      <div class="card-icon icon-green">📖</div>
+      <div class="card-title">Official Handbook</div>
+      <div class="card-desc">My Hero Academia — The Homebrewery official handbook for MHA5e rules</div>
+      <div class="card-meta">PDF · Opens in new tab</div>
+    </a>
+    <a class="card" href="/rulebooks/My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf" target="_blank">
+      <div class="card-icon icon-green">⚡</div>
+      <div class="card-title">Quirk Compendium</div>
+      <div class="card-desc">Full quirk definitions and mechanics reference for MHA5e</div>
+      <div class="card-meta">PDF · Opens in new tab</div>
+    </a>
+  </div>
+</main>
+</body>
+</html>

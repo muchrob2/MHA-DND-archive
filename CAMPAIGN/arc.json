@@ -1,0 +1,216 @@
+{
+  "campaign_title": "Class 1-A",
+  "tone": "Primarily lighthearted and fun — dorm life, rivalries, chaos, friendship, competition — with genuine dramatic stakes that escalate through each tier. The comedy and the tragedy earn each other.",
+  "tiers": [
+    {
+      "tier": 1,
+      "levels": "1-4",
+      "title": "Welcome to U.A.",
+      "overall_tone": "Almost entirely fun. This is orientation. The class is meeting each other, figuring out who they are, discovering the school is hard and also ridiculous. The Chain exists only as faint background noise.",
+      "arcs": [
+        {
+          "name": "The Entrance Exam",
+          "type": "Opening session / character introduction",
+          "description": "A staged disaster scenario in a simulated city block. Students must rescue civilians (actors and prop mannequins) while combat drones provide the 'villain' opposition. No predetermined groupings — everyone is on their own. This is how the class meets each other.",
+          "beats": [
+            "Opening chaos: the exam starts without warning. Students scatter and self-organise",
+            "Key moments: Toshida shouts a word and accidentally levels a wall, Nakaya enlarges a bus to use as a ramp, Ren disappears mid-sprint — no one saw him move",
+            "Conflict point: Masahata loudly criticises everyone else's performance during the exam and is correct about roughly half of it, which makes it worse",
+            "Resolution: the class passes collectively. Scores are revealed. The ranking chart era begins."
+          ]
+        },
+        {
+          "name": "Dorm Life Begins",
+          "type": "Downtime / social arc",
+          "description": "The class moves into Heights Alliance. First week is pure character chaos. No combat required.",
+          "beats": [
+            "The doorframe incident (Toshida, day one)",
+            "The couch incident (Nakaya, day two)",
+            "Takazuki's invisible presence in the common room is established as a permanent source of accidental confusion",
+            "Masahata prints and laminates a ranking chart. It appears on the fridge. No one asks him to do this.",
+            "Kinosho falls asleep in three separate locations before settling on a favourite. She does not explain herself."
+          ]
+        },
+        {
+          "name": "Capture the Flag",
+          "type": "First formal training encounter",
+          "description": "Oshiro Daikichi's opening combat class. Two teams, live stakes: the losing team runs extra laps, the winning team picks one perk for the week (study room access, better meal options, etc.). Students versus students. This is where rivalries get personal.",
+          "beats": [
+            "Team assignments designed to create interesting matchups — Ren vs Toragi, Chosen vs Samitsu, etc.",
+            "Yoshibara immediately doubles herself, which Oshiro rules is legal because he didn't say it wasn't",
+            "Kinosho correctly predicts the outcome of three matchups in advance but doesn't share this information until after, which infuriates everyone",
+            "Ando loses to someone he was certain he'd beat and wears his sunglasses for the next 36 hours consecutively"
+          ]
+        },
+        {
+          "name": "The Agency Visit",
+          "type": "Low-stakes mission / Chain seed",
+          "description": "The class assists at a small local hero agency for a day — filing, crowd management at a public event, basic patrol. Their first taste of actual hero work. Mostly administrative and slightly boring. At the end of the day, there's a minor theft nearby involving a quirk user — an opportunist, not Chain-affiliated. But the agency handler mentions offhandedly that the port district has been 'interesting lately.' Seed planted.",
+          "beats": [
+            "Aikawa organises an entire filing system the agency didn't ask for and everyone pretends not to be impressed",
+            "The minor theft is solved, clumsily, by three students who end up creating more mess than the thief did",
+            "The offhand mention of port district activity. Nobody thinks much of it at this point."
+          ]
+        }
+      ],
+      "chain_presence": "Absent from direct play. Name heard once as background noise."
+    },
+    {
+      "tier": 2,
+      "levels": "5-10",
+      "title": "Getting Good",
+      "overall_tone": "The fun continues but real stakes appear. The Sports Festival is peak chaos and excitement. Internships are where the world gets complicated. Flashpoint's attack is the moment everything changes.",
+      "arcs": [
+        {
+          "name": "The Sports Festival",
+          "type": "Major event arc (3-4 sessions)",
+          "description": "U.A.'s annual Sports Festival. Public, broadcast, massive audience. Full tournament structure: obstacle race → team event → individual brackets. This arc is almost entirely fun — competition, crowd reactions, upsets, pre-fight nerves, post-fight drama.",
+          "beats": [
+            "Obstacle race: wide-open chaos. Kibi's vines turn the whole course into a climbing wall situation. Setaka's iron balls create ricochets that take out four people at once. Takazuki wins her heat because no one can find her.",
+            "Team event: alliances form and collapse within minutes. Yoshibara doubles the wrong person at the wrong moment and this becomes a meme within the class.",
+            "Individual brackets — highlight fights: Toragi's Twin Impact causes the audience to go completely silent and then very loud. Chosen Tadachi's bracket is a stress escalation — he starts calm, someone says the wrong thing, and by the quarterfinal he is terrifying. Ren's fights look effortless until one suddenly doesn't. Kazama discovers his Hellflame has an audience problem: people like it too much and he gets flustered.",
+            "Post-festival: winners, losers, people who are privately devastated about their bracket result and will not discuss it. Masahata updates the ranking chart. No one responds well to this."
+          ]
+        },
+        {
+          "name": "Internships",
+          "type": "Split-party arc (3-4 sessions across multiple agencies)",
+          "description": "Students split across different Pro Hero agencies in Murano. This is the arc where the Chain becomes visible and where things start not sitting right.",
+          "student_groupings": [
+            "Ren Suzuki, Isokono Yoromu, and Kibi Kankei are placed with a speed-and-rescue agency in the port district. They stumble into a Chain collection operation — a small cell intimidating a shop owner. They intervene. The cell scatters but one of them says something: 'You don't want to know who we work for.'",
+            "Kazama Kenji and Nakaya Emari are placed with a larger downtown agency. Kazama's supervisor asks him to participate in a crowd dispersal that targets protesters outside a Chain-adjacent business. The supervisor frames it as routine. It doesn't feel routine.",
+            "Izuto Kutsu and Toragi Kayo are placed with a fast-response agency. Efficient, professional, everything above board — except a memo Izuto accidentally reads about deliberately under-resourcing port district patrol. Someone decided the Chain's territory isn't worth the cost.",
+            "Chosen Tadachi and Tazato Tadamaki are placed with a recovery hero whose entire practice is pulling people out of bad situations — not fights, but domestic crises, people trapped in circumstances. This is a quieter internship that hits differently."
+          ],
+          "convergence": "The internship groups share information. A pattern emerges: The Chain is larger, more organised, and more embedded than anyone told them. The port district is being allowed to be what it is."
+        },
+        {
+          "name": "Flashpoint",
+          "type": "Major dramatic beat (tone shift)",
+          "description": "Goda Miruki burns down a hero agency in the port district. Three heroes hospitalised. One in critical condition. It happens during the class's patrol rotation. They arrive at the aftermath.",
+          "beats": [
+            "The class reaches the scene. The agency is still burning. Real fire, real damage, real people hurt.",
+            "Flashpoint is gone — she was gone before they arrived. But witnesses saw blue-white flames. No one in the class has ever seen anything like that.",
+            "One of the hospitalised heroes is the supervisor who mentored Ren's internship group. She will recover. But this makes it personal.",
+            "Oshiro Daikichi arrives at the scene, looks at the damage, and says: 'This is a different problem than what you've been dealing with.'"
+          ]
+        },
+        {
+          "name": "Kuma",
+          "type": "Tier 2 Boss Fight",
+          "description": "The class, acting on information from the internship arc, intercepts a Chain operation in the port district warehouse district. Kuma is running it. This is their first coordinated fight against a real villain.",
+          "beats": [
+            "Kuma opens by growing to Large. He's loud. He tells them they're kids and should leave.",
+            "He grows to Huge when they don't. Things get serious.",
+            "The fight is hard and messy. Students use each other — actual teamwork under pressure.",
+            "They win. It takes longer than it should and something probably gets destroyed. But they win.",
+            "Kuma is arrested. First real victory. It means something."
+          ]
+        }
+      ],
+      "chain_presence": "Fully visible by Tier 2 end. Flashpoint attack is the escalation point. Kuma is captured but he's a mid-tier member — leadership is untouched."
+    },
+    {
+      "tier": 3,
+      "levels": "11-15",
+      "title": "It Gets Personal",
+      "overall_tone": "The Chain escalates because the class costs them Kuma and disrupts several operations. Undertow decides to make them understand the difference between students and professionals. The Culture Festival sits in the middle of this arc — full of genuine fun — but the betrayal revelation hits during it or just after.",
+      "arcs": [
+        {
+          "name": "Riddle's Move",
+          "type": "Social/investigative arc (runs parallel to everything else in Tier 3)",
+          "description": "Sae Ichiro is already operating in Murano. He's been having conversations with students who are frustrated, lonely, struggling. He's not brainwashing them — not yet. He's listening. He knows how to find people at their most vulnerable and be exactly what they need.",
+          "beats": [
+            "One student (DM's choice based on PC/NPC dynamics) starts behaving slightly differently. Nothing alarming — they seem more settled, less stressed.",
+            "Riddle plants questions: 'Do you really think the system supports people like you?' 'What would you do if you weren't bound by licensing rules?' He never advocates for The Chain directly.",
+            "Mid-tier: the class becomes aware someone has been sharing information with the Chain — patrol schedules, personal details. The scope is unclear.",
+            "Discovery: the student who's been talking to Riddle didn't know what they were doing — but they've been giving him information they didn't realise mattered. The confrontation is not about a traitor. It's about manipulation, and how it works, and how to talk about it when it happened to someone you care about."
+          ]
+        },
+        {
+          "name": "The Culture Festival",
+          "type": "Major event arc (2 sessions)",
+          "description": "U.A.'s Culture Festival. Class 1-A produces a performance for the whole school. The planning process is chaos. The performance itself is chaos. The audience loves it.",
+          "beats": [
+            "Planning meeting: seventeen competing visions, zero consensus, eventually Kinosho makes a decision and everyone does what she says because her plan is obviously correct",
+            "Rehearsal disasters: Toshida's Comic accidentally destroys the stage mock-up twice. Kazama's Hellflame lights the backdrop on fire once (briefly). Ren keeps disappearing mid-choreography.",
+            "The actual performance: spectacular, partially on purpose. Yoshibara duplicates a crucial prop at the right moment. The audience does not know they're watching improvisation.",
+            "Aftermath: the class has a moment together that is genuinely good. This scene lands harder because it sits right against the Riddle revelation."
+          ]
+        },
+        {
+          "name": "Undertow",
+          "type": "Tier 3 climax encounter",
+          "description": "Undertow personally confronts the class during a sanctioned mission. He doesn't fight seriously. He walks through every attack. He leaves when he wants to.",
+          "beats": [
+            "The class has been tracking a Chain supply operation. They intercept it. It goes well — until Undertow appears.",
+            "He phases through every attack. He's not trying to hurt them. He's demonstrating.",
+            "He talks. He's curious about them, specifically. He asks each PC one question that is unusually perceptive.",
+            "He phases through the floor and is gone. He leaves behind nothing except the understanding that he could reach them anywhere, any time.",
+            "Oshiro Daikichi's response when they report this: a long pause, and: 'You need to think very carefully about your next move.'"
+          ]
+        }
+      ],
+      "chain_presence": "Maximum. The Chain is escalating. Undertow is no longer interested in staying low-profile."
+    },
+    {
+      "tier": 4,
+      "levels": "16-20",
+      "title": "Finish It",
+      "overall_tone": "The gloves are off. The class is not quite Pro Heroes yet but close enough. The final arc is big, cinematic, and split across multiple locations. It ends with a graduation that the class has genuinely earned.",
+      "arcs": [
+        {
+          "name": "The Device",
+          "type": "Rising action",
+          "description": "The Chain has acquired a black-market quirk-nullification device — experimental tech originally built for a licensed containment operation, stolen and modified. Their plan: use it during the Murano Hero Gala, an annual public event where ranked Pro Heroes attend, to neutralise quirks across the venue and commit a mass kidnapping for leverage.",
+          "beats": [
+            "Intelligence reaches the class through Shimoda Iku's journalist contact. The timeline is short.",
+            "Riddle makes contact. He doesn't want to be part of this. He offers information. This is complicated.",
+            "Class coordination: they can't stop everything alone. They brief the teachers. Oshiro's response is to gear up immediately. Hamagawa's response is to ask what the legal framework is for what they're about to do. Both responses are correct."
+          ]
+        },
+        {
+          "name": "The Gala Night",
+          "type": "Split-party multi-encounter final arc (2-3 sessions)",
+          "description": "The class splits to cover multiple theatres across the Gala venue simultaneously. Each group has their own encounter that feeds into the final confrontation.",
+          "groups": [
+            "Group 1 (PC-heavy): device location and shutdown — racing through the venue back-of-house to reach the Chain's tech team",
+            "Group 2: civilian evacuation — Chain operatives have sealed the exits. Getting people out without triggering the device early.",
+            "Group 3: Chain containment — holding the Chain's cell members long enough for the other groups to complete their objectives"
+          ],
+          "coordination": "The groups can communicate but can't be in two places at once. Choices matter — what gets prioritised determines what goes wrong."
+        },
+        {
+          "name": "Final Confrontation: Undertow and Flashpoint",
+          "type": "Final boss encounter",
+          "description": "Undertow and Flashpoint, together, in a burning event venue. The fight is large and cinematic. The key: Flashpoint's flames are out of control in the enclosed space, which means Undertow has to split his attention between fighting the class and protecting himself from Goda's excess. That division is the window.",
+          "beats": [
+            "Undertow is containable with creative use of terrain, AoE, and teamwork — he can't phase everything simultaneously",
+            "Flashpoint's Cremation at full output in an enclosed space is a disaster for everyone including The Chain",
+            "Midpoint: the device is disabled by the group that reached it. The stakes drop — the kidnapping is foiled. Now it's just the fight.",
+            "Resolution: Undertow is captured or disabled. Flashpoint's flames exhaust her — Cremation at this output is burning through her. The fight ends not with a killshot but with her running out of fuel.",
+            "Riddle is in custody, having given himself up. What happens to him is the players' call."
+          ]
+        },
+        {
+          "name": "Graduation",
+          "type": "Epilogue session",
+          "description": "One year later. The class has graduated. The city is safer than it was. Some things didn't resolve cleanly.",
+          "beats": [
+            "Each student gets a moment: what are they doing now? Where did they land?",
+            "The class dynamic: some friendships are the same. Some have changed. Some will last forever.",
+            "A final scene together. Doesn't need to be dramatic — could be the common room one last time before it's someone else's dorm.",
+            "What Kurogane looks like because of what they did. Not perfect. Better."
+          ]
+        }
+      ],
+      "chain_presence": "Final confrontation. Their operation collapses. The chain is done."
+    }
+  ],
+  "recurring_elements": {
+    "ranking_chart": "Masahata's ranking chart on the common room fridge persists through the entire campaign. It should be referenced at least once per tier. By Tier 4 it has been defaced so many times it's barely legible. He reprints it every time.",
+    "oshiro_arrivals": "Whenever things get very serious, Oshiro Daikichi arrives without being asked. No explanation given. He just shows up.",
+    "kinosho_napping": "Kinosho Kochimiko is asleep in a background scene in every session where she is not the focus. This is consistent and never addressed directly.",
+    "toshida_head": "Toshida's speech bubble head gets stuck in, on, or around something at least once per tier. This escalates in scale as his quirk control improves but his spatial awareness does not."
+  }
+}

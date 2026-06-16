@@ -1,0 +1,83 @@
+{
+  "name": "Samitsu Hinsei",
+  "is_pc": false,
+  "gender": "Male",
+  "height": "6'5\"",
+  "body_type": "Muscular",
+  "physiology": "Heteromorph",
+  "quirk": "Dupli-Arms",
+  "quirk_rarity": "Uncommon",
+  "quirk_type": "Mutation",
+  "appearance": {
+    "hair": "Short grey spiky. Despite being a first-year, his hair went grey early. He doesn't explain this.",
+    "build": "The second-largest in the class (Setaka is taller). Multiple arm-tentacles extend from his back and sides, each capable of growing replicated body parts at the tip.",
+    "other": "Usually has at least four arm-tentacles active with replicated hands. Can independently use all of them simultaneously. Somehow doesn't take up more space than expected."
+  },
+  "personality": {
+    "summary": "Cool exterior that reads as standoffish until someone says something even slightly presumptuous — then he's very easily offended. Gets over it fast. Genuinely nice under that, and remarkable once people know him well. Also an extraordinary cook, which he discovers the class's respect is built on.",
+    "in_class": "Sits at the back. Folds his extra arms neatly. Answers questions when called on with complete accuracy and minimal words.",
+    "in_combat": "Wall of arms. Uses his tentacles to shield allies, grab enemies, and attack simultaneously. The most versatile defensive profile in the class.",
+    "quirk_of_character": "When he's concentrating on something he enjoys — especially cooking — his extra arms do different things independently without him directing them. One stirs, one chops, one tastes. It's completely unconscious. He doesn't notice."
+  },
+  "ability_scores": {
+    "note": "STR primary (physical, multiple arms). CON for durability while taking damage in the tank role.",
+    "STR": 15,
+    "DEX": 8,
+    "CON": 14,
+    "INT": 12,
+    "WIS": 13,
+    "CHA": 13,
+    "TECH": 10
+  },
+  "modifiers": {
+    "STR": 2,
+    "DEX": -1,
+    "CON": 2,
+    "INT": 1,
+    "WIS": 1,
+    "CHA": 1,
+    "TECH": 0
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Strength",
+  "quirk_save_DC": 12,
+  "HP": 12,
+  "AC": 14,
+  "speed": "30 ft",
+  "suggested_class": "Heroic Vanguard → Shield Body Style",
+  "class_note": "Shield Body Style gives him interception mechanics and damage reduction that combine with Dupli-Arms' defensive uses.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Dupli-Arms",
+    "weakness": "Tentacles and replicated body parts are vulnerable to damage. Regrowing a destroyed limb requires a full rest.",
+    "abilities": [
+      {
+        "name": "Dupli-Arms",
+        "type": "Bonus Action",
+        "description": "Grow a replicated limb at the tip of a tentacle. Max 10 replicated limbs at once, each with 10-foot reach. Each limb has HP = 5 + CON modifier.",
+        "pod_types": {
+          "Arm Pod": "Each active Arm Pod increases STR by +1 (max 18). Carrying capacity doubled. Reaction: Tentacle Shield (half cover +2 AC to self and allies within 10 ft).",
+          "Mouth Pod": "Free action to grow. Can bite as part of Attack action: 2d4 + STR piercing.",
+          "Ear Pod": "Advantage on hearing-based Perception. +1 per active tentacle to the check. Hear through walls at double normal distance.",
+          "Eye Pod": "Advantage on sight-based Perception. Sight range doubled. 15 ft blindsight."
+        }
+      },
+      {
+        "name": "Octo-Blow",
+        "type": "Action",
+        "description": "With 8 or more ARM pods active: convert all attacks into a 20-foot cone. DEX save vs Quirk DC. Fail: unarmed damage + 3d10 bludgeoning. Success: half damage."
+      },
+      {
+        "name": "Octospansion",
+        "type": "Action (unlocks at level 10)",
+        "description": "Combine all limbs into one massive fist. On hit: Xd10 damage (X = number of active limbs). Target becomes prone."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Defensive anchor and multi-target handler. Can protect adjacent allies with Tentacle Shield while still attacking. The more active pods he has, the stronger he gets — but managing pod count is the tactical layer.",
+    "social_role": "The class's unexpected pillar. People don't go to Samitsu first, but once they do, he's reliable. His cooking becomes a social glue — the common room kitchen after a bad session is his territory.",
+    "growth_arc": "His touchiness about being underestimated resolves as the class proves they don't. A key moment: someone needs him, and he's there, and no one comments on it. That matters more to him than being thanked.",
+    "weakness_to_exploit": "Low DEX. He's slow and easy to outmanoeuvre. Enemies with speed or range can avoid his melee reach. His tentacles can also be targeted directly."
+  }
+}

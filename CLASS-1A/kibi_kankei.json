@@ -1,0 +1,83 @@
+{
+  "name": "Kibi Kankei",
+  "is_pc": false,
+  "gender": "Male",
+  "height": "5'9\"",
+  "body_type": "Athletic",
+  "physiology": "Heteromorph",
+  "quirk": "Vines",
+  "quirk_rarity": "Uncommon",
+  "quirk_type": "Mutant",
+  "appearance": {
+    "hair": "Vines growing from his scalp, tangled and heavy like dreads. Green and brown, living — they shift slightly with his mood.",
+    "build": "Athletic and relaxed. Moves like someone who has never been in a hurry.",
+    "other": "Faintly earthy smell. Occasional small flowers appear in his vine-hair when he's in a good mood."
+  },
+  "personality": {
+    "summary": "The most laid-back person in a class of intense personalities. Not lazy — genuinely unbothered. Has an unspoken alliance with Isokono Yoromu based on mutual appreciation of peace and quiet.",
+    "in_class": "Usually near a window. Sometimes asleep. Wakes up immediately if anything interesting happens.",
+    "in_combat": "Unhurried and effective. Treats vine control like a conversation — patient, precise, building toward something.",
+    "quirk_of_character": "His vine-hair reacts to his emotions involuntarily. When he's annoyed, the vines tighten. When he's genuinely content, small flowers bloom. Everyone notices. He is aware of this and does not discuss it."
+  },
+  "ability_scores": {
+    "note": "STR is primary quirk ability (Vines is physical/mutant). WIS reflects his perceptive, relaxed awareness.",
+    "STR": 15,
+    "DEX": 13,
+    "CON": 13,
+    "INT": 10,
+    "WIS": 14,
+    "CHA": 12,
+    "TECH": 8
+  },
+  "modifiers": {
+    "STR": 2,
+    "DEX": 1,
+    "CON": 1,
+    "INT": 0,
+    "WIS": 2,
+    "CHA": 1,
+    "TECH": -1
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Strength",
+  "quirk_save_DC": 12,
+  "HP": 10,
+  "AC": 13,
+  "speed": "30 ft",
+  "suggested_class": "Quirk Savant",
+  "class_note": "His vine control benefits from the Quirk Savant's enhanced quirk abilities and expanded quirk use per rest.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Vines",
+    "weakness": "Vines require water to grow effectively. Must remain wet for at least 4 hours per day or effectiveness is halved (range, damage, duration). Vines are vulnerable to slashing, fire, or cold damage.",
+    "abilities": [
+      {
+        "name": "Via Dolorosa",
+        "type": "Action",
+        "description": "Extend vines in a 10-foot cone within 30 feet. Target up to proficiency bonus number of creatures. Each must make STR save vs Quirk DC or become restrained and grappled.",
+        "damage": null
+      },
+      {
+        "name": "Crucifixion",
+        "type": "Action",
+        "description": "Extend vines up to 30 feet to grab multiple targets (up to proficiency bonus). STR save vs Quirk DC or become restrained 30 feet in the air. On a hit, vines deal 2d12 piercing damage. Reach increases by 10 ft at 5th, 10th, 15th, 20th levels."
+      },
+      {
+        "name": "Big Tree",
+        "type": "Reaction",
+        "description": "Erupt a barrier of thorny vines in a 20-foot radius. Any creature that starts or enters must make DEX save or take 3d12 piercing damage and become restrained. Barrier has 20 HP. Damage increases to 5d12 at 7th level."
+      },
+      {
+        "name": "Faith Shield",
+        "type": "Reaction",
+        "description": "Erupt a 20-foot tall, 10-foot wide wall of thorny vines. Wall has 30 HP and grants immunity to lightning damage."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Battlefield control. Kibi locks down enemy movement and creates chokepoints. He doesn't need to be the one dealing damage — he's the reason others can.",
+    "social_role": "The class's pressure valve. When tension spikes, Kibi's presence usually helps it drop. He's not mediating — he just doesn't participate in drama, and that's sometimes enough.",
+    "growth_arc": "Kibi's laid-back nature occasionally gets read as disengagement. A key character moment is when the class realises he's actually paying close attention to everything — he just doesn't perform anxiety about it.",
+    "weakness_to_exploit": "Fire and cold attacks. His quirk at half effectiveness is still useful but his combat role suffers. An enemy with area fire damage should make him prioritise positioning."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "name": "Nomi Igisa",
+  "is_pc": false,
+  "gender": "Female",
+  "height": "5'0\"",
+  "body_type": "Athletic",
+  "physiology": "Standard",
+  "quirk": "Poltergeist",
+  "quirk_rarity": "Uncommon",
+  "quirk_type": "Emitter",
+  "appearance": {
+    "hair": "White. Fine and straight. Falls loosely.",
+    "build": "Small and slight. The appearance of fragility. Not fragile.",
+    "other": "Very pale skin, dark eyes. In motion her eyes go slightly unfocused when she's actively using Poltergeist — she's watching the objects, not you."
+  },
+  "personality": {
+    "summary": "Timid in new situations and quiet as a default. Somehow best friends with Yoshibara Hiyoko, who is neither of those things. They balance each other precisely: Hiyoko fills the space Nomi leaves; Nomi provides the stillness Hiyoko doesn't have. Their friendship makes complete sense if you see it operating.",
+    "in_class": "Listens carefully. Speaks rarely. When she speaks, people listen because it doesn't happen often.",
+    "in_combat": "Eerie. She looks calm while objects orbit and launch around her. Her telekinesis is quiet — she doesn't narrate it.",
+    "quirk_of_character": "Small objects near her sometimes drift toward her slightly without her intending it — a pen rolling half an inch on a desk, a cup shifting. She doesn't notice."
+  },
+  "ability_scores": {
+    "note": "WIS primary (Poltergeist is telekinesis — mental/control type, governed by perception and focus). INT secondary for precision.",
+    "STR": 8,
+    "DEX": 12,
+    "CON": 13,
+    "INT": 14,
+    "WIS": 15,
+    "CHA": 10,
+    "TECH": 13
+  },
+  "modifiers": {
+    "STR": -1,
+    "DEX": 1,
+    "CON": 1,
+    "INT": 2,
+    "WIS": 2,
+    "CHA": 0,
+    "TECH": 1
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Wisdom",
+  "quirk_save_DC": 12,
+  "HP": 9,
+  "AC": 12,
+  "speed": "30 ft",
+  "suggested_class": "Quirk Savant",
+  "class_note": "Quirk Savant's expanded quirk use lets her maintain more simultaneous telekinetic effects.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Poltergeist",
+    "weakness": "Max weight controllable: ~275 lbs (approximately one person). High stamina drain. Number of simultaneously controlled objects = proficiency bonus.",
+    "abilities": [
+      {
+        "name": "Object Barrage",
+        "type": "Action",
+        "description": "Telekinetically launch a barrage of small objects in a 40-foot cone. DEX save vs Quirk DC. Fail: 4d6 bludgeoning damage, knocked back 20 ft. Success: half damage, no knockback."
+      },
+      {
+        "name": "Telekinetic Push or Pull",
+        "type": "Action",
+        "description": "Target one creature or two objects within 30 feet and move forcefully. Objects: instantly move up to 30 ft. Creatures: STR save vs Quirk DC. Fail: pushed/pulled 40 ft, 2d6 force damage, restrained or prone 10 ft in the air. Success: pushed/pulled 20 ft, half damage, no condition."
+      },
+      {
+        "name": "Telekinetic Shield",
+        "type": "Reaction",
+        "description": "Create a swirling 10-foot radius barrier of telekinetically controlled debris centered on self or up to two allies within 30 ft. Barrier has 20 HP, grants +1 AC to creatures inside. Enemies cannot enter while active. Friendly creatures can move out freely."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Area denial and creature repositioning. She moves enemies into bad positions and allies into good ones. Doesn't deal high damage but makes everyone else's damage land better.",
+    "social_role": "The class's quiet conscience. She notices things others miss but communicates them only in small ways — a look, a sentence. People who pay attention to her learn to pay more attention.",
+    "growth_arc": "Finding her voice. Not metaphorically — literally saying the thing she noticed. Her relationship with Hiyoko is the model: she's seen how much space another person takes, and the class is going to need her to take some.",
+    "weakness_to_exploit": "Low STR and CON. She is physically fragile. Any enemy that ignores the orbiting debris and goes directly at her will find someone who cannot survive a close-range fight."
+  }
+}

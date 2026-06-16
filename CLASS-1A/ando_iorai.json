@@ -1,0 +1,72 @@
+{
+  "name": "Ando Iorai",
+  "is_pc": false,
+  "gender": "Male",
+  "height": "5'7\"",
+  "body_type": "Athletic",
+  "physiology": "Standard",
+  "quirk": "Scales",
+  "quirk_rarity": "Common",
+  "quirk_type": "Transformation",
+  "appearance": {
+    "hair": "Green buzzcut. Sharp.",
+    "build": "Athletic. Compact and quick.",
+    "other": "Hard reptile scales cover his body under his clothing — he wears the sunglasses at all times. The scales along his arms can be seen when he rolls up his sleeves, which he does more often than necessary."
+  },
+  "personality": {
+    "summary": "Cocky and jokes constantly, even in situations that don't call for it. Genuinely believes he is the best person in the class until proven wrong, at which point he is briefly very quiet and then resumes being cocky. Gets scared easily but has constructed an impressive wall of banter around this fact. The sunglasses are part of the architecture.",
+    "in_class": "Makes comments under his breath. About 40% are funny. 100% are delivered with full confidence.",
+    "in_combat": "Jumps in early and hard. The jokes stop. He's actually competent when he drops the performance.",
+    "quirk_of_character": "He is afraid of surprisingly mundane things (specific loud sounds, the dark, sudden movement from above). He covers these immediately with a joke. The class has started to recognise the pattern."
+  },
+  "ability_scores": {
+    "note": "CON primary (Scales is protective, durability-oriented). STR secondary for striker role.",
+    "STR": 14,
+    "DEX": 13,
+    "CON": 15,
+    "INT": 8,
+    "WIS": 12,
+    "CHA": 13,
+    "TECH": 10
+  },
+  "modifiers": {
+    "STR": 2,
+    "DEX": 1,
+    "CON": 2,
+    "INT": -1,
+    "WIS": 1,
+    "CHA": 1,
+    "TECH": 0
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Constitution",
+  "quirk_save_DC": 12,
+  "HP": 12,
+  "AC": 14,
+  "speed": "30 ft",
+  "suggested_class": "Heroic Vanguard → Reckless Attacker Style",
+  "class_note": "Reckless Attacker suits his high-aggression, get-in-first combat style. Scale Armor gives him survivability to back up the aggression.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Scales",
+    "weakness": "Scales break off relatively easily after strong impacts — inferior to Hardening or Steel. Not indestructible.",
+    "abilities": [
+      {
+        "name": "Scale Armor",
+        "type": "Bonus Action / Reaction",
+        "description": "Cover body with scales. Grants +2 AC and reduces incoming attacks by 2d6 for 1 minute."
+      },
+      {
+        "name": "Scale Shot",
+        "type": "Attack",
+        "description": "Fire scales as projectiles at a target within 45 ft. On hit: 3d6 piercing damage. At 5th, 10th, and 15th level, add 1 extra damage die."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Front-line striker with defensive layering. Scale Armor lets him absorb early hits while Scale Shot gives him a ranged option. Works best in a class that can exploit the openings he creates.",
+    "social_role": "Comic relief with actual depth. The class learns to read the sunglasses — on means normal, off means he's genuinely shaken. Off is rare.",
+    "growth_arc": "His cockiness is defensive. A key moment is when he can't joke his way through something and has to sit with the actual feeling. Toragi Kayo is the person he has the most consistent rivalry with, which eventually becomes mutual respect.",
+    "weakness_to_exploit": "Loud sudden noises give him genuine pause — a savvy enemy could exploit this. Also: darkness. Anything that disrupts his bravado performance has an outsized effect on him."
+  }
+}

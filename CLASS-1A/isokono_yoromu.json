@@ -1,0 +1,78 @@
+{
+  "name": "Isokono Yoromu",
+  "is_pc": false,
+  "gender": "Female",
+  "height": "5'2\"",
+  "body_type": "Athletic",
+  "physiology": "Heteromorph",
+  "quirk": "Tail",
+  "quirk_rarity": "Common",
+  "quirk_type": "Mutant",
+  "appearance": {
+    "hair": "Blonde ponytail. The irony of a girl with a tail also wearing her hair in a ponytail is not lost on her. She knows.",
+    "build": "Small and athletic. Compact.",
+    "other": "Her tail extends from her lower back — thick, strong, and prehensile. It moves with her emotions somewhat involuntarily."
+  },
+  "personality": {
+    "summary": "Shy and quiet in groups. Deeply and genuinely loving toward people she trusts. Cries easily — not from weakness but from sensitivity — and doesn't hide it. Makes no apology for this.",
+    "in_class": "Usually near Kibi Kankei. Participates when called on and gives thoughtful answers. Doesn't volunteer often.",
+    "in_combat": "Steadier than expected. The shyness disappears when her friends need her. Uses her tail for grapples and support rather than pure offense.",
+    "quirk_of_character": "Her tail wags when she's happy. Stiffens when she's nervous. Wraps around nearby friendly people when she's scared. She can't entirely control this. The class finds it endearing."
+  },
+  "ability_scores": {
+    "note": "STR primary for Tail attacks (2d12 + double STR). WIS secondary for perceptive support role.",
+    "STR": 14,
+    "DEX": 13,
+    "CON": 13,
+    "INT": 8,
+    "WIS": 15,
+    "CHA": 12,
+    "TECH": 10
+  },
+  "modifiers": {
+    "STR": 2,
+    "DEX": 1,
+    "CON": 1,
+    "INT": -1,
+    "WIS": 2,
+    "CHA": 1,
+    "TECH": 0
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Strength",
+  "quirk_save_DC": 12,
+  "HP": 10,
+  "AC": 12,
+  "speed": "30 ft",
+  "suggested_class": "Heroic Vanguard → Unarmed Style",
+  "class_note": "Her tail is a natural weapon — Unarmed Style expands how effectively she can use it and adds unarmed combat features.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Tail",
+    "weakness": "The tail is vulnerable to damage and can be targeted. As a permanent mutation, makes sitting and lying down comfortably difficult. If the tail is injured, certain abilities become unavailable.",
+    "abilities": [
+      {
+        "name": "Tail (base)",
+        "type": "Passive / Unarmed Strike",
+        "description": "Tail functions as an extra limb. Has double HP of a regular limb. Reach 10 feet. Carrying capacity: 200 lbs. Can interact with objects like a hand.",
+        "unarmed_strike": "2d12 + double STR modifier bludgeoning. On hit, target makes STR save vs Quirk DC or is knocked back 20 feet (half on success)."
+      },
+      {
+        "name": "Grapple",
+        "type": "Bonus Action",
+        "description": "Use tail to grapple a creature. While grappling, can still attack and interact with objects using arms. Grappled creature makes STR save vs Quirk DC at turn start to escape."
+      },
+      {
+        "name": "Defensive Reaction",
+        "type": "Reaction",
+        "description": "When hit by an attack, use tail to intercept, reducing incoming damage by 1d12. Tail takes the reduced damage instead."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Grapple control and knockback. She locks one enemy in place with her tail while using her arms to support allies. In a class full of high-damage dealers, she's the one making sure enemies stay where the big hitters can reach them.",
+    "social_role": "The warmth in the class. The person who notices when someone is struggling before they say anything. She cries in the same scenes where others don't but that doesn't mean she feels it less correctly.",
+    "growth_arc": "Her shyness in groups occasionally leaves her unheard. A character arc is learning to say the thing she noticed — and discovering that the class wanted to hear it.",
+    "weakness_to_exploit": "Her tail is a liability in tight spaces or against enemies that can grab it. Slashing damage to the tail can cripple her combat effectiveness quickly."
+  }
+}

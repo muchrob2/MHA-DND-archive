@@ -1,0 +1,77 @@
+{
+  "name": "Toshida Shogoro",
+  "is_pc": false,
+  "gender": "Male",
+  "height": "5'9\"",
+  "body_type": "Athletic",
+  "physiology": "Heteromorph",
+  "quirk": "Comic",
+  "quirk_rarity": "Uncommon",
+  "quirk_type": "Emitter",
+  "appearance": {
+    "hair": "None. His head is a large three-dimensional speech bubble — white with a pointed tail — and his face is rendered on its surface in clean black ink. Expressions shift like a cartoon.",
+    "build": "Athletic and surprisingly normal below the neck. The head is the thing.",
+    "other": "His face-expressions on the bubble surface change rapidly to match his emotional state — broad grins, exaggerated shock, sweat drops. These are automatic and cannot be hidden. He has tried. It has never worked."
+  },
+  "personality": {
+    "summary": "Dramatic and enthusiastic in everything he does. His heteromorph physiology lends itself to this — an expressive cartoon face is hard to use subtly. He has committed to full expressiveness as a life philosophy. He is exactly as much as he appears to be, at all times.",
+    "in_class": "Takes notes. His face shows exactly what he thinks of every lesson in real time. Teachers have mixed feelings about this.",
+    "in_combat": "His ability is chaotic-area by nature and his combat approach reflects that. He's loud about it. Announces his moves. Has been told to stop announcing his moves. Cannot stop announcing his moves.",
+    "quirk_of_character": "His head has gotten stuck in the dorm doorframe three times. He treats this as evidence that the doorframe is out to get him. He has named the doorframe Hiroshi."
+  },
+  "ability_scores": {
+    "note": "CHA primary (Comic is expression and performance made physical — the quirk manifests as visual/emotional projections, governed by force of personality). TECH secondary for precision of text and effects.",
+    "STR": 10,
+    "DEX": 12,
+    "CON": 13,
+    "INT": 13,
+    "WIS": 8,
+    "CHA": 15,
+    "TECH": 14
+  },
+  "modifiers": {
+    "STR": 0,
+    "DEX": 1,
+    "CON": 1,
+    "INT": 1,
+    "WIS": -1,
+    "CHA": 2,
+    "TECH": 2
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Charisma",
+  "quirk_save_DC": 12,
+  "HP": 9,
+  "AC": 12,
+  "speed": "30 ft",
+  "suggested_class": "Star Performer",
+  "class_note": "Star Performer's performance-linked abilities directly synergise with Comic's expressive, audience-affecting mechanics.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Comic",
+    "weakness": "Effects are visible to everyone, including allies. Toshida cannot create Comic effects silently or subtly. Anything he creates in combat is clearly labelled as coming from him.",
+    "abilities": [
+      {
+        "name": "Sound Effect",
+        "type": "Action",
+        "description": "Manifest a giant comic-style sound effect word (CRASH, BOOM, SLAM) in a 20-foot area within 60 feet. All creatures in the area make CON save vs Quirk DC. Fail: deafened for 1 minute, take 3d8 thunder damage, knocked prone. Success: half damage, not prone. The word remains visible for 1 minute as difficult terrain (physical letters manifest as real objects)."
+      },
+      {
+        "name": "Motion Lines",
+        "type": "Bonus Action",
+        "description": "Project comic motion lines onto up to 3 creatures within 60 ft. Affected creatures cannot take reactions and have disadvantage on opportunity attack rolls until the start of Toshida's next turn."
+      },
+      {
+        "name": "Panel Shift",
+        "type": "Action",
+        "description": "Create a comic panel border around up to 4 creatures within 30 ft. Affected creatures must make INT save vs Quirk DC or become briefly confused by a reality-overlay effect — on fail, all movement is halved and the creature must move in a straight line until end of their turn."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Disruption and area denial. His Sound Effect creates difficult terrain and prone enemies; Motion Lines strip reactions from key targets. He's not a striker but he creates the conditions that make strikers devastating.",
+    "social_role": "Class morale engine. When things go badly, his face is readable and his response to bad news is usually — somehow — funny. He doesn't mean to be. He just can't hide how he's processing things.",
+    "growth_arc": "Learning discretion. His cartoon-expressiveness is a liability in covert missions and emotional conversations with stakes. Finding out that sometimes the most powerful thing is silence — and sitting with that knowledge.",
+    "weakness_to_exploit": "Every ability telegraphs. Enemies always know what he's doing and where it's coming from. Low WIS means he doesn't always read the situation correctly before acting."
+  }
+}

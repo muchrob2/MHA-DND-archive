@@ -1,0 +1,83 @@
+{
+  "name": "Izuto Kutsu",
+  "is_pc": true,
+  "gender": "Male",
+  "height": "5'8\"",
+  "body_type": "Athletic",
+  "physiology": "Heteromorph",
+  "quirk": "Engine",
+  "quirk_rarity": "Common",
+  "quirk_type": "Mutant",
+  "appearance": {
+    "hair": "Black, textured crew cut.",
+    "build": "Athletic, solid. The engine protrusions on his legs are always visible — mechanical components flush with his calves, permanently present, not painful.",
+    "other": "When Engine activates the protrusions heat up and a faint exhaust-heat shimmer comes off his legs. At full output there's a low mechanical hum. He can hear it; usually other people can too, at close range."
+  },
+  "personality": {
+    "summary": "Intelligent and self-reliant in the mode of someone who figured out early that relying on others was slower. Not cold — engaged, direct, competent. Has a harder time accepting help than he does giving it, which is a consistent failure mode he's aware of and doesn't entirely know how to fix.",
+    "in_class": "Excellent student. Works independently. Does group projects by doing them and asking others to review the result.",
+    "in_combat": "Tactical. He uses Engine's speed for positioning and extraction, not just aggression — getting allies out of bad positions, creating flanking opportunities, controlling the map.",
+    "quirk_of_character": "He maintains his own leg-engine components like someone maintaining a motorcycle — periodic cleaning, specific care routines. Other students found this normal. Then they realised it was his body he was maintaining with a wrench. It's still normal. It's just also a bit strange."
+  },
+  "ability_scores": {
+    "note": "DEX primary — Engine is a speed/mobility mutation, DEX governs both the movement mechanics and the precision of high-speed maneuvering. INT secondary for tactical positioning use and self-maintenance knowledge.",
+    "STR": 12,
+    "DEX": 15,
+    "CON": 13,
+    "INT": 14,
+    "WIS": 13,
+    "CHA": 8,
+    "TECH": 10
+  },
+  "modifiers": {
+    "STR": 1,
+    "DEX": 2,
+    "CON": 1,
+    "INT": 2,
+    "WIS": 1,
+    "CHA": -1,
+    "TECH": 0
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Dexterity",
+  "quirk_save_DC": 13,
+  "HP": 10,
+  "AC": 13,
+  "speed": "30 ft",
+  "suggested_class": "Heroic Vanguard",
+  "class_note": "Heroic Vanguard → Speedster Style. Engine's leg-based movement multiplier and exhaust-burst attacks are the Speedster's core mechanical loop.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Engine",
+    "weakness": "Engine requires fuel — physical exertion is the primary fuel source. Extended high-speed use in short bursts without rest causes engine strain (speed reduction until short rest). If significantly cold, startup is slower and max output is reduced.",
+    "abilities": [
+      {
+        "name": "Gear Shift",
+        "type": "Bonus Action",
+        "description": "Activate Engine. Movement speed increases by 30 ft per Gear Shift activation, up to 3 activations (+90 ft max). Each activation increases by one gear — Gear 1 (+30), Gear 2 (+60), Gear 3 (+90). Downshifting is a bonus action. After Gear 3, must downshift completely or make CON save (DC 13) or take 1d8 engine strain damage and drop to Gear 1."
+      },
+      {
+        "name": "Exhaust Kick",
+        "type": "Attack",
+        "description": "Leg strike that releases a directed exhaust burst on impact. 2d8 + STR modifier bludgeoning + 1d6 fire damage. Target makes DEX save vs Quirk DC or is pushed 20 ft and blinded until end of their next turn (exhaust in face). Requires at least Gear 1 active."
+      },
+      {
+        "name": "Extraction Run",
+        "type": "Action",
+        "description": "Move up to full current speed, carry one willing ally, and end in a safe position. The ally takes no damage from the movement. Izuto takes no opportunity attacks during this move. Usable once per short rest."
+      }
+    ]
+  },
+  "player_notes": {
+    "role_summary": "The class's mobility engine — in the most literal sense. You control where the fight happens. Gear Shift determines your speed; Exhaust Kick is your damage output; Extraction Run is the 'get someone out of there' tool the party will rely on more than they expect.",
+    "social_position": "Quietly central. He doesn't take leadership but he takes responsibility, which ends up looking similar.",
+    "growth_hook": "He doesn't accept help. This will cost him something at some point. The character moment is asking — sincerely, with nothing held back.",
+    "suggested_background": "Grew up in a family that prized self-sufficiency. Older relatives in trade work. He learned to fix things and assume he was the one who fixed them."
+  },
+  "dm_notes": {
+    "combat_role": "Mobile striker and team repositioner. His Extraction Run is one of the highest-value support abilities in the class. Don't let him solo — his best play is creating advantages for others.",
+    "social_role": "The self-sufficient one. Reliable. Somewhat isolated by choice. The class respects this and also, quietly, wants in.",
+    "growth_arc": "Letting people in without framing it as weakness. Someone has to get far enough inside the defences that he doesn't realise they're there until they already are.",
+    "weakness_to_exploit": "Engine strain in extended high-gear fights. Cold environments reduce max output. His CHA is his weakest social stat — in political or persuasion situations he's at a disadvantage. Self-reliance can become a liability when the team needs him to communicate what he needs."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "name": "Takazuki Hanori",
+  "is_pc": false,
+  "gender": "Female",
+  "height": "5'2\"",
+  "body_type": "Athletic",
+  "physiology": "Heteromorph",
+  "quirk": "Invisibility",
+  "quirk_rarity": "Common",
+  "quirk_type": "Mutant",
+  "appearance": {
+    "hair": "N/A — she is completely invisible.",
+    "build": "Athletic, 5'2\" — she knows this because she's measured herself by other means. Others know this approximately.",
+    "other": "Permanently invisible body. To use her quirk effectively, she must remove all clothing. Clothing she's wearing is visible. She has developed very strong opinions about this particular limitation."
+  },
+  "personality": {
+    "summary": "Tries hard to be noticed. Loud, opinionated, and present — she is not going to be the person in the corner that no one knows is there. She knows exactly when to be quiet: in a dangerous situation, she becomes the silence itself. The switch between these modes is very clean.",
+    "in_class": "One of the most vocal students. Has a specific seat that everyone knows is hers and will vacate if somehow occupied. Taps the desk when thinking.",
+    "in_combat": "Precisely the opposite — nearly wordless, completely still except in motion. She's a different person in a fight.",
+    "quirk_of_character": "She has strong feelings about the concept of being seen. She hates the word 'invisible' used as a metaphor — it's just her appearance, it doesn't mean anything about her."
+  },
+  "ability_scores": {
+    "note": "DEX primary (Invisibility is agility/speed-oriented; her combat style relies on positioning and striking unseen). WIS secondary for perceptive awareness.",
+    "STR": 8,
+    "DEX": 15,
+    "CON": 12,
+    "INT": 13,
+    "WIS": 14,
+    "CHA": 13,
+    "TECH": 10
+  },
+  "modifiers": {
+    "STR": -1,
+    "DEX": 2,
+    "CON": 1,
+    "INT": 1,
+    "WIS": 2,
+    "CHA": 1,
+    "TECH": 0
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Dexterity",
+  "quirk_save_DC": 12,
+  "HP": 9,
+  "AC": 13,
+  "speed": "30 ft",
+  "suggested_class": "Street Scum or Heroic Vanguard → Speedster Style",
+  "class_note": "Her quirk is most powerful for infiltration and unseen strikes. Street Scum's stealth and mobility features enhance her natural advantages. Speedster Style also works for mobile unseen assault.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Invisibility",
+    "weakness": "Invisibility does not extend to clothing or objects. Must remove all clothing to be fully unseen. Going fully naked exposes skin to environmental hazards. If wearing any visible clothing or equipment, she is considered seen.",
+    "abilities": [
+      {
+        "name": "Invisibility",
+        "type": "Passive (always active)",
+        "description": "Always invisible. Impossible to see without truesight or infravision. For hiding, treated as heavily obscured. Location detected only by noise, scent, or tracks. Attack rolls against her have disadvantage. Her attack rolls have advantage."
+      },
+      {
+        "name": "Warp Refraction",
+        "type": "Bonus Action",
+        "description": "In bright light, refract and amplify surrounding light to blind a creature within 15 feet. CHA save vs Quirk DC. On failure: blinded until end of your next turn. When used, distorted light briefly outlines her shape until start of her next turn."
+      },
+      {
+        "name": "Radiant Redirect",
+        "type": "Reaction",
+        "description": "When a creature within 50 feet makes an attack or quirk that deals radiant or fire damage, alter its trajectory: add one damage die of that attack (half proficiency bonus amount) and optionally redirect to hit up to two other creatures within 50 feet of the original target."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Scout and unseen striker. Advantage on all attacks (when unclothed) makes her hit rate exceptional. Her vulnerability is environmental damage when using the quirk fully — exposure to cold, heat, or rough terrain matters more for her than armoured classmates.",
+    "social_role": "Unexpectedly central in the dorms. She's the loudest invisible person anyone has met. People talk around her before they check if she's there. She has used this to win every dorm argument about the TV.",
+    "growth_arc": "The dissonance between wanting to be seen and having a quirk built on invisibility. Resolves not by changing the quirk but by the class demonstrating — without making a speech about it — that they always know she's there.",
+    "weakness_to_exploit": "Fully visible when clothed. Exposure when unclothed. Any enemy with truesight negates her primary combat advantage completely. Heat and cold are genuine physical threats."
+  }
+}

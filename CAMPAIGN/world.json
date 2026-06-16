@@ -1,0 +1,54 @@
+{
+  "setting": {
+    "school": "U.A. High School",
+    "school_description": "The most prestigious hero-track school in the country. Known across the nation for producing top Pro Heroes. Entry is highly competitive — the entrance exam is genuinely dangerous and only the top performers earn a spot. Class 1-A is the elite hero course cohort, the class everyone outside watches and resents a little.",
+    "school_features": {
+      "grounds": "Sprawling campus with state-of-the-art training grounds, Battle Centres simulating real urban environments, dormitories (Heights Alliance), support labs, and classrooms designed for quirk-integrated learning.",
+      "heights_alliance": "The student dormitories. Each student has their own room but shares common spaces — kitchen, living room, laundry. Most of the campaign's downtime drama happens here.",
+      "battle_centres": "Numbered training areas (I through VII) with different environments: city simulation, forest, industrial, interior combat, etc. Used for both formal training and exams.",
+      "recommendations_and_rankings": "Students are ranked internally. This matters more than it probably should to several members of Class 1-A."
+    }
+  },
+  "city": {
+    "name": "Murano",
+    "description": "A large, modern coastal city adjacent to U.A.'s campus. Busy and alive — hero sightings are a regular occurrence, hero merchandise lines entire districts, and civilians have strong opinions about the Pro Hero rankings. The city has distinct districts with different flavours.",
+    "districts": {
+      "central_plaza": "Downtown commercial core. Agency towers, hero-branded stores, big public screens showing hero ranking updates. Where the class goes on free weekends.",
+      "port_district": "Working-class waterfront. Older buildings, smaller heroes, real crime. Where the class gets sent during internships. Less glamorous, more honest.",
+      "east_ward": "Residential sprawl. Middle-class families, schools, parks. Where many of the class's rescue missions will take place.",
+      "hero_row": "The street where the highest-ranked local agencies are headquartered. Glass and steel and sponsorship banners. Looks impressive, feels sterile."
+    }
+  },
+  "hero_society": {
+    "tone": "Mostly functioning and genuinely exciting. Being a hero is cool. Hero rankings are watched like sports. U.A. students are minor celebrities at public events. The world feels alive and worth protecting.",
+    "licensing": "Heroes must hold a Hero License to engage in combat. Students operate under provisional licenses before graduating. Unlicensed quirk use in combat is technically criminal, which creates tension during internship arcs.",
+    "pro_hero_culture": "Pro heroes have sponsors, fan rankings, social media followings. Some are genuine legends. Some are PR machines. The class will meet both kinds.",
+    "background_rot": "The villain organisation The Chain has been operating in Murano's port district for years, exploiting coverage gaps and preying on unlicensed quirk users. Most people don't know how organised they are yet."
+  },
+  "student_life": {
+    "tone": "The backbone of the campaign between dramatic arcs. Cooking arguments, study chaos, dorm drama, class rivalries, gossip about who likes who, culture festival disasters, sports festival tensions. This is as important as the combat.",
+    "quirks_of_daily_life": [
+      "Toshida Shogoro's speech bubble head makes doorways a recurring hazard",
+      "Takazuki Hanori being invisible means people regularly sit on her or walk through her stuff",
+      "Nakaya Emari has accidentally enlarged several common room items and refuses to apologise",
+      "Masahata Shikoji maintains a printed personal ranking chart on the common room fridge that everyone else ignores",
+      "Kinosho Kochimiko has the best strategic mind in the class and uses it exclusively to find the optimal napping location"
+    ],
+    "class_dynamics": {
+      "rivalries": "Ando Iorai and Toragi Kayo both think they're the most dangerous person in the room. They are not. The most dangerous person in the room is usually Chosen Tadachi, who is currently staring at a wall.",
+      "friendships": "Kibi Kankei and Isokono Yoromu have an unspoken alliance based on being the most laid-back people in a class full of very intense personalities. Yoshibara Hiyoko's chaotic energy pairs oddly well with Nomi Igisa's quietness — they are somehow best friends.",
+      "class_chaos_index": "High. There are twenty people with unusual abilities living together. Something is always happening."
+    }
+  },
+  "rules_reference": {
+    "rulebook": "MHA5e Official Handbook (RULEBOOKS folder)",
+    "quirk_source": "My Hero Academia Quirk Compendium (RULEBOOKS folder)",
+    "ability_scores": ["Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma", "Technology"],
+    "level_tiers": {
+      "tier_1": "Levels 1-4: First year begins. U.A. campus. Training, dorm life, first real danger.",
+      "tier_2": "Levels 5-10: Sports Festival, Internships, Murano city patrol. Getting serious.",
+      "tier_3": "Levels 11-15: The Chain makes it personal. Culture Festival. Betrayal arc.",
+      "tier_4": "Levels 16-20: Final confrontation. Graduation. Epilogue."
+    }
+  }
+}

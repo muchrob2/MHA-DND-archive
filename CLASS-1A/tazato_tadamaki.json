@@ -1,0 +1,77 @@
+{
+  "name": "Tazato Tadamaki",
+  "is_pc": false,
+  "gender": "Female",
+  "height": "5'3\"",
+  "body_type": "Athletic",
+  "physiology": "Heteromorph",
+  "quirk": "Dragon",
+  "quirk_rarity": "Rare",
+  "quirk_type": "Transformation",
+  "appearance": {
+    "hair": "Red. Thick, slightly wild. She doesn't manage it much.",
+    "build": "Athletic, compact, stronger than she looks.",
+    "other": "Red scales visible on her back, upper arms, and along her shoulderblades — always present, not triggered by the quirk. Her teeth are slightly sharper than normal. When she activates full Dragon transformation the scales cover her entirely and she gains several inches of height."
+  },
+  "personality": {
+    "summary": "Cranky as a resting state, not as an exceptional condition. She is not in a bad mood — she is in her mood, which looks like a bad mood to people who expect cheerfulness. She is direct, has high standards, and finds performance of niceness exhausting. She is not unkind. She is honest, which she considers the same thing.",
+    "in_class": "Does the work, doesn't engage socially with the work. Hates group projects — not because of the collaboration, because of the managing of the collaboration.",
+    "in_combat": "Completely in her element. She is genuinely more comfortable here than anywhere else. Her cranky edge disappears because the situation is clear.",
+    "quirk_of_character": "She helps people. She just doesn't frame it as helping — she finds a reason that is technically about efficiency or practicality and does the kind thing that way. The class has noticed. She knows they've noticed. She does not comment on it."
+  },
+  "ability_scores": {
+    "note": "STR primary for Dragon transformation's physical enhancement — raw power is the quirk's core output. CON secondary for the sustained transformation and dragon physiology requirements.",
+    "STR": 15,
+    "DEX": 12,
+    "CON": 14,
+    "INT": 8,
+    "WIS": 13,
+    "CHA": 13,
+    "TECH": 10
+  },
+  "modifiers": {
+    "STR": 2,
+    "DEX": 1,
+    "CON": 2,
+    "INT": -1,
+    "WIS": 1,
+    "CHA": 1,
+    "TECH": 0
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Strength",
+  "quirk_save_DC": 12,
+  "HP": 12,
+  "AC": 14,
+  "speed": "30 ft",
+  "suggested_class": "Heroic Vanguard",
+  "class_note": "Heroic Vanguard → Reckless Attacker Style. Dragon's transformation-enhanced strikes and breath weapon suit aggressive, high-risk front-line fighting.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Dragon",
+    "weakness": "Full transformation can only be maintained for a limited time (scales with level). Transformation state has a recharge period before it can be re-entered. Extremely hot environments increase strain while active.",
+    "abilities": [
+      {
+        "name": "Dragon Form",
+        "type": "Bonus Action",
+        "description": "Enter full Dragon transformation. Scales cover entire body. +4 to STR, +2 to CON. Natural armour sets AC to 16. Gain fire immunity and resistance to cold. Dragon Form lasts 3 rounds per proficiency bonus. Returning to normal is a free action."
+      },
+      {
+        "name": "Dragon Strike",
+        "type": "Attack (requires Dragon Form or natural scale state)",
+        "description": "Unarmed strike enhanced by scales. 2d8 + STR modifier bludgeoning + 1d6 fire damage. On a crit, target must make CON save vs Quirk DC or be stunned until end of next turn."
+      },
+      {
+        "name": "Breath Weapon",
+        "type": "Action (Dragon Form only, recharge 5-6)",
+        "description": "30-foot cone of fire. DEX save vs Quirk DC. Fail: 4d8 fire damage. Success: half damage. At level 5: 5d8. At level 10: 6d8. Creatures who fail are also set ablaze (1d6 fire per round until extinguished)."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Front-line brawler with a time limit. Dragon Form turns her into the class's hardest hitter for a short window — the DM should play enemies who understand this and try to outlast the form. The Breath Weapon is her burst option.",
+    "social_role": "Unofficial quality control. When someone is doing something stupid or insufficient, she says so. When someone is doing something well, she also says so, exactly once, in a tone that sounds like criticism and isn't.",
+    "growth_arc": "Her help-but-don't-admit-it pattern is armour. Something requiring her to accept help herself and acknowledge she needed it is the key moment.",
+    "weakness_to_exploit": "Dragon Form's timer. Enemies who can force her to burn the transformation duration and then disengage will face a weakened version of her after. INT is her dump stat — complex scenarios involving strategy or deception leave her at a disadvantage."
+  }
+}

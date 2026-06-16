@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campaign — MHA D&D</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f8f7f5; --surface: #ffffff; --surface2: #f2f1ef;
+    --border: rgba(0,0,0,0.10); --border-strong: rgba(0,0,0,0.18);
+    --text: #1a1a1a; --text-muted: #5f5e5a; --text-dim: #9a9890;
+    --purple: #534AB7; --purple-light: #EEEDFE; --purple-text: #3C3489;
+    --teal: #1D9E75; --teal-light: #E1F5EE; --teal-text: #085041;
+    --red: #E24B4A; --red-light: #FCEBEB; --red-text: #A32D2D;
+    --amber: #BA7517; --amber-light: #FAEEDA; --amber-text: #633806;
+    --green: #639922; --green-light: #EAF3DE; --green-text: #27500A;
+    --radius: 8px; --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18; --surface: #242422; --surface2: #2e2e2c;
+      --border: rgba(255,255,255,0.10); --border-strong: rgba(255,255,255,0.18);
+      --text: #e8e7e4; --text-muted: #a8a7a3; --text-dim: #6a6965;
+      --purple-light: #26215C; --purple-text: #AFA9EC;
+      --teal-light: #04342C; --teal-text: #9FE1CB;
+      --red-light: #501313; --red-text: #F09595;
+      --amber-light: #412402; --amber-text: #FAC775;
+      --green-light: #173404; --green-text: #C0DD97;
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+  /* ── Top bar ── */
+  #topbar { display: flex; align-items: center; gap: 0; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  #back-btn { display: flex; align-items: center; gap: 6px; padding: 10px 16px; font-size: 13px; color: var(--text-muted); text-decoration: none; border-right: 1px solid var(--border); white-space: nowrap; }
+  #back-btn:hover { color: var(--purple); background: var(--purple-light); }
+  .tab-bar { display: flex; flex: 1; overflow-x: auto; }
+  .tab-btn { padding: 10px 18px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--text-muted); border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.1s; }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
+
+  /* ── Body ── */
+  #content { flex: 1; overflow-y: auto; }
+
+  /* ── Shared layout ── */
+  .page { display: none; max-width: 860px; margin: 0 auto; padding: 32px 32px 60px; }
+  .page.active { display: block; }
+  .page-title { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 4px; }
+  .page-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
+  .section-label { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; margin-top: 28px; }
+  .section-label:first-child { margin-top: 0; }
+
+  /* ── Cards ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 10px; }
+  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .card-sub { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; }
+  .card-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 4px; margin-right: 4px; margin-bottom: 4px; font-weight: 500; }
+  .tag-purple { background: var(--purple-light); color: var(--purple-text); }
+  .tag-teal   { background: var(--teal-light);   color: var(--teal-text); }
+  .tag-red    { background: var(--red-light);    color: var(--red-text); }
+  .tag-amber  { background: var(--amber-light);  color: var(--amber-text); }
+  .tag-green  { background: var(--green-light);  color: var(--green-text); }
+
+  /* ── Arc page ── */
+  .tier-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .tier-badge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 4px; background: var(--purple-light); color: var(--purple-text); }
+  .tier-title { font-size: 17px; font-weight: 600; }
+  .tier-levels { font-size: 12px; color: var(--text-dim); }
+  .tier-tone { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 14px; font-style: italic; border-left: 3px solid var(--border); padding-left: 12px; }
+  .arc-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--surface2); }
+  .arc-card:last-child { margin-bottom: 0; }
+  .arc-name { font-size: 13px; font-weight: 600; }
+  .arc-type { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .arc-desc { font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+  .beats-toggle { font-size: 11px; color: var(--purple-text); cursor: pointer; margin-top: 8px; display: inline-block; }
+  .beats-toggle:hover { text-decoration: underline; }
+  .beats-list { margin-top: 8px; padding-left: 16px; display: none; }
+  .beats-list.open { display: block; }
+  .beats-list li { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+
+  /* ── Teachers & Villains ── */
+  .person-card { display: grid; grid-template-columns: 52px 1fr; gap: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 12px; }
+  .person-avatar { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; flex-shrink: 0; }
+  .av-teacher { background: var(--amber-light); color: var(--amber-text); }
+  .av-villain { background: var(--red-light); color: var(--red-text); }
+  .person-name { font-size: 16px; font-weight: 600; }
+  .person-alias { font-size: 12px; color: var(--text-dim); }
+  .person-role { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .person-tags { margin-top: 8px; }
+  .person-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .person-section-label { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+  .person-section-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .stat-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+  .stat-chip { display: flex; flex-direction: column; align-items: center; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 4px 8px; min-width: 40px; }
+  .stat-chip-label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .stat-chip-val { font-size: 15px; font-weight: 700; }
+  .dm-note { background: var(--amber-light); border-left: 3px solid var(--amber); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin-top: 8px; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .dm-note strong { color: var(--amber-text); }
+  .warning-note { background: var(--red-light); border-left: 3px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin-top: 8px; font-size: 12px; color: var(--red-text); }
+  .collapse-btn { font-size: 11px; color: var(--purple-text); cursor: pointer; margin-top: 10px; display: inline-block; }
+  .collapse-btn:hover { text-decoration: underline; }
+  .collapsible { display: none; }
+  .collapsible.open { display: block; }
+
+  /* ── World page ── */
+  .world-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 12px; overflow: hidden; }
+  .world-section-header { padding: 14px 18px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+  .world-section-header:hover { background: var(--surface2); }
+  .world-section-title { font-size: 14px; font-weight: 600; }
+  .world-chevron { font-size: 12px; color: var(--text-dim); transition: transform 0.2s; }
+  .world-chevron.open { transform: rotate(90deg); }
+  .world-section-body { padding: 0 18px 14px; display: none; }
+  .world-section-body.open { display: block; }
+  .kv-row { display: grid; grid-template-columns: 160px 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .kv-row:last-child { border-bottom: none; }
+  .kv-key { font-weight: 500; color: var(--text-muted); text-transform: capitalize; }
+  .kv-val { color: var(--text); }
+
+  /* ── Loading ── */
+  #loading { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-dim); font-size: 13px; }
+</style>
+</head>
+<body>
+<div id="topbar">
+  <a id="back-btn" href="/">← Dashboard</a>
+  <div class="tab-bar">
+    <button class="tab-btn" onclick="loadFile('arc')" id="tab-arc">Arc Overview</button>
+    <button class="tab-btn" onclick="loadFile('world')" id="tab-world">World</button>
+    <button class="tab-btn" onclick="loadFile('teachers')" id="tab-teachers">Teachers</button>
+    <button class="tab-btn" onclick="loadFile('villains')" id="tab-villains">Villains</button>
+  </div>
+</div>
+<div id="content">
+  <div id="loading">Loading…</div>
+  <div class="page" id="page-arc"></div>
+  <div class="page" id="page-world"></div>
+  <div class="page" id="page-teachers"></div>
+  <div class="page" id="page-villains"></div>
+</div>
+
+<script>
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function initials(name) { return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+
+const cache = {};
+
+async function loadFile(file) {
+  // Set active tab
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+file).classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('loading').style.display = 'flex';
+
+  // Fetch if not cached
+  if (!cache[file]) {
+    const res = await fetch('/api/campaign/'+file);
+    cache[file] = await res.json();
+  }
+  const data = cache[file];
+  document.getElementById('loading').style.display = 'none';
+
+  const el = document.getElementById('page-'+file);
+  if (file === 'arc') renderArc(data, el);
+  else if (file === 'world') renderWorld(data, el);
+  else if (file === 'teachers') renderTeachers(data, el);
+  else if (file === 'villains') renderVillains(data, el);
+  el.classList.add('active');
+
+  // Update URL without reload
+  history.replaceState(null, '', '/campaign?file='+file);
+}
+
+/* ─── ARC ─────────────────────────────────────────────── */
+function renderArc(data, el) {
+  const TIER_COLORS = ['tag-purple','tag-teal','tag-amber','tag-red'];
+  let html = `<div class="page-title">${escHtml(data.campaign_title||'Campaign Arc')}</div>
+    <div class="page-sub">${escHtml(data.tone||'')}</div>`;
+
+  for (const t of (data.tiers||[])) {
+    const tColor = TIER_COLORS[(t.tier-1)%4];
+    html += `<div class="card" style="margin-bottom:16px;">
+      <div class="tier-header">
+        <span class="tier-badge">Tier ${t.tier}</span>
+        <span class="tier-title">${escHtml(t.title)}</span>
+        <span class="tier-levels">Levels ${escHtml(t.levels)}</span>
+      </div>
+      <div class="tier-tone">${escHtml(t.overall_tone||'')}</div>`;
+
+    for (const arc of (t.arcs||[])) {
+      const beatsId = 'beats-'+Math.random().toString(36).slice(2);
+      html += `<div class="arc-card">
+        <div class="arc-name">${escHtml(arc.name)}</div>
+        <div class="arc-type">${escHtml(arc.type)}</div>
+        <div class="arc-desc">${escHtml(arc.description||'')}</div>`;
+      if (arc.beats?.length) {
+        html += `<span class="beats-toggle" onclick="toggleBeats('${beatsId}',this)">▶ Show beats (${arc.beats.length})</span>
+          <ul class="beats-list" id="${beatsId}">
+            ${arc.beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}
+          </ul>`;
+      }
+      html += `</div>`;
+    }
+    html += `</div>`;
+  }
+
+  if (data.recurring_elements) {
+    html += `<div class="section-label">Recurring elements</div><div class="card">`;
+    for (const [k,v] of Object.entries(data.recurring_elements)) {
+      html += `<div class="kv-row"><div class="kv-key">${escHtml(k.replace(/_/g,' '))}</div><div class="kv-val">${escHtml(String(v))}</div></div>`;
+    }
+    html += `</div>`;
+  }
+  el.innerHTML = html;
+}
+
+function toggleBeats(id, btn) {
+  const el = document.getElementById(id);
+  const open = el.classList.toggle('open');
+  btn.textContent = (open ? '▼ Hide beats' : '▶ Show beats') + ' (' + el.children.length + ')';
+}
+
+/* ─── WORLD ───────────────────────────────────────────── */
+function renderWorld(data, el) {
+  let html = `<div class="page-title">World Reference</div><div class="page-sub">Setting, society, and student life</div>`;
+
+  function renderObj(obj, depth) {
+    let out = '';
+    for (const [k, v] of Object.entries(obj)) {
+      const label = k.replace(/_/g,' ');
+      if (typeof v === 'object' && v !== null && !Array.isArray(v)) {
+        if (depth === 0) {
+          const sid = 'ws-'+k;
+          out += `<div class="world-section">
+            <div class="world-section-header" onclick="toggleWorld('${sid}')">
+              <span class="world-section-title">${escHtml(label.charAt(0).toUpperCase()+label.slice(1))}</span>
+              <span class="world-chevron" id="chev-${sid}">▶</span>
+            </div>
+            <div class="world-section-body" id="${sid}">${renderObj(v,1)}</div>
+          </div>`;
+        } else {
+          out += `<div class="section-label" style="margin-top:14px">${escHtml(label)}</div>`;
+          out += renderObj(v, depth+1);
+        }
+      } else if (Array.isArray(v)) {
+        out += `<div class="kv-row"><div class="kv-key">${escHtml(label)}</div><div class="kv-val">${escHtml(v.join(', '))}</div></div>`;
+      } else {
+        out += `<div class="kv-row"><div class="kv-key">${escHtml(label)}</div><div class="kv-val">${escHtml(String(v||''))}</div></div>`;
+      }
+    }
+    return out;
+  }
+
+  html += renderObj(data, 0);
+  el.innerHTML = html;
+}
+
+function toggleWorld(id) {
+  const body = document.getElementById(id);
+  const chev = document.getElementById('chev-'+id);
+  const open = body.classList.toggle('open');
+  if (chev) { chev.textContent = open ? '▼' : '▶'; chev.classList.toggle('open', open); }
+}
+
+/* ─── TEACHERS ────────────────────────────────────────── */
+function renderTeachers(data, el) {
+  let html = `<div class="page-title">Teachers</div><div class="page-sub">U.A. High faculty — profiles and DM notes</div>`;
+
+  for (const t of (data.teachers||[])) {
+    const dmn = t.dm_notes||{};
+    const detailId = 'td-'+Math.random().toString(36).slice(2);
+    html += `<div class="person-card">
+      <div class="person-avatar av-teacher">${initials(t.name)}</div>
+      <div>
+        <div class="person-name">${escHtml(t.name)}</div>
+        <div class="person-alias">${escHtml(t.hero_name||'')} ${t.hero_name?'·':''} ${escHtml(t.role||'')}</div>
+        <div class="person-tags">
+          <span class="tag tag-amber">${escHtml(t.quirk||'')}</span>
+          <span class="tag tag-purple">${escHtml(t.quirk_type||'')}</span>
+        </div>
+        ${t.quirk_summary?`<div class="person-section">
+          <div class="person-section-label">Quirk</div>
+          <div class="person-section-body">${escHtml(t.quirk_summary)}</div>
+        </div>`:''}
+        <div class="person-section">
+          <div class="person-section-label">Appearance</div>
+          <div class="person-section-body">${escHtml(t.appearance||'')}</div>
+        </div>
+        <div class="person-section">
+          <div class="person-section-label">Personality</div>
+          <div class="person-section-body">${escHtml(t.personality||'')}</div>
+        </div>
+        <span class="collapse-btn" onclick="toggleCollapse('${detailId}',this)">▶ DM notes &amp; teaching style</span>
+        <div class="collapsible" id="${detailId}">
+          ${t.teaching_style?`<div class="person-section">
+            <div class="person-section-label">Teaching style</div>
+            <div class="person-section-body">${escHtml(t.teaching_style)}</div>
+          </div>`:''}
+          ${Object.keys(dmn).length?`<div class="dm-note"><strong>DM notes</strong><br>${
+            Object.entries(dmn).map(([k,v])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(v))}`).join('<br>')
+          }</div>`:''}
+        </div>
+      </div>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+/* ─── VILLAINS ────────────────────────────────────────── */
+function renderVillains(data, el) {
+  const STAT_KEYS = ['STR','DEX','CON','INT','WIS'];
+  const org = data.organisation||{};
+  let html = `<div class="page-title">Villains — The Chain</div>
+    <div class="page-sub">${escHtml(org.description||'')}</div>`;
+
+  if (org.structure||org.public_awareness) {
+    html += `<div class="card" style="margin-bottom:20px;">`;
+    if (org.structure) html += `<div class="kv-row"><div class="kv-key">Structure</div><div class="kv-val">${escHtml(org.structure)}</div></div>`;
+    if (org.public_awareness) html += `<div class="kv-row"><div class="kv-key">Public awareness</div><div class="kv-val">${escHtml(org.public_awareness)}</div></div>`;
+    html += `</div>`;
+  }
+
+  html += `<div class="section-label">Members</div>`;
+
+  for (const v of (data.villains||[])) {
+    const sb = v.stat_block||{};
+    const dmn = v.dm_notes||{};
+    const detailId = 'vd-'+Math.random().toString(36).slice(2);
+    html += `<div class="person-card">
+      <div class="person-avatar av-villain">${initials(v.name)}</div>
+      <div>
+        <div class="person-name">${escHtml(v.name)}</div>
+        <div class="person-alias">${v.alias?`"${escHtml(v.alias)}"`:''}</div>
+        <div class="person-role">${escHtml(v.role||'')}</div>
+        <div class="person-tags">
+          <span class="tag tag-red">${escHtml(v.quirk||'')}</span>
+          <span class="tag tag-amber">${escHtml(v.quirk_rarity||'')}</span>
+          <span class="tag tag-purple">${escHtml(v.quirk_type||'')}</span>
+        </div>
+        ${v.quirk_summary?`<div class="person-section">
+          <div class="person-section-label">Quirk</div>
+          <div class="person-section-body">${escHtml(v.quirk_summary)}</div>
+        </div>`:''}
+        <div class="person-section">
+          <div class="person-section-label">Appearance</div>
+          <div class="person-section-body">${escHtml(v.appearance||'')}</div>
+        </div>
+        <div class="person-section">
+          <div class="person-section-label">Personality</div>
+          <div class="person-section-body">${escHtml(v.personality||'')}</div>
+        </div>
+        <span class="collapse-btn" onclick="toggleCollapse('${detailId}',this)">▶ Stat block, combat &amp; DM notes</span>
+        <div class="collapsible" id="${detailId}">
+          ${v.combat_style?`<div class="person-section">
+            <div class="person-section-label">Combat style</div>
+            <div class="person-section-body">${escHtml(v.combat_style)}</div>
+          </div>`:''}
+          ${Object.keys(sb).length?`<div class="person-section">
+            <div class="person-section-label">Stat block</div>
+            <div class="stat-grid">
+              ${sb.level?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${sb.level}</span></div>`:''}
+              ${sb.HP?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${sb.HP}</span></div>`:''}
+              ${sb.AC?`<div class="stat-chip"><span class="stat-chip-label">AC</span><span class="stat-chip-val">${sb.AC}</span></div>`:''}
+              ${STAT_KEYS.map(k=>sb[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${sb[k]}</span></div>`:'').join('')}
+            </div>
+          </div>`:''}
+          ${Object.keys(dmn).length?`<div class="dm-note"><strong>DM notes</strong><br>${
+            Object.entries(dmn).map(([k,val])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(val))}`).join('<br>')
+          }</div>`:''}
+          ${v.arc_role?`<div class="warning-note"><strong>Arc role:</strong> ${escHtml(v.arc_role)}</div>`:''}
+        </div>
+      </div>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function toggleCollapse(id, btn) {
+  const el = document.getElementById(id);
+  const open = el.classList.toggle('open');
+  const label = btn.textContent.replace(/^[▶▼] /,'');
+  btn.textContent = (open ? '▼ ' : '▶ ') + label;
+}
+
+/* ─── Init ─────────────────────────────────────────────── */
+const startFile = new URLSearchParams(location.search).get('file') || 'arc';
+loadFile(startFile);
+</script>
+</body>
+</html>

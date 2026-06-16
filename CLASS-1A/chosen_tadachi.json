@@ -1,0 +1,83 @@
+{
+  "name": "Chosen Tadachi",
+  "is_pc": true,
+  "gender": "Male",
+  "height": "5'9\"",
+  "body_type": "Muscular",
+  "physiology": "Standard",
+  "quirk": "Stress",
+  "quirk_rarity": "Uncommon",
+  "quirk_type": "Transformation",
+  "appearance": {
+    "hair": "Black with natural red streaks running through it. Medium length, slightly unkempt.",
+    "build": "Muscular, denser than he looks. The physical transformation from Stress makes him a different presence in a room.",
+    "other": "The stress-activation is visible: veins darken and become briefly visible across his neck and forearms, his posture shifts, and when Stress hits full output his eyes narrow in a way that people tend to step back from. He doesn't notice it happening. He's dealing with something else."
+  },
+  "personality": {
+    "summary": "An overthinker who reaches conclusions quickly because he's already thought about it seventeen times in advance. This means he's frequently right and also frequently pre-worried about things that haven't happened yet. He is not anxious in a paralysed way — he's anxious in a brisk, prepared way. He will have already thought about the bad outcome and made a plan for it.",
+    "in_class": "Thorough notes, thorough questions. The student who has already read the chapter before class. Sometimes this is visible in the quality of his answers; sometimes it's visible in the bags under his eyes.",
+    "in_combat": "Focused. Stress is reactive by nature — it gets stronger as the situation gets worse, which means Chosen actually gets stronger as he gets more stressed, which means bad situations push him into his best combat state. He's learned to lean into this.",
+    "quirk_of_character": "He prepares for contingencies. He has thought about what to do if approximately forty different bad things happen, including several that are very unlikely. He told Ren about the volcanic eruption plan once. Ren thought this was the funniest thing he had ever heard. Chosen was not joking."
+  },
+  "ability_scores": {
+    "note": "STR primary — Stress augments physical output proportional to stress level, STR governs both mechanics and raw output. CON secondary for the biological demands of the Stress transformation.",
+    "STR": 15,
+    "DEX": 10,
+    "CON": 14,
+    "INT": 12,
+    "WIS": 13,
+    "CHA": 8,
+    "TECH": 13
+  },
+  "modifiers": {
+    "STR": 2,
+    "DEX": 0,
+    "CON": 2,
+    "INT": 1,
+    "WIS": 1,
+    "CHA": -1,
+    "TECH": 1
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Strength",
+  "quirk_save_DC": 12,
+  "HP": 12,
+  "AC": 14,
+  "speed": "30 ft",
+  "suggested_class": "Heroic Vanguard",
+  "class_note": "Heroic Vanguard → Shield Body Style. Stress augments both his offensive output and his durability under pressure — Shield Body's damage-mitigation and sustained-combat features match this.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Stress",
+    "weakness": "Stress output scales with actual stress level — if Chosen is calm, the quirk's output is lower. The quirk cannot be 'saved' at high output without maintaining elevated stress. After extended high-stress states, crash: disadvantage on all checks until a short rest. He cannot deactivate voluntarily at high stress — the quirk runs its course.",
+    "abilities": [
+      {
+        "name": "Stress Surge",
+        "type": "Passive (scales with Stress Tier)",
+        "description": "Chosen tracks a Stress Tier (1-3). Tier 1 (Standard danger): +2 STR, +1 AC. Tier 2 (Moderate threat — ally downed, significant damage taken): +4 STR, +2 AC, advantage on STR saves. Tier 3 (Critical — multiple allies down, personal high damage): +6 STR, +3 AC, advantage on STR checks and saves, melee attacks deal +1d8 bonus damage. DM determines Stress Tier based on actual situation severity."
+      },
+      {
+        "name": "Stress Break",
+        "type": "Action",
+        "description": "At Stress Tier 2 or higher, release a built-up surge. 20-foot radius centred on Chosen — all hostile creatures make STR save vs Quirk DC. Fail: 3d8 bludgeoning damage, knocked prone 15 ft. Success: half damage, not knocked back. After use, Stress Tier drops by 1."
+      },
+      {
+        "name": "Adrenaline Wall",
+        "type": "Reaction (Stress Tier 1+)",
+        "description": "When Chosen would be reduced to 0 HP, expend Stress Surge to instead drop to 1 HP and gain temporary HP equal to CON modifier × current Stress Tier. Usable once per long rest."
+      }
+    ]
+  },
+  "player_notes": {
+    "role_summary": "Durable front-liner who gets stronger as the situation gets worse. Your Stress Tier is your resource — the fight rewards staying in it. Stress Break is your panic-button AoE. Adrenaline Wall is your not-today card.",
+    "social_position": "The person who already knows what could go wrong, which is frustrating when nothing has gone wrong yet and invaluable when it has.",
+    "growth_hook": "He controls stress by planning for it — the scenario where the plan doesn't exist yet and he has to operate without a safety net is the one that tests him most.",
+    "suggested_background": "Older sibling to multiple younger kids. The family needed someone to have a plan. He became that person."
+  },
+  "dm_notes": {
+    "combat_role": "Escalating durable bruiser. He should feel different at the end of a hard fight than he did at the start — more dangerous, slightly unhinged, and very much still standing.",
+    "social_role": "The class's contingency planner and worst-case thinker. They joke about this but they also rely on it. The volcanic eruption plan has never been needed. He considers it a success.",
+    "growth_arc": "The moment where all his planning still doesn't prevent something bad. And then what. He doesn't spiral — but he recalibrates.",
+    "weakness_to_exploit": "Stress Tier only rises in genuine danger — manufactured calm removes his peak-performance edge. Post-combat crash is exploitable if enemies have reserves and he doesn't. Low CHA and DEX."
+  }
+}

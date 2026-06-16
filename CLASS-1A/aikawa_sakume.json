@@ -1,0 +1,72 @@
+{
+  "name": "Aikawa Sakume",
+  "is_pc": false,
+  "gender": "Female",
+  "height": "5'4\"",
+  "body_type": "Athletic",
+  "physiology": "Heteromorph",
+  "quirk": "Iron Claws",
+  "quirk_rarity": "Common",
+  "quirk_type": "Mutation",
+  "appearance": {
+    "hair": "Brown, straight, covers her eyes. She navigates entirely fine regardless. Refuses to cut it.",
+    "build": "Athletic and compact. Fast over short distances.",
+    "other": "Iron claws extend from her fingertips — they look like elongated nails made of dark metal. She taps them on surfaces constantly. The sound is distinctive."
+  },
+  "personality": {
+    "summary": "Very proud to be in Class 1-A and expresses this loudly and often. Always the first to volunteer for anything. Smiley by default. Enormously loud when excited. One of the most genuinely enthusiastic people in the class.",
+    "in_class": "Front row. Answering questions before they're finished. Organising things no one asked her to organise. The filing system she implemented at the hero agency internship is still in use.",
+    "in_combat": "Aggressive and direct. Gets in close immediately. Uses her claws to create bleeds and push through armour.",
+    "quirk_of_character": "Her iron claws make tasks like holding a cup or typing complicated. She's developed workarounds for everything. She doesn't complain about it."
+  },
+  "ability_scores": {
+    "note": "STR primary for Iron Claws (unarmed striker). CON secondary for durability in close range.",
+    "STR": 15,
+    "DEX": 13,
+    "CON": 14,
+    "INT": 10,
+    "WIS": 8,
+    "CHA": 13,
+    "TECH": 12
+  },
+  "modifiers": {
+    "STR": 2,
+    "DEX": 1,
+    "CON": 2,
+    "INT": 0,
+    "WIS": -1,
+    "CHA": 1,
+    "TECH": 1
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Strength",
+  "quirk_save_DC": 12,
+  "HP": 11,
+  "AC": 13,
+  "speed": "30 ft",
+  "suggested_class": "Heroic Vanguard → Unarmed Style",
+  "class_note": "Unarmed Style enhances her natural weapon attacks and gives her additional close-range combat options that synergise with Iron Claws.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Iron Claws",
+    "weakness": "Hard to use hands in normal ways. Tasks requiring fine motor control or grip precision are at disadvantage.",
+    "abilities": [
+      {
+        "name": "Tunnel",
+        "type": "Passive/Action",
+        "description": "Use claws to drill into the ground. Gain a burrow speed equal to movement speed."
+      },
+      {
+        "name": "Iron Claws",
+        "type": "Attack",
+        "description": "Unarmed strikes deal 3d8 slashing damage, plus twice STR modifier. On a hit, target gains 1 rank of Bleed and takes additional damage equal to STR modifier at the start of their next turn."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "Close-range burst damage. Gets in fast, applies bleed, and keeps pressure on a single target. Not a tank — she hits hard but needs allies to absorb attention.",
+    "social_role": "The energy of the class. When morale drops, Aikawa usually brings it back — not through speeches but through sheer kinetic enthusiasm. She makes it hard to stay low.",
+    "growth_arc": "Her pride in the class is genuine but sometimes tips into protectiveness that becomes controlling. A character moment: realising that wanting the best for the class doesn't mean she gets to define what that looks like.",
+    "weakness_to_exploit": "Low WIS means low perception and insight. Enemies that rely on misdirection or social manipulation have a better chance against her than most."
+  }
+}

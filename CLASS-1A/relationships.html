@@ -1337,7 +1337,7 @@ function encAddEnemy() {
 /* ── Init ──────────────────────────────────────────────── */
 (async () => {
   const [rosterRes, relsRes, enemiesRes] = await Promise.all([
-    fetch('roster.json'), fetch('relationships.json'), fetch('../CAMPAIGN/enemies.json')
+    fetch('roster.json'), fetch('relationships.json'), fetch('../CAMPAIGN/enemies.json', {cache: 'no-cache'})
   ]);
   const roster = await rosterRes.json();
   rels = await relsRes.json();

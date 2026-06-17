@@ -514,12 +514,37 @@
     </div>
 
     <div id="save-bar">
-      <span>Saves to <code style="font-size:11px;background:var(--surface2);padding:1px 5px;border-radius:4px">CLASS-1A/</code> character files &amp; relationships.json</span>
+      <span>Syncs via GitHub Gist</span>
       <div style="display:flex;gap:6px;margin-left:auto;align-items:center;">
         <button onclick="saveAllNow()" id="save-btn" style="padding:3px 10px;font-size:11px;border:1px solid var(--purple);border-radius:5px;background:var(--purple-light);color:var(--purple-text);cursor:pointer;font-weight:600;" title="Save all changes now">💾 Save</button>
-        <button onclick="exportData()" style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Download a backup of all character data">↓ Export</button>
-        <label style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Restore from a previously exported backup">↑ Import<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
+        <button onclick="exportData()" style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Download a local backup">↓ Export</button>
+        <label style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Restore from a backup file">↑ Import<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
+        <button onclick="openGistSettings()" style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Configure GitHub Gist sync">⚙ Gist</button>
         <span id="save-status"></span>
+      </div>
+    </div>
+
+    <!-- Gist Settings Modal -->
+    <div id="gist-settings-overlay" onclick="if(event.target===this)closeGistSettings()" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+      <div style="background:var(--surface);border:1px solid rgba(232,160,32,0.2);border-radius:14px;width:380px;max-width:calc(100vw - 40px);box-shadow:0 24px 60px rgba(0,0,0,0.6);padding:24px;display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:13px;font-weight:800;letter-spacing:0.04em;color:var(--purple-text);">⚙ GIST SYNC</span>
+          <button onclick="closeGistSettings()" style="width:26px;height:26px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-dim);font-size:13px;cursor:pointer;">✕</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;">GitHub Personal Access Token</label>
+          <input id="gist-token-inp" type="password" placeholder="github_pat_…" style="padding:8px 10px;border:1px solid var(--border);border-radius:7px;background:var(--surface2);color:var(--text);font-size:12px;outline:none;font-family:monospace;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;">Gist ID</label>
+          <input id="gist-id-inp" type="text" placeholder="9511ee4cce316f89a9a3821e5d502803" style="padding:8px 10px;border:1px solid var(--border);border-radius:7px;background:var(--surface2);color:var(--text);font-size:12px;outline:none;font-family:monospace;">
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button onclick="testGistConnection()" style="padding:6px 14px;font-size:11px;font-weight:700;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text-muted);cursor:pointer;">Test Connection</button>
+          <span id="gist-test-result" style="font-size:11px;font-weight:600;"></span>
+          <button onclick="saveGistSettings()" style="margin-left:auto;padding:7px 18px;font-size:12px;font-weight:800;border:none;border-radius:7px;background:var(--purple);color:#0C1017;cursor:pointer;box-shadow:0 0 12px var(--gold-glow);">Save Settings</button>
+        </div>
+        <p style="font-size:10px;color:var(--text-dim);line-height:1.5;margin:0;">Token is stored in your browser only — never sent anywhere except GitHub's API.</p>
       </div>
     </div>
   </div>
@@ -535,8 +560,7 @@ let ENEMIES = [];
 let selected = null;
 let activeTab = 'personality';
 let rels = {};
-let relSaveTimer = null;
-let charSaveTimers = {};
+let gistSaveTimer = null;
 let currentView = 'character';
 
 /* ── Save status ──────────────────────────────────────── */
@@ -544,6 +568,57 @@ function setSaveStatus(state, text) {
   const el = document.getElementById('save-status');
   el.className = state;
   el.textContent = text;
+}
+
+/* ── Gist storage ─────────────────────────────────────── */
+const GIST_TOKEN_KEY = 'mha_gist_token';
+const GIST_ID_KEY    = 'mha_gist_id';
+const GIST_FILE      = 'mha-dnd-save.json';
+
+function gistCreds() {
+  return { token: localStorage.getItem(GIST_TOKEN_KEY), id: localStorage.getItem(GIST_ID_KEY) };
+}
+
+function buildBundle() {
+  const characters = {};
+  for (const c of CHARACTERS) { if (c._file) characters[c._file] = c; }
+  return { version: 1, exported_at: new Date().toISOString(), relationships: rels, characters };
+}
+
+async function saveToGist() {
+  const { token, id } = gistCreds();
+  if (!token || !id) throw new Error('Gist not configured — open ⚙ Settings');
+  const r = await fetch(`https://api.github.com/gists/${id}`, {
+    method: 'PATCH',
+    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
+    body: JSON.stringify({ files: { [GIST_FILE]: { content: JSON.stringify(buildBundle(), null, 2) } } })
+  });
+  if (!r.ok) throw new Error(`GitHub API ${r.status}`);
+}
+
+async function loadFromGist() {
+  const { token, id } = gistCreds();
+  if (!token || !id) return null;
+  const r = await fetch(`https://api.github.com/gists/${id}`, {
+    headers: { 'Authorization': `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' }
+  });
+  if (!r.ok) return null;
+  const data = await r.json();
+  const content = data.files?.[GIST_FILE]?.content;
+  if (!content) return null;
+  const parsed = JSON.parse(content);
+  return (parsed.version === 1 && parsed.characters) ? parsed : null;
+}
+
+function scheduleGistSave() {
+  clearTimeout(gistSaveTimer);
+  setSaveStatus('saving', 'Saving…');
+  gistSaveTimer = setTimeout(async () => {
+    try {
+      await saveToGist();
+      setSaveStatus('saved', 'Saved ' + new Date().toLocaleTimeString());
+    } catch (e) { setSaveStatus('error', e.message); }
+  }, 600);
 }
 
 /* ── View switching ───────────────────────────────────── */
@@ -565,23 +640,13 @@ function setRelScore(fromId, toId, score) {
   rels[k] = rels[k] || { score: 0, note: '' };
   rels[k].score = parseInt(score);
   updateScoreDisplay(fromId, toId, score);
-  scheduleRelSave();
+  scheduleGistSave();
 }
 function setRelNote(fromId, toId, note) {
   const k = relKey(fromId, toId);
   rels[k] = rels[k] || { score: 0, note: '' };
   rels[k].note = note;
-  scheduleRelSave();
-}
-function scheduleRelSave() {
-  clearTimeout(relSaveTimer);
-  setSaveStatus('saving', 'Saving…');
-  relSaveTimer = setTimeout(async () => {
-    try {
-      const r = await fetch('/api/relationships', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(rels) });
-      setSaveStatus(r.ok ? 'saved' : 'error', r.ok ? 'Saved '+new Date().toLocaleTimeString() : 'Save failed');
-    } catch { setSaveStatus('error','Offline — not saved'); }
-  }, 400);
+  scheduleGistSave();
 }
 function updateScoreDisplay(fromId, toId, score) {
   const el = document.getElementById('score-'+fromId+'-'+toId);
@@ -592,40 +657,18 @@ function updateScoreDisplay(fromId, toId, score) {
 }
 
 /* ── Character persistence ────────────────────────────── */
-function scheduleCharSave(c) {
-  clearTimeout(charSaveTimers[c._file]);
-  setSaveStatus('saving', 'Saving…');
-  charSaveTimers[c._file] = setTimeout(async () => {
-    try {
-      const r = await fetch('/api/character/'+c._file, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(c) });
-      setSaveStatus(r.ok?'saved':'error', r.ok?'Saved '+new Date().toLocaleTimeString():'Save failed');
-    } catch { setSaveStatus('error','Offline — not saved'); }
-  }, 500);
-}
+function scheduleCharSave(c) { scheduleGistSave(); }
+
 async function saveAllNow() {
-  clearTimeout(relSaveTimer);
-  Object.values(charSaveTimers).forEach(t => clearTimeout(t));
-  charSaveTimers = {};
+  clearTimeout(gistSaveTimer);
   const btn = document.getElementById('save-btn');
   btn.disabled = true;
   setSaveStatus('saving', 'Saving…');
-  const tasks = [];
-  for (const c of CHARACTERS) {
-    if (!c._file) continue;
-    tasks.push(
-      fetch('/api/character/' + c._file, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(c) })
-        .then(r => { if (!r.ok) throw new Error(c._file); })
-    );
-  }
-  tasks.push(
-    fetch('/api/relationships', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(rels) })
-      .then(r => { if (!r.ok) throw new Error('relationships'); })
-  );
   try {
-    await Promise.all(tasks);
+    await saveToGist();
     setSaveStatus('saved', 'Saved ' + new Date().toLocaleTimeString());
   } catch (e) {
-    setSaveStatus('error', 'Save failed: ' + e.message);
+    setSaveStatus('error', e.message);
   } finally {
     btn.disabled = false;
   }
@@ -1336,17 +1379,37 @@ function encAddEnemy() {
 
 /* ── Init ──────────────────────────────────────────────── */
 (async () => {
-  const [rosterRes, relsRes, enemiesRes] = await Promise.all([
-    fetch('roster.json'), fetch('relationships.json'), fetch('../CAMPAIGN/enemies.json', {cache: 'no-cache'})
+  const [rosterRes, enemiesRes] = await Promise.all([
+    fetch('roster.json'), fetch('../CAMPAIGN/enemies.json', {cache: 'no-cache'})
   ]);
   const roster = await rosterRes.json();
-  rels = await relsRes.json();
   try { const ed = await enemiesRes.json(); ENEMIES = ed.enemies || []; } catch {}
-  CHARACTERS = (await Promise.all(
-    (roster.students || []).filter(s => s.file).map(s =>
-      fetch(s.file).then(r => r.json()).then(c => { c._file = s.file; c._roster_id = s.id; return c; }).catch(() => null)
-    )
-  )).filter(Boolean);
+
+  // Try Gist first, fall back to bundled JSON files
+  setSaveStatus('saving', 'Loading…');
+  let gistBundle = null;
+  try { gistBundle = await loadFromGist(); } catch {}
+
+  if (gistBundle) {
+    rels = gistBundle.relationships || {};
+    CHARACTERS = (roster.students || []).filter(s => s.file).map(s => {
+      const c = Object.assign({}, gistBundle.characters?.[s.file] || {});
+      c._file = s.file; c._roster_id = s.id;
+      return c;
+    }).filter(c => c.name);
+    setSaveStatus('saved', 'Loaded from Gist ✓');
+  } else {
+    const [relsRes, ...charResults] = await Promise.all([
+      fetch('relationships.json'),
+      ...(roster.students || []).filter(s => s.file).map(s =>
+        fetch(s.file).then(r => r.json()).then(c => { c._file = s.file; c._roster_id = s.id; return c; }).catch(() => null)
+      )
+    ]);
+    rels = await relsRes.json();
+    CHARACTERS = charResults.filter(Boolean);
+    setSaveStatus('saved', gistCreds().token ? 'Gist unreachable — loaded local' : '');
+  }
+
   CHARACTERS.sort((a, b) => { if (a.is_pc !== b.is_pc) return a.is_pc ? -1 : 1; return a._roster_id - b._roster_id; });
   selected = CHARACTERS[0];
   encLoad();
@@ -1355,7 +1418,6 @@ function encAddEnemy() {
   renderProfile();
   renderRelationships();
   renderEncounter();
-  setSaveStatus('saved', '');
 })();
 
 /* ── Turn Modal ───────────────────────────────────────── */
@@ -1586,21 +1648,16 @@ function tmApplyHp(mode) {
 }
 
 /* ── Export / Import ──────────────────────────────────── */
-async function exportData() {
+function exportData() {
   setSaveStatus('saving', 'Exporting…');
   try {
-    const r = await fetch('/api/export');
-    if (!r.ok) throw new Error(await r.text());
-    const blob = await r.blob();
+    const blob = new Blob([JSON.stringify(buildBundle(), null, 2)], {type: 'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    const date = new Date().toISOString().slice(0, 10);
-    a.href = url; a.download = `mha-dnd-backup-${date}.json`;
+    a.href = url; a.download = `mha-dnd-backup-${new Date().toISOString().slice(0,10)}.json`;
     a.click(); URL.revokeObjectURL(url);
     setSaveStatus('saved', 'Exported ✓');
-  } catch (e) {
-    setSaveStatus('error', 'Export failed');
-  }
+  } catch { setSaveStatus('error', 'Export failed'); }
 }
 
 async function importData(input) {
@@ -1610,16 +1667,56 @@ async function importData(input) {
   if (!confirm(`Import "${file.name}"? This will overwrite all current character data and relationships.`)) return;
   setSaveStatus('saving', 'Importing…');
   try {
-    const text = await file.text();
-    const data = JSON.parse(text);
-    const r = await fetch('/api/import', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-    const result = await r.json();
-    if (!r.ok) throw new Error(result.error || 'Import failed');
+    const data = JSON.parse(await file.text());
+    if (data.version !== 1) throw new Error('Unsupported version');
+    if (data.relationships) rels = data.relationships;
+    if (data.characters) {
+      for (const c of CHARACTERS) {
+        if (c._file && data.characters[c._file]) {
+          const f = c._file, rid = c._roster_id;
+          Object.assign(c, data.characters[c._file]);
+          c._file = f; c._roster_id = rid;
+        }
+      }
+    }
+    await saveToGist();
     setSaveStatus('saved', 'Imported ✓ — reloading…');
     setTimeout(() => location.reload(), 800);
-  } catch (e) {
-    setSaveStatus('error', 'Import failed: ' + e.message);
-  }
+  } catch (e) { setSaveStatus('error', 'Import failed: ' + e.message); }
+}
+
+/* ── Gist Settings modal ──────────────────────────────── */
+function openGistSettings() {
+  const { token, id } = gistCreds();
+  document.getElementById('gist-token-inp').value = token || '';
+  document.getElementById('gist-id-inp').value = id || '';
+  document.getElementById('gist-test-result').textContent = '';
+  document.getElementById('gist-settings-overlay').style.display = 'flex';
+}
+function closeGistSettings() {
+  document.getElementById('gist-settings-overlay').style.display = 'none';
+}
+function saveGistSettings() {
+  const token = document.getElementById('gist-token-inp').value.trim();
+  const id = document.getElementById('gist-id-inp').value.trim();
+  if (token) localStorage.setItem(GIST_TOKEN_KEY, token); else localStorage.removeItem(GIST_TOKEN_KEY);
+  if (id) localStorage.setItem(GIST_ID_KEY, id); else localStorage.removeItem(GIST_ID_KEY);
+  closeGistSettings();
+  setSaveStatus('saved', 'Settings saved — reload to sync');
+}
+async function testGistConnection() {
+  const el = document.getElementById('gist-test-result');
+  el.textContent = 'Testing…'; el.style.color = 'var(--text-dim)';
+  // Temporarily use the typed values without committing to localStorage
+  const token = document.getElementById('gist-token-inp').value.trim();
+  const id = document.getElementById('gist-id-inp').value.trim();
+  try {
+    const r = await fetch(`https://api.github.com/gists/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' }
+    });
+    if (r.ok) { el.textContent = '✓ Connected'; el.style.color = 'var(--teal)'; }
+    else { el.textContent = `✗ Error ${r.status}`; el.style.color = 'var(--red)'; }
+  } catch { el.textContent = '✗ Network error'; el.style.color = 'var(--red)'; }
 }
 </script>
 </body>

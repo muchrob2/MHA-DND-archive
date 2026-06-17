@@ -16,6 +16,7 @@
     --amber: #BA7517; --amber-light: #FAEEDA; --amber-text: #633806;
     --green: #639922; --green-light: #EAF3DE; --green-text: #27500A;
     --radius: 8px; --radius-lg: 12px;
+    --nav-h: 44px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -29,365 +30,451 @@
       --green-light: #173404; --green-text: #C0DD97;
     }
   }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-  /* ── Top bar ── */
-  #topbar { display: flex; align-items: center; gap: 0; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
-  #back-btn { display: flex; align-items: center; gap: 6px; padding: 10px 16px; font-size: 13px; color: var(--text-muted); text-decoration: none; border-right: 1px solid var(--border); white-space: nowrap; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+
+  /* ── Sticky nav ── */
+  #topnav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: stretch; gap: 0;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    height: var(--nav-h);
+  }
+  #back-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 0 16px; font-size: 13px; color: var(--text-muted);
+    text-decoration: none; border-right: 1px solid var(--border); white-space: nowrap; flex-shrink: 0;
+  }
   #back-btn:hover { color: var(--purple); background: var(--purple-light); }
-  .tab-bar { display: flex; flex: 1; overflow-x: auto; }
-  .tab-btn { padding: 10px 18px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--text-muted); border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.1s; }
-  .tab-btn:hover { color: var(--text); }
-  .tab-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
+  .anchor-bar { display: flex; flex: 1; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .anchor-bar::-webkit-scrollbar { display: none; }
+  .anchor-btn {
+    display: flex; align-items: center;
+    padding: 0 16px; font-size: 12px; font-weight: 500;
+    color: var(--text-muted); text-decoration: none; white-space: nowrap;
+    border-bottom: 2px solid transparent; flex-shrink: 0;
+    transition: color 0.1s;
+  }
+  .anchor-btn:hover { color: var(--text); }
+  .anchor-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
 
-  /* ── Body ── */
-  #content { flex: 1; overflow-y: auto; }
+  /* ── Main content ── */
+  #main { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
 
-  /* ── Shared layout ── */
-  .page { display: none; max-width: 860px; margin: 0 auto; padding: 32px 32px 60px; }
-  .page.active { display: block; }
-  .page-title { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 4px; }
-  .page-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
-  .section-label { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; margin-top: 28px; }
-  .section-label:first-child { margin-top: 0; }
+  /* ── Campaign header ── */
+  #campaign-header { padding: 28px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 0; }
+  .campaign-title { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .campaign-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .campaign-tone { font-size: 13px; color: var(--text-muted); margin-top: 8px; line-height: 1.6; }
 
-  /* ── Cards ── */
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 10px; }
-  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-  .card-sub { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; }
-  .card-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  /* ── Sections ── */
+  .campaign-section { border-bottom: 1px solid var(--border); }
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 0; cursor: pointer; user-select: none; gap: 12px;
+  }
+  .section-header:hover .section-title { color: var(--purple); }
+  .section-title { font-size: 16px; font-weight: 700; }
+  .section-meta { font-size: 12px; color: var(--text-dim); }
+  .section-toggle { font-size: 13px; color: var(--text-dim); flex-shrink: 0; transition: transform 0.2s; }
+  .section-toggle.open { transform: rotate(90deg); }
+  .section-body { display: none; padding-bottom: 24px; }
+  .section-body.open { display: block; }
+
+  /* ── Shared card styles ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 10px; }
   .tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 4px; margin-right: 4px; margin-bottom: 4px; font-weight: 500; }
   .tag-purple { background: var(--purple-light); color: var(--purple-text); }
   .tag-teal   { background: var(--teal-light);   color: var(--teal-text); }
   .tag-red    { background: var(--red-light);    color: var(--red-text); }
   .tag-amber  { background: var(--amber-light);  color: var(--amber-text); }
   .tag-green  { background: var(--green-light);  color: var(--green-text); }
+  .sub-label { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; margin-top: 20px; }
+  .sub-label:first-child { margin-top: 0; }
 
-  /* ── Arc page ── */
-  .tier-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-  .tier-badge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 4px; background: var(--purple-light); color: var(--purple-text); }
-  .tier-title { font-size: 17px; font-weight: 600; }
+  /* ── Arc styles ── */
+  .tier-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 16px; }
+  .tier-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .tier-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .tier-title { font-size: 16px; font-weight: 600; }
   .tier-levels { font-size: 12px; color: var(--text-dim); }
-  .tier-tone { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 14px; font-style: italic; border-left: 3px solid var(--border); padding-left: 12px; }
-  .arc-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--surface2); }
-  .arc-card:last-child { margin-bottom: 0; }
+  .tier-tone { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; font-style: italic; border-left: 3px solid var(--border); padding-left: 12px; }
+
+  .arc-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; background: var(--surface2); }
+  .arc-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
   .arc-name { font-size: 13px; font-weight: 600; }
   .arc-type { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
-  .arc-desc { font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
-  .beats-toggle { font-size: 11px; color: var(--purple-text); cursor: pointer; margin-top: 8px; display: inline-block; }
-  .beats-toggle:hover { text-decoration: underline; }
-  .beats-list { margin-top: 8px; padding-left: 16px; display: none; }
-  .beats-list.open { display: block; }
-  .beats-list li { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-  /* sub-sections within arc cards */
-  .arc-sub-header { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 12px; margin-bottom: 6px; border-top: 1px solid var(--border); padding-top: 10px; }
-  .arc-sub-toggle { font-size: 11px; color: var(--teal-text); cursor: pointer; display: inline-block; margin-bottom: 4px; }
-  .arc-sub-toggle:hover { text-decoration: underline; }
-  .arc-sub-body { display: none; }
-  .arc-sub-body.open { display: block; }
-  .arc-sub-item { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 6px; background: var(--surface); }
-  .arc-sub-item-label { font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-  .arc-sub-item-body { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-  .arc-chain-note { background: var(--red-light); border-left: 3px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; padding: 7px 11px; margin-top: 12px; font-size: 12px; color: var(--red-text); line-height: 1.5; }
-  .arc-chain-note strong { display: block; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 3px; opacity: 0.8; }
+  .arc-desc { font-size: 12px; color: var(--text-muted); line-height: 1.55; margin-top: 6px; }
 
-  /* ── Teachers & Villains ── */
-  .person-card { display: grid; grid-template-columns: 52px 1fr; gap: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 12px; }
-  .person-avatar { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; flex-shrink: 0; }
-  .av-teacher { background: var(--amber-light); color: var(--amber-text); }
-  .av-villain { background: var(--red-light); color: var(--red-text); }
-  .person-name { font-size: 16px; font-weight: 600; }
-  .person-alias { font-size: 12px; color: var(--text-dim); }
-  .person-role { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-  .person-tags { margin-top: 8px; }
-  .person-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
-  .person-section-label { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
-  .person-section-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-  .stat-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
-  .stat-chip { display: flex; flex-direction: column; align-items: center; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 4px 8px; min-width: 40px; }
-  .stat-chip-label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
-  .stat-chip-val { font-size: 15px; font-weight: 700; }
+  .toggle-btn { font-size: 11px; color: var(--purple-text); cursor: pointer; margin-top: 8px; display: inline-block; }
+  .toggle-btn:hover { text-decoration: underline; }
+  .toggle-list { margin-top: 6px; padding-left: 16px; display: none; }
+  .toggle-list.open { display: block; }
+  .toggle-list li { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; line-height: 1.55; }
+
+  .sub-toggle { font-size: 11px; color: var(--teal-text); cursor: pointer; display: inline-block; margin-bottom: 4px; }
+  .sub-toggle:hover { text-decoration: underline; }
+  .sub-body { display: none; }
+  .sub-body.open { display: block; }
+  .sub-item { border: 1px solid var(--border); border-radius: var(--radius); padding: 9px 12px; margin-bottom: 6px; background: var(--surface); }
+  .sub-item-label { font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .sub-item-body { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  .arc-sub-header { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 10px; margin-bottom: 6px; border-top: 1px solid var(--border); padding-top: 8px; }
+
+  .villain-presence { background: var(--red-light); border-left: 3px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; padding: 7px 11px; margin-top: 12px; font-size: 12px; color: var(--red-text); line-height: 1.5; }
+  .villain-presence strong { display: block; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 3px; opacity: 0.8; }
+
+  /* ── DM callout ── */
   .dm-note { background: var(--amber-light); border-left: 3px solid var(--amber); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin-top: 8px; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
   .dm-note strong { color: var(--amber-text); }
+  .dm-prep { background: var(--amber-light); border: 1px solid var(--amber); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 10px; }
+  .dm-prep-label { font-size: 10px; font-weight: 700; color: var(--amber-text); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+  .dm-prep-row { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
   .warning-note { background: var(--red-light); border-left: 3px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin-top: 8px; font-size: 12px; color: var(--red-text); }
   .collapse-btn { font-size: 11px; color: var(--purple-text); cursor: pointer; margin-top: 10px; display: inline-block; }
   .collapse-btn:hover { text-decoration: underline; }
   .collapsible { display: none; }
   .collapsible.open { display: block; }
 
-  /* ── World page ── */
-  .world-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 12px; overflow: hidden; }
-  .world-section-header { padding: 14px 18px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+  /* ── Faction / villain seeds ── */
+  .villain-seed { border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; margin-bottom: 6px; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .villain-seed-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 3px; }
+  .seed-chain   { border-left: 3px solid #E24B4A; } .seed-chain .villain-seed-label   { color: #E24B4A; }
+  .seed-null    { border-left: 3px solid #0891B2; } .seed-null .villain-seed-label    { color: #0891B2; }
+  .seed-fracture{ border-left: 3px solid #8B47D4; } .seed-fracture .villain-seed-label{ color: #8B47D4; }
+  .seed-all     { border-left: 3px solid var(--text-dim); } .seed-all .villain-seed-label { color: var(--text-muted); }
+
+  /* ── Tournament bracket ── */
+  .bracket-event-title { font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+  .match-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 6px; background: var(--surface); }
+  .match-card.final-match { border: 2px solid var(--purple); }
+  .match-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+  .match-id { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.06em; }
+  .match-vs { font-size: 12px; font-weight: 600; flex: 1; }
+  .match-winner { font-size: 11px; font-weight: 700; color: var(--teal-text); background: var(--teal-light); padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+  .final-match .match-winner { background: var(--purple-light); color: var(--purple-text); }
+  .match-favored { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
+  .match-body { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .match-dm { background: var(--amber-light); border-left: 2px solid var(--amber); padding: 5px 8px; margin-top: 6px; font-size: 11px; color: var(--amber-text); line-height: 1.4; border-radius: 0 4px 4px 0; }
+  .season-role { font-size: 11px; color: var(--text-dim); font-style: italic; margin-top: 5px; padding: 3px 8px; border-left: 2px solid var(--border); }
+
+  /* ── Person cards ── */
+  .person-card { display: grid; grid-template-columns: 48px 1fr; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 10px; }
+  .person-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+  .av-teacher { background: var(--amber-light); color: var(--amber-text); }
+  .av-villain { background: var(--red-light); color: var(--red-text); }
+  .person-name { font-size: 15px; font-weight: 600; }
+  .person-alias { font-size: 12px; color: var(--text-dim); }
+  .person-role { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .person-tags { margin-top: 7px; }
+  .person-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .person-section-label { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 3px; }
+  .person-section-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .stat-grid { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .stat-chip { display: flex; flex-direction: column; align-items: center; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 4px 8px; min-width: 38px; }
+  .stat-chip-label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .stat-chip-val { font-size: 14px; font-weight: 700; }
+
+  /* ── World ── */
+  .world-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 10px; overflow: hidden; }
+  .world-section-header { padding: 12px 16px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
   .world-section-header:hover { background: var(--surface2); }
   .world-section-title { font-size: 14px; font-weight: 600; }
   .world-chevron { font-size: 12px; color: var(--text-dim); transition: transform 0.2s; }
   .world-chevron.open { transform: rotate(90deg); }
-  .world-section-body { padding: 0 18px 14px; display: none; }
+  .world-section-body { padding: 0 16px 12px; display: none; }
   .world-section-body.open { display: block; }
-  .kv-row { display: grid; grid-template-columns: 160px 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .kv-row { display: grid; grid-template-columns: 140px 1fr; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
   .kv-row:last-child { border-bottom: none; }
   .kv-key { font-weight: 500; color: var(--text-muted); text-transform: capitalize; }
   .kv-val { color: var(--text); }
 
   /* ── Loading ── */
-  #loading { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-dim); font-size: 13px; }
+  #loading { display: flex; align-items: center; justify-content: center; padding: 80px 0; color: var(--text-dim); font-size: 13px; }
+  #error-msg { display: none; padding: 24px; color: var(--red-text); font-size: 13px; }
 
-  /* ── DM Prep block ── */
-  .dm-prep { background: var(--amber-light); border: 1px solid var(--amber); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 10px; }
-  .dm-prep-label { font-size: 10px; font-weight: 700; color: var(--amber-text); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
-  .dm-prep-row { font-size: 12px; color: var(--text-muted); line-height: 1.5; padding: 2px 0; }
-  .dm-prep-row strong { color: var(--amber-text); }
-
-  /* ── Villain seed block ── */
-  .villain-seed { border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; margin-bottom: 6px; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-  .villain-seed-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 3px; }
-  .seed-chain { border-left: 3px solid #E24B4A; }
-  .seed-chain .villain-seed-label { color: #E24B4A; }
-  .seed-null { border-left: 3px solid #0891B2; }
-  .seed-null .villain-seed-label { color: #0891B2; }
-  .seed-fracture { border-left: 3px solid #8B47D4; }
-  .seed-fracture .villain-seed-label { color: #8B47D4; }
-  .seed-all { border-left: 3px solid var(--text-dim); }
-  .seed-all .villain-seed-label { color: var(--text-muted); }
-
-  /* ── Tournament bracket ── */
-  .bracket-event { margin-bottom: 16px; }
-  .bracket-event-title { font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
-  .match-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 6px; background: var(--surface); }
-  .match-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
-  .match-id { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.06em; }
-  .match-vs { font-size: 13px; font-weight: 600; flex: 1; }
-  .match-winner { font-size: 11px; font-weight: 700; color: var(--teal-text); background: var(--teal-light); padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
-  .match-favored { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
-  .match-body { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-  .match-dm { background: var(--amber-light); border-left: 2px solid var(--amber); padding: 5px 8px; margin-top: 6px; font-size: 11px; color: var(--amber-text); line-height: 1.4; border-radius: 0 4px 4px 0; }
-  .final-match { border: 2px solid var(--purple); border-radius: var(--radius); }
-  .final-match .match-winner { background: var(--purple-light); color: var(--purple-text); }
-
-  /* ── Season role badge ── */
-  .season-role { font-size: 11px; color: var(--text-dim); font-style: italic; margin-top: 6px; padding: 4px 8px; border-left: 2px solid var(--border); }
-
-  /* ── Mobile improvements ── */
+  /* ── Mobile ── */
   @media (max-width: 640px) {
-    .tab-btn { padding: 10px 14px; min-height: 44px; font-size: 12px; }
-    .page { padding: 16px 12px 40px; }
-    .person-card { grid-template-columns: 1fr; gap: 10px; }
+    #main { padding: 0 12px 60px; }
+    .campaign-title { font-size: 20px; }
+    #campaign-header { padding: 20px 0 16px; }
+    .anchor-btn { padding: 0 12px; font-size: 11px; }
+    #back-btn { padding: 0 12px; font-size: 12px; }
+    .person-card { grid-template-columns: 1fr; gap: 8px; }
     .person-avatar { width: 36px; height: 36px; font-size: 13px; }
-    .kv-row { grid-template-columns: 1fr; gap: 1px; padding: 8px 0; }
-    .kv-key { font-size: 10px; margin-bottom: 1px; }
-    .beats-list li { font-size: 13px; padding: 4px 0; line-height: 1.6; }
-    .stat-grid { gap: 5px; }
-    .stat-chip { min-width: 36px; padding: 3px 6px; }
-    .arc-card { padding: 12px; }
-    .match-header { gap: 6px; }
-    .match-vs { font-size: 12px; }
-    .card { padding: 14px 14px; }
-    .arc-sub-item { padding: 8px 10px; }
-    #back-btn { display: none; }
-    .tab-bar { width: 100%; }
+    .kv-row { grid-template-columns: 1fr; gap: 2px; padding: 8px 0; }
+    .kv-key { font-size: 10px; }
+    .toggle-list li { font-size: 13px; padding: 3px 0; }
+    .arc-card { padding: 10px 12px; }
+    .card { padding: 12px 14px; }
+    .match-vs { font-size: 11px; }
+    .stat-chip { min-width: 34px; }
+    .stat-chip-val { font-size: 13px; }
+    .tier-block { padding: 12px 14px; }
   }
 </style>
 </head>
 <body>
-<div id="topbar">
+
+<nav id="topnav">
   <a id="back-btn" href="index.html">← Dashboard</a>
-  <div class="tab-bar">
-    <button class="tab-btn" onclick="loadFile('arc')" id="tab-arc">Story Arcs</button>
-    <button class="tab-btn" onclick="loadFile('tier1')" id="tab-tier1">Session Notes</button>
-    <button class="tab-btn" onclick="loadFile('world')" id="tab-world">World</button>
-    <button class="tab-btn" onclick="loadFile('teachers')" id="tab-teachers">Teachers</button>
-    <button class="tab-btn" onclick="loadFile('villains')" id="tab-villains">Villains</button>
-    <button class="tab-btn" onclick="loadFile('class1b')" id="tab-class1b">Class 1-B</button>
+  <div class="anchor-bar" id="anchor-bar">
+    <a class="anchor-btn" href="#sec-arc">Story Arcs</a>
+    <a class="anchor-btn" href="#sec-tier1">Session Notes</a>
+    <a class="anchor-btn" href="#sec-world">World</a>
+    <a class="anchor-btn" href="#sec-teachers">Teachers</a>
+    <a class="anchor-btn" href="#sec-villains">Villains</a>
+    <a class="anchor-btn" href="#sec-class1b">Class 1-B</a>
   </div>
-</div>
-<div id="content">
-  <div id="loading">Loading…</div>
-  <div class="page" id="page-arc"></div>
-  <div class="page" id="page-tier1"></div>
-  <div class="page" id="page-world"></div>
-  <div class="page" id="page-teachers"></div>
-  <div class="page" id="page-villains"></div>
-  <div class="page" id="page-class1b"></div>
+</nav>
+
+<div id="main">
+  <div id="loading">Loading campaign data…</div>
+  <div id="error-msg"></div>
+
+  <div id="campaign-header" style="display:none">
+    <div class="campaign-title" id="camp-title"></div>
+    <div class="campaign-tone" id="camp-tone"></div>
+    <div class="campaign-meta" id="camp-meta"></div>
+  </div>
+
+  <!-- Story Arcs -->
+  <section class="campaign-section" id="sec-arc" style="display:none">
+    <div class="section-header" onclick="toggleSection('sec-arc')">
+      <div><span class="section-title">Story Arcs</span><span class="section-meta" id="arc-meta" style="margin-left:10px;"></span></div>
+      <span class="section-toggle open" id="tog-sec-arc">▶</span>
+    </div>
+    <div class="section-body open" id="body-sec-arc"></div>
+  </section>
+
+  <!-- Session Notes (Tier 1 detail) -->
+  <section class="campaign-section" id="sec-tier1" style="display:none">
+    <div class="section-header" onclick="toggleSection('sec-tier1')">
+      <div><span class="section-title">Session Notes</span><span class="section-meta" style="margin-left:10px;">Tier 1 detailed DM content</span></div>
+      <span class="section-toggle" id="tog-sec-tier1">▶</span>
+    </div>
+    <div class="section-body" id="body-sec-tier1"></div>
+  </section>
+
+  <!-- World Reference -->
+  <section class="campaign-section" id="sec-world" style="display:none">
+    <div class="section-header" onclick="toggleSection('sec-world')">
+      <div><span class="section-title">World Reference</span><span class="section-meta" style="margin-left:10px;">U.A., Murano, student life</span></div>
+      <span class="section-toggle" id="tog-sec-world">▶</span>
+    </div>
+    <div class="section-body" id="body-sec-world"></div>
+  </section>
+
+  <!-- Teachers -->
+  <section class="campaign-section" id="sec-teachers" style="display:none">
+    <div class="section-header" onclick="toggleSection('sec-teachers')">
+      <div><span class="section-title">Teachers</span><span class="section-meta" style="margin-left:10px;">Faculty profiles &amp; DM notes</span></div>
+      <span class="section-toggle" id="tog-sec-teachers">▶</span>
+    </div>
+    <div class="section-body" id="body-sec-teachers"></div>
+  </section>
+
+  <!-- Villains -->
+  <section class="campaign-section" id="sec-villains" style="display:none">
+    <div class="section-header" onclick="toggleSection('sec-villains')">
+      <div><span class="section-title">Villain Factions</span><span class="section-meta" style="margin-left:10px;">The Chain · Null Signal · Fracture</span></div>
+      <span class="section-toggle" id="tog-sec-villains">▶</span>
+    </div>
+    <div class="section-body" id="body-sec-villains"></div>
+  </section>
+
+  <!-- Class 1-B -->
+  <section class="campaign-section" id="sec-class1b" style="display:none">
+    <div class="section-header" onclick="toggleSection('sec-class1b')">
+      <div><span class="section-title">Class 1-B</span><span class="section-meta" style="margin-left:10px;">Rivals &amp; recurring NPCs</span></div>
+      <span class="section-toggle" id="tog-sec-class1b">▶</span>
+    </div>
+    <div class="section-body" id="body-sec-class1b"></div>
+  </section>
 </div>
 
 <script>
+/* ─── Utilities ──────────────────────────────────────── */
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function initials(name) { return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+function uid() { return Math.random().toString(36).slice(2); }
 
-const cache = {};
-
-async function loadFile(file) {
-  // Set active tab
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-'+file).classList.add('active');
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('loading').style.display = 'flex';
-
-  // Fetch if not cached
-  if (!cache[file]) {
-    const res = await fetch('CAMPAIGN/'+file+'.json', {cache: 'no-cache'});
-    cache[file] = await res.json();
-  }
-  const data = cache[file];
-  document.getElementById('loading').style.display = 'none';
-
-  const el = document.getElementById('page-'+file);
-  if (file === 'arc') renderArc(data, el);
-  else if (file === 'tier1') renderTier1(data, el);
-  else if (file === 'world') renderWorld(data, el);
-  else if (file === 'teachers') renderTeachers(data, el);
-  else if (file === 'villains') renderVillains(data, el);
-  else if (file === 'class1b') renderClass1B(data, el);
-  el.classList.add('active');
-
-  // Update URL without reload
-  history.replaceState(null, '', '?file='+file);
+/* ─── Section toggle ─────────────────────────────────── */
+function toggleSection(id) {
+  const body = document.getElementById('body-'+id);
+  const tog  = document.getElementById('tog-'+id);
+  const open = body.classList.toggle('open');
+  if (tog) tog.classList.toggle('open', open);
 }
 
-/* ─── ARC ─────────────────────────────────────────────── */
+function toggleList(id, btn) {
+  const el = document.getElementById(id);
+  const open = el.classList.toggle('open');
+  const label = btn.textContent.replace(/^[▶▼] /,'');
+  btn.textContent = (open?'▼ ':'▶ ')+label;
+}
+function toggleSub(id, btn) { toggleList(id, btn); }
+function toggleCollapse(id, btn) {
+  const el = document.getElementById(id);
+  const open = el.classList.toggle('open');
+  const label = btn.textContent.replace(/^[▶▼] /,'');
+  btn.textContent = (open?'▼ ':'▶ ')+label;
+}
+function toggleWorld(id) {
+  const body = document.getElementById(id);
+  const chev = document.getElementById('chev-'+id);
+  const open = body.classList.toggle('open');
+  if (chev) { chev.textContent = open?'▼':'▶'; chev.classList.toggle('open',open); }
+}
+
+/* ─── Scroll spy for anchor bar ─────────────────────── */
+function initScrollSpy() {
+  const sections = ['arc','tier1','world','teachers','villains','class1b'];
+  const anchors  = document.querySelectorAll('.anchor-btn');
+  function update() {
+    let active = null;
+    for (const s of sections) {
+      const el = document.getElementById('sec-'+s);
+      if (el && el.getBoundingClientRect().top <= 60) active = s;
+    }
+    anchors.forEach(a => {
+      const match = a.getAttribute('href') === '#sec-'+(active||'arc');
+      a.classList.toggle('active', match);
+    });
+  }
+  document.addEventListener('scroll', update, {passive:true});
+  update();
+}
+
+/* ─── ARC renderer ───────────────────────────────────── */
 function renderVillainSeeds(seeds) {
   if (!seeds) return '';
-  const SEED_CLASS = { the_chain:'seed-chain', null_signal:'seed-null', fracture:'seed-fracture', all_factions:'seed-all' };
-  const SEED_LABEL = { the_chain:'The Chain', null_signal:'Null Signal', fracture:'Fracture', all_factions:'All Factions' };
-  let html = '<div class="arc-sub-header">Faction seeds in this arc</div>';
-  for (const [k, v] of Object.entries(seeds)) {
-    const cls = SEED_CLASS[k] || 'seed-all';
-    const lbl = SEED_LABEL[k] || k.replace(/_/g,' ');
-    html += `<div class="villain-seed ${cls}"><div class="villain-seed-label">${escHtml(lbl)}</div>${escHtml(v)}</div>`;
+  const CLS = {the_chain:'seed-chain',null_signal:'seed-null',fracture:'seed-fracture',all_factions:'seed-all'};
+  const LBL = {the_chain:'The Chain',null_signal:'Null Signal',fracture:'Fracture',all_factions:'All Factions'};
+  let h = '<div class="arc-sub-header">Faction seeds</div>';
+  for (const [k,v] of Object.entries(seeds)) {
+    const cls = CLS[k]||'seed-all', lbl = LBL[k]||k.replace(/_/g,' ');
+    h += `<div class="villain-seed ${cls}"><div class="villain-seed-label">${escHtml(lbl)}</div>${escHtml(v)}</div>`;
   }
-  return html;
+  return h;
+}
+
+function renderMatchList(matches, label, isFinal) {
+  if (!matches?.length) return '';
+  let h = `<div style="margin-top:10px;"><div class="bracket-event-title">${escHtml(label)}</div>`;
+  for (const m of (Array.isArray(matches)?matches:[matches])) {
+    const upset = (m.how_it_goes||'').toUpperCase().includes('UPSET');
+    h += `<div class="match-card${isFinal?' final-match':''}">
+      <div class="match-header">
+        ${m.match?`<span class="match-id">${escHtml(m.match)}</span>`:''}
+        <span class="match-vs">${escHtml(m.fighter_a||'')} <span style="font-weight:400;color:var(--text-dim)">vs</span> ${escHtml(m.fighter_b||'')}</span>
+        ${m.winner?`<span class="match-winner">🏆 ${escHtml(m.winner)}</span>`:''}
+      </div>
+      ${m.favored?`<div class="match-favored">Favored: ${escHtml(m.favored)}${upset?' <strong style="color:var(--red)">— UPSET</strong>':''}</div>`:''}
+      <div class="match-body">${escHtml(m.how_it_goes||'')}</div>
+      ${m.dm_note?`<div class="match-dm"><strong>DM:</strong> ${escHtml(m.dm_note)}</div>`:''}
+    </div>`;
+  }
+  h += '</div>';
+  return h;
 }
 
 function renderTournamentBracket(bracket) {
   if (!bracket) return '';
-  let html = `<div class="arc-sub-header">Tournament bracket</div>`;
-  const bracketId = 'brk-'+Math.random().toString(36).slice(2);
-  html += `<span class="arc-sub-toggle" onclick="toggleSub('${bracketId}',this)">▶ Show full bracket</span>
-    <div class="arc-sub-body" id="${bracketId}">`;
-
+  const bId = uid();
+  let h = `<div class="arc-sub-header">Sports Festival bracket</div>
+    <span class="sub-toggle" onclick="toggleSub('${bId}',this)">▶ Show full bracket</span>
+    <div class="sub-body" id="${bId}">`;
   // Event 1
-  if (bracket.event_1_obstacle_race) {
-    const e1 = bracket.event_1_obstacle_race;
-    const e1id = 'e1-'+Math.random().toString(36).slice(2);
-    html += `<div class="bracket-event"><div class="bracket-event-title">Event 1 — Obstacle Race</div>
+  const e1 = bracket.event_1_obstacle_race;
+  if (e1) {
+    const eId = uid();
+    h += `<div class="bracket-event-title">Event 1 — Obstacle Race</div>
       <div class="arc-desc" style="margin-bottom:6px;">${escHtml(e1.summary||'')}</div>`;
     if (e1.key_moments?.length) {
-      html += `<span class="beats-toggle" onclick="toggleBeats('${e1id}',this)">▶ Key moments (${e1.key_moments.length})</span>
-        <ul class="beats-list" id="${e1id}">${e1.key_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
+      h += `<span class="toggle-btn" onclick="toggleList('${eId}',this)">▶ Key moments (${e1.key_moments.length})</span>
+        <ul class="toggle-list" id="${eId}">${e1.key_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
     }
-    html += `</div>`;
   }
-
   // Event 2
-  if (bracket.event_2_cavalry_battle) {
-    const e2 = bracket.event_2_cavalry_battle;
-    const e2id = 'e2-'+Math.random().toString(36).slice(2);
-    html += `<div class="bracket-event"><div class="bracket-event-title">Event 2 — Cavalry Battle</div>
+  const e2 = bracket.event_2_cavalry_battle;
+  if (e2) {
+    const eId = uid();
+    h += `<div class="bracket-event-title">Event 2 — Cavalry Battle</div>
       <div class="arc-desc" style="margin-bottom:6px;">${escHtml(e2.summary||'')}</div>`;
     if (e2.key_moments?.length) {
-      html += `<span class="beats-toggle" onclick="toggleBeats('${e2id}',this)">▶ Key moments (${e2.key_moments.length})</span>
-        <ul class="beats-list" id="${e2id}">${e2.key_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
+      h += `<span class="toggle-btn" onclick="toggleList('${eId}',this)">▶ Key moments (${e2.key_moments.length})</span>
+        <ul class="toggle-list" id="${eId}">${e2.key_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
     }
-    html += `</div>`;
   }
-
-  // Event 3 — Individual Tournament
-  if (bracket.event_3_individual_tournament) {
-    const t = bracket.event_3_individual_tournament;
-    html += `<div class="bracket-event"><div class="bracket-event-title">Event 3 — Individual Tournament</div>
-      <div class="arc-desc" style="margin-bottom:8px;">${escHtml(t.format||'')}</div>`;
-
-    // Seeds
-    if (t.seeds?.length) {
-      const seedId = 'seeds-'+Math.random().toString(36).slice(2);
-      html += `<span class="beats-toggle" onclick="toggleBeats('${seedId}',this)">▶ Top seeds (${t.seeds.length})</span>
-        <ul class="beats-list" id="${seedId}">${t.seeds.map(s=>`<li><strong>#${s.seed} ${escHtml(s.name)} (${escHtml(s.class)}):</strong> ${escHtml(s.note)}</li>`).join('')}</ul>`;
+  // Event 3
+  const t3 = bracket.event_3_individual_tournament;
+  if (t3) {
+    h += `<div class="bracket-event-title">Event 3 — Individual Tournament</div>
+      <div class="arc-desc" style="margin-bottom:8px;">${escHtml(t3.format||'')}</div>`;
+    if (t3.seeds?.length) {
+      const sId = uid();
+      h += `<span class="toggle-btn" onclick="toggleList('${sId}',this)">▶ Top seeds (${t3.seeds.length})</span>
+        <ul class="toggle-list" id="${sId}">${t3.seeds.map(s=>`<li><strong>#${s.seed} ${escHtml(s.name)} (${escHtml(s.class)}):</strong> ${escHtml(s.note)}</li>`).join('')}</ul>`;
     }
-
-    function renderMatches(matches, label, isFinal) {
-      if (!matches?.length && !isFinal) return '';
-      const mid = 'matches-'+Math.random().toString(36).slice(2);
-      const arr = matches ? (Array.isArray(matches) ? matches : [matches]) : [];
-      if (!arr.length) return '';
-      let mhtml = `<div style="margin-top:10px;"><div style="font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">${escHtml(label)}</div>`;
-      for (const m of arr) {
-        const isUpset = (m.how_it_goes||'').toUpperCase().includes('UPSET');
-        const cardClass = isFinal ? 'match-card final-match' : 'match-card';
-        mhtml += `<div class="${cardClass}">
-          <div class="match-header">
-            ${m.match?`<span class="match-id">${escHtml(m.match)}</span>`:''}
-            <span class="match-vs">${escHtml(m.fighter_a||'')} <span style="color:var(--text-dim);font-weight:400">vs</span> ${escHtml(m.fighter_b||'')}</span>
-            ${m.winner?`<span class="match-winner">🏆 ${escHtml(m.winner)}</span>`:''}
-          </div>
-          ${m.favored?`<div class="match-favored">Favored: ${escHtml(m.favored)}${isUpset?' <strong style="color:var(--red);">— UPSET</strong>':''}</div>`:''}
-          <div class="match-body">${escHtml(m.how_it_goes||'')}</div>
-          ${m.dm_note?`<div class="match-dm"><strong>DM:</strong> ${escHtml(m.dm_note)}</div>`:''}
-        </div>`;
-      }
-      mhtml += `</div>`;
-      return mhtml;
-    }
-
-    html += renderMatches(t.round_1, 'Round 1');
-    html += renderMatches(t.quarterfinals, 'Quarterfinals');
-    html += renderMatches(t.semifinals, 'Semifinals');
-
+    h += renderMatchList(t3.round_1, 'Round 1');
+    h += renderMatchList(t3.quarterfinals, 'Quarterfinals');
+    h += renderMatchList(t3.semifinals, 'Semifinals');
     // Third place
-    if (t.third_place) {
-      const tp = t.third_place;
-      html += `<div style="margin-top:10px;"><div style="font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Third Place</div>
+    if (t3.third_place) {
+      const tp = t3.third_place;
+      h += `<div style="margin-top:10px;"><div class="bracket-event-title">Third Place</div>
         <div class="match-card">
           <div class="match-header">
-            <span class="match-vs">${escHtml(tp.fighter_a||'')} <span style="color:var(--text-dim);font-weight:400">vs</span> ${escHtml(tp.fighter_b||'')}</span>
+            <span class="match-vs">${escHtml(tp.fighter_a||'')} <span style="font-weight:400;color:var(--text-dim)">vs</span> ${escHtml(tp.fighter_b||'')}</span>
             ${tp.winner?`<span class="match-winner">🏆 ${escHtml(tp.winner)}</span>`:''}
           </div>
           <div class="match-body">${escHtml(tp.how_it_goes||'')}</div>
         </div></div>`;
     }
-
-    // Final
-    if (t.final) html += renderMatches([t.final], 'Final', true);
-
-    // Post-tournament moments
-    if (t.post_tournament_moments?.length) {
-      const ptid = 'pt-'+Math.random().toString(36).slice(2);
-      html += `<span class="beats-toggle" style="margin-top:8px;display:inline-block;" onclick="toggleBeats('${ptid}',this)">▶ Post-tournament moments (${t.post_tournament_moments.length})</span>
-        <ul class="beats-list" id="${ptid}">${t.post_tournament_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
+    if (t3.final) h += renderMatchList([t3.final], 'Final', true);
+    if (t3.post_tournament_moments?.length) {
+      const ptId = uid();
+      h += `<span class="toggle-btn" style="margin-top:8px;display:inline-block;" onclick="toggleList('${ptId}',this)">▶ Post-tournament moments (${t3.post_tournament_moments.length})</span>
+        <ul class="toggle-list" id="${ptId}">${t3.post_tournament_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
     }
-
-    html += `</div>`;
   }
-
-  html += `</div>`;
-  return html;
+  h += '</div>';
+  return h;
 }
 
 function renderSeasonHooks(hooks) {
   if (!hooks) return '';
-  const hookId = 'hooks-'+Math.random().toString(36).slice(2);
-  let html = `<div class="arc-sub-header">Season 2 hooks</div>
-    <span class="arc-sub-toggle" onclick="toggleSub('${hookId}',this)">▶ Show cliffhangers (${Object.keys(hooks).length})</span>
-    <div class="arc-sub-body" id="${hookId}">`;
-  for (const [k, v] of Object.entries(hooks)) {
-    html += `<div class="arc-sub-item">
-      <div class="arc-sub-item-label">${escHtml(k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()))}</div>
-      <div class="arc-sub-item-body">${escHtml(v)}</div>
-    </div>`;
+  const hId = uid();
+  let h = `<div class="arc-sub-header">Season 2 hooks</div>
+    <span class="sub-toggle" onclick="toggleSub('${hId}',this)">▶ Show cliffhangers (${Object.keys(hooks).length})</span>
+    <div class="sub-body" id="${hId}">`;
+  for (const [k,v] of Object.entries(hooks)) {
+    h += `<div class="sub-item"><div class="sub-item-label">${escHtml(k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()))}</div><div class="sub-item-body">${escHtml(v)}</div></div>`;
   }
-  html += `</div>`;
-  return html;
+  return h + '</div>';
 }
 
 function renderArc(data, el) {
-  const TIER_BORDER = ['#534AB7','#1D9E75','#BA7517','#E24B4A'];
-  let html = `<div class="page-title">${escHtml(data.campaign_title||'Campaign Arc')}</div>
-    <div class="page-sub">${escHtml(data.tone||'')}</div>`;
+  const TIER_COLORS = ['#534AB7','#1D9E75','#BA7517','#E24B4A'];
+  // Header
+  document.getElementById('camp-title').textContent = data.campaign_title||'Class 1-A';
+  document.getElementById('camp-tone').textContent  = data.tone||'';
+  const meta = document.getElementById('camp-meta');
+  if (data.level_range) meta.innerHTML += `<span class="tag tag-purple">Levels ${escHtml(data.level_range)}</span>`;
+  if (data.season)      meta.innerHTML += `<span class="tag tag-teal">Season ${data.season}</span>`;
+  document.getElementById('campaign-header').style.display = '';
 
+  document.getElementById('arc-meta').textContent =
+    (data.tiers?.length||0)+' tiers · '+(data.tiers?.reduce((a,t)=>a+(t.arcs?.length||0),0)||0)+' arcs';
+
+  let html = '';
   for (const t of (data.tiers||[])) {
-    const borderColor = TIER_BORDER[(t.tier-1)%4];
-    html += `<div class="card" style="margin-bottom:20px;border-left:4px solid ${borderColor};">
+    const col = TIER_COLORS[(t.tier-1)%4];
+    html += `<div class="tier-block" style="border-left:4px solid ${col};">
       <div class="tier-header">
-        <span class="tier-badge" style="background:${borderColor}22;color:${borderColor};">Tier ${t.tier}</span>
+        <span class="tier-badge" style="background:${col}22;color:${col};">Tier ${t.tier}</span>
         <span class="tier-title">${escHtml(t.title)}</span>
         <span class="tier-levels">Levels ${escHtml(t.levels||'')}${t.session_estimate?' · '+escHtml(t.session_estimate):''}</span>
       </div>
@@ -395,9 +482,9 @@ function renderArc(data, el) {
       ${t.dm_at_a_glance?`<div class="dm-prep"><div class="dm-prep-label">DM — At a glance</div><div class="dm-prep-row">${escHtml(t.dm_at_a_glance)}</div></div>`:''}`;
 
     for (const arc of (t.arcs||[])) {
-      const uid = Math.random().toString(36).slice(2);
+      const id = uid();
       html += `<div class="arc-card">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+        <div class="arc-header">
           <div>
             <div class="arc-name">${escHtml(arc.name)}</div>
             <div class="arc-type">${escHtml(arc.type||'')}</div>
@@ -405,120 +492,71 @@ function renderArc(data, el) {
           ${arc.sessions?`<span class="tag tag-purple" style="white-space:nowrap;flex-shrink:0;">${escHtml(arc.sessions)} session${arc.sessions==='1'?'':arc.sessions?'s':''}</span>`:''}
         </div>
         ${arc.dm_goal?`<div class="dm-prep" style="margin-top:8px;"><div class="dm-prep-label">Session goal</div><div class="dm-prep-row">${escHtml(arc.dm_goal)}</div></div>`:''}
-        <div class="arc-desc" style="margin-top:6px;">${escHtml(arc.description||'')}</div>`;
+        <div class="arc-desc">${escHtml(arc.description||'')}</div>`;
 
-      // Beats
       if (arc.beats?.length) {
-        const beatsId = 'beats-'+uid;
-        html += `<span class="beats-toggle" onclick="toggleBeats('${beatsId}',this)">▶ Story beats (${arc.beats.length})</span>
-          <ul class="beats-list" id="${beatsId}">
-            ${arc.beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}
-          </ul>`;
+        const bId = 'b'+id;
+        html += `<span class="toggle-btn" onclick="toggleList('${bId}',this)">▶ Story beats (${arc.beats.length})</span>
+          <ul class="toggle-list" id="${bId}">${arc.beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}</ul>`;
       }
+      if (arc.tournament_bracket) html += renderTournamentBracket(arc.tournament_bracket);
+      if (arc.villain_seeds)      html += renderVillainSeeds(arc.villain_seeds);
+      if (arc.season_1_hooks)     html += renderSeasonHooks(arc.season_1_hooks);
 
-      // Tournament bracket (Sports Festival)
-      if (arc.tournament_bracket) {
-        html += renderTournamentBracket(arc.tournament_bracket);
-      }
-
-      // Villain seeds
-      if (arc.villain_seeds) {
-        html += renderVillainSeeds(arc.villain_seeds);
-      }
-
-      // Season 1 hooks (Convergence arc)
-      if (arc.season_1_hooks) {
-        html += renderSeasonHooks(arc.season_1_hooks);
-      }
-
-      // Student groupings (Internships arc)
+      // Internships groupings
       if (arc.student_groupings?.length) {
-        const sgId = 'sg-'+uid;
+        const sgId = 'sg'+id;
         html += `<div class="arc-sub-header">Student groupings</div>
-          <span class="arc-sub-toggle" onclick="toggleSub('${sgId}',this)">▶ Show all groups (${arc.student_groupings.length})</span>
-          <div class="arc-sub-body" id="${sgId}">`;
+          <span class="sub-toggle" onclick="toggleSub('${sgId}',this)">▶ Show all groups (${arc.student_groupings.length})</span>
+          <div class="sub-body" id="${sgId}">`;
         for (const g of arc.student_groupings) {
-          html += `<div class="arc-sub-item">
-            <div class="arc-sub-item-label">${escHtml(g.students||g.label||'')}</div>`;
-          if (g.agency) html += `<div class="arc-sub-item-body" style="font-size:11px;color:var(--text-dim);margin-bottom:4px;">${escHtml(g.agency)}</div>`;
-          html += `<div class="arc-sub-item-body">${escHtml(g.event||'')}</div></div>`;
+          html += `<div class="sub-item"><div class="sub-item-label">${escHtml(g.students||g.label||'')}</div>`;
+          if (g.agency) html += `<div style="font-size:11px;color:var(--text-dim);margin-bottom:3px;">${escHtml(g.agency)}</div>`;
+          html += `<div class="sub-item-body">${escHtml(g.event||'')}</div></div>`;
         }
-        html += `</div>`;
+        html += '</div>';
       }
-
-      // Convergence (Internships arc)
       if (arc.convergence) {
-        html += `<div class="arc-sub-header">Convergence</div>
-          <div class="arc-sub-item" style="margin-top:0;">
-            <div class="arc-sub-item-body">${escHtml(arc.convergence)}</div>
-          </div>`;
+        html += `<div class="arc-sub-header">Convergence</div><div class="sub-item"><div class="sub-item-body">${escHtml(arc.convergence)}</div></div>`;
       }
-
-      // Groups (Gala Night arc)
       if (arc.groups?.length) {
-        const grId = 'gr-'+uid;
+        const grId = 'gr'+id;
         html += `<div class="arc-sub-header">Operational groups</div>
-          <span class="arc-sub-toggle" onclick="toggleSub('${grId}',this)">▶ Show groups (${arc.groups.length})</span>
-          <div class="arc-sub-body" id="${grId}">`;
+          <span class="sub-toggle" onclick="toggleSub('${grId}',this)">▶ Show groups (${arc.groups.length})</span>
+          <div class="sub-body" id="${grId}">`;
         for (const g of arc.groups) {
-          html += `<div class="arc-sub-item">
-            <div class="arc-sub-item-label">${escHtml(g.label||'')}</div>
-            <div class="arc-sub-item-body">${escHtml(g.objective||'')}</div>
-          </div>`;
+          html += `<div class="sub-item"><div class="sub-item-label">${escHtml(g.label||'')}</div><div class="sub-item-body">${escHtml(g.objective||'')}</div></div>`;
         }
-        html += `</div>`;
+        html += '</div>';
       }
-
-      // Coordination note
       if (arc.coordination) {
-        html += `<div class="arc-sub-header">Coordination</div>
-          <div class="arc-sub-item" style="margin-top:0;">
-            <div class="arc-sub-item-body">${escHtml(arc.coordination)}</div>
-          </div>`;
+        html += `<div class="arc-sub-header">Coordination</div><div class="sub-item"><div class="sub-item-body">${escHtml(arc.coordination)}</div></div>`;
       }
-
-      html += `</div>`;
+      html += '</div>';
     }
 
-    // Villain presence footer (supports old chain_presence and new villain_presence)
-    const presenceText = t.villain_presence || t.chain_presence;
-    if (presenceText) {
-      html += `<div class="arc-chain-note"><strong>Villain presence — Tier ${t.tier}</strong>${escHtml(presenceText)}</div>`;
+    const presence = t.villain_presence || t.chain_presence;
+    if (presence) {
+      html += `<div class="villain-presence"><strong>Villain presence — Tier ${t.tier}</strong>${escHtml(presence)}</div>`;
     }
-
-    html += `</div>`;
+    html += '</div>';
   }
 
   if (data.recurring_elements) {
-    html += `<div class="section-label">Recurring elements</div><div class="card">`;
+    html += `<div class="sub-label" style="margin-top:20px;">Recurring elements</div><div class="card">`;
     for (const [k,v] of Object.entries(data.recurring_elements)) {
-      html += `<div class="kv-row"><div class="kv-key">${escHtml(k.replace(/_/g,' '))}</div><div class="kv-val">${escHtml(String(v))}</div></div>`;
+      html += `<div class="kv-row"><div class="kv-key">${escHtml(k.replace(/_/g,' '))}</div><div class="kv-val" style="font-size:13px;">${escHtml(String(v))}</div></div>`;
     }
-    html += `</div>`;
+    html += '</div>';
   }
   el.innerHTML = html;
 }
 
-function toggleSub(id, btn) {
-  const el = document.getElementById(id);
-  const open = el.classList.toggle('open');
-  const label = btn.textContent.replace(/^[▶▼] /,'');
-  btn.textContent = (open ? '▼ ' : '▶ ') + label;
-}
-
-function toggleBeats(id, btn) {
-  const el = document.getElementById(id);
-  const open = el.classList.toggle('open');
-  btn.textContent = (open ? '▼ Hide beats' : '▶ Show beats') + ' (' + el.children.length + ')';
-}
-
-/* ─── WORLD ───────────────────────────────────────────── */
+/* ─── WORLD renderer ─────────────────────────────────── */
 function renderWorld(data, el) {
-  let html = `<div class="page-title">World Reference</div><div class="page-sub">Setting, society, and student life</div>`;
-
   function renderObj(obj, depth) {
     let out = '';
-    for (const [k, v] of Object.entries(obj)) {
+    for (const [k,v] of Object.entries(obj)) {
       const label = k.replace(/_/g,' ');
       if (typeof v === 'object' && v !== null && !Array.isArray(v)) {
         if (depth === 0) {
@@ -531,8 +569,7 @@ function renderWorld(data, el) {
             <div class="world-section-body" id="${sid}">${renderObj(v,1)}</div>
           </div>`;
         } else {
-          out += `<div class="section-label" style="margin-top:14px">${escHtml(label)}</div>`;
-          out += renderObj(v, depth+1);
+          out += `<div class="sub-label" style="margin-top:12px;">${escHtml(label)}</div>${renderObj(v,depth+1)}`;
         }
       } else if (Array.isArray(v)) {
         out += `<div class="kv-row"><div class="kv-key">${escHtml(label)}</div><div class="kv-val">${escHtml(v.join(', '))}</div></div>`;
@@ -542,55 +579,31 @@ function renderWorld(data, el) {
     }
     return out;
   }
-
-  html += renderObj(data, 0);
-  el.innerHTML = html;
+  el.innerHTML = renderObj(data, 0);
 }
 
-function toggleWorld(id) {
-  const body = document.getElementById(id);
-  const chev = document.getElementById('chev-'+id);
-  const open = body.classList.toggle('open');
-  if (chev) { chev.textContent = open ? '▼' : '▶'; chev.classList.toggle('open', open); }
-}
-
-/* ─── TEACHERS ────────────────────────────────────────── */
+/* ─── TEACHERS renderer ──────────────────────────────── */
 function renderTeachers(data, el) {
-  let html = `<div class="page-title">Teachers</div><div class="page-sub">U.A. High faculty — profiles and DM notes</div>`;
-
+  let html = '';
   for (const t of (data.teachers||[])) {
     const dmn = t.dm_notes||{};
-    const detailId = 'td-'+Math.random().toString(36).slice(2);
+    const dId = 'td'+uid();
     html += `<div class="person-card">
       <div class="person-avatar av-teacher">${initials(t.name)}</div>
       <div>
         <div class="person-name">${escHtml(t.name)}</div>
-        <div class="person-alias">${escHtml(t.hero_name||'')} ${t.hero_name?'·':''} ${escHtml(t.role||'')}</div>
+        <div class="person-alias">${escHtml(t.hero_name||'')}${t.hero_name?' · ':''}${escHtml(t.role||'')}</div>
         <div class="person-tags">
           <span class="tag tag-amber">${escHtml(t.quirk||'')}</span>
           <span class="tag tag-purple">${escHtml(t.quirk_type||'')}</span>
         </div>
-        ${t.quirk_summary?`<div class="person-section">
-          <div class="person-section-label">Quirk</div>
-          <div class="person-section-body">${escHtml(t.quirk_summary)}</div>
-        </div>`:''}
-        <div class="person-section">
-          <div class="person-section-label">Appearance</div>
-          <div class="person-section-body">${escHtml(t.appearance||'')}</div>
-        </div>
-        <div class="person-section">
-          <div class="person-section-label">Personality</div>
-          <div class="person-section-body">${escHtml(t.personality||'')}</div>
-        </div>
-        <span class="collapse-btn" onclick="toggleCollapse('${detailId}',this)">▶ DM notes &amp; teaching style</span>
-        <div class="collapsible" id="${detailId}">
-          ${t.teaching_style?`<div class="person-section">
-            <div class="person-section-label">Teaching style</div>
-            <div class="person-section-body">${escHtml(t.teaching_style)}</div>
-          </div>`:''}
-          ${Object.keys(dmn).length?`<div class="dm-note"><strong>DM notes</strong><br>${
-            Object.entries(dmn).map(([k,v])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(v))}`).join('<br>')
-          }</div>`:''}
+        ${t.quirk_summary?`<div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(t.quirk_summary)}</div></div>`:''}
+        <div class="person-section"><div class="person-section-label">Appearance</div><div class="person-section-body">${escHtml(t.appearance||'')}</div></div>
+        <div class="person-section"><div class="person-section-label">Personality</div><div class="person-section-body">${escHtml(t.personality||'')}</div></div>
+        <span class="collapse-btn" onclick="toggleCollapse('${dId}',this)">▶ DM notes &amp; teaching style</span>
+        <div class="collapsible" id="${dId}">
+          ${t.teaching_style?`<div class="person-section"><div class="person-section-label">Teaching style</div><div class="person-section-body">${escHtml(t.teaching_style)}</div></div>`:''}
+          ${Object.keys(dmn).length?`<div class="dm-note"><strong>DM notes</strong><br>${Object.entries(dmn).map(([k,v])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(v))}`).join('<br>')}</div>`:''}
         </div>
       </div>
     </div>`;
@@ -598,17 +611,16 @@ function renderTeachers(data, el) {
   el.innerHTML = html;
 }
 
-/* ─── VILLAINS ────────────────────────────────────────── */
+/* ─── VILLAIN card ───────────────────────────────────── */
 function renderVillainCard(v, accentColor) {
-  const STAT_KEYS = ['STR','DEX','CON','INT','WIS'];
-  const sb = v.stat_block||{};
+  const STATS = ['STR','DEX','CON','INT','WIS'];
+  const sb  = v.stat_block||{};
+  const ssb = v.scaled_stat_block||{};
   const dmn = v.dm_notes||{};
-  const detailId = 'vd-'+Math.random().toString(36).slice(2);
-  const avatarStyle = accentColor
-    ? `background:${accentColor}22;color:${accentColor};`
-    : '';
-  return `<div class="person-card">
-    <div class="person-avatar av-villain" style="${avatarStyle}">${initials(v.name)}</div>
+  const dId = 'vd'+uid();
+  const avStyle = accentColor?`background:${accentColor}22;color:${accentColor};`:'';
+  return `<div class="person-card" style="border-left:4px solid ${accentColor||'var(--border)'};">
+    <div class="person-avatar av-villain" style="${avStyle}">${initials(v.name)}</div>
     <div>
       <div class="person-name">${escHtml(v.name)}</div>
       <div class="person-alias">${v.alias?`"${escHtml(v.alias)}"`:''}</div>
@@ -619,181 +631,138 @@ function renderVillainCard(v, accentColor) {
         <span class="tag tag-amber">${escHtml(v.quirk_rarity||'')}</span>
         <span class="tag tag-purple">${escHtml(v.quirk_type||'')}</span>
       </div>
-      ${v.quirk_summary?`<div class="person-section">
-        <div class="person-section-label">Quirk</div>
-        <div class="person-section-body">${escHtml(v.quirk_summary)}</div>
-      </div>`:''}
-      <div class="person-section">
-        <div class="person-section-label">Appearance</div>
-        <div class="person-section-body">${escHtml(v.appearance||'')}</div>
-      </div>
-      <div class="person-section">
-        <div class="person-section-label">Personality</div>
-        <div class="person-section-body">${escHtml(v.personality||'')}</div>
-      </div>
-      <span class="collapse-btn" onclick="toggleCollapse('${detailId}',this)">▶ Stat block, combat &amp; DM notes</span>
-      <div class="collapsible" id="${detailId}">
-        ${v.combat_style?`<div class="person-section">
-          <div class="person-section-label">Combat style</div>
-          <div class="person-section-body">${escHtml(v.combat_style)}</div>
-        </div>`:''}
+      ${v.quirk_summary?`<div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(v.quirk_summary)}</div></div>`:''}
+      <div class="person-section"><div class="person-section-label">Appearance</div><div class="person-section-body">${escHtml(v.appearance||'')}</div></div>
+      <div class="person-section"><div class="person-section-label">Personality</div><div class="person-section-body">${escHtml(v.personality||'')}</div></div>
+      <span class="collapse-btn" onclick="toggleCollapse('${dId}',this)">▶ Combat, stat block &amp; DM notes</span>
+      <div class="collapsible" id="${dId}">
+        ${v.combat_style?`<div class="person-section"><div class="person-section-label">Combat style</div><div class="person-section-body">${escHtml(v.combat_style)}</div></div>`:''}
         ${Object.keys(sb).length?`<div class="person-section">
-          <div class="person-section-label">Stat block</div>
+          <div class="person-section-label">Stat block (full)</div>
           <div class="stat-grid">
-            ${sb.level?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${sb.level}</span></div>`:''}
-            ${sb.HP?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${sb.HP}</span></div>`:''}
-            ${sb.AC?`<div class="stat-chip"><span class="stat-chip-label">AC</span><span class="stat-chip-val">${sb.AC}</span></div>`:''}
-            ${STAT_KEYS.map(k=>sb[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${sb[k]}</span></div>`:'').join('')}
+            ${sb.level!=null?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${sb.level}</span></div>`:''}
+            ${sb.HP!=null?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${sb.HP}</span></div>`:''}
+            ${sb.AC!=null?`<div class="stat-chip"><span class="stat-chip-label">AC</span><span class="stat-chip-val">${sb.AC}</span></div>`:''}
+            ${STATS.map(k=>sb[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${sb[k]}</span></div>`:'').join('')}
           </div>
+          ${sb.special_abilities?.length?`<ul style="margin-top:8px;padding-left:16px;">${sb.special_abilities.map(a=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">${escHtml(a)}</li>`).join('')}</ul>`:''}
         </div>`:''}
-        ${v.campaign_appearances?`<div class="person-section">
-          <div class="person-section-label">Campaign appearances</div>
-          ${Object.entries(v.campaign_appearances).map(([t,txt])=>`
-            <div class="kv-row"><div class="kv-key">${escHtml(t.replace('_',' '))}</div><div class="kv-val" style="font-size:12px;">${escHtml(txt)}</div></div>
-          `).join('')}
+        ${Object.keys(ssb).length?`<div class="person-section">
+          <div class="person-section-label" style="color:var(--teal-text);">Scaled stat block — Season 1 (Level 6)</div>
+          <div class="stat-grid">
+            ${ssb.level!=null?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${ssb.level}</span></div>`:''}
+            ${ssb.HP!=null?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${ssb.HP}</span></div>`:''}
+            ${ssb.AC!=null?`<div class="stat-chip"><span class="stat-chip-label">AC</span><span class="stat-chip-val">${ssb.AC}</span></div>`:''}
+            ${['STR_base','STR','DEX','CON_base','CON','INT','WIS'].map(k=>ssb[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k.replace('_base','')}</span><span class="stat-chip-val">${ssb[k]}</span></div>`:'').join('')}
+          </div>
+          ${ssb.special_abilities?.length?`<ul style="margin-top:8px;padding-left:16px;">${ssb.special_abilities.map(a=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">${escHtml(a)}</li>`).join('')}</ul>`:''}
+          ${ssb.dm_scaling_note||ssb.dm_note?`<div class="dm-note" style="margin-top:6px;"><strong>Scaling note:</strong> ${escHtml(ssb.dm_scaling_note||ssb.dm_note)}</div>`:''}
+          ${ssb.growth_sizes?`<div style="margin-top:6px;">${Object.entries(ssb.growth_sizes).map(([k,v])=>`<div class="kv-row"><div class="kv-key">${escHtml(k)}</div><div class="kv-val" style="font-size:12px;">${escHtml(v)}</div></div>`).join('')}</div>`:''}
         </div>`:''}
-        ${v.dm_notes?`<div class="dm-note"><strong>DM notes</strong><br>${
-          typeof dmn === 'string'
-            ? escHtml(dmn)
-            : Object.entries(dmn).map(([k,val])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(val))}`).join('<br>')
-        }</div>`:''}
+        ${v.campaign_appearances?`<div class="person-section"><div class="person-section-label">Campaign appearances</div>${Object.entries(v.campaign_appearances).map(([k,txt])=>`<div class="kv-row"><div class="kv-key">${escHtml(k.replace('_',' '))}</div><div class="kv-val" style="font-size:12px;">${escHtml(txt)}</div></div>`).join('')}</div>`:''}
+        ${v.dm_notes?`<div class="dm-note"><strong>DM notes</strong><br>${typeof dmn==='string'?escHtml(dmn):Object.entries(dmn).map(([k,val])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(val))}`).join('<br>')}</div>`:''}
         ${v.arc_role?`<div class="warning-note"><strong>Arc role:</strong> ${escHtml(v.arc_role)}</div>`:''}
-        ${v.scaled_stat_block?`<div class="person-section">
-          <div class="person-section-label" style="color:var(--teal-text);">Season 1 scaled stat block (Level 6)</div>
-          <div class="stat-grid">
-            ${v.scaled_stat_block.level!=null?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${v.scaled_stat_block.level}</span></div>`:''}
-            ${v.scaled_stat_block.HP!=null?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${v.scaled_stat_block.HP}</span></div>`:''}
-            ${v.scaled_stat_block.AC!=null?`<div class="stat-chip"><span class="stat-chip-label">AC</span><span class="stat-chip-val">${v.scaled_stat_block.AC}</span></div>`:''}
-            ${['STR_base','STR','DEX','CON_base','CON','INT','WIS'].map(k=>v.scaled_stat_block[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k.replace('_base','')}</span><span class="stat-chip-val">${v.scaled_stat_block[k]}</span></div>`:'').join('')}
-          </div>
-          ${v.scaled_stat_block.special_abilities?.length?`<ul style="margin-top:8px;padding-left:16px;">${v.scaled_stat_block.special_abilities.map(a=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">${escHtml(a)}</li>`).join('')}</ul>`:''}
-          ${v.scaled_stat_block.dm_scaling_note||v.scaled_stat_block.dm_note?`<div class="dm-note" style="margin-top:6px;"><strong>Scaling note:</strong> ${escHtml(v.scaled_stat_block.dm_scaling_note||v.scaled_stat_block.dm_note)}</div>`:''}
-        </div>`:''}
       </div>
     </div>
   </div>`;
 }
 
-function renderFactionBlock(faction) {
-  const color = faction.colour || '#E24B4A';
-  let html = `<div class="card" style="margin-bottom:24px;border-left:4px solid ${color};">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-      <span style="width:12px;height:12px;border-radius:50%;background:${color};flex-shrink:0;display:inline-block;"></span>
-      <span style="font-size:16px;font-weight:700;">${escHtml(faction.name)}</span>
-      ${faction.tier_introduced?`<span class="tag tag-purple" style="margin-left:auto;">Introduced Tier ${faction.tier_introduced}</span>`:''}
-    </div>
-    <div style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:10px;">${escHtml(faction.description||'')}</div>`;
-  if (faction.structure) html += `<div class="kv-row"><div class="kv-key">Structure</div><div class="kv-val" style="font-size:12px;">${escHtml(faction.structure)}</div></div>`;
-  if (faction.public_awareness) html += `<div class="kv-row"><div class="kv-key">Public awareness</div><div class="kv-val" style="font-size:12px;">${escHtml(faction.public_awareness)}</div></div>`;
-  html += `</div>`;
-  html += `<div class="section-label" style="color:${color};">${escHtml(faction.name)} — Members</div>`;
-  for (const v of (faction.villains||[])) html += renderVillainCard(v, color);
-  return html;
-}
-
 function renderVillains(data, el) {
-  let html = `<div class="page-title">Villain Factions</div>
-    <div class="page-sub">Three organisations operating in Murano — The Chain, Null Signal, and Fracture</div>`;
+  let html = '';
+  const renderFaction = f => {
+    const col = f.colour||'#E24B4A';
+    html += `<div class="card" style="margin-bottom:20px;border-left:4px solid ${col};">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+        <span style="width:10px;height:10px;border-radius:50%;background:${col};flex-shrink:0;display:inline-block;"></span>
+        <span style="font-size:15px;font-weight:700;">${escHtml(f.name)}</span>
+        ${f.tier_introduced?`<span class="tag tag-purple" style="margin-left:auto;">Introduced Tier ${f.tier_introduced}</span>`:''}
+      </div>
+      <div style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">${escHtml(f.description||'')}</div>
+      ${f.structure?`<div class="kv-row"><div class="kv-key">Structure</div><div class="kv-val" style="font-size:12px;">${escHtml(f.structure)}</div></div>`:''}
+      ${f.public_awareness?`<div class="kv-row"><div class="kv-key">Awareness</div><div class="kv-val" style="font-size:12px;">${escHtml(f.public_awareness)}</div></div>`:''}
+    </div>
+    <div class="sub-label" style="color:${col};">${escHtml(f.name)} — Members</div>`;
+    for (const v of (f.villains||[])) html += renderVillainCard(v, col);
+  };
 
-  // Multi-faction format
-  if (data.factions && data.factions.length) {
-    for (const faction of data.factions) {
-      html += renderFactionBlock(faction);
-    }
+  if (data.factions?.length) {
+    for (const f of data.factions) renderFaction(f);
   } else {
-    // Fallback: legacy single-org format
     const org = data.organisation||{};
-    const fakeFaction = { name: org.name||'The Chain', description: org.description, structure: org.structure, public_awareness: org.public_awareness, colour: '#E24B4A', villains: data.villains||[] };
-    html += renderFactionBlock(fakeFaction);
+    renderFaction({ name:org.name||'The Chain', description:org.description, structure:org.structure, public_awareness:org.public_awareness, colour:'#E24B4A', villains:data.villains||[] });
   }
-
   el.innerHTML = html;
 }
 
-function toggleCollapse(id, btn) {
-  const el = document.getElementById(id);
-  const open = el.classList.toggle('open');
-  const label = btn.textContent.replace(/^[▶▼] /,'');
-  btn.textContent = (open ? '▼ ' : '▶ ') + label;
-}
-
-/* ─── TIER 1 ──────────────────────────────────────────── */
+/* ─── TIER 1 detail renderer ─────────────────────────── */
 function renderTier1(data, el) {
-  const ARC_COLORS = ['tag-purple','tag-teal','tag-amber','tag-red'];
-  let html = `<div class="page-title">Tier 1 — ${escHtml(data.title)}</div>
-    <div class="page-sub">Levels ${escHtml(data.levels)} · ${escHtml(data.session_estimate||'')} · ${escHtml(data.tone||'')}</div>`;
-
+  const ARC_TAGS = ['tag-purple','tag-teal','tag-amber','tag-red'];
+  let html = '';
   if (data.dm_overview) {
-    html += `<div class="dm-note" style="margin-bottom:20px;"><strong>DM overview:</strong> ${escHtml(data.dm_overview)}</div>`;
+    html += `<div class="dm-note" style="margin-bottom:16px;"><strong>DM overview:</strong> ${escHtml(data.dm_overview)}</div>`;
   }
-
   for (const [arcIdx, arc] of (data.arcs||[]).entries()) {
-    const color = ARC_COLORS[arcIdx % ARC_COLORS.length];
-    const arcBodyId = 'arc-body-'+arcIdx;
-    html += `<div class="card" style="margin-bottom:16px;">
+    const aId = uid();
+    html += `<div class="card" style="margin-bottom:14px;">
       <div class="tier-header">
-        <span class="tier-badge" style="background:var(--purple-light);color:var(--purple-text)">Arc ${arcIdx+1}</span>
+        <span class="tier-badge ${ARC_TAGS[arcIdx%4]}" style="padding:2px 8px;">Arc ${arcIdx+1}</span>
         <span class="tier-title">${escHtml(arc.name)}</span>
         <span class="tier-levels">${escHtml(arc.sessions||'')} session${arc.sessions==='1'?'':arc.sessions?'s':''}</span>
       </div>
       <div class="tier-tone">${escHtml(arc.summary||'')}</div>
-      ${arc.dm_setup?`<div class="dm-note" style="margin-bottom:10px;"><strong>DM setup:</strong> ${escHtml(arc.dm_setup)}</div>`:''}`;
+      ${arc.dm_setup?`<div class="dm-prep" style="margin-bottom:10px;"><div class="dm-prep-label">DM setup</div><div class="dm-prep-row">${escHtml(arc.dm_setup)}</div></div>`:''}`;
 
     // Major beats
     if (arc.major_beats?.length) {
-      html += `<div class="section-label" style="margin-top:10px">Major beats</div>`;
+      html += `<div class="sub-label">Major beats</div>`;
       for (const beat of arc.major_beats) {
-        const beatId = 'beat-'+Math.random().toString(36).slice(2);
+        const bId = uid();
         html += `<div class="arc-card">
           <div class="arc-name">${escHtml(beat.name)}</div>
           <div class="arc-desc">${escHtml(beat.description||'')}</div>
           ${beat.dm_notes?`<div class="dm-note" style="margin-top:6px;"><strong>DM:</strong> ${escHtml(beat.dm_notes)}</div>`:''}
           ${beat.player_hooks && Object.keys(beat.player_hooks).length
-            ? `<span class="beats-toggle" onclick="toggleBeats('${beatId}',this)">▶ Player hooks (${Object.keys(beat.player_hooks).length})</span>
-               <ul class="beats-list" id="${beatId}">${Object.entries(beat.player_hooks).map(([k,v])=>`<li><strong>${escHtml(k)}:</strong> ${escHtml(v)}</li>`).join('')}</ul>`
+            ? (() => { const phId = uid(); return `<span class="toggle-btn" onclick="toggleList('${phId}',this)">▶ Player hooks (${Object.keys(beat.player_hooks).length})</span>
+               <ul class="toggle-list" id="${phId}">${Object.entries(beat.player_hooks).map(([k,v])=>`<li><strong>${escHtml(k)}:</strong> ${escHtml(v)}</li>`).join('')}</ul>`; })()
             : ''}
         </div>`;
       }
     }
-
     // Minor beats
     if (arc.minor_beats?.length) {
-      const minorId = 'minor-'+Math.random().toString(36).slice(2);
-      html += `<div class="section-label" style="margin-top:10px">Minor beats</div>
-        <span class="beats-toggle" onclick="toggleBeats('${minorId}',this)">▶ Show all (${arc.minor_beats.length})</span>
-        <ul class="beats-list" id="${minorId}">${arc.minor_beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}</ul>`;
+      const mId = uid();
+      html += `<div class="sub-label">Minor beats</div>
+        <span class="toggle-btn" onclick="toggleList('${mId}',this)">▶ Show all (${arc.minor_beats.length})</span>
+        <ul class="toggle-list" id="${mId}">${arc.minor_beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}</ul>`;
     }
-
-    // NPC Interactions
+    // NPC interactions
     if (arc.npc_interactions?.length) {
-      html += `<div class="section-label" style="margin-top:10px">NPC interactions</div>`;
+      html += `<div class="sub-label">NPC interactions</div>`;
       for (const npc of arc.npc_interactions) {
-        const npcId = 'npc-'+Math.random().toString(36).slice(2);
+        const nId = uid();
         html += `<div class="arc-card">
           <div class="arc-name">${escHtml(npc.npc)}</div>
           <div class="arc-type">${escHtml(npc.context||'')}</div>
-          ${npc.key_moment?`<div class="arc-desc" style="margin-top:6px;">${escHtml(npc.key_moment)}</div>`:''}
-          ${npc.dm_dialogue?`<span class="beats-toggle" onclick="toggleBeats('${npcId}',this)">▶ Dialogue &amp; notes</span>
-            <ul class="beats-list" id="${npcId}"><li style="list-style:none;padding-left:0">${escHtml(npc.dm_dialogue)}</li>
-            ${npc.trigger?`<li style="list-style:none;padding-left:0;margin-top:6px;color:var(--text-dim);font-size:11px;">${escHtml(npc.trigger)}</li>`:''}
+          ${npc.key_moment?`<div class="arc-desc" style="margin-top:5px;">${escHtml(npc.key_moment)}</div>`:''}
+          ${npc.dm_dialogue?`<span class="toggle-btn" onclick="toggleList('${nId}',this)">▶ Dialogue &amp; trigger</span>
+            <ul class="toggle-list" id="${nId}">
+              <li style="list-style:none;padding-left:0;">${escHtml(npc.dm_dialogue)}</li>
+              ${npc.trigger?`<li style="list-style:none;padding-left:0;color:var(--text-dim);font-size:11px;margin-top:4px;">${escHtml(npc.trigger)}</li>`:''}
             </ul>`:''}
         </div>`;
       }
     }
-
     // Encounters
     if (arc.encounters?.length) {
-      html += `<div class="section-label" style="margin-top:10px">Encounters</div>`;
+      html += `<div class="sub-label">Encounters</div>`;
       for (const enc of arc.encounters) {
-        const encId2 = 'enc2-'+Math.random().toString(36).slice(2);
+        const eId = uid();
         html += `<div class="arc-card" style="border-left:3px solid var(--red);">
           <div class="arc-name">${escHtml(enc.name)}</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
-            <span class="tag tag-red">⚔ ${escHtml(enc.enemies||'')}</span>
-          </div>
-          ${enc.terrain?`<div class="arc-desc" style="margin-top:6px;"><strong>Terrain:</strong> ${escHtml(enc.terrain)}</div>`:''}
-          <span class="beats-toggle" onclick="toggleBeats('${encId2}',this)">▶ Setup &amp; tactics</span>
-          <ul class="beats-list" id="${encId2}">
+          <span class="tag tag-red">⚔ ${escHtml(enc.enemies||'')}</span>
+          ${enc.terrain?`<div class="arc-desc" style="margin-top:5px;"><strong>Terrain:</strong> ${escHtml(enc.terrain)}</div>`:''}
+          <span class="toggle-btn" onclick="toggleList('${eId}',this)">▶ Setup &amp; tactics</span>
+          <ul class="toggle-list" id="${eId}">
             ${enc.setup?`<li><strong>Setup:</strong> ${escHtml(enc.setup)}</li>`:''}
             ${enc.tactics?`<li><strong>Tactics:</strong> ${escHtml(enc.tactics)}</li>`:''}
             ${enc.dm_notes?`<li><strong>DM notes:</strong> ${escHtml(enc.dm_notes)}</li>`:''}
@@ -802,59 +771,50 @@ function renderTier1(data, el) {
         </div>`;
       }
     }
-
     // Foreshadowing
     if (arc.foreshadowing?.length) {
-      const fsId = 'fs-'+Math.random().toString(36).slice(2);
-      html += `<div class="section-label" style="margin-top:10px">Foreshadowing</div>
-        <span class="beats-toggle" onclick="toggleBeats('${fsId}',this)">▶ Seeds (${arc.foreshadowing.length})</span>
-        <ul class="beats-list" id="${fsId}">${arc.foreshadowing.map(f=>`<li>${escHtml(f)}</li>`).join('')}</ul>`;
+      const fsId = uid();
+      html += `<div class="sub-label">Foreshadowing</div>
+        <span class="toggle-btn" onclick="toggleList('${fsId}',this)">▶ Seeds (${arc.foreshadowing.length})</span>
+        <ul class="toggle-list" id="${fsId}">${arc.foreshadowing.map(f=>`<li>${escHtml(f)}</li>`).join('')}</ul>`;
     }
-
     // Class 1-B seeds
     if (arc.class1b_seeds?.length) {
-      const cbId = 'cb-'+Math.random().toString(36).slice(2);
-      html += `<div class="section-label" style="margin-top:10px">Class 1-B seeds</div>
-        <span class="beats-toggle" onclick="toggleBeats('${cbId}',this)">▶ Foreshadowing (${arc.class1b_seeds.length})</span>
-        <ul class="beats-list" id="${cbId}">${arc.class1b_seeds.map(s=>`<li>${escHtml(s)}</li>`).join('')}</ul>`;
+      const cbId = uid();
+      html += `<div class="sub-label">Class 1-B seeds</div>
+        <span class="toggle-btn" onclick="toggleList('${cbId}',this)">▶ Foreshadowing (${arc.class1b_seeds.length})</span>
+        <ul class="toggle-list" id="${cbId}">${arc.class1b_seeds.map(s=>`<li>${escHtml(s)}</li>`).join('')}</ul>`;
     }
-
-    html += `</div>`;
+    html += '</div>';
   }
   el.innerHTML = html;
 }
 
-/* ─── CLASS 1-B ───────────────────────────────────────── */
+/* ─── CLASS 1-B renderer ─────────────────────────────── */
 function renderClass1B(data, el) {
   const STAT_KEYS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
-  let html = `<div class="page-title">Class 1-B</div>
-    <div class="page-sub">${escHtml(data.reputation||'')}</div>`;
+  let html = '';
+  if (data.teacher)     html += `<div class="dm-note" style="margin-bottom:10px;"><strong>Teacher:</strong> ${escHtml(data.teacher)}</div>`;
+  if (data.dm_overview) html += `<div class="arc-desc" style="margin-bottom:12px;">${escHtml(data.dm_overview)}</div>`;
 
-  if (data.teacher) html += `<div class="dm-note" style="margin-bottom:12px;"><strong>Teacher:</strong> ${escHtml(data.teacher)}</div>`;
-  if (data.sports_festival_note) html += `<div class="weakness-block" style="margin-bottom:12px;"><strong>Sports Festival:</strong> ${escHtml(data.sports_festival_note)}</div>`;
-
-  // Tier 1 introduction guide
   if (data.tier1_introduction_guide) {
-    const introId = 'intro-'+Math.random().toString(36).slice(2);
-    html += `<div class="card" style="margin-bottom:16px;">
-      <div class="card-title">Tier 1 Introduction Guide</div>
-      <div class="card-body">${escHtml(data.dm_overview||'')}</div>
-      <span class="collapse-btn" onclick="toggleCollapse('${introId}',this)">▶ Per-arc introduction notes</span>
-      <div class="collapsible" id="${introId}">`;
+    const tId = uid();
+    html += `<div class="card" style="margin-bottom:14px;">
+      <div class="sub-label" style="margin-top:0;">Tier 1 introduction guide</div>
+      <span class="collapse-btn" onclick="toggleCollapse('${tId}',this)">▶ Show per-arc notes</span>
+      <div class="collapsible" id="${tId}">`;
     for (const [k,v] of Object.entries(data.tier1_introduction_guide)) {
-      html += `<div class="person-section"><div class="person-section-label">${escHtml(k.replace(/_/g,' '))}</div>
-        <div class="person-section-body">${escHtml(v)}</div></div>`;
+      html += `<div class="person-section"><div class="person-section-label">${escHtml(k.replace(/_/g,' '))}</div><div class="person-section-body">${escHtml(v)}</div></div>`;
     }
-    html += `</div></div>`;
+    html += '</div></div>';
   }
 
-  html += `<div class="section-label">Students</div>`;
-
+  html += `<div class="sub-label">Students</div>`;
   for (const s of (data.students||[])) {
     const sb = s.stat_block||{};
-    const detailId = 's1b-'+Math.random().toString(36).slice(2);
+    const dId = uid();
     html += `<div class="person-card">
-      <div class="person-avatar av-npc" style="background:var(--teal-light);color:var(--teal-text)">${initials(s.name)}</div>
+      <div class="person-avatar" style="background:var(--teal-light);color:var(--teal-text);">${initials(s.name)}</div>
       <div>
         <div class="person-name">${escHtml(s.name)}</div>
         <div class="person-alias">${escHtml(s.quirk||'')} · ${escHtml(s.quirk_type||'')}</div>
@@ -862,28 +822,13 @@ function renderClass1B(data, el) {
           <span class="tag tag-teal">${escHtml(s.quirk||'')}</span>
           ${s.rival_in_1a?`<span class="tag tag-purple">Rivals: ${escHtml(s.rival_in_1a)}</span>`:''}
         </div>
-        <div class="person-section">
-          <div class="person-section-label">Quirk</div>
-          <div class="person-section-body">${escHtml(s.quirk_summary||'')}</div>
-        </div>
-        <div class="person-section">
-          <div class="person-section-label">Personality</div>
-          <div class="person-section-body">${escHtml(s.personality||'')}</div>
-        </div>
-        <div class="person-section">
-          <div class="person-section-label">Rivalry with ${escHtml(s.rival_in_1a||'')}</div>
-          <div class="person-section-body">${escHtml(s.rivalry_dynamic||'')}</div>
-        </div>
-        <div class="person-section">
-          <div class="person-section-label">Tier 1 appearance</div>
-          <div class="person-section-body">${escHtml(s.tier1_appearance||'')}</div>
-        </div>
-        <span class="collapse-btn" onclick="toggleCollapse('${detailId}',this)">▶ Sports festival role, stat block &amp; signature moves</span>
-        <div class="collapsible" id="${detailId}">
-          ${s.sports_festival_role?`<div class="person-section">
-            <div class="person-section-label">Sports festival role</div>
-            <div class="person-section-body">${escHtml(s.sports_festival_role)}</div>
-          </div>`:''}
+        <div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(s.quirk_summary||'')}</div></div>
+        <div class="person-section"><div class="person-section-label">Personality</div><div class="person-section-body">${escHtml(s.personality||'')}</div></div>
+        <div class="person-section"><div class="person-section-label">Rivalry with ${escHtml(s.rival_in_1a||'')}</div><div class="person-section-body">${escHtml(s.rivalry_dynamic||'')}</div></div>
+        <div class="person-section"><div class="person-section-label">Tier 1 appearance</div><div class="person-section-body">${escHtml(s.tier1_appearance||'')}</div></div>
+        <span class="collapse-btn" onclick="toggleCollapse('${dId}',this)">▶ Sports festival, stat block &amp; moves</span>
+        <div class="collapsible" id="${dId}">
+          ${s.sports_festival_role?`<div class="person-section"><div class="person-section-label">Sports festival role</div><div class="person-section-body">${escHtml(s.sports_festival_role)}</div></div>`:''}
           ${s.dm_notes?`<div class="dm-note"><strong>DM notes:</strong> ${escHtml(s.dm_notes)}</div>`:''}
           ${Object.keys(sb).length?`<div class="person-section">
             <div class="person-section-label">Stat block</div>
@@ -894,9 +839,8 @@ function renderClass1B(data, el) {
               ${STAT_KEYS.map(k=>sb[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${sb[k]}</span></div>`:'').join('')}
             </div>
           </div>`:''}
-          ${s.signature_moves?.length?`<div class="person-section">
-            <div class="person-section-label">Signature moves</div>
-            <ul style="margin-top:4px;padding-left:16px;">${s.signature_moves.map(m=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">${escHtml(m)}</li>`).join('')}</ul>
+          ${s.signature_moves?.length?`<div class="person-section"><div class="person-section-label">Signature moves</div>
+            <ul style="margin-top:4px;padding-left:16px;">${s.signature_moves.map(m=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:3px;">${escHtml(m)}</li>`).join('')}</ul>
           </div>`:''}
         </div>
       </div>
@@ -905,9 +849,63 @@ function renderClass1B(data, el) {
   el.innerHTML = html;
 }
 
-/* ─── Init ─────────────────────────────────────────────── */
-const startFile = new URLSearchParams(location.search).get('file') || 'arc';
-loadFile(startFile);
+/* ─── Init — load all files at once ──────────────────── */
+const FILES = [
+  { key:'arc',      url:'CAMPAIGN/arc.json' },
+  { key:'tier1',    url:'CAMPAIGN/tier1.json' },
+  { key:'world',    url:'CAMPAIGN/world.json' },
+  { key:'teachers', url:'CAMPAIGN/teachers.json' },
+  { key:'villains', url:'CAMPAIGN/villains.json' },
+  { key:'class1b',  url:'CAMPAIGN/class1b.json' },
+];
+const RENDERERS = {
+  arc:      (d,el) => renderArc(d,el),
+  tier1:    (d,el) => renderTier1(d,el),
+  world:    (d,el) => renderWorld(d,el),
+  teachers: (d,el) => renderTeachers(d,el),
+  villains: (d,el) => renderVillains(d,el),
+  class1b:  (d,el) => renderClass1B(d,el),
+};
+
+async function init() {
+  const results = await Promise.allSettled(
+    FILES.map(f => fetch(f.url, {cache:'no-cache'}).then(r => r.json()).then(d => ({key:f.key,data:d})))
+  );
+  document.getElementById('loading').style.display = 'none';
+
+  for (const r of results) {
+    if (r.status === 'rejected') continue;
+    const {key, data} = r.value;
+    const sec  = document.getElementById('sec-'+key);
+    const body = document.getElementById('body-sec-'+key);
+    if (!sec || !body) continue;
+    try {
+      RENDERERS[key]?.(data, body);
+      sec.style.display = '';
+    } catch(e) {
+      console.error('Render error for', key, e);
+      body.innerHTML = `<div style="color:var(--red-text);font-size:12px;padding:8px;">Failed to render ${key}: ${e.message}</div>`;
+      sec.style.display = '';
+    }
+  }
+  initScrollSpy();
+
+  // Restore hash-based scroll after render
+  if (location.hash) {
+    setTimeout(() => {
+      const el = document.querySelector(location.hash);
+      if (el) {
+        // Auto-open that section if collapsed
+        const sKey = location.hash.replace('#sec-','');
+        const body = document.getElementById('body-sec-'+sKey);
+        if (body && !body.classList.contains('open')) toggleSection('sec-'+sKey);
+        el.scrollIntoView({behavior:'smooth'});
+      }
+    }, 100);
+  }
+}
+
+init();
 </script>
 </body>
 </html>

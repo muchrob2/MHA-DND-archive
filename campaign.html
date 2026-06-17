@@ -79,6 +79,17 @@
   .beats-list { margin-top: 8px; padding-left: 16px; display: none; }
   .beats-list.open { display: block; }
   .beats-list li { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  /* sub-sections within arc cards */
+  .arc-sub-header { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 12px; margin-bottom: 6px; border-top: 1px solid var(--border); padding-top: 10px; }
+  .arc-sub-toggle { font-size: 11px; color: var(--teal-text); cursor: pointer; display: inline-block; margin-bottom: 4px; }
+  .arc-sub-toggle:hover { text-decoration: underline; }
+  .arc-sub-body { display: none; }
+  .arc-sub-body.open { display: block; }
+  .arc-sub-item { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 6px; background: var(--surface); }
+  .arc-sub-item-label { font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .arc-sub-item-body { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .arc-chain-note { background: var(--red-light); border-left: 3px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; padding: 7px 11px; margin-top: 12px; font-size: 12px; color: var(--red-text); line-height: 1.5; }
+  .arc-chain-note strong { display: block; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 3px; opacity: 0.8; }
 
   /* ── Teachers & Villains ── */
   .person-card { display: grid; grid-template-columns: 52px 1fr; gap: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 12px; }
@@ -180,34 +191,90 @@ async function loadFile(file) {
 
 /* ─── ARC ─────────────────────────────────────────────── */
 function renderArc(data, el) {
-  const TIER_COLORS = ['tag-purple','tag-teal','tag-amber','tag-red'];
+  const TIER_BORDER = ['#534AB7','#1D9E75','#BA7517','#E24B4A'];
   let html = `<div class="page-title">${escHtml(data.campaign_title||'Campaign Arc')}</div>
     <div class="page-sub">${escHtml(data.tone||'')}</div>`;
 
   for (const t of (data.tiers||[])) {
-    const tColor = TIER_COLORS[(t.tier-1)%4];
-    html += `<div class="card" style="margin-bottom:16px;">
+    const borderColor = TIER_BORDER[(t.tier-1)%4];
+    html += `<div class="card" style="margin-bottom:20px;border-left:4px solid ${borderColor};">
       <div class="tier-header">
-        <span class="tier-badge">Tier ${t.tier}</span>
+        <span class="tier-badge" style="background:${borderColor}22;color:${borderColor};">Tier ${t.tier}</span>
         <span class="tier-title">${escHtml(t.title)}</span>
         <span class="tier-levels">Levels ${escHtml(t.levels)}</span>
       </div>
       <div class="tier-tone">${escHtml(t.overall_tone||'')}</div>`;
 
     for (const arc of (t.arcs||[])) {
-      const beatsId = 'beats-'+Math.random().toString(36).slice(2);
+      const uid = Math.random().toString(36).slice(2);
       html += `<div class="arc-card">
         <div class="arc-name">${escHtml(arc.name)}</div>
         <div class="arc-type">${escHtml(arc.type)}</div>
         <div class="arc-desc">${escHtml(arc.description||'')}</div>`;
+
+      // Beats
       if (arc.beats?.length) {
-        html += `<span class="beats-toggle" onclick="toggleBeats('${beatsId}',this)">▶ Show beats (${arc.beats.length})</span>
+        const beatsId = 'beats-'+uid;
+        html += `<span class="beats-toggle" onclick="toggleBeats('${beatsId}',this)">▶ Story beats (${arc.beats.length})</span>
           <ul class="beats-list" id="${beatsId}">
             ${arc.beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}
           </ul>`;
       }
+
+      // Student groupings (Internships arc)
+      if (arc.student_groupings?.length) {
+        const sgId = 'sg-'+uid;
+        html += `<div class="arc-sub-header">Student groupings</div>
+          <span class="arc-sub-toggle" onclick="toggleSub('${sgId}',this)">▶ Show all groups (${arc.student_groupings.length})</span>
+          <div class="arc-sub-body" id="${sgId}">`;
+        for (const g of arc.student_groupings) {
+          html += `<div class="arc-sub-item">
+            <div class="arc-sub-item-label">${escHtml(g.students||g.label||'')}</div>`;
+          if (g.agency) html += `<div class="arc-sub-item-body" style="font-size:11px;color:var(--text-dim);margin-bottom:4px;">${escHtml(g.agency)}</div>`;
+          html += `<div class="arc-sub-item-body">${escHtml(g.event||'')}</div></div>`;
+        }
+        html += `</div>`;
+      }
+
+      // Convergence (Internships arc)
+      if (arc.convergence) {
+        html += `<div class="arc-sub-header">Convergence</div>
+          <div class="arc-sub-item" style="margin-top:0;">
+            <div class="arc-sub-item-body">${escHtml(arc.convergence)}</div>
+          </div>`;
+      }
+
+      // Groups (Gala Night arc)
+      if (arc.groups?.length) {
+        const grId = 'gr-'+uid;
+        html += `<div class="arc-sub-header">Operational groups</div>
+          <span class="arc-sub-toggle" onclick="toggleSub('${grId}',this)">▶ Show groups (${arc.groups.length})</span>
+          <div class="arc-sub-body" id="${grId}">`;
+        for (const g of arc.groups) {
+          html += `<div class="arc-sub-item">
+            <div class="arc-sub-item-label">${escHtml(g.label||'')}</div>
+            <div class="arc-sub-item-body">${escHtml(g.objective||'')}</div>
+          </div>`;
+        }
+        html += `</div>`;
+      }
+
+      // Coordination note
+      if (arc.coordination) {
+        html += `<div class="arc-sub-header">Coordination</div>
+          <div class="arc-sub-item" style="margin-top:0;">
+            <div class="arc-sub-item-body">${escHtml(arc.coordination)}</div>
+          </div>`;
+      }
+
       html += `</div>`;
     }
+
+    // Chain presence footer
+    if (t.chain_presence) {
+      html += `<div class="arc-chain-note"><strong>Chain presence</strong>${escHtml(t.chain_presence)}</div>`;
+    }
+
     html += `</div>`;
   }
 
@@ -219,6 +286,13 @@ function renderArc(data, el) {
     html += `</div>`;
   }
   el.innerHTML = html;
+}
+
+function toggleSub(id, btn) {
+  const el = document.getElementById(id);
+  const open = el.classList.toggle('open');
+  const label = btn.textContent.replace(/^[▶▼] /,'');
+  btn.textContent = (open ? '▼ ' : '▶ ') + label;
 }
 
 function toggleBeats(id, btn) {

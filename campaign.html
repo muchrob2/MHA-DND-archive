@@ -7,27 +7,43 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #f8f7f5; --surface: #ffffff; --surface2: #f2f1ef;
+    --bg: #f7f6f4; --surface: #ffffff; --surface2: #f1f0ee;
     --border: rgba(0,0,0,0.10); --border-strong: rgba(0,0,0,0.18);
     --text: #1a1a1a; --text-muted: #5f5e5a; --text-dim: #9a9890;
-    --purple: #534AB7; --purple-light: #EEEDFE; --purple-text: #3C3489;
+    /* UA / Hero palette */
+    --primary: #1D3461;          /* UA navy */
+    --primary-light: #E6ECF5;
+    --primary-text: #1D3461;
+    --gold: #B8860B;             /* UA gold */
+    --gold-light: #FEF6DB;
+    --gold-text: #7A5A05;
+    --hero-red: #CC2936;         /* hero red */
+    --hero-red-light: #FAEAEA;
+    --hero-red-text: #8B1220;
+    /* Utility colours (kept for faction coding etc.) */
     --teal: #1D9E75; --teal-light: #E1F5EE; --teal-text: #085041;
     --red: #E24B4A; --red-light: #FCEBEB; --red-text: #A32D2D;
     --amber: #BA7517; --amber-light: #FAEEDA; --amber-text: #633806;
     --green: #639922; --green-light: #EAF3DE; --green-text: #27500A;
     --radius: 8px; --radius-lg: 12px;
     --nav-h: 44px;
+    /* Villain palette (used as local overrides in villain section) */
+    --v-bg: #100a14; --v-surface: #1a0f1f; --v-border: rgba(180,0,60,0.22);
+    --v-crimson: #DC143C; --v-purple: #7B2FBE;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #1a1a18; --surface: #242422; --surface2: #2e2e2c;
-      --border: rgba(255,255,255,0.10); --border-strong: rgba(255,255,255,0.18);
+      --bg: #161614; --surface: #1f1f1d; --surface2: #282826;
+      --border: rgba(255,255,255,0.09); --border-strong: rgba(255,255,255,0.16);
       --text: #e8e7e4; --text-muted: #a8a7a3; --text-dim: #6a6965;
-      --purple-light: #26215C; --purple-text: #AFA9EC;
+      --primary-light: #0D1929; --primary-text: #7BAFD4;
+      --gold-light: #1f1500; --gold-text: #E6B84A;
+      --hero-red-light: #2a0a0e; --hero-red-text: #F4737A;
       --teal-light: #04342C; --teal-text: #9FE1CB;
       --red-light: #501313; --red-text: #F09595;
       --amber-light: #412402; --amber-text: #FAC775;
       --green-light: #173404; --green-text: #C0DD97;
+      --v-bg: #0d0810; --v-surface: #170d1c; --v-border: rgba(220,20,60,0.18);
     }
   }
 
@@ -36,36 +52,35 @@
   /* ── Sticky nav ── */
   #topnav {
     position: sticky; top: 0; z-index: 100;
-    display: flex; align-items: stretch; gap: 0;
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    height: var(--nav-h);
+    display: flex; align-items: stretch;
+    background: var(--primary); height: var(--nav-h);
+    box-shadow: 0 2px 8px rgba(29,52,97,0.3);
   }
   #back-btn {
     display: flex; align-items: center; gap: 6px;
-    padding: 0 16px; font-size: 13px; color: var(--text-muted);
-    text-decoration: none; border-right: 1px solid var(--border); white-space: nowrap; flex-shrink: 0;
+    padding: 0 16px; font-size: 13px; color: rgba(255,255,255,0.65);
+    text-decoration: none; border-right: 1px solid rgba(255,255,255,0.12); white-space: nowrap; flex-shrink: 0;
   }
-  #back-btn:hover { color: var(--purple); background: var(--purple-light); }
+  #back-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
   .anchor-bar { display: flex; flex: 1; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .anchor-bar::-webkit-scrollbar { display: none; }
   .anchor-btn {
     display: flex; align-items: center;
-    padding: 0 16px; font-size: 12px; font-weight: 500;
-    color: var(--text-muted); text-decoration: none; white-space: nowrap;
-    border-bottom: 2px solid transparent; flex-shrink: 0;
-    transition: color 0.1s;
+    padding: 0 15px; font-size: 12px; font-weight: 500;
+    color: rgba(255,255,255,0.6); text-decoration: none; white-space: nowrap;
+    border-bottom: 2px solid transparent; flex-shrink: 0; transition: color 0.1s;
   }
-  .anchor-btn:hover { color: var(--text); }
-  .anchor-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
+  .anchor-btn:hover { color: rgba(255,255,255,0.9); }
+  .anchor-btn.active { color: #fff; border-bottom-color: var(--gold); }
 
   /* ── Main content ── */
   #main { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
 
   /* ── Campaign header ── */
-  #campaign-header { padding: 28px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 0; }
-  .campaign-title { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
-  .campaign-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  #campaign-header { padding: 28px 0 20px; border-bottom: 2px solid var(--hero-red); margin-bottom: 0; }
+  .campaign-title { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; color: var(--primary); }
   .campaign-tone { font-size: 13px; color: var(--text-muted); margin-top: 8px; line-height: 1.6; }
+  .campaign-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 
   /* ── Sections ── */
   .campaign-section { border-bottom: 1px solid var(--border); }
@@ -73,22 +88,50 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 16px 0; cursor: pointer; user-select: none; gap: 12px;
   }
-  .section-header:hover .section-title { color: var(--purple); }
+  .section-header:hover .section-title { color: var(--primary); }
   .section-title { font-size: 16px; font-weight: 700; }
   .section-meta { font-size: 12px; color: var(--text-dim); }
+  .section-header-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .section-toggle { font-size: 13px; color: var(--text-dim); flex-shrink: 0; transition: transform 0.2s; }
   .section-toggle.open { transform: rotate(90deg); }
   .section-body { display: none; padding-bottom: 24px; }
   .section-body.open { display: block; }
 
+  /* Bookmark button on section headers */
+  .bm-btn {
+    background: none; border: none; cursor: pointer; font-size: 13px;
+    color: var(--text-dim); padding: 2px 5px; border-radius: 4px;
+    flex-shrink: 0; line-height: 1; transition: color 0.1s, background 0.1s;
+  }
+  .bm-btn:hover { color: var(--gold); background: var(--gold-light); }
+  .bm-btn.bookmarked { color: var(--gold); }
+
+  /* ── Arc search ── */
+  .arc-search-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .arc-search-input {
+    flex: 1; padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius);
+    background: var(--surface); color: var(--text); font-size: 13px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .arc-search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+  .arc-search-clear { background: none; border: none; cursor: pointer; font-size: 16px; color: var(--text-dim); padding: 4px; line-height: 1; display: none; }
+  .arc-search-clear:hover { color: var(--text); }
+  .arc-search-count { font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+  .search-highlight { background: #FFE066; color: #1a1a1a; border-radius: 2px; padding: 0 1px; }
+  .arc-no-results { text-align: center; padding: 40px 0; color: var(--text-dim); font-size: 13px; }
+  .arc-hidden { display: none !important; }
+
   /* ── Shared card styles ── */
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 10px; }
   .tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 4px; margin-right: 4px; margin-bottom: 4px; font-weight: 500; }
-  .tag-purple { background: var(--purple-light); color: var(--purple-text); }
-  .tag-teal   { background: var(--teal-light);   color: var(--teal-text); }
-  .tag-red    { background: var(--red-light);    color: var(--red-text); }
-  .tag-amber  { background: var(--amber-light);  color: var(--amber-text); }
-  .tag-green  { background: var(--green-light);  color: var(--green-text); }
+  .tag-primary { background: var(--primary-light); color: var(--primary-text); }
+  .tag-gold    { background: var(--gold-light);    color: var(--gold-text); }
+  .tag-red     { background: var(--hero-red-light); color: var(--hero-red-text); }
+  .tag-teal    { background: var(--teal-light);    color: var(--teal-text); }
+  .tag-amber   { background: var(--amber-light);   color: var(--amber-text); }
+  .tag-green   { background: var(--green-light);   color: var(--green-text); }
+  /* Keep tag-purple as alias so existing render code works */
+  .tag-purple  { background: var(--primary-light); color: var(--primary-text); }
   .sub-label { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; margin-top: 20px; }
   .sub-label:first-child { margin-top: 0; }
 
@@ -98,15 +141,25 @@
   .tier-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
   .tier-title { font-size: 16px; font-weight: 600; }
   .tier-levels { font-size: 12px; color: var(--text-dim); }
-  .tier-tone { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; font-style: italic; border-left: 3px solid var(--border); padding-left: 12px; }
+  .tier-tone { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; font-style: italic; border-left: 3px solid var(--hero-red); padding-left: 12px; }
 
-  .arc-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; background: var(--surface2); }
+  .arc-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; background: var(--surface2); position: relative; }
   .arc-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+  .arc-header-left { flex: 1; min-width: 0; }
+  .arc-header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
   .arc-name { font-size: 13px; font-weight: 600; }
   .arc-type { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
   .arc-desc { font-size: 12px; color: var(--text-muted); line-height: 1.55; margin-top: 6px; }
 
-  .toggle-btn { font-size: 11px; color: var(--purple-text); cursor: pointer; margin-top: 8px; display: inline-block; }
+  .arc-bm-btn {
+    background: none; border: none; cursor: pointer; font-size: 12px;
+    color: var(--text-dim); padding: 2px 4px; border-radius: 3px; line-height: 1;
+    transition: color 0.1s, background 0.1s;
+  }
+  .arc-bm-btn:hover { color: var(--gold); background: var(--gold-light); }
+  .arc-bm-btn.bookmarked { color: var(--gold); }
+
+  .toggle-btn { font-size: 11px; color: var(--primary-text); cursor: pointer; margin-top: 8px; display: inline-block; }
   .toggle-btn:hover { text-decoration: underline; }
   .toggle-list { margin-top: 6px; padding-left: 16px; display: none; }
   .toggle-list.open { display: block; }
@@ -122,17 +175,17 @@
 
   .arc-sub-header { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 10px; margin-bottom: 6px; border-top: 1px solid var(--border); padding-top: 8px; }
 
-  .villain-presence { background: var(--red-light); border-left: 3px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; padding: 7px 11px; margin-top: 12px; font-size: 12px; color: var(--red-text); line-height: 1.5; }
+  .villain-presence { background: var(--hero-red-light); border-left: 3px solid var(--hero-red); border-radius: 0 var(--radius) var(--radius) 0; padding: 7px 11px; margin-top: 12px; font-size: 12px; color: var(--hero-red-text); line-height: 1.5; }
   .villain-presence strong { display: block; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 3px; opacity: 0.8; }
 
   /* ── DM callout ── */
-  .dm-note { background: var(--amber-light); border-left: 3px solid var(--amber); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin-top: 8px; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-  .dm-note strong { color: var(--amber-text); }
-  .dm-prep { background: var(--amber-light); border: 1px solid var(--amber); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 10px; }
-  .dm-prep-label { font-size: 10px; font-weight: 700; color: var(--amber-text); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+  .dm-note { background: var(--gold-light); border-left: 3px solid var(--gold); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin-top: 8px; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .dm-note strong { color: var(--gold-text); }
+  .dm-prep { background: var(--gold-light); border: 1px solid var(--gold); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 10px; }
+  .dm-prep-label { font-size: 10px; font-weight: 700; color: var(--gold-text); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
   .dm-prep-row { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-  .warning-note { background: var(--red-light); border-left: 3px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin-top: 8px; font-size: 12px; color: var(--red-text); }
-  .collapse-btn { font-size: 11px; color: var(--purple-text); cursor: pointer; margin-top: 10px; display: inline-block; }
+  .warning-note { background: var(--hero-red-light); border-left: 3px solid var(--hero-red); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin-top: 8px; font-size: 12px; color: var(--hero-red-text); }
+  .collapse-btn { font-size: 11px; color: var(--primary-text); cursor: pointer; margin-top: 10px; display: inline-block; }
   .collapse-btn:hover { text-decoration: underline; }
   .collapsible { display: none; }
   .collapsible.open { display: block; }
@@ -140,30 +193,30 @@
   /* ── Faction / villain seeds ── */
   .villain-seed { border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; margin-bottom: 6px; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
   .villain-seed-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 3px; }
-  .seed-chain   { border-left: 3px solid #E24B4A; } .seed-chain .villain-seed-label   { color: #E24B4A; }
-  .seed-null    { border-left: 3px solid #0891B2; } .seed-null .villain-seed-label    { color: #0891B2; }
-  .seed-fracture{ border-left: 3px solid #8B47D4; } .seed-fracture .villain-seed-label{ color: #8B47D4; }
-  .seed-all     { border-left: 3px solid var(--text-dim); } .seed-all .villain-seed-label { color: var(--text-muted); }
+  .seed-chain    { border-left: 3px solid #E24B4A; } .seed-chain .villain-seed-label    { color: #E24B4A; }
+  .seed-null     { border-left: 3px solid #0891B2; } .seed-null .villain-seed-label     { color: #0891B2; }
+  .seed-fracture { border-left: 3px solid #8B47D4; } .seed-fracture .villain-seed-label { color: #8B47D4; }
+  .seed-all      { border-left: 3px solid var(--text-dim); } .seed-all .villain-seed-label { color: var(--text-muted); }
 
   /* ── Tournament bracket ── */
   .bracket-event-title { font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
   .match-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 6px; background: var(--surface); }
-  .match-card.final-match { border: 2px solid var(--purple); }
+  .match-card.final-match { border: 2px solid var(--gold); }
   .match-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
   .match-id { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.06em; }
   .match-vs { font-size: 12px; font-weight: 600; flex: 1; }
   .match-winner { font-size: 11px; font-weight: 700; color: var(--teal-text); background: var(--teal-light); padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
-  .final-match .match-winner { background: var(--purple-light); color: var(--purple-text); }
+  .final-match .match-winner { background: var(--gold-light); color: var(--gold-text); }
   .match-favored { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
   .match-body { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-  .match-dm { background: var(--amber-light); border-left: 2px solid var(--amber); padding: 5px 8px; margin-top: 6px; font-size: 11px; color: var(--amber-text); line-height: 1.4; border-radius: 0 4px 4px 0; }
+  .match-dm { background: var(--gold-light); border-left: 2px solid var(--gold); padding: 5px 8px; margin-top: 6px; font-size: 11px; color: var(--gold-text); line-height: 1.4; border-radius: 0 4px 4px 0; }
   .season-role { font-size: 11px; color: var(--text-dim); font-style: italic; margin-top: 5px; padding: 3px 8px; border-left: 2px solid var(--border); }
 
   /* ── Person cards ── */
   .person-card { display: grid; grid-template-columns: 48px 1fr; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 10px; }
   .person-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
-  .av-teacher { background: var(--amber-light); color: var(--amber-text); }
-  .av-villain { background: var(--red-light); color: var(--red-text); }
+  .av-teacher { background: var(--gold-light); color: var(--gold-text); }
+  .av-villain { background: var(--hero-red-light); color: var(--hero-red-text); }
   .person-name { font-size: 15px; font-weight: 600; }
   .person-alias { font-size: 12px; color: var(--text-dim); }
   .person-role { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
@@ -190,16 +243,82 @@
   .kv-key { font-weight: 500; color: var(--text-muted); text-transform: capitalize; }
   .kv-val { color: var(--text); }
 
+  /* ── Villain section theming ── */
+  #sec-villains {
+    background: var(--v-bg);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--v-border);
+    margin: 12px -4px 0;
+    padding: 0 20px;
+  }
+  #sec-villains .section-header { border-bottom: 1px solid var(--v-border); }
+  #sec-villains .section-title { color: var(--v-crimson); }
+  #sec-villains .section-toggle { color: var(--v-crimson); opacity: 0.7; }
+  #sec-villains .section-meta { color: rgba(220,20,60,0.5); }
+  #sec-villains .bm-btn:hover { background: rgba(220,20,60,0.12); color: var(--v-crimson); }
+  #sec-villains .bm-btn.bookmarked { color: var(--v-crimson); }
+  #sec-villains .section-body { padding-bottom: 28px; }
+  #sec-villains .card { background: var(--v-surface); border-color: var(--v-border); }
+  #sec-villains .person-card { background: var(--v-surface); border-color: var(--v-border); }
+  #sec-villains .stat-chip { background: #0f0812; border-color: var(--v-border); }
+  #sec-villains .tier-block { background: var(--v-surface); border-color: var(--v-border); }
+  #sec-villains .sub-item { background: #12091a; border-color: var(--v-border); }
+  #sec-villains .person-section { border-top-color: var(--v-border); }
+  #sec-villains .tag-red { background: rgba(139,0,0,0.25); color: #F4737A; }
+  #sec-villains .tag-amber { background: rgba(123,47,190,0.18); color: #C4A0E8; }
+  #sec-villains .section-header:hover .section-title { color: var(--v-crimson); }
+  #sec-villains .world-section { background: var(--v-surface); border-color: var(--v-border); }
+  #sec-villains .kv-row { border-color: var(--v-border); }
+  /* Villain section collapse btn */
+  #sec-villains .collapse-btn { color: rgba(220,20,60,0.8); }
+  #sec-villains .collapse-btn:hover { color: var(--v-crimson); }
+  /* faction label strip */
+  #sec-villains .sub-label { color: rgba(220,20,60,0.5); }
+
+  /* ── Bookmark panel ── */
+  #bm-panel {
+    position: fixed; bottom: 20px; right: 16px; z-index: 200;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+  }
+  #bm-toggle-btn {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--primary); border: none; cursor: pointer;
+    font-size: 18px; box-shadow: 0 3px 12px rgba(29,52,97,0.35);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s, background 0.15s; color: #fff;
+  }
+  #bm-toggle-btn:hover { transform: scale(1.07); background: #152747; }
+  #bm-toggle-btn.has-marks { background: var(--gold); color: #fff; box-shadow: 0 3px 12px rgba(184,134,11,0.4); }
+  #bm-drawer {
+    background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18); width: 240px; max-height: 320px;
+    overflow-y: auto; display: none; flex-direction: column;
+  }
+  #bm-drawer.open { display: flex; }
+  #bm-drawer-header { padding: 10px 14px; font-size: 12px; font-weight: 700; color: var(--text-muted); border-bottom: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; }
+  #bm-clear-all { font-size: 10px; color: var(--text-dim); background: none; border: none; cursor: pointer; }
+  #bm-clear-all:hover { color: var(--hero-red); }
+  #bm-list { flex: 1; padding: 6px 0; }
+  .bm-item {
+    display: flex; align-items: center; gap: 8px; padding: 8px 14px; cursor: pointer;
+    transition: background 0.1s;
+  }
+  .bm-item:hover { background: var(--surface2); }
+  .bm-item-icon { font-size: 13px; flex-shrink: 0; }
+  .bm-item-label { font-size: 12px; color: var(--text); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bm-item-remove { font-size: 14px; color: var(--text-dim); background: none; border: none; cursor: pointer; padding: 0 2px; flex-shrink: 0; line-height: 1; }
+  .bm-item-remove:hover { color: var(--hero-red); }
+  #bm-empty { padding: 20px 14px; font-size: 12px; color: var(--text-dim); text-align: center; }
+
   /* ── Loading ── */
   #loading { display: flex; align-items: center; justify-content: center; padding: 80px 0; color: var(--text-dim); font-size: 13px; }
-  #error-msg { display: none; padding: 24px; color: var(--red-text); font-size: 13px; }
 
   /* ── Mobile ── */
   @media (max-width: 640px) {
     #main { padding: 0 12px 60px; }
     .campaign-title { font-size: 20px; }
     #campaign-header { padding: 20px 0 16px; }
-    .anchor-btn { padding: 0 12px; font-size: 11px; }
+    .anchor-btn { padding: 0 11px; font-size: 11px; }
     #back-btn { padding: 0 12px; font-size: 12px; }
     .person-card { grid-template-columns: 1fr; gap: 8px; }
     .person-avatar { width: 36px; height: 36px; font-size: 13px; }
@@ -212,6 +331,9 @@
     .stat-chip { min-width: 34px; }
     .stat-chip-val { font-size: 13px; }
     .tier-block { padding: 12px 14px; }
+    #sec-villains { margin: 10px -4px 0; padding: 0 12px; }
+    #bm-panel { bottom: 12px; right: 10px; }
+    #bm-drawer { width: 210px; }
   }
 </style>
 </head>
@@ -229,9 +351,20 @@
   </div>
 </nav>
 
+<!-- Bookmark panel -->
+<div id="bm-panel">
+  <div id="bm-drawer">
+    <div id="bm-drawer-header">
+      Bookmarks
+      <button id="bm-clear-all" onclick="clearAllBookmarks()">Clear all</button>
+    </div>
+    <div id="bm-list"><div id="bm-empty">No bookmarks yet.<br>Tap 🔖 to save a spot.</div></div>
+  </div>
+  <button id="bm-toggle-btn" onclick="toggleBmDrawer()" title="Bookmarks">🔖</button>
+</div>
+
 <div id="main">
   <div id="loading">Loading campaign data…</div>
-  <div id="error-msg"></div>
 
   <div id="campaign-header" style="display:none">
     <div class="campaign-title" id="camp-title"></div>
@@ -242,17 +375,36 @@
   <!-- Story Arcs -->
   <section class="campaign-section" id="sec-arc" style="display:none">
     <div class="section-header" onclick="toggleSection('sec-arc')">
-      <div><span class="section-title">Story Arcs</span><span class="section-meta" id="arc-meta" style="margin-left:10px;"></span></div>
-      <span class="section-toggle open" id="tog-sec-arc">▶</span>
+      <div class="section-header-left">
+        <span class="section-title">Story Arcs</span>
+        <span class="section-meta" id="arc-meta"></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button class="bm-btn" id="bm-sec-arc" onclick="event.stopPropagation();toggleBookmark('sec-arc','Story Arcs','#sec-arc')" title="Bookmark this section">🔖</button>
+        <span class="section-toggle open" id="tog-sec-arc">▶</span>
+      </div>
     </div>
-    <div class="section-body open" id="body-sec-arc"></div>
+    <div class="section-body open" id="body-sec-arc">
+      <div class="arc-search-wrap">
+        <input class="arc-search-input" id="arc-search" type="search" placeholder="Search arcs, beats, villain seeds…" autocomplete="off" oninput="searchArcs(this.value)" />
+        <button class="arc-search-clear" id="arc-search-clear" onclick="clearArcSearch()" title="Clear">✕</button>
+        <span class="arc-search-count" id="arc-search-count"></span>
+      </div>
+      <div id="arc-no-results" class="arc-no-results" style="display:none">No arcs match "<span id="arc-no-results-q"></span>"</div>
+    </div>
   </section>
 
-  <!-- Session Notes (Tier 1 detail) -->
+  <!-- Session Notes -->
   <section class="campaign-section" id="sec-tier1" style="display:none">
     <div class="section-header" onclick="toggleSection('sec-tier1')">
-      <div><span class="section-title">Session Notes</span><span class="section-meta" style="margin-left:10px;">Tier 1 detailed DM content</span></div>
-      <span class="section-toggle" id="tog-sec-tier1">▶</span>
+      <div class="section-header-left">
+        <span class="section-title">Session Notes</span>
+        <span class="section-meta">Tier 1 detailed DM content</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button class="bm-btn" id="bm-sec-tier1" onclick="event.stopPropagation();toggleBookmark('sec-tier1','Session Notes','#sec-tier1')" title="Bookmark">🔖</button>
+        <span class="section-toggle" id="tog-sec-tier1">▶</span>
+      </div>
     </div>
     <div class="section-body" id="body-sec-tier1"></div>
   </section>
@@ -260,8 +412,14 @@
   <!-- World Reference -->
   <section class="campaign-section" id="sec-world" style="display:none">
     <div class="section-header" onclick="toggleSection('sec-world')">
-      <div><span class="section-title">World Reference</span><span class="section-meta" style="margin-left:10px;">U.A., Murano, student life</span></div>
-      <span class="section-toggle" id="tog-sec-world">▶</span>
+      <div class="section-header-left">
+        <span class="section-title">World Reference</span>
+        <span class="section-meta">U.A., Murano, student life</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button class="bm-btn" id="bm-sec-world" onclick="event.stopPropagation();toggleBookmark('sec-world','World Reference','#sec-world')" title="Bookmark">🔖</button>
+        <span class="section-toggle" id="tog-sec-world">▶</span>
+      </div>
     </div>
     <div class="section-body" id="body-sec-world"></div>
   </section>
@@ -269,8 +427,14 @@
   <!-- Teachers -->
   <section class="campaign-section" id="sec-teachers" style="display:none">
     <div class="section-header" onclick="toggleSection('sec-teachers')">
-      <div><span class="section-title">Teachers</span><span class="section-meta" style="margin-left:10px;">Faculty profiles &amp; DM notes</span></div>
-      <span class="section-toggle" id="tog-sec-teachers">▶</span>
+      <div class="section-header-left">
+        <span class="section-title">Teachers</span>
+        <span class="section-meta">Faculty profiles &amp; DM notes</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button class="bm-btn" id="bm-sec-teachers" onclick="event.stopPropagation();toggleBookmark('sec-teachers','Teachers','#sec-teachers')" title="Bookmark">🔖</button>
+        <span class="section-toggle" id="tog-sec-teachers">▶</span>
+      </div>
     </div>
     <div class="section-body" id="body-sec-teachers"></div>
   </section>
@@ -278,8 +442,14 @@
   <!-- Villains -->
   <section class="campaign-section" id="sec-villains" style="display:none">
     <div class="section-header" onclick="toggleSection('sec-villains')">
-      <div><span class="section-title">Villain Factions</span><span class="section-meta" style="margin-left:10px;">The Chain · Null Signal · Fracture</span></div>
-      <span class="section-toggle" id="tog-sec-villains">▶</span>
+      <div class="section-header-left">
+        <span class="section-title">Villain Factions</span>
+        <span class="section-meta">The Chain · Null Signal · Fracture</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button class="bm-btn" id="bm-sec-villains" onclick="event.stopPropagation();toggleBookmark('sec-villains','Villain Factions','#sec-villains')" title="Bookmark">🔖</button>
+        <span class="section-toggle" id="tog-sec-villains">▶</span>
+      </div>
     </div>
     <div class="section-body" id="body-sec-villains"></div>
   </section>
@@ -287,8 +457,14 @@
   <!-- Class 1-B -->
   <section class="campaign-section" id="sec-class1b" style="display:none">
     <div class="section-header" onclick="toggleSection('sec-class1b')">
-      <div><span class="section-title">Class 1-B</span><span class="section-meta" style="margin-left:10px;">Rivals &amp; recurring NPCs</span></div>
-      <span class="section-toggle" id="tog-sec-class1b">▶</span>
+      <div class="section-header-left">
+        <span class="section-title">Class 1-B</span>
+        <span class="section-meta">Rivals &amp; recurring NPCs</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button class="bm-btn" id="bm-sec-class1b" onclick="event.stopPropagation();toggleBookmark('sec-class1b','Class 1-B','#sec-class1b')" title="Bookmark">🔖</button>
+        <span class="section-toggle" id="tog-sec-class1b">▶</span>
+      </div>
     </div>
     <div class="section-body" id="body-sec-class1b"></div>
   </section>
@@ -306,6 +482,10 @@ function toggleSection(id) {
   const tog  = document.getElementById('tog-'+id);
   const open = body.classList.toggle('open');
   if (tog) tog.classList.toggle('open', open);
+  if (open) {
+    const el = document.getElementById(id);
+    if (el) setTimeout(() => el.scrollIntoView({behavior:'smooth', block:'start'}), 50);
+  }
 }
 
 function toggleList(id, btn) {
@@ -328,7 +508,166 @@ function toggleWorld(id) {
   if (chev) { chev.textContent = open?'▼':'▶'; chev.classList.toggle('open',open); }
 }
 
-/* ─── Scroll spy for anchor bar ─────────────────────── */
+/* ─── Arc search ─────────────────────────────────────── */
+let _arcSearchTimer = null;
+function searchArcs(q) {
+  const clearBtn = document.getElementById('arc-search-clear');
+  const countEl  = document.getElementById('arc-search-count');
+  const noRes    = document.getElementById('arc-no-results');
+  clearBtn.style.display = q ? 'block' : 'none';
+
+  clearTimeout(_arcSearchTimer);
+  _arcSearchTimer = setTimeout(() => {
+    const query = q.trim().toLowerCase();
+    const tierBlocks = document.querySelectorAll('#body-sec-arc .tier-block');
+    if (!query) {
+      tierBlocks.forEach(t => {
+        t.classList.remove('arc-hidden');
+        t.querySelectorAll('.arc-card').forEach(c => c.classList.remove('arc-hidden'));
+      });
+      removeHighlights(document.getElementById('body-sec-arc'));
+      countEl.textContent = '';
+      noRes.style.display = 'none';
+      return;
+    }
+
+    let matchCount = 0;
+    tierBlocks.forEach(tier => {
+      const arcCards = tier.querySelectorAll('.arc-card');
+      let tierHasMatch = false;
+      arcCards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(query)) {
+          card.classList.remove('arc-hidden');
+          tierHasMatch = true;
+          matchCount++;
+        } else {
+          card.classList.add('arc-hidden');
+        }
+      });
+      tier.classList.toggle('arc-hidden', !tierHasMatch);
+    });
+
+    // highlight
+    removeHighlights(document.getElementById('body-sec-arc'));
+    if (query) highlightText(document.getElementById('body-sec-arc'), query);
+
+    countEl.textContent = matchCount ? `${matchCount} arc${matchCount===1?'':'s'}` : '';
+    noRes.style.display = matchCount ? 'none' : '';
+    document.getElementById('arc-no-results-q').textContent = q;
+  }, 150);
+}
+function clearArcSearch() {
+  document.getElementById('arc-search').value = '';
+  searchArcs('');
+}
+function highlightText(root, q) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  let n;
+  while ((n = walker.nextNode())) nodes.push(n);
+  const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+  for (const node of nodes) {
+    if (!node.textContent.toLowerCase().includes(q)) continue;
+    if (node.parentElement.closest('input,button,script,style')) continue;
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(node.textContent)) !== null) {
+      frag.appendChild(document.createTextNode(node.textContent.slice(last, m.index)));
+      const mark = document.createElement('mark');
+      mark.className = 'search-highlight';
+      mark.textContent = m[0];
+      frag.appendChild(mark);
+      last = re.lastIndex;
+    }
+    frag.appendChild(document.createTextNode(node.textContent.slice(last)));
+    node.parentElement.replaceChild(frag, node);
+  }
+}
+function removeHighlights(root) {
+  root.querySelectorAll('mark.search-highlight').forEach(m => {
+    m.parentNode.replaceChild(document.createTextNode(m.textContent), m);
+  });
+  root.normalize();
+}
+
+/* ─── Bookmarks ──────────────────────────────────────── */
+const BM_KEY = 'mha-campaign-bookmarks';
+function loadBookmarks()   { try { return JSON.parse(localStorage.getItem(BM_KEY)||'[]'); } catch { return []; } }
+function saveBookmarks(bms) { localStorage.setItem(BM_KEY, JSON.stringify(bms)); }
+
+function toggleBmDrawer() {
+  const d = document.getElementById('bm-drawer');
+  d.classList.toggle('open');
+  if (d.classList.contains('open')) renderBmList();
+}
+function toggleBookmark(id, label, href) {
+  let bms = loadBookmarks();
+  const idx = bms.findIndex(b => b.id === id);
+  if (idx > -1) {
+    bms.splice(idx, 1);
+    document.getElementById('bm-'+id)?.classList.remove('bookmarked');
+  } else {
+    bms.unshift({ id, label, href, ts: Date.now() });
+    document.getElementById('bm-'+id)?.classList.add('bookmarked');
+  }
+  saveBookmarks(bms);
+  updateBmToggleBtn();
+  if (document.getElementById('bm-drawer').classList.contains('open')) renderBmList();
+}
+function jumpToBookmark(href, sectionId) {
+  const el = document.getElementById(sectionId);
+  if (el) {
+    const body = document.getElementById('body-'+sectionId);
+    const tog  = document.getElementById('tog-'+sectionId);
+    if (body && !body.classList.contains('open')) {
+      body.classList.add('open');
+      if (tog) tog.classList.add('open');
+    }
+    el.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+  document.getElementById('bm-drawer').classList.remove('open');
+}
+function removeBookmark(id, e) {
+  e.stopPropagation();
+  let bms = loadBookmarks().filter(b => b.id !== id);
+  saveBookmarks(bms);
+  document.getElementById('bm-'+id)?.classList.remove('bookmarked');
+  updateBmToggleBtn();
+  renderBmList();
+}
+function clearAllBookmarks() {
+  saveBookmarks([]);
+  document.querySelectorAll('.bm-btn.bookmarked,.arc-bm-btn.bookmarked').forEach(b => b.classList.remove('bookmarked'));
+  updateBmToggleBtn();
+  renderBmList();
+}
+function updateBmToggleBtn() {
+  const btn = document.getElementById('bm-toggle-btn');
+  btn.classList.toggle('has-marks', loadBookmarks().length > 0);
+}
+function renderBmList() {
+  const list  = document.getElementById('bm-list');
+  const empty = document.getElementById('bm-empty');
+  const bms   = loadBookmarks();
+  if (!bms.length) { empty.style.display = ''; list.innerHTML = ''; list.appendChild(empty); return; }
+  empty.style.display = 'none';
+  const icons = { 'sec-arc':'📖','sec-tier1':'📋','sec-world':'🗺️','sec-teachers':'👨‍🏫','sec-villains':'💀','sec-class1b':'🎓' };
+  list.innerHTML = bms.map(b => `
+    <div class="bm-item" onclick="jumpToBookmark('${escHtml(b.href)}','${escHtml(b.id)}')">
+      <span class="bm-item-icon">${icons[b.id]||'📌'}</span>
+      <span class="bm-item-label">${escHtml(b.label)}</span>
+      <button class="bm-item-remove" onclick="removeBookmark('${escHtml(b.id)}',event)" title="Remove">×</button>
+    </div>`).join('');
+}
+function restoreBmState() {
+  const bms = loadBookmarks();
+  bms.forEach(b => document.getElementById('bm-'+b.id)?.classList.add('bookmarked'));
+  updateBmToggleBtn();
+}
+
+/* ─── Scroll spy ─────────────────────────────────────── */
 function initScrollSpy() {
   const sections = ['arc','tier1','world','teachers','villains','class1b'];
   const anchors  = document.querySelectorAll('.anchor-btn');
@@ -338,16 +677,15 @@ function initScrollSpy() {
       const el = document.getElementById('sec-'+s);
       if (el && el.getBoundingClientRect().top <= 60) active = s;
     }
-    anchors.forEach(a => {
-      const match = a.getAttribute('href') === '#sec-'+(active||'arc');
-      a.classList.toggle('active', match);
-    });
+    anchors.forEach(a => a.classList.toggle('active', a.getAttribute('href')==='#sec-'+(active||'arc')));
   }
   document.addEventListener('scroll', update, {passive:true});
   update();
 }
 
 /* ─── ARC renderer ───────────────────────────────────── */
+const TIER_COLORS = ['#1D3461','#1D9E75','#B8860B','#CC2936'];
+
 function renderVillainSeeds(seeds) {
   if (!seeds) return '';
   const CLS = {the_chain:'seed-chain',null_signal:'seed-null',fracture:'seed-fracture',all_factions:'seed-all'};
@@ -359,7 +697,6 @@ function renderVillainSeeds(seeds) {
   }
   return h;
 }
-
 function renderMatchList(matches, label, isFinal) {
   if (!matches?.length) return '';
   let h = `<div style="margin-top:10px;"><div class="bracket-event-title">${escHtml(label)}</div>`;
@@ -371,44 +708,35 @@ function renderMatchList(matches, label, isFinal) {
         <span class="match-vs">${escHtml(m.fighter_a||'')} <span style="font-weight:400;color:var(--text-dim)">vs</span> ${escHtml(m.fighter_b||'')}</span>
         ${m.winner?`<span class="match-winner">🏆 ${escHtml(m.winner)}</span>`:''}
       </div>
-      ${m.favored?`<div class="match-favored">Favored: ${escHtml(m.favored)}${upset?' <strong style="color:var(--red)">— UPSET</strong>':''}</div>`:''}
+      ${m.favored?`<div class="match-favored">Favored: ${escHtml(m.favored)}${upset?' <strong style="color:var(--hero-red)">— UPSET</strong>':''}</div>`:''}
       <div class="match-body">${escHtml(m.how_it_goes||'')}</div>
       ${m.dm_note?`<div class="match-dm"><strong>DM:</strong> ${escHtml(m.dm_note)}</div>`:''}
     </div>`;
   }
-  h += '</div>';
-  return h;
+  return h + '</div>';
 }
-
 function renderTournamentBracket(bracket) {
   if (!bracket) return '';
   const bId = uid();
   let h = `<div class="arc-sub-header">Sports Festival bracket</div>
     <span class="sub-toggle" onclick="toggleSub('${bId}',this)">▶ Show full bracket</span>
     <div class="sub-body" id="${bId}">`;
-  // Event 1
   const e1 = bracket.event_1_obstacle_race;
   if (e1) {
     const eId = uid();
     h += `<div class="bracket-event-title">Event 1 — Obstacle Race</div>
       <div class="arc-desc" style="margin-bottom:6px;">${escHtml(e1.summary||'')}</div>`;
-    if (e1.key_moments?.length) {
-      h += `<span class="toggle-btn" onclick="toggleList('${eId}',this)">▶ Key moments (${e1.key_moments.length})</span>
-        <ul class="toggle-list" id="${eId}">${e1.key_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
-    }
+    if (e1.key_moments?.length) h += `<span class="toggle-btn" onclick="toggleList('${eId}',this)">▶ Key moments (${e1.key_moments.length})</span>
+      <ul class="toggle-list" id="${eId}">${e1.key_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
   }
-  // Event 2
   const e2 = bracket.event_2_cavalry_battle;
   if (e2) {
     const eId = uid();
     h += `<div class="bracket-event-title">Event 2 — Cavalry Battle</div>
       <div class="arc-desc" style="margin-bottom:6px;">${escHtml(e2.summary||'')}</div>`;
-    if (e2.key_moments?.length) {
-      h += `<span class="toggle-btn" onclick="toggleList('${eId}',this)">▶ Key moments (${e2.key_moments.length})</span>
-        <ul class="toggle-list" id="${eId}">${e2.key_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
-    }
+    if (e2.key_moments?.length) h += `<span class="toggle-btn" onclick="toggleList('${eId}',this)">▶ Key moments (${e2.key_moments.length})</span>
+      <ul class="toggle-list" id="${eId}">${e2.key_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
   }
-  // Event 3
   const t3 = bracket.event_3_individual_tournament;
   if (t3) {
     h += `<div class="bracket-event-title">Event 3 — Individual Tournament</div>
@@ -418,10 +746,9 @@ function renderTournamentBracket(bracket) {
       h += `<span class="toggle-btn" onclick="toggleList('${sId}',this)">▶ Top seeds (${t3.seeds.length})</span>
         <ul class="toggle-list" id="${sId}">${t3.seeds.map(s=>`<li><strong>#${s.seed} ${escHtml(s.name)} (${escHtml(s.class)}):</strong> ${escHtml(s.note)}</li>`).join('')}</ul>`;
     }
-    h += renderMatchList(t3.round_1, 'Round 1');
-    h += renderMatchList(t3.quarterfinals, 'Quarterfinals');
-    h += renderMatchList(t3.semifinals, 'Semifinals');
-    // Third place
+    h += renderMatchList(t3.round_1,'Round 1');
+    h += renderMatchList(t3.quarterfinals,'Quarterfinals');
+    h += renderMatchList(t3.semifinals,'Semifinals');
     if (t3.third_place) {
       const tp = t3.third_place;
       h += `<div style="margin-top:10px;"><div class="bracket-event-title">Third Place</div>
@@ -433,17 +760,15 @@ function renderTournamentBracket(bracket) {
           <div class="match-body">${escHtml(tp.how_it_goes||'')}</div>
         </div></div>`;
     }
-    if (t3.final) h += renderMatchList([t3.final], 'Final', true);
+    if (t3.final) h += renderMatchList([t3.final],'Final',true);
     if (t3.post_tournament_moments?.length) {
       const ptId = uid();
       h += `<span class="toggle-btn" style="margin-top:8px;display:inline-block;" onclick="toggleList('${ptId}',this)">▶ Post-tournament moments (${t3.post_tournament_moments.length})</span>
         <ul class="toggle-list" id="${ptId}">${t3.post_tournament_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
     }
   }
-  h += '</div>';
-  return h;
+  return h + '</div>';
 }
-
 function renderSeasonHooks(hooks) {
   if (!hooks) return '';
   const hId = uid();
@@ -457,23 +782,27 @@ function renderSeasonHooks(hooks) {
 }
 
 function renderArc(data, el) {
-  const TIER_COLORS = ['#534AB7','#1D9E75','#BA7517','#E24B4A'];
-  // Header
   document.getElementById('camp-title').textContent = data.campaign_title||'Class 1-A';
   document.getElementById('camp-tone').textContent  = data.tone||'';
   const meta = document.getElementById('camp-meta');
-  if (data.level_range) meta.innerHTML += `<span class="tag tag-purple">Levels ${escHtml(data.level_range)}</span>`;
-  if (data.season)      meta.innerHTML += `<span class="tag tag-teal">Season ${data.season}</span>`;
+  if (data.level_range) meta.innerHTML += `<span class="tag tag-primary">Levels ${escHtml(data.level_range)}</span>`;
+  if (data.season)      meta.innerHTML += `<span class="tag tag-gold">Season ${data.season}</span>`;
+  if (data.system)      meta.innerHTML += `<span class="tag tag-red">${escHtml(data.system)}</span>`;
   document.getElementById('campaign-header').style.display = '';
 
   document.getElementById('arc-meta').textContent =
     (data.tiers?.length||0)+' tiers · '+(data.tiers?.reduce((a,t)=>a+(t.arcs?.length||0),0)||0)+' arcs';
 
-  let html = '';
+  // Render tiers into a temp div, then append to section body after the search bar
+  const wrapper = document.createElement('div');
+  wrapper.id = 'arc-tiers-wrapper';
+
   for (const t of (data.tiers||[])) {
     const col = TIER_COLORS[(t.tier-1)%4];
-    html += `<div class="tier-block" style="border-left:4px solid ${col};">
-      <div class="tier-header">
+    const tierDiv = document.createElement('div');
+    tierDiv.className = 'tier-block';
+    tierDiv.style.borderLeft = `4px solid ${col}`;
+    let tierHtml = `<div class="tier-header">
         <span class="tier-badge" style="background:${col}22;color:${col};">Tier ${t.tier}</span>
         <span class="tier-title">${escHtml(t.title)}</span>
         <span class="tier-levels">Levels ${escHtml(t.levels||'')}${t.session_estimate?' · '+escHtml(t.session_estimate):''}</span>
@@ -483,73 +812,67 @@ function renderArc(data, el) {
 
     for (const arc of (t.arcs||[])) {
       const id = uid();
-      html += `<div class="arc-card">
+      const arcBmId = 'arc-'+arc.name.replace(/\s+/g,'-').toLowerCase().slice(0,20);
+      tierHtml += `<div class="arc-card" id="${arcBmId}">
         <div class="arc-header">
-          <div>
+          <div class="arc-header-left">
             <div class="arc-name">${escHtml(arc.name)}</div>
             <div class="arc-type">${escHtml(arc.type||'')}</div>
           </div>
-          ${arc.sessions?`<span class="tag tag-purple" style="white-space:nowrap;flex-shrink:0;">${escHtml(arc.sessions)} session${arc.sessions==='1'?'':arc.sessions?'s':''}</span>`:''}
+          <div class="arc-header-right">
+            ${arc.sessions?`<span class="tag tag-primary" style="white-space:nowrap;">${escHtml(arc.sessions)} session${arc.sessions==='1'?'':arc.sessions?'s':''}</span>`:''}
+            <button class="arc-bm-btn" id="bm-${arcBmId}" onclick="event.stopPropagation();toggleBookmark('${arcBmId}','${escHtml(arc.name)}','#${arcBmId}')" title="Bookmark this arc">🔖</button>
+          </div>
         </div>
         ${arc.dm_goal?`<div class="dm-prep" style="margin-top:8px;"><div class="dm-prep-label">Session goal</div><div class="dm-prep-row">${escHtml(arc.dm_goal)}</div></div>`:''}
         <div class="arc-desc">${escHtml(arc.description||'')}</div>`;
 
       if (arc.beats?.length) {
         const bId = 'b'+id;
-        html += `<span class="toggle-btn" onclick="toggleList('${bId}',this)">▶ Story beats (${arc.beats.length})</span>
+        tierHtml += `<span class="toggle-btn" onclick="toggleList('${bId}',this)">▶ Story beats (${arc.beats.length})</span>
           <ul class="toggle-list" id="${bId}">${arc.beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}</ul>`;
       }
-      if (arc.tournament_bracket) html += renderTournamentBracket(arc.tournament_bracket);
-      if (arc.villain_seeds)      html += renderVillainSeeds(arc.villain_seeds);
-      if (arc.season_1_hooks)     html += renderSeasonHooks(arc.season_1_hooks);
+      if (arc.tournament_bracket) tierHtml += renderTournamentBracket(arc.tournament_bracket);
+      if (arc.villain_seeds)      tierHtml += renderVillainSeeds(arc.villain_seeds);
+      if (arc.season_1_hooks)     tierHtml += renderSeasonHooks(arc.season_1_hooks);
 
-      // Internships groupings
       if (arc.student_groupings?.length) {
         const sgId = 'sg'+id;
-        html += `<div class="arc-sub-header">Student groupings</div>
+        tierHtml += `<div class="arc-sub-header">Student groupings</div>
           <span class="sub-toggle" onclick="toggleSub('${sgId}',this)">▶ Show all groups (${arc.student_groupings.length})</span>
           <div class="sub-body" id="${sgId}">`;
         for (const g of arc.student_groupings) {
-          html += `<div class="sub-item"><div class="sub-item-label">${escHtml(g.students||g.label||'')}</div>`;
-          if (g.agency) html += `<div style="font-size:11px;color:var(--text-dim);margin-bottom:3px;">${escHtml(g.agency)}</div>`;
-          html += `<div class="sub-item-body">${escHtml(g.event||'')}</div></div>`;
+          tierHtml += `<div class="sub-item"><div class="sub-item-label">${escHtml(g.students||g.label||'')}</div>
+            ${g.agency?`<div style="font-size:11px;color:var(--text-dim);margin-bottom:3px;">${escHtml(g.agency)}</div>`:''}
+            <div class="sub-item-body">${escHtml(g.event||'')}</div></div>`;
         }
-        html += '</div>';
+        tierHtml += '</div>';
       }
-      if (arc.convergence) {
-        html += `<div class="arc-sub-header">Convergence</div><div class="sub-item"><div class="sub-item-body">${escHtml(arc.convergence)}</div></div>`;
-      }
+      if (arc.convergence) tierHtml += `<div class="arc-sub-header">Convergence</div><div class="sub-item"><div class="sub-item-body">${escHtml(arc.convergence)}</div></div>`;
       if (arc.groups?.length) {
         const grId = 'gr'+id;
-        html += `<div class="arc-sub-header">Operational groups</div>
+        tierHtml += `<div class="arc-sub-header">Operational groups</div>
           <span class="sub-toggle" onclick="toggleSub('${grId}',this)">▶ Show groups (${arc.groups.length})</span>
           <div class="sub-body" id="${grId}">`;
-        for (const g of arc.groups) {
-          html += `<div class="sub-item"><div class="sub-item-label">${escHtml(g.label||'')}</div><div class="sub-item-body">${escHtml(g.objective||'')}</div></div>`;
-        }
-        html += '</div>';
+        for (const g of arc.groups) tierHtml += `<div class="sub-item"><div class="sub-item-label">${escHtml(g.label||'')}</div><div class="sub-item-body">${escHtml(g.objective||'')}</div></div>`;
+        tierHtml += '</div>';
       }
-      if (arc.coordination) {
-        html += `<div class="arc-sub-header">Coordination</div><div class="sub-item"><div class="sub-item-body">${escHtml(arc.coordination)}</div></div>`;
-      }
-      html += '</div>';
+      if (arc.coordination) tierHtml += `<div class="arc-sub-header">Coordination</div><div class="sub-item"><div class="sub-item-body">${escHtml(arc.coordination)}</div></div>`;
+      tierHtml += '</div>';
     }
 
-    const presence = t.villain_presence || t.chain_presence;
-    if (presence) {
-      html += `<div class="villain-presence"><strong>Villain presence — Tier ${t.tier}</strong>${escHtml(presence)}</div>`;
-    }
-    html += '</div>';
+    const presence = t.villain_presence||t.chain_presence;
+    if (presence) tierHtml += `<div class="villain-presence"><strong>Villain presence — Tier ${t.tier}</strong>${escHtml(presence)}</div>`;
+    tierDiv.innerHTML = tierHtml;
+    wrapper.appendChild(tierDiv);
   }
 
   if (data.recurring_elements) {
-    html += `<div class="sub-label" style="margin-top:20px;">Recurring elements</div><div class="card">`;
-    for (const [k,v] of Object.entries(data.recurring_elements)) {
-      html += `<div class="kv-row"><div class="kv-key">${escHtml(k.replace(/_/g,' '))}</div><div class="kv-val" style="font-size:13px;">${escHtml(String(v))}</div></div>`;
-    }
-    html += '</div>';
+    const recDiv = document.createElement('div');
+    recDiv.innerHTML = `<div class="sub-label" style="margin-top:20px;">Recurring elements</div><div class="card">${Object.entries(data.recurring_elements).map(([k,v])=>`<div class="kv-row"><div class="kv-key">${escHtml(k.replace(/_/g,' '))}</div><div class="kv-val" style="font-size:13px;">${escHtml(String(v))}</div></div>`).join('')}</div>`;
+    wrapper.appendChild(recDiv);
   }
-  el.innerHTML = html;
+  el.appendChild(wrapper);
 }
 
 /* ─── WORLD renderer ─────────────────────────────────── */
@@ -566,8 +889,7 @@ function renderWorld(data, el) {
               <span class="world-section-title">${escHtml(label.charAt(0).toUpperCase()+label.slice(1))}</span>
               <span class="world-chevron" id="chev-${sid}">▶</span>
             </div>
-            <div class="world-section-body" id="${sid}">${renderObj(v,1)}</div>
-          </div>`;
+            <div class="world-section-body" id="${sid}">${renderObj(v,1)}</div></div>`;
         } else {
           out += `<div class="sub-label" style="margin-top:12px;">${escHtml(label)}</div>${renderObj(v,depth+1)}`;
         }
@@ -579,7 +901,7 @@ function renderWorld(data, el) {
     }
     return out;
   }
-  el.innerHTML = renderObj(data, 0);
+  el.innerHTML = renderObj(data,0);
 }
 
 /* ─── TEACHERS renderer ──────────────────────────────── */
@@ -594,8 +916,8 @@ function renderTeachers(data, el) {
         <div class="person-name">${escHtml(t.name)}</div>
         <div class="person-alias">${escHtml(t.hero_name||'')}${t.hero_name?' · ':''}${escHtml(t.role||'')}</div>
         <div class="person-tags">
-          <span class="tag tag-amber">${escHtml(t.quirk||'')}</span>
-          <span class="tag tag-purple">${escHtml(t.quirk_type||'')}</span>
+          <span class="tag tag-gold">${escHtml(t.quirk||'')}</span>
+          <span class="tag tag-primary">${escHtml(t.quirk_type||'')}</span>
         </div>
         ${t.quirk_summary?`<div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(t.quirk_summary)}</div></div>`:''}
         <div class="person-section"><div class="person-section-label">Appearance</div><div class="person-section-body">${escHtml(t.appearance||'')}</div></div>
@@ -618,18 +940,17 @@ function renderVillainCard(v, accentColor) {
   const ssb = v.scaled_stat_block||{};
   const dmn = v.dm_notes||{};
   const dId = 'vd'+uid();
-  const avStyle = accentColor?`background:${accentColor}22;color:${accentColor};`:'';
-  return `<div class="person-card" style="border-left:4px solid ${accentColor||'var(--border)'};">
-    <div class="person-avatar av-villain" style="${avStyle}">${initials(v.name)}</div>
+  const avStyle = accentColor?`background:${accentColor}33;color:${accentColor};`:'';
+  return `<div class="person-card" style="border-left:4px solid ${accentColor||'var(--v-border)'};background:var(--v-surface);border-color:var(--v-border);">
+    <div class="person-avatar" style="${avStyle}">${initials(v.name)}</div>
     <div>
       <div class="person-name">${escHtml(v.name)}</div>
       <div class="person-alias">${v.alias?`"${escHtml(v.alias)}"`:''}</div>
-      <div class="person-role">${escHtml(v.role||'')}</div>
-      ${v.season_1_role?`<div class="season-role">Season 1: ${escHtml(v.season_1_role)}</div>`:''}
+      <div class="person-role" style="color:rgba(220,20,60,0.6);">${escHtml(v.role||'')}</div>
+      ${v.season_1_role?`<div class="season-role" style="border-left-color:var(--v-border);">Season 1: ${escHtml(v.season_1_role)}</div>`:''}
       <div class="person-tags">
         <span class="tag tag-red">${escHtml(v.quirk||'')}</span>
         <span class="tag tag-amber">${escHtml(v.quirk_rarity||'')}</span>
-        <span class="tag tag-purple">${escHtml(v.quirk_type||'')}</span>
       </div>
       ${v.quirk_summary?`<div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(v.quirk_summary)}</div></div>`:''}
       <div class="person-section"><div class="person-section-label">Appearance</div><div class="person-section-body">${escHtml(v.appearance||'')}</div></div>
@@ -637,8 +958,7 @@ function renderVillainCard(v, accentColor) {
       <span class="collapse-btn" onclick="toggleCollapse('${dId}',this)">▶ Combat, stat block &amp; DM notes</span>
       <div class="collapsible" id="${dId}">
         ${v.combat_style?`<div class="person-section"><div class="person-section-label">Combat style</div><div class="person-section-body">${escHtml(v.combat_style)}</div></div>`:''}
-        ${Object.keys(sb).length?`<div class="person-section">
-          <div class="person-section-label">Stat block (full)</div>
+        ${Object.keys(sb).length?`<div class="person-section"><div class="person-section-label">Stat block (full)</div>
           <div class="stat-grid">
             ${sb.level!=null?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${sb.level}</span></div>`:''}
             ${sb.HP!=null?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${sb.HP}</span></div>`:''}
@@ -648,7 +968,7 @@ function renderVillainCard(v, accentColor) {
           ${sb.special_abilities?.length?`<ul style="margin-top:8px;padding-left:16px;">${sb.special_abilities.map(a=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">${escHtml(a)}</li>`).join('')}</ul>`:''}
         </div>`:''}
         ${Object.keys(ssb).length?`<div class="person-section">
-          <div class="person-section-label" style="color:var(--teal-text);">Scaled stat block — Season 1 (Level 6)</div>
+          <div class="person-section-label" style="color:var(--v-crimson);">Scaled block — Season 1</div>
           <div class="stat-grid">
             ${ssb.level!=null?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${ssb.level}</span></div>`:''}
             ${ssb.HP!=null?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${ssb.HP}</span></div>`:''}
@@ -671,17 +991,17 @@ function renderVillains(data, el) {
   let html = '';
   const renderFaction = f => {
     const col = f.colour||'#E24B4A';
-    html += `<div class="card" style="margin-bottom:20px;border-left:4px solid ${col};">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+    html += `<div style="margin-bottom:24px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--v-border);">
         <span style="width:10px;height:10px;border-radius:50%;background:${col};flex-shrink:0;display:inline-block;"></span>
-        <span style="font-size:15px;font-weight:700;">${escHtml(f.name)}</span>
-        ${f.tier_introduced?`<span class="tag tag-purple" style="margin-left:auto;">Introduced Tier ${f.tier_introduced}</span>`:''}
+        <span style="font-size:17px;font-weight:700;color:${col};">${escHtml(f.name)}</span>
+        ${f.tier_introduced?`<span class="tag tag-primary" style="margin-left:auto;background:rgba(123,47,190,0.2);color:#C4A0E8;">Introduced Tier ${f.tier_introduced}</span>`:''}
       </div>
       <div style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">${escHtml(f.description||'')}</div>
-      ${f.structure?`<div class="kv-row"><div class="kv-key">Structure</div><div class="kv-val" style="font-size:12px;">${escHtml(f.structure)}</div></div>`:''}
-      ${f.public_awareness?`<div class="kv-row"><div class="kv-key">Awareness</div><div class="kv-val" style="font-size:12px;">${escHtml(f.public_awareness)}</div></div>`:''}
-    </div>
-    <div class="sub-label" style="color:${col};">${escHtml(f.name)} — Members</div>`;
+      ${f.structure?`<div class="kv-row" style="border-color:var(--v-border);"><div class="kv-key">Structure</div><div class="kv-val" style="font-size:12px;">${escHtml(f.structure)}</div></div>`:''}
+      ${f.public_awareness?`<div class="kv-row" style="border-color:var(--v-border);"><div class="kv-key">Awareness</div><div class="kv-val" style="font-size:12px;">${escHtml(f.public_awareness)}</div></div>`:''}
+    </div>`;
+    html += `<div class="sub-label" style="color:${col};margin-bottom:8px;">${escHtml(f.name)} — Members</div>`;
     for (const v of (f.villains||[])) html += renderVillainCard(v, col);
   };
 
@@ -694,48 +1014,42 @@ function renderVillains(data, el) {
   el.innerHTML = html;
 }
 
-/* ─── TIER 1 detail renderer ─────────────────────────── */
+/* ─── TIER 1 detail ──────────────────────────────────── */
 function renderTier1(data, el) {
-  const ARC_TAGS = ['tag-purple','tag-teal','tag-amber','tag-red'];
+  const ARC_COLORS = ['#1D3461','#1D9E75','#B8860B','#CC2936'];
   let html = '';
-  if (data.dm_overview) {
-    html += `<div class="dm-note" style="margin-bottom:16px;"><strong>DM overview:</strong> ${escHtml(data.dm_overview)}</div>`;
-  }
+  if (data.dm_overview) html += `<div class="dm-note" style="margin-bottom:16px;"><strong>DM overview:</strong> ${escHtml(data.dm_overview)}</div>`;
   for (const [arcIdx, arc] of (data.arcs||[]).entries()) {
-    const aId = uid();
-    html += `<div class="card" style="margin-bottom:14px;">
+    const col = ARC_COLORS[arcIdx%4];
+    html += `<div class="card" style="margin-bottom:14px;border-left:4px solid ${col};">
       <div class="tier-header">
-        <span class="tier-badge ${ARC_TAGS[arcIdx%4]}" style="padding:2px 8px;">Arc ${arcIdx+1}</span>
+        <span class="tier-badge" style="background:${col}22;color:${col};">Arc ${arcIdx+1}</span>
         <span class="tier-title">${escHtml(arc.name)}</span>
         <span class="tier-levels">${escHtml(arc.sessions||'')} session${arc.sessions==='1'?'':arc.sessions?'s':''}</span>
       </div>
       <div class="tier-tone">${escHtml(arc.summary||'')}</div>
       ${arc.dm_setup?`<div class="dm-prep" style="margin-bottom:10px;"><div class="dm-prep-label">DM setup</div><div class="dm-prep-row">${escHtml(arc.dm_setup)}</div></div>`:''}`;
 
-    // Major beats
     if (arc.major_beats?.length) {
       html += `<div class="sub-label">Major beats</div>`;
       for (const beat of arc.major_beats) {
-        const bId = uid();
+        const phId = uid();
         html += `<div class="arc-card">
           <div class="arc-name">${escHtml(beat.name)}</div>
           <div class="arc-desc">${escHtml(beat.description||'')}</div>
           ${beat.dm_notes?`<div class="dm-note" style="margin-top:6px;"><strong>DM:</strong> ${escHtml(beat.dm_notes)}</div>`:''}
-          ${beat.player_hooks && Object.keys(beat.player_hooks).length
-            ? (() => { const phId = uid(); return `<span class="toggle-btn" onclick="toggleList('${phId}',this)">▶ Player hooks (${Object.keys(beat.player_hooks).length})</span>
-               <ul class="toggle-list" id="${phId}">${Object.entries(beat.player_hooks).map(([k,v])=>`<li><strong>${escHtml(k)}:</strong> ${escHtml(v)}</li>`).join('')}</ul>`; })()
-            : ''}
+          ${beat.player_hooks&&Object.keys(beat.player_hooks).length
+            ?`<span class="toggle-btn" onclick="toggleList('${phId}',this)">▶ Player hooks (${Object.keys(beat.player_hooks).length})</span>
+              <ul class="toggle-list" id="${phId}">${Object.entries(beat.player_hooks).map(([k,v])=>`<li><strong>${escHtml(k)}:</strong> ${escHtml(v)}</li>`).join('')}</ul>`:''}
         </div>`;
       }
     }
-    // Minor beats
     if (arc.minor_beats?.length) {
       const mId = uid();
       html += `<div class="sub-label">Minor beats</div>
         <span class="toggle-btn" onclick="toggleList('${mId}',this)">▶ Show all (${arc.minor_beats.length})</span>
         <ul class="toggle-list" id="${mId}">${arc.minor_beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}</ul>`;
     }
-    // NPC interactions
     if (arc.npc_interactions?.length) {
       html += `<div class="sub-label">NPC interactions</div>`;
       for (const npc of arc.npc_interactions) {
@@ -752,12 +1066,11 @@ function renderTier1(data, el) {
         </div>`;
       }
     }
-    // Encounters
     if (arc.encounters?.length) {
       html += `<div class="sub-label">Encounters</div>`;
       for (const enc of arc.encounters) {
         const eId = uid();
-        html += `<div class="arc-card" style="border-left:3px solid var(--red);">
+        html += `<div class="arc-card" style="border-left:3px solid var(--hero-red);">
           <div class="arc-name">${escHtml(enc.name)}</div>
           <span class="tag tag-red">⚔ ${escHtml(enc.enemies||'')}</span>
           ${enc.terrain?`<div class="arc-desc" style="margin-top:5px;"><strong>Terrain:</strong> ${escHtml(enc.terrain)}</div>`:''}
@@ -771,14 +1084,12 @@ function renderTier1(data, el) {
         </div>`;
       }
     }
-    // Foreshadowing
     if (arc.foreshadowing?.length) {
       const fsId = uid();
       html += `<div class="sub-label">Foreshadowing</div>
         <span class="toggle-btn" onclick="toggleList('${fsId}',this)">▶ Seeds (${arc.foreshadowing.length})</span>
         <ul class="toggle-list" id="${fsId}">${arc.foreshadowing.map(f=>`<li>${escHtml(f)}</li>`).join('')}</ul>`;
     }
-    // Class 1-B seeds
     if (arc.class1b_seeds?.length) {
       const cbId = uid();
       html += `<div class="sub-label">Class 1-B seeds</div>
@@ -796,10 +1107,9 @@ function renderClass1B(data, el) {
   let html = '';
   if (data.teacher)     html += `<div class="dm-note" style="margin-bottom:10px;"><strong>Teacher:</strong> ${escHtml(data.teacher)}</div>`;
   if (data.dm_overview) html += `<div class="arc-desc" style="margin-bottom:12px;">${escHtml(data.dm_overview)}</div>`;
-
   if (data.tier1_introduction_guide) {
     const tId = uid();
-    html += `<div class="card" style="margin-bottom:14px;">
+    html += `<div class="card" style="margin-bottom:14px;border-left:4px solid var(--teal);">
       <div class="sub-label" style="margin-top:0;">Tier 1 introduction guide</div>
       <span class="collapse-btn" onclick="toggleCollapse('${tId}',this)">▶ Show per-arc notes</span>
       <div class="collapsible" id="${tId}">`;
@@ -808,7 +1118,6 @@ function renderClass1B(data, el) {
     }
     html += '</div></div>';
   }
-
   html += `<div class="sub-label">Students</div>`;
   for (const s of (data.students||[])) {
     const sb = s.stat_block||{};
@@ -820,7 +1129,7 @@ function renderClass1B(data, el) {
         <div class="person-alias">${escHtml(s.quirk||'')} · ${escHtml(s.quirk_type||'')}</div>
         <div class="person-tags">
           <span class="tag tag-teal">${escHtml(s.quirk||'')}</span>
-          ${s.rival_in_1a?`<span class="tag tag-purple">Rivals: ${escHtml(s.rival_in_1a)}</span>`:''}
+          ${s.rival_in_1a?`<span class="tag tag-primary">Rivals: ${escHtml(s.rival_in_1a)}</span>`:''}
         </div>
         <div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(s.quirk_summary||'')}</div></div>
         <div class="person-section"><div class="person-section-label">Personality</div><div class="person-section-body">${escHtml(s.personality||'')}</div></div>
@@ -830,15 +1139,13 @@ function renderClass1B(data, el) {
         <div class="collapsible" id="${dId}">
           ${s.sports_festival_role?`<div class="person-section"><div class="person-section-label">Sports festival role</div><div class="person-section-body">${escHtml(s.sports_festival_role)}</div></div>`:''}
           ${s.dm_notes?`<div class="dm-note"><strong>DM notes:</strong> ${escHtml(s.dm_notes)}</div>`:''}
-          ${Object.keys(sb).length?`<div class="person-section">
-            <div class="person-section-label">Stat block</div>
+          ${Object.keys(sb).length?`<div class="person-section"><div class="person-section-label">Stat block</div>
             <div class="stat-grid">
               ${sb.level!=null?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${sb.level}</span></div>`:''}
               ${sb.HP!=null?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${sb.HP}</span></div>`:''}
               ${sb.AC!=null?`<div class="stat-chip"><span class="stat-chip-label">AC</span><span class="stat-chip-val">${sb.AC}</span></div>`:''}
               ${STAT_KEYS.map(k=>sb[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${sb[k]}</span></div>`:'').join('')}
-            </div>
-          </div>`:''}
+            </div></div>`:''}
           ${s.signature_moves?.length?`<div class="person-section"><div class="person-section-label">Signature moves</div>
             <ul style="margin-top:4px;padding-left:16px;">${s.signature_moves.map(m=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:3px;">${escHtml(m)}</li>`).join('')}</ul>
           </div>`:''}
@@ -849,7 +1156,7 @@ function renderClass1B(data, el) {
   el.innerHTML = html;
 }
 
-/* ─── Init — load all files at once ──────────────────── */
+/* ─── Init ───────────────────────────────────────────── */
 const FILES = [
   { key:'arc',      url:'CAMPAIGN/arc.json' },
   { key:'tier1',    url:'CAMPAIGN/tier1.json' },
@@ -869,42 +1176,35 @@ const RENDERERS = {
 
 async function init() {
   const results = await Promise.allSettled(
-    FILES.map(f => fetch(f.url, {cache:'no-cache'}).then(r => r.json()).then(d => ({key:f.key,data:d})))
+    FILES.map(f => fetch(f.url,{cache:'no-cache'}).then(r=>r.json()).then(d=>({key:f.key,data:d})))
   );
   document.getElementById('loading').style.display = 'none';
-
   for (const r of results) {
     if (r.status === 'rejected') continue;
-    const {key, data} = r.value;
+    const {key,data} = r.value;
     const sec  = document.getElementById('sec-'+key);
     const body = document.getElementById('body-sec-'+key);
-    if (!sec || !body) continue;
+    if (!sec||!body) continue;
     try {
-      RENDERERS[key]?.(data, body);
+      RENDERERS[key]?.(data,body);
       sec.style.display = '';
     } catch(e) {
-      console.error('Render error for', key, e);
-      body.innerHTML = `<div style="color:var(--red-text);font-size:12px;padding:8px;">Failed to render ${key}: ${e.message}</div>`;
+      console.error('Render error',key,e);
+      body.innerHTML = `<div style="color:var(--hero-red);font-size:12px;padding:8px;">Failed to render ${key}: ${e.message}</div>`;
       sec.style.display = '';
     }
   }
   initScrollSpy();
-
-  // Restore hash-based scroll after render
+  restoreBmState();
   if (location.hash) {
     setTimeout(() => {
-      const el = document.querySelector(location.hash);
-      if (el) {
-        // Auto-open that section if collapsed
-        const sKey = location.hash.replace('#sec-','');
-        const body = document.getElementById('body-sec-'+sKey);
-        if (body && !body.classList.contains('open')) toggleSection('sec-'+sKey);
-        el.scrollIntoView({behavior:'smooth'});
-      }
+      const sKey = location.hash.replace('#sec-','');
+      const body = document.getElementById('body-sec-'+sKey);
+      if (body && !body.classList.contains('open')) toggleSection('sec-'+sKey);
+      document.querySelector(location.hash)?.scrollIntoView({behavior:'smooth'});
     }, 100);
   }
 }
-
 init();
 </script>
 </body>

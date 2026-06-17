@@ -202,6 +202,10 @@
   .enc-ac { display: flex; flex-direction: column; align-items: center; }
   .enc-ac label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
   .enc-ac span { font-size: 16px; font-weight: 700; }
+  .temp-hp-row { display: flex; align-items: center; gap: 5px; margin-top: 4px; }
+  .temp-hp-label { font-size: 9px; font-weight: 700; color: var(--teal-text); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+  .temp-hp-input { width: 46px; padding: 2px 4px; border: 1px solid rgba(14,165,114,0.4); border-radius: 4px; background: var(--surface); color: var(--teal-text); font-size: 11px; font-weight: 700; text-align: center; outline: none; }
+  .temp-hp-input:focus { border-color: var(--teal); }
   .enc-actions { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
   .icon-btn { width: 26px; height: 26px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); color: var(--text-muted); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .icon-btn:hover { color: var(--text); background: var(--surface); }
@@ -971,7 +975,7 @@ function encAddFromRoster() {
   encounter.combatants.push({
     id: encId(), name: c.name, initiative: 0, hp: c.HP || 10, maxHp: c.HP || 10,
     ac: c.AC || 10, conditions: [], notes: '', rosterId: id, isPC: !!c.is_pc,
-    quirk: c.quirk, condOpen: false, editingHp: false, dexMod, team: null
+    quirk: c.quirk, condOpen: false, editingHp: false, dexMod, team: null, tempHp: 0
   });
   sel.value = '';
   encSave(); renderEncounter();
@@ -984,7 +988,7 @@ function encAddCustom() {
   if (!name) { document.getElementById('enc-custom-name').focus(); return; }
   encounter.combatants.push({
     id: encId(), name, initiative: 0, hp, maxHp: hp, ac, conditions: [],
-    notes: '', rosterId: null, isPC: false, quirk: '', condOpen: false, editingHp: false, dexMod: 0, team: null
+    notes: '', rosterId: null, isPC: false, quirk: '', condOpen: false, editingHp: false, dexMod: 0, team: null, tempHp: 0
   });
   document.getElementById('enc-custom-name').value = '';
   document.getElementById('enc-custom-hp').value = '';
@@ -1069,6 +1073,21 @@ function encSetHpDirect(id, val) {
   encSave(); renderEncHpRow(id);
 }
 
+function encSetTempHp(id, val) {
+  const c = encounter.combatants.find(x => x.id === id);
+  if (!c) return;
+  const num = parseInt(val);
+  c.tempHp = isNaN(num) ? 0 : Math.max(0, num);
+  encSave();
+  const inp = document.getElementById('enc-thp-' + id);
+  if (inp) inp.value = c.tempHp;
+  const badge = document.getElementById('tm-thp-badge');
+  if (badge && encounter.combatants[encounter.currentIndex]?.id === id) {
+    badge.textContent = c.tempHp;
+    badge.closest('.tm-stat').style.display = c.tempHp > 0 ? '' : 'none';
+  }
+}
+
 function encToggleCond(id) {
   const c = encounter.combatants.find(x => x.id === id);
   if (!c) return;
@@ -1129,6 +1148,11 @@ function renderEncHpRow(id) {
       <button class="hp-adj-btn heal" onclick="encApplyHeal(${c.id})" title="Apply healing">+</button>
       <input id="enc-heal-inp-${c.id}" type="number" min="1" placeholder="heal" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
         onkeydown="if(event.key==='Enter')encApplyHeal(${c.id})">
+    </div>
+    <div class="temp-hp-row">
+      <span class="temp-hp-label">Temp HP</span>
+      <input class="temp-hp-input" id="enc-thp-${c.id}" type="number" min="0" value="${c.tempHp || 0}"
+        onchange="encSetTempHp(${c.id},this.value)" onkeydown="if(event.key==='Enter')encSetTempHp(${c.id},this.value)">
     </div>`;
 }
 
@@ -1183,6 +1207,11 @@ function renderEncounter() {
           <button class="hp-adj-btn heal" onclick="encApplyHeal(${c.id})" title="Apply healing">+</button>
           <input id="enc-heal-inp-${c.id}" type="number" min="1" placeholder="heal" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
             onkeydown="if(event.key==='Enter')encApplyHeal(${c.id})">
+        </div>
+        <div class="temp-hp-row">
+          <span class="temp-hp-label">Temp HP</span>
+          <input class="temp-hp-input" id="enc-thp-${c.id}" type="number" min="0" value="${c.tempHp || 0}"
+            onchange="encSetTempHp(${c.id},this.value)" onkeydown="if(event.key==='Enter')encSetTempHp(${c.id},this.value)">
         </div>
       </div>
       <div class="enc-actions">
@@ -1298,7 +1327,7 @@ function encAddEnemy() {
       hp: e.hp, maxHp: e.hp, ac: e.ac, conditions: [],
       notes: '', rosterId: null, isPC: false,
       quirk: `CR ${e.cr} · ${e.category}`,
-      condOpen: false, editingHp: false, dexMod: e.dex_mod || 0, team: null
+      condOpen: false, editingHp: false, dexMod: e.dex_mod || 0, team: null, tempHp: 0
     });
   }
   sel.value = '';
@@ -1421,6 +1450,10 @@ function updateTurnModal() {
       <div class="tm-stat-label">Dex Mod</div>
       <div class="tm-stat-val">${c.dexMod >= 0 ? '+' : ''}${c.dexMod}</div>
     </div>` : ''}
+    <div class="tm-stat" style="${(c.tempHp || 0) === 0 ? 'display:none' : ''}">
+      <div class="tm-stat-label" style="color:var(--teal-text)">Temp HP</div>
+      <div class="tm-stat-val" id="tm-thp-badge" style="color:var(--teal)">${c.tempHp || 0}</div>
+    </div>
   `;
 
   // Conditions

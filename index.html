@@ -7,27 +7,16 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #f8f7f5; --surface: #ffffff; --surface2: #f2f1ef;
-    --border: rgba(0,0,0,0.10); --border-strong: rgba(0,0,0,0.18);
-    --text: #1a1a1a; --text-muted: #5f5e5a; --text-dim: #9a9890;
-    --purple: #534AB7; --purple-light: #EEEDFE; --purple-text: #3C3489;
-    --teal: #1D9E75; --teal-light: #E1F5EE; --teal-text: #085041;
-    --red: #E24B4A; --red-light: #FCEBEB; --red-text: #A32D2D;
-    --amber: #BA7517; --amber-light: #FAEEDA; --amber-text: #633806;
-    --green: #639922; --green-light: #EAF3DE; --green-text: #27500A;
-    --radius: 10px; --radius-lg: 16px;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1a1a18; --surface: #242422; --surface2: #2e2e2c;
-      --border: rgba(255,255,255,0.10); --border-strong: rgba(255,255,255,0.18);
-      --text: #e8e7e4; --text-muted: #a8a7a3; --text-dim: #6a6965;
-      --purple-light: #26215C; --purple-text: #AFA9EC;
-      --teal-light: #04342C; --teal-text: #9FE1CB;
-      --red-light: #501313; --red-text: #F09595;
-      --amber-light: #412402; --amber-text: #FAC775;
-      --green-light: #173404; --green-text: #C0DD97;
-    }
+    --bg: #0C1017; --surface: #111923; --surface2: #18222E;
+    --border: rgba(255,255,255,0.07); --border-strong: rgba(255,255,255,0.14);
+    --text: #E8EDF3; --text-muted: #8A9BB0; --text-dim: #3E5068;
+    --purple: #E8A020; --purple-light: rgba(232,160,32,0.13); --purple-text: #F5C842;
+    --teal: #0EA572; --teal-light: rgba(14,165,114,0.13); --teal-text: #5FDBAA;
+    --red: #EF4444; --red-light: rgba(239,68,68,0.13); --red-text: #FCA5A5;
+    --amber: #F59E0B; --amber-light: rgba(245,158,11,0.13); --amber-text: #FDE68A;
+    --green: #22C55E; --green-light: rgba(34,197,94,0.13); --green-text: #86EFAC;
+    --radius: 10px; --radius-lg: 14px;
+    --gold-glow: rgba(232,160,32,0.15);
   }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -37,30 +26,41 @@
 
   /* ── Header ── */
   header {
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    padding: 20px 48px 18px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    position: relative;
   }
-  .header-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+  header::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--purple) 0%, rgba(232,160,32,0.2) 50%, transparent 100%);
+  }
+  .header-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; gap: 16px; padding: 18px 0; }
   .header-icon {
-    width: 44px; height: 44px; border-radius: 12px;
-    background: var(--purple-light); display: flex; align-items: center;
-    justify-content: center; font-size: 22px; flex-shrink: 0;
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--purple-light); border: 1px solid rgba(232,160,32,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+    box-shadow: 0 0 16px var(--gold-glow);
   }
   .header-text {}
-  .header-label { font-size: 11px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
-  header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+  .header-label {
+    font-size: 10px; font-weight: 700; color: var(--purple); letter-spacing: 0.14em;
+    text-transform: uppercase; margin-bottom: 1px;
+  }
+  header h1 { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
 
   /* ── Content ── */
   main { max-width: 960px; margin: 0 auto; padding: 32px 48px 60px; }
 
   .section-title {
-    font-size: 11px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em;
+    font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.12em;
     text-transform: uppercase; margin-bottom: 12px; margin-top: 32px;
     display: flex; align-items: center; gap: 8px;
   }
   .section-title::before {
     content: ''; display: block; width: 3px; height: 12px;
-    border-radius: 2px; background: var(--purple); opacity: 0.5;
+    border-radius: 1px; background: var(--purple);
   }
   .section-title:first-child { margin-top: 0; }
 
@@ -72,7 +72,7 @@
 
   @media (max-width: 640px) {
     main { padding: 20px 16px 48px; }
-    header { padding: 16px 16px 14px; }
+    header { padding: 0 16px; }
     .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; }
   }
   @media (max-width: 900px) {
@@ -88,15 +88,15 @@
     cursor: pointer;
   }
   .card:hover {
-    border-color: var(--purple); transform: translateY(-1px);
-    box-shadow: 0 4px 20px rgba(83,74,183,0.10);
+    border-color: rgba(232,160,32,0.5); transform: translateY(-1px);
+    box-shadow: 0 4px 24px var(--gold-glow);
   }
   .card-icon {
-    width: 36px; height: 36px; border-radius: 9px;
+    width: 36px; height: 36px; border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
     font-size: 18px; margin-bottom: 10px;
   }
-  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .card-title { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
   .card-desc { font-size: 12px; color: var(--text-muted); line-height: 1.55; }
   .card-meta { font-size: 11px; color: var(--text-dim); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); }
 
@@ -110,14 +110,19 @@
   /* ── Hero card (full width) ── */
   .card-hero {
     display: flex; gap: 18px; align-items: center;
-    padding: 20px 24px;
-    background: linear-gradient(135deg, var(--surface) 0%, var(--purple-light) 200%);
+    padding: 22px 26px;
+    background: linear-gradient(120deg, var(--surface) 0%, rgba(232,160,32,0.06) 100%);
+    border-color: rgba(232,160,32,0.2);
   }
-  .card-hero .card-icon { width: 48px; height: 48px; font-size: 24px; flex-shrink: 0; margin-bottom: 0; }
+  .card-hero .card-icon {
+    width: 50px; height: 50px; font-size: 24px; flex-shrink: 0; margin-bottom: 0;
+    box-shadow: 0 0 20px var(--gold-glow);
+    border: 1px solid rgba(232,160,32,0.3);
+  }
   .card-hero-body { flex: 1; min-width: 0; }
-  .card-hero .card-title { font-size: 16px; }
+  .card-hero .card-title { font-size: 17px; font-weight: 800; }
   .card-hero-arrow { font-size: 18px; color: var(--text-dim); flex-shrink: 0; transition: transform 0.15s, color 0.15s; }
-  .card-hero:hover .card-hero-arrow { color: var(--purple); transform: translateX(3px); }
+  .card-hero:hover .card-hero-arrow { color: var(--purple); transform: translateX(4px); }
 
   /* ── Divider ── */
   .divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
@@ -128,7 +133,7 @@
   <div class="header-inner">
     <div class="header-icon">⚡</div>
     <div class="header-text">
-      <div class="header-label">DM Dashboard</div>
+      <div class="header-label">U.A. High School — DM Command</div>
       <h1>My Hero Academia D&amp;D</h1>
     </div>
   </div>
@@ -174,9 +179,9 @@
     </a>
     <a class="card" href="campaign.html?file=villains">
       <div class="card-icon icon-red">⛓</div>
-      <div class="card-title">Villains — The Chain</div>
-      <div class="card-desc">The villain organisation, leadership profiles, stat blocks, and arc roles</div>
-      <div class="card-meta">4 villains · Undertow, Flashpoint, Riddle, Kuma</div>
+      <div class="card-title">Villains</div>
+      <div class="card-desc">Three villain factions — leadership profiles, stat blocks, and arc roles</div>
+      <div class="card-meta">The Chain · Null Signal · Fracture</div>
     </a>
   </div>
 

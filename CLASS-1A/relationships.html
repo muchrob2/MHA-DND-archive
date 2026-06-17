@@ -466,6 +466,11 @@
           <div class="tm-conditions" id="tm-conditions"></div>
           <div id="tm-attack-zone" class="tm-zone">
             <div class="tm-zone-title">Attack</div>
+            <div id="tm-target-select-row" style="display:none;margin-bottom:8px;">
+              <select id="tm-target-select" style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:12px;font-weight:600;outline:none;cursor:pointer;">
+                <option value="">— random target —</option>
+              </select>
+            </div>
             <button id="tm-roll-btn" onclick="modalRollAttack()">⚔ Roll Attack</button>
             <div id="tm-roll-result"></div>
           </div>
@@ -1530,6 +1535,27 @@ function updateTurnModal() {
   // Attack zone
   document.getElementById('tm-roll-btn').disabled = isDead;
   document.getElementById('tm-roll-btn').style.opacity = isDead ? '0.4' : '1';
+
+  // Target selector — show for PCs so they can pick manually
+  const targetRow = document.getElementById('tm-target-select-row');
+  const targetSel = document.getElementById('tm-target-select');
+  if (c.isPC) {
+    const validTargets = combatants.filter(t => {
+      if (t.id === c.id) return false;
+      if (t.hp === 0) return false;
+      if (c.team !== null && c.team !== undefined &&
+          t.team !== null && t.team !== undefined &&
+          t.team === c.team) return false;
+      return true;
+    });
+    targetSel.innerHTML = '<option value="">— random target —</option>' +
+      validTargets.map(t => `<option value="${t.id}">${escHtml(t.name)} (HP ${t.hp}/${t.maxHp} · AC ${t.ac})</option>`).join('');
+    targetRow.style.display = validTargets.length ? 'block' : 'none';
+  } else {
+    targetRow.style.display = 'none';
+    targetSel.value = '';
+  }
+
   renderModalAttackResult();
 
   // Next button label: last combatant wraps to next round
@@ -1553,9 +1579,12 @@ function modalRollAttack() {
   if (!targets.length) {
     modalAttackResult = { attacker: c.name, target: null, roll: null, ac: null };
   } else {
-    const target = targets[Math.floor(Math.random() * targets.length)];
+    const selectedId = c.isPC ? document.getElementById('tm-target-select').value : '';
+    const target = selectedId
+      ? targets.find(t => t.id === selectedId) || targets[Math.floor(Math.random() * targets.length)]
+      : targets[Math.floor(Math.random() * targets.length)];
     const roll = Math.floor(Math.random() * 20) + 1;
-    modalAttackResult = { attacker: c.name, target: target.name, roll, ac: target.ac };
+    modalAttackResult = { attacker: c.name, target: target.name, targetId: target.id, roll, ac: target.ac };
     addAttackLog(modalAttackResult);
   }
   renderModalAttackResult();
@@ -1579,6 +1608,13 @@ function renderModalAttackResult() {
     <span class="tm-result-target">${escHtml(e.target)}</span>
     <span class="${rollClass}">d20: ${e.roll} — ${label}</span>
     <span style="font-size:11px;color:var(--text-dim);">${crit?'Critical hit!':fumble?'Fumble!':hit?`hits (AC ${e.ac})`:`misses (AC ${e.ac})`}</span>
+  </div>
+  <div class="tm-target-hp-row" style="margin-top:6px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+    <span style="font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:0.07em;text-transform:uppercase;">Apply to ${escHtml(e.target)}:</span>
+    <input class="tm-hp-inp" id="tm-target-hp-inp" type="number" min="1" placeholder="amt" title="Amount" style="width:54px;">
+    <button class="tm-dmg-btn dmg" onclick="tmApplyHpToTarget('dmg')" title="Deal damage to target">− Dmg</button>
+    <button class="tm-dmg-btn heal" onclick="tmApplyHpToTarget('heal')" title="Heal target">+ Heal</button>
+    <span id="tm-target-hp-feedback" style="font-size:11px;color:var(--text-dim);margin-left:2px;"></span>
   </div>`;
 }
 
@@ -1645,6 +1681,32 @@ function tmApplyHp(mode) {
   document.getElementById('tm-hp-inp').value = '';
 
   if (c.hp === 0) document.getElementById('tm-dead-badge').style.display = 'inline-block';
+}
+
+function tmApplyHpToTarget(mode) {
+  if (!modalAttackResult?.targetId) return;
+  const t = encounter.combatants.find(x => x.id === modalAttackResult.targetId);
+  if (!t) return;
+  const inp = document.getElementById('tm-target-hp-inp');
+  const val = parseInt(inp?.value);
+  const fb = document.getElementById('tm-target-hp-feedback');
+  if (!val || val <= 0) { if (fb) fb.textContent = 'Enter an amount'; return; }
+
+  const before = t.hp;
+  if (mode === 'dmg') {
+    t.hp = Math.max(0, t.hp - val);
+  } else {
+    t.hp = Math.min(t.maxHp, t.hp + val);
+  }
+  const delta = t.hp - before;
+  encSave();
+  renderEncHpRow(t.id);
+
+  if (fb) {
+    fb.style.color = delta < 0 ? 'var(--red-text)' : 'var(--green-text)';
+    fb.textContent = delta < 0 ? `−${Math.abs(delta)} → ${t.hp} HP` : delta > 0 ? `+${delta} → ${t.hp} HP` : 'No change';
+  }
+  if (inp) inp.value = '';
 }
 
 /* ── Export / Import ──────────────────────────────────── */

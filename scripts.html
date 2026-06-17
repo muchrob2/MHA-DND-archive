@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DM Scripts — MHA D&D</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0C1017; --surface: #111923; --surface2: #18222E;
+    --border: rgba(255,255,255,0.07); --border-strong: rgba(255,255,255,0.14);
+    --text: #E8EDF3; --text-muted: #8A9BB0; --text-dim: #3E5068;
+    --gold: #E8A020; --gold-light: rgba(232,160,32,0.13); --gold-text: #F5C842;
+    --teal: #0EA572; --teal-light: rgba(14,165,114,0.13); --teal-text: #5FDBAA;
+    --red: #EF4444; --red-light: rgba(239,68,68,0.13); --red-text: #FCA5A5;
+    --radius: 10px; --radius-lg: 14px;
+    --nav-h: 48px;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+
+  /* ── Nav ── */
+  #topnav {
+    position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0;
+  }
+  #back-btn {
+    display: flex; align-items: center; gap: 6px; padding: 0 16px;
+    font-size: 13px; color: var(--text-muted); text-decoration: none;
+    border-right: 1px solid var(--border); height: 100%; white-space: nowrap; flex-shrink: 0;
+  }
+  #back-btn:hover { color: var(--gold-text); background: var(--gold-light); }
+  .nav-title { padding: 0 16px; font-size: 13px; font-weight: 700; color: var(--text); flex: 1; }
+  .nav-right { display: flex; align-items: center; gap: 8px; padding: 0 16px; }
+  .nav-btn {
+    padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border-strong); background: var(--surface2); color: var(--text-muted);
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+  }
+  .nav-btn:hover { color: var(--text); border-color: rgba(232,160,32,0.4); }
+  .nav-btn.active, .nav-btn.save-btn:hover { background: var(--gold-light); color: var(--gold-text); border-color: rgba(232,160,32,0.5); }
+  .nav-btn.save-btn { background: rgba(14,165,114,0.12); color: var(--teal-text); border-color: rgba(14,165,114,0.25); }
+  .nav-btn.save-btn:hover { background: rgba(14,165,114,0.2); }
+  .nav-saved { font-size: 11px; color: var(--teal-text); opacity: 0; transition: opacity 0.4s; }
+  .nav-saved.show { opacity: 1; }
+
+  /* ── Layout ── */
+  #layout { display: flex; max-width: 1100px; margin: 0 auto; min-height: calc(100vh - var(--nav-h)); }
+
+  /* ── Sidebar ── */
+  #sidebar {
+    width: 220px; flex-shrink: 0; border-right: 1px solid var(--border);
+    padding: 20px 0; position: sticky; top: var(--nav-h); height: calc(100vh - var(--nav-h));
+    overflow-y: auto;
+  }
+  .cat-header {
+    display: flex; align-items: center; gap: 8px; padding: 6px 18px;
+    font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.1em;
+    text-transform: uppercase; margin-top: 16px;
+  }
+  .cat-header:first-child { margin-top: 0; }
+  .cat-icon { font-size: 13px; }
+  .script-link {
+    display: block; padding: 7px 18px; font-size: 12px; color: var(--text-muted);
+    cursor: pointer; text-decoration: none; transition: background 0.1s, color 0.1s;
+    border-left: 2px solid transparent; line-height: 1.4;
+  }
+  .script-link:hover { color: var(--text); background: var(--surface2); }
+  .script-link.active { color: var(--gold-text); border-left-color: var(--gold); background: var(--gold-light); }
+
+  /* ── Main panel ── */
+  #panel { flex: 1; min-width: 0; padding: 32px 40px 80px; }
+
+  /* Read mode */
+  .script-block { display: none; }
+  .script-block.active { display: block; }
+  .script-when {
+    display: inline-block; font-size: 11px; color: var(--gold-text); background: var(--gold-light);
+    border: 1px solid rgba(232,160,32,0.25); border-radius: 6px; padding: 3px 10px;
+    margin-bottom: 16px; font-weight: 500;
+  }
+  .script-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .script-category-label { font-size: 11px; color: var(--text-dim); margin-bottom: 20px; }
+  .script-body {
+    font-size: 17px; line-height: 1.85; color: var(--text); white-space: pre-wrap;
+    font-family: Georgia, "Times New Roman", serif; letter-spacing: 0.01em;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 28px 32px; min-height: 120px;
+  }
+  .script-actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .action-btn {
+    padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border-strong); background: var(--surface2); color: var(--text-muted);
+    transition: background 0.1s, color 0.1s;
+  }
+  .action-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+  .action-btn.copy-btn:hover { color: var(--teal-text); border-color: rgba(14,165,114,0.4); background: var(--teal-light); }
+
+  /* Edit mode */
+  .edit-section { margin-top: 20px; }
+  .edit-label { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .edit-input {
+    width: 100%; background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: var(--radius); color: var(--text); font-size: 13px; padding: 9px 12px;
+    outline: none; font-family: inherit; transition: border-color 0.15s;
+  }
+  .edit-input:focus { border-color: rgba(232,160,32,0.5); box-shadow: 0 0 0 2px var(--gold-light); }
+  .edit-textarea {
+    width: 100%; background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: var(--radius); color: var(--text); font-size: 15px; padding: 16px;
+    outline: none; font-family: Georgia, "Times New Roman", serif; line-height: 1.8;
+    min-height: 280px; resize: vertical; transition: border-color 0.15s; letter-spacing: 0.01em;
+  }
+  .edit-textarea:focus { border-color: rgba(232,160,32,0.5); }
+  .edit-hint { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+  /* Add / delete */
+  .manage-bar { display: flex; gap: 8px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .danger-btn { color: var(--red-text) !important; border-color: rgba(239,68,68,0.25) !important; }
+  .danger-btn:hover { background: var(--red-light) !important; }
+
+  /* Add script form */
+  #add-form { display: none; background: var(--surface2); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 24px; margin-top: 20px; }
+  #add-form.open { display: block; }
+  .add-form-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+  .form-row { margin-bottom: 14px; }
+  .form-row label { display: block; font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+  select.edit-input { cursor: pointer; }
+  .form-actions { display: flex; gap: 8px; margin-top: 16px; }
+
+  /* Empty state */
+  #empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 40px; text-align: center; color: var(--text-dim); }
+  #empty-state .es-icon { font-size: 40px; margin-bottom: 16px; }
+  #empty-state h2 { font-size: 16px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; }
+
+  /* Copy flash */
+  .copy-flash { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--teal); color: #fff; font-size: 12px; font-weight: 600; padding: 8px 20px; border-radius: 8px; pointer-events: none; opacity: 0; transition: opacity 0.3s; z-index: 300; }
+  .copy-flash.show { opacity: 1; }
+
+  @media (max-width: 640px) {
+    #sidebar { display: none; }
+    #panel { padding: 20px 16px 60px; }
+    .script-body { padding: 20px; font-size: 15px; }
+    .nav-title { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">DM Scripts</span>
+  <div class="nav-right">
+    <span class="nav-saved" id="saved-notice">Saved ✓</span>
+    <button class="nav-btn" id="edit-toggle-btn" onclick="toggleEditMode()">✏️ Edit</button>
+    <button class="nav-btn save-btn" id="save-btn" onclick="saveAll()" style="display:none;">💾 Save</button>
+    <button class="nav-btn" id="add-script-btn" onclick="toggleAddForm()" style="display:none;">+ Add Script</button>
+  </div>
+</nav>
+
+<div id="layout">
+  <nav id="sidebar" id="script-sidebar"></nav>
+  <main id="panel">
+    <div id="empty-state">
+      <div class="es-icon">📜</div>
+      <h2>Loading scripts…</h2>
+    </div>
+  </main>
+</div>
+
+<!-- Add script form (injected into panel) -->
+<div id="add-form">
+  <div class="add-form-title">New Script</div>
+  <div class="form-row"><label>Title</label><input class="edit-input" id="new-title" type="text" placeholder="Script title" autocomplete="off"></div>
+  <div class="form-row"><label>When to use</label><input class="edit-input" id="new-when" type="text" placeholder="e.g. Read at session start" autocomplete="off"></div>
+  <div class="form-row"><label>Category</label><select class="edit-input" id="new-cat"></select></div>
+  <div class="form-row"><label>Script text</label><textarea class="edit-textarea" id="new-body" placeholder="Write your script here…" style="min-height:160px;"></textarea></div>
+  <div class="form-actions">
+    <button class="action-btn" onclick="submitAddForm()">Add Script</button>
+    <button class="action-btn" onclick="toggleAddForm()">Cancel</button>
+  </div>
+</div>
+
+<div class="copy-flash" id="copy-flash">Copied to clipboard</div>
+
+<script>
+const LS_KEY = 'mha-scripts-v1';
+let data = null;
+let editMode = false;
+let activeScriptId = null;
+
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function uid() { return 'sc_'+Math.random().toString(36).slice(2,8); }
+
+/* ── Load ────────────────────────────────────────────── */
+async function init() {
+  const saved = localStorage.getItem(LS_KEY);
+  if (saved) {
+    try { data = JSON.parse(saved); } catch {}
+  }
+  if (!data) {
+    const res = await fetch('CAMPAIGN/scripts.json', {cache:'no-cache'});
+    data = await res.json();
+  }
+  render();
+  // Auto-select first script
+  const first = data.categories?.[0]?.scripts?.[0];
+  if (first) showScript(first.id);
+}
+
+/* ── Save ────────────────────────────────────────────── */
+function saveAll() {
+  if (editMode) flushEdits();
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+  const notice = document.getElementById('saved-notice');
+  notice.classList.add('show');
+  setTimeout(() => notice.classList.remove('show'), 2000);
+}
+
+/* ── Render sidebar + panel shells ───────────────────── */
+function render() {
+  const sidebar = document.getElementById('sidebar') || document.querySelector('#script-sidebar');
+  const sideEl  = document.getElementById('sidebar');
+  const panel   = document.getElementById('panel');
+
+  // Sidebar
+  let sHtml = '';
+  for (const cat of (data.categories||[])) {
+    sHtml += `<div class="cat-header"><span class="cat-icon">${escHtml(cat.icon||'')}</span>${escHtml(cat.label)}</div>`;
+    for (const sc of (cat.scripts||[])) {
+      sHtml += `<a class="script-link" id="link-${escHtml(sc.id)}" onclick="showScript('${escHtml(sc.id)}')">${escHtml(sc.title)}</a>`;
+    }
+  }
+  sideEl.innerHTML = sHtml;
+
+  // Panel: create all script blocks (hidden by default)
+  let pHtml = '';
+  for (const cat of (data.categories||[])) {
+    for (const sc of (cat.scripts||[])) {
+      pHtml += buildScriptBlock(sc, cat.label);
+    }
+  }
+  panel.innerHTML = pHtml;
+}
+
+function buildScriptBlock(sc, catLabel) {
+  return `<div class="script-block" id="block-${escHtml(sc.id)}">
+    <div class="script-category-label">${escHtml(catLabel||'')}</div>
+    <div class="script-title" id="title-disp-${escHtml(sc.id)}">${escHtml(sc.title)}</div>
+    <div class="script-when" id="when-disp-${escHtml(sc.id)}">${escHtml(sc.when||'')}</div>
+
+    <!-- Read mode -->
+    <div id="read-${escHtml(sc.id)}">
+      <div class="script-body" id="body-disp-${escHtml(sc.id)}">${escHtml(sc.body||'')}</div>
+      <div class="script-actions">
+        <button class="action-btn copy-btn" onclick="copyScript('${escHtml(sc.id)}')">📋 Copy</button>
+      </div>
+    </div>
+
+    <!-- Edit mode (hidden by default) -->
+    <div id="edit-${escHtml(sc.id)}" style="display:none;">
+      <div class="edit-section">
+        <div class="edit-label">Title</div>
+        <input class="edit-input" id="ed-title-${escHtml(sc.id)}" type="text" value="${escHtml(sc.title)}" autocomplete="off">
+      </div>
+      <div class="edit-section">
+        <div class="edit-label">When to use</div>
+        <input class="edit-input" id="ed-when-${escHtml(sc.id)}" type="text" value="${escHtml(sc.when||'')}" autocomplete="off">
+        <div class="edit-hint">Shown as a reminder cue above the script.</div>
+      </div>
+      <div class="edit-section">
+        <div class="edit-label">Script text</div>
+        <textarea class="edit-textarea" id="ed-body-${escHtml(sc.id)}">${escHtml(sc.body||'')}</textarea>
+        <div class="edit-hint">Write naturally — line breaks are preserved.</div>
+      </div>
+      <div class="manage-bar">
+        <button class="action-btn danger-btn" onclick="deleteScript('${escHtml(sc.id)}')">🗑 Delete this script</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── Show / activate a script ────────────────────────── */
+function showScript(id) {
+  if (activeScriptId && editMode) flushEdits(activeScriptId);
+
+  document.querySelectorAll('.script-block').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.script-link').forEach(l => l.classList.remove('active'));
+
+  const block = document.getElementById('block-'+id);
+  const link  = document.getElementById('link-'+id);
+  if (block) { block.classList.add('active'); block.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+  if (link)  { link.classList.add('active'); link.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+
+  activeScriptId = id;
+  if (editMode) applyEditMode(id);
+}
+
+/* ── Edit mode toggle ────────────────────────────────── */
+function toggleEditMode() {
+  editMode = !editMode;
+  const btn       = document.getElementById('edit-toggle-btn');
+  const saveBtn   = document.getElementById('save-btn');
+  const addBtn    = document.getElementById('add-script-btn');
+  btn.textContent = editMode ? '👁 Read' : '✏️ Edit';
+  btn.classList.toggle('active', editMode);
+  saveBtn.style.display  = editMode ? '' : 'none';
+  addBtn.style.display   = editMode ? '' : 'none';
+  if (!editMode && document.getElementById('add-form').classList.contains('open')) toggleAddForm();
+
+  if (editMode) {
+    if (activeScriptId) applyEditMode(activeScriptId);
+  } else {
+    if (activeScriptId) { flushEdits(activeScriptId); applyReadMode(activeScriptId); }
+  }
+}
+
+function applyEditMode(id) {
+  document.getElementById('read-'+id).style.display = 'none';
+  document.getElementById('edit-'+id).style.display = '';
+}
+function applyReadMode(id) {
+  document.getElementById('read-'+id).style.display = '';
+  document.getElementById('edit-'+id).style.display = 'none';
+}
+
+/* Flush input values back to data + update display elements */
+function flushEdits(id) {
+  id = id || activeScriptId;
+  if (!id) return;
+  const titleEl = document.getElementById('ed-title-'+id);
+  const whenEl  = document.getElementById('ed-when-'+id);
+  const bodyEl  = document.getElementById('ed-body-'+id);
+  if (!titleEl) return;
+  const title = titleEl.value;
+  const when  = whenEl.value;
+  const body  = bodyEl.value;
+
+  // Update data
+  for (const cat of (data.categories||[])) {
+    const sc = (cat.scripts||[]).find(s => s.id === id);
+    if (sc) { sc.title = title; sc.when = when; sc.body = body; break; }
+  }
+  // Update display elements
+  const td = document.getElementById('title-disp-'+id);
+  const wd = document.getElementById('when-disp-'+id);
+  const bd = document.getElementById('body-disp-'+id);
+  const lk = document.getElementById('link-'+id);
+  if (td) td.textContent = title;
+  if (wd) wd.textContent = when;
+  if (bd) bd.textContent = body;
+  if (lk) lk.textContent = title;
+}
+
+/* ── Copy ────────────────────────────────────────────── */
+function copyScript(id) {
+  const sc = findScript(id);
+  if (!sc) return;
+  navigator.clipboard.writeText(sc.body||'').then(() => {
+    const f = document.getElementById('copy-flash');
+    f.classList.add('show');
+    setTimeout(() => f.classList.remove('show'), 1800);
+  });
+}
+
+/* ── Delete ──────────────────────────────────────────── */
+function deleteScript(id) {
+  if (!confirm('Delete this script? This cannot be undone.')) return;
+  for (const cat of (data.categories||[])) {
+    const idx = (cat.scripts||[]).findIndex(s => s.id === id);
+    if (idx > -1) { cat.scripts.splice(idx,1); break; }
+  }
+  render();
+  saveAll();
+  const first = data.categories?.[0]?.scripts?.[0];
+  if (first) showScript(first.id);
+  if (editMode) { /* re-apply edit mode UI after re-render */ }
+}
+
+/* ── Add script ──────────────────────────────────────── */
+function toggleAddForm() {
+  const form = document.getElementById('add-form');
+  const panel = document.getElementById('panel');
+  const open = form.classList.toggle('open');
+  if (open) {
+    // Populate category dropdown
+    const sel = document.getElementById('new-cat');
+    sel.innerHTML = (data.categories||[]).map(c => `<option value="${escHtml(c.id)}">${escHtml(c.label)}</option>`).join('');
+    document.getElementById('new-title').value = '';
+    document.getElementById('new-when').value  = '';
+    document.getElementById('new-body').value  = '';
+    panel.appendChild(form);
+    document.getElementById('new-title').focus();
+  }
+}
+function submitAddForm() {
+  const title = document.getElementById('new-title').value.trim();
+  const when  = document.getElementById('new-when').value.trim();
+  const catId = document.getElementById('new-cat').value;
+  const body  = document.getElementById('new-body').value.trim();
+  if (!title || !body) { alert('Title and script text are required.'); return; }
+  const sc = { id: uid(), title, when, body };
+  const cat = (data.categories||[]).find(c => c.id === catId);
+  if (cat) cat.scripts.push(sc);
+  else if (data.categories?.length) data.categories[0].scripts.push(sc);
+  toggleAddForm();
+  render();
+  saveAll();
+  showScript(sc.id);
+  if (editMode) applyEditMode(sc.id);
+}
+
+/* ── Helpers ─────────────────────────────────────────── */
+function findScript(id) {
+  for (const cat of (data.categories||[])) {
+    const sc = (cat.scripts||[]).find(s => s.id === id);
+    if (sc) return sc;
+  }
+  return null;
+}
+
+init();
+</script>
+</body>
+</html>

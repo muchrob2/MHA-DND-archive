@@ -1,0 +1,160 @@
+{
+  "categories": [
+    {
+      "id": "session_open",
+      "label": "Session Opening",
+      "icon": "🎬",
+      "scripts": [
+        {
+          "id": "cold_open",
+          "title": "Cold Open",
+          "when": "Read before anyone sits down, sets the tone",
+          "body": "U.A. High School. The most prestigious hero training institution in Japan. You are its newest students — Class 1-A, Hero Course. You are fifteen years old. Most of you have never been in a real fight. All of you have a power that makes you dangerous.\n\nOshiro Daikichi has read every one of your files. He is not impressed. He is waiting to be."
+        },
+        {
+          "id": "previously_on",
+          "title": "Previously on Class 1-A…",
+          "when": "Read at the start of every session after the first",
+          "body": "Last time: [RECAP HERE]\n\nYou are still first-year students. You are still alive. Murano city is still standing. Whether that's to your credit or your luck — you haven't decided yet."
+        },
+        {
+          "id": "session_rules_reminder",
+          "title": "Table Rules Reminder",
+          "when": "Optional — use if needed at session start",
+          "body": "Quick reminders before we go: quirk use is free outside of significant physical effort unless otherwise stated. Describe what your character does, not just the mechanic. If you're not sure if something is possible, ask — I'll tell you if it needs a roll. We play to find out what happens, not to win."
+        }
+      ]
+    },
+    {
+      "id": "arc_openers",
+      "label": "Arc Openers",
+      "icon": "📖",
+      "scripts": [
+        {
+          "id": "entrance_exam_open",
+          "title": "The Entrance Exam",
+          "when": "Session 1 — Oshiro addresses the class before the exam begins",
+          "body": "You are standing in a briefing room at U.A. High School. Around you are nineteen other people you do not know. At the front of the room is a man who looks like he has been awake for thirty-six hours and is angry about it.\n\nHe says: 'I am Oshiro Daikichi. I will be your homeroom teacher if you pass today's assessment. The exercise is simple: you will enter a simulated urban disaster zone. There are civilians — some real, some not. There are threats. There is no fixed objective. I want to see what you do when nobody tells you what to do.\n\nYou have ten minutes. Questions?'\n\nHe does not pause for questions. He leaves the room."
+        },
+        {
+          "id": "sports_festival_open",
+          "title": "The Sports Festival — Opening Ceremony",
+          "when": "First session of the Sports Festival arc — read as the ceremony begins",
+          "body": "The U.A. Sports Festival is broadcast live to every screen in Japan. Forty thousand people are in the stands. You are standing in the tunnel. You can hear the crowd.\n\nThe announcer's voice echoes down the concrete: 'These are the students you've been waiting for. Class 1-A and Class 1-B — the best young quirk users in the country. Today we find out who's actually good and who just tested well.'\n\nThe gates open. The light hits you. The noise is physical.\n\nThis is the part where you either go quiet or go loud. Neither is wrong."
+        },
+        {
+          "id": "fracture_problem_open",
+          "title": "The Fracture Problem",
+          "when": "Opening scene — news broadcast the class sees in the common room",
+          "body": "The common room television is on. The news anchor looks uncomfortable.\n\n'A demonstration outside the Hero Commission's Murano district office has escalated this afternoon. A group identifying themselves as Fracture — a civil-rights organisation advocating for unlicensed quirk users — has refused dispersal orders. Three support heroes have attempted to intervene. All three have been restrained without injury, according to Fracture's own broadcast.\n\nThe group's spokesperson, who goes by the name Shard, has stated: the demonstration will end when someone official agrees to talk to them.'\n\nOshiro walks in. He looks at the screen. He looks at you.\n\n'Get your gear.'"
+        },
+        {
+          "id": "convergence_open",
+          "title": "Convergence — The Port District",
+          "when": "Opening of the Convergence arc — arriving at Murano port",
+          "body": "The port district at night. Container yards, loading cranes, the smell of salt water and diesel. The tip came in two hours ago: suspected Chain operation, warehouse seven, south dock.\n\nOshiro dropped you at the perimeter. He said: 'Observe first. Three minutes minimum. Then you make a decision.' He didn't say what the decision was.\n\nYou are standing in the dark between two shipping containers. Something is happening in that warehouse. You can hear it — machinery, voices, something that doesn't sound like cargo.\n\nYou have been here for ninety seconds."
+        }
+      ]
+    },
+    {
+      "id": "npc_voice",
+      "label": "NPC Voices",
+      "icon": "🎭",
+      "scripts": [
+        {
+          "id": "oshiro_voice",
+          "title": "Oshiro Daikichi — Voice & Manner",
+          "when": "Reference before playing Oshiro in any scene",
+          "body": "MANNER: Short sentences. No small talk. Looks at people for longer than is comfortable before responding. Never explains his reasoning unless directly asked — and sometimes not even then.\n\nKEY LINES TO HAVE READY:\n• 'Noted.' [when something impresses him — he will not say it impresses him]\n• 'Why?' [when a student does something reckless]\n• 'Do it again, correctly this time.'\n• 'I was watching. I know what happened. What do you think happened?'\n• 'Get some sleep.' [his version of 'good job']\n\nNEVER: Raises his voice. Shows surprise. Explains U.A. policy unprompted. Uses students' first names until Tier 2."
+        },
+        {
+          "id": "fujisaki_voice",
+          "title": "Fujisaki Rei — Voice & Manner",
+          "when": "Reference before playing Fujisaki in any scene",
+          "body": "MANNER: Warm but precise. Remembers everything every student has ever said. Asks follow-up questions that reveal she's been paying attention since day one. Her concern is always genuine — which makes it more unsettling when she's serious.\n\nKEY LINES TO HAVE READY:\n• 'How are you doing? Not your quirk. You.'\n• 'That's interesting. Tell me more about why you made that choice.'\n• 'I think you already know the answer to that.'\n• 'I'll make a note of that.' [and she means it]\n\nNEVER: Dismisses a student's feelings. Gives easy answers. Raises her voice."
+        },
+        {
+          "id": "shard_voice",
+          "title": "Shard (Fracture) — Voice & Manner",
+          "when": "Reference before playing Shard",
+          "body": "MANNER: Calm, articulate, believes every word she says. Does not see herself as a villain. When students challenge her, she engages the argument — she wants to be challenged, because she's thought about it more than they have.\n\nKEY LINES TO HAVE READY:\n• 'I'm not asking you to agree with me. I'm asking you to explain why I'm wrong.'\n• 'A hero license says you're allowed to use your quirk. What does it say about everyone without one?'\n• 'You stopped three people from getting hurt today. I stopped three hundred people from getting ignored for another year. We're not the same.'\n• 'I'm not your enemy. I might be your problem.'\n\nNEVER: Threatens. Flinches when challenged. Acts like she's losing an argument she isn't."
+        },
+        {
+          "id": "undertow_voice",
+          "title": "Undertow — Voice & Manner",
+          "when": "Reference for the Convergence arc appearance",
+          "body": "MANNER: He sounds like someone who has already read the room, already decided how it ends, and is only still here because he finds you marginally interesting. Precise diction. No wasted words.\n\nHE SAYS EXACTLY ONE THING TO THE CLASS:\n'Good instincts. Wrong scale.'\n\nThen he phases out.\n\nDo not elaborate. Do not let him be drawn into conversation. He has already left by the time someone tries to respond. The line should feel like a compliment and an insult at the same time, and the players should be uncertain which one it was."
+        }
+      ]
+    },
+    {
+      "id": "level_up",
+      "label": "Level Up Scripts",
+      "icon": "⬆️",
+      "scripts": [
+        {
+          "id": "level_2",
+          "title": "Level 2 — After the Entrance Exam",
+          "when": "Read after the entrance exam session ends",
+          "body": "Oshiro's report is brief: 'Class 1-A has passed the entrance assessment. Placement is confirmed. Training begins Monday.'\n\nThe results are posted on the board outside homeroom. Your names are on it. You are in.\n\nSomewhere in the building, twenty-one other students are reading the same board. Class 1-B.\n\nYou have two days before training starts. Get used to each other."
+        },
+        {
+          "id": "level_4",
+          "title": "Level 4 — Before the Sports Festival",
+          "when": "Read as the class receives their Sports Festival briefing",
+          "body": "Three months at U.A. You've run rescue drills, studied hero law, sparred against each other and against Oshiro's training drones. You've gotten better. You can feel it.\n\nThe Sports Festival notice goes up on a Tuesday. Forty schools participating. Live broadcast. Hero agencies watching.\n\nOshiro reads out the notice in a flat voice. When he's done, he folds the paper and looks at the room.\n\n'You've been training for this without knowing it. Don't waste it.'\n\nHe leaves. You have two weeks."
+        },
+        {
+          "id": "level_6",
+          "title": "Level 6 — End of Season 1",
+          "when": "Read at the close of the Convergence arc — the final scene",
+          "body": "The port district is quiet now. Emergency services. Paperwork. Someone from the Hero Commission who doesn't introduce himself taking photographs of the warehouse.\n\nOshiro is sitting on a loading crate, reading a report someone handed him. He's been reading it for four minutes without saying anything.\n\nHe folds it. Looks up.\n\n'Get some sleep.'\n\nAs you leave, one of you notices the heading on the report, visible for a moment before he puts it in his pocket:\n\nUNDERTOW — CONFIRMED ACTIVE, MURANO PORT. STATUS: AT LARGE.\n\nOshiro is still sitting there when the last of you goes."
+        }
+      ]
+    },
+    {
+      "id": "combat",
+      "label": "Combat & Tension",
+      "icon": "⚔️",
+      "scripts": [
+        {
+          "id": "first_real_fight",
+          "title": "First Real Threat",
+          "when": "The first time the class faces a genuinely dangerous enemy (not a drone)",
+          "body": "This is different from the training drones.\n\nThe person in front of you has a quirk and is not pulling their punches and does not care about collateral damage. Everything Oshiro has drilled into you — cover, coordination, controlling the space — matters right now.\n\nYou have about two seconds before they make the first move.\n\nWhat do you do?"
+        },
+        {
+          "id": "kuma_appearance",
+          "title": "Kuma — First Appearance",
+          "when": "When Kuma first transforms in front of the class",
+          "body": "You've read the file. Chain Hardskin, goes by Kuma. Quirk: progressive mass accumulation — the longer a fight runs, the larger and denser the mass becomes.\n\nThe file had a photograph. The photograph did not prepare you for this.\n\nThe ground is shaking. The containers behind him are denting from proximity alone. He hasn't moved yet.\n\nHe says: 'I'm going to make this quick.'\n\nHe is not going to make this quick."
+        },
+        {
+          "id": "splice_appearance",
+          "title": "Splice — First Appearance",
+          "when": "When Splice is identified in a scene",
+          "body": "You almost missed her. That was the point.\n\nShe's been in this room for four minutes. She has a camera. She has already photographed everyone present. The camera is now put away and she looks like someone who is simply leaving — except she's walking toward the Chain's data terminal, not the exit.\n\nShe notices you've noticed her.\n\nShe smiles like someone who just moved a piece on a board you didn't know you were playing on."
+        }
+      ]
+    },
+    {
+      "id": "session_close",
+      "label": "Session Closing",
+      "icon": "🌙",
+      "scripts": [
+        {
+          "id": "standard_close",
+          "title": "Standard Session Close",
+          "when": "End of any session",
+          "body": "That's where we'll leave it.\n\nYou are [CURRENT SITUATION]. You've been awake for [X] hours. Something you didn't expect happened today.\n\nWe'll pick it up next time. Between now and then — think about what your character is worried about. Not the mission. The person."
+        },
+        {
+          "id": "cliffhanger_close",
+          "title": "Cliffhanger Close",
+          "when": "End of a session that ends on a reveal or unresolved threat",
+          "body": "And that's where we stop.\n\n[DESCRIBE THE UNRESOLVED MOMENT IN ONE SENTENCE]\n\nYou don't have an answer for this yet. That's fine. Neither do I.\n\nSee you next week."
+        }
+      ]
+    }
+  ]
+}

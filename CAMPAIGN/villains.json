@@ -226,7 +226,8 @@
             "tier_3": "First direct confrontation. He doesn't fight seriously. He leaves when he wants to. The message: he can reach them anywhere.",
             "tier_4": "Final boss (with Flashpoint). His Permeation is his greatest defense but Flashpoint's unpredictability forces him to split focus — that's the window."
           },
-          "dm_notes": "Never raise his voice. If he's being loud, something is wrong with his plan and that's more dangerous. The class beating him requires creativity — simply dealing damage doesn't work."
+          "dm_notes": "Never raise his voice. If he's being loud, something is wrong with his plan and that's more dangerous. The class beating him requires creativity — simply dealing damage doesn't work.",
+          "season_1_role": "Observer only in Season 1. Appears once in Convergence — watches the fight, looks at each PC for three seconds, says 'Good instincts. Wrong scale.' and phases out. Never targeted, never threatened. His Season 1 closing appearance is the image the campaign ends on."
         },
         {
           "name": "Goda Miruki",
@@ -268,7 +269,8 @@
             "tier_3": "Appears with Undertow in the Tier 3 climax. Does not fight — present as implicit threat only.",
             "tier_4": "Final boss alongside Undertow. The challenge: stopping Flashpoint without being incinerated, in an enclosed venue, while also dealing with Undertow's Permeation. The fact that she and Undertow don't fight well together is the path to victory."
           },
-          "dm_notes": "Make the Tier 2 fight feel genuinely dangerous. If the class tries to fight her head-on at level 5-7, they should be badly outmatched and need to retreat or use terrain. This is a loss that makes the eventual Tier 4 win matter."
+          "dm_notes": "Make the Tier 2 fight feel genuinely dangerous. If the class tries to fight her head-on at level 5-7, they should be badly outmatched and need to retreat or use terrain. This is a loss that makes the eventual Tier 4 win matter.",
+          "season_1_role": "Teased, not fought. Season 1 foreshadowing only — referenced in a seized Chain memo ('Miruki's operation, port district, pending') found in the Convergence arc. The class won't know what the name means yet. Season 2 threat."
         },
         {
           "name": "Sae Ichiro",
@@ -309,7 +311,8 @@
             "tier_3": "His operation inside the class becomes apparent. The exposure is painful because the class has to account for what was real and what was manipulation — and some of it was both.",
             "tier_4": "He gives himself up. He didn't want to be part of what The Chain is doing with the quirk-nullifying device. This is complicated, not redemptive — he still did real harm. What happens to him is the players' decision."
           },
-          "dm_notes": "Play him warmly. Don't telegraph the villain. When students interact with him in Tier 2 and 3, he should feel like a genuinely good person to talk to. That's the point. The reveal hits harder if they liked him."
+          "dm_notes": "Play him warmly. Don't telegraph the villain. When students interact with him in Tier 2 and 3, he should feel like a genuinely good person to talk to. That's the point. The reveal hits harder if they liked him.",
+          "season_1_role": "Teased, not fought. A Chain cell member in the Convergence arrest says 'We have a friend who talks to people. He talked to someone you know.' Plant this ambiguously. Season 2 threat."
         },
         {
           "name": "Kuma",
@@ -353,7 +356,33 @@
           "campaign_appearances": {
             "tier_2": "Boss fight at end of Tier 2. The class faces him as a group for the first time as a real coordinated encounter. Hard, chaotic, messy. They win. Important that they win — this is the class's first real victory against an actual villain."
           },
-          "dm_notes": "Make him loud and fun before and during the fight. He talks. He brags. He's not scared of them — until suddenly he should be. Play up the students' reactions to each other during this fight — it's a team-building moment masquerading as a combat encounter."
+          "dm_notes": "Make him loud and fun before and during the fight. He talks. He brags. He's not scared of them — until suddenly he should be. Play up the students' reactions to each other during this fight — it's a team-building moment masquerading as a combat encounter.",
+          "season_1_role": "Season 1 Convergence boss fight (Level 6). The class's first victory against a real villain — hard, chaotic, messy. They win. That's important.",
+          "scaled_stat_block": {
+            "level": 6,
+            "HP": 90,
+            "AC": 14,
+            "speed": "30 ft (45 ft at Large or Huge)",
+            "growth_sizes": {
+              "normal": "Size Medium — Kuma starts every fight here; standard stats",
+              "large": "Size Large — STR +4, CON +2, unarmed 2d8+STR, 10 ft reach. Bonus action, available turn 1.",
+              "huge": "Size Huge — STR +8, CON +4, unarmed 3d8+STR, 15 ft reach. Bonus action, available turn 2. CEILING PREVENTS GARGANTUAN — use the warehouse architecture."
+            },
+            "STR_base": 18,
+            "DEX": 10,
+            "CON_base": 16,
+            "INT": 9,
+            "WIS": 10,
+            "CHA": 12,
+            "quirk_save_DC": 14,
+            "proficiency_bonus": 3,
+            "special_abilities": [
+              "Growth (Scaled): Bonus action. Large turn 1, Huge turn 2. Warehouse ceiling stops him at Huge.",
+              "Ground Slam (Huge only): All creatures within 15 ft make DEX save DC 14 or take 4d8 bludgeoning and be knocked prone. Half on success.",
+              "Sweeping Strike (Huge only): 10 ft cone. DEX save DC 14 or take 3d10 bludgeoning and be pushed 10 ft."
+            ],
+            "dm_scaling_note": "Climax boss for a Level 6 party of 4. Should be genuinely threatening but beatable. The ceiling preventing Gargantuan is the terrain advantage — make sure the class can discover it."
+          }
         }
       ]
     },
@@ -406,7 +435,8 @@
             "tier_3": "First direct encounter. She comes to observe in person, which means she's already decided the class is worth studying rather than avoiding.",
             "tier_4": "Final confrontation in the Null Signal facility. Fighting her means fighting without quirks — or finding a way to reach her before she can lock someone down."
           },
-          "dm_notes": "She suppresses the most dangerous PC first, every time. She's done the reading. If a PC's quirk was studied in Tier 2, she knows its exact limitations. Let her use that knowledge — it makes the encounter feel genuinely threatening."
+          "dm_notes": "She suppresses the most dangerous PC first, every time. She's done the reading. If a PC's quirk was studied in Tier 2, she knows its exact limitations. Let her use that knowledge — it makes the encounter feel genuinely threatening.",
+          "season_1_role": "Teased, not fought. Season 1 foreshadowing only — referenced in the 'Seika Advanced Systems' external data request (Hamagawa's monitor, Tier 1) and as Splice's director. Her season 1 log entry on the class: 'worth acquiring.' Season 2 threat."
         },
         {
           "name": "Ryo Karashi",
@@ -448,7 +478,29 @@
             "tier_3": "Returns with preparation. He's been briefed on the class's quirks and has adjusted his approach accordingly.",
             "tier_4": "Optional encounter if the class pursues the Acquisition division subplot. He can be flipped if the class offers him something more interesting than the job."
           },
-          "dm_notes": "He should feel like a horror villain in combat — not because he deals big numbers, but because being touched by him has consequences. Narrate his modifications vividly."
+          "dm_notes": "He should feel like a horror villain in combat — not because he deals big numbers, but because being touched by him has consequences. Narrate his modifications vividly.",
+          "season_1_role": "Active in Season 1 — appears at Patchwork Agency (Tier 1), at The Fracture Problem protest (Tier 2), and in the Convergence warehouse fight (Tier 2). The class may fight him in Convergence if they block his path to the equipment.",
+          "scaled_stat_block": {
+            "level": 7,
+            "HP": 70,
+            "AC": 15,
+            "speed": "35 ft",
+            "STR": 17,
+            "DEX": 18,
+            "CON": 16,
+            "INT": 15,
+            "WIS": 13,
+            "CHA": 14,
+            "quirk_save_DC": 15,
+            "proficiency_bonus": 3,
+            "special_abilities": [
+              "Modification Touch: Melee +7 to hit. On hit, CON save DC 15 or one of: Disadvantage on attacks (tendon), halved move (leg), 2d6 necrotic and save vs dropping held item (hand). Until end of their next turn.",
+              "Self-Reshape: Bonus action — extend reach 5 ft, OR +2 AC until start of next turn.",
+              "Acquisition Protocol: Grappled target makes CON save DC 15 or is Paralysed until end of their next turn. Splice cannot move while using this.",
+              "Glove Removal: Bonus action. Modification Touch deals +1d6 necrotic. He does this only when the objective is failing."
+            ],
+            "dm_note": "Splice is not here to fight the class. He's here to take the equipment. If the class lets him work, he goes. If they engage him, run him as evasive — he tries to complete the objective while avoiding a full fight. He retreats at 35 HP."
+          }
         }
       ]
     },
@@ -501,7 +553,8 @@
             "tier_3": "The confrontation becomes unavoidable. She's protecting people the system has failed. Is she wrong?",
             "tier_4": "The class must decide: is Fracture a villain organisation, or a symptom? Shard is the face of that question."
           },
-          "dm_notes": "Every time she talks to the class, give her a point. She should land real arguments. The fight with her shouldn't feel clean. If a player says 'she's not wrong,' that's exactly right."
+          "dm_notes": "Every time she talks to the class, give her a point. She should land real arguments. The fight with her shouldn't feel clean. If a player says 'she's not wrong,' that's exactly right.",
+          "season_1_role": "Met directly in The Fracture Problem (Tier 2) and present on the rooftop in Convergence. Combat is avoidable — designed as moral confrontation. If combat happens, use full stat block. She will not fight the class in Convergence unless they actively come after her."
         },
         {
           "name": "Daisuke Ren",
@@ -543,7 +596,8 @@
             "tier_3": "Direct confrontation. He's protecting Fracture members from a Hero Commission crackdown. He and the class may be on the same side for thirty seconds before it goes wrong.",
             "tier_4": "If Shard is cornered, Voltage is the last line. He won't surrender. He will try to get her out."
           },
-          "dm_notes": "He's the tactician. He reads the room, reads the class. Use him to punish overconfidence — he knows that Hellflame can't run electricity through its own fire and will take advantage of it."
+          "dm_notes": "He's the tactician. He reads the room, reads the class. Use him to punish overconfidence — he knows that Hellflame can't run electricity through its own fire and will take advantage of it.",
+          "season_1_role": "Met directly in The Fracture Problem (Tier 2) — performs a hero move (protecting an elderly protester) while being a villain. Present but non-combative in Convergence, ensuring Shard's exit is clean. If forced into combat, use full stat block."
         }
       ]
     }

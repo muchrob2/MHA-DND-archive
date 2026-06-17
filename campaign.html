@@ -131,14 +131,69 @@
 
   /* ── Loading ── */
   #loading { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-dim); font-size: 13px; }
+
+  /* ── DM Prep block ── */
+  .dm-prep { background: var(--amber-light); border: 1px solid var(--amber); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 10px; }
+  .dm-prep-label { font-size: 10px; font-weight: 700; color: var(--amber-text); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .dm-prep-row { font-size: 12px; color: var(--text-muted); line-height: 1.5; padding: 2px 0; }
+  .dm-prep-row strong { color: var(--amber-text); }
+
+  /* ── Villain seed block ── */
+  .villain-seed { border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; margin-bottom: 6px; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .villain-seed-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 3px; }
+  .seed-chain { border-left: 3px solid #E24B4A; }
+  .seed-chain .villain-seed-label { color: #E24B4A; }
+  .seed-null { border-left: 3px solid #0891B2; }
+  .seed-null .villain-seed-label { color: #0891B2; }
+  .seed-fracture { border-left: 3px solid #8B47D4; }
+  .seed-fracture .villain-seed-label { color: #8B47D4; }
+  .seed-all { border-left: 3px solid var(--text-dim); }
+  .seed-all .villain-seed-label { color: var(--text-muted); }
+
+  /* ── Tournament bracket ── */
+  .bracket-event { margin-bottom: 16px; }
+  .bracket-event-title { font-size: 11px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+  .match-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 6px; background: var(--surface); }
+  .match-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+  .match-id { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.06em; }
+  .match-vs { font-size: 13px; font-weight: 600; flex: 1; }
+  .match-winner { font-size: 11px; font-weight: 700; color: var(--teal-text); background: var(--teal-light); padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+  .match-favored { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
+  .match-body { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .match-dm { background: var(--amber-light); border-left: 2px solid var(--amber); padding: 5px 8px; margin-top: 6px; font-size: 11px; color: var(--amber-text); line-height: 1.4; border-radius: 0 4px 4px 0; }
+  .final-match { border: 2px solid var(--purple); border-radius: var(--radius); }
+  .final-match .match-winner { background: var(--purple-light); color: var(--purple-text); }
+
+  /* ── Season role badge ── */
+  .season-role { font-size: 11px; color: var(--text-dim); font-style: italic; margin-top: 6px; padding: 4px 8px; border-left: 2px solid var(--border); }
+
+  /* ── Mobile improvements ── */
+  @media (max-width: 640px) {
+    .tab-btn { padding: 10px 14px; min-height: 44px; font-size: 12px; }
+    .page { padding: 16px 12px 40px; }
+    .person-card { grid-template-columns: 1fr; gap: 10px; }
+    .person-avatar { width: 36px; height: 36px; font-size: 13px; }
+    .kv-row { grid-template-columns: 1fr; gap: 1px; padding: 8px 0; }
+    .kv-key { font-size: 10px; margin-bottom: 1px; }
+    .beats-list li { font-size: 13px; padding: 4px 0; line-height: 1.6; }
+    .stat-grid { gap: 5px; }
+    .stat-chip { min-width: 36px; padding: 3px 6px; }
+    .arc-card { padding: 12px; }
+    .match-header { gap: 6px; }
+    .match-vs { font-size: 12px; }
+    .card { padding: 14px 14px; }
+    .arc-sub-item { padding: 8px 10px; }
+    #back-btn { display: none; }
+    .tab-bar { width: 100%; }
+  }
 </style>
 </head>
 <body>
 <div id="topbar">
   <a id="back-btn" href="index.html">← Dashboard</a>
   <div class="tab-bar">
-    <button class="tab-btn" onclick="loadFile('arc')" id="tab-arc">Arc Overview</button>
-    <button class="tab-btn" onclick="loadFile('tier1')" id="tab-tier1">Tier 1 Detail</button>
+    <button class="tab-btn" onclick="loadFile('arc')" id="tab-arc">Story Arcs</button>
+    <button class="tab-btn" onclick="loadFile('tier1')" id="tab-tier1">Session Notes</button>
     <button class="tab-btn" onclick="loadFile('world')" id="tab-world">World</button>
     <button class="tab-btn" onclick="loadFile('teachers')" id="tab-teachers">Teachers</button>
     <button class="tab-btn" onclick="loadFile('villains')" id="tab-villains">Villains</button>
@@ -190,6 +245,139 @@ async function loadFile(file) {
 }
 
 /* ─── ARC ─────────────────────────────────────────────── */
+function renderVillainSeeds(seeds) {
+  if (!seeds) return '';
+  const SEED_CLASS = { the_chain:'seed-chain', null_signal:'seed-null', fracture:'seed-fracture', all_factions:'seed-all' };
+  const SEED_LABEL = { the_chain:'The Chain', null_signal:'Null Signal', fracture:'Fracture', all_factions:'All Factions' };
+  let html = '<div class="arc-sub-header">Faction seeds in this arc</div>';
+  for (const [k, v] of Object.entries(seeds)) {
+    const cls = SEED_CLASS[k] || 'seed-all';
+    const lbl = SEED_LABEL[k] || k.replace(/_/g,' ');
+    html += `<div class="villain-seed ${cls}"><div class="villain-seed-label">${escHtml(lbl)}</div>${escHtml(v)}</div>`;
+  }
+  return html;
+}
+
+function renderTournamentBracket(bracket) {
+  if (!bracket) return '';
+  let html = `<div class="arc-sub-header">Tournament bracket</div>`;
+  const bracketId = 'brk-'+Math.random().toString(36).slice(2);
+  html += `<span class="arc-sub-toggle" onclick="toggleSub('${bracketId}',this)">▶ Show full bracket</span>
+    <div class="arc-sub-body" id="${bracketId}">`;
+
+  // Event 1
+  if (bracket.event_1_obstacle_race) {
+    const e1 = bracket.event_1_obstacle_race;
+    const e1id = 'e1-'+Math.random().toString(36).slice(2);
+    html += `<div class="bracket-event"><div class="bracket-event-title">Event 1 — Obstacle Race</div>
+      <div class="arc-desc" style="margin-bottom:6px;">${escHtml(e1.summary||'')}</div>`;
+    if (e1.key_moments?.length) {
+      html += `<span class="beats-toggle" onclick="toggleBeats('${e1id}',this)">▶ Key moments (${e1.key_moments.length})</span>
+        <ul class="beats-list" id="${e1id}">${e1.key_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
+    }
+    html += `</div>`;
+  }
+
+  // Event 2
+  if (bracket.event_2_cavalry_battle) {
+    const e2 = bracket.event_2_cavalry_battle;
+    const e2id = 'e2-'+Math.random().toString(36).slice(2);
+    html += `<div class="bracket-event"><div class="bracket-event-title">Event 2 — Cavalry Battle</div>
+      <div class="arc-desc" style="margin-bottom:6px;">${escHtml(e2.summary||'')}</div>`;
+    if (e2.key_moments?.length) {
+      html += `<span class="beats-toggle" onclick="toggleBeats('${e2id}',this)">▶ Key moments (${e2.key_moments.length})</span>
+        <ul class="beats-list" id="${e2id}">${e2.key_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
+    }
+    html += `</div>`;
+  }
+
+  // Event 3 — Individual Tournament
+  if (bracket.event_3_individual_tournament) {
+    const t = bracket.event_3_individual_tournament;
+    html += `<div class="bracket-event"><div class="bracket-event-title">Event 3 — Individual Tournament</div>
+      <div class="arc-desc" style="margin-bottom:8px;">${escHtml(t.format||'')}</div>`;
+
+    // Seeds
+    if (t.seeds?.length) {
+      const seedId = 'seeds-'+Math.random().toString(36).slice(2);
+      html += `<span class="beats-toggle" onclick="toggleBeats('${seedId}',this)">▶ Top seeds (${t.seeds.length})</span>
+        <ul class="beats-list" id="${seedId}">${t.seeds.map(s=>`<li><strong>#${s.seed} ${escHtml(s.name)} (${escHtml(s.class)}):</strong> ${escHtml(s.note)}</li>`).join('')}</ul>`;
+    }
+
+    function renderMatches(matches, label, isFinal) {
+      if (!matches?.length && !isFinal) return '';
+      const mid = 'matches-'+Math.random().toString(36).slice(2);
+      const arr = matches ? (Array.isArray(matches) ? matches : [matches]) : [];
+      if (!arr.length) return '';
+      let mhtml = `<div style="margin-top:10px;"><div style="font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">${escHtml(label)}</div>`;
+      for (const m of arr) {
+        const isUpset = (m.how_it_goes||'').toUpperCase().includes('UPSET');
+        const cardClass = isFinal ? 'match-card final-match' : 'match-card';
+        mhtml += `<div class="${cardClass}">
+          <div class="match-header">
+            ${m.match?`<span class="match-id">${escHtml(m.match)}</span>`:''}
+            <span class="match-vs">${escHtml(m.fighter_a||'')} <span style="color:var(--text-dim);font-weight:400">vs</span> ${escHtml(m.fighter_b||'')}</span>
+            ${m.winner?`<span class="match-winner">🏆 ${escHtml(m.winner)}</span>`:''}
+          </div>
+          ${m.favored?`<div class="match-favored">Favored: ${escHtml(m.favored)}${isUpset?' <strong style="color:var(--red);">— UPSET</strong>':''}</div>`:''}
+          <div class="match-body">${escHtml(m.how_it_goes||'')}</div>
+          ${m.dm_note?`<div class="match-dm"><strong>DM:</strong> ${escHtml(m.dm_note)}</div>`:''}
+        </div>`;
+      }
+      mhtml += `</div>`;
+      return mhtml;
+    }
+
+    html += renderMatches(t.round_1, 'Round 1');
+    html += renderMatches(t.quarterfinals, 'Quarterfinals');
+    html += renderMatches(t.semifinals, 'Semifinals');
+
+    // Third place
+    if (t.third_place) {
+      const tp = t.third_place;
+      html += `<div style="margin-top:10px;"><div style="font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Third Place</div>
+        <div class="match-card">
+          <div class="match-header">
+            <span class="match-vs">${escHtml(tp.fighter_a||'')} <span style="color:var(--text-dim);font-weight:400">vs</span> ${escHtml(tp.fighter_b||'')}</span>
+            ${tp.winner?`<span class="match-winner">🏆 ${escHtml(tp.winner)}</span>`:''}
+          </div>
+          <div class="match-body">${escHtml(tp.how_it_goes||'')}</div>
+        </div></div>`;
+    }
+
+    // Final
+    if (t.final) html += renderMatches([t.final], 'Final', true);
+
+    // Post-tournament moments
+    if (t.post_tournament_moments?.length) {
+      const ptid = 'pt-'+Math.random().toString(36).slice(2);
+      html += `<span class="beats-toggle" style="margin-top:8px;display:inline-block;" onclick="toggleBeats('${ptid}',this)">▶ Post-tournament moments (${t.post_tournament_moments.length})</span>
+        <ul class="beats-list" id="${ptid}">${t.post_tournament_moments.map(m=>`<li>${escHtml(m)}</li>`).join('')}</ul>`;
+    }
+
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+function renderSeasonHooks(hooks) {
+  if (!hooks) return '';
+  const hookId = 'hooks-'+Math.random().toString(36).slice(2);
+  let html = `<div class="arc-sub-header">Season 2 hooks</div>
+    <span class="arc-sub-toggle" onclick="toggleSub('${hookId}',this)">▶ Show cliffhangers (${Object.keys(hooks).length})</span>
+    <div class="arc-sub-body" id="${hookId}">`;
+  for (const [k, v] of Object.entries(hooks)) {
+    html += `<div class="arc-sub-item">
+      <div class="arc-sub-item-label">${escHtml(k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()))}</div>
+      <div class="arc-sub-item-body">${escHtml(v)}</div>
+    </div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
 function renderArc(data, el) {
   const TIER_BORDER = ['#534AB7','#1D9E75','#BA7517','#E24B4A'];
   let html = `<div class="page-title">${escHtml(data.campaign_title||'Campaign Arc')}</div>
@@ -201,16 +389,23 @@ function renderArc(data, el) {
       <div class="tier-header">
         <span class="tier-badge" style="background:${borderColor}22;color:${borderColor};">Tier ${t.tier}</span>
         <span class="tier-title">${escHtml(t.title)}</span>
-        <span class="tier-levels">Levels ${escHtml(t.levels)}</span>
+        <span class="tier-levels">Levels ${escHtml(t.levels||'')}${t.session_estimate?' · '+escHtml(t.session_estimate):''}</span>
       </div>
-      <div class="tier-tone">${escHtml(t.overall_tone||'')}</div>`;
+      <div class="tier-tone">${escHtml(t.overall_tone||'')}</div>
+      ${t.dm_at_a_glance?`<div class="dm-prep"><div class="dm-prep-label">DM — At a glance</div><div class="dm-prep-row">${escHtml(t.dm_at_a_glance)}</div></div>`:''}`;
 
     for (const arc of (t.arcs||[])) {
       const uid = Math.random().toString(36).slice(2);
       html += `<div class="arc-card">
-        <div class="arc-name">${escHtml(arc.name)}</div>
-        <div class="arc-type">${escHtml(arc.type)}</div>
-        <div class="arc-desc">${escHtml(arc.description||'')}</div>`;
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+          <div>
+            <div class="arc-name">${escHtml(arc.name)}</div>
+            <div class="arc-type">${escHtml(arc.type||'')}</div>
+          </div>
+          ${arc.sessions?`<span class="tag tag-purple" style="white-space:nowrap;flex-shrink:0;">${escHtml(arc.sessions)} session${arc.sessions==='1'?'':arc.sessions?'s':''}</span>`:''}
+        </div>
+        ${arc.dm_goal?`<div class="dm-prep" style="margin-top:8px;"><div class="dm-prep-label">Session goal</div><div class="dm-prep-row">${escHtml(arc.dm_goal)}</div></div>`:''}
+        <div class="arc-desc" style="margin-top:6px;">${escHtml(arc.description||'')}</div>`;
 
       // Beats
       if (arc.beats?.length) {
@@ -219,6 +414,21 @@ function renderArc(data, el) {
           <ul class="beats-list" id="${beatsId}">
             ${arc.beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}
           </ul>`;
+      }
+
+      // Tournament bracket (Sports Festival)
+      if (arc.tournament_bracket) {
+        html += renderTournamentBracket(arc.tournament_bracket);
+      }
+
+      // Villain seeds
+      if (arc.villain_seeds) {
+        html += renderVillainSeeds(arc.villain_seeds);
+      }
+
+      // Season 1 hooks (Convergence arc)
+      if (arc.season_1_hooks) {
+        html += renderSeasonHooks(arc.season_1_hooks);
       }
 
       // Student groupings (Internships arc)
@@ -270,9 +480,10 @@ function renderArc(data, el) {
       html += `</div>`;
     }
 
-    // Chain presence footer
-    if (t.chain_presence) {
-      html += `<div class="arc-chain-note"><strong>Chain presence</strong>${escHtml(t.chain_presence)}</div>`;
+    // Villain presence footer (supports old chain_presence and new villain_presence)
+    const presenceText = t.villain_presence || t.chain_presence;
+    if (presenceText) {
+      html += `<div class="arc-chain-note"><strong>Villain presence — Tier ${t.tier}</strong>${escHtml(presenceText)}</div>`;
     }
 
     html += `</div>`;
@@ -402,6 +613,7 @@ function renderVillainCard(v, accentColor) {
       <div class="person-name">${escHtml(v.name)}</div>
       <div class="person-alias">${v.alias?`"${escHtml(v.alias)}"`:''}</div>
       <div class="person-role">${escHtml(v.role||'')}</div>
+      ${v.season_1_role?`<div class="season-role">Season 1: ${escHtml(v.season_1_role)}</div>`:''}
       <div class="person-tags">
         <span class="tag tag-red">${escHtml(v.quirk||'')}</span>
         <span class="tag tag-amber">${escHtml(v.quirk_rarity||'')}</span>
@@ -446,6 +658,17 @@ function renderVillainCard(v, accentColor) {
             : Object.entries(dmn).map(([k,val])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(val))}`).join('<br>')
         }</div>`:''}
         ${v.arc_role?`<div class="warning-note"><strong>Arc role:</strong> ${escHtml(v.arc_role)}</div>`:''}
+        ${v.scaled_stat_block?`<div class="person-section">
+          <div class="person-section-label" style="color:var(--teal-text);">Season 1 scaled stat block (Level 6)</div>
+          <div class="stat-grid">
+            ${v.scaled_stat_block.level!=null?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${v.scaled_stat_block.level}</span></div>`:''}
+            ${v.scaled_stat_block.HP!=null?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${v.scaled_stat_block.HP}</span></div>`:''}
+            ${v.scaled_stat_block.AC!=null?`<div class="stat-chip"><span class="stat-chip-label">AC</span><span class="stat-chip-val">${v.scaled_stat_block.AC}</span></div>`:''}
+            ${['STR_base','STR','DEX','CON_base','CON','INT','WIS'].map(k=>v.scaled_stat_block[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k.replace('_base','')}</span><span class="stat-chip-val">${v.scaled_stat_block[k]}</span></div>`:'').join('')}
+          </div>
+          ${v.scaled_stat_block.special_abilities?.length?`<ul style="margin-top:8px;padding-left:16px;">${v.scaled_stat_block.special_abilities.map(a=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">${escHtml(a)}</li>`).join('')}</ul>`:''}
+          ${v.scaled_stat_block.dm_scaling_note||v.scaled_stat_block.dm_note?`<div class="dm-note" style="margin-top:6px;"><strong>Scaling note:</strong> ${escHtml(v.scaled_stat_block.dm_scaling_note||v.scaled_stat_block.dm_note)}</div>`:''}
+        </div>`:''}
       </div>
     </div>
   </div>`;

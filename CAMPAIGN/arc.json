@@ -1,249 +1,359 @@
 {
-  "campaign_title": "Class 1-A",
-  "tone": "Primarily lighthearted and fun — dorm life, rivalries, chaos, friendship, competition — with genuine dramatic stakes that escalate through each tier. The comedy and the tragedy earn each other.",
+  "campaign_title": "Class 1-A — Season 1",
+  "season": 1,
+  "level_range": "1–6",
+  "tone": "Primarily lighthearted and fun — dorm life, rivalries, chaos, friendship, competition — with genuine dramatic stakes that escalate through each tier. The comedy and the tragedy earn each other. Season 1 ends with the class intact but the world more complicated than it was.",
   "tiers": [
     {
       "tier": 1,
-      "levels": "1-4",
+      "levels": "1–3",
       "title": "Welcome to U.A.",
-      "overall_tone": "Almost entirely fun. This is orientation. The class is meeting each other, figuring out who they are, discovering the school is hard and also ridiculous. The Chain exists only as faint background noise.",
+      "session_estimate": "5–6 sessions",
+      "overall_tone": "Almost entirely fun. This is orientation. The class is meeting each other, figuring out who they are, discovering the school is hard and also ridiculous. Three villain factions exist in Murano — none of them are talking to the class yet.",
+      "dm_at_a_glance": "Your job in Tier 1: establish the class as a cohort, not a score bracket. Run the danger lightly. The three faction seeds (Chain, Null Signal, Fracture) are background detail — findable if players look, not announced to anyone. If players chase a thread, give them one more piece. If they don't, those seeds are there for retrospective recognition in Tier 2.",
       "arcs": [
         {
           "name": "The Entrance Exam",
           "type": "Opening session / character introduction",
-          "description": "A staged disaster scenario in a simulated city block. Students must rescue civilians (actors and prop mannequins) while combat drones provide the 'villain' opposition. No predetermined groupings — everyone is on their own. This is how the class meets each other.",
+          "sessions": "1",
+          "dm_goal": "Drop the class into chaos before they have a plan. The cooperation instinct — or lack of it — is the data Oshiro wants. Who these people are under pressure is the data you want.",
+          "description": "A staged disaster scenario in a simulated city block. Students must rescue civilians (actors and prop mannequins) while combat drones provide the villain opposition. No predetermined groupings — everyone is on their own. This is how the class meets each other.",
           "beats": [
             "Opening chaos: the exam starts without warning — no countdown, no announcement. Students scatter and self-organise in real time. The first interaction most PCs have is nearly colliding with each other.",
             "Key moments: Toshida shouts a word and accidentally levels a wall. Nakaya enlarges a bus to use as a ramp, then can't unshrink it. Ren disappears mid-sprint — no one sees him move, they just notice he's somewhere else.",
             "Conflict point: Masahata loudly criticises everyone else's technique during the exam. He is correct about roughly half of it, which makes it significantly worse.",
             "Drone boss: the final obstacle is a single large combat drone targeting the highest-scoring candidates. Students have to cooperate — or use each other as distractions — to take it down.",
             "Resolution: the class passes collectively. Score rankings are posted. Masahata reads them twice. The ranking chart era begins."
-          ]
+          ],
+          "villain_seeds": {
+            "fracture": "Graffiti on the arena's exterior wall during student arrival: 'HEROES SERVE COMMISSIONS, NOT COMMUNITIES' in the jagged-line Fracture style. Weathered enough to have been there for weeks. Nobody on the exam staff comments on it.",
+            "null_signal": "A compact black drone with no UA markings logged the exam from the upper observation tier. The exam team assumed it was another faculty member's equipment. It was not in the manifest. No footage was flagged.",
+            "the_chain": "Absent from direct play. A single offhand comment from an agency worker at the venue gates: 'Avoid the port district after dark this week. It's been interesting lately.' Nobody asks a follow-up question."
+          }
         },
         {
-          "name": "Dorm Life Begins",
-          "type": "Downtime / social arc",
-          "description": "The class moves into Heights Alliance. First week is pure character chaos — personalities collide, routines form, the common room becomes a social ecosystem. No combat required. This arc is about who these people are when nothing is on the line.",
+          "name": "Dorm Life & Combat Training",
+          "type": "Social arc + first formal training encounter",
+          "sessions": "2",
+          "dm_goal": "Establish who these students are to each other before anything is on the line. The dorm incidents build personality. Capture the Flag is where rivalries get specific. Both should feel low-stakes and character-driven.",
+          "description": "The class moves into Heights Alliance. First week is pure character chaos — personalities collide, routines form, the common room becomes a social ecosystem. Oshiro's opening combat class (Capture the Flag) runs in the second session: two teams, live stakes, no mercy. The same students who argued about the couch are now trying to beat each other for lap-running rights.",
           "beats": [
             "The doorframe incident (Toshida, day one): a word escapes him mid-yawn. A panel falls out of the doorframe. He apologises and fixes it. The panel falls again the next morning.",
             "The couch incident (Nakaya, day two): she absentmindedly enlarges a throw pillow. It cannot be un-enlarged. The couch is now partially obscured. This is simply the couch now.",
-            "Takazuki's presence: she is in the common room constantly. No one ever sees her sit down or stand up. She simply exists in a different location each time someone looks. This is established as permanent and never addressed directly.",
             "Masahata prints and laminates a ranking chart based on exam scores. It appears on the fridge, fully formatted with tier brackets. No one asked him to do this. Kinosho stares at it for a long time and says nothing.",
-            "Kinosho falls asleep in three separate locations during the first week — the kitchen counter, a hallway windowsill, and once standing up in the supply room. She does not explain herself."
-          ]
-        },
-        {
-          "name": "Capture the Flag",
-          "type": "First formal training encounter",
-          "description": "Oshiro Daikichi's opening combat class. Two teams, live stakes: the losing team runs extra laps, the winning team picks one perk for the week. Students versus students. This is where rivalries get personal and where the class discovers who actually works well together.",
-          "beats": [
-            "Team assignments are calibrated to create interesting matchups rather than balanced ones. Oshiro wants to see what happens when people are uncomfortable.",
-            "Yoshibara immediately doubles herself. Oshiro rules it legal because he didn't say it wasn't. This causes six minutes of argument from one team and quiet horror from the other.",
-            "Kinosho correctly predicts the outcome of three matchups before they happen. She doesn't share this until after. The people she predicted correctly are more annoyed than the ones she predicted wrong.",
-            "Ando loses to someone he was certain he'd beat. He wears his sunglasses for the next 36 hours straight. He goes to sleep in them. No one mentions this.",
-            "Winning team picks: they choose better meal options. Losing team runs the laps. Masahata updates the ranking chart to include 'combat performance (preliminary).' No methodology is explained."
-          ]
+            "Capture the Flag — Oshiro's opening combat class: team assignments calibrated for discomfort, not balance. Yoshibara immediately doubles herself — Oshiro rules it legal because he didn't say it wasn't. Kinosho correctly predicts the outcome of three matchups and declines to share until after. Ando loses to someone he was certain he'd beat and wears his sunglasses for the next 36 hours including during sleep.",
+            "Masahata updates the ranking chart to include 'combat performance (preliminary).' No methodology is explained. It is accurate."
+          ],
+          "villain_seeds": {
+            "fracture": "A leaflet appears under a dorm door on day three. Black print, spare design, jagged-line symbol. 'Your quirk is yours — not your license.' Someone pushed it through. Nobody saw who. Nobody has seen this symbol before (unless they noticed the entrance exam graffiti — if they did, they'll notice it matches).",
+            "null_signal": "If any student explores Hamagawa's open-door office in the evening, a monitor in standby shows a file header before the screensaver kicks in: 'Provisional License Cohort Data — External Access Request, Ref: SA/7-91.' Requesting party: 'Seika Advanced Systems.' The file is already closed when they look.",
+            "the_chain": "The common room TV runs news in the background one evening. Port district. Something about a business closure — a small support agency for unlicensed quirk users, closed 'due to changing neighbourhood conditions.' The report is twelve seconds long."
+          }
         },
         {
           "name": "The Agency Visit",
-          "type": "Low-stakes mission / Chain seed",
-          "description": "The class assists at a small local hero agency for a day — filing, crowd management at a public event, basic patrol. Their first taste of actual hero work. Mostly administrative and slightly boring. A minor incident near the end plants the first seed of something larger.",
+          "type": "Low-stakes mission / villain seed convergence",
+          "sessions": "1–2",
+          "dm_goal": "First time in the real world without exam conditions. The Chain becomes tangible. All three faction seeds converge in the same physical location for the first time — findable by observant players, not announced.",
+          "description": "The class assists at Patchwork Agency in the port district for a day. Filing, crowd management at a public event, basic patrol. Their first taste of actual hero work. Mostly administrative and slightly boring. A minor incident near the end brings the class's first real Chain encounter — and if students are paying attention, two other organisations are also present in the margins.",
           "beats": [
             "Arrival: the agency is underwhelmed by having twenty students in their breakroom simultaneously. They did not fully plan for this.",
             "Aikawa organises an entire filing system the agency didn't ask for. It is objectively better than what they had. They are mildly resentful.",
-            "Crowd management at a public ceremony: Toshida is stationed away from the speakers. This is communicated very clearly. He is stationed near the speakers anyway due to a logistical mix-up.",
-            "Minor theft nearby: a quirk user — opportunist, not Chain-affiliated — grabs a delivery and runs. Three students pursue and resolve it by creating more property damage than the thief would have. The thief is returned.",
-            "The agency handler, offhandedly, at the end of the day: 'You're heading back toward Murano central? Avoid the port district after dark this week. It's been interesting lately.' Nobody asks follow-up questions."
-          ]
+            "Crowd management at a small community event. Toshida is stationed away from the speakers. This is communicated very clearly. He is stationed near the speakers anyway due to a logistical mix-up.",
+            "The incident: two Chain Grunts and a Chain Hardskin are intimidating a shopkeeper in a side street. The class has six seconds before Patchwork arrives. Decision point: wait or intervene. Both choices are defensible. The Hardskin's fear when contained — not of the students, but of being seen by them — is the most important data in the encounter.",
+            "Patchwork's debrief: direct, accurate, slightly alarming. She's been watching since they arrived. 'The quiet one — that's not local. You walked into someone's business trip.' She won't say more today. She makes a quiet call after they leave."
+          ],
+          "villain_seeds": {
+            "the_chain": "The Hardskin has a chain-link tattoo visible on DC 15 Perception during the fight, DC 12 on a subdued target. His fear of being identified is disproportionate for a low-level criminal caught by student heroes. That gap is the important data. Patchwork says 'affiliated' once and doesn't elaborate.",
+            "null_signal": "Ryo Karashi ('Splice') appears in a corridor inside Patchwork Agency. Visitor badge: 'Seika Consulting — Dr. R. Karashi.' Slim tablet, unhurried, claims wrong floor. If stopped: warm, apologetic, gives nothing away. The tablet, if glimpsed, shows a student photo grid — the class's entrance exam publicity shots. He is gone in thirty seconds.",
+            "fracture": "The Fracture jagged-line symbol is scratched into the concrete of the alley wall behind where the Chain Hardskin was standing. Old enough to be weathered — months, not weeks. Not a message placed for today. A marker. Someone was using this alley before the Chain was."
+          }
         }
       ],
-      "chain_presence": "Absent from direct play. One offhand mention from a background NPC. The word 'Chain' is never used."
+      "villain_presence": "All three factions are background seeds in Tier 1. The Chain is the most visible — one direct encounter with low-tier operatives, planted through a pro hero's offhand comment. Null Signal is glimpsed twice: the unmarked exam drone, Splice's thirty-second corridor appearance. Fracture is found rather than encountered: graffiti, a leaflet, a symbol scratched in concrete. None of them have spoken to the class yet. All three are aware of them."
     },
     {
       "tier": 2,
-      "levels": "5-10",
+      "levels": "4–6",
       "title": "Getting Good",
-      "overall_tone": "The fun continues but real stakes appear. The Sports Festival is peak chaos and excitement. Internships are where the world gets complicated. Flashpoint's attack is the moment everything changes — the first time something happens that can't be laughed off.",
+      "session_estimate": "8–10 sessions",
+      "overall_tone": "The Sports Festival is peak chaos and excitement — the class gets to show off and it is almost entirely fun. Then the world gets complicated: Fracture becomes a real moral problem the class can't punch away, and the Convergence finale puts all three factions in the same warehouse at the same time. Season 1 ends with a win that doesn't feel entirely clean.",
+      "dm_at_a_glance": "Three arcs, each with a different tone. Sports Festival: pure energy, use the full bracket below, every fight has a story. Fracture Problem: moral complexity, Shard should land real arguments. Convergence: three-faction chaos, Kuma is the boss fight, Splice is the complication, Undertow is the image Season 1 ends on. The class wins the immediate problem. Everything else stays open.",
       "arcs": [
         {
           "name": "The Sports Festival",
-          "type": "Major event arc (3-4 sessions)",
-          "description": "U.A.'s annual Sports Festival. Public, broadcast, massive audience. Full tournament structure: obstacle race → team event → individual brackets. This arc is almost entirely fun — competition, crowd reactions, upsets, pre-fight nerves, post-fight drama. The class gets to show off.",
+          "type": "Major event arc (3–4 sessions)",
+          "sessions": "3–4",
+          "dm_goal": "Pure excitement. Almost entirely fun. Every fight should have a story. PC fights are fully played out. NPC fights get one-paragraph summaries read aloud. The crowd, the commentary, and the post-fight moments are as important as the results.",
+          "description": "U.A.'s annual Sports Festival. Public, broadcast, massive audience. Full tournament structure: obstacle race → cavalry battle → individual brackets with Class 1-B competing alongside Class 1-A. The bracket is detailed below — run it as a living event, not a cutscene. The 1-A vs 1-B rivalry becomes concrete here for the first time.",
           "beats": [
-            "Obstacle race: Kibi's vines turn the course into a climbing wall situation within the first 30 seconds. Setaka's iron balls ricochet through a bottleneck and take out four competitors. Takazuki wins her heat because no one can find her to pass her.",
-            "Team event: alliances form and collapse in real time. Yoshibara doubles the wrong person at the wrong moment — an opponent, who was already in the lead. This becomes a recurring reference for the rest of the campaign.",
-            "Individual brackets: Toragi's Twin Impact causes the audience to go silent, then very loud. Chosen's bracket is a stress escalation — he starts calm, someone says the wrong thing, and by the quarterfinal he is terrifying in a way that is hard to describe. Ren's fights look effortless until one suddenly doesn't. Kazama's Hellflame draws too much crowd attention and he keeps losing his composure because they're cheering.",
-            "Broadcast moments: the commentary team is unequipped to describe some of these quirks. A segment called 'What Is She Doing?' about Kinosho trends nationally.",
-            "Post-festival: winners, losers, people who are privately devastated about their bracket and will not discuss it. Masahata updates the ranking chart with Sports Festival performance modifiers. It now has footnotes."
-          ]
-        },
-        {
-          "name": "Internships",
-          "type": "Split-party arc (3-4 sessions across multiple agencies)",
-          "description": "Students split across different Pro Hero agencies in Murano. This is the arc where The Chain becomes visible and where things start not sitting right. Each group encounters a different angle of the same problem — and when they reconvene, what they've each seen adds up to something none of them were told about.",
-          "student_groupings": [
-            {
-              "students": "Ren Suzuki, Isokono Yoromu, Kibi Kankei",
-              "agency": "Speed-and-rescue agency, port district",
-              "event": "They stumble into a Chain collection operation — a small cell intimidating a shop owner who owes dues. They intervene. The cell scatters. One of them says, over their shoulder: 'You don't want to know who we work for.' The agency supervisor, told about this afterward, goes very quiet and suggests they file a report through official channels. The report goes nowhere."
-            },
-            {
-              "students": "Kazama Kenji, Nakaya Emari",
-              "agency": "Larger downtown agency",
-              "event": "Kazama's supervisor asks him to participate in a crowd dispersal targeting protesters outside a Chain-adjacent business. The framing is 'routine public safety.' It doesn't feel routine. Nakaya notices the supervisor checks his phone twice during the briefing and doesn't take notes."
-            },
-            {
-              "students": "Izuto Kutsu, Toragi Kayo",
-              "agency": "Fast-response agency",
-              "event": "Efficient, professional, everything above board — except a memo Izuto accidentally reads listing port district patrol as 'deprioritised pending resource review.' Someone made a deliberate decision to under-resource the area. The memo is dated six months ago."
-            },
-            {
-              "students": "Chosen Tadachi, Tazato Tadamaki",
-              "agency": "Recovery hero specialising in extraction from difficult circumstances",
-              "event": "Not crime. Not fighting. Domestic crises, people trapped in situations — a family displaced by Chain-adjacent debt collection, a man who won't leave an unsafe building because the agency that owns it has the right paperwork. A quieter internship that hits differently. Chosen is very good at it in ways that surprise him."
-            }
+            "Pre-festival: the class arrives to a stadium already full. The broadcast team is interviewing hero course students outside. Kazama is recognised from the entrance exam footage. He loses his composure for approximately four seconds.",
+            "Obstacle race: Takazuki wins her heat (nobody can find her to pass her). Ren places first overall (nobody saw him pass anyone — he was just suddenly at the front). Setaka's iron balls ricochet through a bottleneck and eliminate four competitors simultaneously. Kinosho places top five despite appearing to be in a near-sleep state for most of the course. Morida Takeshi (Class 1-B) places third — first time the class sees him in a competitive context.",
+            "Cavalry battle: alliances form and collapse. Class 1-B's coordination is visibly superior — they've drilled for this. Yoshibara doubles the wrong person at the wrong moment (an opponent already in the lead). This becomes a permanent campaign reference.",
+            "Broadcast: the commentary team is unprepared for approximately half the quirks on display. 'What Is She Doing?' about Kinosho trends nationally within twenty minutes of first airing. Masahata's ongoing score commentary in the waiting room is captured on a spectator's phone and briefly goes viral.",
+            "Post-festival: the ranking chart — which Masahata brought to the festival in laminated form — does not get updated for four days. When asked why: 'The model is broken.' He reprints it anyway."
           ],
-          "convergence": "The groups compare notes when they reunite. The pattern is visible: The Chain is larger, more embedded, and more officially tolerated than anyone told them. The port district is being allowed to be what it is. Heroes know about it. Some of them made a choice."
-        },
-        {
-          "name": "Flashpoint",
-          "type": "Major dramatic beat — tone shift",
-          "description": "Goda Miruki burns down a hero agency in the port district. Three heroes hospitalised. One in critical condition. It happens during the class's patrol rotation. They arrive at the aftermath. This is the first moment in the campaign where something is simply, straightforwardly terrible.",
-          "beats": [
-            "The class reaches the scene. The agency is still burning. This is real fire — structural damage, debris in the street, emergency services blocking the approach.",
-            "Flashpoint is gone. She was gone before they arrived. Witnesses describe blue-white flames. Nobody in the class has ever seen fire do what this fire did to concrete.",
-            "One of the hospitalised heroes is the supervisor who mentored Ren's internship group. She will recover. But the students don't know that for three days.",
-            "Oshiro Daikichi arrives at the scene without being called. He stands at the perimeter for a long time looking at the damage. He says: 'This is a different problem than what you've been dealing with.' He doesn't explain further.",
-            "First appearance of Goda's name in the official incident report. The Chain affiliation is listed as 'suspected.' No arrests."
-          ]
-        },
-        {
-          "name": "Kuma",
-          "type": "Tier 2 Boss Fight",
-          "description": "The class, acting on information gathered across the internship arc, intercepts a Chain logistics operation in the port district warehouse district. Kuma is running it. This is their first coordinated fight against a real villain who is actually trying to stop them.",
-          "beats": [
-            "Kuma opens by telling them to leave. His voice carries. He's Large before they respond — not a transformation, just a change in posture.",
-            "When they don't leave he grows to Huge. Warehouse shelving collapses. The ceiling becomes relevant. Things fall.",
-            "The fight is hard and messy. Students cover each other's angles. Something goes wrong that forces an improvised solution. This is where the teamwork from Capture the Flag pays off — or doesn't.",
-            "They win. It takes longer than it should. Something is definitely broken. Kuma is arrested and in custody.",
-            "First real victory. Masahata does not update the ranking chart. He is quiet for a day. This is noted."
-          ]
-        }
-      ],
-      "chain_presence": "Fully visible by Tier 2 end. The internship arc names them. Flashpoint is their signature. Kuma is captured but he's a mid-tier lieutenant — leadership is untouched and the operation barely hiccups."
-    },
-    {
-      "tier": 3,
-      "levels": "11-15",
-      "title": "It Gets Personal",
-      "overall_tone": "The Chain escalates because the class cost them Kuma and disrupted several operations. Undertow decides to make them understand the difference between students and professionals. The Culture Festival sits in the middle of this arc — full of genuine warmth — but the Riddle revelation hits during it or just after, and the contrast is intentional.",
-      "arcs": [
-        {
-          "name": "Riddle's Move",
-          "type": "Social / investigative arc — runs parallel to all other Tier 3 content",
-          "description": "Sae Ichiro is already in Murano. He has been having conversations with students who are frustrated, lonely, or struggling. He is not brainwashing them. He listens. He knows how to find people at their lowest and be exactly what they need. By the time anyone recognises what's happening, it's already happened.",
-          "beats": [
-            "Early signs: one student begins behaving slightly differently. Not alarming — they seem more settled, less stressed. More decisive. They mention they've been 'talking to someone' but don't elaborate.",
-            "Riddle's method: he plants questions rather than conclusions. 'Do you really think the system supports people like you?' 'What would you do if you weren't limited by licensing?' 'Who actually benefits when you follow the rules?' He never names The Chain.",
-            "Mid-tier: the class becomes aware that patrol schedules and some personal details have been reaching the Chain. The source is unclear. No one wants to believe it's someone they know.",
-            "Discovery: the student who talked to Riddle didn't know what they were doing. They shared information that felt harmless. The confrontation is not about a traitor — it's about manipulation and what it looks like from the inside, and how you talk to someone you care about when something like this happened to them.",
-            "Riddle himself: he is never hostile during this arc. When the class eventually finds him, he's genuinely interested in them. He thinks they're wasted as students. This is more unsettling than anger would be."
-          ]
-        },
-        {
-          "name": "The Culture Festival",
-          "type": "Major event arc (2 sessions)",
-          "description": "U.A.'s Culture Festival. Class 1-A has to produce a performance for the whole school. The planning process is beautiful chaos. The performance itself is more beautiful chaos. The audience genuinely loves it. This arc is pure warmth — which makes what comes immediately after land harder.",
-          "beats": [
-            "Planning meeting: seventeen competing visions, zero consensus, forty-five minutes of genuine argument. Eventually Kinosho makes a decision. It's clearly the right decision. Everyone does what she says without further discussion, which is somehow more unsettling than the argument.",
-            "Rehearsal disasters: Toshida's Comic destroys the stage mock-up twice — different words each time. Kazama's Hellflame lights the backdrop briefly. Ren keeps vanishing mid-choreography. None of this is resolved before the show.",
-            "The performance: spectacular. About 60% on purpose. Yoshibara duplicates a crucial prop at exactly the right moment. The audience has no idea they are watching improvisation. The standing ovation is genuine.",
-            "Aftermath: the class has a moment together — not dramatic, just good. A shared meal, a stupid argument about something small, someone laughs too loud. It's the last clean moment before the Riddle situation becomes undeniable."
-          ]
-        },
-        {
-          "name": "Undertow",
-          "type": "Tier 3 climax encounter",
-          "description": "Kirato Shou personally intercepts the class during a sanctioned mission. He does not fight seriously. He walks through every attack. He leaves when he chooses to. The purpose is not to hurt them — it's to make them understand what they're dealing with.",
-          "beats": [
-            "The class intercepts a Chain supply run. It goes well — clean takedown, good teamwork. Then Undertow steps out of a wall and the mood changes.",
-            "He phases through every attack. He's not defensive — he just moves through whatever they throw. He's curious. He watches them try different approaches.",
-            "He talks. He asks each PC a question. The questions are unexpectedly specific and accurate. He's done research.",
-            "He phases through the floor. He does not say goodbye. He leaves nothing except the knowledge that he could be anywhere.",
-            "Oshiro's response, when they report: a long pause. Then: 'You need to think very carefully about what you do next.' He doesn't tell them what to do. This is the first time he hasn't."
-          ]
-        }
-      ],
-      "chain_presence": "Maximum. The Chain is retaliating for the Kuma loss and the operational disruptions. Undertow is no longer staying low-profile. Riddle's infiltration is the most damaging thing they've done — not a fight, just a conversation."
-    },
-    {
-      "tier": 4,
-      "levels": "16-20",
-      "title": "Finish It",
-      "overall_tone": "The gloves are off. The class is not quite Pro Heroes yet but close enough that the distinction stops mattering. The final arc is large, cinematic, and split across multiple locations simultaneously. It ends with a graduation that the class has genuinely, specifically earned.",
-      "arcs": [
-        {
-          "name": "The Device",
-          "type": "Rising action",
-          "description": "The Chain has acquired a black-market quirk-nullification device — experimental tech built for a licensed containment operation, stolen and modified for mass deployment. Their plan: activate it during the Murano Hero Gala, a major annual public event attended by ranked Pro Heroes, and use the resulting window to conduct a mass kidnapping of high-profile targets for leverage.",
-          "beats": [
-            "Intelligence arrives through Shimoda Iku's journalist contact — a source she's cultivated since Tier 2. The timeline is short: days, not weeks.",
-            "Riddle makes contact. He doesn't want to be part of this. The mass kidnapping is not something he signed up for. He offers what he knows about the device's location and the Chain's operational plan. This is complicated.",
-            "Briefing the teachers: Oshiro gear up immediately — no questions, just action. Hamagawa asks what the legal framework is for what they're about to do, and this is also the correct response. Both things are true at the same time.",
-            "The class has to decide what role they play. They can't cover everything. They have to choose what matters most."
-          ]
-        },
-        {
-          "name": "The Gala Night",
-          "type": "Split-party multi-encounter final arc (2-3 sessions)",
-          "description": "The class divides across three simultaneous operational theatres inside and around the Gala venue. Each group has a distinct objective that feeds into the final confrontation. The groups can communicate but cannot be in two places. Every choice about resources and priority has a consequence.",
-          "groups": [
-            {
-              "label": "Group 1 — The Device",
-              "objective": "Race through the venue's back-of-house to reach the Chain's tech team before the device is activated. The tech team is not fighters — but the route is defended, and time matters more than a clean fight."
+          "tournament_bracket": {
+            "event_1_obstacle_race": {
+              "summary": "All participants. Mixed classes competing. Results determine seedings for individual brackets.",
+              "key_moments": [
+                "Takazuki wins her heat — invisible the entire race; nobody knew she was competing until she crossed the line",
+                "Ren places 1st overall — nobody saw him pass anyone; he was simply at the front",
+                "Setaka's iron balls ricochet through a midpoint bottleneck and eliminate four competitors at once",
+                "Kinosho places top 5 despite appearing to be in a near-sleep state for a significant portion of the course",
+                "Morida Takeshi (1-B) places 3rd — first meaningful rival appearance in a competitive context; the class has had his entrance exam score on their fridge chart since week one"
+              ]
             },
-            {
-              "label": "Group 2 — Evacuation",
-              "objective": "Chain operatives have sealed the emergency exits on the main floor. Get civilians out without triggering early device activation. The challenge is that panicked civilians with quirks in an enclosed space is its own disaster."
+            "event_2_cavalry_battle": {
+              "summary": "Teams of 4. Collect headbands. Top 16 overall advance to individual brackets.",
+              "key_moments": [
+                "Yoshibara doubles herself mid-battle — then doubles the wrong person (an opponent already in the lead). Her double and the opponent's lead-holder collide in the arena centre. The scoring board updates in the class's favour for thirty seconds before correcting.",
+                "Class 1-B's team coordination is surgical. They've drilled cavalry formations specifically. They make no redundant movements. It's slightly alarming to watch.",
+                "Kinosho's team doesn't appear to be coordinating. They place 3rd. Nobody can explain how."
+              ]
             },
-            {
-              "label": "Group 3 — Containment",
-              "objective": "Hold the Chain's field cell in place long enough for the other groups to complete their objectives. Not defeat them — just keep them occupied. The cell knows this too and will try to break and run."
+            "event_3_individual_tournament": {
+              "format": "16 competitors. 8 Class 1-A, 8 Class 1-B. Top 4 seeded (get Round 1 byes). Single elimination.",
+              "seeds": [
+                {
+                  "seed": 1,
+                  "name": "Ren Suzuki",
+                  "class": "1-A",
+                  "note": "Placed 1st in obstacle race. The class has been watching him move. Nobody knows yet what his speed looks like in a direct fight."
+                },
+                {
+                  "seed": 2,
+                  "name": "Morida Takeshi",
+                  "class": "1-B",
+                  "note": "Placed 3rd in obstacle race. Class 1-A has had his entrance exam score on the ranking chart since week one. He is quiet about this. He has been thinking about it too."
+                },
+                {
+                  "seed": 3,
+                  "name": "Chosen Tadachi",
+                  "class": "1-A",
+                  "note": "Placed well across both events. Notable for the quality of his obstacle race finish despite Stress not being a movement quirk."
+                },
+                {
+                  "seed": 4,
+                  "name": "Ogiwara Bunta",
+                  "class": "1-B",
+                  "note": "Seismic shockwaves. The class felt them in the cavalry battle from across the arena. He was in a different quadrant."
+                }
+              ],
+              "round_1": [
+                {
+                  "match": "R1-1",
+                  "fighter_a": "Kazama Kenji (1-A)",
+                  "fighter_b": "Takuma Rei (1-B, Hardening)",
+                  "favored": "Kazama",
+                  "how_it_goes": "Hellflame draws the first massive crowd reaction of the day. Too much reaction — Kazama loses composure managing it. He wins anyway, but he's rattled and the crowd knows it. His exit from the arena is fast.",
+                  "winner": "Kazama Kenji",
+                  "dm_note": "Play the crowd noise as a genuine obstacle for Kazama. He can't control that he's visually spectacular. If this is a PC fight, have spectators start cheering mid-move — forcing him to choose between commitment and crowd management."
+                },
+                {
+                  "match": "R1-2",
+                  "fighter_a": "Toragi Kayo (1-A)",
+                  "fighter_b": "Toshida Shogoro (1-A)",
+                  "favored": "Toragi",
+                  "how_it_goes": "Toshida's Comic shout disrupts Toragi's first Twin Impact — the timing breaks. She absorbs the chaos and shuts him down methodically on the second attempt. The crowd goes silent for three seconds when the Impact lands, then extremely loud.",
+                  "winner": "Toragi Kayo",
+                  "dm_note": "Let Toshida's disruption feel like a genuine near-upset. The first Impact failing should surprise people. Toragi winning the second is inevitable — but it shouldn't feel like it in the moment."
+                },
+                {
+                  "match": "R1-3",
+                  "fighter_a": "Kinosho Kochimiko (1-A)",
+                  "fighter_b": "Aikawa Sakume (1-A)",
+                  "favored": "Aikawa — massive upset incoming",
+                  "how_it_goes": "Kinosho deactivates Aikawa's iron claws mid-swing. Then walks up to her. The fight ends in approximately forty seconds. The audience does not understand what happened. 'What Is She Doing?' — segment one — trends nationally within the hour.",
+                  "winner": "Kinosho Kochimiko",
+                  "dm_note": "Don't explain Kinosho's win to the audience. The commentary team can't explain it either. The class should be slightly disturbed. Masahata should look at the chart, say nothing, and sit down."
+                },
+                {
+                  "match": "R1-4",
+                  "fighter_a": "Izuto Kutsu (1-A)",
+                  "fighter_b": "Ando Iorai (1-A)",
+                  "favored": "Ando",
+                  "how_it_goes": "Ando's scales shrug off the first engine-charge cleanly. Izuto clocks this and adjusts — times his second burst for the moment Ando is mid-pivot repositioning. Ando goes down surprised. He wears the sunglasses for the rest of the day.",
+                  "winner": "Izuto Kutsu",
+                  "dm_note": "Ando's first shrug should feel definitive — the class should believe he's going to win. Izuto's adjustment is the key character beat: he's a problem-solver under pressure."
+                },
+                {
+                  "match": "R1-5",
+                  "fighter_a": "Kitamura Sora (1-B, Wire)",
+                  "fighter_b": "Takazuki Hanori (1-A)",
+                  "favored": "Kitamura",
+                  "how_it_goes": "Kitamura's wire technique fills the arena before Takazuki can establish position. Invisibility is useless against tension detection — Kitamura knows exactly where she is by the wires. Precise, quiet, over in under a minute. First definitive 1-B win of the individual tournament.",
+                  "winner": "Kitamura Sora",
+                  "dm_note": "This should feel technically impressive rather than exciting. Kitamura wins like someone solving a problem. The contrast with Kinosho's inexplicable win makes both more interesting."
+                },
+                {
+                  "match": "R1-6",
+                  "fighter_a": "Yashiro (1-B, Teleport)",
+                  "fighter_b": "Yoshibara Hiyoko (1-A)",
+                  "favored": "Even",
+                  "how_it_goes": "Two displacement-type quirk users. Yashiro teleports; Yoshibara doubles. For three minutes neither lands anything. Yashiro teleports directly into Yoshibara's double — pauses, stares at it for three seconds with visible confusion — and gets hit from behind by the real one. The audience loses it.",
+                  "winner": "Yoshibara Hiyoko",
+                  "dm_note": "Run this as pure comedy that somehow still has athletic stakes. The three-second pause should be played for maximum effect. Play Yoshibara as equally surprised it worked."
+                },
+                {
+                  "match": "R1-7",
+                  "fighter_a": "Takuma Rei (1-B, Hardening)",
+                  "fighter_b": "Kibi Kankei (1-A)",
+                  "favored": "Takuma Rei",
+                  "how_it_goes": "Kibi's vines are slower in an open arena with no anchor points. Takuma hardened his skin and walked through the first vine attempt, then the second. Kibi's vines require terrain. This arena gave her none. Masahata updates the chart: 'Terrain dependency — noted. Filed. Corrected.'",
+                  "winner": "Takuma Rei (1-B)",
+                  "dm_note": "This loss is important for Kibi's character arc. She's excellent in complex environments. She's limited without them. Make it quiet and slightly inevitable rather than dramatic."
+                },
+                {
+                  "match": "R1-8",
+                  "fighter_a": "1-B Student",
+                  "fighter_b": "Setaka Toko (1-A)",
+                  "favored": "Setaka",
+                  "how_it_goes": "Setaka's iron balls clear the arena's usable space in two rounds. By round three there is nowhere left to stand that isn't being contested by a ricocheting ball. The opponent surrenders. The arena cleanup crew takes fifteen minutes.",
+                  "winner": "Setaka Toko",
+                  "dm_note": "Play this for scale. Setaka should feel genuinely large and dangerous. The cleanup aftermath is funnier if you describe a crew member having to retrieve a ball embedded in the far wall."
+                }
+              ],
+              "quarterfinals": [
+                {
+                  "match": "QF-1",
+                  "fighter_a": "Ren Suzuki (1-A, Seed 1)",
+                  "fighter_b": "Izuto Kutsu (1-A)",
+                  "favored": "Ren",
+                  "how_it_goes": "The fastest fight of the tournament. Two speed-types. Ren is faster. Izuto knew this going in — he has been clocking Ren's movement since the entrance exam. He had a plan. The plan required three moves. He got through two. Ren wins. He looks at Izuto for a moment, says nothing. Izuto is already thinking about what he'd do with a third attempt.",
+                  "winner": "Ren Suzuki",
+                  "dm_note": "If this is a PC fight, let Izuto's plan get close to working. The fun isn't Ren dominating — it's Izuto coming so close and still losing. The 'third attempt' feeling should be palpable."
+                },
+                {
+                  "match": "QF-2",
+                  "fighter_a": "Morida Takeshi (1-B, Seed 2)",
+                  "fighter_b": "Toragi Kayo (1-A)",
+                  "favored": "Morida (slight)",
+                  "how_it_goes": "Best fight of the quarterfinals. Morida's quirk is close-range precision deflection — he's drilled for disrupting attack timing. Toragi's Twin Impact relies on delayed detonation: Morida disrupts the timing on the first Impact, breaking the delay mechanism. Nobody has done this to Toragi before. She adjusts. The second Impact lands. Toragi wins. Both of them are satisfied with the result in a way that's unusual for a tournament fight.",
+                  "winner": "Toragi Kayo",
+                  "dm_note": "Post-fight: Morida approaches Toragi. He says: 'Your Impact timing — I disrupted it once. That's the only time that's worked on anyone I've spoken to.' She says: 'I know.' He nods. They both write this down. This is the beginning of a mutual-respect dynamic."
+                },
+                {
+                  "match": "QF-3",
+                  "fighter_a": "Chosen Tadachi (1-A, Seed 3)",
+                  "fighter_b": "Kazama Kenji (1-A)",
+                  "favored": "50/50 — most dramatic QF fight",
+                  "how_it_goes": "Kazama's Hellflame escalates the ambient temperature and chaos — exactly the wrong environment for fighting Chosen Tadachi. Each fire blast makes Chosen more dangerous. The crowd is extremely loud about Hellflame and completely unprepared for what Stress looks like by round 4. Kazama loses a spectacular, close fight that the crowd talks about more than most of the wins.",
+                  "winner": "Chosen Tadachi",
+                  "dm_note": "First time the stadium sees Chosen at escalation. Run round 4 as genuinely alarming — Chosen should not feel comfortable to be near by the end. Kazama's loss should feel unfair in a way that's hard to articulate: he did everything right and it still made things worse."
+                },
+                {
+                  "match": "QF-4",
+                  "fighter_a": "Ogiwara Bunta (1-B, Seed 4)",
+                  "fighter_b": "Kinosho Kochimiko (1-A)",
+                  "favored": "Ogiwara",
+                  "how_it_goes": "Ogiwara's seismic shockwaves are structural — Kinosho's Neutralization can't deactivate something already in the ground. Her first plan fails visibly. Her second plan involves assembling something from arena debris during the fight. Ogiwara ends up briefly suspended in mid-air by a contraption Kinosho assembled in forty seconds. She does not have a construction quirk. Nobody asks how she did this. 'What Is She Doing?' airs for the second time.",
+                  "winner": "Kinosho Kochimiko",
+                  "dm_note": "Ogiwara's post-fight comment: 'I don't know what she did.' He has never said this about an opponent. He is not embarrassed — genuinely interested. Masahata writes this down immediately."
+                }
+              ],
+              "semifinals": [
+                {
+                  "match": "SF-1",
+                  "fighter_a": "Ren Suzuki (1-A, Seed 1)",
+                  "fighter_b": "Toragi Kayo (1-A)",
+                  "favored": "Ren",
+                  "how_it_goes": "UPSET. Twin Impact's first hit is a decoy — placed to create a specific dodge corridor. Ren dodges it exactly as Toragi predicted. The real Impact triggers on the dodge vector. Ren cannot outrun something that hits where he's going, not where he is. He loses a very fast fight in a way that shocks everyone including him. He stands at the edge of the arena for a moment after the loss, not saying anything, then leaves. He thinks about the second hit for the rest of the campaign.",
+                  "winner": "Toragi Kayo",
+                  "dm_note": "Post-fight: Ren finds Toragi. He says: 'The second hit.' She says: 'Yes.' That is the whole conversation. Two sentences that communicate complete mutual understanding. Do not add to it."
+                },
+                {
+                  "match": "SF-2",
+                  "fighter_a": "Chosen Tadachi (1-A, Seed 3)",
+                  "fighter_b": "Kinosho Kochimiko (1-A)",
+                  "favored": "Kinosho (tactically)",
+                  "how_it_goes": "Kinosho targets Chosen's quirk with Neutralization. But Chosen's Stress isn't purely active — it's reactive. The crowd noise, the semifinal stakes, the previous three fights all feed the passive escalation that Kinosho can't fully suppress. She deactivates what she can. The ambient stress feeds what she can't. Chosen wins and is visibly running very hot walking out of the arena.",
+                  "winner": "Chosen Tadachi",
+                  "dm_note": "The crowd noise is a game mechanic here. Neutralization removes the quirk label but not the underlying stress response from competing in front of thousands of people. Chosen's win should feel slightly worrying, not triumphant."
+                }
+              ],
+              "third_place": {
+                "fighter_a": "Ren Suzuki (1-A)",
+                "fighter_b": "Kinosho Kochimiko (1-A)",
+                "how_it_goes": "Ren wins. He says nothing about it afterward. Kinosho seems to find this appropriate. Masahata notes the result, looks at the ranking chart, and adds a column titled 'semantic outcomes.' Nobody asks him what this means.",
+                "winner": "Ren Suzuki"
+              },
+              "final": {
+                "fighter_a": "Toragi Kayo (1-A)",
+                "fighter_b": "Chosen Tadachi (1-A)",
+                "favored": "Toragi — technically superior, has defeated Class 1-B's seed 2, has a tested plan for Chosen's escalation curve",
+                "how_it_goes": "Toragi has studied Chosen's last three fights. Her plan: end it before he escalates. She lands the first hit — a perfect technical strike, the cleanest move in the tournament. It is the worst decision she could have made. Chosen at round 1 stress level is manageable. Chosen after being struck in a national broadcast final, having already fought three escalating fights, is not. The fight drags into round 5. Nobody predicted round 5. The commentary team goes very quiet in round 4. It ends when Chosen's accumulated escalation exceeds anything Toragi's technique can counter. CHOSEN WINS. The commentary team is silent for four full seconds. Then very loud.",
+                "winner": "Chosen Tadachi",
+                "dm_note": "Toragi's plan should be visibly correct until the moment it isn't. Her frustration should come from having done everything right. Chosen's win should feel slightly too big for the arena — not triumphant, but overwhelming. He comes down slowly. Give that moment: the quiet after the final ends, Chosen standing in the arena while the crowd is still loud."
+              },
+              "post_tournament_moments": [
+                "Morida finds Toragi after QF-2. 'Your Impact timing — I disrupted it once. That's the only time that's worked on anyone I've spoken to.' She says: 'I know.' He nods. They both write this down.",
+                "Ren finds Toragi after SF-1. 'The second hit.' She says: 'Yes.' That's the whole conversation. He thinks about it for the rest of the campaign.",
+                "Kazama's Hellflame drew the biggest crowd reaction of any fight. Someone sends him a photo of the crowd mid-blast. He never shows it to anyone.",
+                "'What Is She Doing?' about Kinosho airs twice. She watches both replays once in the waiting room, alone. She seems satisfied.",
+                "Ogiwara, after losing to Kinosho: 'I don't know what she did.' He has never said this about an opponent. Masahata writes this down immediately.",
+                "The ranking chart — brought to the festival laminated — does not get updated for four days. When asked why: 'The model is broken.' He reprints it anyway."
+              ]
             }
+          },
+          "villain_seeds": {
+            "all_factions": "All three factions are watching the Sports Festival broadcast. Null Signal is collecting comprehensive quirk activation data — better footage than the exam drone captured. Fracture cells are watching because the festival represents exactly the system they oppose: licensed quirk use as public spectacle. Undertow watches Chosen's final with specific interest. None of this is visible to the class."
+          }
+        },
+        {
+          "name": "The Fracture Problem",
+          "type": "Moral confrontation arc",
+          "sessions": "2",
+          "dm_goal": "Force the class into a confrontation they can't punch away. Shard should land at least two arguments the players can't easily dismiss. This is not a fight arc — it's a values arc. Null Signal is watching from the crowd periphery and the class probably doesn't notice.",
+          "description": "Fracture stages a large public protest outside a Hero Commission building in central Murano. Unlicensed quirk users are demanding licensing reform, backed by Fracture cells providing protection. When the protest tips into a confrontation with Commission security, Class 1-A is deployed for crowd management. They meet Shard and Voltage directly. The situation is complicated by the fact that some protesters have genuine grievances, Fracture is genuinely protecting people in this moment, and Null Signal operatives are photographing quirk activation patterns from the crowd periphery.",
+          "beats": [
+            "Arrival: the protest is peaceful, large, and legally ambiguous. Fracture's jagged-line symbol is everywhere. The students have seen it before — exam graffiti, dorm leaflet, alley concrete. It lands differently at scale.",
+            "Shard approaches the class directly, no aggression. She wants to debate. Her points are specific: the licensing system disadvantages people in communities like the port district. The Commission the class works for actively suppressed investigation into the Chain. Heroes who could have stopped the port district problem chose not to. 'I'm not asking you to agree with me. I'm asking you to explain why I'm wrong.' Give her at least two points that land with the players.",
+            "The escalation: Commission security physically moves an elderly protester who wasn't causing problems. Voltage intervenes — stops the guard with a paralytic shock, positions himself between the guard and the protester. This is a hero move performed by a villain. The class has to decide how to respond.",
+            "Null Signal in the margins: Splice is in the crowd, two rows back from the Commission building's west entrance. He's photographing the class — specifically their quirk activation patterns under stress. DC 18 Perception to notice him. If noticed, he's gone by the time anyone looks twice.",
+            "Resolution: Shard withdraws the Fracture cells before things become unmanageable. She does not run. She says: 'We'll be back when you've figured out which side you're on.' Voltage leaves last, making sure the elderly protester is clear before he goes."
           ],
-          "coordination": "The three groups share a communication channel but cannot reinforce each other mid-operation. If Group 1 fails, the device activates and everyone's situation gets worse. If Group 2 takes too long, civilians are still in the building when the final confrontation starts. Choices made here determine what the endgame looks like."
+          "villain_seeds": {
+            "fracture": "Shard and Voltage are fully visible — named, confronted, argued with. The class knows who they are now. What the class does with Shard's arguments is the open question they carry into the finale.",
+            "null_signal": "Splice's photographic operation in the crowd. Null Signal now has comprehensive quirk-activation footage of every PC under stress conditions. Whether the class noticed him determines how much warning they have.",
+            "the_chain": "Shard mentions once that the Commission ignored the Chain's port district operation for eighteen months. She has documentation. She doesn't share it today. She knows the class was at Patchwork Agency — she has sources in the neighbourhood."
+          }
         },
         {
-          "name": "Final Confrontation — Undertow and Flashpoint",
-          "type": "Final boss encounter",
-          "description": "Undertow and Flashpoint, together, in a burning event venue. The fight is large and cinematic. The critical asymmetry: Flashpoint's Cremation at full output in an enclosed space is a problem for everyone including The Chain. Undertow has to manage her excess while also fighting the class. That divided attention is the window.",
+          "name": "Convergence",
+          "type": "Season 1 finale (2–3 sessions)",
+          "sessions": "2–3",
+          "dm_goal": "All three factions in the same space. The class wins the immediate fight but walks out with Undertow at large, Null Signal's data collected, and no clean answer on Fracture. This is a victory that opens more questions than it closes.",
+          "description": "Acting on information from Oshiro (sourced through Patchwork's contacts), the class intercepts a Chain logistics operation in the port district warehouse district. Kuma is running it. What they don't know: Null Signal's Splice has identified this operation as a data acquisition target — the Chain is transporting experimental quirk-suppression equipment, and Null Signal wants it. Fracture is also here, sabotaging Chain equipment because the Chain extorts the unlicensed quirk users in their community. The class walks into three factions with three different agendas and has to make decisions in real time.",
           "beats": [
-            "Undertow is containable — not beatable in a straight fight, but containable. Creative use of terrain, coordinated AoE, and sustained pressure can restrict his phasing options. The class has to work out that fighting him directly is not the play.",
-            "Flashpoint is not fully in control. Cremation at this scale is burning through her. She's not losing the fight — she's running out of fuel for it.",
-            "Midpoint: the device is disabled by whichever group reached it. The kidnapping is foiled. The strategic objective is done. Now it's just the fight, which is somehow more manageable now that the stakes have narrowed.",
-            "Resolution: Undertow is contained — not killed, contained. The logistics of how is the class's problem to solve. Flashpoint's flames exhaust themselves and her. She ends the fight not because she loses it but because she physically cannot continue.",
-            "Riddle is in custody. He turned himself in before the Gala even started. What happens to him — trial, deal, something else — is the players' call, and the narrative should honour whatever they choose."
-          ]
-        },
-        {
-          "name": "Graduation",
-          "type": "Epilogue session",
-          "description": "One year later. The class has graduated. Murano is safer than it was — not fixed, but measurably better. Some things didn't resolve cleanly. This session is not about plot. It's about people.",
-          "beats": [
-            "Each student gets a moment: where are they now? What did they choose? The answers should reflect decisions made across the campaign, not generic hero career beats.",
-            "The class: some friendships are the same. Some changed in ways nobody planned. Some will last the rest of their lives and everyone knows it.",
-            "The ranking chart: Masahata's chart, on the common room fridge — defaced, laminated over, updated, torn, re-laminated — is still there. Someone left it. The final session ends with it still on the fridge.",
-            "A final scene together. Doesn't need to be dramatic — could be the common room one last time before it's someone else's dorm. The point is that they're there."
-          ]
+            "Arrival: the warehouse district at night. Signs of the Chain operation — logistics vehicles, a perimeter. Signs of something else — two Fracture cell members are already inside, cutting equipment cables. Signs of something else entirely — a Null Signal technical van is parked across the street monitoring equipment frequencies. The class has thirty seconds before Kuma notices the Fracture interference.",
+            "Kuma: loud, overconfident, not in on the Null Signal or Fracture presence. 'You're graduating early, students.' He starts Large. He reaches Huge by round 2. His growth is capped at Huge — the warehouse ceiling prevents Gargantuan. Use this. The class should figure out that the architecture is their advantage.",
+            "Splice: enters from the north loading door in round 3, after assessing that the fight will compromise the equipment he came for. He does not engage the class unless they block his path to the crates. If the class is occupied with Kuma, he takes what he came for and leaves clean. Either way, Null Signal gets something.",
+            "Shard: she's on the roof of the adjacent building, watching. If the class gets into serious trouble, she could intervene — whether she does depends on how they handled The Fracture Problem. She will not fight the class tonight regardless.",
+            "Undertow: he phases through the warehouse's east wall in the final round. He stands at the edge of the fight. He watches Kuma go down. He watches Splice complete or abandon his objective. He looks at each PC for three seconds each — unhurried, interested. Then he phases through the floor. He says one thing as he goes: 'Good instincts. Wrong scale.' He is gone.",
+            "Resolution: Kuma is arrested and in custody. Splice has retreated. Shard is gone. Undertow was never touchable. The class has won the immediate fight. Oshiro arrives — without being called. He reads a single-line report. He puts it down. He says: 'Get some sleep.' The report heading, visible to a sharp-eyed player: 'Undertow — confirmed active, Murano port. Status: at large.'"
+          ],
+          "season_1_hooks": {
+            "undertow": "At large. 'Wrong scale' is not a dismissal — it's an assessment. He's decided the class is interesting. Season 2 opens with Undertow being specifically interested in Class 1-A.",
+            "null_signal": "Whether Splice got the equipment or not, Null Signal has comprehensive combat data on every PC's quirk activation. Director Aoi Tenshin (Null) has been briefed. Her log entry describes the class as 'worth acquiring.' In Null Signal's context, this means something specific.",
+            "fracture": "Shard's question — 'which side are you on?' — is unanswered. The class's relationship with Fracture in Season 2 depends entirely on how they handled The Fracture Problem.",
+            "flashpoint_tease": "Among the Chain's seized equipment: an internal memo referencing 'Miruki's operation, port district, pending approval.' The name means nothing to the class yet.",
+            "riddle_tease": "One Chain cell member being processed says: 'We have a friend who talks to people. He talked to someone you know.' He won't say more. Plant this ambiguously — it could be Riddle, or it could be a bluff.",
+            "null_tease": "Splice's retreating van. A plate number and a logo: 'Seika Advanced Systems.' The same name from Hamagawa's monitor screen in Tier 1, if anyone remembered it."
+          },
+          "villain_seeds": {
+            "all_factions": "All three factions are fully present and active. The Chain (Kuma) is the direct confrontation — arrested. Null Signal (Splice) achieves a partial objective regardless of what the class does. Fracture (Shard) is neither defeated nor allied. Undertow's observation and departure is the closing image of Season 1."
+          }
         }
       ],
-      "chain_presence": "Endgame. Their operation collapses. Undertow is contained. Flashpoint is spent. Riddle is in custody. The organisation doesn't end — organisations don't — but this particular chapter does."
+      "villain_presence": "All three factions are fully active in Tier 2. The Chain (Kuma) is the direct confrontation — a winnable boss fight. Null Signal (Splice) is the operationally sophisticated secondary threat who achieves something regardless of how the main fight goes. Fracture (Shard, Voltage) is the moral complication that doesn't resolve cleanly. Undertow's Season 1 closing appearance — watching, commenting, leaving untouched — establishes the scale of the problem the class is not yet equipped to address."
     }
   ],
   "recurring_elements": {
-    "ranking_chart": "Masahata's ranking chart on the common room fridge persists through the entire campaign. It should be referenced at least once per tier. By Tier 4 it has been defaced, annotated, amended, and re-laminated so many times it's barely legible beneath the layers. He reprints it every time. This is never commented on directly.",
-    "oshiro_arrivals": "Whenever things get serious — genuinely, unavoidably serious — Oshiro Daikichi arrives at the scene without being called. No explanation is offered. He just shows up. This should remain unexplained.",
-    "kinosho_napping": "Kinosho Kochimiko is asleep somewhere in the background of every session where she is not the primary focus. This is consistent, unannounced, and never addressed. She is always awake again before it matters.",
-    "toshida_head": "Toshida's speech bubble head gets stuck in, on, or through something structural at least once per tier. The scale of the incident escalates as his quirk control improves but his spatial awareness does not. By Tier 4 it should involve load-bearing architecture."
+    "ranking_chart": "Masahata's ranking chart on the common room fridge persists through the entire campaign. Reference it at least once per tier. By Season 1's end it has been annotated, defaced, coffee-stained, and re-laminated over the original lamination. He reprints it every time. This is never commented on directly.",
+    "oshiro_arrivals": "Whenever things get genuinely serious, Oshiro Daikichi arrives at the scene without being called. No explanation is offered. He just shows up. This should remain unexplained through Season 1.",
+    "kinosho_napping": "Kinosho Kochimiko is asleep somewhere in the background of every session where she is not the primary focus. She is always awake again before it matters.",
+    "toshida_head": "Toshida's speech bubble head gets stuck in, on, or through something structural at least once per tier. The scale escalates as his quirk control improves but his spatial awareness does not.",
+    "faction_symbol_thread": "The Fracture jagged-line symbol appears in each Tier 1 arc (entrance exam wall, dorm leaflet, alley concrete). By the time Shard introduces herself in The Fracture Problem, the class has seen it three times in contexts they didn't understand. The connection is available in retrospect."
   }
 }

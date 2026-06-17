@@ -10,11 +10,9 @@
     --bg: #0C1017; --surface: #111923; --surface2: #18222E;
     --border: rgba(255,255,255,0.07); --border-strong: rgba(255,255,255,0.14);
     --text: #E8EDF3; --text-muted: #8A9BB0; --text-dim: #3E5068;
-    --purple: #E8A020; --purple-light: rgba(232,160,32,0.13); --purple-text: #F5C842;
+    --gold: #E8A020; --gold-light: rgba(232,160,32,0.13); --gold-text: #F5C842;
     --teal: #0EA572; --teal-light: rgba(14,165,114,0.13); --teal-text: #5FDBAA;
     --red: #EF4444; --red-light: rgba(239,68,68,0.13); --red-text: #FCA5A5;
-    --amber: #F59E0B; --amber-light: rgba(245,158,11,0.13); --amber-text: #FDE68A;
-    --green: #22C55E; --green-light: rgba(34,197,94,0.13); --green-text: #86EFAC;
     --radius: 10px; --radius-lg: 14px;
     --gold-glow: rgba(232,160,32,0.15);
   }
@@ -28,111 +26,90 @@
   header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 0 48px;
+    padding: 0 32px;
     position: relative;
   }
   header::after {
     content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, var(--purple) 0%, rgba(232,160,32,0.2) 50%, transparent 100%);
+    background: linear-gradient(90deg, var(--gold) 0%, rgba(232,160,32,0.2) 50%, transparent 100%);
   }
-  .header-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; gap: 16px; padding: 18px 0; }
+  .header-inner { max-width: 760px; margin: 0 auto; display: flex; align-items: center; gap: 14px; padding: 16px 0; }
   .header-icon {
-    width: 44px; height: 44px; border-radius: 10px;
-    background: var(--purple-light); border: 1px solid rgba(232,160,32,0.3);
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--gold-light); border: 1px solid rgba(232,160,32,0.3);
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px; flex-shrink: 0;
-    box-shadow: 0 0 16px var(--gold-glow);
+    font-size: 20px; flex-shrink: 0;
+    box-shadow: 0 0 14px var(--gold-glow);
   }
-  .header-text {}
-  .header-label {
-    font-size: 10px; font-weight: 700; color: var(--purple); letter-spacing: 0.14em;
-    text-transform: uppercase; margin-bottom: 1px;
-  }
-  header h1 { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+  .header-label { font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 1px; }
+  header h1 { font-size: 17px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
 
   /* ── Content ── */
-  main { max-width: 960px; margin: 0 auto; padding: 32px 48px 60px; }
+  main { max-width: 760px; margin: 0 auto; padding: 28px 32px 60px; }
 
-  .section-title {
+  .section-label {
     font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.12em;
-    text-transform: uppercase; margin-bottom: 12px; margin-top: 32px;
+    text-transform: uppercase; margin-bottom: 10px; margin-top: 24px;
     display: flex; align-items: center; gap: 8px;
   }
-  .section-title::before {
-    content: ''; display: block; width: 3px; height: 12px;
-    border-radius: 1px; background: var(--purple);
-  }
-  .section-title:first-child { margin-top: 0; }
+  .section-label::before { content: ''; display: block; width: 3px; height: 11px; border-radius: 1px; background: var(--gold); }
+  .section-label:first-child { margin-top: 0; }
 
-  /* ── Card grid ── */
-  .card-grid { display: grid; gap: 10px; }
-  .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
-  .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
-  .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+  /* ── Hero card ── */
+  .card-hero {
+    display: flex; gap: 16px; align-items: center; text-decoration: none; color: inherit;
+    background: linear-gradient(120deg, var(--surface) 0%, rgba(232,160,32,0.05) 100%);
+    border: 1px solid rgba(232,160,32,0.18); border-radius: var(--radius-lg);
+    padding: 20px 22px; transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+    margin-bottom: 10px;
+  }
+  .card-hero:hover { border-color: rgba(232,160,32,0.5); transform: translateY(-1px); box-shadow: 0 4px 24px var(--gold-glow); }
+  .card-icon {
+    width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    border: 1px solid rgba(232,160,32,0.25); box-shadow: 0 0 16px var(--gold-glow);
+  }
+  .card-body { flex: 1; min-width: 0; }
+  .card-title { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+  .card-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .card-arrow { font-size: 16px; color: var(--text-dim); flex-shrink: 0; transition: transform 0.15s, color 0.15s; }
+  .card-hero:hover .card-arrow { color: var(--gold); transform: translateX(3px); }
+
+  /* ── Row of smaller cards ── */
+  .card-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+  .card-sm {
+    display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: inherit;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 16px; transition: border-color 0.15s, transform 0.1s;
+  }
+  .card-sm:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+  .card-sm-icon { font-size: 18px; }
+  .card-sm-title { font-size: 13px; font-weight: 700; }
+  .card-sm-desc { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
+
+  /* Accent variants */
+  .accent-gold  .card-sm-title { color: var(--gold-text); }
+  .accent-teal  .card-sm-title { color: var(--teal-text); }
+  .accent-red   .card-sm-title { color: var(--red-text); }
+  .accent-gold:hover  { border-color: rgba(232,160,32,0.4)  !important; }
+  .accent-teal:hover  { border-color: rgba(14,165,114,0.4)  !important; }
+  .accent-red:hover   { border-color: rgba(239,68,68,0.35)  !important; }
 
   @media (max-width: 640px) {
     main { padding: 20px 16px 48px; }
     header { padding: 0 16px; }
-    .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; }
+    .card-row { grid-template-columns: 1fr 1fr; }
   }
-  @media (max-width: 900px) {
-    .card-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 400px) {
+    .card-row { grid-template-columns: 1fr; }
   }
-
-  /* ── Card ── */
-  .card {
-    display: block; text-decoration: none; color: inherit;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 18px 20px;
-    transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
-    cursor: pointer;
-  }
-  .card:hover {
-    border-color: rgba(232,160,32,0.5); transform: translateY(-1px);
-    box-shadow: 0 4px 24px var(--gold-glow);
-  }
-  .card-icon {
-    width: 36px; height: 36px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; margin-bottom: 10px;
-  }
-  .card-title { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
-  .card-desc { font-size: 12px; color: var(--text-muted); line-height: 1.55; }
-  .card-meta { font-size: 11px; color: var(--text-dim); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); }
-
-  /* ── Colour variants ── */
-  .icon-purple { background: var(--purple-light); }
-  .icon-teal   { background: var(--teal-light); }
-  .icon-red    { background: var(--red-light); }
-  .icon-amber  { background: var(--amber-light); }
-  .icon-green  { background: var(--green-light); }
-
-  /* ── Hero card (full width) ── */
-  .card-hero {
-    display: flex; gap: 18px; align-items: center;
-    padding: 22px 26px;
-    background: linear-gradient(120deg, var(--surface) 0%, rgba(232,160,32,0.06) 100%);
-    border-color: rgba(232,160,32,0.2);
-  }
-  .card-hero .card-icon {
-    width: 50px; height: 50px; font-size: 24px; flex-shrink: 0; margin-bottom: 0;
-    box-shadow: 0 0 20px var(--gold-glow);
-    border: 1px solid rgba(232,160,32,0.3);
-  }
-  .card-hero-body { flex: 1; min-width: 0; }
-  .card-hero .card-title { font-size: 17px; font-weight: 800; }
-  .card-hero-arrow { font-size: 18px; color: var(--text-dim); flex-shrink: 0; transition: transform 0.15s, color 0.15s; }
-  .card-hero:hover .card-hero-arrow { color: var(--purple); transform: translateX(4px); }
-
-  /* ── Divider ── */
-  .divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
 </style>
 </head>
 <body>
 <header>
   <div class="header-inner">
     <div class="header-icon">⚡</div>
-    <div class="header-text">
+    <div>
       <div class="header-label">U.A. High School — DM Command</div>
       <h1>My Hero Academia D&amp;D</h1>
     </div>
@@ -140,67 +117,45 @@
 </header>
 
 <main>
-  <!-- Class 1-A app -->
-  <p class="section-title">Class 1-A</p>
-  <div class="card-grid">
-    <a class="card card-hero" href="CLASS-1A/relationships.html">
-      <div class="card-icon icon-purple">🎓</div>
-      <div class="card-hero-body">
-        <div class="card-title">Class 1-A Toolkit</div>
-        <div class="card-desc">Character profiles, editable stats, quirk mechanics, relationship tracker, dice roller, and encounter manager</div>
-        <div class="card-meta">20 students · Editable · Auto-saves</div>
-      </div>
-      <div class="card-hero-arrow">→</div>
-    </a>
-  </div>
+  <p class="section-label">Class 1-A</p>
+  <a class="card-hero" href="CLASS-1A/relationships.html">
+    <div class="card-icon" style="background:var(--gold-light);">🎓</div>
+    <div class="card-body">
+      <div class="card-title">Class 1-A Toolkit</div>
+      <div class="card-desc">Character profiles, stats, quirk mechanics, relationship tracker, dice roller &amp; encounter manager</div>
+    </div>
+    <div class="card-arrow">→</div>
+  </a>
 
-  <hr class="divider">
+  <p class="section-label">Campaign</p>
+  <a class="card-hero" href="campaign.html">
+    <div class="card-icon" style="background:rgba(29,52,97,0.25);">🗺</div>
+    <div class="card-body">
+      <div class="card-title">Campaign Archive</div>
+      <div class="card-desc">Story arcs, session notes, world reference, teachers, villains &amp; Class 1-B — all in one page</div>
+    </div>
+    <div class="card-arrow">→</div>
+  </a>
+  <a class="card-hero" href="scripts.html">
+    <div class="card-icon" style="background:rgba(14,165,114,0.15);">📜</div>
+    <div class="card-body">
+      <div class="card-title">DM Scripts</div>
+      <div class="card-desc">Session openers, arc narration, NPC voice notes, level-up moments &amp; combat read-outs — editable</div>
+    </div>
+    <div class="card-arrow">→</div>
+  </a>
 
-  <!-- Campaign -->
-  <p class="section-title">Campaign</p>
-  <div class="card-grid card-grid-2">
-    <a class="card" href="campaign.html?file=arc">
-      <div class="card-icon icon-purple">🗺</div>
-      <div class="card-title">Arc Overview</div>
-      <div class="card-desc">All four campaign tiers, arcs, key beats, and the escalating Chain storyline</div>
-      <div class="card-meta">Tiers 1–4 · 16 arcs</div>
+  <p class="section-label">Rulebooks</p>
+  <div class="card-row">
+    <a class="card-sm accent-gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Offical%20Handbook%20-%20The%20Homebrewery.pdf" target="_blank">
+      <span class="card-sm-icon">📖</span>
+      <span class="card-sm-title">Official Handbook</span>
+      <span class="card-sm-desc">MHA5e core rules — PDF</span>
     </a>
-    <a class="card" href="campaign.html?file=world">
-      <div class="card-icon icon-teal">🏙</div>
-      <div class="card-title">World Reference</div>
-      <div class="card-desc">U.A. High, Murano city, hero society, student life, and rules notes</div>
-      <div class="card-meta">Setting · Society · Daily life</div>
-    </a>
-    <a class="card" href="campaign.html?file=teachers">
-      <div class="card-icon icon-amber">🧑‍🏫</div>
-      <div class="card-title">Teachers</div>
-      <div class="card-desc">Faculty profiles — quirks, personalities, teaching styles, and DM notes for 5 teachers</div>
-      <div class="card-meta">5 teachers · Oshiro, Fujisaki, and more</div>
-    </a>
-    <a class="card" href="campaign.html?file=villains">
-      <div class="card-icon icon-red">⛓</div>
-      <div class="card-title">Villains</div>
-      <div class="card-desc">Three villain factions — leadership profiles, stat blocks, and arc roles</div>
-      <div class="card-meta">The Chain · Null Signal · Fracture</div>
-    </a>
-  </div>
-
-  <hr class="divider">
-
-  <!-- Rulebooks -->
-  <p class="section-title">Rulebooks</p>
-  <div class="card-grid card-grid-2">
-    <a class="card" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Offical%20Handbook%20-%20The%20Homebrewery.pdf" target="_blank">
-      <div class="card-icon icon-green">📖</div>
-      <div class="card-title">Official Handbook</div>
-      <div class="card-desc">My Hero Academia — The Homebrewery official handbook for MHA5e rules</div>
-      <div class="card-meta">PDF · Opens in new tab</div>
-    </a>
-    <a class="card" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf" target="_blank">
-      <div class="card-icon icon-green">⚡</div>
-      <div class="card-title">Quirk Compendium</div>
-      <div class="card-desc">Full quirk definitions and mechanics reference for MHA5e</div>
-      <div class="card-meta">PDF · Opens in new tab</div>
+    <a class="card-sm accent-gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf" target="_blank">
+      <span class="card-sm-icon">⚡</span>
+      <span class="card-sm-title">Quirk Compendium</span>
+      <span class="card-sm-desc">Full quirk mechanics — PDF</span>
     </a>
   </div>
 </main>

@@ -22,6 +22,18 @@
           "title": "Table Rules Reminder",
           "when": "Optional — use if needed at session start",
           "body": "Quick reminders before we go: quirk use is free outside of significant physical effort unless otherwise stated. Describe what your character does, not just the mechanic. If you're not sure if something is possible, ask — I'll tell you if it needs a roll. We play to find out what happens, not to win."
+        },
+        {
+          "id": "between_sessions_dorm",
+          "title": "Dorm Night — Between Arcs",
+          "when": "Opening of a quieter session after a high-tension arc",
+          "body": "It's been four days since the incident. The dorms feel different now — not haunted, exactly, but slightly charged, like the air after a lightning strike.\n\nSomeone left Masahata's ranking chart face-down on the table. Nobody's turned it back over. The common room television is on a low volume and nobody's watching it.\n\nYou've been training harder this week. All of you. Nobody scheduled it. Nobody mentioned it. You just started showing up earlier.\n\nOshiro walked past the practice room at seven this morning. He glanced in. He kept walking. That felt like something."
+        },
+        {
+          "id": "open_before_festival_day",
+          "title": "Festival Morning",
+          "when": "Start of the first Sports Festival session — before the bus",
+          "body": "You didn't sleep well. You wouldn't admit that to anyone.\n\nThe bus to the venue leaves at seven. You're all in the lobby at six forty. Nobody talks much. Masahata has a printed itinerary with colour-coded time slots. Toshida's head briefly becomes the words 'I'm fine' — which tells you he isn't. Kinosho is asleep against the window. You have no idea when she got there.\n\nForty thousand people are going to watch you today. Hero agencies are going to watch you today. One of you is going to lose. Most of you are going to lose.\n\nThe bus pulls out. Murano city slides past the windows. Somewhere across the city, Class 1-B is on their own bus. Their coach has a different expression on his face.\n\nYou have forty minutes."
         }
       ]
     },
@@ -53,6 +65,18 @@
           "title": "Convergence — The Port District",
           "when": "Opening of the Convergence arc — arriving at Murano port",
           "body": "The port district at night. Container yards, loading cranes, the smell of salt water and diesel. The tip came in two hours ago: suspected Chain operation, warehouse seven, south dock.\n\nOshiro dropped you at the perimeter. He said: 'Observe first. Three minutes minimum. Then you make a decision.' He didn't say what the decision was.\n\nYou are standing in the dark between two shipping containers. Something is happening in that warehouse. You can hear it — machinery, voices, something that doesn't sound like cargo.\n\nYou have been here for ninety seconds."
+        },
+        {
+          "id": "dorm_life_open",
+          "title": "Dorm Move-In",
+          "when": "First session of the dorm arc — the class arrives at the U.A. residential block",
+          "body": "The U.A. residential block is larger than you expected. Your room is smaller than you expected. These two facts cancel out.\n\nDown the corridor: Masahata is already unpacking using a system. Toshida's door is open and something comic-book-shaped has already gone through it accidentally. Kinosho hasn't been seen since arrival — her room light is on.\n\nThe common room has a refrigerator, a television, and a corkboard with a single rule on it: 'No quirk use in the kitchen (Yamamoto Incident, 2019). — U.A. Facilities.'\n\nSomewhere across the campus, Class 1-B has a matching block. Identical layout. Their fridge rule is different.\n\nYou live here now. Figure out how to do that."
+        },
+        {
+          "id": "agency_visit_open",
+          "title": "The Agency Visit",
+          "when": "Opening of the work-experience arc — arriving at Patchwork Hero Agency",
+          "body": "Patchwork Hero Agency operates out of the Murano port district. The building was a logistics office before the agency moved in. It still has the original carpet.\n\nYour contact is a support hero called Ironside. She shakes your hand with the hand that isn't reinforced steel. She says: 'We handle three to five calls per shift. Low-level. Domestic disputes, noise complaints, the occasional Chain-adjacent situation. Don't let 'low-level' make you sloppy.'\n\nOut the window: the Murano port. Container cranes. The warehouse district.\n\nIronside adds, without looking up from her desk: 'Stay in pairs. The port district is friendly until it isn't.'"
         }
       ]
     },
@@ -74,6 +98,12 @@
           "body": "MANNER: Warm but precise. Remembers everything every student has ever said. Asks follow-up questions that reveal she's been paying attention since day one. Her concern is always genuine — which makes it more unsettling when she's serious.\n\nKEY LINES TO HAVE READY:\n• 'How are you doing? Not your quirk. You.'\n• 'That's interesting. Tell me more about why you made that choice.'\n• 'I think you already know the answer to that.'\n• 'I'll make a note of that.' [and she means it]\n\nNEVER: Dismisses a student's feelings. Gives easy answers. Raises her voice."
         },
         {
+          "id": "matsunami_voice",
+          "title": "Matsunami Goro — Voice & Manner",
+          "when": "Reference before playing 1-B's teacher (Scaffold) in any scene",
+          "body": "MANNER: Methodical, patient, and quietly competitive. He doesn't trash-talk Class 1-A directly — he just makes observations that happen to be unfavourable comparisons. Everything is delivered with the casual confidence of someone who has already run the numbers.\n\nKEY LINES TO HAVE READY:\n• 'Class 1-B trains at six. Every day.' [when asked nothing — offered unprompted]\n• 'Your instincts are good. Instincts aren't the same as preparation.'\n• 'Oshiro runs an interesting class. Very reactive. My students are taught to front-load.'\n• [Watching a 1-A fight] A slow nod. No comment. The nod is the comment.\n• 'Interesting choice.' [meaning: that wasn't the right choice]\n\nNEVER: Openly antagonises Oshiro. Admits his class has weaknesses. Underestimates a student he hasn't seen fight. Gets loud."
+        },
+        {
           "id": "shard_voice",
           "title": "Shard (Fracture) — Voice & Manner",
           "when": "Reference before playing Shard",
@@ -84,6 +114,30 @@
           "title": "Undertow — Voice & Manner",
           "when": "Reference for the Convergence arc appearance",
           "body": "MANNER: He sounds like someone who has already read the room, already decided how it ends, and is only still here because he finds you marginally interesting. Precise diction. No wasted words.\n\nHE SAYS EXACTLY ONE THING TO THE CLASS:\n'Good instincts. Wrong scale.'\n\nThen he phases out.\n\nDo not elaborate. Do not let him be drawn into conversation. He has already left by the time someone tries to respond. The line should feel like a compliment and an insult at the same time, and the players should be uncertain which one it was."
+        },
+        {
+          "id": "morida_voice",
+          "title": "Morida Takeshi — Voice & Manner",
+          "when": "Reference before playing 1-B's strongest physical student",
+          "body": "MANNER: Disciplined, measured, contemptuous of flashy quirk use without saying so. Doesn't do small talk. His compliments are so minimal they sound like neutral observations. Players should feel vaguely evaluated whenever he looks at them.\n\nKEY LINES TO HAVE READY:\n• 'That was efficient.' [his highest praise]\n• 'Your timing is inconsistent.' [after watching a student fight, unprompted]\n• [After someone's quirk display] A pause. 'That works.'\n• [In combat] Nothing. He doesn't speak during a fight.\n• [Post-fight, win or loss] 'I'll note that.'\n\nNEVER: Emotes visibly. Raises his voice. Shows surprise. Acknowledges 1-A students by name until they've earned it — and they have to earn it from him specifically."
+        },
+        {
+          "id": "yashiro_voice",
+          "title": "Yashiro Fumiko — Voice & Manner",
+          "when": "Reference before playing 1-B's teleporter",
+          "body": "MANNER: Smug, playful, treats everything like a game she's already won. The surprise is that she's also genuinely sincere about competition — she wants a good fight more than an easy win.\n\nKEY LINES TO HAVE READY:\n• 'You're fun to watch. You keep doing the same thing hoping for a different result.'\n• 'Oh, I've been here for a while.' [while appearing from an unexpected position]\n• [After a close call] A grin. 'Okay. That was good.'\n• 'I'm not trying to make you feel bad. I'm trying to make you faster.'\n• [To Ren Suzuki specifically] 'See you at the bracket.'\n\nNEVER: Plays mean. Dismisses a student who's genuinely improving. Takes a fight so seriously she stops enjoying it. Blinks to flee — only to flank."
+        },
+        {
+          "id": "ogiwara_voice",
+          "title": "Ogiwara Bunta — Voice & Manner",
+          "when": "Reference before playing 1-B's loudest student",
+          "body": "MANNER: Physically loud without trying. Enthusiastic. No hidden agenda. The rarest kind of competitor — one who genuinely wants you to be good enough to make the fight worth having.\n\nKEY LINES TO HAVE READY:\n• 'OKAY.' [delivered at full volume as an affirmation, a greeting, and a challenge simultaneously]\n• 'That was a good hit. Do it again.'\n• [After taking a hit] 'Ha! Alright!'\n• [Before a fight] A thumbs up. Completely, sincerely, unironically meant.\n• [To Toshida] 'You. Bracket. I'll find you.'\n\nHIS ONE WEAKNESS: He cannot go quiet when he's excited. His volume has no indoor setting. He is apologetic about this and immediately does it again."
+        },
+        {
+          "id": "voltage_voice",
+          "title": "Voltage (Fracture) — Voice & Manner",
+          "when": "Reference for the Fracture Problem arc",
+          "body": "MANNER: Quiet where Shard is articulate. He doesn't want to debate — he just knows what he thinks is right and acts on it. He's not threatening the students. He's not trying to be a villain. He's a twenty-three-year-old from the port district who learned his quirk in secret because he had no other option.\n\nKEY LINES TO HAVE READY:\n• 'She's not asking you to fight us. She's asking you to think.'\n• [Intervening between a guard and a protester] No lines. Just positions himself there and doesn't move.\n• 'I've been using this quirk since I was eight. Nobody taught me. Nobody helped me. That's the problem.'\n• [When the class seems to be following orders they disagree with] 'You know this is wrong.'\n\nNEVER: Antagonises students unprovoked. Fights unless defending someone specific. Explains himself at length — Shard handles the arguments; Voltage handles the action."
         }
       ]
     },
@@ -99,10 +153,22 @@
           "body": "Oshiro's report is brief: 'Class 1-A has passed the entrance assessment. Placement is confirmed. Training begins Monday.'\n\nThe results are posted on the board outside homeroom. Your names are on it. You are in.\n\nSomewhere in the building, twenty-one other students are reading the same board. Class 1-B.\n\nYou have two days before training starts. Get used to each other."
         },
         {
+          "id": "level_3",
+          "title": "Level 3 — After Capture the Flag",
+          "when": "Read after the CTF exercise concludes",
+          "body": "Oshiro's debrief is three sentences: 'You protected your flag. You failed to predict the second incursion. The solution to the second incursion was available if you'd looked for it thirty seconds earlier.'\n\nHe posts your combined score: 78 out of 100. He adds: 'Class 1-B's equivalent exercise: 81.'\n\nHe leaves.\n\nMasahata is already updating the chart. Nobody looks at the chart for a long time."
+        },
+        {
           "id": "level_4",
           "title": "Level 4 — Before the Sports Festival",
           "when": "Read as the class receives their Sports Festival briefing",
           "body": "Three months at U.A. You've run rescue drills, studied hero law, sparred against each other and against Oshiro's training drones. You've gotten better. You can feel it.\n\nThe Sports Festival notice goes up on a Tuesday. Forty schools participating. Live broadcast. Hero agencies watching.\n\nOshiro reads out the notice in a flat voice. When he's done, he folds the paper and looks at the room.\n\n'You've been training for this without knowing it. Don't waste it.'\n\nHe leaves. You have two weeks."
+        },
+        {
+          "id": "level_5",
+          "title": "Level 5 — After the Sports Festival",
+          "when": "Read at the first session following the Sports Festival arc",
+          "body": "The broadcast replay has been watched by a combined audience of forty-three million people. Masahata has the numbers.\n\nThree hero agencies have sent preliminary letters of interest. Oshiro has the letters on his desk. He hasn't opened them yet, as far as anyone can tell.\n\nClass 1-B's Morida gave an interview. He said: 'Class 1-A is stronger than their exam scores suggested.' He was asked if that was a compliment. He said: 'It was an assessment.'\n\nYou've been back in class for two days. Training feels different now — not harder, exactly. More specific. Like you know what you're actually preparing for."
         },
         {
           "id": "level_6",
@@ -134,6 +200,97 @@
           "title": "Splice — First Appearance",
           "when": "When Splice is identified in a scene",
           "body": "You almost missed her. That was the point.\n\nShe's been in this room for four minutes. She has a camera. She has already photographed everyone present. The camera is now put away and she looks like someone who is simply leaving — except she's walking toward the Chain's data terminal, not the exit.\n\nShe notices you've noticed her.\n\nShe smiles like someone who just moved a piece on a board you didn't know you were playing on."
+        },
+        {
+          "id": "kuma_growth",
+          "title": "Kuma — Escalating Size",
+          "when": "Read at the end of each round as Kuma grows during the Convergence fight",
+          "body": "ROUND 2:\nHe's bigger. You registered it between one exchange and the next — not a transformation, exactly, just a continuous accumulation that doesn't stop. The ceiling is still two metres above him. For now.\n\nROUND 3:\nHis shoulders are brushing the loading shelves on either side. One of the shelves has already buckled. He doesn't seem to notice. His movement is slower but his reach is not.\n\nROUND 4 (USE SPARINGLY — only if still going):\nHe fills the warehouse like the warehouse was built for him. The ceiling is no longer above him — it's pressed against him. He can't grow further in here. He knows this.\n\nHe looks up at the architecture.\n\n'You planned this part.'"
+        },
+        {
+          "id": "high_stakes_clock",
+          "title": "Countdown Pressure",
+          "when": "When the class is racing against a time limit mid-combat",
+          "body": "You have [X] minutes.\n\nThat number felt large at the start. It does not feel large now.\n\nEvery decision you make is also a decision about time. Engaging costs time. Disengaging costs time. Standing still costs the most.\n\nOshiro's voice from two months ago: 'Urgency is a weapon. It's just as often used against you.'\n\nClock's running."
+        },
+        {
+          "id": "fracture_confrontation",
+          "title": "The Fracture Stand-Off",
+          "when": "The moment the class arrives at the Fracture protest and has to decide how to engage",
+          "body": "The protest is peaceful. That's the first thing you register — it's loud, there are hundreds of people, and it's peaceful.\n\nThe second thing you register: Fracture cell members are positioned at intervals around the crowd. Not threatening anyone. Positioned. Like bodyguards.\n\nThe Commission security team is watching you. Waiting to see what Class 1-A is going to do.\n\nThe Fracture members are watching you. Also waiting.\n\nThe protesters are watching you.\n\nShard is at the centre of the crowd. She's not watching you. She's speaking to someone. She'll be done in a moment.\n\nYou have about thirty seconds before you have to do something."
+        }
+      ]
+    },
+    {
+      "id": "sports_festival_battles",
+      "label": "Sports Festival — Bracket Battles",
+      "icon": "🏟️",
+      "scripts": [
+        {
+          "id": "sf_r1_toragi_vs_toshida",
+          "title": "R1 · Toragi vs. Toshida",
+          "when": "Read while PCs are waiting for their match — describes what they see/hear from the stands or the tunnel",
+          "body": "The announcer calls it a matchup between 'two of 1-A's most creative quirk users.' The crowd doesn't know what that means yet.\n\nToshida steps out first. His head is already cycling through something — the word FOCUSED appears briefly, visible to the first three rows. The crowd in those rows laughs, then stops laughing because the look on his face is serious.\n\nToragi comes in quiet. She always comes in quiet.\n\nThe first thirty seconds are positioning — both of them reading the arena, reading each other. Then Toshida opens with a shout. Not at her. At the floor, two metres to her left — a sound wave that reconfigures into the word DELAY just before impact.\n\nToragi's first Impact misfires. The delay component breaks. The crowd makes a noise that suggests it isn't sure what happened.\n\nShe takes four steps backward. Resets.\n\nThe second Impact doesn't misfire. It lands directly and the sound the arena makes is involuntary — forty thousand people simultaneously startled by something they felt in their sternum.\n\nToshida is down. The scorecard reads: Toshida, Shogoro — Unable to continue.\n\nToragi is already walking off the field. She looks like she's running a calculation."
+        },
+        {
+          "id": "sf_r1_kinosho_vs_aikawa",
+          "title": "R1 · Kinosho vs. Aikawa",
+          "when": "Read as the PCs watch from the tunnel or stands — builds the 'What Is She Doing?' legend",
+          "body": "Kinosho is already on the field when her name is announced. Nobody saw her enter.\n\nAikawa comes out with her iron claws fully extended — a sound like shears opening. The crowd appreciates this. The scoreboard shows the betting lines shifting toward Aikawa. Iron Claws versus — what? The commentary team has been describing Kinosho's quirk all morning and still hasn't made it land.\n\nAikawa charges. The claws swing. There's a sound like nothing — a flat absence of a sound that should have been there — and the claws deactivate mid-arc. Not bend. Not break. Simply stop being iron claws. Aikawa stares at her hands for one full second. That second is enough.\n\nKinosho walks up to her. Unhurried. Precise. The fight ends in the next forty seconds.\n\nThe crowd does not understand what just happened. The commentary team attempts to explain it. The explanation does not help.\n\nThe phrase 'What Is She Doing?' is coined by a sports broadcaster in Osaka. It trends nationally within the hour.\n\nKinosho, leaving the field, appears to check something off a mental list."
+        },
+        {
+          "id": "sf_r1_kitamura_vs_takazuki",
+          "title": "R1 · Kitamura vs. Takazuki",
+          "when": "Read to illustrate 1-B's clinical precision — a fight that impresses without being dramatic",
+          "body": "The arena feels different after Kitamura enters it. You can't see what she's done, but something has changed.\n\nTakazuki goes invisible immediately — a standard read on the situation, nothing wrong with it. Standard unless the person you're fighting has already mapped the arena in seventeen tension vectors and can locate you by the resistance pattern of a wire you haven't noticed yet.\n\nThe crowd watches an empty arena for forty-five seconds. There's nothing to see.\n\nThen, sequentially: a sound of something tightening. A constraint — one limb, then another. Takazuki reappears, not by choice, suspended in a geometry of near-invisible wire that catches the arena light like rain.\n\nThe match official calls it.\n\nKitamura recalls the wires. The arena is clean.\n\nThe crowd is respectful in the way crowds are respectful when they're not entirely sure what they watched. From the 1-B waiting area, Matsunami Goro watches and says nothing. He seems satisfied."
+        },
+        {
+          "id": "sf_r1_yashiro_vs_yoshibara",
+          "title": "R1 · Yashiro vs. Yoshibara",
+          "when": "Read for comedic relief mid-bracket — this is the crowd's favourite early match",
+          "body": "Two displacement-type quirk users. The crowd has been briefed. The crowd thinks it understands what this means.\n\nThe crowd is wrong.\n\nFor three minutes, Yashiro teleports and Yoshibara doubles, and neither of them lands a single clean hit. The arena looks like someone is trying to play chess using mirrors. The crowd begins narrating things that aren't happening. The commentary team gives up explaining and starts describing.\n\nYashiro blinks directly into Yoshibara's double. She pauses. She looks at it. For three full seconds — an eternity at Sports Festival pace — she stares at the double with the expression of someone who has encountered something that genuinely doesn't compute.\n\nYoshibara — the real one, seven metres behind — lands the hit.\n\nThe arena erupts. Yashiro goes down with the expression of someone who has just lost an argument she thought she had already won. She lies on the field for a moment longer than is strictly necessary.\n\nYoshibara looks equally surprised that this worked. She is trying not to show it. She is not succeeding.\n\nThe highlight clip runs on repeat on the broadcast for the next two hours."
+        },
+        {
+          "id": "sf_r1_setaka_vs_1b",
+          "title": "R1 · Setaka vs. 1-B (Clearing the Arena)",
+          "when": "Read to establish Setaka's presence and scale",
+          "body": "Setaka Toko steps out and the crowd cheers because Setaka Toko stepping out means something is going to happen to the arena.\n\nThe iron balls emerge from the field device at her hip — slow at first, orbital, like she's calibrating. The 1-B student opposite her watches the first ball arc past and makes a decision: attack now, before the coverage expands.\n\nTwo more balls are already between them.\n\nBy the second minute, there is no safe space in the arena under about forty square metres — the rest of it is contested, ricocheting, actively occupied by iron balls that do not stop. The 1-B student is cornered against the wall. The surrender comes with dignity. The cleanup crew takes fourteen minutes.\n\nOne ball has to be extracted from the arena wall with a crowbar.\n\nSetaka watches this with the focused attention of someone who is already calculating the next match's coverage geometry. She has opinions about the crowbar angle. She keeps them to herself."
+        },
+        {
+          "id": "sf_qf_morida_vs_toragi",
+          "title": "QF · Morida vs. Toragi",
+          "when": "Read for the quarterfinal — the best fight of the early bracket",
+          "body": "This is the fight both classes have been waiting for, even if nobody said so.\n\nMorida's armour goes up immediately — the full plate, the kind that has bent blades and absorbed direct energy discharges across two months of 1-B training. His eyes are the only exposed point. He doesn't move from his position. He doesn't need to. He has decided the ground beneath his feet is his.\n\nToragi approaches like she has a plan. She does have a plan.\n\nThe first Twin Impact is a probe — she knows it might not land cleanly. What she doesn't know is that Morida has studied her Impact delay mechanics from exam footage, from the R1 match, from three months of preparation. He disrupts the timing. The delay breaks. The Impact misses.\n\nFor one second, both fighters are completely still.\n\nSomething shifts in Toragi's expression — not frustration, adjustment. The recalculation is visible, and it's fast.\n\nThe second Impact doesn't probe. It commits. It lands.\n\nMorida, on the floor, takes a moment. He looks at the arm she hit.\n\nAfter the match, he walks to her. He says: 'Your Impact timing — I disrupted it once. That's the only time that's worked on anyone I've spoken to.'\n\nShe says: 'I know.'\n\nHe nods. They both write this down. In the 1-B waiting area, Matsunami marks something in a notebook that is already full of marks."
+        },
+        {
+          "id": "sf_qf_ogiwara_vs_kinosho",
+          "title": "QF · Ogiwara vs. Kinosho",
+          "when": "Read for the quarterfinal — 'What Is She Doing?' airs for the second time",
+          "body": "The crowd is loud for Ogiwara. Ogiwara is always loud for himself. He stomps once at the arena entrance — a 10-foot tremor that rattles the starting marks — and gives the crowd a thumbs up that they return with noise.\n\nKinosho appears. Nobody clocked when she got there.\n\nOgiwara stomps. The shockwave expands in a 20-foot radius and does exactly what shockwaves do — except to Kinosho, who isn't there anymore. Her Neutralization had already been deployed: not at Ogiwara's quirk, but at the ground contact point, attempting to interrupt the seismic chain.\n\nIt works for one stomp.\n\nThe second shockwave is in the ground already by the time Kinosho realises Neutralization can't cancel a wave already propagating through the substrate. Her first plan fails visibly, in front of forty thousand people.\n\nHer second plan begins before she processes the failure.\n\nFrom arena debris — fragments of the scoring marker, a section of broken starting-gate casing, something the broadcast crew couldn't subsequently identify — she assembles something in forty seconds. She does not have a construction quirk. Nobody on the commentary team mentions this because they are still trying to describe what's happening.\n\nOgiwara is briefly airborne. The contraption holds him there for exactly long enough.\n\nOgiwara, post-match: 'I don't know what she did.'\n\nHe has never said this about an opponent. He seems genuinely interested rather than annoyed. He asks Kinosho about it directly. She is asleep by the time he finds her.\n\n'What Is She Doing?' airs for the second time. The segment now has a title card."
+        },
+        {
+          "id": "sf_semi_toragi_vs_ren",
+          "title": "SF · Toragi vs. Ren — The Upset",
+          "when": "Read if this is an NPC fight, or use as DM reference for the PC version — the moment that defines the semifinal",
+          "body": "The announcer reminds the crowd that Ren Suzuki placed first in the obstacle race and hasn't lost a match.\n\nToragi says nothing. She is already on her side of the arena.\n\nRen moves first — Overclock at near-full output, a straight line, the fastest approach in the bracket. He has won every fight by being faster than the response window allows.\n\nTwin Impact's first hit is placed at his approach vector. It looks like a shot at where he is. He reads it correctly and dodges left.\n\nThe Impact wasn't aimed at where he is.\n\nIt was aimed at where someone moving left goes.\n\nThe detonation point is exactly on the dodge corridor. Ren cannot outrun something calibrated for where he's going rather than where he started.\n\nThe hit lands. The arena takes a moment to understand what happened. Then it is very loud.\n\nRen stands at the edge of the arena for a moment — not collecting himself, specifically, just standing there. Looking at the point where the second Impact landed. Something is happening behind his face that doesn't surface.\n\nHe leaves without speaking to anyone.\n\nLater: he finds Toragi in the corridor. He says: 'The second hit.'\n\nShe says: 'Yes.'\n\nThat's the whole conversation. He thinks about it for the rest of the campaign."
+        },
+        {
+          "id": "sf_final_toragi_vs_chosen",
+          "title": "Final · Toragi vs. Chosen",
+          "when": "Read for the tournament final — the match that ends the Sports Festival arc",
+          "body": "The bracket board has two names left. The class has watched Toragi win three fights. They've watched Chosen win three fights and get progressively harder to be near.\n\nThe final begins.\n\nToragi's plan is visible in retrospect: end it fast, before the escalation curve compounds. She has studied Chosen's last three fights and she knows exactly where round 4 goes.\n\nShe lands the first hit in the opening exchange. It is the cleanest technical strike of the entire tournament. Perfect timing, perfect placement.\n\nIt is the worst decision she could have made.\n\nChosen at round 1 stress level is manageable. Chosen in the final of a nationally broadcast tournament, having already run three escalating fights, having now been struck cleanly in front of forty million viewers — is something the crowd is not prepared for.\n\nThe broadcast commentary goes quieter through round 3.\n\nBy round 4, the commentary team isn't filling the space with words. The audio is just crowd noise and the sound of the fight.\n\nRound 5. Nobody predicted round 5. Toragi's technique is still correct at round 5. Correct against the thing Chosen is at round 5 is not the same as sufficient.\n\nChosen wins.\n\nThe commentary team is silent for four full seconds.\n\nThen very loud.\n\nChosen is still in the arena. The crowd is still loud. He comes down slowly — not savoring, just taking the time to come down. Give that moment: the noise still going, him standing in the centre of the field, the crowd that just watched something that wasn't purely a competition.\n\nOshiro, watching from the faculty section, says nothing. He looks at Oshiro's notes on the desk beside him: one sentence, legible from two seats over: Good instincts. Wrong scale? — and then a question mark he didn't have before tonight."
+        },
+        {
+          "id": "sf_cavalry_1b_coordination",
+          "title": "Cavalry Battle — 1-B's Plan",
+          "when": "Read during the cavalry battle when 1-B's coordination becomes visible",
+          "body": "Halfway through the cavalry battle, you notice it.\n\nClass 1-B's four-person team hasn't changed formation once. Every pivot, every response to a threat, happens as a single coordinated movement — not communicated, pre-planned. Someone protected a flank thirty seconds before the flank was attacked.\n\nMatsunami drilled them on this. He spent two weeks on it. You didn't have two weeks on this.\n\nAcross the arena, the 1-B team's headband count ticks upward. Their current leader — Morida, near-impervious, anchoring the centre — makes eye contact with someone in your formation.\n\nHe doesn't change expression.\n\nSomewhere, Masahata's ranking chart is about to get a new column."
+        },
+        {
+          "id": "sf_obstacle_race",
+          "title": "Obstacle Race — The Field",
+          "when": "Read at the start of the obstacle course event — before the PCs make their first decision",
+          "body": "The obstacles are not the obstacle.\n\nThat's what Oshiro said two months ago during a drill, and you didn't understand it then. You might understand it now: there are sixteen students in your immediate field of view, all of them with quirks, all of them making decisions about the same terrain you're making decisions about — and their decisions are part of the terrain.\n\nThe course is five kilometres. The announced hazards are: collapsed structures, a suspension bridge with load-sensing plates, and 'hero-grade restraint drones' whose parameters they will not specify.\n\nFirst place seeds into the individual tournament bracket.\n\nThe gates open.\n\nWhat do you do?"
         }
       ]
     },
@@ -153,6 +310,18 @@
           "title": "Cliffhanger Close",
           "when": "End of a session that ends on a reveal or unresolved threat",
           "body": "And that's where we stop.\n\n[DESCRIBE THE UNRESOLVED MOMENT IN ONE SENTENCE]\n\nYou don't have an answer for this yet. That's fine. Neither do I.\n\nSee you next week."
+        },
+        {
+          "id": "sports_festival_close",
+          "title": "Sports Festival — End of Day",
+          "when": "Close of the Sports Festival arc's final session",
+          "body": "The arena clears in stages. By the time you reach the tunnel exit, the broadcast truck is already packing down. Someone from a hero agency left a card with the U.A. faculty desk. You don't know whose name is on it.\n\nThe bracket board is still lit. Your name is somewhere on it — win column, loss column, however far you went. It will be referenced for the rest of the campaign.\n\nIn the 1-B changing room, Masahata is reprinting the ranking chart. The original laminate didn't survive the day. The new version will be on the fridge by morning.\n\nOshiro met you at the gate. He said: 'Get some sleep.'\n\nYou didn't ask what that meant today. You've started learning when not to ask."
+        },
+        {
+          "id": "post_combat_close",
+          "title": "After the Fight — Wind-Down",
+          "when": "End of a session that concluded with a major combat encounter",
+          "body": "The adrenaline takes a while to leave. You're probably aware of that already.\n\nSomewhere in the next twenty minutes you'll start noticing the small injuries — the hit you didn't process, the thing you landed on wrong, the way your quirk is sitting differently now that you've pushed it past a threshold you hadn't hit in training.\n\nEveryone's accounted for. Nobody's critically hurt. That counts.\n\nWe'll debrief properly next session. For now: [DESCRIBE THE IMMEDIATE AFTERMATH — where they are, what's still happening around them]. You did the thing. You can breathe.\n\nThat's where we'll leave it."
         }
       ]
     }

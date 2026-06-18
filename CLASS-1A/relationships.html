@@ -319,6 +319,52 @@
   .tm-dmg-btn.heal:hover { background: var(--green-light); }
   #tm-hp-feedback { font-size: 11px; color: var(--text-dim); margin-left: 4px; }
 
+  /* ── Board Mode ──────────────────────────────────────── */
+  #board-overlay {
+    display: none; position: fixed; inset: 0; z-index: 110;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center;
+  }
+  #board-overlay.open { display: flex; }
+  #board-modal {
+    background: var(--surface); border: 1px solid rgba(139,71,212,0.3);
+    border-radius: 16px; width: calc(100vw - 40px); max-width: 1100px;
+    height: calc(100vh - 60px); max-height: 780px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 40px rgba(139,71,212,0.15);
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  #board-header {
+    display: flex; align-items: center; padding: 12px 18px;
+    border-bottom: 1px solid var(--border); gap: 12px; flex-shrink: 0;
+    background: linear-gradient(90deg, rgba(139,71,212,0.08) 0%, transparent 100%);
+  }
+  #board-title { font-size: 13px; font-weight: 800; color: var(--purple); letter-spacing: 0.08em; text-transform: uppercase; }
+  #board-distance-label { font-size: 13px; font-weight: 700; color: var(--gold,#E8A020); background: rgba(232,160,32,0.12); padding: 3px 12px; border-radius: 20px; border: 1px solid rgba(232,160,32,0.25); min-width: 140px; text-align: center; transition: opacity 0.2s; }
+  #board-close-btn { width: 28px; height: 28px; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--text-dim); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  #board-close-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  #board-body { flex: 1; display: flex; gap: 0; overflow: hidden; }
+  #board-tray {
+    width: 160px; flex-shrink: 0; border-right: 1px solid var(--border);
+    background: var(--bg); display: flex; flex-direction: column; overflow: hidden;
+  }
+  #board-tray-title { font-size: 9px; font-weight: 800; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 12px 6px; }
+  #board-tray-list { flex: 1; overflow-y: auto; padding: 4px 8px 8px; display: flex; flex-direction: column; gap: 5px; }
+  .board-tray-item {
+    display: flex; align-items: center; gap: 7px; padding: 6px 8px;
+    border-radius: 8px; cursor: pointer; border: 1px solid var(--border);
+    background: var(--surface); transition: border-color 0.1s, background 0.1s;
+    user-select: none;
+  }
+  .board-tray-item:hover { border-color: var(--purple); background: var(--purple-light); }
+  .board-tray-item.selected { border-color: var(--purple); background: var(--purple-light); box-shadow: 0 0 8px var(--gold-glow); }
+  .board-tray-item.is-dead { opacity: 0.4; }
+  .board-tray-token { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
+  .board-tray-name { font-size: 11px; font-weight: 600; color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  #board-grid-wrap { flex: 1; overflow: auto; display: flex; align-items: flex-start; justify-content: flex-start; padding: 16px; background: var(--bg); cursor: crosshair; }
+  #board-canvas { display: block; image-rendering: pixelated; }
+  #board-footer { flex-shrink: 0; padding: 8px 18px; border-top: 1px solid var(--border); background: var(--surface2); }
+  #board-hint { font-size: 11px; color: var(--text-dim); }
+
   /* ── Save bar ─────────────────────────────────────────── */
   #save-bar { display: flex; align-items: center; gap: 8px; padding: 6px 20px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
   #save-bar span { font-size: 10px; color: var(--text-dim); font-weight: 600; letter-spacing: 0.04em; }
@@ -424,6 +470,7 @@
         <button class="enc-btn" onclick="encRollAllInit()">Roll All Initiative</button>
         <div style="flex:1"></div>
         <button class="enc-btn" onclick="openTurnModal()" title="Run turns in a focused modal" style="font-weight:600;">▶ Turn Mode</button>
+        <button class="enc-btn" onclick="openBoardMode()" title="View units on a tactical grid" style="font-weight:600;">⊞ Board</button>
         <button class="enc-btn danger" onclick="encReset()">Reset Encounter</button>
       </div>
       <div id="enc-add-bar">
@@ -514,6 +561,32 @@
           </label>
           <span id="tm-dead-badge">☠ Downed</span>
           <button id="tm-next-btn" onclick="modalNextTurn()">End Turn →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Board Mode Overlay ── -->
+    <div id="board-overlay" onclick="if(event.target===this)closeBoardMode()">
+      <div id="board-modal">
+        <div id="board-header">
+          <span id="board-title">⊞ Board Mode</span>
+          <span id="board-distance-label"></span>
+          <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+            <button class="enc-btn" onclick="boardClearPositions()" title="Remove all units from grid">Clear Grid</button>
+            <button id="board-close-btn" onclick="closeBoardMode()" title="Close">✕</button>
+          </div>
+        </div>
+        <div id="board-body">
+          <div id="board-tray">
+            <div id="board-tray-title">UNPLACED</div>
+            <div id="board-tray-list"></div>
+          </div>
+          <div id="board-grid-wrap">
+            <canvas id="board-canvas"></canvas>
+          </div>
+        </div>
+        <div id="board-footer">
+          <span id="board-hint">Click a unit in the tray, then click a grid square to place it. Click placed tokens to select and measure distance.</span>
         </div>
       </div>
     </div>
@@ -1708,6 +1781,305 @@ function tmApplyHpToTarget(mode) {
   }
   if (inp) inp.value = '';
 }
+
+/* ── Board Mode ───────────────────────────────────────── */
+const BOARD_COLS = 30;
+const BOARD_ROWS = 20;
+const CELL = 36; // px per square
+let boardState = { pendingId: null, selectedIds: [] }; // pendingId = tray item waiting to be placed
+
+function openBoardMode() {
+  document.getElementById('board-overlay').classList.add('open');
+  renderBoard();
+}
+function closeBoardMode() {
+  document.getElementById('board-overlay').classList.remove('open');
+  boardState = { pendingId: null, selectedIds: [] };
+}
+
+function boardClearPositions() {
+  encounter.combatants.forEach(c => { c.boardX = null; c.boardY = null; });
+  boardState = { pendingId: null, selectedIds: [] };
+  encSave();
+  renderBoard();
+}
+
+function boardInitCanvas() {
+  const canvas = document.getElementById('board-canvas');
+  const W = BOARD_COLS * CELL;
+  const H = BOARD_ROWS * CELL;
+  if (canvas.width !== W || canvas.height !== H) {
+    canvas.width = W;
+    canvas.height = H;
+  }
+  return canvas;
+}
+
+function boardTokenColor(c) {
+  if (c.team !== null && c.team !== undefined && TEAM_COLORS[c.team]) {
+    return TEAM_COLORS[c.team].bg;
+  }
+  return '#8B47D4'; // default purple
+}
+
+function boardInitials(name) {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+}
+
+function renderBoard() {
+  renderBoardTray();
+  renderBoardCanvas();
+  renderBoardDistance();
+}
+
+function renderBoardTray() {
+  const list = document.getElementById('board-tray-list');
+  const unplaced = encounter.combatants.filter(c => c.boardX == null);
+  if (unplaced.length === 0) {
+    list.innerHTML = '<div style="font-size:11px;color:var(--text-dim);padding:8px 4px;font-style:italic;">All placed</div>';
+    return;
+  }
+  list.innerHTML = unplaced.map(c => {
+    const isDead = c.hp === 0;
+    const color = boardTokenColor(c);
+    const isPending = boardState.pendingId === c.id;
+    return `<div class="board-tray-item${isDead ? ' is-dead' : ''}${isPending ? ' selected' : ''}"
+      onclick="boardSelectTrayItem(${c.id})" title="${c.name} — HP: ${c.hp}/${c.maxHp}">
+      <div class="board-tray-token" style="background:${color};color:#fff;">${boardInitials(c.name)}</div>
+      <div class="board-tray-name">${c.name}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderBoardCanvas() {
+  const canvas = boardInitCanvas();
+  const ctx = canvas.getContext('2d');
+  const isDark = document.body.classList.contains('dark') || getComputedStyle(document.body).getPropertyValue('--bg').trim().startsWith('#0') || getComputedStyle(document.body).getPropertyValue('--bg').trim() === '';
+
+  // Background
+  ctx.fillStyle = isDark ? '#141820' : '#f0f0f0';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Alternating squares
+  for (let r = 0; r < BOARD_ROWS; r++) {
+    for (let c = 0; c < BOARD_COLS; c++) {
+      if ((r + c) % 2 === 1) {
+        ctx.fillStyle = isDark ? '#1a1f2a' : '#e4e4e4';
+        ctx.fillRect(c * CELL, r * CELL, CELL, CELL);
+      }
+    }
+  }
+
+  // Grid lines
+  ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.12)';
+  ctx.lineWidth = 1;
+  for (let c = 0; c <= BOARD_COLS; c++) {
+    ctx.beginPath(); ctx.moveTo(c * CELL, 0); ctx.lineTo(c * CELL, canvas.height); ctx.stroke();
+  }
+  for (let r = 0; r <= BOARD_ROWS; r++) {
+    ctx.beginPath(); ctx.moveTo(0, r * CELL); ctx.lineTo(canvas.width, r * CELL); ctx.stroke();
+  }
+
+  // Row/col labels
+  ctx.fillStyle = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.25)';
+  ctx.font = '9px sans-serif';
+  ctx.textAlign = 'center';
+  for (let c = 0; c < BOARD_COLS; c++) {
+    ctx.fillText(c + 1, c * CELL + CELL / 2, 10);
+  }
+  ctx.textAlign = 'right';
+  for (let r = 0; r < BOARD_ROWS; r++) {
+    ctx.fillText(String.fromCharCode(65 + r), CELL - 4, r * CELL + CELL / 2 + 4);
+  }
+
+  // Distance line between two selected units
+  const sel = boardState.selectedIds;
+  if (sel.length === 2) {
+    const a = encounter.combatants.find(c => c.id === sel[0]);
+    const b = encounter.combatants.find(c => c.id === sel[1]);
+    if (a && b && a.boardX != null && b.boardX != null) {
+      const ax = a.boardX * CELL + CELL / 2, ay = a.boardY * CELL + CELL / 2;
+      const bx = b.boardX * CELL + CELL / 2, by = b.boardY * CELL + CELL / 2;
+      ctx.save();
+      ctx.setLineDash([6, 4]);
+      ctx.strokeStyle = 'rgba(232,160,32,0.8)';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  // Tokens
+  const placed = encounter.combatants.filter(c => c.boardX != null);
+  for (const c of placed) {
+    const cx = c.boardX * CELL + CELL / 2;
+    const cy = c.boardY * CELL + CELL / 2;
+    const r = CELL / 2 - 3;
+    const isDead = c.hp === 0;
+    const color = boardTokenColor(c);
+    const isSelected = boardState.selectedIds.includes(c.id);
+
+    ctx.save();
+    if (isDead) ctx.globalAlpha = 0.35;
+
+    // Selection ring
+    if (isSelected) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(232,160,32,0.35)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(232,160,32,0.9)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    // Token circle
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // HP arc
+    const hpPct = c.maxHp > 0 ? c.hp / c.maxHp : 0;
+    const arcColor = hpPct > 0.5 ? '#2D9F4E' : hpPct > 0.25 ? '#C49A0A' : '#EF4444';
+    ctx.beginPath();
+    ctx.arc(cx, cy, r + 2, -Math.PI / 2, -Math.PI / 2 + hpPct * Math.PI * 2);
+    ctx.strokeStyle = arcColor;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Initials
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `bold ${CELL <= 32 ? 9 : 11}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(boardInitials(c.name), cx, cy);
+
+    ctx.restore();
+  }
+
+  // Pending placement highlight — show where next click will place
+  if (boardState.pendingId !== null) {
+    const hint = document.getElementById('board-hint');
+    if (hint) hint.textContent = 'Click a grid square to place the selected unit.';
+  }
+}
+
+function renderBoardDistance() {
+  const label = document.getElementById('board-distance-label');
+  const sel = boardState.selectedIds;
+  if (sel.length === 2) {
+    const a = encounter.combatants.find(c => c.id === sel[0]);
+    const b = encounter.combatants.find(c => c.id === sel[1]);
+    if (a && b && a.boardX != null && b.boardX != null) {
+      const dx = Math.abs(a.boardX - b.boardX);
+      const dy = Math.abs(a.boardY - b.boardY);
+      const squares = Math.max(dx, dy); // Chebyshev (D&D diagonal = 5ft)
+      const feet = squares * 5;
+      label.textContent = `${squares} sq · ${feet} ft`;
+      label.style.display = 'block';
+      return;
+    }
+  }
+  label.textContent = '';
+}
+
+function boardSelectTrayItem(id) {
+  boardState.pendingId = boardState.pendingId === id ? null : id;
+  boardState.selectedIds = [];
+  document.getElementById('board-hint').textContent = boardState.pendingId !== null
+    ? 'Click a grid square to place the selected unit.'
+    : 'Click a unit in the tray, then click a grid square to place it. Click placed tokens to select and measure distance.';
+  renderBoard();
+}
+
+function boardHandleCanvasClick(e) {
+  const canvas = document.getElementById('board-canvas');
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const px = (e.clientX - rect.left) * scaleX;
+  const py = (e.clientY - rect.top) * scaleY;
+  const col = Math.floor(px / CELL);
+  const row = Math.floor(py / CELL);
+  if (col < 0 || col >= BOARD_COLS || row < 0 || row >= BOARD_ROWS) return;
+
+  // Check if click lands on an existing placed token
+  const hit = encounter.combatants.find(c => c.boardX === col && c.boardY === row);
+
+  if (boardState.pendingId !== null) {
+    // Placing a tray item
+    if (hit && hit.id !== boardState.pendingId) return; // occupied
+    const c = encounter.combatants.find(x => x.id === boardState.pendingId);
+    if (c) { c.boardX = col; c.boardY = row; }
+    boardState.pendingId = null;
+    encSave();
+    document.getElementById('board-hint').textContent = 'Click a unit in the tray, then click a grid square to place it. Click placed tokens to select and measure distance.';
+    renderBoard();
+    return;
+  }
+
+  if (hit) {
+    // Select / deselect token for distance measurement
+    const idx = boardState.selectedIds.indexOf(hit.id);
+    if (idx !== -1) {
+      boardState.selectedIds.splice(idx, 1);
+    } else {
+      boardState.selectedIds.push(hit.id);
+      if (boardState.selectedIds.length > 2) boardState.selectedIds.shift();
+    }
+    renderBoard();
+    return;
+  }
+
+  // Click on empty cell while a placed token is selected (move it)
+  if (boardState.selectedIds.length === 1) {
+    const c = encounter.combatants.find(x => x.id === boardState.selectedIds[0]);
+    if (c && c.boardX != null) {
+      c.boardX = col; c.boardY = row;
+      encSave();
+      renderBoard();
+      return;
+    }
+  }
+
+  // Clear selection on empty click
+  boardState.selectedIds = [];
+  renderBoard();
+}
+
+function boardHandleCanvasRightClick(e) {
+  e.preventDefault();
+  const canvas = document.getElementById('board-canvas');
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const px = (e.clientX - rect.left) * scaleX;
+  const py = (e.clientY - rect.top) * scaleY;
+  const col = Math.floor(px / CELL);
+  const row = Math.floor(py / CELL);
+  const hit = encounter.combatants.find(c => c.boardX === col && c.boardY === row);
+  if (hit) {
+    hit.boardX = null; hit.boardY = null;
+    boardState.selectedIds = boardState.selectedIds.filter(id => id !== hit.id);
+    encSave();
+    renderBoard();
+  }
+}
+
+// Wire up canvas events after DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('board-canvas');
+  if (canvas) {
+    canvas.addEventListener('click', boardHandleCanvasClick);
+    canvas.addEventListener('contextmenu', boardHandleCanvasRightClick);
+  }
+});
 
 /* ── Export / Import ──────────────────────────────────── */
 function exportData() {

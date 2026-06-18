@@ -1333,7 +1333,7 @@ function encSortByInit() {
 
 function encRollAllInit() {
   for (const c of encounter.combatants) {
-    c.initiative = Math.floor(Math.random() * 20) + 1 + c.dexMod;
+    c.initiative = Math.max(1, Math.min(20, Math.floor(Math.random() * 20) + 1 + c.dexMod));
   }
   encSortByInit();
 }

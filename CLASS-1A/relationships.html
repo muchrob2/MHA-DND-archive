@@ -364,6 +364,25 @@
   #board-canvas { display: block; image-rendering: pixelated; }
   #board-footer { flex-shrink: 0; padding: 8px 18px; border-top: 1px solid var(--border); background: var(--surface2); }
   #board-hint { font-size: 11px; color: var(--text-dim); }
+  #board-range-wrap {
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(14,158,133,0.1); border: 1px solid rgba(14,158,133,0.3);
+    border-radius: 20px; padding: 3px 10px 3px 8px;
+  }
+  #board-range-icon { font-size: 14px; color: var(--teal,#0EA572); line-height: 1; }
+  #board-range-input {
+    width: 80px; background: transparent; border: none; outline: none;
+    color: var(--teal-text,#5FDBAA); font-size: 12px; font-weight: 700;
+    font-family: inherit;
+  }
+  #board-range-input::placeholder { color: rgba(95,219,170,0.4); font-weight: 400; }
+  #board-range-clear {
+    width: 16px; height: 16px; border: none; background: none;
+    color: rgba(95,219,170,0.5); font-size: 11px; cursor: pointer;
+    display: none; padding: 0; line-height: 1;
+  }
+  #board-range-clear:hover { color: var(--teal-text,#5FDBAA); }
+  #board-range-input:not(:placeholder-shown) ~ #board-range-clear { display: block; }
 
   /* ── Save bar ─────────────────────────────────────────── */
   #save-bar { display: flex; align-items: center; gap: 8px; padding: 6px 20px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
@@ -571,6 +590,11 @@
         <div id="board-header">
           <span id="board-title">⊞ Board Mode</span>
           <span id="board-distance-label"></span>
+          <div id="board-range-wrap" title="Show attack range around selected unit">
+            <span id="board-range-icon">◎</span>
+            <input id="board-range-input" type="number" min="5" max="300" step="5" placeholder="Range (ft)">
+            <button id="board-range-clear" onclick="boardClearRange()" title="Clear range">✕</button>
+          </div>
           <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
             <button class="enc-btn" onclick="boardClearPositions()" title="Remove all units from grid">Clear Grid</button>
             <button id="board-close-btn" onclick="closeBoardMode()" title="Close">✕</button>
@@ -1786,7 +1810,7 @@ function tmApplyHpToTarget(mode) {
 const BOARD_COLS = 30;
 const BOARD_ROWS = 20;
 const CELL = 36; // px per square
-let boardState = { pendingId: null, selectedIds: [] }; // pendingId = tray item waiting to be placed
+let boardState = { pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false };
 
 function openBoardMode() {
   document.getElementById('board-overlay').classList.add('open');
@@ -1794,7 +1818,15 @@ function openBoardMode() {
 }
 function closeBoardMode() {
   document.getElementById('board-overlay').classList.remove('open');
-  boardState = { pendingId: null, selectedIds: [] };
+  boardState = { pendingId: null, selectedIds: [], rangeFt: 0 };
+  const inp = document.getElementById('board-range-input');
+  if (inp) inp.value = '';
+}
+function boardClearRange() {
+  boardState.rangeFt = 0;
+  const inp = document.getElementById('board-range-input');
+  if (inp) inp.value = '';
+  renderBoardCanvas();
 }
 
 function boardClearPositions() {
@@ -1894,6 +1926,51 @@ function renderBoardCanvas() {
     ctx.fillText(String.fromCharCode(65 + r), CELL - 4, r * CELL + CELL / 2 + 4);
   }
 
+  // Range overlay — highlight squares within range of first selected placed unit
+  if (boardState.rangeFt > 0 && boardState.selectedIds.length >= 1) {
+    const origin = encounter.combatants.find(c => c.id === boardState.selectedIds[0]);
+    if (origin && origin.boardX != null) {
+      const rangeSquares = Math.round(boardState.rangeFt / 5);
+      const ox = origin.boardX, oy = origin.boardY;
+      // Fill in-range cells
+      ctx.save();
+      for (let r = 0; r < BOARD_ROWS; r++) {
+        for (let c = 0; c < BOARD_COLS; c++) {
+          const dx = Math.abs(c - ox), dy = Math.abs(r - oy);
+          const dist = Math.max(dx, dy); // Chebyshev
+          if (dist > 0 && dist <= rangeSquares) {
+            ctx.fillStyle = 'rgba(14,158,133,0.18)';
+            ctx.fillRect(c * CELL + 1, r * CELL + 1, CELL - 2, CELL - 2);
+          }
+        }
+      }
+      // Draw perimeter border on cells at exactly the range boundary
+      ctx.strokeStyle = 'rgba(14,158,133,0.85)';
+      ctx.lineWidth = 2;
+      for (let r = 0; r < BOARD_ROWS; r++) {
+        for (let c = 0; c < BOARD_COLS; c++) {
+          const dx = Math.abs(c - ox), dy = Math.abs(r - oy);
+          const dist = Math.max(dx, dy);
+          if (dist === rangeSquares) {
+            // Draw only the edges that face outside the range
+            const edges = [
+              { cond: Math.max(Math.abs(c-1-ox), dy) > rangeSquares, x1: c*CELL, y1: r*CELL,       x2: c*CELL,        y2: (r+1)*CELL },       // left
+              { cond: Math.max(Math.abs(c+1-ox), dy) > rangeSquares, x1: (c+1)*CELL, y1: r*CELL,   x2: (c+1)*CELL,    y2: (r+1)*CELL },   // right
+              { cond: Math.max(dx, Math.abs(r-1-oy)) > rangeSquares, x1: c*CELL, y1: r*CELL,       x2: (c+1)*CELL,    y2: r*CELL },             // top
+              { cond: Math.max(dx, Math.abs(r+1-oy)) > rangeSquares, x1: c*CELL, y1: (r+1)*CELL,   x2: (c+1)*CELL,    y2: (r+1)*CELL },   // bottom
+            ];
+            for (const e of edges) {
+              if (e.cond) {
+                ctx.beginPath(); ctx.moveTo(e.x1, e.y1); ctx.lineTo(e.x2, e.y2); ctx.stroke();
+              }
+            }
+          }
+        }
+      }
+      ctx.restore();
+    }
+  }
+
   // Distance line between two selected units
   const sel = boardState.selectedIds;
   if (sel.length === 2) {
@@ -1911,9 +1988,48 @@ function renderBoardCanvas() {
     }
   }
 
+  // Ghost token — draw destination cell highlight while dragging
+  if (boardState.dragging) {
+    const { id, originX, originY, curCol, curRow } = boardState.dragging;
+    const dc = encounter.combatants.find(c => c.id === id);
+    if (dc) {
+      const color = boardTokenColor(dc);
+      const occupied = encounter.combatants.some(c => c.boardX === curCol && c.boardY === curRow && c.id !== id);
+      // Origin: dashed outline where token came from
+      ctx.save();
+      ctx.setLineDash([4, 3]);
+      ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(originX * CELL + 2, originY * CELL + 2, CELL - 4, CELL - 4);
+      ctx.restore();
+      // Destination: ghost token
+      const cx = curCol * CELL + CELL / 2;
+      const cy = curRow * CELL + CELL / 2;
+      const tr = CELL / 2 - 3;
+      ctx.save();
+      ctx.globalAlpha = occupied ? 0.3 : 0.65;
+      ctx.beginPath();
+      ctx.arc(cx, cy, tr, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.strokeStyle = occupied ? '#EF4444' : 'rgba(255,255,255,0.6)';
+      ctx.lineWidth = occupied ? 2.5 : 1.5;
+      ctx.stroke();
+      if (!occupied) {
+        ctx.fillStyle = '#ffffff';
+        ctx.font = `bold ${CELL <= 32 ? 9 : 11}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(boardInitials(dc.name), cx, cy);
+      }
+      ctx.restore();
+    }
+  }
+
   // Tokens
   const placed = encounter.combatants.filter(c => c.boardX != null);
   for (const c of placed) {
+    const isDraggingThis = boardState.dragging?.id === c.id;
     const cx = c.boardX * CELL + CELL / 2;
     const cy = c.boardY * CELL + CELL / 2;
     const r = CELL / 2 - 3;
@@ -1922,7 +2038,8 @@ function renderBoardCanvas() {
     const isSelected = boardState.selectedIds.includes(c.id);
 
     ctx.save();
-    if (isDead) ctx.globalAlpha = 0.35;
+    if (isDraggingThis) ctx.globalAlpha = 0.25; // fade original while dragging
+    else if (isDead) ctx.globalAlpha = 0.35;
 
     // Selection ring
     if (isSelected) {
@@ -1998,16 +2115,69 @@ function boardSelectTrayItem(id) {
   renderBoard();
 }
 
-function boardHandleCanvasClick(e) {
+function boardCanvasCell(e) {
   const canvas = document.getElementById('board-canvas');
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
-  const px = (e.clientX - rect.left) * scaleX;
-  const py = (e.clientY - rect.top) * scaleY;
-  const col = Math.floor(px / CELL);
-  const row = Math.floor(py / CELL);
+  const col = Math.floor((e.clientX - rect.left) * scaleX / CELL);
+  const row = Math.floor((e.clientY - rect.top)  * scaleY / CELL);
+  return { col, row };
+}
+
+function boardHandleMouseDown(e) {
+  if (e.button !== 0) return;
+  const { col, row } = boardCanvasCell(e);
   if (col < 0 || col >= BOARD_COLS || row < 0 || row >= BOARD_ROWS) return;
+  const hit = encounter.combatants.find(c => c.boardX === col && c.boardY === row);
+  if (!hit) return;
+  boardState.dragging = { id: hit.id, originX: col, originY: row, curCol: col, curRow: row };
+  document.getElementById('board-canvas').style.cursor = 'grabbing';
+  e.preventDefault();
+}
+
+function boardHandleMouseMove(e) {
+  const canvas = document.getElementById('board-canvas');
+  if (!boardState.dragging) {
+    const { col, row } = boardCanvasCell(e);
+    const onToken = col >= 0 && col < BOARD_COLS && row >= 0 && row < BOARD_ROWS &&
+      encounter.combatants.some(c => c.boardX === col && c.boardY === row);
+    canvas.style.cursor = onToken ? 'grab' : 'crosshair';
+    return;
+  }
+  const { col, row } = boardCanvasCell(e);
+  const cc = Math.max(0, Math.min(BOARD_COLS - 1, col));
+  const cr = Math.max(0, Math.min(BOARD_ROWS - 1, row));
+  if (cc !== boardState.dragging.curCol || cr !== boardState.dragging.curRow) {
+    boardState.dragging.curCol = cc;
+    boardState.dragging.curRow = cr;
+    renderBoardCanvas();
+  }
+}
+
+function boardHandleMouseUp(e) {
+  if (!boardState.dragging) return;
+  const { id, originX, originY, curCol, curRow } = boardState.dragging;
+  boardState.dragging = null;
+  document.getElementById('board-canvas').style.cursor = 'crosshair';
+  const moved = curCol !== originX || curRow !== originY;
+  if (moved) {
+    const occupant = encounter.combatants.find(c => c.boardX === curCol && c.boardY === curRow && c.id !== id);
+    if (!occupant) {
+      const c = encounter.combatants.find(x => x.id === id);
+      if (c) { c.boardX = curCol; c.boardY = curRow; }
+      encSave();
+    }
+    boardState._wasDragging = true;
+  }
+  renderBoard();
+}
+
+function boardHandleCanvasClick(e) {
+  if (boardState._wasDragging) { boardState._wasDragging = false; return; }
+  const { col, row } = boardCanvasCell(e);
+  if (col < 0 || col >= BOARD_COLS || row < 0 || row >= BOARD_ROWS) return;
+
 
   // Check if click lands on an existing placed token
   const hit = encounter.combatants.find(c => c.boardX === col && c.boardY === row);
@@ -2055,14 +2225,7 @@ function boardHandleCanvasClick(e) {
 
 function boardHandleCanvasRightClick(e) {
   e.preventDefault();
-  const canvas = document.getElementById('board-canvas');
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  const px = (e.clientX - rect.left) * scaleX;
-  const py = (e.clientY - rect.top) * scaleY;
-  const col = Math.floor(px / CELL);
-  const row = Math.floor(py / CELL);
+  const { col, row } = boardCanvasCell(e);
   const hit = encounter.combatants.find(c => c.boardX === col && c.boardY === row);
   if (hit) {
     hit.boardX = null; hit.boardY = null;
@@ -2076,8 +2239,20 @@ function boardHandleCanvasRightClick(e) {
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('board-canvas');
   if (canvas) {
+    canvas.addEventListener('mousedown', boardHandleMouseDown);
+    canvas.addEventListener('mousemove', boardHandleMouseMove);
+    canvas.addEventListener('mouseup',   boardHandleMouseUp);
+    canvas.addEventListener('mouseleave', boardHandleMouseUp);
     canvas.addEventListener('click', boardHandleCanvasClick);
     canvas.addEventListener('contextmenu', boardHandleCanvasRightClick);
+  }
+  const rangeInp = document.getElementById('board-range-input');
+  if (rangeInp) {
+    rangeInp.addEventListener('input', () => {
+      const v = parseInt(rangeInp.value);
+      boardState.rangeFt = (v > 0) ? v : 0;
+      renderBoardCanvas();
+    });
   }
 });
 

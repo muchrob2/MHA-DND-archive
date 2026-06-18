@@ -2129,6 +2129,8 @@ const CELL_BASE = 16; // base px per square at zoom 1.0
 let boardZoom = 0.5;  // start zoomed out to fit the full grid
 let boardState = { pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false };
 let boardHoverInfo = null; // { combatant, col, row }
+let boardPan = null;       // { startX, startY, scrollLeft, scrollTop } while panning
+let _boardWasPanning = false;
 
 function boardCell() { return Math.max(6, Math.round(CELL_BASE * boardZoom)); }
 
@@ -2502,18 +2504,39 @@ function boardCanvasCell(e) {
 }
 
 function boardHandleMouseDown(e) {
+  // Middle-click OR left-click on empty space → pan
+  if (e.button === 1) {
+    const wrap = document.getElementById('board-grid-wrap');
+    boardPan = { startX: e.clientX, startY: e.clientY, scrollLeft: wrap.scrollLeft, scrollTop: wrap.scrollTop };
+    document.getElementById('board-canvas').style.cursor = 'grabbing';
+    e.preventDefault();
+    return;
+  }
   if (e.button !== 0) return;
   const { col, row } = boardCanvasCell(e);
   if (col < 0 || col >= BOARD_COLS || row < 0 || row >= BOARD_ROWS) return;
   const hit = encounter.combatants.find(c => c.boardX === col && c.boardY === row);
-  if (!hit) return;
-  boardState.dragging = { id: hit.id, originX: col, originY: row, curCol: col, curRow: row };
-  document.getElementById('board-canvas').style.cursor = 'grabbing';
+  if (hit) {
+    boardState.dragging = { id: hit.id, originX: col, originY: row, curCol: col, curRow: row };
+    document.getElementById('board-canvas').style.cursor = 'grabbing';
+  } else {
+    // Left-click drag on empty space pans the view
+    const wrap = document.getElementById('board-grid-wrap');
+    boardPan = { startX: e.clientX, startY: e.clientY, scrollLeft: wrap.scrollLeft, scrollTop: wrap.scrollTop };
+    document.getElementById('board-canvas').style.cursor = 'grabbing';
+  }
   e.preventDefault();
 }
 
 function boardHandleMouseMove(e) {
   const canvas = document.getElementById('board-canvas');
+  // Panning
+  if (boardPan) {
+    const wrap = document.getElementById('board-grid-wrap');
+    wrap.scrollLeft = boardPan.scrollLeft - (e.clientX - boardPan.startX);
+    wrap.scrollTop  = boardPan.scrollTop  - (e.clientY - boardPan.startY);
+    return;
+  }
   if (!boardState.dragging) {
     const { col, row } = boardCanvasCell(e);
     const hit = col >= 0 && col < BOARD_COLS && row >= 0 && row < BOARD_ROWS
@@ -2537,6 +2560,13 @@ function boardHandleMouseMove(e) {
 }
 
 function boardHandleMouseUp(e) {
+  if (boardPan) {
+    const moved = Math.abs(e.clientX - boardPan.startX) + Math.abs(e.clientY - boardPan.startY) > 4;
+    boardPan = null;
+    document.getElementById('board-canvas').style.cursor = 'crosshair';
+    if (moved) { _boardWasPanning = true; }
+    return;
+  }
   if (!boardState.dragging) return;
   const { id, originX, originY, curCol, curRow } = boardState.dragging;
   boardState.dragging = null;
@@ -2555,6 +2585,7 @@ function boardHandleMouseUp(e) {
 }
 
 function boardHandleCanvasClick(e) {
+  if (_boardWasPanning) { _boardWasPanning = false; return; }
   if (boardState._wasDragging) { boardState._wasDragging = false; return; }
   const { col, row } = boardCanvasCell(e);
   if (col < 0 || col >= BOARD_COLS || row < 0 || row >= BOARD_ROWS) return;
@@ -2647,7 +2678,9 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.addEventListener('mousedown', boardHandleMouseDown);
     canvas.addEventListener('mousemove', boardHandleMouseMove);
     canvas.addEventListener('mouseup',   boardHandleMouseUp);
-    canvas.addEventListener('mouseleave', e => { boardHoverInfo = null; boardHandleMouseUp(e); renderBoardCanvas(); });
+    canvas.addEventListener('mouseleave', e => { boardHoverInfo = null; boardPan = null; boardHandleMouseUp(e); document.getElementById('board-canvas').style.cursor = 'crosshair'; renderBoardCanvas(); });
+    canvas.addEventListener('mouseup', e => { if (e.button === 1 && boardPan) { boardPan = null; document.getElementById('board-canvas').style.cursor = 'crosshair'; } });
+    canvas.addEventListener('auxclick', e => e.preventDefault()); // suppress middle-click scroll icon
     canvas.addEventListener('click', boardHandleCanvasClick);
     canvas.addEventListener('contextmenu', boardHandleCanvasRightClick);
     canvas.addEventListener('wheel', e => { e.preventDefault(); e.deltaY < 0 ? boardZoomIn() : boardZoomOut(); }, { passive: false });

@@ -71,6 +71,10 @@
   .stat-input:focus { color: var(--purple); }
   .class-input { width: 130px; padding: 1px 2px; border: none; background: transparent; color: var(--text); font-size: 11px; font-weight: 700; outline: none; }
   .class-input:focus { color: var(--purple); }
+  .stat-chip { font-size: 11px; font-weight: 700; padding: 2px 7px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text-muted); white-space: nowrap; }
+  .profile-action-btn { font-size: 11px; font-weight: 700; padding: 2px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface2); color: var(--text-muted); cursor: pointer; transition: background 0.1s, color 0.1s; white-space: nowrap; }
+  .profile-action-btn:hover { background: var(--purple-light); color: var(--purple-text); border-color: var(--purple); }
+  .add-enc-btn:hover { background: var(--teal-light); color: var(--teal-text); border-color: var(--teal); }
   #scores-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
   .score-block { display: flex; flex-direction: column; align-items: center; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 8px; min-width: 46px; }
   .score-label { font-size: 9px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
@@ -137,6 +141,9 @@
   .counter-val { font-size: 15px; font-weight: 700; min-width: 28px; text-align: center; }
   .roll-btn { padding: 10px 28px; background: var(--purple); color: #0C1017; border: none; border-radius: var(--radius); font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: opacity 0.1s, box-shadow 0.1s; box-shadow: 0 0 16px var(--gold-glow); }
   .roll-btn:hover { opacity: 0.9; box-shadow: 0 0 24px rgba(232,160,32,0.3); }
+  .adv-btn { padding: 4px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface2); color: var(--text-muted); font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.1s, color 0.1s, border-color 0.1s; }
+  .adv-btn:hover { border-color: var(--purple); color: var(--purple-text); background: var(--purple-light); }
+  .adv-btn.active { background: var(--purple-light); color: var(--purple-text); border-color: var(--purple); box-shadow: 0 0 8px var(--gold-glow); }
   .dice-result { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 20px; min-height: 88px; display: flex; align-items: center; gap: 20px; }
   .result-number { font-size: 56px; font-weight: 800; color: var(--text); line-height: 1; min-width: 80px; letter-spacing: -0.02em; }
   .result-number.crit { color: var(--green); text-shadow: 0 0 20px rgba(34,197,94,0.4); }
@@ -215,6 +222,14 @@
   .cond-option { font-size: 11px; padding: 2px 8px; border-radius: 10px; cursor: pointer; border: 1px solid var(--border); background: var(--surface2); color: var(--text-muted); }
   .cond-option:hover { border-color: var(--amber); color: var(--amber-text); background: var(--amber-light); }
   .cond-option.active { background: var(--amber-light); color: var(--amber-text); border-color: var(--amber); font-weight: 500; }
+  .cond-dur-btn { margin-left: 2px; font-size: 10px; cursor: pointer; opacity: 0.6; vertical-align: middle; }
+  .cond-dur-btn:hover { opacity: 1; }
+  .enc-notes-row { grid-column: 1 / -1; padding: 4px 14px 6px; }
+  .enc-notes-inp { width: 100%; padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); color: var(--text); font-size: 11px; outline: none; font-family: inherit; box-sizing: border-box; }
+  .enc-notes-inp:focus { border-color: var(--purple); }
+  .tm-action-chip { padding: 4px 10px; border-radius: 6px; border: 1px solid var(--chip-color, var(--border)); background: transparent; color: var(--chip-color, var(--text-muted)); font-size: 11px; font-weight: 600; cursor: pointer; transition: background 0.1s, opacity 0.1s; }
+  .tm-action-chip:hover { opacity: 0.8; }
+  .tm-action-chip.used { background: color-mix(in srgb, var(--chip-color) 15%, transparent); opacity: 0.45; text-decoration: line-through; }
   .enc-empty { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 13px; }
 
   /* ── Teams ────────────────────────────────────────────── */
@@ -383,6 +398,19 @@
   }
   #board-range-clear:hover { color: var(--teal-text,#5FDBAA); }
   #board-range-input:not(:placeholder-shown) ~ #board-range-clear { display: block; }
+  #board-zoom-wrap {
+    display: flex; align-items: center; gap: 4px;
+    background: var(--surface2); border: 1px solid var(--border-strong);
+    border-radius: 20px; padding: 2px 8px;
+  }
+  .board-zoom-btn {
+    width: 22px; height: 22px; border: none; background: none;
+    color: var(--text-muted); font-size: 16px; font-weight: 700;
+    cursor: pointer; line-height: 1; padding: 0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .board-zoom-btn:hover { color: var(--text); background: var(--surface); }
+  #board-zoom-label { font-size: 11px; font-weight: 700; color: var(--text-muted); min-width: 34px; text-align: center; }
 
   /* ── Save bar ─────────────────────────────────────────── */
   #save-bar { display: flex; align-items: center; gap: 8px; padding: 6px 20px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
@@ -457,7 +485,12 @@
         <button class="die-btn" onclick="selectDie(12, this)"><span class="die-face">⬠</span>d12</button>
         <button class="die-btn" onclick="selectDie(20, this)"><span class="die-face">⬟</span>d20</button>
       </div>
-      <div class="dice-controls" style="padding:16px 24px 0">
+      <div class="dice-adv-row" style="padding:8px 24px 0;display:flex;gap:6px;align-items:center;">
+        <button class="adv-btn" id="dice-adv-btn" onclick="toggleAdvMode('adv')" title="Advantage: roll 2d20, take highest (d20 only)">Adv</button>
+        <button class="adv-btn" id="dice-dis-btn" onclick="toggleAdvMode('dis')" title="Disadvantage: roll 2d20, take lowest (d20 only)">Dis</button>
+        <span id="adv-hint" style="font-size:10px;color:var(--text-dim);display:none;">d20 only</span>
+      </div>
+      <div class="dice-controls" style="padding:10px 24px 0">
         <div class="counter-group">
           <span class="counter-label">Dice</span>
           <button class="counter-btn" onclick="adjustDice(-1)">−</button>
@@ -472,7 +505,13 @@
         </div>
         <button class="roll-btn" onclick="rollDice()" id="roll-btn">Roll 1d4</button>
       </div>
-      <div class="dice-result" style="margin:16px 24px 0" id="dice-result">
+      <div class="dice-expr-row" style="padding:10px 24px 0;display:flex;gap:6px;align-items:center;">
+        <input id="dice-expr-inp" type="text" placeholder="e.g. 2d6 + 3" title="Dice expression"
+          style="flex:1;padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px;font-family:inherit;outline:none;"
+          onkeydown="if(event.key==='Enter')rollExpr()">
+        <button class="roll-btn" style="white-space:nowrap;padding:5px 14px;" onclick="rollExpr()">Roll Expr</button>
+      </div>
+      <div class="dice-result" style="margin:14px 24px 0" id="dice-result">
         <div style="color:var(--text-dim);font-size:13px;">Select a die and roll</div>
       </div>
       <p class="dice-section-title" style="padding:0 24px 6px">Recent rolls</p>
@@ -572,6 +611,27 @@
               <span id="tm-hp-feedback"></span>
             </div>
           </div>
+
+          <div class="tm-zone" id="tm-action-zone">
+            <div class="tm-zone-title">Action Economy</div>
+            <div id="tm-action-chips" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+          </div>
+
+          <div class="tm-zone" id="tm-death-zone" style="display:none;">
+            <div class="tm-zone-title" style="color:var(--red-text);">☠ Death Saves</div>
+            <div style="display:flex;gap:16px;align-items:center;margin-top:4px;">
+              <div>
+                <div style="font-size:10px;font-weight:700;color:var(--green-text);letter-spacing:0.05em;margin-bottom:4px;">SUCCESSES</div>
+                <div id="tm-ds-success" style="display:flex;gap:5px;"></div>
+              </div>
+              <div>
+                <div style="font-size:10px;font-weight:700;color:var(--red-text);letter-spacing:0.05em;margin-bottom:4px;">FAILURES</div>
+                <div id="tm-ds-fail" style="display:flex;gap:5px;"></div>
+              </div>
+              <button class="tm-dmg-btn" style="margin-left:auto;" onclick="tmRollDeathSave()">Roll d20</button>
+            </div>
+            <div id="tm-ds-result" style="font-size:11px;color:var(--text-dim);margin-top:6px;"></div>
+          </div>
         </div>
         <div id="turn-modal-footer">
           <label class="tm-skip-dead">
@@ -594,6 +654,12 @@
             <span id="board-range-icon">◎</span>
             <input id="board-range-input" type="number" min="5" max="300" step="5" placeholder="Range (ft)">
             <button id="board-range-clear" onclick="boardClearRange()" title="Clear range">✕</button>
+          </div>
+          <div id="board-zoom-wrap">
+            <button class="board-zoom-btn" onclick="boardZoomOut()" title="Zoom out">−</button>
+            <span id="board-zoom-label">50%</span>
+            <button class="board-zoom-btn" onclick="boardZoomIn()" title="Zoom in">+</button>
+            <button class="board-zoom-btn" onclick="boardFitZoom()" title="Fit grid to window">Fit</button>
           </div>
           <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
             <button class="enc-btn" onclick="boardClearPositions()" title="Remove all units from grid">Clear Grid</button>
@@ -740,7 +806,7 @@ function getRel(fromId, toId) { return rels[relKey(fromId, toId)] || { score: 0,
 function setRelScore(fromId, toId, score) {
   const k = relKey(fromId, toId);
   rels[k] = rels[k] || { score: 0, note: '' };
-  rels[k].score = parseInt(score);
+  rels[k].score = Math.max(-10, Math.min(10, parseInt(score) || 0));
   updateScoreDisplay(fromId, toId, score);
   scheduleGistSave();
 }
@@ -861,12 +927,20 @@ function renderProfile() {
   document.getElementById('profile-sub').textContent = c.quirk+' · '+(c.physiology||'')+' · '+(c.height||'')+' · '+(c.gender||'');
 
   const tags = document.getElementById('tags-row');
+  const lv = c.level || 1;
+  const prof = Math.floor((lv - 1) / 4) + 2;
+  const wisMod = (c.modifiers || {}).WIS ?? Math.floor(((c.ability_scores || {}).WIS ?? 10) - 10) / 2 | 0;
+  const passivePerc = 10 + wisMod + prof;
   let tagHtml = '';
   if (c.is_pc) tagHtml += '<span class="tag tag-pc">PC</span>';
-  tagHtml += `<div class="edit-wrap"><label>Lv</label><input class="stat-input" type="number" min="1" max="20" value="${c.level||1}" onchange="onStatChange('level',this.value,false)" title="Level"></div>`;
+  tagHtml += `<div class="edit-wrap"><label>Lv</label><input class="stat-input" type="number" min="1" max="20" value="${lv}" onchange="onStatChange('level',this.value,false)" title="Level"></div>`;
   tagHtml += `<div class="edit-wrap"><label>HP</label><input class="stat-input" type="number" min="1" value="${c.HP||10}" onchange="onStatChange('HP',this.value,false)" title="Max HP"></div>`;
   tagHtml += `<div class="edit-wrap"><label>AC</label><input class="stat-input" type="number" min="1" value="${c.AC||10}" onchange="onStatChange('AC',this.value,false)" title="Armour Class"></div>`;
   tagHtml += `<div class="edit-wrap"><label>Class</label><input class="class-input" type="text" value="${escHtml(c.suggested_class||'')}" onchange="onClassChange(this.value)" title="Class"></div>`;
+  tagHtml += `<div class="stat-chip" title="Proficiency bonus (level ${lv})">Prof +${prof}</div>`;
+  tagHtml += `<div class="stat-chip" title="Passive Perception = 10 + WIS mod + Prof">Passive ${passivePerc}</div>`;
+  tagHtml += `<button class="profile-action-btn" onclick="copyStatBlock()" title="Copy stat block to clipboard">⧉ Copy</button>`;
+  tagHtml += `<button class="profile-action-btn add-enc-btn" onclick="addSelectedToEncounter()" title="Add to encounter tracker">+ Encounter</button>`;
   tags.innerHTML = tagHtml;
 
   const sc = c.ability_scores || {};
@@ -885,6 +959,37 @@ function renderProfile() {
 }
 
 function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function copyStatBlock() {
+  const c = selected;
+  if (!c) return;
+  const lv = c.level || 1;
+  const prof = Math.floor((lv - 1) / 4) + 2;
+  const mo = c.modifiers || {};
+  const sc = c.ability_scores || {};
+  const fmt = k => { const v = sc[k] ?? 10; const m = mo[k] ?? (Math.floor((v-10)/2)); return `${k} ${m>=0?'+':''}${m}`; };
+  const line = `${c.name} — Lv ${lv} ${c.suggested_class||''} | HP: ${c.HP||10}  AC: ${c.AC||10}  Prof: +${prof} | ${['STR','DEX','CON','INT','WIS','CHA'].map(fmt).join('  ')}`;
+  navigator.clipboard.writeText(line).then(() => {
+    const btn = document.querySelector('.profile-action-btn');
+    if (btn && btn.textContent.includes('Copy')) { btn.textContent = '✓ Copied'; setTimeout(() => btn.textContent = '⧉ Copy', 1500); }
+  });
+}
+
+function addSelectedToEncounter() {
+  const c = selected;
+  if (!c) return;
+  const dexMod = (c.modifiers || {}).DEX ?? 0;
+  const already = encounter.combatants.find(x => x.rosterId === c._roster_id);
+  if (already) { setView('encounter'); return; }
+  encounter.combatants.push({
+    id: encId(), name: c.name, initiative: 0, hp: c.HP || 10, maxHp: c.HP || 10,
+    ac: c.AC || 10, conditions: [], notes: '', rosterId: c._roster_id, isPC: !!c.is_pc,
+    quirk: c.quirk, condOpen: false, editingHp: false, dexMod, team: null, tempHp: 0,
+    condDurations: {}, deathSuccesses: 0, deathFails: 0
+  });
+  encSave(); renderEncounter();
+  setView('encounter');
+}
 
 function showTab(tab) {
   activeTab = tab;
@@ -1006,13 +1111,24 @@ function renderRelationships() {
 /* ══════════════════════════════════════════════════════════
    DICE ROLLER
 ══════════════════════════════════════════════════════════ */
-let diceState = { sides: 4, count: 1, mod: 0 };
+let diceState = { sides: 4, count: 1, mod: 0, advMode: null }; // advMode: null | 'adv' | 'dis'
 let diceHistory = [];
+
+function toggleAdvMode(mode) {
+  diceState.advMode = diceState.advMode === mode ? null : mode;
+  document.getElementById('dice-adv-btn').classList.toggle('active', diceState.advMode === 'adv');
+  document.getElementById('dice-dis-btn').classList.toggle('active', diceState.advMode === 'dis');
+  updateRollBtn();
+}
 
 function selectDie(sides, btn) {
   diceState.sides = sides;
   document.querySelectorAll('.die-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
+  // Adv/Dis only applies to d20
+  const hint = document.getElementById('adv-hint');
+  if (sides !== 20 && diceState.advMode) { diceState.advMode = null; document.getElementById('dice-adv-btn').classList.remove('active'); document.getElementById('dice-dis-btn').classList.remove('active'); }
+  if (hint) hint.style.display = sides === 20 ? 'none' : (diceState.advMode ? 'inline' : 'none');
   updateRollBtn();
 }
 function adjustDice(delta) {
@@ -1035,7 +1151,27 @@ function updateRollBtn() {
 }
 
 function rollDice() {
-  const { count, sides, mod } = diceState;
+  const { count, sides, mod, advMode } = diceState;
+
+  if (advMode && sides === 20) {
+    const r1 = Math.floor(Math.random() * 20) + 1;
+    const r2 = Math.floor(Math.random() * 20) + 1;
+    const kept = advMode === 'adv' ? Math.max(r1, r2) : Math.min(r1, r2);
+    const dropped = advMode === 'adv' ? Math.min(r1, r2) : Math.max(r1, r2);
+    const total = kept + mod;
+    const isCrit = kept === 20;
+    const isFumble = kept === 1;
+    const modeLabel = advMode === 'adv' ? 'Advantage' : 'Disadvantage';
+    const modStr = mod !== 0 ? (mod > 0 ? ` +${mod}` : ` ${mod}`) : '';
+    const label = `d20 (${modeLabel})${modStr}`;
+    const entry = { label, rolls: [kept], mod, total, isCrit, isFumble, advRolls: [r1, r2], dropped, advMode };
+    diceHistory.unshift(entry);
+    if (diceHistory.length > 12) diceHistory.pop();
+    renderDiceResult(entry);
+    renderDiceHistory();
+    return;
+  }
+
   const rolls = Array.from({ length: count }, () => Math.floor(Math.random() * sides) + 1);
   const total = rolls.reduce((a, b) => a + b, 0) + mod;
   const isCrit = sides === 20 && count === 1 && rolls[0] === 20;
@@ -1050,16 +1186,53 @@ function rollDice() {
   renderDiceHistory();
 }
 
+function rollExpr() {
+  const inp = document.getElementById('dice-expr-inp');
+  const raw = (inp?.value || '').trim();
+  if (!raw) return;
+  const m = raw.replace(/\s+/g,'').match(/^(\d+)d(\d+)([+-]\d+)?$/i);
+  if (!m) {
+    document.getElementById('dice-result').innerHTML = `<div style="color:var(--red-text);font-size:13px;">Invalid expression — try "2d6+3"</div>`;
+    return;
+  }
+  const count = Math.min(parseInt(m[1]), 100);
+  const sides = parseInt(m[2]);
+  const mod = m[3] ? parseInt(m[3]) : 0;
+  if (count < 1 || sides < 2) return;
+  const rolls = Array.from({ length: count }, () => Math.floor(Math.random() * sides) + 1);
+  const total = rolls.reduce((a, b) => a + b, 0) + mod;
+  const isCrit = sides === 20 && count === 1 && rolls[0] === 20;
+  const isFumble = sides === 20 && count === 1 && rolls[0] === 1;
+  const label = `${count}d${sides}${mod>0?'+'+mod:mod<0?mod:''}`;
+  const entry = { label, rolls, mod, total, isCrit, isFumble };
+  diceHistory.unshift(entry);
+  if (diceHistory.length > 12) diceHistory.pop();
+  renderDiceResult(entry);
+  renderDiceHistory();
+  inp.value = '';
+}
+
 function renderDiceResult(e) {
   const modStr = e.mod > 0 ? ` + ${e.mod}` : e.mod < 0 ? ` − ${Math.abs(e.mod)}` : '';
-  const rollStr = e.rolls.join(', ') + modStr;
   const numClass = e.isCrit ? 'crit' : e.isFumble ? 'fumble' : '';
   const badge = e.isCrit ? '<div class="crit-label">★ Critical!</div>' : e.isFumble ? '<div class="fumble-label">☠ Fumble!</div>' : '';
+  let rollStr;
+  if (e.advRolls) {
+    const [a, b] = e.advRolls;
+    const keptStr = `<span style="font-weight:700;color:var(--text)">${e.rolls[0]}</span>`;
+    const dropStr = `<span style="text-decoration:line-through;color:var(--text-dim)">${e.dropped}</span>`;
+    rollStr = e.advMode === 'adv'
+      ? (a >= b ? `${keptStr}, ${dropStr}` : `${dropStr}, ${keptStr}`)
+      : (a <= b ? `${keptStr}, ${dropStr}` : `${dropStr}, ${keptStr}`);
+    if (e.mod !== 0) rollStr += modStr;
+  } else {
+    rollStr = escHtml(e.rolls.join(', ') + modStr);
+  }
   document.getElementById('dice-result').innerHTML = `
     <div class="result-number ${numClass}">${e.total}</div>
     <div class="result-detail">
       <div class="result-label">${e.label}</div>
-      <div class="result-breakdown">${escHtml(rollStr)}</div>
+      <div class="result-breakdown">${rollStr}</div>
       ${badge}
     </div>`;
 }
@@ -1167,6 +1340,8 @@ function encRollAllInit() {
 
 function encNextTurn() {
   if (!encounter.combatants.length) return;
+  const prevId = encounter.combatants[encounter.currentIndex]?.id;
+  if (prevId != null) encTickConditions(prevId);
   encounter.currentIndex = (encounter.currentIndex + 1) % encounter.combatants.length;
   if (encounter.currentIndex === 0) encounter.round++;
   document.getElementById('enc-round-num').textContent = encounter.round;
@@ -1258,16 +1433,77 @@ function encToggleCondition(id, cond) {
 
 function renderCondPills(c) {
   if (!c.conditions.length) return `<span style="font-size:10px;color:var(--text-dim);">no conditions</span>`;
-  return c.conditions.map(cond =>
-    `<span class="cond-pill" onclick="encToggleCondition(${c.id},'${cond}')">${cond} ×</span>`
-  ).join('');
+  const durations = c.condDurations || {};
+  return c.conditions.map(cond => {
+    const dur = durations[cond];
+    const durBadge = dur != null ? `<span style="font-size:9px;opacity:0.75;margin-left:1px;">(${dur})</span>` : '';
+    return `<span class="cond-pill" onclick="encToggleCondition(${c.id},'${cond}')">${cond}${durBadge} ×</span>`;
+  }).join('');
 }
 
 function renderCondOptions(c) {
+  const durations = c.condDurations || {};
   return CONDITIONS.map(cond => {
-    const active = c.conditions.includes(cond) ? ' active' : '';
-    return `<span class="cond-option${active}" onclick="encToggleCondition(${c.id},'${cond}')">${cond}</span>`;
+    const active = c.conditions.includes(cond);
+    const dur = durations[cond];
+    const durPart = active && dur != null
+      ? `<span style="font-size:9px;margin-left:3px;opacity:0.7;">${dur}r</span>`
+      : '';
+    const durBtn = active
+      ? `<span class="cond-dur-btn" onclick="event.stopPropagation();encSetCondDuration(${c.id},'${cond}')" title="Set round duration">⏱</span>`
+      : '';
+    return `<span class="cond-option${active?' active':''}" onclick="encToggleCondition(${c.id},'${cond}')">${cond}${durPart}${durBtn}</span>`;
   }).join('');
+}
+
+function encSetCondDuration(id, cond) {
+  const c = encounter.combatants.find(x => x.id === id);
+  if (!c) return;
+  const raw = prompt(`Rounds for ${cond} (blank = permanent):`, (c.condDurations||{})[cond] ?? '');
+  if (raw === null) return;
+  if (!c.condDurations) c.condDurations = {};
+  const n = parseInt(raw);
+  if (raw.trim() === '' || isNaN(n) || n <= 0) {
+    delete c.condDurations[cond];
+  } else {
+    c.condDurations[cond] = n;
+  }
+  encSave();
+  const pillsEl = document.getElementById('enc-pill-'+id);
+  if (pillsEl) pillsEl.innerHTML = renderCondPills(c);
+  const condEl = document.getElementById('enc-conds-'+id);
+  if (condEl) condEl.innerHTML = renderCondOptions(c);
+}
+
+function encToggleNotes(id) {
+  const c = encounter.combatants.find(x => x.id === id);
+  if (!c) return;
+  c.notesOpen = !c.notesOpen;
+  const row = document.getElementById('enc-notes-'+id);
+  if (!row) return;
+  row.style.display = c.notesOpen || c.notes ? '' : 'none';
+  if (c.notesOpen) row.querySelector('input')?.focus();
+}
+function encSetNotes(id, val) {
+  const c = encounter.combatants.find(x => x.id === id);
+  if (c) c.notes = val;
+}
+function encSaveNoteBlur(id) {
+  encSave();
+}
+
+function encTickConditions(id) {
+  const c = encounter.combatants.find(x => x.id === id);
+  if (!c || !c.condDurations) return;
+  const expired = [];
+  for (const cond of Object.keys(c.condDurations)) {
+    c.condDurations[cond]--;
+    if (c.condDurations[cond] <= 0) { expired.push(cond); delete c.condDurations[cond]; }
+  }
+  for (const cond of expired) {
+    const idx = c.conditions.indexOf(cond);
+    if (idx >= 0) c.conditions.splice(idx, 1);
+  }
 }
 
 function renderEncHpRow(id) {
@@ -1335,6 +1571,7 @@ function renderEncounter() {
         <div class="enc-name-sub">${escHtml(typeLabel)}${team ? ` · <span style="color:${team.bg};font-weight:600;">${team.name}</span>` : ''}</div>
         <div class="enc-conditions" id="enc-pill-${c.id}">${renderCondPills(c)}</div>
         <div class="cond-selector${c.condOpen?' open':''}" id="enc-conds-${c.id}">${renderCondOptions(c)}</div>
+        ${c.notesOpen || c.notes ? `<div class="enc-notes-row" id="enc-notes-${c.id}"><input class="enc-notes-inp" type="text" value="${escHtml(c.notes||'')}" placeholder="Combat note…" oninput="encSetNotes(${c.id},this.value)" onblur="encSaveNoteBlur(${c.id})"></div>` : `<div class="enc-notes-row" id="enc-notes-${c.id}" style="display:none;"><input class="enc-notes-inp" type="text" value="" placeholder="Combat note…" oninput="encSetNotes(${c.id},this.value)"></div>`}
       </div>
       <div class="enc-hp-col" id="enc-hp-${c.id}">
         <div class="hp-bar-wrap"><div class="hp-bar" style="width:${pct}%;background:${barColor}"></div></div>
@@ -1363,6 +1600,7 @@ function renderEncounter() {
         <div style="font-size:11px;font-weight:600;color:var(--text-dim);">AC ${c.ac}</div>
         <button class="icon-btn" onclick="encRandomAttack(${c.id})" title="Random attack against an enemy">⚔</button>
         <button class="icon-btn" onclick="encToggleCond(${c.id})" title="Conditions">⚡</button>
+        <button class="icon-btn${c.notes?'  note-active':''}" onclick="encToggleNotes(${c.id})" title="Combat note">📝</button>
         <button class="icon-btn remove" onclick="encRemove(${c.id})" title="Remove">✕</button>
       </div>
     </div>`;
@@ -1551,6 +1789,7 @@ function modalNextTurn() {
   document.getElementById('tm-qr-qty').textContent = '1';
   document.getElementById('tm-hp-inp').value = '';
   document.getElementById('tm-hp-feedback').textContent = '';
+  tmResetActions();
   // Skip dead combatants if checkbox is on
   if (document.getElementById('tm-skip-dead-chk').checked) {
     let safety = encounter.combatants.length;
@@ -1654,6 +1893,8 @@ function updateTurnModal() {
   }
 
   renderModalAttackResult();
+  renderTmActionChips();
+  renderDeathSaves(c);
 
   // Next button label: last combatant wraps to next round
   const isLast = encounter.currentIndex === combatants.length - 1;
@@ -1806,19 +2047,118 @@ function tmApplyHpToTarget(mode) {
   if (inp) inp.value = '';
 }
 
+/* ── Action Economy (C1) ──────────────────────────────── */
+const TM_ACTIONS = [
+  { key: 'action',   label: 'Action',       color: 'var(--purple)' },
+  { key: 'bonus',    label: 'Bonus Action', color: 'var(--teal)'   },
+  { key: 'reaction', label: 'Reaction',     color: 'var(--amber)'  },
+  { key: 'movement', label: 'Movement',     color: 'var(--green)'  },
+];
+let tmActionState = { action: false, bonus: false, reaction: false, movement: false };
+
+function tmResetActions() {
+  tmActionState = { action: false, bonus: false, reaction: false, movement: false };
+  renderTmActionChips();
+}
+
+function tmToggleAction(key) {
+  tmActionState[key] = !tmActionState[key];
+  renderTmActionChips();
+}
+
+function renderTmActionChips() {
+  const el = document.getElementById('tm-action-chips');
+  if (!el) return;
+  el.innerHTML = TM_ACTIONS.map(a => {
+    const used = tmActionState[a.key];
+    return `<button class="tm-action-chip${used?' used':''}" style="--chip-color:${a.color}" onclick="tmToggleAction('${a.key}')" title="${used?'Used — click to undo':'Click to mark used'}">${used?'<s>'+a.label+'</s>':a.label}</button>`;
+  }).join('');
+}
+
+/* ── Death Saves (C2) ─────────────────────────────────── */
+function renderDeathSaves(c) {
+  const zone = document.getElementById('tm-death-zone');
+  if (!zone) return;
+  const isDead = c.hp === 0;
+  zone.style.display = isDead ? '' : 'none';
+  if (!isDead) return;
+  if (!c.deathSuccesses) c.deathSuccesses = 0;
+  if (!c.deathFails) c.deathFails = 0;
+  const bubble = (filled, color) => `<span style="width:18px;height:18px;border-radius:50%;display:inline-block;border:2px solid ${color};background:${filled?color:'transparent'};"></span>`;
+  document.getElementById('tm-ds-success').innerHTML = [0,1,2].map(i => bubble(i < c.deathSuccesses, 'var(--green)')).join('');
+  document.getElementById('tm-ds-fail').innerHTML    = [0,1,2].map(i => bubble(i < c.deathFails,    'var(--red)')).join('');
+}
+
+function tmRollDeathSave() {
+  const c = encounter.combatants[encounter.currentIndex];
+  if (!c || c.hp > 0) return;
+  if (!c.deathSuccesses) c.deathSuccesses = 0;
+  if (!c.deathFails) c.deathFails = 0;
+  const roll = Math.floor(Math.random() * 20) + 1;
+  const res = document.getElementById('tm-ds-result');
+  if (roll === 20) {
+    c.hp = 1; c.deathSuccesses = 0; c.deathFails = 0;
+    encSave(); renderEncHpRow(c.id); updateTurnModal();
+    if (res) res.innerHTML = `<span style="color:var(--green-text)">★ Natural 20 — ${c.name} stabilises at 1 HP!</span>`;
+    return;
+  } else if (roll === 1) {
+    c.deathFails = Math.min(3, c.deathFails + 2);
+    if (res) res.innerHTML = `<span style="color:var(--red-text)">☠ Natural 1 — two failures!</span>`;
+  } else if (roll >= 10) {
+    c.deathSuccesses = Math.min(3, c.deathSuccesses + 1);
+    if (res) res.innerHTML = `<span style="color:var(--green-text)">✓ ${roll} — success (${c.deathSuccesses}/3)</span>`;
+  } else {
+    c.deathFails = Math.min(3, c.deathFails + 1);
+    if (res) res.innerHTML = `<span style="color:var(--red-text)">✗ ${roll} — failure (${c.deathFails}/3)</span>`;
+  }
+  if (c.deathSuccesses >= 3) {
+    c.deathSuccesses = 0; c.deathFails = 0;
+    if (res) res.innerHTML = `<span style="color:var(--green-text)">✓✓✓ ${c.name} is stable!</span>`;
+  } else if (c.deathFails >= 3) {
+    c.deathFails = 0; c.deathSuccesses = 0;
+    if (res) res.innerHTML = `<span style="color:var(--red-text)">☠☠☠ ${c.name} is dead.</span>`;
+  }
+  encSave();
+  renderDeathSaves(c);
+}
+
 /* ── Board Mode ───────────────────────────────────────── */
-const BOARD_COLS = 30;
-const BOARD_ROWS = 20;
-const CELL = 36; // px per square
+const BOARD_COLS = 100;
+const BOARD_ROWS = 100;
+const CELL_BASE = 16; // base px per square at zoom 1.0
+let boardZoom = 0.5;  // start zoomed out to fit the full grid
 let boardState = { pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false };
+let boardHoverInfo = null; // { combatant, col, row }
+
+function boardCell() { return Math.max(6, Math.round(CELL_BASE * boardZoom)); }
+
+function boardZoomIn()  { boardZoom = Math.min(+(boardZoom * 1.25).toFixed(4), 3);   renderBoardCanvas(); updateZoomLabel(); }
+function boardZoomOut() { boardZoom = Math.max(+(boardZoom / 1.25).toFixed(4), 0.25); renderBoardCanvas(); updateZoomLabel(); }
+function updateZoomLabel() {
+  const el = document.getElementById('board-zoom-label');
+  if (el) el.textContent = Math.round(boardZoom * 100) + '%';
+}
+
+function boardFitZoom() {
+  const wrap = document.getElementById('board-grid-wrap');
+  if (wrap) {
+    const availW = wrap.clientWidth  - 32;
+    const availH = wrap.clientHeight - 32;
+    const fit = Math.min(availW / (BOARD_COLS * CELL_BASE), availH / (BOARD_ROWS * CELL_BASE));
+    boardZoom = Math.max(+fit.toFixed(4), 0.25);
+  }
+  updateZoomLabel();
+  renderBoardCanvas();
+}
 
 function openBoardMode() {
   document.getElementById('board-overlay').classList.add('open');
-  renderBoard();
+  requestAnimationFrame(() => { boardFitZoom(); renderBoard(); });
 }
 function closeBoardMode() {
   document.getElementById('board-overlay').classList.remove('open');
-  boardState = { pendingId: null, selectedIds: [], rangeFt: 0 };
+  boardState = { pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false };
+  boardHoverInfo = null;
   const inp = document.getElementById('board-range-input');
   if (inp) inp.value = '';
 }
@@ -1838,8 +2178,9 @@ function boardClearPositions() {
 
 function boardInitCanvas() {
   const canvas = document.getElementById('board-canvas');
-  const W = BOARD_COLS * CELL;
-  const H = BOARD_ROWS * CELL;
+  const SZ = boardCell();
+  const W = BOARD_COLS * SZ;
+  const H = BOARD_ROWS * SZ;
   if (canvas.width !== W || canvas.height !== H) {
     canvas.width = W;
     canvas.height = H;
@@ -1888,7 +2229,9 @@ function renderBoardTray() {
 function renderBoardCanvas() {
   const canvas = boardInitCanvas();
   const ctx = canvas.getContext('2d');
-  const isDark = document.body.classList.contains('dark') || getComputedStyle(document.body).getPropertyValue('--bg').trim().startsWith('#0') || getComputedStyle(document.body).getPropertyValue('--bg').trim() === '';
+  const SZ = boardCell();
+  const isDark = getComputedStyle(document.body).getPropertyValue('--bg').trim().startsWith('#0');
+  const showLabels = SZ >= 10;
 
   // Background
   ctx.fillStyle = isDark ? '#141820' : '#f0f0f0';
@@ -1899,7 +2242,7 @@ function renderBoardCanvas() {
     for (let c = 0; c < BOARD_COLS; c++) {
       if ((r + c) % 2 === 1) {
         ctx.fillStyle = isDark ? '#1a1f2a' : '#e4e4e4';
-        ctx.fillRect(c * CELL, r * CELL, CELL, CELL);
+        ctx.fillRect(c * SZ, r * SZ, SZ, SZ);
       }
     }
   }
@@ -1908,61 +2251,59 @@ function renderBoardCanvas() {
   ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.12)';
   ctx.lineWidth = 1;
   for (let c = 0; c <= BOARD_COLS; c++) {
-    ctx.beginPath(); ctx.moveTo(c * CELL, 0); ctx.lineTo(c * CELL, canvas.height); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(c * SZ, 0); ctx.lineTo(c * SZ, canvas.height); ctx.stroke();
   }
   for (let r = 0; r <= BOARD_ROWS; r++) {
-    ctx.beginPath(); ctx.moveTo(0, r * CELL); ctx.lineTo(canvas.width, r * CELL); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, r * SZ); ctx.lineTo(canvas.width, r * SZ); ctx.stroke();
   }
 
-  // Row/col labels
-  ctx.fillStyle = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.25)';
-  ctx.font = '9px sans-serif';
-  ctx.textAlign = 'center';
-  for (let c = 0; c < BOARD_COLS; c++) {
-    ctx.fillText(c + 1, c * CELL + CELL / 2, 10);
-  }
-  ctx.textAlign = 'right';
-  for (let r = 0; r < BOARD_ROWS; r++) {
-    ctx.fillText(String.fromCharCode(65 + r), CELL - 4, r * CELL + CELL / 2 + 4);
+  // Row/col labels (skip at very small zoom)
+  if (showLabels) {
+    ctx.fillStyle = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.25)';
+    const fontSize = Math.max(6, Math.min(9, SZ - 4));
+    ctx.font = `${fontSize}px sans-serif`;
+    // Only label every Nth column/row to avoid clutter
+    const step = SZ < 14 ? 5 : SZ < 20 ? 2 : 1;
+    ctx.textAlign = 'center';
+    for (let c = 0; c < BOARD_COLS; c++) {
+      if ((c + 1) % step === 0 || c === 0) ctx.fillText(c + 1, c * SZ + SZ / 2, fontSize + 1);
+    }
+    ctx.textAlign = 'right';
+    for (let r = 0; r < BOARD_ROWS; r++) {
+      if ((r + 1) % step === 0 || r === 0) ctx.fillText(r + 1, SZ - 2, r * SZ + SZ / 2 + fontSize / 2 - 1);
+    }
   }
 
-  // Range overlay — highlight squares within range of first selected placed unit
+  // Range overlay
   if (boardState.rangeFt > 0 && boardState.selectedIds.length >= 1) {
     const origin = encounter.combatants.find(c => c.id === boardState.selectedIds[0]);
     if (origin && origin.boardX != null) {
       const rangeSquares = Math.round(boardState.rangeFt / 5);
       const ox = origin.boardX, oy = origin.boardY;
-      // Fill in-range cells
       ctx.save();
       for (let r = 0; r < BOARD_ROWS; r++) {
         for (let c = 0; c < BOARD_COLS; c++) {
-          const dx = Math.abs(c - ox), dy = Math.abs(r - oy);
-          const dist = Math.max(dx, dy); // Chebyshev
+          const dist = Math.max(Math.abs(c - ox), Math.abs(r - oy));
           if (dist > 0 && dist <= rangeSquares) {
             ctx.fillStyle = 'rgba(14,158,133,0.18)';
-            ctx.fillRect(c * CELL + 1, r * CELL + 1, CELL - 2, CELL - 2);
+            ctx.fillRect(c * SZ + 1, r * SZ + 1, SZ - 2, SZ - 2);
           }
         }
       }
-      // Draw perimeter border on cells at exactly the range boundary
       ctx.strokeStyle = 'rgba(14,158,133,0.85)';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = Math.max(1, SZ / 16);
       for (let r = 0; r < BOARD_ROWS; r++) {
         for (let c = 0; c < BOARD_COLS; c++) {
           const dx = Math.abs(c - ox), dy = Math.abs(r - oy);
-          const dist = Math.max(dx, dy);
-          if (dist === rangeSquares) {
-            // Draw only the edges that face outside the range
+          if (Math.max(dx, dy) === rangeSquares) {
             const edges = [
-              { cond: Math.max(Math.abs(c-1-ox), dy) > rangeSquares, x1: c*CELL, y1: r*CELL,       x2: c*CELL,        y2: (r+1)*CELL },       // left
-              { cond: Math.max(Math.abs(c+1-ox), dy) > rangeSquares, x1: (c+1)*CELL, y1: r*CELL,   x2: (c+1)*CELL,    y2: (r+1)*CELL },   // right
-              { cond: Math.max(dx, Math.abs(r-1-oy)) > rangeSquares, x1: c*CELL, y1: r*CELL,       x2: (c+1)*CELL,    y2: r*CELL },             // top
-              { cond: Math.max(dx, Math.abs(r+1-oy)) > rangeSquares, x1: c*CELL, y1: (r+1)*CELL,   x2: (c+1)*CELL,    y2: (r+1)*CELL },   // bottom
+              { cond: Math.max(Math.abs(c-1-ox), dy) > rangeSquares, x1: c*SZ,     y1: r*SZ,     x2: c*SZ,     y2: (r+1)*SZ },
+              { cond: Math.max(Math.abs(c+1-ox), dy) > rangeSquares, x1: (c+1)*SZ, y1: r*SZ,     x2: (c+1)*SZ, y2: (r+1)*SZ },
+              { cond: Math.max(dx, Math.abs(r-1-oy)) > rangeSquares, x1: c*SZ,     y1: r*SZ,     x2: (c+1)*SZ, y2: r*SZ     },
+              { cond: Math.max(dx, Math.abs(r+1-oy)) > rangeSquares, x1: c*SZ,     y1: (r+1)*SZ, x2: (c+1)*SZ, y2: (r+1)*SZ },
             ];
             for (const e of edges) {
-              if (e.cond) {
-                ctx.beginPath(); ctx.moveTo(e.x1, e.y1); ctx.lineTo(e.x2, e.y2); ctx.stroke();
-              }
+              if (e.cond) { ctx.beginPath(); ctx.moveTo(e.x1, e.y1); ctx.lineTo(e.x2, e.y2); ctx.stroke(); }
             }
           }
         }
@@ -1977,8 +2318,8 @@ function renderBoardCanvas() {
     const a = encounter.combatants.find(c => c.id === sel[0]);
     const b = encounter.combatants.find(c => c.id === sel[1]);
     if (a && b && a.boardX != null && b.boardX != null) {
-      const ax = a.boardX * CELL + CELL / 2, ay = a.boardY * CELL + CELL / 2;
-      const bx = b.boardX * CELL + CELL / 2, by = b.boardY * CELL + CELL / 2;
+      const ax = a.boardX * SZ + SZ / 2, ay = a.boardY * SZ + SZ / 2;
+      const bx = b.boardX * SZ + SZ / 2, by = b.boardY * SZ + SZ / 2;
       ctx.save();
       ctx.setLineDash([6, 4]);
       ctx.strokeStyle = 'rgba(232,160,32,0.8)';
@@ -1988,41 +2329,55 @@ function renderBoardCanvas() {
     }
   }
 
-  // Ghost token — draw destination cell highlight while dragging
+  // Ghost token + drag-distance label
   if (boardState.dragging) {
     const { id, originX, originY, curCol, curRow } = boardState.dragging;
     const dc = encounter.combatants.find(c => c.id === id);
     if (dc) {
       const color = boardTokenColor(dc);
       const occupied = encounter.combatants.some(c => c.boardX === curCol && c.boardY === curRow && c.id !== id);
-      // Origin: dashed outline where token came from
+      // Origin dashed outline
       ctx.save();
       ctx.setLineDash([4, 3]);
       ctx.strokeStyle = 'rgba(255,255,255,0.25)';
       ctx.lineWidth = 2;
-      ctx.strokeRect(originX * CELL + 2, originY * CELL + 2, CELL - 4, CELL - 4);
+      ctx.strokeRect(originX * SZ + 2, originY * SZ + 2, SZ - 4, SZ - 4);
       ctx.restore();
-      // Destination: ghost token
-      const cx = curCol * CELL + CELL / 2;
-      const cy = curRow * CELL + CELL / 2;
-      const tr = CELL / 2 - 3;
+      // Ghost circle
+      const cx = curCol * SZ + SZ / 2, cy = curRow * SZ + SZ / 2;
+      const tr = Math.max(3, SZ / 2 - 3);
       ctx.save();
       ctx.globalAlpha = occupied ? 0.3 : 0.65;
-      ctx.beginPath();
-      ctx.arc(cx, cy, tr, 0, Math.PI * 2);
-      ctx.fillStyle = color;
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy, tr, 0, Math.PI * 2);
+      ctx.fillStyle = color; ctx.fill();
       ctx.strokeStyle = occupied ? '#EF4444' : 'rgba(255,255,255,0.6)';
-      ctx.lineWidth = occupied ? 2.5 : 1.5;
-      ctx.stroke();
-      if (!occupied) {
-        ctx.fillStyle = '#ffffff';
-        ctx.font = `bold ${CELL <= 32 ? 9 : 11}px sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+      ctx.lineWidth = occupied ? 2.5 : 1.5; ctx.stroke();
+      if (!occupied && SZ >= 10) {
+        ctx.fillStyle = '#fff';
+        ctx.font = `bold ${Math.max(6, SZ <= 16 ? 7 : 9)}px sans-serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText(boardInitials(dc.name), cx, cy);
       }
       ctx.restore();
+      // Move-distance pill above ghost
+      const moveSq = Math.max(Math.abs(curCol - originX), Math.abs(curRow - originY));
+      if (moveSq > 0) {
+        const label = `${moveSq} sq · ${moveSq * 5} ft`;
+        ctx.save();
+        ctx.font = 'bold 10px sans-serif';
+        const tw = ctx.measureText(label).width;
+        const pillW = tw + 12, pillH = 16;
+        const px = cx - pillW / 2;
+        const py = cy - tr - pillH - 6;
+        ctx.fillStyle = 'rgba(10,14,22,0.82)';
+        ctx.beginPath();
+        if (ctx.roundRect) { ctx.roundRect(px, py, pillW, pillH, 4); } else { ctx.rect(px, py, pillW, pillH); }
+        ctx.fill();
+        ctx.fillStyle = occupied ? '#FCA5A5' : '#E8A020';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(label, cx, py + pillH / 2);
+        ctx.restore();
+      }
     }
   }
 
@@ -2030,57 +2385,79 @@ function renderBoardCanvas() {
   const placed = encounter.combatants.filter(c => c.boardX != null);
   for (const c of placed) {
     const isDraggingThis = boardState.dragging?.id === c.id;
-    const cx = c.boardX * CELL + CELL / 2;
-    const cy = c.boardY * CELL + CELL / 2;
-    const r = CELL / 2 - 3;
+    const cx = c.boardX * SZ + SZ / 2, cy = c.boardY * SZ + SZ / 2;
+    const r = Math.max(3, SZ / 2 - 3);
     const isDead = c.hp === 0;
     const color = boardTokenColor(c);
     const isSelected = boardState.selectedIds.includes(c.id);
 
     ctx.save();
-    if (isDraggingThis) ctx.globalAlpha = 0.25; // fade original while dragging
+    if (isDraggingThis) ctx.globalAlpha = 0.25;
     else if (isDead) ctx.globalAlpha = 0.35;
 
-    // Selection ring
     if (isSelected) {
-      ctx.beginPath();
-      ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(232,160,32,0.35)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(232,160,32,0.9)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(232,160,32,0.35)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(232,160,32,0.9)'; ctx.lineWidth = 2; ctx.stroke();
     }
 
-    // Token circle
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle = color;
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1.5; ctx.stroke();
 
-    // HP arc
     const hpPct = c.maxHp > 0 ? c.hp / c.maxHp : 0;
-    const arcColor = hpPct > 0.5 ? '#2D9F4E' : hpPct > 0.25 ? '#C49A0A' : '#EF4444';
     ctx.beginPath();
     ctx.arc(cx, cy, r + 2, -Math.PI / 2, -Math.PI / 2 + hpPct * Math.PI * 2);
-    ctx.strokeStyle = arcColor;
-    ctx.lineWidth = 3;
-    ctx.stroke();
+    ctx.strokeStyle = hpPct > 0.5 ? '#2D9F4E' : hpPct > 0.25 ? '#C49A0A' : '#EF4444';
+    ctx.lineWidth = Math.max(2, SZ / 12); ctx.stroke();
 
-    // Initials
-    ctx.fillStyle = '#ffffff';
-    ctx.font = `bold ${CELL <= 32 ? 9 : 11}px sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(boardInitials(c.name), cx, cy);
-
+    if (SZ >= 10) {
+      ctx.fillStyle = '#fff';
+      ctx.font = `bold ${Math.max(6, SZ <= 16 ? 7 : 9)}px sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(boardInitials(c.name), cx, cy);
+    }
     ctx.restore();
   }
 
-  // Pending placement highlight — show where next click will place
+  // Hover tooltip
+  if (boardHoverInfo && !boardState.dragging) {
+    const { combatant: hc, col: hCol, row: hRow } = boardHoverInfo;
+    const hpPct = hc.maxHp > 0 ? hc.hp / hc.maxHp : 0;
+    const hpColor = hpPct > 0.5 ? '#2D9F4E' : hpPct > 0.25 ? '#C49A0A' : '#EF4444';
+    const conds = (hc.conditions || []).join(', ') || 'None';
+    const lines = [
+      hc.name,
+      `HP ${hc.hp}/${hc.maxHp}  ·  AC ${hc.ac}`,
+      `Conditions: ${conds}`,
+    ];
+    const ttX = hCol * SZ + SZ / 2;
+    const ttY = hRow * SZ - 6;
+    ctx.save();
+    ctx.font = 'bold 11px sans-serif';
+    const maxW = Math.max(...lines.map(l => ctx.measureText(l).width));
+    const ttW = maxW + 18, ttH = lines.length * 15 + 10;
+    let tx = ttX - ttW / 2;
+    let ty = ttY - ttH;
+    tx = Math.max(2, Math.min(canvas.width - ttW - 2, tx));
+    if (ty < 2) ty = hRow * SZ + SZ + 6;
+    ctx.fillStyle = 'rgba(10,14,22,0.92)';
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(tx, ty, ttW, ttH, 5); else ctx.rect(tx, ty, ttW, ttH);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    lines.forEach((line, i) => {
+      ctx.fillStyle = i === 0 ? '#fff' : i === 1 ? hpColor : 'rgba(255,255,255,0.6)';
+      ctx.font = i === 0 ? 'bold 11px sans-serif' : '10px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      ctx.fillText(line, tx + 9, ty + 6 + i * 15);
+    });
+    ctx.restore();
+  }
+
   if (boardState.pendingId !== null) {
     const hint = document.getElementById('board-hint');
     if (hint) hint.textContent = 'Click a grid square to place the selected unit.';
@@ -2118,10 +2495,9 @@ function boardSelectTrayItem(id) {
 function boardCanvasCell(e) {
   const canvas = document.getElementById('board-canvas');
   const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  const col = Math.floor((e.clientX - rect.left) * scaleX / CELL);
-  const row = Math.floor((e.clientY - rect.top)  * scaleY / CELL);
+  const SZ = boardCell();
+  const col = Math.floor((e.clientX - rect.left) * (canvas.width  / rect.width)  / SZ);
+  const row = Math.floor((e.clientY - rect.top)  * (canvas.height / rect.height) / SZ);
   return { col, row };
 }
 
@@ -2140,9 +2516,14 @@ function boardHandleMouseMove(e) {
   const canvas = document.getElementById('board-canvas');
   if (!boardState.dragging) {
     const { col, row } = boardCanvasCell(e);
-    const onToken = col >= 0 && col < BOARD_COLS && row >= 0 && row < BOARD_ROWS &&
-      encounter.combatants.some(c => c.boardX === col && c.boardY === row);
-    canvas.style.cursor = onToken ? 'grab' : 'crosshair';
+    const hit = col >= 0 && col < BOARD_COLS && row >= 0 && row < BOARD_ROWS
+      ? encounter.combatants.find(c => c.boardX === col && c.boardY === row) : null;
+    canvas.style.cursor = hit ? 'grab' : 'crosshair';
+    const prev = boardHoverInfo;
+    boardHoverInfo = hit ? { combatant: hit, col, row } : null;
+    if ((prev == null) !== (boardHoverInfo == null) || prev?.combatant?.id !== boardHoverInfo?.combatant?.id) {
+      renderBoardCanvas();
+    }
     return;
   }
   const { col, row } = boardCanvasCell(e);
@@ -2235,6 +2616,30 @@ function boardHandleCanvasRightClick(e) {
   }
 }
 
+// ── Keyboard shortcuts ─────────────────────────────────────
+document.addEventListener('keydown', e => {
+  const tag = document.activeElement?.tagName;
+  const inInput = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+  const modalOpen = document.getElementById('turn-modal-overlay')?.classList.contains('open') ||
+                    document.getElementById('board-overlay')?.classList.contains('open');
+  if (inInput || modalOpen) return;
+
+  if (e.key === '1') { e.preventDefault(); setView('character'); }
+  else if (e.key === '2') { e.preventDefault(); setView('dice'); }
+  else if (e.key === '3') { e.preventDefault(); setView('encounter'); }
+  else if ((e.key === ' ' || e.key === 'Enter') && currentView === 'dice') {
+    e.preventDefault(); rollDice();
+  } else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && currentView === 'character') {
+    e.preventDefault();
+    const idx = CHARACTERS.findIndex(c => c._roster_id === selected?._roster_id);
+    if (idx === -1) return;
+    const next = e.key === 'ArrowRight'
+      ? CHARACTERS[(idx + 1) % CHARACTERS.length]
+      : CHARACTERS[(idx - 1 + CHARACTERS.length) % CHARACTERS.length];
+    selectChar(next._roster_id);
+  }
+});
+
 // Wire up canvas events after DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('board-canvas');
@@ -2242,9 +2647,10 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.addEventListener('mousedown', boardHandleMouseDown);
     canvas.addEventListener('mousemove', boardHandleMouseMove);
     canvas.addEventListener('mouseup',   boardHandleMouseUp);
-    canvas.addEventListener('mouseleave', boardHandleMouseUp);
+    canvas.addEventListener('mouseleave', e => { boardHoverInfo = null; boardHandleMouseUp(e); renderBoardCanvas(); });
     canvas.addEventListener('click', boardHandleCanvasClick);
     canvas.addEventListener('contextmenu', boardHandleCanvasRightClick);
+    canvas.addEventListener('wheel', e => { e.preventDefault(); e.deltaY < 0 ? boardZoomIn() : boardZoomOut(); }, { passive: false });
   }
   const rangeInp = document.getElementById('board-range-input');
   if (rangeInp) {

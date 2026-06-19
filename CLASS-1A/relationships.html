@@ -419,6 +419,116 @@
   #save-status.saving { color: var(--amber); }
   #save-status.saved { color: var(--teal); }
   #save-status.error { color: var(--red); }
+
+  /* ── Mobile ──────────────────────────────────────────── */
+  @media (max-width: 640px) {
+    body { height: 100dvh; }
+    #app { grid-template-columns: 1fr; position: relative; overflow: hidden; }
+
+    /* Sidebar: full screen, slides left when main is shown */
+    #sidebar {
+      position: absolute; inset: 0; z-index: 10; width: 100%; border-right: none;
+      transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    }
+    #app.mobile-main #sidebar { transform: translateX(-100%); pointer-events: none; }
+
+    /* Main: full screen, slides in from right */
+    #main {
+      position: absolute; inset: 0;
+      transform: translateX(100%);
+      transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    }
+    #app.mobile-main #main { transform: translateX(0); }
+
+    /* Sidebar quick-nav for tools without a character */
+    #sidebar-mobile-nav {
+      display: flex; gap: 6px; padding: 8px 12px;
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .sidebar-mobile-btn {
+      flex: 1; padding: 7px 10px; border: 1px solid var(--border);
+      border-radius: var(--radius); background: var(--surface2); color: var(--text-muted);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer;
+      text-transform: uppercase; font-family: inherit;
+      transition: border-color 0.1s, color 0.1s, background 0.1s;
+    }
+    .sidebar-mobile-btn:hover { border-color: var(--purple); color: var(--purple-text); background: var(--purple-light); }
+
+    /* Main nav: hide dashboard link, show back-to-list button */
+    #back-to-dash { display: none; }
+    #mobile-back-btn {
+      display: flex; align-items: center; padding: 10px 12px; gap: 4px;
+      font-size: 12px; font-weight: 600; color: var(--text-dim); background: none;
+      border: none; border-right: 1px solid var(--border); cursor: pointer;
+      white-space: nowrap; text-transform: uppercase; letter-spacing: 0.04em;
+      font-family: inherit; flex-shrink: 0;
+    }
+    #mobile-back-btn:hover { color: var(--purple-text); background: var(--purple-light); }
+    #main-nav { overflow-x: auto; scrollbar-width: none; }
+    #main-nav::-webkit-scrollbar { display: none; }
+    .nav-btn { padding: 10px 14px; white-space: nowrap; flex-shrink: 0; }
+
+    /* Profile header */
+    #profile-inner { padding: 12px 14px 8px; }
+    #profile-name { font-size: 17px; }
+    #scores-row { gap: 4px; }
+    .score-block { padding: 4px 5px; min-width: 40px; }
+    .score-val-input { font-size: 14px; width: 30px; }
+    .stat-chip { font-size: 10px; }
+
+    /* Profile tabs: horizontally scrollable */
+    #profile-tabs { overflow-x: auto; scrollbar-width: none; flex-shrink: 0; }
+    #profile-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { white-space: nowrap; padding: 7px 10px; flex-shrink: 0; }
+    #tab-content { max-height: 180px; padding: 10px 14px; }
+    #tab-content.tab-quirk { max-height: 240px; }
+
+    /* Relationships: stack name+score on one row, controls below */
+    #rel-list { padding: 0 14px 24px; }
+    #rel-header { padding: 8px 14px; }
+    #rel-legend { display: none; }
+    .rel-row {
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto;
+      gap: 6px;
+    }
+    .rel-row > :nth-child(1) { grid-column: 1; grid-row: 1; }
+    .rel-row > :nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+    .rel-row > :nth-child(3) { grid-column: 2; grid-row: 1; align-self: center; }
+
+    /* Dice roller */
+    #view-dice { padding: 14px; gap: 14px; }
+    .die-btn { width: 58px; height: 58px; }
+    .dice-result { padding: 14px 16px; }
+    .result-number { font-size: 44px; min-width: 60px; }
+    .dice-tray { padding: 0 !important; }
+    .dice-section-title { padding: 0 !important; }
+
+    /* Encounter: init+name+actions on row 1, hp on row 2 */
+    #enc-header { padding: 8px 12px; gap: 6px; }
+    #enc-add-bar { padding: 8px 12px; }
+    #enc-list { padding: 8px 12px; }
+    .enc-row {
+      grid-template-columns: 40px 1fr auto;
+      grid-template-rows: auto auto;
+      gap: 6px 8px;
+      padding: 8px 10px;
+    }
+    .enc-init    { grid-column: 1; grid-row: 1; }
+    .enc-name-col{ grid-column: 2; grid-row: 1; }
+    .enc-actions { grid-column: 3; grid-row: 1; flex-direction: row; align-items: center; }
+    .enc-hp-col  { grid-column: 1 / -1; grid-row: 2; }
+    .cond-selector { grid-column: 1 / -1; }
+    .enc-notes-row { grid-column: 1 / -1; }
+
+    /* Save bar */
+    #save-bar { padding: 6px 12px; }
+  }
+
+  @media (min-width: 641px) {
+    #mobile-back-btn { display: none; }
+    #sidebar-mobile-nav { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -428,6 +538,10 @@
       <h1>U.A. High School</h1>
       <p>Hero Course — Class 1-A</p>
     </div>
+    <div id="sidebar-mobile-nav">
+      <button class="sidebar-mobile-btn" onclick="mobileFwd('dice')">⚄ Dice</button>
+      <button class="sidebar-mobile-btn" onclick="mobileFwd('encounter')">⚔ Encounter</button>
+    </div>
     <input id="search" type="text" placeholder="Search characters..." autocomplete="off" oninput="filterList(this.value)">
     <div id="char-list"></div>
   </div>
@@ -435,6 +549,7 @@
   <div id="main">
     <div id="main-nav">
       <a id="back-to-dash" href="../index.html">← Dashboard</a>
+      <button id="mobile-back-btn" onclick="mobileBack()">← List</button>
       <button class="nav-btn active" onclick="setView('character')">Characters</button>
       <button class="nav-btn" onclick="setView('dice')">Dice Roller</button>
       <button class="nav-btn" onclick="setView('encounter')">Encounter</button>
@@ -904,6 +1019,16 @@ function selectChar(id) {
   renderProfile();
   renderRelationships();
   setView('character');
+  if (window.innerWidth <= 640) document.getElementById('app').classList.add('mobile-main');
+}
+
+function mobileBack() {
+  document.getElementById('app').classList.remove('mobile-main');
+}
+
+function mobileFwd(view) {
+  setView(view);
+  document.getElementById('app').classList.add('mobile-main');
 }
 
 function filterList(q) {

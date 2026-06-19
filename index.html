@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MHA D&D — DM Dashboard</title>
+<title>MHA D&D</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -21,6 +21,97 @@
     background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5;
     min-height: 100vh;
   }
+
+  /* ── Role selection overlay ── */
+  #role-screen {
+    position: fixed; inset: 0; z-index: 100;
+    background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0; padding: 32px;
+  }
+  .role-badge {
+    font-size: 11px; font-weight: 700; color: var(--gold); letter-spacing: 0.14em;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .role-title {
+    font-size: 26px; font-weight: 800; letter-spacing: -0.03em;
+    margin-bottom: 6px; text-align: center;
+  }
+  .role-sub {
+    font-size: 13px; color: var(--text-muted); text-align: center;
+    margin-bottom: 40px; max-width: 300px; line-height: 1.6;
+  }
+  .role-buttons { display: flex; gap: 14px; width: 100%; max-width: 380px; }
+  .role-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10px;
+    padding: 28px 16px; border-radius: var(--radius-lg);
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text); cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s, background 0.15s;
+    font-family: inherit;
+  }
+  .role-btn:hover { transform: translateY(-2px); }
+  .role-btn-icon { font-size: 32px; line-height: 1; }
+  .role-btn-label { font-size: 15px; font-weight: 800; }
+  .role-btn-desc { font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.4; }
+
+  .role-btn.player { border-color: rgba(14,165,114,0.3); }
+  .role-btn.player:hover { border-color: rgba(14,165,114,0.7); box-shadow: 0 6px 28px rgba(14,165,114,0.15); background: rgba(14,165,114,0.06); }
+  .role-btn.player .role-btn-label { color: var(--teal-text); }
+
+  .role-btn.dm { border-color: rgba(232,160,32,0.3); }
+  .role-btn.dm:hover { border-color: rgba(232,160,32,0.7); box-shadow: 0 6px 28px var(--gold-glow); background: var(--gold-light); }
+  .role-btn.dm .role-btn-label { color: var(--gold-text); }
+
+  #role-screen.hidden { display: none; }
+
+  /* ── PIN screen ── */
+  #pin-screen {
+    position: fixed; inset: 0; z-index: 100;
+    background: var(--bg);
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0; padding: 32px;
+  }
+  #pin-screen.visible { display: flex; }
+  .pin-title { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+  .pin-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
+  .pin-dots {
+    display: flex; gap: 12px; margin-bottom: 28px;
+  }
+  .pin-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid var(--border-strong); background: transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .pin-dot.filled { background: var(--gold); border-color: var(--gold); }
+  .pin-dot.error { background: var(--red); border-color: var(--red); }
+  .pin-pad {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    width: 100%; max-width: 260px;
+  }
+  .pin-key {
+    padding: 16px; border-radius: var(--radius); border: 1px solid var(--border);
+    background: var(--surface); color: var(--text); font-size: 18px; font-weight: 700;
+    cursor: pointer; font-family: inherit; text-align: center;
+    transition: background 0.1s, border-color 0.1s, transform 0.08s;
+  }
+  .pin-key:hover { background: var(--surface2); border-color: var(--border-strong); }
+  .pin-key:active { transform: scale(0.94); }
+  .pin-key.wide { grid-column: span 2; }
+  .pin-key.del { color: var(--text-muted); }
+  .pin-back-btn {
+    margin-top: 20px; font-size: 12px; color: var(--text-dim); background: none;
+    border: none; cursor: pointer; font-family: inherit;
+    transition: color 0.15s;
+  }
+  .pin-back-btn:hover { color: var(--text-muted); }
+  .pin-error-msg {
+    font-size: 12px; color: var(--red-text); margin-bottom: 16px; min-height: 18px;
+  }
+
+  /* ── App content (hidden until role chosen) ── */
+  #app { display: none; }
+  #app.visible { display: block; }
 
   /* ── Header ── */
   header {
@@ -43,6 +134,12 @@
   }
   .header-label { font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 1px; }
   header h1 { font-size: 17px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+  .switch-role-btn {
+    margin-left: auto; font-size: 11px; color: var(--text-dim); background: none;
+    border: 1px solid var(--border); border-radius: 6px; padding: 5px 10px;
+    cursor: pointer; font-family: inherit; transition: color 0.15s, border-color 0.15s;
+  }
+  .switch-role-btn:hover { color: var(--text-muted); border-color: var(--border-strong); }
 
   /* ── Content ── */
   main { max-width: 760px; margin: 0 auto; padding: 28px 32px 60px; }
@@ -106,13 +203,63 @@
 </style>
 </head>
 <body>
+
+<!-- Role selection screen -->
+<div id="role-screen">
+  <div class="role-badge">U.A. High School</div>
+  <div class="role-title">My Hero Academia D&amp;D</div>
+  <div class="role-sub">Who are you?</div>
+  <div class="role-buttons">
+    <button class="role-btn player" onclick="chooseRole('player')">
+      <span class="role-btn-icon">🎓</span>
+      <span class="role-btn-label">Player</span>
+      <span class="role-btn-desc">Access your character &amp; class tools</span>
+    </button>
+    <button class="role-btn dm" onclick="showPin()">
+      <span class="role-btn-icon">⚡</span>
+      <span class="role-btn-label">DM</span>
+      <span class="role-btn-desc">Full dashboard including campaign</span>
+    </button>
+  </div>
+</div>
+
+<!-- DM PIN screen -->
+<div id="pin-screen">
+  <div class="pin-title">DM Access</div>
+  <div class="pin-sub">Enter your 4-digit code</div>
+  <div class="pin-error-msg" id="pin-error"></div>
+  <div class="pin-dots" id="pin-dots">
+    <div class="pin-dot" id="dot-0"></div>
+    <div class="pin-dot" id="dot-1"></div>
+    <div class="pin-dot" id="dot-2"></div>
+    <div class="pin-dot" id="dot-3"></div>
+  </div>
+  <div class="pin-pad">
+    <button class="pin-key" onclick="pinPress('1')">1</button>
+    <button class="pin-key" onclick="pinPress('2')">2</button>
+    <button class="pin-key" onclick="pinPress('3')">3</button>
+    <button class="pin-key" onclick="pinPress('4')">4</button>
+    <button class="pin-key" onclick="pinPress('5')">5</button>
+    <button class="pin-key" onclick="pinPress('6')">6</button>
+    <button class="pin-key" onclick="pinPress('7')">7</button>
+    <button class="pin-key" onclick="pinPress('8')">8</button>
+    <button class="pin-key" onclick="pinPress('9')">9</button>
+    <button class="pin-key wide" onclick="pinPress('0')">0</button>
+    <button class="pin-key del" onclick="pinDelete()">⌫</button>
+  </div>
+  <button class="pin-back-btn" onclick="hidePin()">← Back</button>
+</div>
+
+<!-- Main app (revealed after role selection) -->
+<div id="app">
 <header>
   <div class="header-inner">
     <div class="header-icon">⚡</div>
     <div>
-      <div class="header-label">U.A. High School — DM Command</div>
+      <div class="header-label" id="header-label">U.A. High School</div>
       <h1>My Hero Academia D&amp;D</h1>
     </div>
+    <button class="switch-role-btn" onclick="switchRole()">Switch role</button>
   </div>
 </header>
 
@@ -127,23 +274,25 @@
     <div class="card-arrow">→</div>
   </a>
 
-  <p class="section-label">Campaign</p>
-  <a class="card-hero" href="campaign.html">
-    <div class="card-icon" style="background:rgba(29,52,97,0.25);">🗺</div>
-    <div class="card-body">
-      <div class="card-title">Campaign Archive</div>
-      <div class="card-desc">Story arcs, session notes, world reference, teachers, villains &amp; Class 1-B — all in one page</div>
-    </div>
-    <div class="card-arrow">→</div>
-  </a>
-  <a class="card-hero" href="scripts.html">
-    <div class="card-icon" style="background:rgba(14,165,114,0.15);">📜</div>
-    <div class="card-body">
-      <div class="card-title">DM Scripts</div>
-      <div class="card-desc">Session openers, arc narration, NPC voice notes, level-up moments &amp; combat read-outs — editable</div>
-    </div>
-    <div class="card-arrow">→</div>
-  </a>
+  <div id="dm-only">
+    <p class="section-label">Campaign</p>
+    <a class="card-hero" href="campaign.html">
+      <div class="card-icon" style="background:rgba(29,52,97,0.25);">🗺</div>
+      <div class="card-body">
+        <div class="card-title">Campaign Archive</div>
+        <div class="card-desc">Story arcs, session notes, world reference, teachers, villains &amp; Class 1-B — all in one page</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a class="card-hero" href="scripts.html">
+      <div class="card-icon" style="background:rgba(14,165,114,0.15);">📜</div>
+      <div class="card-body">
+        <div class="card-title">DM Scripts</div>
+        <div class="card-desc">Session openers, arc narration, NPC voice notes, level-up moments &amp; combat read-outs — editable</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+  </div>
 
   <p class="section-label">Rulebooks</p>
   <div class="card-row">
@@ -159,5 +308,103 @@
     </a>
   </div>
 </main>
+</div>
+
+<script>
+  const DM_PIN = '6560';
+  let pinEntry = '';
+
+  function chooseRole(role) {
+    sessionStorage.setItem('mha-role', role);
+    applyRole(role);
+  }
+
+  function applyRole(role) {
+    document.getElementById('role-screen').classList.add('hidden');
+    document.getElementById('pin-screen').classList.remove('visible');
+    document.getElementById('app').classList.add('visible');
+    if (role === 'player') {
+      document.getElementById('dm-only').style.display = 'none';
+      document.getElementById('header-label').textContent = 'U.A. High School — Class 1-A';
+    } else {
+      document.getElementById('dm-only').style.display = '';
+      document.getElementById('header-label').textContent = 'U.A. High School — DM Command';
+    }
+  }
+
+  function switchRole() {
+    sessionStorage.removeItem('mha-role');
+    pinEntry = '';
+    updateDots();
+    document.getElementById('pin-error').textContent = '';
+    document.getElementById('role-screen').classList.remove('hidden');
+    document.getElementById('pin-screen').classList.remove('visible');
+    document.getElementById('app').classList.remove('visible');
+  }
+
+  function showPin() {
+    pinEntry = '';
+    updateDots();
+    document.getElementById('pin-error').textContent = '';
+    document.getElementById('role-screen').classList.add('hidden');
+    document.getElementById('pin-screen').classList.add('visible');
+  }
+
+  function hidePin() {
+    pinEntry = '';
+    updateDots();
+    document.getElementById('pin-error').textContent = '';
+    document.getElementById('pin-screen').classList.remove('visible');
+    document.getElementById('role-screen').classList.remove('hidden');
+  }
+
+  function pinPress(digit) {
+    if (pinEntry.length >= 4) return;
+    pinEntry += digit;
+    updateDots();
+    if (pinEntry.length === 4) {
+      setTimeout(checkPin, 120);
+    }
+  }
+
+  function pinDelete() {
+    pinEntry = pinEntry.slice(0, -1);
+    updateDots();
+    document.getElementById('pin-error').textContent = '';
+  }
+
+  function updateDots() {
+    for (let i = 0; i < 4; i++) {
+      const dot = document.getElementById('dot-' + i);
+      dot.classList.toggle('filled', i < pinEntry.length);
+      dot.classList.remove('error');
+    }
+  }
+
+  function checkPin() {
+    if (pinEntry === DM_PIN) {
+      chooseRole('dm');
+    } else {
+      for (let i = 0; i < 4; i++) {
+        document.getElementById('dot-' + i).classList.add('error');
+        document.getElementById('dot-' + i).classList.remove('filled');
+      }
+      document.getElementById('pin-error').textContent = 'Incorrect code — try again';
+      setTimeout(() => {
+        pinEntry = '';
+        updateDots();
+      }, 800);
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('pin-screen').classList.contains('visible')) return;
+    if (e.key >= '0' && e.key <= '9') pinPress(e.key);
+    if (e.key === 'Backspace') pinDelete();
+  });
+
+  const saved = sessionStorage.getItem('mha-role');
+  if (saved) applyRole(saved);
+</script>
 </body>
 </html>

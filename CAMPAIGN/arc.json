@@ -113,7 +113,7 @@
               ]
             },
             "event_3_individual_tournament": {
-              "format": "16 competitors. 8 Class 1-A, 8 Class 1-B. Top 4 seeded (get Round 1 byes). Single elimination.",
+              "format": "16 competitors, mixed from Class 1-A and 1-B. Top 4 seeded — all competitors play from Round 1; seeds receive favorable matchups. Single elimination.",
               "seeds": [
                 {
                   "seed": 1,
@@ -148,7 +148,13 @@
                   "favored": "Kazama",
                   "how_it_goes": "Hellflame draws the first massive crowd reaction of the day. Too much reaction — Kazama loses composure managing it. He wins anyway, but he's rattled and the crowd knows it. His exit from the arena is fast.",
                   "winner": "Kazama Kenji",
-                  "dm_note": "Play the crowd noise as a genuine obstacle for Kazama. He can't control that he's visually spectacular. If this is a PC fight, have spectators start cheering mid-move — forcing him to choose between commitment and crowd management."
+                  "dm_note": "Play the crowd noise as a genuine obstacle for Kazama. He can't control that he's visually spectacular. If this is a PC fight, have spectators start cheering mid-move — forcing him to choose between commitment and crowd management.",
+                  "alternate_outcome": {
+                    "if_winner": "Takuma Rei",
+                    "how_it_goes": "Kazama's critical moment hesitation — the crowd roar hitting right as he commits — costs him. He pulls the blast a fraction. Takuma walks through the reduced discharge and lands the deciding hit. The commentary team goes quiet. The crowd does not know how to react to Hellflame losing.",
+                    "downstream": "Takuma Rei advances to QF-3 instead of Kazama. Chosen faces hardening rather than Hellflame escalation — he wins QF-3 but at lower escalation than the default, meaning he's calmer going into SF-2.",
+                    "dm_note": "Kazama sitting in the stands for the rest of the tournament is a significant character beat. He has to watch. He doesn't leave. Masahata quietly removes the 'crowd factor: asset' notation from his chart."
+                  }
                 },
                 {
                   "match": "R1-2",
@@ -157,7 +163,13 @@
                   "favored": "Toragi",
                   "how_it_goes": "Toshida's Comic shout disrupts Toragi's first Twin Impact — the timing breaks. She absorbs the chaos and shuts him down methodically on the second attempt. The crowd goes silent for three seconds when the Impact lands, then extremely loud.",
                   "winner": "Toragi Kayo",
-                  "dm_note": "Let Toshida's disruption feel like a genuine near-upset. The first Impact failing should surprise people. Toragi winning the second is inevitable — but it shouldn't feel like it in the moment."
+                  "dm_note": "Let Toshida's disruption feel like a genuine near-upset. The first Impact failing should surprise people. Toragi winning the second is inevitable — but it shouldn't feel like it in the moment.",
+                  "alternate_outcome": {
+                    "if_winner": "Toshida Shogoro",
+                    "how_it_goes": "Toshida's timing on the second disruption is better than anyone expected — including Toragi. She has two Impact approaches drilled. He breaks both. She has no third approach ready. Toshida wins by surviving until she runs out of prepared responses. He looks surprised. She looks like she's already cataloguing what went wrong.",
+                    "downstream": "Toshida advances to QF-2 vs Morida. Morida's deflection operates by feel, not rhythm — sound disruption doesn't interfere with it. Morida wins QF-2 cleanly. SF-1 changes: Morida faces whoever won QF-1 instead of Toragi. The Morida/Toragi post-fight conversation doesn't happen.",
+                    "dm_note": "Toragi watching Morida defeat Toshida in QF-2 is worth a moment. She sees Morida handle the same disruption that beat her without any difficulty. She writes something down. It's about the third Impact she doesn't have yet."
+                  }
                 },
                 {
                   "match": "R1-3",
@@ -166,7 +178,13 @@
                   "favored": "Aikawa — massive upset incoming",
                   "how_it_goes": "Kinosho deactivates Aikawa's iron claws mid-swing. Then walks up to her. The fight ends in approximately forty seconds. The audience does not understand what happened. 'What Is She Doing?' — segment one — trends nationally within the hour.",
                   "winner": "Kinosho Kochimiko",
-                  "dm_note": "Don't explain Kinosho's win to the audience. The commentary team can't explain it either. The class should be slightly disturbed. Masahata should look at the chart, say nothing, and sit down."
+                  "dm_note": "Don't explain Kinosho's win to the audience. The commentary team can't explain it either. The class should be slightly disturbed. Masahata should look at the chart, say nothing, and sit down.",
+                  "alternate_outcome": {
+                    "if_winner": "Aikawa Sakume",
+                    "how_it_goes": "Kinosho's Neutralization requires a targeting window — a moment where she can identify the right limb and close. Aikawa's iron claws don't give her that window. The swings are too fast, too varied. Aikawa lands the hit Kinosho didn't expect because Kinosho's first plan assumed she'd get the window. She didn't. The genuine upset the crowd was expecting actually happens. 'What Is She Doing?' never airs.",
+                    "downstream": "Aikawa advances to QF-4 vs Ogiwara. Seismic shockwaves don't care about iron claws — the ground she's standing on isn't stable enough for her to drive the strikes. Ogiwara wins. SF-2 changes: Ogiwara faces Chosen or Kazama instead of Kinosho.",
+                    "dm_note": "Kinosho sitting in the stands is very quiet. She watches every subsequent fight. She is not visibly upset. She is watching something specific in each fight and nobody knows what."
+                  }
                 },
                 {
                   "match": "R1-4",
@@ -175,43 +193,73 @@
                   "favored": "Ando",
                   "how_it_goes": "Ando's scales shrug off the first engine-charge cleanly. Izuto clocks this and adjusts — times his second burst for the moment Ando is mid-pivot repositioning. Ando goes down surprised. He wears the sunglasses for the rest of the day.",
                   "winner": "Izuto Kutsu",
-                  "dm_note": "Ando's first shrug should feel definitive — the class should believe he's going to win. Izuto's adjustment is the key character beat: he's a problem-solver under pressure."
+                  "dm_note": "Ando's first shrug should feel definitive — the class should believe he's going to win. Izuto's adjustment is the key character beat: he's a problem-solver under pressure.",
+                  "alternate_outcome": {
+                    "if_winner": "Ando Iorai",
+                    "how_it_goes": "Izuto's second burst hits when Ando is already braced for it — he read the adjustment coming. He planted and shrugged the second charge the same way he shrugged the first. Izuto ran out of adjustments. Ando wins by being less complicated than Izuto expected. He takes the sunglasses off for a moment, looks at them, puts them back on.",
+                    "downstream": "Ando advances to QF-1 vs Ren. Scales can't block something you can't track — Ren wins, but it's less clean than the Izuto fight. The third-place match changes if Ren advances: Ando vs whoever lost the other SF.",
+                    "dm_note": "Izuto watching Ren beat Ando in QF-1 is worth playing. He's watching the QF-1 fight like he's studying it. He has opinions about Ando's footing in round 2. He doesn't say them out loud."
+                  }
                 },
                 {
                   "match": "R1-5",
-                  "fighter_a": "Kitamura Sora (1-B, Wire)",
+                  "fighter_a": "Ren Suzuki (1-A, Seed 1)",
                   "fighter_b": "Takazuki Hanori (1-A)",
-                  "favored": "Kitamura",
-                  "how_it_goes": "Kitamura's wire technique fills the arena before Takazuki can establish position. Invisibility is useless against tension detection — Kitamura knows exactly where she is by the wires. Precise, quiet, over in under a minute. First definitive 1-B win of the individual tournament.",
-                  "winner": "Kitamura Sora",
-                  "dm_note": "This should feel technically impressive rather than exciting. Kitamura wins like someone solving a problem. The contrast with Kinosho's inexplicable win makes both more interesting."
+                  "favored": "Ren",
+                  "how_it_goes": "Takazuki disappears before the opening bell. Ren wins in eleven seconds. He crossed the arena faster than the commentary team could finish the introduction. Takazuki's strategy assumed her opponent needed to find her first. Ren didn't look. The crowd replays the footage three times trying to find where the contact happened.",
+                  "winner": "Ren Suzuki",
+                  "dm_note": "Run this as proof-of-concept for Ren's tier. The fight shouldn't feel like a fight — it should feel like a demonstration. The class watching should clock that Takazuki had a real plan and it simply didn't matter.",
+                  "alternate_outcome": {
+                    "if_winner": "Takazuki Hanori",
+                    "how_it_goes": "She was invisible before the bell and stayed that way. Ren's eleven-second plan assumed she'd be somewhere specific when he arrived. She wasn't. He overshot. In the half-second he was reorienting, she landed the hit. Nobody saw it. The crowd replays the footage eight times. Nobody is certain what happened on the footage either. The commentary team goes very quiet for a different reason than usual.",
+                    "downstream": "MAJOR UPSET — Ren is eliminated in Round 1. Takazuki advances to QF-1 vs Izuto (or Ando if alt R1-4). Izuto figures out her displacement pattern through air current readings — problem-solver finds the solution. Izuto wins QF-1. SF-1 completely changes: Izuto vs whoever won QF-2. Ren watching the tournament from the stands is its own story — he doesn't leave, he watches every fight, he is thinking about what a second attempt would look like.",
+                    "dm_note": "This is the biggest possible upset of the tournament. If it happens, let it breathe. The class's reaction to Ren losing in Round 1 is more significant than the fight itself. Masahata does not update the chart. He stares at it for a long time."
+                  }
                 },
                 {
                   "match": "R1-6",
-                  "fighter_a": "Yashiro (1-B, Teleport)",
+                  "fighter_a": "Morida Takeshi (1-B, Seed 2)",
                   "fighter_b": "Yoshibara Hiyoko (1-A)",
-                  "favored": "Even",
-                  "how_it_goes": "Two displacement-type quirk users. Yashiro teleports; Yoshibara doubles. For three minutes neither lands anything. Yashiro teleports directly into Yoshibara's double — pauses, stares at it for three seconds with visible confusion — and gets hit from behind by the real one. The audience loses it.",
-                  "winner": "Yoshibara Hiyoko",
-                  "dm_note": "Run this as pure comedy that somehow still has athletic stakes. The three-second pause should be played for maximum effect. Play Yoshibara as equally surprised it worked."
+                  "favored": "Morida",
+                  "how_it_goes": "Yoshibara doubles herself immediately — standard opening. Morida deflects the first attack from the double without hesitation. He explains afterward, without being asked: 'Different weight. Clean tell.' She tries four more doubles. He deflects each one correctly. She stops doubling and attempts a direct hit. He deflects that too. First definitive 1-B win of the individual tournament. The crowd doesn't understand why none of her tricks worked. Masahata takes extremely detailed notes.",
+                  "winner": "Morida Takeshi",
+                  "dm_note": "Play Yoshibara as genuinely trying to adapt — she's not being stupid, Morida is just reading her perfectly. His win should feel technically impressive in a quiet, diagnostic way. Post-fight, Yoshibara looks at her hands for a moment, then nods. She respects what just happened.",
+                  "alternate_outcome": {
+                    "if_winner": "Yoshibara Hiyoko",
+                    "how_it_goes": "Yoshibara doesn't double herself. She doubles Morida. He deflects his own double's attack for three seconds before he registers what he's deflecting. She hits him from behind during the pause. The commentary team has to explain this slowly. Masahata has to add a new row to the chart. Morida stands in the arena looking at his hands for a moment after the loss, then nods once.",
+                    "downstream": "Yoshibara advances to QF-2 vs Toragi (or Toshida if alt R1-2). Toragi's Twin Impact doesn't distinguish real from double — it detonates where it's placed. Toragi wins QF-2. SF-1 unchanged: Toragi advances. The Morida/Toragi post-fight conversation doesn't happen.",
+                    "dm_note": "Morida watching Yoshibara lose to Toragi in QF-2 is a good moment. He sees exactly what Toragi did to beat the doubling. He writes it down. He writes Yoshibara's name next to it."
+                  }
                 },
                 {
                   "match": "R1-7",
-                  "fighter_a": "Takuma Rei (1-B, Hardening)",
-                  "fighter_b": "Kibi Kankei (1-A)",
-                  "favored": "Takuma Rei",
-                  "how_it_goes": "Kibi's vines are slower in an open arena with no anchor points. Takuma hardened his skin and walked through the first vine attempt, then the second. Kibi's vines require terrain. This arena gave her none. Masahata updates the chart: 'Terrain dependency — noted. Filed. Corrected.'",
-                  "winner": "Takuma Rei (1-B)",
-                  "dm_note": "This loss is important for Kibi's character arc. She's excellent in complex environments. She's limited without them. Make it quiet and slightly inevitable rather than dramatic."
+                  "fighter_a": "Chosen Tadachi (1-A, Seed 3)",
+                  "fighter_b": "Kitamura Sora (1-B, Wire)",
+                  "favored": "Kitamura (tactically)",
+                  "how_it_goes": "Kitamura's wire network is up in four seconds — full arena coverage, tension-detection, every movement tracked. It's the same technique that eliminated Takazuki in the obstacle race. Chosen is not invisible and he is not trying to evade. He's been in three stressful situations this morning in front of thousands of people and the total is adding up. Round 2, Kitamura has to decide between holding the wire network and getting clear. The wire network is load-bearing for his entire strategy. He holds. Chosen walks through it. The wires register contact. Kitamura loses a tactically sound fight because the math stopped working.",
+                  "winner": "Chosen Tadachi",
+                  "dm_note": "Kitamura's technique was correct — this should be acknowledged by the commentary. He didn't make a mistake. Chosen's escalation is the variable that doesn't fit the model. If Chosen is a PC, let the player feel the crowd noise and prior fights as an accumulated resource, not a liability — they're winning because of the stress, not despite it.",
+                  "alternate_outcome": {
+                    "if_winner": "Kitamura Sora",
+                    "how_it_goes": "Chosen is at round 1 stress — this is only his first fight. The escalation hasn't built yet. The wire network maps him completely and every approach route is contested before he can gain momentum. Kitamura wins cleanly because the variable that breaks his strategy hasn't had time to accumulate. He notes privately that five more minutes would have been different.",
+                    "downstream": "Kitamura advances to QF-3 vs Kazama (or Takuma Rei if alt R1-1). Hellflame melts the wire network within two rounds — Kitamura had a contingency but not for sustained high-temperature discharge. Kazama wins QF-3 dramatically, wires catching fire in visible arcs. SF-2 changes completely: Kazama vs whoever won QF-4.",
+                    "dm_note": "Chosen watching Kitamura in subsequent fights from the stands is worth playing. He's watching the wire technique specifically. He is cataloguing what he'd do with two more minutes of stress. He doesn't say this out loud."
+                  }
                 },
                 {
                   "match": "R1-8",
-                  "fighter_a": "1-B Student",
-                  "fighter_b": "Setaka Toko (1-A)",
-                  "favored": "Setaka",
-                  "how_it_goes": "Setaka's iron balls clear the arena's usable space in two rounds. By round three there is nowhere left to stand that isn't being contested by a ricocheting ball. The opponent surrenders. The arena cleanup crew takes fifteen minutes.",
-                  "winner": "Setaka Toko",
-                  "dm_note": "Play this for scale. Setaka should feel genuinely large and dangerous. The cleanup aftermath is funnier if you describe a crew member having to retrieve a ball embedded in the far wall."
+                  "fighter_a": "Ogiwara Bunta (1-B, Seed 4)",
+                  "fighter_b": "Yashiro (1-B, Teleport)",
+                  "favored": "Ogiwara",
+                  "how_it_goes": "Yashiro teleports to a safe position. Ogiwara's first shockwave hits every point of the arena floor simultaneously. Yashiro teleports to a different safe position. The second shockwave informs him there are no safe positions. Yashiro stands still for a moment — genuinely thinking — and then raises his hand. The surrender takes less time than the audience expected. Ogiwara watches him leave with what appears to be mild disappointment that it ended there.",
+                  "winner": "Ogiwara Bunta",
+                  "dm_note": "The fight is quiet in a way that makes the shockwaves sound louder by contrast. Yashiro's pause before surrendering is important — he's not giving up, he's done the math. Play Ogiwara as someone who wanted a harder problem.",
+                  "alternate_outcome": {
+                    "if_winner": "Yashiro",
+                    "how_it_goes": "Yashiro reads the shockwave pulse pattern on the third wave and teleports not to a safe position but directly to Ogiwara — inside his personal space, too close for a shockwave to be aimed. Ogiwara didn't plan for close range. Neither did Yashiro, really. He wins on improvisation. He looks slightly bewildered by this.",
+                    "downstream": "Yashiro advances to QF-4 vs Kinosho (or Aikawa if alt R1-3). Kinosho deactivates the teleport. Yashiro appears mid-arc with his eyes wide, three feet from where he aimed, and Kinosho is already there. Kinosho wins. SF-2 unchanged: Kinosho advances.",
+                    "dm_note": "Ogiwara watching Kinosho eliminate Yashiro in QF-4 is a quiet beat. He watches Kinosho work. He says 'I don't know what she did' about a completely different part of the fight than everyone expected. Masahata writes it down."
+                  }
                 }
               ],
               "quarterfinals": [
@@ -219,72 +267,127 @@
                   "match": "QF-1",
                   "fighter_a": "Ren Suzuki (1-A, Seed 1)",
                   "fighter_b": "Izuto Kutsu (1-A)",
+                  "note": "Fighter B is whoever won R1-4 (default Izuto; Ando if alt R1-4; or Takazuki takes this slot if she upset Ren in R1-5, in which case fighter A becomes Takazuki)",
                   "favored": "Ren",
                   "how_it_goes": "The fastest fight of the tournament. Two speed-types. Ren is faster. Izuto knew this going in — he has been clocking Ren's movement since the entrance exam. He had a plan. The plan required three moves. He got through two. Ren wins. He looks at Izuto for a moment, says nothing. Izuto is already thinking about what he'd do with a third attempt.",
                   "winner": "Ren Suzuki",
-                  "dm_note": "If this is a PC fight, let Izuto's plan get close to working. The fun isn't Ren dominating — it's Izuto coming so close and still losing. The 'third attempt' feeling should be palpable."
+                  "dm_note": "If this is a PC fight, let Izuto's plan get close to working. The fun isn't Ren dominating — it's Izuto coming so close and still losing. The 'third attempt' feeling should be palpable.",
+                  "alternate_outcome": {
+                    "if_winner": "Izuto Kutsu",
+                    "how_it_goes": "Izuto's plan required three moves. He got through two last time — in every run-through in his head. This time he gets through all three. The third move accounts for the specific way Ren decelerates before contact. Izuto wins. He does not look pleased — he's already thinking about what a fourth move would have looked like. Ren stands at the edge of the arena for a moment, then leaves without saying anything.",
+                    "downstream": "Izuto advances to SF-1 vs Toragi (QF-2 default winner). Toragi's dodge-corridor trick worked on Ren because his dodge pattern was readable. Izuto's pattern is adaptive. She needs a different approach. She finds it — but it takes longer. Toragi wins SF-1, but the fight is her hardest of the tournament.",
+                    "dm_note": "Post-fight: Ren finds Izuto. He says: 'The third move.' Izuto says: 'Yes.' That is the whole conversation. Run it exactly like the Ren/Toragi version — two sentences, mutual understanding, don't add to it."
+                  }
                 },
                 {
                   "match": "QF-2",
                   "fighter_a": "Morida Takeshi (1-B, Seed 2)",
                   "fighter_b": "Toragi Kayo (1-A)",
+                  "note": "Fighter B is whoever won R1-2 (default Toragi; Toshida if alt R1-2). Fighter A is whoever won R1-6 (default Morida; Yoshibara if alt R1-6)",
                   "favored": "Morida (slight)",
                   "how_it_goes": "Best fight of the quarterfinals. Morida's quirk is close-range precision deflection — he's drilled for disrupting attack timing. Toragi's Twin Impact relies on delayed detonation: Morida disrupts the timing on the first Impact, breaking the delay mechanism. Nobody has done this to Toragi before. She adjusts. The second Impact lands. Toragi wins. Both of them are satisfied with the result in a way that's unusual for a tournament fight.",
                   "winner": "Toragi Kayo",
-                  "dm_note": "Post-fight: Morida approaches Toragi. He says: 'Your Impact timing — I disrupted it once. That's the only time that's worked on anyone I've spoken to.' She says: 'I know.' He nods. They both write this down. This is the beginning of a mutual-respect dynamic."
+                  "dm_note": "Post-fight: Morida approaches Toragi. He says: 'Your Impact timing — I disrupted it once. That's the only time that's worked on anyone I've spoken to.' She says: 'I know.' He nods. They both write this down. This is the beginning of a mutual-respect dynamic.",
+                  "alternate_outcome": {
+                    "if_winner": "Morida Takeshi",
+                    "how_it_goes": "Toragi adjusts after the first Impact fails — but Morida disrupts the adjustment itself. He has drilled specifically for follow-through mechanics, not just the initial timing. The second Impact breaks cleanly too. Toragi runs out of Impact variants she has prepared. Morida wins the best fight of the quarterfinals. Both of them write this down.",
+                    "downstream": "Morida advances to SF-1 vs Ren (QF-1 default winner). Morida's deflection can redirect Ren's burst — but Ren is too fast for reliable deflection contact. Ren wins on the third exchange when Morida misreads the deceleration point. The Morida/Toragi post-fight conversation changes: he finds her anyway afterward. 'I disrupted both of them.' She says: 'I know.' Neither of them sounds happy about it.",
+                    "dm_note": "If Morida makes SF-1, the stakes of Ren vs Morida are higher than Ren vs Toragi for the 1-A/1-B rivalry dynamic. The class is watching a 1-B student reach the final. Masahata has updated the chart three times by this point."
+                  }
                 },
                 {
                   "match": "QF-3",
                   "fighter_a": "Chosen Tadachi (1-A, Seed 3)",
                   "fighter_b": "Kazama Kenji (1-A)",
+                  "note": "Fighter A is whoever won R1-7 (default Chosen; Kitamura if alt R1-7). Fighter B is whoever won R1-1 (default Kazama; Takuma Rei if alt R1-1)",
                   "favored": "50/50 — most dramatic QF fight",
                   "how_it_goes": "Kazama's Hellflame escalates the ambient temperature and chaos — exactly the wrong environment for fighting Chosen Tadachi. Each fire blast makes Chosen more dangerous. The crowd is extremely loud about Hellflame and completely unprepared for what Stress looks like by round 4. Kazama loses a spectacular, close fight that the crowd talks about more than most of the wins.",
                   "winner": "Chosen Tadachi",
-                  "dm_note": "First time the stadium sees Chosen at escalation. Run round 4 as genuinely alarming — Chosen should not feel comfortable to be near by the end. Kazama's loss should feel unfair in a way that's hard to articulate: he did everything right and it still made things worse."
+                  "dm_note": "First time the stadium sees Chosen at escalation. Run round 4 as genuinely alarming — Chosen should not feel comfortable to be near by the end. Kazama's loss should feel unfair in a way that's hard to articulate: he did everything right and it still made things worse.",
+                  "alternate_outcome": {
+                    "if_winner": "Kazama Kenji",
+                    "how_it_goes": "Kazama's plan: end it before Chosen can build. He stops performing for the crowd entirely — the quietest Hellflame the stadium has ever seen. He fights like nobody's watching. Round 1 Chosen is manageable. Round 1 Chosen who hasn't escalated yet is winnable. Kazama wins before round 3. The crowd is slightly disappointed. Kazama looks more comfortable than he has all day.",
+                    "downstream": "Kazama advances to SF-2 vs Kinosho (QF-4 default winner). Kinosho deactivates Hellflame mid-charge. Kazama's physical technique without the quirk is still considerable — he trained before his quirk manifested. Kinosho wins after four rounds. Kazama finds this acceptable.",
+                    "dm_note": "The crowd's reaction to a quiet Kazama win is interesting — they wanted the spectacle and didn't get it. He hears this. He is not sure how to feel about having won by being less than what people came to see."
+                  }
                 },
                 {
                   "match": "QF-4",
                   "fighter_a": "Ogiwara Bunta (1-B, Seed 4)",
                   "fighter_b": "Kinosho Kochimiko (1-A)",
+                  "note": "Fighter A is whoever won R1-8 (default Ogiwara; Yashiro if alt R1-8). Fighter B is whoever won R1-3 (default Kinosho; Aikawa if alt R1-3)",
                   "favored": "Ogiwara",
                   "how_it_goes": "Ogiwara's seismic shockwaves are structural — Kinosho's Neutralization can't deactivate something already in the ground. Her first plan fails visibly. Her second plan involves assembling something from arena debris during the fight. Ogiwara ends up briefly suspended in mid-air by a contraption Kinosho assembled in forty seconds. She does not have a construction quirk. Nobody asks how she did this. 'What Is She Doing?' airs for the second time.",
                   "winner": "Kinosho Kochimiko",
-                  "dm_note": "Ogiwara's post-fight comment: 'I don't know what she did.' He has never said this about an opponent. He is not embarrassed — genuinely interested. Masahata writes this down immediately."
+                  "dm_note": "Ogiwara's post-fight comment: 'I don't know what she did.' He has never said this about an opponent. He is not embarrassed — genuinely interested. Masahata writes this down immediately.",
+                  "alternate_outcome": {
+                    "if_winner": "Ogiwara Bunta",
+                    "how_it_goes": "Kinosho's debris contraption works for thirty seconds. Ogiwara's second shockwave set dismantles it from underneath — she's building in a shaking building. She gets to the third component and the foundation isn't there. She concedes. Ogiwara says afterward: 'I don't know what she was building.' He says it like someone who genuinely wants to know.",
+                    "downstream": "Ogiwara advances to SF-2 vs Chosen (QF-3 default winner). Shockwaves plus crowd noise plus three prior fights feed Chosen's escalation. Chosen wins — the arena chaos helps him more than it hurts him. If Kazama won QF-3 instead: Ogiwara vs Kazama in SF-2. Seismic shockwaves destabilize Kazama's footing; Hellflame can't aim at something that's already moving the floor. Ogiwara wins.",
+                    "dm_note": "'What Is She Doing?' never airs for the second time. The second segment was going to be about this fight. The silence where it would have been is its own thing."
+                  }
                 }
               ],
               "semifinals": [
                 {
                   "match": "SF-1",
-                  "fighter_a": "Ren Suzuki (1-A, Seed 1)",
+                  "fighter_a": "Ren Suzuki (1-A)",
                   "fighter_b": "Toragi Kayo (1-A)",
+                  "note": "Fighter A is whoever won QF-1. Fighter B is whoever won QF-2. Default path is Ren vs Toragi.",
                   "favored": "Ren",
                   "how_it_goes": "UPSET. Twin Impact's first hit is a decoy — placed to create a specific dodge corridor. Ren dodges it exactly as Toragi predicted. The real Impact triggers on the dodge vector. Ren cannot outrun something that hits where he's going, not where he is. He loses a very fast fight in a way that shocks everyone including him. He stands at the edge of the arena for a moment after the loss, not saying anything, then leaves. He thinks about the second hit for the rest of the campaign.",
                   "winner": "Toragi Kayo",
-                  "dm_note": "Post-fight: Ren finds Toragi. He says: 'The second hit.' She says: 'Yes.' That is the whole conversation. Two sentences that communicate complete mutual understanding. Do not add to it."
+                  "dm_note": "Post-fight: Ren finds Toragi. He says: 'The second hit.' She says: 'Yes.' That is the whole conversation. Two sentences that communicate complete mutual understanding. Do not add to it.",
+                  "alternate_outcome": {
+                    "if_winner": "Ren Suzuki",
+                    "how_it_goes": "Ren clocks that Toragi is placing Impacts along predicted dodge corridors. His solution: don't dodge. He takes the first Impact and wins through it. Nobody anticipated this. Toragi had no contingency for an opponent who wasn't trying to avoid it. Ren wins. He looks slightly surprised by his own decision.",
+                    "downstream": "Ren advances to the Final vs Chosen (SF-2 default winner). Speed vs escalation — Ren needs to end it by round 2 at the latest. If he does, it's the fastest final in the festival's history. If he doesn't, round 3 Chosen is a different problem entirely. The post-fight Ren/Toragi conversation still happens: 'The first hit.' She says: 'Yes.' Same two sentences. Different hit.",
+                    "dm_note": "A Ren vs Chosen final has a completely different energy than Toragi vs Chosen. Ren is fast enough to beat Chosen's escalation if he's disciplined. Whether he's disciplined is the question. The class watching this final knows the answer better than Ren does."
+                  }
                 },
                 {
                   "match": "SF-2",
-                  "fighter_a": "Chosen Tadachi (1-A, Seed 3)",
+                  "fighter_a": "Chosen Tadachi (1-A)",
                   "fighter_b": "Kinosho Kochimiko (1-A)",
+                  "note": "Fighter A is whoever won QF-3. Fighter B is whoever won QF-4. Default path is Chosen vs Kinosho.",
                   "favored": "Kinosho (tactically)",
                   "how_it_goes": "Kinosho targets Chosen's quirk with Neutralization. But Chosen's Stress isn't purely active — it's reactive. The crowd noise, the semifinal stakes, the previous three fights all feed the passive escalation that Kinosho can't fully suppress. She deactivates what she can. The ambient stress feeds what she can't. Chosen wins and is visibly running very hot walking out of the arena.",
                   "winner": "Chosen Tadachi",
-                  "dm_note": "The crowd noise is a game mechanic here. Neutralization removes the quirk label but not the underlying stress response from competing in front of thousands of people. Chosen's win should feel slightly worrying, not triumphant."
+                  "dm_note": "The crowd noise is a game mechanic here. Neutralization removes the quirk label but not the underlying stress response from competing in front of thousands of people. Chosen's win should feel slightly worrying, not triumphant.",
+                  "alternate_outcome": {
+                    "if_winner": "Kinosho Kochimiko",
+                    "how_it_goes": "Kinosho identifies that specific commentary vocal patterns correlate with Chosen's passive spikes. She suppresses active stimulation precisely — not reacting, not escalating the fight, giving him nothing to build on. The passive accumulation continues but slowly. She closes the window before it reaches critical. Kinosho wins. 'What Is She Doing?' — final segment — airs for the last time.",
+                    "downstream": "Kinosho advances to the Final vs Toragi (SF-1 default winner). Two methodical fighters. Kinosho neutralizes Twin Impact once. Toragi has been drilling her approach without the Impact since the Morida fight showed her it could be disrupted. She lands the approach clean. Both are fighting at their actual ceiling. Kinosho wins on round four when Toragi's timing becomes predictable. The crowd goes quiet in a way that signals they watched something exceptional but aren't sure how to celebrate it.",
+                    "dm_note": "A Kinosho vs Toragi final is the quietest possible ending for this tournament. Run it that way. No commentary on what's happening — just the two of them, and the audience slowly realising it was over before they understood what they were watching."
+                  }
                 }
               ],
               "third_place": {
                 "fighter_a": "Ren Suzuki (1-A)",
                 "fighter_b": "Kinosho Kochimiko (1-A)",
+                "note": "Fighters are the two SF losers. Default is Ren vs Kinosho.",
                 "how_it_goes": "Ren wins. He says nothing about it afterward. Kinosho seems to find this appropriate. Masahata notes the result, looks at the ranking chart, and adds a column titled 'semantic outcomes.' Nobody asks him what this means.",
-                "winner": "Ren Suzuki"
+                "winner": "Ren Suzuki",
+                "alternate_outcome": {
+                  "if_winner": "Kinosho Kochimiko",
+                  "how_it_goes": "Kinosho wins. Ren loses cleanly and accepts it cleanly. He nods once. She seems satisfied. Masahata adds 'semantic outcomes: confirmed' to the chart.",
+                  "dm_note": "Either result for the third-place match is fine. Run it based on what the players need from it emotionally. If Ren needs a win after a brutal SF loss, give him the 3rd place. If Kinosho needs to close her arc with something definitive, give her the win instead."
+                }
               },
               "final": {
                 "fighter_a": "Toragi Kayo (1-A)",
                 "fighter_b": "Chosen Tadachi (1-A)",
+                "note": "Fighters are the two SF winners. Default is Toragi vs Chosen.",
                 "favored": "Toragi — technically superior, has defeated Class 1-B's seed 2, has a tested plan for Chosen's escalation curve",
                 "how_it_goes": "Toragi has studied Chosen's last three fights. Her plan: end it before he escalates. She lands the first hit — a perfect technical strike, the cleanest move in the tournament. It is the worst decision she could have made. Chosen at round 1 stress level is manageable. Chosen after being struck in a national broadcast final, having already fought three escalating fights, is not. The fight drags into round 5. Nobody predicted round 5. The commentary team goes very quiet in round 4. It ends when Chosen's accumulated escalation exceeds anything Toragi's technique can counter. CHOSEN WINS. The commentary team is silent for four full seconds. Then very loud.",
                 "winner": "Chosen Tadachi",
-                "dm_note": "Toragi's plan should be visibly correct until the moment it isn't. Her frustration should come from having done everything right. Chosen's win should feel slightly too big for the arena — not triumphant, but overwhelming. He comes down slowly. Give that moment: the quiet after the final ends, Chosen standing in the arena while the crowd is still loud."
+                "dm_note": "Toragi's plan should be visibly correct until the moment it isn't. Her frustration should come from having done everything right. Chosen's win should feel slightly too big for the arena — not triumphant, but overwhelming. He comes down slowly. Give that moment: the quiet after the final ends, Chosen standing in the arena while the crowd is still loud.",
+                "alternate_outcome": {
+                  "if_winner": "Toragi Kayo",
+                  "how_it_goes": "Toragi's plan was always correct. She identified round 2 as the window and she closes it. The first hit is perfect. She doesn't immediately go for the second — she waits, watches him start to build, then closes the window before it opens. She wins in round 2. Chosen walks out elevated. He sits with that for a long time.",
+                  "downstream": "Toragi wins the Sports Festival. The commentary team calls it 'flawless.' She watches the replay once and privately disagrees with the word. The class gets the quieter closing moment: Toragi in the arena, the crowd loud around her, already thinking about the next problem.",
+                  "dm_note": "A Toragi win is the technically correct outcome — it's what the data supported. Run her closing moment as satisfaction without triumph. She won because her preparation was better. That's enough. The Null Signal faction watching the broadcast takes specific interest in Toragi's precision: better footage of her technique than the exam drone captured."
+                }
               },
               "post_tournament_moments": [
                 "Morida finds Toragi after QF-2. 'Your Impact timing — I disrupted it once. That's the only time that's worked on anyone I've spoken to.' She says: 'I know.' He nods. They both write this down.",

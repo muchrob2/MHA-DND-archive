@@ -49,36 +49,31 @@
   "class_note": "Heroic Vanguard → Speedster Style. Overclock's speed amplification and reaction enhancement are the Speedster's core gameplay loop.",
   "quirk_mechanics": {
     "source": "Quirk Compendium — Overclock",
-    "weakness": "Overclock burns stamina fast. Extended use causes Overmodification risk — past safe limits, CON saves or take self-damage. At maximum output, movement drops to 0 after Overclock ends for 1 round (crash).",
+    "weakness": "Overclock's extreme brain and muscle stimulation burns through neural energy and oxygen. When it ends, Ren must succeed on a DC 15 CON save or gain a level of exhaustion; failing this more than once per long rest causes neural backlash (disadvantage on INT/WIS checks for 1 hour, -25 ft speed until exhaustion clears). If Overclock ends abruptly or runs past its safe duration, he takes 4d10 psychic damage and is stunned until the end of his next turn.",
     "abilities": [
       {
-        "name": "Overclock: Standard",
+        "name": "Overclock",
         "type": "Bonus Action",
-        "description": "Activate Overclock. Movement speed doubled for 1 minute. +2 to all DEX-based checks and saves. All attacks gain +1 to hit. Take an additional attack as part of the Attack action. Concentration: if Ren takes damage while active, he makes a CON save (DC 12) or the effect drops."
+        "description": "Activate for a number of rounds equal to half CON modifier + half proficiency bonus (rounded down); cannot be reactivated until a short or long rest (early reactivation requires a DC 15 CON save or 2d10 psychic damage). While active: movement speed is multiplied by (1 + DEX modifier), up to x6 base speed; +AC equal to proficiency bonus; advantage on DEX, INT, and WIS saves and on initiative; one additional reaction and bonus action each round; moving 30+ ft before a melee attack adds an extra damage die; can move through creatures' spaces without provoking opportunity attacks."
       },
       {
-        "name": "Overclock: High Gear",
-        "type": "Action (replaces Standard activation, unlocks at level 5)",
-        "description": "Movement speed tripled. +4 to all DEX-based checks and saves. Take two additional attacks as part of the Attack action. Lasts 3 rounds. After High Gear ends, speed is 0 for 1 round and Ren takes 2d8 true damage (crash)."
-      },
-      {
-        "name": "Reaction Surge",
-        "type": "Reaction",
-        "description": "When an attack roll targeting Ren is made, activate to gain +4 AC against that attack and immediately move up to 15 ft. Usable once per short rest."
+        "name": "Instant Eight",
+        "type": "Action (4th level, once per Overclock activation)",
+        "description": "Unleash six unarmed strikes in rapid succession, each dealing standard unarmed damage + DEX modifier, divided among targets in range as desired. Using this shortens the current Overclock duration by 2 rounds."
       }
     ]
   },
   "player_notes": {
-    "role_summary": "The class's speed-striker. Overclock makes you fast — your window is short, your burst is high, and your crash is real. Standard activation is bread and butter. High Gear is the big play. Know your stamina limits.",
+    "role_summary": "The class's speed-striker. Overclock makes you fast — your window is short, your burst is high, and the comedown is real if you push past your limit. Instant Eight is your big multi-strike play once you hit 4th level. Know your limits.",
     "social_position": "Natural team frontman by accident rather than design — he goes in first, which people interpret as leadership. He finds this funny and slightly uncomfortable.",
     "growth_hook": "His sarcasm is armour for the specific fear of not being enough. As the stakes escalate, moments where the joke doesn't land — or where he just can't make one — are the ones that matter.",
     "suggested_background": "Street-level neighbourhood in Murano's port district. Hero worship baked in, because he watched heroes work growing up."
   },
   "dm_notes": {
-    "combat_role": "First-in speed-striker. He opens fights fast, creates pressure, and forces enemies to commit before the rest of the class arrives. The crash mechanic means enemies who survive his Overclock window are in a better position — track this.",
+    "combat_role": "First-in speed-striker. He opens fights fast, creates pressure, and forces enemies to commit before the rest of the class arrives. The post-Overclock exhaustion risk means enemies who survive his Overclock window are in a better position — track this.",
     "social_role": "The deflector. He keeps things light when they get heavy. The party relies on this; they also sometimes need someone to make them stop and take something seriously.",
     "growth_arc": "First into every danger. At some point the danger wins a round. How he responds to that is his arc.",
-    "weakness_to_exploit": "Low STR and CHA — he's not a brawler and he's not a negotiator. The Overclock crash is a real vulnerability in extended fights. In Tier 3 and 4, enemies will learn to outlast his Overclock window."
+    "weakness_to_exploit": "Low STR and CHA — he's not a brawler and he's not a negotiator. The post-Overclock exhaustion risk is a real vulnerability in extended fights. Enemies will learn to outlast his Overclock window."
   },
   "_file": "ren_suzuki.json",
   "_roster_id": 17

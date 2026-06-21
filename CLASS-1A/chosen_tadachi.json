@@ -49,27 +49,17 @@
   "class_note": "Heroic Vanguard → Shield Body Style. Stress augments both his offensive output and his durability under pressure — Shield Body's damage-mitigation and sustained-combat features match this.",
   "quirk_mechanics": {
     "source": "Quirk Compendium — Stress",
-    "weakness": "Stress output scales with actual stress level — if Chosen is calm, the quirk's output is lower. The quirk cannot be 'saved' at high output without maintaining elevated stress. After extended high-stress states, crash: disadvantage on all checks until a short rest. He cannot deactivate voluntarily at high stress — the quirk runs its course.",
+    "weakness": "Stress relies on negative emotions to function — calm, peace, or relief weakens its effects. Activating Stress Build-Up as a bonus action requires a d20 roll of 12 or higher (DC decreases by 1 each level); a natural 20 increases Stress by two steps.",
     "abilities": [
       {
-        "name": "Stress Surge",
-        "type": "Passive (scales with Stress Tier)",
-        "description": "Chosen tracks a Stress Tier (1-3). Tier 1 (Standard danger): +2 STR, +1 AC. Tier 2 (Moderate threat — ally downed, significant damage taken): +4 STR, +2 AC, advantage on STR saves. Tier 3 (Critical — multiple allies down, personal high damage): +6 STR, +3 AC, advantage on STR checks and saves, melee attacks deal +1d8 bonus damage. DM determines Stress Tier based on actual situation severity."
-      },
-      {
-        "name": "Stress Break",
-        "type": "Action",
-        "description": "At Stress Tier 2 or higher, release a built-up surge. 20-foot radius centred on Chosen — all hostile creatures make STR save vs Quirk DC. Fail: 3d8 bludgeoning damage, knocked prone 15 ft. Success: half damage, not knocked back. After use, Stress Tier drops by 1."
-      },
-      {
-        "name": "Adrenaline Wall",
-        "type": "Reaction (Stress Tier 1+)",
-        "description": "When Chosen would be reduced to 0 HP, expend Stress Surge to instead drop to 1 HP and gain temporary HP equal to CON modifier × current Stress Tier. Usable once per long rest."
+        "name": "Stress Build-Up",
+        "type": "Passive (triggered by damage taken)",
+        "description": "Damage taken fuels the quirk. For every 20 damage Chosen receives, he gains 10% Stress, up to 100%. Each percentage tier grants escalating bonus damage dice plus boosts to Strength/Constitution, movement speed, and other effects — e.g. at 30% Stress: +3d6 damage and +2 STR/CON (max 26); at 50%: +5d6 damage, +2 STR/CON (max 28), one size larger, gains CON mod + proficiency bonus in temporary HP; at 100%: +10d6 damage, +2 STR/CON (max 34), +30 ft movement, ignores 5 damage resistance and gains 5 damage resistance, one size larger, attacks affect a 10 ft radius, and reach increases by 5 ft. Full tier table in the Quirk Compendium."
       }
     ]
   },
   "player_notes": {
-    "role_summary": "Durable front-liner who gets stronger as the situation gets worse. Your Stress Tier is your resource — the fight rewards staying in it. Stress Break is your panic-button AoE. Adrenaline Wall is your not-today card.",
+    "role_summary": "Durable front-liner who gets stronger as the situation gets worse. Stress Build-Up climbs automatically as you take damage — the fight rewards staying in it, since every 20 damage taken pushes your Stress percentage up and grants escalating Strength/Constitution and movement bonuses plus bonus damage dice.",
     "social_position": "The person who already knows what could go wrong, which is frustrating when nothing has gone wrong yet and invaluable when it has.",
     "growth_hook": "He controls stress by planning for it — the scenario where the plan doesn't exist yet and he has to operate without a safety net is the one that tests him most.",
     "suggested_background": "Older sibling to multiple younger kids. The family needed someone to have a plan. He became that person."
@@ -78,6 +68,6 @@
     "combat_role": "Escalating durable bruiser. He should feel different at the end of a hard fight than he did at the start — more dangerous, slightly unhinged, and very much still standing.",
     "social_role": "The class's contingency planner and worst-case thinker. They joke about this but they also rely on it. The volcanic eruption plan has never been needed. He considers it a success.",
     "growth_arc": "The moment where all his planning still doesn't prevent something bad. And then what. He doesn't spiral — but he recalibrates.",
-    "weakness_to_exploit": "Stress Tier only rises in genuine danger — manufactured calm removes his peak-performance edge. Post-combat crash is exploitable if enemies have reserves and he doesn't. Low CHA and DEX."
+    "weakness_to_exploit": "Stress only rises from actually taking damage — manufactured calm or avoiding hits removes his peak-performance edge. Once Stress fades (calm returns), his bonuses fall away. Low CHA and DEX."
   }
 }

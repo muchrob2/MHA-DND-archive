@@ -52,20 +52,9 @@
     "weakness": "The tail is vulnerable to damage and can be targeted. As a permanent mutation, makes sitting and lying down comfortably difficult. If the tail is injured, certain abilities become unavailable.",
     "abilities": [
       {
-        "name": "Tail (base)",
-        "type": "Passive / Unarmed Strike",
-        "description": "Tail functions as an extra limb. Has double HP of a regular limb. Reach 10 feet. Carrying capacity: 200 lbs. Can interact with objects like a hand.",
-        "unarmed_strike": "2d12 + double STR modifier bludgeoning. On hit, target makes STR save vs Quirk DC or is knocked back 20 feet (half on success)."
-      },
-      {
-        "name": "Grapple",
-        "type": "Bonus Action",
-        "description": "Use tail to grapple a creature. While grappling, can still attack and interact with objects using arms. Grappled creature makes STR save vs Quirk DC at turn start to escape."
-      },
-      {
-        "name": "Defensive Reaction",
-        "type": "Reaction",
-        "description": "When hit by an attack, use tail to intercept, reducing incoming damage by 1d12. Tail takes the reduced damage instead."
+        "name": "Tail",
+        "type": "Passive (extra limb) with attack, bonus action, and reaction options",
+        "description": "Her tail functions as an extra limb with double the HP of a regular limb, a 10-foot reach, and 200 lb carrying capacity, and can interact with objects like a hand. Unarmed Strike: 2d12 + double STR modifier bludgeoning; on a hit the target makes a STR save vs Quirk DC or is knocked back 20 feet (half on success). Grapple (bonus action): use the tail to grapple a creature — she can still attack and interact with objects using her arms while grappling; the grappled creature can attempt a STR save vs Quirk DC at the start of its turn to escape. Defensive Reaction: when hit by an attack, she can use her reaction to have her tail intercept the blow, reducing the damage by 1d12 — the tail takes the reduced damage instead."
       }
     ]
   },

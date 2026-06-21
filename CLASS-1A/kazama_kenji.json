@@ -49,33 +49,33 @@
   "class_note": "Quirk Savant's enhanced quirk output and additional uses per rest suit Hellflame's sustained-fire playstyle. Alternatively Heroic Vanguard → Reckless Attacker for a closer-range approach.",
   "quirk_mechanics": {
     "source": "Quirk Compendium — Hellflame",
-    "weakness": "Hellflame produces extreme heat — even Kazama is not fully immune to it at maximum output. Sustained use without rest risks internal heat damage. Rain, extreme cold, or anti-fire environments reduce output.",
+    "weakness": "Hellflame tracks Heat Points — every move costs Heat Points, and once Kazama reaches 45 he can't use any move again unless he takes 2d6 true damage (which can't be reduced). Rain or snow grants 1 Heat Point at the start of his turn; taking cold damage or being cooled regains 3 Heat Points.",
     "abilities": [
       {
-        "name": "Hellflame Jet",
-        "type": "Attack (ranged, 60 ft)",
-        "description": "Emit a concentrated stream of blue-white flame. 3d8 fire damage. DEX save vs Quirk DC or target is set ablaze (1d6 fire per round until extinguished by action). At level 5: 4d8. At level 10: 5d8."
+        "name": "Hellflame (Flame)",
+        "type": "Melee or ranged attack (45 ft or 5 ft); costs 1 Heat Point",
+        "description": "Make a melee or ranged attack against a creature within 45 ft or 5 ft. On a hit: 3d6 + DEX modifier fire damage. The base Hellflame package also grants fire resistance (ignoring resistance and treating immunity as resistance), a 60 ft fly/hover speed (Fire Fly), and Heatup — spend up to 8 Heat Points on an attack to add one extra damage die per point spent."
       },
       {
-        "name": "Hellflame Burst",
-        "type": "Action",
-        "description": "Release a 30-foot cone of superheated flame. DEX save vs Quirk DC. Fail: 4d6 fire damage, set ablaze. Success: half damage, not ablaze. Structures in the cone take triple damage."
+        "name": "Flashfire Fist",
+        "type": "Action; costs 4 Heat Points",
+        "description": "Increase flame temperature to maximum and make an unarmed attack. On a hit: 4d10 fire damage, ignoring up to 8 damage reduction."
       },
       {
-        "name": "Heat Wall",
-        "type": "Action",
-        "description": "Construct a 20-ft long, 10-ft tall barrier of sustained flame. Lasts until Kazama's concentration ends or 1 minute. Creatures entering or starting turns in the wall take 3d6 fire damage. Ranged attacks through the wall have disadvantage due to heat distortion."
+        "name": "Hells Curtain",
+        "type": "Action or Reaction (4th level); costs 5 Heat Points",
+        "description": "Create a 50 ft radius flame barrier up to 100 ft tall around a target. Creatures in the barrier take 5d8 + STR modifier fire damage. A creature trying to move through it makes a DEX save: fail takes 5d8 fire damage, can't pass, and gains two ranks of Burned; success takes half damage, passes through, and gains one rank of Burned."
       }
     ]
   },
   "player_notes": {
-    "role_summary": "Primary fire blaster. Your quirk is straightforward in the best way: aim and apply heat. Jet for single-target, Burst for groups, Heat Wall for area control. Manage your heat level — you have good output but it's not unlimited.",
+    "role_summary": "Primary fire blaster. Your quirk is straightforward in the best way: aim and apply heat. Hellflame is your bread-and-butter attack, Flashfire Fist your harder-hitting unarmed strike, and Hells Curtain your area control once you hit 4th level. Manage your Heat Points — you have good output but it's not unlimited.",
     "social_position": "Naturally well-regarded in the class. People are drawn to him, which he's somewhat aware of and doesn't exploit. He's genuinely just kind.",
     "growth_hook": "The scar is a story. The story is about a moment he didn't act when he should have, or couldn't, or chose wrong. When it comes out — if it comes out — it reframes some of his confidence.",
     "suggested_background": "Middle-class family in Murano. Has a younger sibling. Hero school was the plan from early on, never a question."
   },
   "dm_notes": {
-    "combat_role": "The class's primary ranged damage dealer. His Burst and Jet give consistent fire damage output. Heat Wall is a major battlefield shaping tool — it changes where everyone can go.",
+    "combat_role": "The class's primary ranged damage dealer. His base Hellflame attack gives consistent fire damage output, with Flashfire Fist for burst and Hells Curtain as a major battlefield-shaping tool once unlocked.",
     "social_role": "Emotional glue. The class likes him. He's kind, he's readable, he's dependable. When classmates fight, Kenji is usually the one who quietly helps both sides down without making it about himself.",
     "growth_arc": "The scar, and whatever it means. It's something he survived — possibly something someone else didn't. The campaign should give that story room at the right moment.",
     "weakness_to_exploit": "Low TECH and WIS — he's not a technical problem-solver and he doesn't always read situations accurately on first pass. Rain or cold environments limit his output. Sustained fights drain him faster than burst engagements."

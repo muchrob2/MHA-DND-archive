@@ -184,7 +184,6 @@
 <div class="copy-flash" id="copy-flash">Copied to clipboard</div>
 
 <script>
-const LS_KEY = 'mha-scripts-v1';
 let data = null;
 let editMode = false;
 let activeScriptId = null;
@@ -194,11 +193,10 @@ function uid() { return 'sc_'+Math.random().toString(36).slice(2,8); }
 
 /* ── Load ────────────────────────────────────────────── */
 async function init() {
-  const saved = localStorage.getItem(LS_KEY);
-  if (saved) {
-    try { data = JSON.parse(saved); } catch {}
-  }
-  if (!data) {
+  try {
+    const res = await fetch('/api/campaign/scripts', {cache:'no-cache'});
+    data = await res.json();
+  } catch {
     const res = await fetch('CAMPAIGN/scripts.json', {cache:'no-cache'});
     data = await res.json();
   }
@@ -209,12 +207,24 @@ async function init() {
 }
 
 /* ── Save ────────────────────────────────────────────── */
-function saveAll() {
+async function saveAll() {
   if (editMode) flushEdits();
-  localStorage.setItem(LS_KEY, JSON.stringify(data));
   const notice = document.getElementById('saved-notice');
-  notice.classList.add('show');
-  setTimeout(() => notice.classList.remove('show'), 2000);
+  try {
+    const res = await fetch('/api/campaign/scripts', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Save failed');
+    notice.textContent = 'Saved ✓';
+    notice.classList.add('show');
+    setTimeout(() => notice.classList.remove('show'), 2000);
+  } catch (e) {
+    notice.textContent = 'Save failed — changes not persisted';
+    notice.classList.add('show');
+    setTimeout(() => notice.classList.remove('show'), 3000);
+  }
 }
 
 /* ── Render sidebar + panel shells ───────────────────── */

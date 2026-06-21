@@ -25,6 +25,7 @@ CAMPAIGN_FILE = ROOT / "campaign.html"
 
 CHAR_FILE_RE = re.compile(r"^/api/character/([a-z0-9_]+\.json)$")
 CAMPAIGN_FILE_RE = re.compile(r"^/api/campaign/(arc|world|teachers|villains|tier1|enemies|class1b)$")
+SCRIPTS_FILE = CAMPAIGN_DIR / "scripts.json"
 EXPORT_VERSION = 1
 RULEBOOK_FILE_RE = re.compile(r"^/rulebooks/(.+\.pdf)$")
 
@@ -163,6 +164,13 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 self.send_json(500, {"error": str(e)})
             return
 
+        if path == "/api/campaign/scripts":
+            try:
+                self.send_json(200, json.loads(SCRIPTS_FILE.read_text(encoding="utf-8")))
+            except FileNotFoundError:
+                self.send_json(404, {"error": "scripts.json not found"})
+            return
+
         m = CAMPAIGN_FILE_RE.match(path)
         if m:
             fpath = CAMPAIGN_DIR / (m.group(1) + ".json")
@@ -201,6 +209,16 @@ class Handler(http.server.BaseHTTPRequestHandler):
             try:
                 data = json.loads(body.decode("utf-8"))
                 save_relationships(data)
+                self.send_json(200, {"ok": True})
+            except (json.JSONDecodeError, OSError) as e:
+                self.send_json(400, {"error": str(e)})
+            return
+
+        if path == "/api/campaign/scripts":
+            try:
+                data = json.loads(body.decode("utf-8"))
+                with open(SCRIPTS_FILE, "w", encoding="utf-8") as f:
+                    json.dump(data, f, indent=2, ensure_ascii=False)
                 self.send_json(200, {"ok": True})
             except (json.JSONDecodeError, OSError) as e:
                 self.send_json(400, {"error": str(e)})

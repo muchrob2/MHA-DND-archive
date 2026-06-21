@@ -1,6 +1,26 @@
 {
   "teachers": [
     {
+      "name": "Arakawa Setsuna",
+      "hero_name": "Watershed",
+      "role": "Principal — U.A. High School Hero Course",
+      "quirk": "Resonance",
+      "quirk_type": "Emitter",
+      "quirk_summary": "Arakawa emits a continuous low-frequency resonance field that she can tune with precision. At ambient levels it's imperceptible — it does nothing visible. At focus, it can shatter stone, collapse steel load-bearing points, or induce disorientation in biological targets. At maximum output she has brought down the outer wall of a fortified building by holding a single sustained note for four seconds. She has not used it at maximum output in eleven years. She keeps a tuning fork on her desk.",
+      "quirk_mechanics_ref": "Resonance — custom. Key features: Ambient Field (passive, negligible effect), Focused Pulse (structural damage, ranged), Dissonance Wave (AOE disorientation, CON save), Resonant Collapse (full-power structural destruction, requires full action and concentration, 1/long rest).",
+      "appearance": "Late 50s. Small — genuinely, surprisingly small, which everyone registers and then immediately forgets because of how she carries herself. Silver hair cut short and practical. Wears U.A. administrative dress with a single concession to personal taste: always a different colour of scarf. Her office is immaculate. The tuning fork on her desk is the only object that isn't perfectly placed — it's always slightly askew, and she never straightens it.",
+      "personality": "Measured in a way that reads as warmth until you look more closely, at which point it reads as complete control. She is genuinely fond of students — of this class in particular — and she expresses it through high expectations rather than softness. Never raises her voice. The teachers are slightly afraid of her in the way that people are afraid of someone whose respect they want. The students are not afraid of her, which she prefers.",
+      "teaching_style": "She doesn't teach classes. She appears at exercises without announcement and watches without commenting. Once a semester she takes a single student to her office for a conversation. Nobody knows what's said. Students come out looking thoughtful. She has an instinct for which student needs to be seen at exactly the right moment.",
+      "dm_notes": {
+        "under_pressure": "Absolutely still. Her voice drops. The tuning fork on her desk starts vibrating on its own — she doesn't notice, or appears not to. Everyone else notices.",
+        "weakness": "She has been principal for fourteen years and has a blind spot for institutional loyalty — she trusts U.A.'s structures more than she should, which Shirai Kenzo has exploited, quietly, more than once.",
+        "what_makes_her_laugh": "Students who argue with her when they're right. She doesn't show it — small pause, something shifts in her expression — but she files it away and thinks better of them for it.",
+        "campaign_role": "The ceiling. She is the highest authority the class can reach within U.A. Getting her to act on something requires more than suspicion — she needs evidence she can put in front of the Commission without it being dismissed. Once she moves, she moves completely. The class needs to understand that asking her to act prematurely will cost them the one time she'll go all the way.",
+        "secret": "Shirai Kenzo was her student, twenty-five years ago. She knows exactly what he is and what he's capable of. She does not know what he's currently doing. When she finds out — which she will — her reaction will not be what the class expects.",
+        "relationship_to_staff": "Oshiro reports to her and respects her completely. Shimoda is the one staff member she's told, obliquely, that she's paying attention. Hamagawa suspects she already knows about the Chain situation. He's right."
+      }
+    },
+    {
       "name": "Oshiro Daikichi",
       "hero_name": "Ironveil",
       "role": "Homeroom Teacher / Combat Training",

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Characters — MHA D&D</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0C1017; --surface: #111923; --surface2: #18222E;
+    --border: rgba(255,255,255,0.07); --border-strong: rgba(255,255,255,0.14);
+    --text: #E8EDF3; --text-muted: #8A9BB0; --text-dim: #3E5068;
+    --gold: #E8A020; --gold-light: rgba(232,160,32,0.13); --gold-text: #F5C842;
+    --teal: #0EA572; --teal-light: rgba(14,165,114,0.13); --teal-text: #5FDBAA;
+    --red: #EF4444; --red-light: rgba(239,68,68,0.13); --red-text: #FCA5A5;
+    --purple: #8B47D4; --purple-light: rgba(139,71,212,0.13); --purple-text: #C09CEB;
+    --radius: 10px; --radius-lg: 14px;
+    --nav-h: 48px;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+
+  #topnav {
+    position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0;
+  }
+  #back-btn {
+    display: flex; align-items: center; gap: 6px; padding: 0 16px;
+    font-size: 13px; color: var(--text-muted); text-decoration: none;
+    border-right: 1px solid var(--border); height: 100%; white-space: nowrap; flex-shrink: 0;
+  }
+  #back-btn:hover { color: var(--gold-text); background: var(--gold-light); }
+  .nav-title { padding: 0 16px; font-size: 13px; font-weight: 700; color: var(--text); flex: 1; }
+  .nav-right { display: flex; align-items: center; gap: 8px; padding: 0 16px; }
+  .nav-btn {
+    padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border-strong); background: var(--surface2); color: var(--text-muted);
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+  }
+  .nav-btn:hover { color: var(--text); border-color: rgba(232,160,32,0.4); }
+  .nav-btn.save-btn { background: rgba(14,165,114,0.12); color: var(--teal-text); border-color: rgba(14,165,114,0.25); }
+  .nav-btn.save-btn:hover { background: rgba(14,165,114,0.2); }
+  .nav-saved { font-size: 11px; color: var(--teal-text); opacity: 0; transition: opacity 0.4s; }
+  .nav-saved.show { opacity: 1; }
+
+  #toolbar {
+    max-width: 1100px; margin: 0 auto; padding: 20px 24px 0;
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  }
+  #search-input {
+    flex: 1; min-width: 200px; background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: var(--radius); color: var(--text); font-size: 13px; padding: 10px 14px;
+    outline: none; font-family: inherit; transition: border-color 0.15s;
+  }
+  #search-input:focus { border-color: rgba(232,160,32,0.5); }
+  .filter-chip {
+    padding: 9px 14px; border-radius: var(--radius); font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-muted);
+    transition: background 0.1s, color 0.1s, border-color 0.1s; white-space: nowrap;
+  }
+  .filter-chip:hover { color: var(--text); }
+  .filter-chip.active { background: var(--gold-light); color: var(--gold-text); border-color: rgba(232,160,32,0.5); }
+
+  #filter-panel {
+    max-width: 1100px; margin: 10px auto 0; padding: 0 24px;
+    display: none; flex-wrap: wrap; gap: 16px;
+  }
+  #filter-panel.open { display: flex; }
+  .filter-group { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; }
+  .filter-group-label { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+  .filter-options { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-opt {
+    padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border-strong); background: var(--surface2); color: var(--text-muted);
+  }
+  .filter-opt.active { background: var(--teal-light); color: var(--teal-text); border-color: rgba(14,165,114,0.4); }
+
+  #grid {
+    max-width: 1100px; margin: 0 auto; padding: 20px 24px 80px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;
+  }
+  .char-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 16px; cursor: pointer; transition: border-color 0.15s, transform 0.1s;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .char-card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+  .char-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .char-name { font-size: 14px; font-weight: 800; }
+  .char-quirk { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .badge {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 7px; border-radius: 5px; white-space: nowrap; flex-shrink: 0;
+  }
+  .badge.student-1a { background: var(--gold-light); color: var(--gold-text); }
+  .badge.student-1b { background: var(--teal-light); color: var(--teal-text); }
+  .badge.teacher { background: rgba(59,130,246,0.13); color: #93C5FD; }
+  .badge.villain { background: var(--red-light); color: var(--red-text); }
+  .badge.pc { background: var(--purple-light); color: var(--purple-text); }
+  .char-meta { display: flex; gap: 6px; flex-wrap: wrap; font-size: 11px; color: var(--text-dim); }
+
+  #empty-state { grid-column: 1/-1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px; text-align: center; color: var(--text-dim); }
+  #empty-state .es-icon { font-size: 36px; margin-bottom: 12px; }
+
+  /* Detail / create modal */
+  #modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200;
+    display: none; align-items: center; justify-content: center; padding: 24px;
+  }
+  #modal-overlay.open { display: flex; }
+  #modal {
+    background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg);
+    max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 28px;
+  }
+  #modal h2 { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+  .modal-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; }
+  .detail-section { margin-bottom: 14px; }
+  .detail-label { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+  .detail-body { font-size: 13px; color: var(--text); white-space: pre-wrap; line-height: 1.6; }
+  .modal-close { float: right; cursor: pointer; color: var(--text-dim); font-size: 18px; }
+  .modal-close:hover { color: var(--text); }
+
+  .form-row { margin-bottom: 14px; }
+  .form-row label { display: block; font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+  .form-input, .form-textarea, .form-select {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border-strong);
+    border-radius: var(--radius); color: var(--text); font-size: 13px; padding: 9px 12px;
+    outline: none; font-family: inherit;
+  }
+  .form-textarea { min-height: 70px; resize: vertical; }
+  .form-actions { display: flex; gap: 8px; margin-top: 18px; }
+  .action-btn {
+    padding: 9px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border-strong); background: var(--surface2); color: var(--text-muted);
+  }
+  .action-btn:hover { color: var(--text); }
+  .action-btn.primary { background: var(--teal-light); color: var(--teal-text); border-color: rgba(14,165,114,0.4); }
+  .checkbox-row { display: flex; align-items: center; gap: 8px; }
+
+  @media (max-width: 640px) {
+    #toolbar, #grid, #filter-panel { padding-left: 16px; padding-right: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">Characters</span>
+  <div class="nav-right">
+    <span class="nav-saved" id="saved-notice">Saved ✓</span>
+    <button class="nav-btn save-btn" id="new-char-btn" onclick="openCreateModal()">+ New Character</button>
+  </div>
+</nav>
+
+<div id="toolbar">
+  <input id="search-input" type="text" placeholder="Search by name or quirk…" oninput="renderGrid()" autocomplete="off">
+  <button class="filter-chip" id="filter-toggle" onclick="toggleFilterPanel()">⚙ Filters</button>
+</div>
+
+<div id="filter-panel">
+  <div class="filter-group">
+    <div class="filter-group-label">Type</div>
+    <div class="filter-options" id="type-filters"></div>
+  </div>
+  <div class="filter-group">
+    <div class="filter-group-label">Gender</div>
+    <div class="filter-options" id="gender-filters"></div>
+  </div>
+  <div class="filter-group">
+    <div class="filter-group-label">Role</div>
+    <div class="filter-options" id="pc-filters">
+      <div class="filter-opt" data-pc="true" onclick="togglePcFilter(this)">Player Character</div>
+      <div class="filter-opt" data-pc="false" onclick="togglePcFilter(this)">NPC</div>
+    </div>
+  </div>
+</div>
+
+<div id="grid">
+  <div id="empty-state"><div class="es-icon">🗂</div>Loading characters…</div>
+</div>
+
+<!-- Detail modal -->
+<div id="modal-overlay" onclick="if(event.target===this) closeModal()">
+  <div id="modal"></div>
+</div>
+
+<script>
+let allChars = [];
+let activeTypes = new Set();
+let activeGenders = new Set();
+let activePc = new Set();
+
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function init() {
+  try {
+    const res = await fetch('/api/all-characters', {cache:'no-cache'});
+    allChars = await res.json();
+  } catch (e) {
+    allChars = [];
+  }
+  buildFilterOptions();
+  renderGrid();
+}
+
+function buildFilterOptions() {
+  const types = [...new Set(allChars.map(c => c._type).filter(Boolean))];
+  document.getElementById('type-filters').innerHTML = types.map(t =>
+    `<div class="filter-opt" data-type="${escHtml(t)}" onclick="toggleTypeFilter(this)">${escHtml(t)}</div>`
+  ).join('');
+
+  const genders = [...new Set(allChars.map(c => c.gender).filter(Boolean))];
+  document.getElementById('gender-filters').innerHTML = genders.map(g =>
+    `<div class="filter-opt" data-gender="${escHtml(g)}" onclick="toggleGenderFilter(this)">${escHtml(g)}</div>`
+  ).join('');
+}
+
+function toggleFilterPanel() {
+  document.getElementById('filter-panel').classList.toggle('open');
+  document.getElementById('filter-toggle').classList.toggle('active');
+}
+function toggleTypeFilter(el) {
+  const t = el.dataset.type;
+  el.classList.toggle('active');
+  activeTypes.has(t) ? activeTypes.delete(t) : activeTypes.add(t);
+  renderGrid();
+}
+function toggleGenderFilter(el) {
+  const g = el.dataset.gender;
+  el.classList.toggle('active');
+  activeGenders.has(g) ? activeGenders.delete(g) : activeGenders.add(g);
+  renderGrid();
+}
+function togglePcFilter(el) {
+  const p = el.dataset.pc;
+  el.classList.toggle('active');
+  activePc.has(p) ? activePc.delete(p) : activePc.add(p);
+  renderGrid();
+}
+
+function badgeClass(type) {
+  if (type === 'Student (1-A)') return 'student-1a';
+  if (type === 'Student (1-B)') return 'student-1b';
+  if (type === 'Teacher') return 'teacher';
+  if (type === 'Villain') return 'villain';
+  return '';
+}
+
+function renderGrid() {
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  const grid = document.getElementById('grid');
+
+  const filtered = allChars.filter(c => {
+    if (q && !((c.name||'').toLowerCase().includes(q) || (c.quirk||'').toLowerCase().includes(q))) return false;
+    if (activeTypes.size && !activeTypes.has(c._type)) return false;
+    if (activeGenders.size && !activeGenders.has(c.gender)) return false;
+    if (activePc.size && !activePc.has(String(!!c.is_pc))) return false;
+    return true;
+  });
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div id="empty-state"><div class="es-icon">🔍</div>No characters match your search/filters.</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map((c, i) => {
+    const idx = allChars.indexOf(c);
+    return `<div class="char-card" onclick="showDetail(${idx})">
+      <div class="char-card-top">
+        <div>
+          <div class="char-name">${escHtml(c.name)}</div>
+          <div class="char-quirk">${escHtml(c.quirk||'')}</div>
+        </div>
+        <span class="badge ${badgeClass(c._type)}">${escHtml(c._type||'')}</span>
+      </div>
+      <div class="char-meta">
+        ${c.gender ? `<span>${escHtml(c.gender)}</span>` : ''}
+        ${c.is_pc ? `<span class="badge pc">PC</span>` : ''}
+        ${c.role ? `<span>${escHtml(c.role)}</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showDetail(idx) {
+  const c = allChars[idx];
+  const personality = typeof c.personality === 'object' ? (c.personality.summary || JSON.stringify(c.personality)) : (c.personality || c.personality_tag || '');
+  const appearance = typeof c.appearance === 'object' ? (c.appearance.other || c.appearance.build || JSON.stringify(c.appearance)) : (c.appearance || '');
+  const bonus = c.bonus_features || c.notable_trait || c.quirk_summary || '';
+
+  document.getElementById('modal').innerHTML = `
+    <span class="modal-close" onclick="closeModal()">✕</span>
+    <h2>${escHtml(c.name)}</h2>
+    <div class="modal-sub">${escHtml(c._type||'')}${c.role ? ' — ' + escHtml(c.role) : ''}</div>
+    <div class="detail-section"><div class="detail-label">Quirk</div><div class="detail-body">${escHtml(c.quirk||'—')}</div></div>
+    ${appearance ? `<div class="detail-section"><div class="detail-label">Appearance</div><div class="detail-body">${escHtml(appearance)}</div></div>` : ''}
+    ${personality ? `<div class="detail-section"><div class="detail-label">Personality</div><div class="detail-body">${escHtml(personality)}</div></div>` : ''}
+    ${bonus ? `<div class="detail-section"><div class="detail-label">Bonus Features / Notes</div><div class="detail-body">${escHtml(bonus)}</div></div>` : ''}
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function openCreateModal() {
+  document.getElementById('modal').innerHTML = `
+    <span class="modal-close" onclick="closeModal()">✕</span>
+    <h2>New Character</h2>
+    <div class="modal-sub">Adds a new Class 1-A style character to the archive.</div>
+    <div class="form-row"><label>Name</label><input class="form-input" id="nc-name" type="text" placeholder="Character name"></div>
+    <div class="form-row"><label>Quirk</label><input class="form-input" id="nc-quirk" type="text" placeholder="Quirk name"></div>
+    <div class="form-row"><label>Gender</label>
+      <select class="form-select" id="nc-gender">
+        <option value="Female">Female</option>
+        <option value="Male">Male</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="form-row"><label>Physiology</label>
+      <select class="form-select" id="nc-physiology">
+        <option value="Standard">Standard</option>
+        <option value="Heteromorph">Heteromorph</option>
+        <option value="Mutant">Mutant</option>
+      </select>
+    </div>
+    <div class="form-row"><label>Appearance</label><textarea class="form-textarea" id="nc-appearance" placeholder="What do they look like?"></textarea></div>
+    <div class="form-row"><label>Personality</label><textarea class="form-textarea" id="nc-personality" placeholder="How do they act?"></textarea></div>
+    <div class="form-row"><label>Bonus Features</label><textarea class="form-textarea" id="nc-bonus" placeholder="Anything else — quirk quirks, notable traits, etc."></textarea></div>
+    <div class="form-row checkbox-row"><input type="checkbox" id="nc-ispc"><label style="margin:0;" for="nc-ispc">Player Character</label></div>
+    <div class="form-actions">
+      <button class="action-btn primary" onclick="submitCreate()">Create Character</button>
+      <button class="action-btn" onclick="closeModal()">Cancel</button>
+    </div>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+async function submitCreate() {
+  const name = document.getElementById('nc-name').value.trim();
+  if (!name) { alert('Name is required.'); return; }
+
+  const payload = {
+    name,
+    quirk: document.getElementById('nc-quirk').value.trim(),
+    gender: document.getElementById('nc-gender').value,
+    physiology: document.getElementById('nc-physiology').value,
+    appearance: document.getElementById('nc-appearance').value.trim(),
+    personality: document.getElementById('nc-personality').value.trim(),
+    bonus_features: document.getElementById('nc-bonus').value.trim(),
+    is_pc: document.getElementById('nc-ispc').checked,
+  };
+
+  try {
+    const res = await fetch('/api/characters/create', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error((await res.json()).error || 'Create failed');
+    closeModal();
+    const notice = document.getElementById('saved-notice');
+    notice.textContent = 'Character created ✓';
+    notice.classList.add('show');
+    setTimeout(() => notice.classList.remove('show'), 2000);
+    await init();
+  } catch (e) {
+    alert('Could not create character: ' + e.message);
+  }
+}
+
+init();
+</script>
+</body>
+</html>

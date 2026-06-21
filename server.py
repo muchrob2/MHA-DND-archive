@@ -25,8 +25,13 @@ CAMPAIGN_FILE = ROOT / "campaign.html"
 
 CHAR_FILE_RE = re.compile(r"^/api/character/([a-z0-9_]+\.json)$")
 CAMPAIGN_FILE_RE = re.compile(r"^/api/campaign/(arc|world|teachers|villains|tier1|enemies|class1b)$")
+SCRIPTS_FILE = CAMPAIGN_DIR / "scripts.json"
+TEACHERS_FILE = CAMPAIGN_DIR / "teachers.json"
+VILLAINS_FILE = CAMPAIGN_DIR / "villains.json"
+CLASS1B_FILE = CAMPAIGN_DIR / "class1b.json"
 EXPORT_VERSION = 1
 RULEBOOK_FILE_RE = re.compile(r"^/rulebooks/(.+\.pdf)$")
+NAME_SLUG_RE = re.compile(r"[^a-z0-9]+")
 
 MIME = {".html": "text/html; charset=utf-8", ".json": "application/json; charset=utf-8", ".pdf": "application/pdf"}
 
@@ -68,6 +73,96 @@ def save_character(filename, data):
         raise FileNotFoundError(f"{safe} not found")
     with open(fpath, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
+
+
+def load_all_characters():
+    """Aggregate Class 1-A, Class 1-B, teachers, and villains into one tagged list."""
+    out = []
+
+    for char in load_characters():
+        char["_type"] = "Student (1-A)"
+        out.append(char)
+
+    if CLASS1B_FILE.exists():
+        class1b = json.loads(CLASS1B_FILE.read_text(encoding="utf-8"))
+        for student in class1b.get("students", []):
+            student = dict(student)
+            student["_type"] = "Student (1-B)"
+            student["is_pc"] = False
+            out.append(student)
+
+    if TEACHERS_FILE.exists():
+        teachers = json.loads(TEACHERS_FILE.read_text(encoding="utf-8"))
+        for teacher in teachers.get("teachers", []):
+            teacher = dict(teacher)
+            teacher["_type"] = "Teacher"
+            teacher["is_pc"] = False
+            out.append(teacher)
+
+    if VILLAINS_FILE.exists():
+        villains_data = json.loads(VILLAINS_FILE.read_text(encoding="utf-8"))
+        seen = set()
+        for faction in villains_data.get("factions", []):
+            for villain in faction.get("villains", []):
+                if villain["name"] in seen:
+                    continue
+                seen.add(villain["name"])
+                villain = dict(villain)
+                villain["_type"] = "Villain"
+                villain["is_pc"] = False
+                villain["_faction"] = faction.get("name")
+                out.append(villain)
+
+    return out
+
+
+def slugify(name):
+    slug = NAME_SLUG_RE.sub("_", name.strip().lower()).strip("_")
+    return slug or "character"
+
+
+def create_character(payload):
+    name = (payload.get("name") or "").strip()
+    if not name:
+        raise ValueError("Name is required")
+
+    base_slug = slugify(name)
+    filename = f"{base_slug}.json"
+    n = 2
+    while (CLASS_DIR / filename).exists():
+        filename = f"{base_slug}_{n}.json"
+        n += 1
+
+    char_data = {
+        "name": name,
+        "is_pc": bool(payload.get("is_pc", False)),
+        "gender": payload.get("gender", ""),
+        "physiology": payload.get("physiology", ""),
+        "quirk": payload.get("quirk", ""),
+        "appearance": {"other": payload.get("appearance", "")},
+        "personality": {"summary": payload.get("personality", "")},
+        "bonus_features": payload.get("bonus_features", ""),
+    }
+    (CLASS_DIR / filename).write_text(
+        json.dumps(char_data, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+
+    roster = json.loads(ROSTER_FILE.read_text(encoding="utf-8"))
+    next_id = max((s.get("id", 0) for s in roster.get("students", [])), default=0) + 1
+    roster["students"].append({
+        "id": next_id,
+        "name": name,
+        "quirk": payload.get("quirk", ""),
+        "gender": payload.get("gender", ""),
+        "physiology": payload.get("physiology", ""),
+        "is_pc": bool(payload.get("is_pc", False)),
+        "file": filename,
+    })
+    roster["total_students"] = len(roster["students"])
+    with open(ROSTER_FILE, "w", encoding="utf-8") as f:
+        json.dump(roster, f, indent=2, ensure_ascii=False)
+
+    return filename
 
 
 def build_export():
@@ -163,6 +258,20 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 self.send_json(500, {"error": str(e)})
             return
 
+        if path == "/api/all-characters":
+            try:
+                self.send_json(200, load_all_characters())
+            except Exception as e:
+                self.send_json(500, {"error": str(e)})
+            return
+
+        if path == "/api/campaign/scripts":
+            try:
+                self.send_json(200, json.loads(SCRIPTS_FILE.read_text(encoding="utf-8")))
+            except FileNotFoundError:
+                self.send_json(404, {"error": "scripts.json not found"})
+            return
+
         m = CAMPAIGN_FILE_RE.match(path)
         if m:
             fpath = CAMPAIGN_DIR / (m.group(1) + ".json")
@@ -190,6 +299,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.serve_file(CAMPAIGN_FILE, "text/html; charset=utf-8")
             return
 
+        if path == "/characters":
+            self.serve_file(ROOT / "characters.html", "text/html; charset=utf-8")
+            return
+
         self.send_json(404, {"error": "not found"})
 
     def do_POST(self):
@@ -206,6 +319,16 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 self.send_json(400, {"error": str(e)})
             return
 
+        if path == "/api/campaign/scripts":
+            try:
+                data = json.loads(body.decode("utf-8"))
+                with open(SCRIPTS_FILE, "w", encoding="utf-8") as f:
+                    json.dump(data, f, indent=2, ensure_ascii=False)
+                self.send_json(200, {"ok": True})
+            except (json.JSONDecodeError, OSError) as e:
+                self.send_json(400, {"error": str(e)})
+            return
+
         m = CHAR_FILE_RE.match(path)
         if m:
             filename = m.group(1)
@@ -214,6 +337,15 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 save_character(filename, data)
                 self.send_json(200, {"ok": True})
             except (json.JSONDecodeError, ValueError, FileNotFoundError, OSError) as e:
+                self.send_json(400, {"error": str(e)})
+            return
+
+        if path == "/api/characters/create":
+            try:
+                payload = json.loads(body.decode("utf-8"))
+                filename = create_character(payload)
+                self.send_json(200, {"ok": True, "file": filename})
+            except (json.JSONDecodeError, ValueError, OSError) as e:
                 self.send_json(400, {"error": str(e)})
             return
 

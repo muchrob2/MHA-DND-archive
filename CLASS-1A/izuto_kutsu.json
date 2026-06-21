@@ -49,33 +49,33 @@
   "class_note": "Heroic Vanguard → Speedster Style. Engine's leg-based movement multiplier and exhaust-burst attacks are the Speedster's core mechanical loop.",
   "quirk_mechanics": {
     "source": "Quirk Compendium — Engine",
-    "weakness": "Engine requires fuel — physical exertion is the primary fuel source. Extended high-speed use in short bursts without rest causes engine strain (speed reduction until short rest). If significantly cold, startup is slower and max output is reduced.",
+    "weakness": "Engine burns through the body's natural fluids, which can only be replenished with juice — a fully hydrated person carries about 32 cups of reserve. Below 8 cups, disadvantage on CON saves and damage dice drop one step; at 0 cups the Quirk shuts down entirely and Izuto gains a level of exhaustion until he drinks juice again.",
     "abilities": [
       {
-        "name": "Gear Shift",
-        "type": "Bonus Action",
-        "description": "Activate Engine. Movement speed increases by 30 ft per Gear Shift activation, up to 3 activations (+90 ft max). Each activation increases by one gear — Gear 1 (+30), Gear 2 (+60), Gear 3 (+90). Downshifting is a bonus action. After Gear 3, must downshift completely or make CON save (DC 13) or take 1d8 engine strain damage and drop to Gear 1."
+        "name": "Engines",
+        "type": "Passive / Natural Weapon",
+        "description": "Base speed becomes 60 ft, vertical jump 30 ft. The leg-engines work as a natural weapon: on a hit, 1d10 + DEX modifier bludgeoning damage, doubled against structures. Izuto never provokes opportunity attacks and gains +3 to initiative."
       },
       {
-        "name": "Exhaust Kick",
-        "type": "Attack",
-        "description": "Leg strike that releases a directed exhaust burst on impact. 2d8 + STR modifier bludgeoning + 1d6 fire damage. Target makes DEX save vs Quirk DC or is pushed 20 ft and blinded until end of their next turn (exhaust in face). Requires at least Gear 1 active."
+        "name": "Recipro Burst",
+        "type": "Bonus Action (3rd level, uses = proficiency bonus, costs 5 cups of juice)",
+        "description": "Forcibly accelerate the Engine for 10 seconds: double speed and advantage on attacks for 5 rounds. Attacks push the target back 10 ft and damage die becomes a d12. Afterward, speed drops to 0 and he can't move for 5 rounds, or until cooled by water or ice."
       },
       {
-        "name": "Extraction Run",
-        "type": "Action",
-        "description": "Move up to full current speed, carry one willing ally, and end in a safe position. The ally takes no damage from the movement. Izuto takes no opportunity attacks during this move. Usable once per short rest."
+        "name": "Recipro Extend",
+        "type": "Bonus Action (7th level, uses = half proficiency bonus, costs 8 cups of juice)",
+        "description": "An extended Recipro Burst: double speed and attack advantage with one extra damage die for 8 rounds, pushing targets back 20 ft. Afterward, speed drops to 0 and he can't move for 8 rounds, or until cooled by water or ice."
       }
     ]
   },
   "player_notes": {
-    "role_summary": "The class's mobility engine — in the most literal sense. You control where the fight happens. Gear Shift determines your speed; Exhaust Kick is your damage output; Extraction Run is the 'get someone out of there' tool the party will rely on more than they expect.",
+    "role_summary": "The class's mobility engine — in the most literal sense. You control where the fight happens. Engines gives you raw speed and a natural-weapon kick at baseline; Recipro Burst (and later Recipro Extend) are your big speed-and-damage windows, but mind the juice cost and the forced stop afterward.",
     "social_position": "Quietly central. He doesn't take leadership but he takes responsibility, which ends up looking similar.",
     "growth_hook": "He doesn't accept help. This will cost him something at some point. The character moment is asking — sincerely, with nothing held back.",
     "suggested_background": "Grew up in a family that prized self-sufficiency. Older relatives in trade work. He learned to fix things and assume he was the one who fixed them."
   },
   "dm_notes": {
-    "combat_role": "Mobile striker and team repositioner. His Extraction Run is one of the highest-value support abilities in the class. Don't let him solo — his best play is creating advantages for others.",
+    "combat_role": "Mobile striker and team repositioner. His Engine speed and Recipro Burst windows are some of the highest-value mobility tools in the class. Don't let him solo — his best play is creating advantages for others.",
     "social_role": "The self-sufficient one. Reliable. Somewhat isolated by choice. The class respects this and also, quietly, wants in.",
     "growth_arc": "Letting people in without framing it as weakness. Someone has to get far enough inside the defences that he doesn't realise they're there until they already are.",
     "weakness_to_exploit": "Engine strain in extended high-gear fights. Cold environments reduce max output. His CHA is his weakest social stat — in political or persuasion situations he's at a disadvantage. Self-reliance can become a liability when the team needs him to communicate what he needs."

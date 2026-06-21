@@ -46,32 +46,22 @@
   "AC": 14,
   "speed": "30 ft",
   "suggested_class": "Heroic Vanguard",
-  "class_note": "Heroic Vanguard → Reckless Attacker Style. Dragon's transformation-enhanced strikes and breath weapon suit aggressive, high-risk front-line fighting.",
+  "class_note": "Heroic Vanguard → Reckless Attacker Style. Dragon's full-body transformation and multiattack suit aggressive, high-risk front-line fighting.",
   "quirk_mechanics": {
     "source": "Quirk Compendium — Dragon",
-    "weakness": "Full transformation can only be maintained for a limited time (scales with level). Transformation state has a recharge period before it can be re-entered. Extremely hot environments increase strain while active.",
+    "weakness": "None listed in the Quirk Compendium — Dragon has no built-in drawback or strain mechanic.",
     "abilities": [
       {
-        "name": "Dragon Form",
-        "type": "Bonus Action",
-        "description": "Enter full Dragon transformation. Scales cover entire body. +4 to STR, +2 to CON. Natural armour sets AC to 16. Gain fire immunity and resistance to cold. Dragon Form lasts 3 rounds per proficiency bonus. Returning to normal is a free action."
-      },
-      {
-        "name": "Dragon Strike",
-        "type": "Attack (requires Dragon Form or natural scale state)",
-        "description": "Unarmed strike enhanced by scales. 2d8 + STR modifier bludgeoning + 1d6 fire damage. On a crit, target must make CON save vs Quirk DC or be stunned until end of next turn."
-      },
-      {
-        "name": "Breath Weapon",
-        "type": "Action (Dragon Form only, recharge 5-6)",
-        "description": "30-foot cone of fire. DEX save vs Quirk DC. Fail: 4d8 fire damage. Success: half damage. At level 5: 5d8. At level 10: 6d8. Creatures who fail are also set ablaze (1d6 fire per round until extinguished)."
+        "name": "Dragon",
+        "type": "Bonus Action (transformation)",
+        "description": "Transform into a Huge draconic form: AC 16, +25 HP, 35 ft walk / 45 ft fly speed, STR 23 (+6), CON 21 (+5), proficiency bonus added to STR and CON saves, resistance to bludgeoning and slashing damage, darkvision 120 ft. Draconic Might lets her count as one size larger for carrying, pushing, and lifting, and squeeze through Large-sized spaces. Wings of the Sky grants the flying speed with hover and lets her ignore difficult terrain while flying or walking. Draconic Resilience grants temporary HP equal to half her level plus half her CON modifier at the start of each turn. In this form she can Multiattack (one Bite plus two Claws): Bite (10 ft reach, 2d8+6 piercing), Claw (5 ft reach, 3d12+6 slashing). Tail Sweep is usable as a bonus action whenever she moves 10+ feet: a Tail Attack against all creatures within 10 ft, 2d10+6 bludgeoning, STR save or knocked prone."
       }
     ]
   },
   "dm_notes": {
-    "combat_role": "Front-line brawler with a time limit. Dragon Form turns her into the class's hardest hitter for a short window — the DM should play enemies who understand this and try to outlast the form. The Breath Weapon is her burst option.",
+    "combat_role": "Front-line brawler who transforms into a genuine monster statblock. Dragon's Multiattack (Bite + two Claws) and Tail Sweep give her some of the highest sustained damage in the class once transformed — the DM should treat her transformed state as a real threat, not a timed gimmick.",
     "social_role": "Unofficial quality control. When someone is doing something stupid or insufficient, she says so. When someone is doing something well, she also says so, exactly once, in a tone that sounds like criticism and isn't.",
     "growth_arc": "Her help-but-don't-admit-it pattern is armour. Something requiring her to accept help herself and acknowledge she needed it is the key moment.",
-    "weakness_to_exploit": "Dragon Form's timer. Enemies who can force her to burn the transformation duration and then disengage will face a weakened version of her after. INT is her dump stat — complex scenarios involving strategy or deception leave her at a disadvantage."
+    "weakness_to_exploit": "Her Huge size in transformed state can make tight spaces and narrow corridors a problem despite Draconic Might. INT is her dump stat — complex scenarios involving strategy or deception leave her at a disadvantage."
   }
 }

@@ -46,27 +46,22 @@
   "AC": 13,
   "speed": "30 ft",
   "suggested_class": "Heroic Vanguard",
-  "class_note": "Heroic Vanguard → Reckless Attacker Style. Twin Impact's double-strike mechanic synergises with the subclass's high-risk, high-reward approach.",
+  "class_note": "Heroic Vanguard → Reckless Attacker Style. Impact Echo's repeat-damage and bounce mechanic synergises with the subclass's high-risk, high-reward approach.",
   "quirk_mechanics": {
     "source": "Quirk Compendium — Twin Impact",
-    "weakness": "Quirk only triggers when a second strike lands within 1 round of the first, and both strikes must be aimed at the same target. Missing either strike means no amplification. Cooldown 2 turns after activation.",
+    "weakness": "Overuse risks injury — after using Impact Echo a number of times equal to his level times his proficiency bonus in a day, he must succeed on a DC 14 CON save or take 1d12 true damage.",
     "abilities": [
       {
-        "name": "Impact Doubling",
-        "type": "Passive",
-        "description": "When Toragi strikes the same target twice in one round (action + bonus action, or two-weapon), the second strike triggers Impact Doubling: the second hit deals double damage and forces a CON save vs Quirk DC. Fail: target is stunned until the end of their next turn. Success: target is rattled (disadvantage on their next attack)."
-      },
-      {
-        "name": "Seismic Follow",
-        "type": "Reaction",
-        "description": "After landing a first hit, immediately declare Seismic Follow. The second hit this round applies a shockwave — all creatures within 10 ft of the target take 2d6 bludgeoning damage and make DEX save vs Quirk DC or fall prone."
+        "name": "Impact Echo",
+        "type": "Bonus Action or Reaction (uses per turn = proficiency bonus)",
+        "description": "When Toragi hits a target with a melee or ranged attack, create a second impact at the same location dealing the same damage again. For ranged attacks, a missed shot that strikes a surface can bounce per a directional chart (forward, right, backward, or left), extending its effective range up to 4x normal and letting him choose a new creature in the new line to make a separate attack roll against."
       }
     ]
   },
   "dm_notes": {
-    "combat_role": "High single-target burst damage with AoE follow-through. His rotation is first hit → Seismic Follow → Impact Doubling stun. If it lands, the target is done. If it doesn't, he's exposed.",
+    "combat_role": "High single-target burst damage via repeated impacts. Impact Echo turns a single good hit into double damage, and missed ranged shots can bounce off terrain into a second target. If his hits land, he's devastating. If they don't, he's not doing much that round.",
     "social_role": "Unexpected emotional anchor. When something happens to the class — a bad training result, a fight between classmates, real danger — Toragi doesn't have the words, but he shows up. People feel it.",
     "growth_arc": "Learning that being intimidating isn't the problem; assuming everyone else is afraid of him is. A classmate who isn't afraid of him and genuinely enjoys his company changes how he sees himself.",
-    "weakness_to_exploit": "His quirk requires two precise hits on the same target. Enemies who move, teleport, or have high DEX saves can break his combo. His CHA is low — in social-heavy scenes he's at a disadvantage."
+    "weakness_to_exploit": "His quirk relies on landing the initial hit before the echo applies — enemies with high AC or evasion deny him the follow-up entirely. Heavy use in a single day risks a CON save and true damage. His CHA is low — in social-heavy scenes he's at a disadvantage."
   }
 }

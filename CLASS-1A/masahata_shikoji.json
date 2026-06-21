@@ -68,9 +68,19 @@
         "description": "5d6 cold + 5d4 piercing. 10 ft knockback. Available from level 3."
       },
       {
-        "name": "Hydro Cannon (Tier 4+)",
+        "name": "High-Pressure Shot (Tier 4)",
         "type": "Attack",
-        "description": "Scales further at higher levels. See Quirk Compendium for full tier table."
+        "description": "6d6 cold + 6d4 piercing. 15 ft knockback; target must succeed on a STR save or be knocked prone. Available from level 4."
+      },
+      {
+        "name": "Water Cannon (Tier 5)",
+        "type": "Attack",
+        "description": "7d6 cold + 7d4 piercing. 20 ft knockback; ignores the target's suit and other AC bonuses for this attack. Available from level 5."
+      },
+      {
+        "name": "Hydro Burst",
+        "type": "Action (unlocks at level 10)",
+        "description": "Unleash a condensed water discharge in a 30-foot line or 15-foot cone. STR save vs Quirk DC. Fail: 6d10 cold + 3d6 piercing damage, pushed up to 30 ft, knocked prone. Success: half damage, no push or prone. After use, Pressure Tier 5 (Water Cannon) can't be used again until a short or long rest."
       }
     ]
   },

@@ -49,29 +49,19 @@
   "class_note": "Heroic Vanguard → Unarmed Style. His cannon barrels are natural weapons and his kit suits sustained melee with ranged burst capacity.",
   "quirk_mechanics": {
     "source": "Quirk Compendium — Iron Ball",
-    "weakness": "Cannon barrels have limited shots per short rest (proficiency bonus). Overuse results in significant recoil that Setaka absorbs — too many shots causes self-inflicted bludgeoning damage. Barrels need to cool between volleys.",
+    "weakness": "Launching larger balls strains his muscles and stamina. If he launches three Large balls or one Massive ball in a single encounter, he must succeed on a DC 16 CON save or gain a level of exhaustion — and on a failure, Large and Massive balls are disabled for 3 rounds.",
     "abilities": [
       {
-        "name": "Iron Knuckle",
-        "type": "Attack",
-        "description": "Natural weapon unarmed strike with cannon-barrel knuckles. 2d8 + STR modifier bludgeoning damage. 5 ft reach. On hit, target makes STR save vs Quirk DC or is pushed 10 feet."
-      },
-      {
-        "name": "Cannon Fire",
-        "type": "Attack (ranged, 60/120 ft)",
-        "description": "Fire a compressed iron ball from one knuckle-cannon. 3d10 bludgeoning damage. Recharge 1/short rest per barrel (2 shots per hand). On hit, target and any creature within 5 ft of target make DEX save vs Quirk DC or take 1d6 splash damage."
-      },
-      {
-        "name": "Broadside",
-        "type": "Action (all 4 cannons, recharge long rest)",
-        "description": "Fire all four cannon barrels simultaneously at up to four targets within 60 ft. Each target: 3d10 bludgeoning damage, DEX save vs Quirk DC or knocked prone. After use, Setaka takes 2d6 bludgeoning self-damage from recoil and his speed is reduced by 10 ft until end of next turn."
+        "name": "Iron Ball",
+        "type": "Action; switch ball size as a bonus action or reaction",
+        "description": "Launch an iron ball from his knuckles, choosing the size as part of the attack: Small/Pellet (2d10 bludgeoning, 80 ft range, pierces armor by ignoring half cover, can ricochet to hit a second target within 10 ft for 1d10); Medium/Standard (4d10 bludgeoning, 40 ft range, 10 ft knockback on hit); Large/Crushing Ball (6d10 bludgeoning, 20 ft range or melee, double damage to structures, creates a 15-ft radius of difficult terrain, 15 ft knockback on hit); or Massive/Overload Shot (10d10 bludgeoning, 10 ft radius hitting all creatures in range, STR save vs Quirk DC or knocked prone, triple damage to structures, creates a 25-ft radius of difficult terrain). Smaller balls trade damage for range; larger balls trade range for damage and battlefield control."
       }
     ]
   },
   "dm_notes": {
-    "combat_role": "Durable melee fighter with limited-use ranged burst capability. He's the class's tank with the ability to suddenly become a sniper for a couple of rounds. Broadside is his set-piece move — save it for moments where knocking four things prone at once will turn a fight.",
+    "combat_role": "Durable melee fighter with switchable ranged burst capability. He's the class's tank with the ability to trade range for damage and battlefield control by stepping up his ball size. Massive/Overload Shot is his set-piece move — save it for moments where knocking everything nearby prone at once will turn a fight.",
     "social_role": "Moral north star. When the class is considering doing something questionable, Setaka doesn't lecture — he just says what he would do, clearly, and moves on. The contrast is felt.",
     "growth_arc": "His honour code will be genuinely tested. A situation where following it perfectly causes real harm, or where breaking it slightly could prevent something bad. He will make a decision. He will live with it.",
-    "weakness_to_exploit": "Limited cannon shots means extended fights deplete his ranged options. DEX is average — he's not particularly mobile. After Broadside, he's vulnerable and slower."
+    "weakness_to_exploit": "Repeated use of Large or Massive balls risks a CON save failure that costs him a level of exhaustion and locks out his heaviest options for several rounds. DEX is average — he's not particularly mobile. Forcing him to keep escalating ball size in a long fight is the way to break him."
   }
 }

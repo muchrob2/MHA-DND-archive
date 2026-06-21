@@ -1,0 +1,289 @@
+{
+  "_note": "Supporting characters — pro heroes, civilians, and other recurring NPCs. Each has a campaign_hook that connects to an existing arc or faction thread.",
+  "characters": [
+    {
+      "id": "npc-blazewatch",
+      "name": "Natsuki Kaori",
+      "alias": "Blazewatch",
+      "category": "Pro Hero",
+      "quirk": "Thermal Pulse",
+      "quirk_type": "Emitter",
+      "quirk_rarity": "Rare",
+      "quirk_summary": "Natsuki generates and projects concentrated waves of heat from her palms. The heat doesn't produce visible flame — it hits like a pressure wave you feel half a second before you register you've been burned. At full output she can warp steel. Precise enough at low levels to dry someone's soaked clothes without singeing them.",
+      "appearance": "Late 30s. Sharp features, copper-streaked dark hair worn in a practical braid. Her hero costume is regulation white-and-gold, always immaculate. Off-duty she looks vaguely disappointed by whatever room she's in.",
+      "personality": "Exacting, precise, and privately very funny in a way she doesn't perform for anyone. Her feedback is the most useful feedback any student will receive — also the most uncomfortable, because she's always correct. Has a reputation for dropping interns the moment they start coasting.",
+      "role": "Top-ranked Murano hero. Runs Blazewatch Agency in the Central Plaza district.",
+      "campaign_hook": "Arc 3 agency visit option. Students who intern with Natsuki get the best training and the toughest evaluation. She's also been contracted by the Hero Safety Commission to run background checks on recent quirk-for-hire incidents — information she's quietly frustrated she can't act on without clearance.",
+      "dm_notes": {
+        "secret": "She knows about The Chain by name. She's been trying to get clearance to move on them for six months. Shirai Kenzo keeps blocking it without explanation.",
+        "relationship_to_pcs": "If a PC impresses her during the agency visit, she becomes a rare source of direct support in Tier 2. She doesn't do this for everyone.",
+        "what_makes_her_useful": "Her Commission access means she can confirm or deny information the class uncovers about The Chain — if they come to her with enough evidence that she's willing to risk the clearance issue.",
+        "arc_relevance": "Arc 3 (Agency Visit), Arc 5 (The Fracture Problem) — her blocked investigation becomes relevant when the class starts pulling the same thread."
+      },
+      "stat_block": {
+        "level": 12, "HP": 94, "AC": 16,
+        "STR": 14, "DEX": 15, "CON": 16, "INT": 16, "WIS": 17, "CHA": 15, "TECH": 14
+      }
+    },
+    {
+      "id": "npc-irongate",
+      "name": "Tobari Jin",
+      "alias": "Irongate",
+      "category": "Pro Hero",
+      "quirk": "Barrier",
+      "quirk_type": "Emitter",
+      "quirk_rarity": "Uncommon",
+      "quirk_summary": "Tobari generates rigid translucent barriers at any point he can see within 60ft. He can hold up to four simultaneously, reposition them as a free action, and detonate any of them as an explosive force burst. Size scales from door-panel to full wall. The barriers are indestructible for three rounds; after that they crack and collapse.",
+      "appearance": "Mid-40s. Stocky, shaved head, permanent five o'clock shadow. Wears battered civilian clothes even on hero calls. His Barrier projections appear as dark smoked-glass panels — they look like they belong to a different, grimmer universe than the cheerful hero aesthetic everyone else has.",
+      "personality": "Zero patience for spectacle. Respects competence regardless of rank. Will tell a student they did a good job with the same energy he tells them they made a mistake — absolutely flat affect, completely sincere. Has been in the port district long enough to know every face that doesn't belong there.",
+      "role": "Underground hero, port district. Criminal investigation and takedowns.",
+      "campaign_hook": "The agency that's most likely to drop Class 1-A students into something real. Arc 3 internship that leads directly into Chain-adjacent territory. Tobari has been tracking The Chain's extortion network for two years.",
+      "dm_notes": {
+        "secret": "He knows Shimoda Iku is feeding information to a journalist. He's fine with it. He's also feeding information to the same journalist under a different alias.",
+        "relationship_to_pcs": "If students intern here and show sense, Tobari gives them access to things they shouldn't technically have access to. He believes in learning by doing and doesn't care much about the licensing technicalities.",
+        "what_makes_him_dangerous": "He does not distinguish between 'villain work' and 'hero work' as strongly as the Commission would like. If the class needs to do something they shouldn't, he is the adult who will look the other way.",
+        "arc_relevance": "Arc 3 (Agency Visit), Arc 5 (The Fracture Problem), Arc 6 (Convergence) — he is the closest thing the class has to a ground-level ally for the Chain investigation."
+      },
+      "stat_block": {
+        "level": 10, "HP": 82, "AC": 17,
+        "STR": 16, "DEX": 13, "CON": 17, "INT": 15, "WIS": 16, "CHA": 10, "TECH": 12
+      }
+    },
+    {
+      "id": "npc-silkwind",
+      "name": "Haruno Setsuko",
+      "alias": "Silkwind",
+      "category": "Pro Hero",
+      "quirk": "Air Current",
+      "quirk_type": "Emitter",
+      "quirk_rarity": "Rare",
+      "quirk_summary": "Haruno generates and shapes precise air currents from her body. She can create lift, directional wind, pressure changes, and sustained atmospheric pockets. In rescue scenarios she can hold three people airborne simultaneously and guide them to safety. In combat she uses sustained wind-walls and targeted concussive gusts.",
+      "appearance": "Early 30s. Slight build, silver-white hair that moves constantly in the self-generated breeze she keeps around herself at low output. Always seems calm. Is always calm.",
+      "personality": "The most patient person in any room. Explains things once, clearly, then watches what you do with the information. Not cold — genuinely interested in people. The kind of teacher students don't realise they've learned from until later.",
+      "role": "Rescue specialist hero. Consults at U.A. for Shimoda Iku's field operations classes.",
+      "campaign_hook": "Appears in rescue training scenarios throughout Tier 1. The class spends time with her before the stakes are high. In Arc 5 and 6 she's one of the first responders when something goes badly wrong in Murano — and she arrives faster than anyone should.",
+      "dm_notes": {
+        "secret": "She was first on scene at an incident three years ago that the Hero Safety Commission officially classified as a structural accident. She knows it wasn't. She's been watching for the pattern to repeat.",
+        "relationship_to_pcs": "She genuinely likes this class and will tell them that, which is disarming. If a student needs someone to talk to who isn't going to immediately make it a learning moment, Haruno is that person.",
+        "arc_relevance": "Tier 1 training touchstone. Arc 5 and 6 first responder. Her early relationship with the class pays off when she's the one pulling them out of something in the endgame."
+      },
+      "stat_block": {
+        "level": 9, "HP": 70, "AC": 14,
+        "STR": 10, "DEX": 17, "CON": 13, "INT": 14, "WIS": 18, "CHA": 15, "TECH": 13
+      }
+    },
+    {
+      "id": "npc-journalist",
+      "name": "Mizushima Dayo",
+      "alias": null,
+      "category": "Civilian",
+      "quirk": "Perfect Recall",
+      "quirk_type": "Emitter",
+      "quirk_rarity": "Uncommon",
+      "quirk_summary": "Passive. Mizushima retains every sensory experience with perfect fidelity — every conversation, document, scene he's witnessed is available to him as if it just happened. No degradation. He can't process more than a normal human, but he never forgets any of it. He's been an investigative journalist for twelve years. He remembers everything.",
+      "appearance": "Early 40s. Rumpled, always carrying too many things. Reading glasses on top of his head that he forgets are there. Looks permanently slightly worried, which is accurate.",
+      "personality": "Methodical, cautious, and deeply certain he's sitting on the most important story of his career. Doesn't want to be a hero. Knows exactly what he's risking. Doing it anyway because someone has to and the people with actual power aren't.",
+      "role": "Investigative journalist, Murano Tribune. Currently investigating The Chain.",
+      "campaign_hook": "Shimoda Iku has been feeding him information for eight months. He doesn't know his source is a teacher at U.A. He is about to publish a story that names three Chain-connected businesses in the port district. When that happens, The Chain will notice. This is the inciting event of Arc 5.",
+      "dm_notes": {
+        "secret": "He has a second source he hasn't told anyone about — someone inside the Hero Safety Commission. He doesn't know their name. The dead drops stopped six weeks ago and he doesn't know if they're compromised or just scared.",
+        "relationship_to_pcs": "The class may encounter him as a journalist first — following up on an incident they were involved in. He is immediately recognisable as someone who knows more than he's saying.",
+        "what_happens_if_he_publishes": "The Chain sends someone after him within 48 hours. Whether the class knows about this in time depends entirely on how much they've been paying attention.",
+        "arc_relevance": "Arc 5 trigger. His story is the stone that starts the avalanche. Arc 6 — he's either the person who helps the class understand what they're fighting, or a liability depending on what's happened to him."
+      },
+      "stat_block": {
+        "level": 1, "HP": 8, "AC": 11,
+        "STR": 9, "DEX": 11, "CON": 10, "INT": 18, "WIS": 16, "CHA": 14, "TECH": 13
+      }
+    },
+    {
+      "id": "npc-cafe-owner",
+      "name": "Okabe Fumi",
+      "alias": null,
+      "category": "Civilian",
+      "quirk": null,
+      "quirk_type": null,
+      "quirk_rarity": "Quirkless",
+      "quirk_summary": "No quirk. Okabe grew up quirkless in an era when that was less of an obstacle than it used to be and more of one than people admit. She has a gift for paying attention to people and a sixty-year understanding of what Murano looked like before the hero agencies moved in.",
+      "appearance": "Early 60s. Short, broad-shouldered, white hair in a neat bun. Apron at all times. The café — The Anchor — looks like it was decorated in 1987 and has been left exactly right since then.",
+      "personality": "Warm without being soft. Remembers every regular's order and personal life without being asked. Has very strong opinions about heroes that she voices with cheerful certainty and no hostility. She's not anti-hero; she's been watching them long enough to have a nuanced view, which is rare.",
+      "role": "Owner, The Anchor café, Murano port district.",
+      "campaign_hook": "The Anchor is where port district locals go. The class ends up here after arc 3 fieldwork. Okabe has noticed the graffiti — the jagged Fracture symbol, the Chain's mark — appearing on walls she's been looking at for thirty years. She doesn't know it means anything. She's mentioned it to a journalist who came in three weeks ago.",
+      "dm_notes": {
+        "secret": "She knows Nakata Ren (the retired hero) and knows he's been approached by someone recently. She hasn't asked what about. She's worried in the low-level persistent way of someone who grew up in a district where you learn not to ask too many questions.",
+        "relationship_to_pcs": "Safe ground. The Anchor is where the class comes to decompress. Okabe feeds them, listens without prying, and says one true thing per visit that they'll think about later.",
+        "what_she_knows": "She can identify by description anyone who regularly moves through the port district. She doesn't know she's a valuable intelligence asset.",
+        "arc_relevance": "Arc 3 recurring space. Arc 5 — she noticed something before the class did and can confirm a detail they can't verify anywhere else."
+      },
+      "stat_block": {
+        "level": 1, "HP": 6, "AC": 10,
+        "STR": 10, "DEX": 10, "CON": 11, "INT": 14, "WIS": 18, "CHA": 16, "TECH": 8
+      }
+    },
+    {
+      "id": "npc-port-kid",
+      "name": "Ryuto Hana",
+      "alias": null,
+      "category": "Civilian",
+      "quirk": "Sparkle",
+      "quirk_type": "Emitter",
+      "quirk_rarity": "Common",
+      "quirk_summary": "Hana can emit decorative light bursts from her palms — controlled, colourful, visually beautiful. No heat, no force, no combat application. She has spent three years trying to find a way to make Sparkle useful in hero work. She's genuinely creative about it.",
+      "appearance": "14. Small, always in motion, light-up sneakers she's had for two years and refuses to replace. Round face, dark eyes, bandages on her knees from whatever she was practicing last week.",
+      "personality": "Enthusiastic in a way that is too genuine to be annoying. Has opinions about every Class 1-A student based on the entrance exam footage that leaked. Completely unintimidated by heroes. Gets quieter and more focused when something she cares about is actually in danger.",
+      "role": "Murano port district resident. Wants to be a hero. Knows Ren Suzuki's neighbourhood better than he does.",
+      "campaign_hook": "She's the first person in Murano to notice that three of the 'structural incidents' in the port district over the past year happened within two blocks of each other. She drew a map. She showed it to a hero she recognised — Ren Suzuki — during the agency visit arc. She thinks she's being helpful. She is.",
+      "dm_notes": {
+        "secret": "Her older brother does odd jobs for a local business that the class will later discover is Chain-connected. She doesn't know. The moment she finds out will be one of the hardest scenes in the campaign if the class has built a relationship with her.",
+        "relationship_to_pcs": "Specifically latches onto whichever PC showed her the most basic kindness first. Becomes a reliable local eyes-and-ears if the class treats her well.",
+        "arc_relevance": "Arc 3 first appearance. Her map is a meaningful piece of evidence. Arc 5 — her brother thread becomes a moral complication."
+      },
+      "stat_block": {
+        "level": 1, "HP": 6, "AC": 10,
+        "STR": 8, "DEX": 13, "CON": 10, "INT": 14, "WIS": 12, "CHA": 15, "TECH": 10
+      }
+    },
+    {
+      "id": "npc-commission",
+      "name": "Shirai Kenzo",
+      "alias": "Sentinel",
+      "category": "Commission Official",
+      "quirk": "Analysis",
+      "quirk_type": "Emitter",
+      "quirk_rarity": "Very Rare",
+      "quirk_summary": "Shirai perceives threat levels, structural weaknesses, and probability assessments as visible overlays when he focuses on a target. He can evaluate a person's quirk threat rating, a building's load-bearing weak points, or the tactical vulnerabilities in any formation. He cannot act on what he sees — he only perceives. He has never stopped perceiving.",
+      "appearance": "50s. Trim, silver-haired, immaculate suit. Always looks like he's just arrived from somewhere more important. Never visibly anxious. Analysis means he can see the outcome of most situations before they develop, which gives him an unnerving stillness.",
+      "personality": "Professionally warm in a way that is completely impenetrable. Every interaction is managed. He chooses what to share with the precision of someone who has spent decades in information management. Not a villain. Operating under a calculus the class won't understand until much later.",
+      "role": "Hero Safety Commission senior liaison to U.A. High. The person Natsuki Kaori's clearance requests go to.",
+      "campaign_hook": "He has been blocking Natsuki's Chain investigation requests for six months. He has been monitoring the Chain situation for longer than anyone knows. He is not protecting The Chain — he's protecting something else, and he believes that protecting it requires The Chain to remain in operation for a defined period. He has not shared this reasoning with anyone.",
+      "dm_notes": {
+        "secret": "He identified Mizushima Dayo's second source (the Commission insider) eight weeks ago. He hasn't acted on this. His Analysis quirk has already modelled six scenarios for how Arc 5 plays out and he's optimising for the one with the lowest total casualties, which requires him to let some things happen that he could stop.",
+        "relationship_to_pcs": "He knows who they are. He has assessed their threat ratings and quirk profiles. He will be unfailingly pleasant to them and give nothing away. If they come to him with evidence of The Chain, he will thank them, note the information, and do nothing visible with it.",
+        "warning_sign": "He's not a villain. He's something arguably more difficult: someone who is right about the end goal and wrong about the means.",
+        "arc_relevance": "Background threat from Arc 1 onwards. Becomes active plot in Arc 5 when the class realises their Chain evidence isn't going anywhere. Central to Arc 6."
+      },
+      "stat_block": {
+        "level": 8, "HP": 62, "AC": 14,
+        "STR": 11, "DEX": 13, "CON": 13, "INT": 20, "WIS": 18, "CHA": 17, "TECH": 18
+      }
+    },
+    {
+      "id": "npc-wireframe",
+      "name": "Makoto Tsurugi",
+      "alias": "Wireframe",
+      "category": "Pro Hero",
+      "quirk": "Blueprint",
+      "quirk_type": "Emitter",
+      "quirk_rarity": "Uncommon",
+      "quirk_summary": "Makoto can generate precise schematic overlays of any structure she observes — full load-bearing maps, utility line paths, access points, structural vulnerabilities — appearing as ghostly blue wireframes visible only to her. She can share them as physical documents by sketching with uncanny accuracy. She has used this for hero agency coordination for eleven years. Nobody considers her a combatant.",
+      "appearance": "30s. Practical short hair, always has a tablet or sketchpad. Moves through buildings like she already knows exactly where she's going, because she does.",
+      "personality": "Quietly competent and deeply accustomed to being overlooked. Not bitter — she long ago accepted that her value is structural rather than visible. Finds the students more interesting than she lets on, because she's been watching how they think.",
+      "role": "Operations coordinator at Tobari Jin's agency. Handles logistics, resource mapping, and intel structuring.",
+      "campaign_hook": "She noticed six months ago that the approved patrol route adjustments she's been filing for three Port District hero teams share a pattern — each one creates a window of coverage absence at the same three locations. Someone is adjusting the routes upstream and she doesn't know who. She hasn't reported it because she doesn't know who to trust.",
+      "dm_notes": {
+        "secret": "The patrol route irregularities are Chain-facilitated. Someone inside the Hero Safety Commission's operations division is feeding them window times. Makoto has the data that proves this. She hasn't shared it because the last person she tried to tell was Shirai Kenzo.",
+        "relationship_to_pcs": "If students intern at Tobari's agency and treat her like a person rather than support staff, she eventually shows them the patrol route data. This is a significant evidence thread for the Chain investigation.",
+        "arc_relevance": "Arc 3 (Agency Visit) — the contact who changes what the investigation looks like. Arc 5 — her data is a critical piece. She is in danger once The Chain realises she has it."
+      },
+      "stat_block": {
+        "level": 6, "HP": 44, "AC": 13,
+        "STR": 10, "DEX": 14, "CON": 12, "INT": 18, "WIS": 16, "CHA": 11, "TECH": 17
+      }
+    },
+    {
+      "id": "npc-gen-studies",
+      "name": "Adachi Sora",
+      "alias": null,
+      "category": "Student",
+      "quirk": "Muffle",
+      "quirk_type": "Emitter",
+      "quirk_rarity": "Uncommon",
+      "quirk_summary": "Adachi generates a field of acoustic suppression around a target area — up to a 20ft radius. Inside the field, no sound passes in or out. She can sustain this for up to 10 minutes without effort. At full concentration she can target it to a single person, making them completely silent without affecting anything around them. The Commission's entrance exam evaluation noted: 'Passive utility, low combat rating.' She disagrees.",
+      "appearance": "Same age as Class 1-A. Medium height, dark bob, always carrying something to read. Wears the General Studies uniform and has clearly thought about exactly how she wears it.",
+      "personality": "Not resentful, but precise about the distinction between being overlooked and being wrong. Confident in her own read of her quirk's potential in ways that the evaluation missed. Gets along well with people who listen and poorly with people who assume.",
+      "role": "U.A. General Studies student. Seeking Hero Course transfer. Would do well in any infiltration or stealth-dependent scenario.",
+      "campaign_hook": "Her Muffle quirk would have been extremely useful in at least two situations the class has already been in. She's been tracking their performances in joint exercises and has opinions. If the class ever needs to move silently — and they will — she is the asset they didn't know they had.",
+      "dm_notes": {
+        "secret": "She applied to the Hero Course first. She passed the written examination in the 97th percentile. The combat evaluation scored her Muffle as insufficient for direct combat. She passed General Studies. She has not stopped working toward a transfer and she is not going to.",
+        "relationship_to_pcs": "Natural ally for any student who values tactics over raw power. Could become a recurring collaborator in missions that require precision over force.",
+        "arc_relevance": "Optional recurring asset. The class meeting her in Tier 1 and building a relationship pays off significantly in Arc 5 when a mission requires her exact skillset."
+      },
+      "stat_block": {
+        "level": 3, "HP": 20, "AC": 12,
+        "STR": 9, "DEX": 14, "CON": 11, "INT": 16, "WIS": 15, "CHA": 13, "TECH": 12
+      }
+    },
+    {
+      "id": "npc-shiketsu",
+      "name": "Dojima Hiroto",
+      "alias": null,
+      "category": "Student",
+      "quirk": "Personal Gravity",
+      "quirk_type": "Transformation",
+      "quirk_rarity": "Rare",
+      "quirk_summary": "Dojima can reverse, nullify, or amplify his personal gravity field — affecting only himself. He can walk on walls and ceilings, stop himself mid-fall, and launch himself with extreme force by toggling gravity direction. At full reversal he's effectively flying. He cannot affect anything he isn't touching. He has mastered the transitions to a degree that makes his movement look effortless.",
+      "appearance": "Tall, lean build, Shiketsu High uniform worn with the hat slightly off-angle in a way that is precisely calculated. The kind of good-looking that he's aware of. Moves like he's already won whatever room he's in.",
+      "personality": "Confident to a degree that should be irritating but is slightly undercut by the fact that the confidence is earned. He's good and he knows it. What he doesn't know is that he's been trained to compete against a specific kind of opponent and Class 1-A is a different kind.",
+      "role": "Exchange student from Shiketsu High. At U.A. for one semester. Natural rival to multiple Class 1-A students.",
+      "campaign_hook": "He's at U.A. because Shiketsu's teachers are running an informal comparison between the two schools' Tier 1 cohorts. He's their best student. He has been given an unspecified brief to 'observe and evaluate.' His rival relationship with whichever 1-A student performs best will be one of the Sports Festival's defining subplots.",
+      "dm_notes": {
+        "specific_rivals": "Ren Suzuki (speed versus precision), Kinosho Kochimiko (strategic genius versus strategic genius, different schools of thought), Tazato Tadamaki (aerial combat).",
+        "secret": "He actually likes U.A. He's not going to admit this. The students here are stranger and more interesting than anyone told him they'd be.",
+        "arc_relevance": "Arc 2 (Dorm Life) introduction. Arc 4 (Sports Festival) as a wildcard competitor. Potentially returns in Tier 2 when the stakes get real — Shiketsu's teachers have noticed what's happening in Murano too.",
+        "growth_arc": "He came to evaluate. He ends up invested. That shift is the interesting thing about him."
+      },
+      "stat_block": {
+        "level": 3, "HP": 24, "AC": 14,
+        "STR": 13, "DEX": 16, "CON": 13, "INT": 14, "WIS": 13, "CHA": 14, "TECH": 11
+      }
+    },
+    {
+      "id": "npc-coerced",
+      "name": "Kurosawa Emi",
+      "alias": null,
+      "category": "Civilian",
+      "quirk": "Sonar",
+      "quirk_type": "Emitter",
+      "quirk_rarity": "Common",
+      "quirk_summary": "Passive echolocation — Kurosawa perceives spatial information through reflected sound waves she passively generates. She can 'see' in complete darkness, through thin walls, and at ranges up to 40ft. The Commission evaluated her quirk as insufficient for hero licensing. The Chain evaluated it differently: she can tell them when hero patrols are approaching and they never have to ask twice.",
+      "appearance": "Mid-20s. Works in a waterfront import office in the port district. Keeps her head down. Has a specific quality of stillness that comes from being afraid for a sustained period.",
+      "personality": "Careful with words. Listens to everything — the Sonar means she always knows who's in a room. Not a villain. Was approached, then threatened, and has been doing what she's told for eight months. She hates it and sees no exit.",
+      "role": "Unwilling Chain informant, port district. Monitors and reports hero patrol timing.",
+      "campaign_hook": "She's one of the coverage-window sources Makoto Tsurugi noticed in the patrol data. She's also the person Ryuto Hana's brother knows, without knowing what she does. If the class encounters her in the port district, she reads as frightened rather than threatening — because she is.",
+      "dm_notes": {
+        "secret": "She has been keeping records. Every instruction, every contact, every patrol window she's reported — written down and hidden. She's terrified to use it but she's also not burning it. If someone comes to her who she believes she can trust, she will hand them everything.",
+        "relationship_to_pcs": "The moral weight of this encounter matters. She's not a villain. The class has to decide what to do with someone who has been doing something wrong because the alternative was worse.",
+        "what_she_needs": "Protection. Witness status. Someone to actually take her records seriously. Tobari Jin can provide all three if the class brings her to him.",
+        "arc_relevance": "Arc 3 or 5 encounter. Her records are the piece of evidence that connects the patrol coverage to The Chain's operations. She is also in immediate danger if The Chain suspects she's been contacted by heroes."
+      },
+      "stat_block": {
+        "level": 1, "HP": 7, "AC": 11,
+        "STR": 9, "DEX": 12, "CON": 10, "INT": 13, "WIS": 15, "CHA": 11, "TECH": 10
+      }
+    },
+    {
+      "id": "npc-retired-hero",
+      "name": "Nakata Ren",
+      "alias": "Wallbreaker (retired)",
+      "category": "Civilian",
+      "quirk": "Impact",
+      "quirk_type": "Transformation",
+      "quirk_rarity": "Uncommon",
+      "quirk_summary": "Nakata's body absorbs kinetic force and redistributes it at a chosen point of contact. He absorbed blows that should have broken him for fifteen years and redirected them into every surface he touched. He still has the quirk. He doesn't use it. The gym bags in his training space are double-stuffed with sand.",
+      "appearance": "50s. Thick-built, salt-and-pepper beard, moved like something more dangerous than he appears for long enough that the movement is permanent. Runs his gym like someone who needs somewhere to be every day.",
+      "personality": "Understated. Gives advice in the form of questions he already knows the answer to, which is annoying when you're not ready for it and invaluable when you are. Was a different person before he retired. The gym is what he built to replace what he lost.",
+      "role": "Retired hero. Runs Nakata's Gym in the port district, one block from The Anchor.",
+      "campaign_hook": "He and Soryu Hatch — Undertow — knew each other before Hatch went to The Chain. Nakata knows things about the early days of The Chain's port district operation that nobody else knows. He was approached last month by someone he doesn't recognise, offering money for information about old hero patrol patterns. He said no. He didn't report it.",
+      "dm_notes": {
+        "secret": "He didn't report it because the person who approached him used a phrase that Soryu Hatch used to use. He thinks Hatch is trying to make contact with him without exposing himself. He doesn't know if he's right. He doesn't know what he'd do if he were.",
+        "relationship_to_pcs": "If the class trains at his gym during arc 3, he's a resource that gets deeper the more they invest. He doesn't give information for free — he gives it to people who've earned the right to hear it by being serious about something.",
+        "what_he_can_provide": "History on The Chain's early Murano operations. A read on Undertow that no current investigation file has. An adult who takes the class's concerns seriously without the authority to act on them — which is its own kind of help.",
+        "arc_relevance": "Arc 3 optional encounter. Arc 5 — his connection to Undertow becomes plot-critical. Arc 6 — he makes a decision about Hatch that the class has to live with."
+      },
+      "stat_block": {
+        "level": 8, "HP": 72, "AC": 15,
+        "STR": 18, "DEX": 13, "CON": 18, "INT": 14, "WIS": 16, "CHA": 12, "TECH": 10
+      }
+    }
+  ]
+}

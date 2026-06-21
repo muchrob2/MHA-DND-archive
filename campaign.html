@@ -106,6 +106,27 @@
   .bm-btn:hover { color: var(--gold); background: var(--gold-light); }
   .bm-btn.bookmarked { color: var(--gold); }
 
+  /* ── Character filter bars ── */
+  .filter-bar { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+  .filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .filter-search { flex: 1; min-width: 160px; background: var(--surface2); border: 1px solid var(--border-strong); border-radius: var(--radius); color: var(--text); font-size: 13px; padding: 6px 10px; outline: none; transition: border-color 0.15s; }
+  .filter-search:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+  .filter-count { font-size: 11px; color: var(--text-dim); white-space: nowrap; margin-left: auto; }
+  .filter-group { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+  .filter-group-label { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; margin-right: 2px; }
+  .filter-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 11px; font-size: 11px; font-weight: 500; cursor: pointer; color: var(--text-muted); transition: all 0.15s; line-height: 1.5; }
+  .filter-pill:hover { border-color: var(--primary); color: var(--text); }
+  .filter-pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .filter-no-results { text-align: center; padding: 32px 0; color: var(--text-dim); font-size: 13px; display: none; }
+
+  /* ── Delete / restore ── */
+  .card-delete-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; cursor: pointer; font-size: 14px; color: var(--text-dim); opacity: 0; transition: opacity 0.15s; padding: 2px 5px; border-radius: 4px; line-height: 1; }
+  .card-delete-btn:hover { background: var(--hero-red-light); color: var(--hero-red); opacity: 1 !important; }
+  .person-card:hover .card-delete-btn { opacity: 0.5; }
+  .deleted-banner { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 12px; font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 10px; }
+  .deleted-banner button { background: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 3px 10px; font-size: 11px; color: var(--text-muted); cursor: pointer; }
+  .deleted-banner button:hover { border-color: var(--primary); color: var(--primary-text); }
+
   /* ── Arc search ── */
   .arc-search-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
   .arc-search-input {
@@ -213,7 +234,7 @@
   .season-role { font-size: 11px; color: var(--text-dim); font-style: italic; margin-top: 5px; padding: 3px 8px; border-left: 2px solid var(--border); }
 
   /* ── Person cards ── */
-  .person-card { display: grid; grid-template-columns: 48px 1fr; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 10px; }
+  .person-card { position: relative; display: grid; grid-template-columns: 48px 1fr; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 10px; }
   .person-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
   .av-teacher { background: var(--gold-light); color: var(--gold-text); }
   .av-villain { background: var(--hero-red-light); color: var(--hero-red-text); }
@@ -347,7 +368,9 @@
     <a class="anchor-btn" href="#sec-world">World</a>
     <a class="anchor-btn" href="#sec-teachers">Teachers</a>
     <a class="anchor-btn" href="#sec-villains">Villains</a>
+    <a class="anchor-btn" href="#sec-class1a">Class 1-A</a>
     <a class="anchor-btn" href="#sec-class1b">Class 1-B</a>
+    <a class="anchor-btn" href="#sec-npcs">Supporting</a>
   </div>
 </nav>
 
@@ -455,6 +478,19 @@
   </section>
 
   <!-- Class 1-B -->
+  <!-- Class 1-A -->
+  <section class="campaign-section" id="sec-class1a" style="display:none">
+    <div class="section-header" onclick="toggleSection('sec-class1a')">
+      <div class="section-header-left">
+        <span class="section-title">Class 1-A</span>
+        <span class="section-meta">All 20 students — heroes in training</span>
+      </div>
+      <button class="bm-btn" id="bm-sec-class1a" onclick="event.stopPropagation();toggleBookmark('sec-class1a','Class 1-A','#sec-class1a')" title="Bookmark">🔖</button>
+      <span class="section-toggle" id="tog-sec-class1a">▶</span>
+    </div>
+    <div class="section-body" id="body-sec-class1a"></div>
+  </section>
+
   <section class="campaign-section" id="sec-class1b" style="display:none">
     <div class="section-header" onclick="toggleSection('sec-class1b')">
       <div class="section-header-left">
@@ -467,6 +503,21 @@
       </div>
     </div>
     <div class="section-body" id="body-sec-class1b"></div>
+  </section>
+
+  <!-- Supporting Characters -->
+  <section class="campaign-section" id="sec-npcs" style="display:none">
+    <div class="section-header" onclick="toggleSection('sec-npcs')">
+      <div class="section-header-left">
+        <span class="section-title">Supporting Characters</span>
+        <span class="section-meta">Pro heroes, civilians &amp; key NPCs</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button class="bm-btn" id="bm-sec-npcs" onclick="event.stopPropagation();toggleBookmark('sec-npcs','Supporting Characters','#sec-npcs')" title="Bookmark">🔖</button>
+        <span class="section-toggle" id="tog-sec-npcs">▶</span>
+      </div>
+    </div>
+    <div class="section-body" id="body-sec-npcs"></div>
   </section>
 </div>
 
@@ -592,6 +643,62 @@ function removeHighlights(root) {
   root.normalize();
 }
 
+/* ─── Character filter bars ──────────────────────────── */
+function buildFilterBar(bodyEl, groups, placeholder) {
+  const fId = 'fb' + uid();
+  const countId = 'fc' + uid();
+  const noResId = 'fn' + uid();
+
+  let html = `<div class="filter-bar" id="${fId}">
+    <div class="filter-row">
+      <input class="filter-search" placeholder="${placeholder||'Search by name or quirk…'}" oninput="applyCharFilters('${fId}','${countId}','${noResId}')">
+      <span class="filter-count" id="${countId}"></span>
+    </div>`;
+
+  for (const g of groups) {
+    html += `<div class="filter-group"><span class="filter-group-label">${escHtml(g.label)}:</span>`;
+    html += `<button class="filter-pill active" data-fbid="${fId}" data-group="${escHtml(g.key)}" data-value="" onclick="toggleCharFilter(this,'${fId}','${countId}','${noResId}')">All</button>`;
+    for (const opt of g.options) {
+      html += `<button class="filter-pill" data-fbid="${fId}" data-group="${escHtml(g.key)}" data-value="${escHtml(opt.value)}" onclick="toggleCharFilter(this,'${fId}','${countId}','${noResId}')">${escHtml(opt.label)}</button>`;
+    }
+    html += `</div>`;
+  }
+  html += `</div><div class="filter-no-results" id="${noResId}">No characters match the current filters.</div>`;
+  bodyEl.insertAdjacentHTML('afterbegin', html);
+  applyCharFilters(fId, countId, noResId);
+}
+
+function toggleCharFilter(btn, fId, countId, noResId) {
+  const bar = document.getElementById(fId);
+  bar.querySelectorAll(`[data-group="${btn.dataset.group}"][data-fbid="${fId}"]`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyCharFilters(fId, countId, noResId);
+}
+
+function applyCharFilters(fId, countId, noResId) {
+  const bar = document.getElementById(fId);
+  if (!bar) return;
+  const activeFilters = {};
+  bar.querySelectorAll('.filter-pill.active').forEach(b => {
+    if (b.dataset.value) activeFilters[b.dataset.group] = b.dataset.value;
+  });
+  const q = bar.querySelector('.filter-search')?.value.toLowerCase().trim() || '';
+  const cards = bar.parentElement.querySelectorAll('.person-card');
+  let shown = 0;
+  cards.forEach(card => {
+    const tags = ' ' + (card.dataset.tags || '') + ' ';
+    const matchFilters = Object.values(activeFilters).every(val => tags.includes(' ' + val + ' '));
+    const matchSearch = !q || (card.dataset.search || '').toLowerCase().includes(q);
+    const show = matchFilters && matchSearch;
+    card.style.display = show ? '' : 'none';
+    if (show) shown++;
+  });
+  const countEl = document.getElementById(countId);
+  if (countEl) countEl.textContent = shown + ' shown';
+  const noRes = document.getElementById(noResId);
+  if (noRes) noRes.style.display = shown === 0 ? 'block' : 'none';
+}
+
 /* ─── Bookmarks ──────────────────────────────────────── */
 const BM_KEY = 'mha-campaign-bookmarks';
 function loadBookmarks()   { try { return JSON.parse(localStorage.getItem(BM_KEY)||'[]'); } catch { return []; } }
@@ -653,7 +760,7 @@ function renderBmList() {
   const bms   = loadBookmarks();
   if (!bms.length) { empty.style.display = ''; list.innerHTML = ''; list.appendChild(empty); return; }
   empty.style.display = 'none';
-  const icons = { 'sec-arc':'📖','sec-tier1':'📋','sec-world':'🗺️','sec-teachers':'👨‍🏫','sec-villains':'💀','sec-class1b':'🎓' };
+  const icons = { 'sec-arc':'📖','sec-tier1':'📋','sec-world':'🗺️','sec-teachers':'👨‍🏫','sec-villains':'💀','sec-class1a':'🏫','sec-class1b':'🎓','sec-npcs':'🧩' };
   list.innerHTML = bms.map(b => `
     <div class="bm-item" onclick="jumpToBookmark('${escHtml(b.href)}','${escHtml(b.id)}')">
       <span class="bm-item-icon">${icons[b.id]||'📌'}</span>
@@ -669,7 +776,7 @@ function restoreBmState() {
 
 /* ─── Scroll spy ─────────────────────────────────────── */
 function initScrollSpy() {
-  const sections = ['arc','tier1','world','teachers','villains','class1b'];
+  const sections = ['arc','tier1','world','teachers','villains','class1a','class1b','npcs'];
   const anchors  = document.querySelectorAll('.anchor-btn');
   function update() {
     let active = null;
@@ -910,7 +1017,12 @@ function renderTeachers(data, el) {
   for (const t of (data.teachers||[])) {
     const dmn = t.dm_notes||{};
     const dId = 'td'+uid();
-    html += `<div class="person-card">
+    const qt = (t.quirk_type||'').toLowerCase();
+    const tags = [qt, 'teacher'].filter(Boolean).join(' ');
+    const searchText = [t.name, t.hero_name, t.quirk, t.role, t.personality].filter(Boolean).join(' ').toLowerCase();
+    const tId2 = 'teacher-'+t.name.replace(/\s+/g,'-').toLowerCase();
+    html += `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(tId2)}" data-char-name="${escHtml(t.name)}">
+      ${makeDeleteBtn(tId2, t.name, 'body-sec-teachers')}
       <div class="person-avatar av-teacher">${initials(t.name)}</div>
       <div>
         <div class="person-name">${escHtml(t.name)}</div>
@@ -931,17 +1043,27 @@ function renderTeachers(data, el) {
     </div>`;
   }
   el.innerHTML = html;
+  applyHiddenOnLoad(el);
+  buildFilterBar(el, [
+    { key:'qt', label:'Quirk Type', options:[{label:'Emitter',value:'emitter'},{label:'Transformation',value:'transformation'}] },
+  ], 'Search teachers…');
 }
 
 /* ─── VILLAIN card ───────────────────────────────────── */
-function renderVillainCard(v, accentColor) {
+function renderVillainCard(v, accentColor, factionId) {
   const STATS = ['STR','DEX','CON','INT','WIS'];
   const sb  = v.stat_block||{};
   const ssb = v.scaled_stat_block||{};
   const dmn = v.dm_notes||{};
   const dId = 'vd'+uid();
   const avStyle = accentColor?`background:${accentColor}33;color:${accentColor};`:'';
-  return `<div class="person-card" style="border-left:4px solid ${accentColor||'var(--v-border)'};background:var(--v-surface);border-color:var(--v-border);">
+  const qt = (v.quirk_type||'').toLowerCase();
+  const rarity = (v.quirk_rarity||'').toLowerCase().replace(/\s+/g,'-');
+  const tags = [qt, rarity, factionId||'', 'villain'].filter(Boolean).join(' ');
+  const searchText = [v.name, v.alias, v.quirk, v.role, v.personality].filter(Boolean).join(' ').toLowerCase();
+  const vCharId = 'villain-'+(v.name||'').replace(/\s+/g,'-').toLowerCase();
+  return `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(vCharId)}" data-char-name="${escHtml(v.name||'')}" style="border-left:4px solid ${accentColor||'var(--v-border)'};background:var(--v-surface);border-color:var(--v-border);">
+    ${makeDeleteBtn(vCharId, v.name||'', 'body-sec-villains')}
     <div class="person-avatar" style="${avStyle}">${initials(v.name)}</div>
     <div>
       <div class="person-name">${escHtml(v.name)}</div>
@@ -1001,17 +1123,79 @@ function renderVillains(data, el) {
       ${f.structure?`<div class="kv-row" style="border-color:var(--v-border);"><div class="kv-key">Structure</div><div class="kv-val" style="font-size:12px;">${escHtml(f.structure)}</div></div>`:''}
       ${f.public_awareness?`<div class="kv-row" style="border-color:var(--v-border);"><div class="kv-key">Awareness</div><div class="kv-val" style="font-size:12px;">${escHtml(f.public_awareness)}</div></div>`:''}
     </div>`;
+    const factionId = f.id || f.name.toLowerCase().replace(/\s+/g,'-');
     html += `<div class="sub-label" style="color:${col};margin-bottom:8px;">${escHtml(f.name)} — Members</div>`;
-    for (const v of (f.villains||[])) html += renderVillainCard(v, col);
+    for (const v of (f.villains||[])) html += renderVillainCard(v, col, factionId);
   };
+
+  // Solo villains — rendered first with distinct black styling
+  if (data.solo?.length) {
+    html += `<div style="margin-bottom:28px;padding:16px;background:#0a0a0a;border:1px solid #222;border-radius:var(--radius-lg);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #222;">
+        <span style="width:10px;height:10px;border-radius:50%;background:#111;border:1px solid #555;flex-shrink:0;display:inline-block;"></span>
+        <span style="font-size:17px;font-weight:700;color:#888;letter-spacing:0.04em;">UNAFFILIATED</span>
+        <span style="margin-left:auto;font-size:10px;font-weight:600;color:#444;letter-spacing:0.1em;text-transform:uppercase;">No faction · No classification</span>
+      </div>
+      <div style="font-size:12px;color:#444;line-height:1.6;margin-bottom:12px;">These individuals operate outside known faction structures. Commission records are incomplete, contradictory, or classified above standard access.</div>
+    </div>`;
+    for (const v of data.solo) {
+      const dId = 'vd'+uid();
+      const STATS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
+      const sb = v.stat_block||{};
+      const dmn = v.dm_notes||{};
+      const ca  = v.campaign_appearances||{};
+      const vCharId = 'villain-solo-'+(v.name||'').replace(/\s+/g,'-').toLowerCase();
+      const qt = (v.quirk_type||'').toLowerCase();
+      const rarity = (v.quirk_rarity||'').toLowerCase().replace(/\s+/g,'-');
+      const tags = [qt, rarity, 'solo', 'villain'].filter(Boolean).join(' ');
+      const searchText = [v.name, v.alias, v.quirk, v.role].filter(Boolean).join(' ').toLowerCase();
+      html += `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(vCharId)}" data-char-name="${escHtml(v.name||'')}" style="background:#0d0d0d;border-color:#1a1a1a;border-left:4px solid #111;">
+        ${makeDeleteBtn(vCharId, v.name||'', 'body-sec-villains')}
+        <div class="person-avatar" style="background:#111;color:#555;font-size:16px;">?</div>
+        <div>
+          <div class="person-name" style="color:#ccc;">${escHtml(v.name)}</div>
+          <div class="person-alias" style="color:#444;">${escHtml(v.role||'')}</div>
+          <div class="person-tags">
+            <span class="tag" style="background:#111;color:#555;border:1px solid #222;">${escHtml(v.quirk||'')}</span>
+            <span class="tag" style="background:#111;color:#444;border:1px solid #1a1a1a;">${escHtml(v.quirk_rarity||'')}</span>
+          </div>
+          <div class="person-section" style="border-top-color:#1a1a1a;"><div class="person-section-label" style="color:#444;">Quirk</div><div class="person-section-body" style="color:#777;">${escHtml(v.quirk_summary||'')}</div></div>
+          <div class="person-section" style="border-top-color:#1a1a1a;"><div class="person-section-label" style="color:#444;">Appearance</div><div class="person-section-body" style="color:#777;">${escHtml(v.appearance||'')}</div></div>
+          <div class="person-section" style="border-top-color:#1a1a1a;"><div class="person-section-label" style="color:#444;">Personality</div><div class="person-section-body" style="color:#777;">${escHtml(v.personality||'')}</div></div>
+          <div class="person-section" style="border-top-color:#1a1a1a;"><div class="person-section-label" style="color:#444;">Combat style</div><div class="person-section-body" style="color:#777;">${escHtml(v.combat_style||'')}</div></div>
+          <span class="collapse-btn" style="color:#555;" onclick="toggleCollapse('${dId}',this)">▶ Stat block, appearances &amp; DM notes</span>
+          <div class="collapsible" id="${dId}">
+            ${Object.keys(sb).length?`<div class="person-section" style="border-top-color:#1a1a1a;"><div class="person-section-label" style="color:#444;">Stat block — Lv ${sb.level??'?'} · HP ${sb.HP??'?'} · AC ${sb.AC??'?'}</div>
+              <div class="stat-grid">${STATS.map(k=>sb[k]!=null?`<div class="stat-chip" style="background:#111;border-color:#222;"><span class="stat-chip-label" style="color:#444;">${k}</span><span class="stat-chip-val" style="color:#888;">${sb[k]}</span></div>`:'').join('')}</div>
+              ${sb.special_abilities?.length?`<ul style="margin-top:10px;padding-left:16px;">${sb.special_abilities.map(a=>`<li style="font-size:12px;color:#555;margin-bottom:6px;line-height:1.5;">${escHtml(a)}</li>`).join('')}</ul>`:''}
+            </div>`:''}
+            ${Object.keys(ca).length?`<div class="person-section" style="border-top-color:#1a1a1a;"><div class="person-section-label" style="color:#444;">Campaign appearances</div>${Object.entries(ca).map(([k,v2])=>`<div style="margin-bottom:8px;"><div style="font-size:10px;font-weight:600;color:#444;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;">${escHtml(k.replace(/_/g,' '))}</div><div style="font-size:12px;color:#555;line-height:1.5;">${escHtml(v2)}</div></div>`).join('')}</div>`:''}
+            ${Object.keys(dmn).length?`<div class="dm-note" style="background:#0a0a0a;border-color:#1a1a1a;"><strong style="color:#666;">DM notes</strong><br>${Object.entries(dmn).map(([k,v2])=>`<strong style="color:#555;">${escHtml(k.replace(/_/g,' '))}:</strong> <span style="color:#555;">${escHtml(String(v2))}</span>`).join('<br>')}</div>`:''}
+          </div>
+        </div>
+      </div>`;
+    }
+  }
 
   if (data.factions?.length) {
     for (const f of data.factions) renderFaction(f);
   } else {
     const org = data.organisation||{};
-    renderFaction({ name:org.name||'The Chain', description:org.description, structure:org.structure, public_awareness:org.public_awareness, colour:'#E24B4A', villains:data.villains||[] });
+    renderFaction({ name:org.name||'The Chain', id:'the-chain', description:org.description, structure:org.structure, public_awareness:org.public_awareness, colour:'#E24B4A', villains:data.villains||[] });
   }
   el.innerHTML = html;
+  applyHiddenOnLoad(el);
+
+  // Build faction options from data
+  const factionOpts = (data.factions||[]).map(f => ({
+    label: f.name,
+    value: (f.id || f.name.toLowerCase().replace(/\s+/g,'-'))
+  }));
+  buildFilterBar(el, [
+    { key:'faction', label:'Faction', options: [{label:'Solo',value:'solo'}, ...factionOpts] },
+    { key:'qt',     label:'Quirk Type', options:[{label:'Emitter',value:'emitter'},{label:'Transformation',value:'transformation'}] },
+    { key:'rarity', label:'Rarity',    options:[{label:'Uncommon',value:'uncommon'},{label:'Rare',value:'rare'},{label:'Very Rare',value:'very-rare'},{label:'Legendary',value:'legendary'},{label:'Unique',value:'unique'}] },
+  ], 'Search villains…');
 }
 
 /* ─── TIER 1 detail ──────────────────────────────────── */
@@ -1102,6 +1286,92 @@ function renderTier1(data, el) {
 }
 
 /* ─── CLASS 1-B renderer ─────────────────────────────── */
+function renderClass1A(roster, charMap, el) {
+  const STAT_KEYS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
+  const rosterData = roster.students || [];
+  let html = `<div class="arc-desc" style="margin-bottom:12px;">${escHtml(roster.class||'')} · Homeroom: ${escHtml(roster.homeroom_teacher||'')}</div>`;
+
+  // PC badge + NPC split
+  const pcs  = rosterData.filter(s => s.is_pc);
+  const npcs = rosterData.filter(s => !s.is_pc);
+
+  function renderStudent(s) {
+    const ch  = charMap[s.file] || {};
+    const ab  = ch.ability_scores || {};
+    const qm  = ch.quirk_mechanics || {};
+    const abi = qm.abilities || [];
+    const app = ch.appearance || {};
+    const per = ch.personality || {};
+    const dmn = ch.dm_notes || {};
+    const pln = ch.player_notes || {};
+    const dId = 'c1a'+uid();
+    const isPC = !!s.is_pc;
+    const avBg = isPC ? 'background:var(--primary);color:#fff;' : 'background:var(--surface2);color:var(--text-muted);';
+    const pcBadge = isPC ? `<span class="tag tag-primary" style="font-size:10px;">PC</span>` : '';
+    const appText = [app.hair, app.build, app.other].filter(Boolean).join(' ');
+    const perText = [per.summary, per.quirk_of_character].filter(Boolean).join(' ');
+
+    // Filter data attributes
+    const qt = (ch.quirk_type || '').toLowerCase().replace('mutation','mutant');
+    const phys = (s.physiology || '').toLowerCase();
+    const roleStr = (s.role || '').toLowerCase();
+    let roleTag = 'other';
+    if (/striker|blaster|bruiser/.test(roleStr)) roleTag = 'striker';
+    else if (/tank/.test(roleStr)) roleTag = 'tank';
+    else if (/support/.test(roleStr)) roleTag = 'support';
+    else if (/control|crowd/.test(roleStr)) roleTag = 'control';
+    else if (/utility/.test(roleStr)) roleTag = 'utility';
+    else if (/scout|infiltrat/.test(roleStr)) roleTag = 'scout';
+    const rarity = (ch.quirk_rarity || '').toLowerCase().replace(/\s+/g,'-');
+    const pcTag = isPC ? 'pc' : 'npc';
+    const tags = [qt, phys, roleTag, rarity, pcTag, 'class-1a'].filter(Boolean).join(' ');
+    const searchText = [s.name, s.quirk, s.personality_tag, per.summary, per.quirk_of_character].filter(Boolean).join(' ').toLowerCase();
+
+    const c1aCharId = 'class1a-'+s.name.replace(/\s+/g,'-').toLowerCase();
+    return `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(c1aCharId)}" data-char-name="${escHtml(s.name)}">
+      ${makeDeleteBtn(c1aCharId, s.name, 'body-sec-class1a')}
+      <div class="person-avatar" style="${avBg}">${initials(s.name)}</div>
+      <div>
+        <div class="person-name">${escHtml(s.name)} ${pcBadge}</div>
+        <div class="person-alias">${escHtml(s.quirk||'')} · ${escHtml(s.physiology||'')} · ${escHtml(s.height||'')}</div>
+        <div class="person-tags">
+          <span class="tag tag-primary">${escHtml(s.quirk||'')}</span>
+          <span class="tag" style="background:var(--surface2);color:var(--text-muted);">${escHtml(s.role||'')}</span>
+          ${ch.quirk_rarity?`<span class="tag tag-gold">${escHtml(ch.quirk_rarity)}</span>`:''}
+        </div>
+        ${s.personality_tag?`<div style="font-size:12px;color:var(--text-dim);margin:4px 0 0;font-style:italic;">"${escHtml(s.personality_tag)}"</div>`:''}
+        ${qm.source||ch.quirk_summary?`<div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(ch.quirk_summary||qm.source||'')}</div></div>`:''}
+        ${appText?`<div class="person-section"><div class="person-section-label">Appearance</div><div class="person-section-body">${escHtml(appText)}</div></div>`:''}
+        ${perText?`<div class="person-section"><div class="person-section-label">Personality</div><div class="person-section-body">${escHtml(perText)}</div></div>`:''}
+        <span class="collapse-btn" onclick="toggleCollapse('${dId}',this)">▶ Stats, moves &amp; DM notes</span>
+        <div class="collapsible" id="${dId}">
+          ${per.in_class||per.in_combat?`<div class="person-section"><div class="person-section-label">Behaviour</div><div class="person-section-body">${[per.in_class&&`<strong>In class:</strong> ${escHtml(per.in_class)}`,per.in_combat&&`<strong>In combat:</strong> ${escHtml(per.in_combat)}`].filter(Boolean).join('<br>')}</div></div>`:''}
+          ${qm.weakness?`<div class="person-section"><div class="person-section-label">Quirk weakness</div><div class="person-section-body">${escHtml(qm.weakness)}</div></div>`:''}
+          ${abi.length?`<div class="person-section"><div class="person-section-label">Quirk abilities</div><ul style="margin:4px 0 0;padding-left:16px;">${abi.map(a=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:4px;"><strong>${escHtml(a.name)}</strong> <em>(${escHtml(a.type||'')})</em><br>${escHtml(a.description||'')}</li>`).join('')}</ul></div>`:''}
+          ${Object.keys(ab).length>1?`<div class="person-section"><div class="person-section-label">Stats — Lv ${ch.level||'?'} · HP ${ch.HP||'?'} · AC ${ch.AC||'?'}</div>
+            <div class="stat-grid">${STAT_KEYS.map(k=>ab[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${ab[k]}</span></div>`:'').join('')}</div>
+          </div>`:''}
+          ${isPC&&pln.role_summary?`<div class="person-section"><div class="person-section-label">Player notes</div><div class="person-section-body">${escHtml(pln.role_summary)}${pln.growth_hook?`<br><strong>Growth hook:</strong> ${escHtml(pln.growth_hook)}`:''}</div></div>`:''}
+          ${Object.keys(dmn).length?`<div class="dm-note"><strong>DM notes</strong><br>${Object.entries(dmn).map(([k,v])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(v))}`).join('<br>')}</div>`:''}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  pcs.forEach(s => { html += renderStudent(s); });
+  npcs.forEach(s => { html += renderStudent(s); });
+
+  el.innerHTML = html;
+  applyHiddenOnLoad(el);
+  buildFilterBar(el, [
+    { key:'pc',    label:'Status',     options:[{label:'PC',value:'pc'},{label:'NPC',value:'npc'}] },
+    { key:'qt',    label:'Quirk Type', options:[{label:'Emitter',value:'emitter'},{label:'Transformation',value:'transformation'},{label:'Mutant',value:'mutant'}] },
+    { key:'phys',  label:'Physiology', options:[{label:'Standard',value:'standard'},{label:'Heteromorph',value:'heteromorph'}] },
+    { key:'role',  label:'Role',       options:[{label:'Striker',value:'striker'},{label:'Tank',value:'tank'},{label:'Support',value:'support'},{label:'Control',value:'control'},{label:'Utility',value:'utility'},{label:'Scout',value:'scout'}] },
+    { key:'rarity',label:'Rarity',     options:[{label:'Common',value:'common'},{label:'Uncommon',value:'uncommon'},{label:'Rare',value:'rare'},{label:'Very Rare',value:'very-rare'}] },
+  ], 'Search Class 1-A…');
+}
+
 function renderClass1B(data, el) {
   const STAT_KEYS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
   let html = '';
@@ -1122,7 +1392,12 @@ function renderClass1B(data, el) {
   for (const s of (data.students||[])) {
     const sb = s.stat_block||{};
     const dId = uid();
-    html += `<div class="person-card">
+    const qt = (s.quirk_type||'').toLowerCase();
+    const tags = [qt, 'class-1b'].filter(Boolean).join(' ');
+    const searchText = [s.name, s.quirk, s.personality, s.rival_in_1a].filter(Boolean).join(' ').toLowerCase();
+    const b1bId = 'class1b-'+s.name.replace(/\s+/g,'-').toLowerCase();
+    html += `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(b1bId)}" data-char-name="${escHtml(s.name)}">
+      ${makeDeleteBtn(b1bId, s.name, 'body-sec-class1b')}
       <div class="person-avatar" style="background:var(--teal-light);color:var(--teal-text);">${initials(s.name)}</div>
       <div>
         <div class="person-name">${escHtml(s.name)}</div>
@@ -1154,6 +1429,159 @@ function renderClass1B(data, el) {
     </div>`;
   }
   el.innerHTML = html;
+  applyHiddenOnLoad(el);
+  buildFilterBar(el, [
+    { key:'qt', label:'Quirk Type', options:[{label:'Emitter',value:'emitter'},{label:'Transformation',value:'transformation'}] },
+  ], 'Search Class 1-B…');
+}
+
+/* ─── Delete / restore ───────────────────────────────── */
+const DEL_KEY = 'mha-deleted-chars';
+function getDeleted()      { try { return JSON.parse(localStorage.getItem(DEL_KEY)||'[]'); } catch { return []; } }
+function saveDeleted(ids)  { localStorage.setItem(DEL_KEY, JSON.stringify(ids)); }
+
+function deleteChar(id, cardEl, sectionBodyEl) {
+  const ids = getDeleted();
+  if (!ids.includes(id)) ids.push(id);
+  saveDeleted(ids);
+  cardEl.style.display = 'none';
+  refreshDeletedBanner(sectionBodyEl);
+  applyCharFiltersAll(sectionBodyEl);
+}
+
+function restoreChar(id, sectionBodyEl) {
+  const ids = getDeleted().filter(x => x !== id);
+  saveDeleted(ids);
+  const card = sectionBodyEl.querySelector(`[data-char-id="${CSS.escape(id)}"]`);
+  if (card) card.style.display = '';
+  refreshDeletedBanner(sectionBodyEl);
+  applyCharFiltersAll(sectionBodyEl);
+}
+
+function restoreAll(sectionBodyEl) {
+  const cards = sectionBodyEl.querySelectorAll('.person-card[data-char-id]');
+  const idsInSection = [...cards].map(c => c.dataset.charId);
+  const remaining = getDeleted().filter(id => !idsInSection.includes(id));
+  saveDeleted(remaining);
+  cards.forEach(c => { c.style.display = ''; });
+  refreshDeletedBanner(sectionBodyEl);
+  applyCharFiltersAll(sectionBodyEl);
+}
+
+function refreshDeletedBanner(sectionBodyEl) {
+  const bannerId = sectionBodyEl.id + '-del-banner';
+  let banner = document.getElementById(bannerId);
+  const deleted = getDeleted();
+  const cards = sectionBodyEl.querySelectorAll('.person-card[data-char-id]');
+  const hiddenInSection = [...cards].filter(c => deleted.includes(c.dataset.charId));
+  if (hiddenInSection.length === 0) {
+    if (banner) banner.remove();
+    return;
+  }
+  const names = hiddenInSection.map(c => c.dataset.charName || c.dataset.charId).join(', ');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = bannerId;
+    banner.className = 'deleted-banner';
+    sectionBodyEl.insertAdjacentElement('afterbegin', banner);
+  }
+  const elId = escHtml(sectionBodyEl.id);
+  banner.innerHTML = `<span>🗑 ${hiddenInSection.length} hidden: <em>${escHtml(names)}</em></span>
+    <button onclick="restoreAll(document.getElementById('${elId}'))">Restore all</button>`;
+}
+
+function applyCharFiltersAll(sectionBodyEl) {
+  const bar = sectionBodyEl.querySelector('.filter-bar');
+  if (!bar) return;
+  const fId = bar.id;
+  const countEl = sectionBodyEl.querySelector('.filter-count');
+  const noResEl = sectionBodyEl.querySelector('.filter-no-results');
+  if (fId && countEl) applyCharFilters(fId, countEl.id, noResEl?.id || '');
+}
+
+function applyHiddenOnLoad(sectionBodyEl) {
+  const deleted = getDeleted();
+  if (!deleted.length) return;
+  sectionBodyEl.querySelectorAll('.person-card[data-char-id]').forEach(c => {
+    if (deleted.includes(c.dataset.charId)) c.style.display = 'none';
+  });
+  refreshDeletedBanner(sectionBodyEl);
+}
+
+function makeDeleteBtn(id, name, sectionBodyId) {
+  return `<button class="card-delete-btn" title="Hide character" onclick="event.stopPropagation();deleteChar('${escHtml(id)}',this.closest('.person-card'),document.getElementById('${escHtml(sectionBodyId)}'))">✕</button>`;
+}
+
+/* ─── NPC / Supporting Characters renderer ───────────── */
+function renderNPCs(data, el) {
+  const STAT_KEYS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
+  const CAT_COLORS = {
+    'Pro Hero':          'var(--primary)',
+    'Commission Official':'var(--amber)',
+    'Student':           'var(--teal)',
+    'Civilian':          'var(--green)',
+  };
+  const CAT_TAG = {
+    'Pro Hero':          'tag-primary',
+    'Commission Official':'tag-amber',
+    'Student':           'tag-teal',
+    'Civilian':          'tag-green',
+  };
+
+  let html = '';
+  const categories = [...new Set((data.characters||[]).map(c => c.category))];
+
+  for (const cat of categories) {
+    const chars = (data.characters||[]).filter(c => c.category === cat);
+    html += `<div class="sub-label">${escHtml(cat)} (${chars.length})</div>`;
+    for (const c of chars) {
+      const dId = 'npc' + uid();
+      const sb  = c.stat_block || {};
+      const dmn = c.dm_notes || {};
+      const qt  = (c.quirk_type || '').toLowerCase();
+      const rarity = (c.quirk_rarity || '').toLowerCase().replace(/\s+/g,'-');
+      const catTag = cat.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+      const tags = [qt, rarity, catTag, 'npc'].filter(Boolean).join(' ');
+      const searchText = [c.name, c.alias, c.quirk, c.role, c.category, c.campaign_hook].filter(Boolean).join(' ').toLowerCase();
+      const accentColor = CAT_COLORS[cat] || 'var(--primary)';
+      const tagClass = CAT_TAG[cat] || 'tag-primary';
+      const avStyle = `background:${accentColor}22;color:${accentColor};`;
+
+      html += `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(c.id)}" data-char-name="${escHtml(c.name)}">
+        ${makeDeleteBtn(c.id, c.name, 'body-sec-npcs')}
+        <div class="person-avatar" style="${avStyle}">${initials(c.name)}</div>
+        <div>
+          <div class="person-name">${escHtml(c.name)}${c.alias ? ` <span style="font-weight:400;color:var(--text-dim);font-size:13px;">/ ${escHtml(c.alias)}</span>` : ''}</div>
+          <div class="person-alias">${escHtml(c.role || '')}</div>
+          <div class="person-tags">
+            <span class="tag ${tagClass}">${escHtml(c.category)}</span>
+            ${c.quirk ? `<span class="tag tag-gold">${escHtml(c.quirk)}</span>` : '<span class="tag" style="background:var(--surface2);color:var(--text-dim);">No quirk</span>'}
+            ${c.quirk_type ? `<span class="tag" style="background:var(--surface2);color:var(--text-muted);">${escHtml(c.quirk_type)}</span>` : ''}
+            ${c.quirk_rarity ? `<span class="tag" style="background:var(--surface2);color:var(--text-dim);font-size:10px;">${escHtml(c.quirk_rarity)}</span>` : ''}
+          </div>
+          ${c.quirk_summary ? `<div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(c.quirk_summary)}</div></div>` : ''}
+          <div class="person-section"><div class="person-section-label">Appearance</div><div class="person-section-body">${escHtml(c.appearance || '')}</div></div>
+          <div class="person-section"><div class="person-section-label">Personality</div><div class="person-section-body">${escHtml(c.personality || '')}</div></div>
+          <div class="person-section"><div class="person-section-label">Campaign hook</div><div class="person-section-body" style="color:var(--primary-text);background:var(--primary-light);border-radius:var(--radius);padding:6px 8px;">${escHtml(c.campaign_hook || '')}</div></div>
+          <span class="collapse-btn" onclick="toggleCollapse('${dId}',this)">▶ DM notes &amp; stats</span>
+          <div class="collapsible" id="${dId}">
+            ${Object.keys(dmn).length ? `<div class="dm-note"><strong>DM notes</strong><br>${Object.entries(dmn).map(([k,v]) => `<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(v))}`).join('<br>')}</div>` : ''}
+            ${Object.keys(sb).length ? `<div class="person-section"><div class="person-section-label">Stat block — Lv ${sb.level ?? '?'} · HP ${sb.HP ?? '?'} · AC ${sb.AC ?? '?'}</div>
+              <div class="stat-grid">${STAT_KEYS.map(k => sb[k] != null ? `<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${sb[k]}</span></div>` : '').join('')}</div>
+            </div>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }
+  }
+
+  el.innerHTML = html;
+  applyHiddenOnLoad(el);
+  buildFilterBar(el, [
+    { key:'cat',    label:'Type',       options:[{label:'Pro Hero',value:'pro-hero'},{label:'Civilian',value:'civilian'},{label:'Student',value:'student'},{label:'Commission',value:'commission-official'}] },
+    { key:'qt',     label:'Quirk Type', options:[{label:'Emitter',value:'emitter'},{label:'Transformation',value:'transformation'},{label:'No Quirk',value:''}] },
+    { key:'rarity', label:'Rarity',     options:[{label:'Common',value:'common'},{label:'Uncommon',value:'uncommon'},{label:'Rare',value:'rare'},{label:'Very Rare',value:'very-rare'}] },
+  ], 'Search characters…');
 }
 
 /* ─── Init ───────────────────────────────────────────── */
@@ -1164,6 +1592,7 @@ const FILES = [
   { key:'teachers', url:'CAMPAIGN/teachers.json' },
   { key:'villains', url:'CAMPAIGN/villains.json' },
   { key:'class1b',  url:'CAMPAIGN/class1b.json' },
+  { key:'npcs',     url:'CAMPAIGN/npcs.json' },
 ];
 const RENDERERS = {
   arc:      (d,el) => renderArc(d,el),
@@ -1172,14 +1601,40 @@ const RENDERERS = {
   teachers: (d,el) => renderTeachers(d,el),
   villains: (d,el) => renderVillains(d,el),
   class1b:  (d,el) => renderClass1B(d,el),
+  npcs:     (d,el) => renderNPCs(d,el),
 };
 
+async function loadClass1A() {
+  const roster = await fetch('CLASS-1A/roster.json',{cache:'no-cache'}).then(r=>r.json());
+  const charMap = {};
+  await Promise.allSettled((roster.students||[]).filter(s=>s.file).map(s =>
+    fetch('CLASS-1A/'+s.file,{cache:'no-cache'}).then(r=>r.json()).then(d=>{ charMap[s.file]=d; }).catch(()=>{})
+  ));
+  return {roster, charMap};
+}
+
 async function init() {
-  const results = await Promise.allSettled(
-    FILES.map(f => fetch(f.url,{cache:'no-cache'}).then(r=>r.json()).then(d=>({key:f.key,data:d})))
-  );
+  const [fileResults, class1aResult] = await Promise.all([
+    Promise.allSettled(FILES.map(f => fetch(f.url,{cache:'no-cache'}).then(r=>r.json()).then(d=>({key:f.key,data:d})))),
+    loadClass1A().catch(e=>({error:e}))
+  ]);
   document.getElementById('loading').style.display = 'none';
-  for (const r of results) {
+
+  // Render class 1-A
+  const c1aSec  = document.getElementById('sec-class1a');
+  const c1aBody = document.getElementById('body-sec-class1a');
+  if (c1aSec && c1aBody && class1aResult && !class1aResult.error) {
+    try {
+      renderClass1A(class1aResult.roster, class1aResult.charMap, c1aBody);
+      c1aSec.style.display = '';
+    } catch(e) {
+      console.error('Render error class1a', e);
+      c1aBody.innerHTML = `<div style="color:var(--hero-red);font-size:12px;padding:8px;">Failed to render Class 1-A: ${e.message}</div>`;
+      c1aSec.style.display = '';
+    }
+  }
+
+  for (const r of fileResults) {
     if (r.status === 'rejected') continue;
     const {key,data} = r.value;
     const sec  = document.getElementById('sec-'+key);

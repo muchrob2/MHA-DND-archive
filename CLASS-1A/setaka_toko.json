@@ -59,9 +59,9 @@
     ]
   },
   "dm_notes": {
-    "combat_role": "Durable melee fighter with limited-use ranged burst capability. He's the class's tank with the ability to suddenly become a sniper for a couple of rounds. Broadside is his set-piece move — save it for moments where knocking four things prone at once will turn a fight.",
+    "combat_role": "Durable melee fighter with switchable ranged burst capability. He's the class's tank with the ability to trade range for damage and battlefield control by stepping up his ball size. Massive/Overload Shot is his set-piece move — save it for moments where knocking everything nearby prone at once will turn a fight.",
     "social_role": "Moral north star. When the class is considering doing something questionable, Setaka doesn't lecture — he just says what he would do, clearly, and moves on. The contrast is felt.",
     "growth_arc": "His honour code will be genuinely tested. A situation where following it perfectly causes real harm, or where breaking it slightly could prevent something bad. He will make a decision. He will live with it.",
-    "weakness_to_exploit": "Limited cannon shots means extended fights deplete his ranged options. DEX is average — he's not particularly mobile. After Broadside, he's vulnerable and slower."
+    "weakness_to_exploit": "Repeated use of Large or Massive balls risks a CON save failure that costs him a level of exhaustion and locks out his heaviest options for several rounds. DEX is average — he's not particularly mobile. Forcing him to keep escalating ball size in a long fight is the way to break him."
   }
 }

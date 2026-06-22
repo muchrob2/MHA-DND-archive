@@ -850,36 +850,8 @@ let activeTab = 'personality';
 let rels = {};
 let fsSaveTimer = null;
 let currentView = 'character';
-let sectionFilter = 'all';
 
-const SECTION_LABELS = { 'class-1a':'Class 1-A','class-1b':'Class 1-B','teachers':'Teachers','villains':'Villains','supporting':'Supporting' };
-const SECTION_ORDER  = ['class-1a','class-1b','teachers','villains','supporting'];
-
-function setSectionFilter(val) { sectionFilter = val; renderSidebar(); }
-
-function normalizeChar(src, section, id) {
-  const sb = src.stat_block || {};
-  const KEYS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
-  const sc = {}; const mo = {};
-  for (const k of KEYS) { sc[k] = sb[k]||10; mo[k] = Math.floor((sc[k]-10)/2); }
-  const personality = typeof src.personality === 'string' ? { summary: src.personality } : (src.personality || {});
-  const appearance  = typeof src.appearance  === 'string' ? { build: src.appearance  } : (src.appearance  || {});
-  const rawDm = src.dm_notes || {};
-  const dm_notes = typeof rawDm === 'string' ? { combat_role: rawDm } : Object.assign({}, rawDm);
-  if (!dm_notes.combat_role && src.combat_style) dm_notes.combat_role = src.combat_style;
-  if (!dm_notes.social_role)  dm_notes.social_role = src.role || '';
-  const quirk_mechanics = { source: src.quirk_mechanics_ref||'', weakness:'', abilities:[], _summary: src.quirk_summary||'' };
-  return {
-    name: src.name, quirk: src.quirk||'', quirk_type: src.quirk_type||'', quirk_rarity: src.quirk_rarity||'',
-    quirk_save_DC: sb.quirk_save_DC||'—', quirk_ability: '', quirk_mechanics,
-    is_pc: false, _file: null, _roster_id: id, _section: section,
-    _alias: src.alias||null, _faction: src._faction||null,
-    personality, appearance, dm_notes, ability_scores: sc, modifiers: mo,
-    level: sb.level||1, HP: sb.HP||10, AC: sb.AC||10,
-    physiology: src.physiology||src.category||'', height: src.height||'', gender: src.gender||'',
-    suggested_class: src.role||'',
-  };
-}
+const SECTION_ORDER  = ['class-1a'];
 
 /* ── Save status ──────────────────────────────────────── */
 function setSaveStatus(state, text) {
@@ -999,35 +971,15 @@ function onClassChange(value) { selected.suggested_class = value; scheduleCharSa
 /* ── Sidebar ──────────────────────────────────────────── */
 function initials(name) { return name.split(' ').slice(0,2).map(w=>w[0]).join(''); }
 
-const AV_CLASS = { 'class-1a': c => c.is_pc ? 'av-pc' : 'av-npc', 'class-1b': ()=>'av-1b', teachers: ()=>'av-teacher', villains: ()=>'av-villain', supporting: ()=>'av-supporting' };
+const AV_CLASS = { 'class-1a': c => c.is_pc ? 'av-pc' : 'av-npc' };
 
 function renderSidebar() {
-  const visible = sectionFilter === 'all' ? CHARACTERS : CHARACTERS.filter(c => c._section === sectionFilter);
-  const counts = {};
-  for (const c of CHARACTERS) counts[c._section] = (counts[c._section]||0)+1;
+  const visible = CHARACTERS;
 
-  const pills = ['all', ...SECTION_ORDER].map(s => {
-    const active = sectionFilter === s ? ' sf-active' : '';
-    const label = s === 'all' ? `All (${CHARACTERS.length})` : `${SECTION_LABELS[s]||s} (${counts[s]||0})`;
-    return `<button class="sf-pill${active}" onclick="setSectionFilter('${s}')">${label}</button>`;
-  }).join('');
-
-  const grouped = {};
-  for (const c of visible) { if (!grouped[c._section]) grouped[c._section]=[]; grouped[c._section].push(c); }
-
-  let html = `<div id="section-filters">${pills}</div>`;
-  for (const sec of SECTION_ORDER) {
-    const chars = grouped[sec];
-    if (!chars?.length) continue;
-    if (sec === 'class-1a') {
-      const pcs = chars.filter(c => c.is_pc), npcs = chars.filter(c => !c.is_pc);
-      if (pcs.length)  { html += '<div class="section-label">Player Characters</div>'; for (const c of pcs)  html += charItem(c); }
-      if (npcs.length) { html += '<div class="section-label">Class 1-A</div>';          for (const c of npcs) html += charItem(c); }
-    } else {
-      html += `<div class="section-label">${SECTION_LABELS[sec]}</div>`;
-      for (const c of chars) html += charItem(c);
-    }
-  }
+  let html = '';
+  const pcs = visible.filter(c => c.is_pc), npcs = visible.filter(c => !c.is_pc);
+  if (pcs.length)  { html += '<div class="section-label">Player Characters</div>'; for (const c of pcs)  html += charItem(c); }
+  if (npcs.length) { html += '<div class="section-label">Class 1-A</div>';          for (const c of npcs) html += charItem(c); }
   document.getElementById('char-list').innerHTML = html;
 
   const sel = document.getElementById('enc-roster-select');
@@ -1901,13 +1853,9 @@ function encAddEnemy() {
 
 /* ── Init ──────────────────────────────────────────────── */
 (async () => {
-  const [rosterRes, enemiesRes, class1bRes, teachersRes, villainsRes, npcsRes] = await Promise.all([
+  const [rosterRes, enemiesRes] = await Promise.all([
     fetch('roster.json'),
     fetch('../CAMPAIGN/enemies.json', {cache:'no-cache'}),
-    fetch('../CAMPAIGN/class1b.json', {cache:'no-cache'}),
-    fetch('../CAMPAIGN/teachers.json', {cache:'no-cache'}),
-    fetch('../CAMPAIGN/villains.json', {cache:'no-cache'}),
-    fetch('../CAMPAIGN/npcs.json', {cache:'no-cache'}),
   ]);
   const roster = await rosterRes.json();
   try { const ed = await enemiesRes.json(); ENEMIES = ed.enemies || []; } catch {}
@@ -1936,36 +1884,6 @@ function encAddEnemy() {
     CHARACTERS = charResults.filter(Boolean);
     setSaveStatus('saved', 'Firestore unreachable — loaded local');
   }
-
-  // Append campaign characters
-  let nextId = 1000;
-  try {
-    const d = await class1bRes.json();
-    for (const s of (d.students || [])) CHARACTERS.push(normalizeChar(s, 'class-1b', nextId++));
-  } catch {}
-  try {
-    const d = await teachersRes.json();
-    for (const t of (d.teachers || [])) CHARACTERS.push(normalizeChar(t, 'teachers', nextId++));
-  } catch {}
-  try {
-    const d = await villainsRes.json();
-    for (const v of (d.solo || []))    CHARACTERS.push(normalizeChar(v, 'villains', nextId++));
-    for (const v of (d.villains || [])) CHARACTERS.push(normalizeChar(Object.assign({}, v, {_faction:'standalone'}), 'villains', nextId++));
-    for (const f of (d.factions || [])) {
-      for (const v of (f.villains || [])) CHARACTERS.push(normalizeChar(Object.assign({}, v, {_faction: f.name}), 'villains', nextId++));
-    }
-    // Deduplicate villains by name (top-level villains array duplicates faction members)
-    const seen = new Set();
-    CHARACTERS = CHARACTERS.filter(c => {
-      if (c._section !== 'villains') return true;
-      if (seen.has(c.name)) return false;
-      seen.add(c.name); return true;
-    });
-  } catch {}
-  try {
-    const d = await npcsRes.json();
-    for (const n of (d.characters || [])) CHARACTERS.push(normalizeChar(n, 'supporting', nextId++));
-  } catch {}
 
   CHARACTERS.sort((a, b) => {
     const si = SECTION_ORDER.indexOf(a._section) - SECTION_ORDER.indexOf(b._section);

@@ -357,6 +357,22 @@
     #bm-drawer { width: 210px; }
   }
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAX4qLRUWXFrA1sX-XC2KIYuGyc1aD8oX8",
+    authDomain: "mha-dnd-archive.firebaseapp.com",
+    projectId: "mha-dnd-archive",
+    storageBucket: "mha-dnd-archive.firebasestorage.app",
+    messagingSenderId: "1095293073071",
+    appId: "1:1095293073071:web:bba6898534bd713cec865a"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const fbAuthReady = firebase.auth().signInAnonymously().then(() => firebase.auth().currentUser);
+</script>
 </head>
 <body>
 
@@ -701,8 +717,34 @@ function applyCharFilters(fId, countId, noResId) {
 
 /* ─── Bookmarks ──────────────────────────────────────── */
 const BM_KEY = 'mha-campaign-bookmarks';
-function loadBookmarks()   { try { return JSON.parse(localStorage.getItem(BM_KEY)||'[]'); } catch { return []; } }
-function saveBookmarks(bms) { localStorage.setItem(BM_KEY, JSON.stringify(bms)); }
+const DEL_KEY = 'mha-deleted-chars';
+const FS_CAMPAIGN_STATE = db.collection('mha-dnd').doc('campaign-state');
+let _bmCache = null;
+let _delCache = null;
+let _campaignStateSaveTimer = null;
+
+async function loadCampaignState() {
+  try {
+    await fbAuthReady;
+    const snap = await FS_CAMPAIGN_STATE.get();
+    const data = snap.exists ? snap.data() : {};
+    _bmCache = data.bookmarks || [];
+    _delCache = data.deletedChars || [];
+  } catch {
+    try { _bmCache = JSON.parse(localStorage.getItem(BM_KEY)||'[]'); } catch { _bmCache = []; }
+    try { _delCache = JSON.parse(localStorage.getItem(DEL_KEY)||'[]'); } catch { _delCache = []; }
+  }
+}
+
+function scheduleCampaignStateSave() {
+  clearTimeout(_campaignStateSaveTimer);
+  _campaignStateSaveTimer = setTimeout(async () => {
+    try { await fbAuthReady; await FS_CAMPAIGN_STATE.set({ bookmarks: _bmCache, deletedChars: _delCache }, { merge: true }); } catch {}
+  }, 600);
+}
+
+function loadBookmarks()   { return _bmCache || []; }
+function saveBookmarks(bms) { _bmCache = bms; scheduleCampaignStateSave(); }
 
 function toggleBmDrawer() {
   const d = document.getElementById('bm-drawer');
@@ -1436,9 +1478,8 @@ function renderClass1B(data, el) {
 }
 
 /* ─── Delete / restore ───────────────────────────────── */
-const DEL_KEY = 'mha-deleted-chars';
-function getDeleted()      { try { return JSON.parse(localStorage.getItem(DEL_KEY)||'[]'); } catch { return []; } }
-function saveDeleted(ids)  { localStorage.setItem(DEL_KEY, JSON.stringify(ids)); }
+function getDeleted()      { return _delCache || []; }
+function saveDeleted(ids)  { _delCache = ids; scheduleCampaignStateSave(); }
 
 function deleteChar(id, cardEl, sectionBodyEl) {
   const ids = getDeleted();
@@ -1616,7 +1657,8 @@ async function loadClass1A() {
 async function init() {
   const [fileResults, class1aResult] = await Promise.all([
     Promise.allSettled(FILES.map(f => fetch(f.url,{cache:'no-cache'}).then(r=>r.json()).then(d=>({key:f.key,data:d})))),
-    loadClass1A().catch(e=>({error:e}))
+    loadClass1A().catch(e=>({error:e})),
+    loadCampaignState()
   ]);
   document.getElementById('loading').style.display = 'none';
 

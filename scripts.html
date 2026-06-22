@@ -144,6 +144,22 @@
     .nav-title { font-size: 12px; }
   }
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAX4qLRUWXFrA1sX-XC2KIYuGyc1aD8oX8",
+    authDomain: "mha-dnd-archive.firebaseapp.com",
+    projectId: "mha-dnd-archive",
+    storageBucket: "mha-dnd-archive.firebasestorage.app",
+    messagingSenderId: "1095293073071",
+    appId: "1:1095293073071:web:bba6898534bd713cec865a"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const fbAuthReady = firebase.auth().signInAnonymously().then(() => firebase.auth().currentUser);
+</script>
 </head>
 <body>
 
@@ -192,10 +208,14 @@ function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&
 function uid() { return 'sc_'+Math.random().toString(36).slice(2,8); }
 
 /* ── Load ────────────────────────────────────────────── */
+const FS_SCRIPTS_DOC = db.collection('mha-dnd').doc('dm-scripts');
+
 async function init() {
   try {
-    const res = await fetch('/api/campaign/scripts', {cache:'no-cache'});
-    data = await res.json();
+    await fbAuthReady;
+    const snap = await FS_SCRIPTS_DOC.get();
+    data = snap.exists ? snap.data() : null;
+    if (!data || !data.categories) throw new Error('empty');
   } catch {
     const res = await fetch('CAMPAIGN/scripts.json', {cache:'no-cache'});
     data = await res.json();
@@ -211,12 +231,8 @@ async function saveAll() {
   if (editMode) flushEdits();
   const notice = document.getElementById('saved-notice');
   try {
-    const res = await fetch('/api/campaign/scripts', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Save failed');
+    await fbAuthReady;
+    await FS_SCRIPTS_DOC.set(data);
     notice.textContent = 'Saved ✓';
     notice.classList.add('show');
     setTimeout(() => notice.classList.remove('show'), 2000);

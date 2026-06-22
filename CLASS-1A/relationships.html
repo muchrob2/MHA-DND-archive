@@ -1409,8 +1409,22 @@ let attackLog = [];
 
 function encId() { return ++_encId; }
 
-function encSave() { localStorage.setItem('mha_encounter_v1', JSON.stringify(encounter)); }
-function encLoad() {
+const FS_ENCOUNTER_DOC = db.collection('mha-dnd').doc('encounter-state');
+let encSaveTimer = null;
+
+function encSave() {
+  localStorage.setItem('mha_encounter_v1', JSON.stringify(encounter));
+  clearTimeout(encSaveTimer);
+  encSaveTimer = setTimeout(async () => {
+    try { await fbAuthReady; await FS_ENCOUNTER_DOC.set(encounter); } catch {}
+  }, 600);
+}
+async function encLoad() {
+  try {
+    await fbAuthReady;
+    const snap = await FS_ENCOUNTER_DOC.get();
+    if (snap.exists) { encounter = snap.data(); return; }
+  } catch {}
   try {
     const raw = localStorage.getItem('mha_encounter_v1');
     if (raw) encounter = JSON.parse(raw);
@@ -1892,7 +1906,7 @@ function encAddEnemy() {
     return a._roster_id - b._roster_id;
   });
   selected = CHARACTERS[0];
-  encLoad();
+  await encLoad();
   renderSidebar();
   buildEnemySelect();
   renderProfile();

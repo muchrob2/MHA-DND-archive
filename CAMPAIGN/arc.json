@@ -9,8 +9,8 @@
       "levels": "1–3",
       "title": "Welcome to U.A.",
       "session_estimate": "5–6 sessions",
-      "overall_tone": "Almost entirely fun. This is orientation. The class is meeting each other, figuring out who they are, discovering the school is hard and also ridiculous. Three villain factions exist in Murano — none of them are talking to the class yet.",
-      "dm_at_a_glance": "Your job in Tier 1: establish the class as a cohort, not a score bracket. Run the danger lightly. The three faction seeds (Chain, Null Signal, Fracture) are background detail — findable if players look, not announced to anyone. If players chase a thread, give them one more piece. If they don't, those seeds are there for retrospective recognition in Tier 2.",
+      "overall_tone": "Almost entirely fun. This is orientation. The class is meeting each other, figuring out who they are, discovering the school is hard and also ridiculous. Murano looks like it has three separate villain problems brewing — The Chain, Null Signal, Fracture — and none of them are talking to the class yet. None of them are talking to EACH OTHER either, as far as anyone can tell. That's the part nobody's supposed to notice.",
+      "dm_at_a_glance": "Your job in Tier 1: establish the class as a cohort, not a score bracket. Run the danger lightly. The three faction seeds (Chain, Null Signal, Fracture) are background detail — findable if players look, not announced to anyone. They read as three unrelated problems and should keep reading that way through Season 1; the fact that they're all Undertow's syndicate is a Tier 3/4 reveal, not a Tier 1 one. If players chase a thread, give them one more piece. If they don't, those seeds are there for retrospective recognition in Tier 2.",
       "arcs": [
         {
           "name": "The Entrance Exam",
@@ -70,15 +70,15 @@
           }
         }
       ],
-      "villain_presence": "All three factions are background seeds in Tier 1. The Chain is the most visible — one direct encounter with low-tier operatives, planted through a pro hero's offhand comment. Null Signal is glimpsed twice: the unmarked exam drone, Splice's thirty-second corridor appearance. Fracture is found rather than encountered: graffiti, a leaflet, a symbol scratched in concrete. None of them have spoken to the class yet. All three are aware of them."
+      "villain_presence": "All three divisions of Undertow's syndicate are background seeds in Tier 1, and all three should still read as separate, unconnected problems. The Chain is the most visible — one direct encounter with low-tier operatives, planted through a pro hero's offhand comment. Null Signal is glimpsed twice: the unmarked exam drone, Splice's thirty-second corridor appearance. Fracture is found rather than encountered: graffiti, a leaflet, a symbol scratched in concrete. None of them have spoken to the class yet. All three are aware of them. Only Undertow is aware of all three."
     },
     {
       "tier": 2,
       "levels": "4–6",
       "title": "Getting Good",
       "session_estimate": "8–10 sessions",
-      "overall_tone": "The Sports Festival is peak chaos and excitement — the class gets to show off and it is almost entirely fun. Then the world gets complicated: Fracture becomes a real moral problem the class can't punch away, and the Convergence finale puts all three factions in the same warehouse at the same time. Season 1 ends with a win that doesn't feel entirely clean.",
-      "dm_at_a_glance": "Three arcs, each with a different tone. Sports Festival: pure energy, use the full bracket below, every fight has a story. Fracture Problem: moral complexity, Shard should land real arguments. Convergence: three-faction chaos, Kuma is the boss fight, Splice is the complication, Undertow is the image Season 1 ends on. The class wins the immediate problem. Everything else stays open.",
+      "overall_tone": "The Sports Festival is peak chaos and excitement — the class gets to show off and it is almost entirely fun. Then the world gets complicated: Fracture becomes a real moral problem the class can't punch away, and the Convergence finale puts all three of Undertow's divisions in the same warehouse at the same time, none of them coordinating, none of them aware they're all answering to the same man. Season 1 ends with a win that doesn't feel entirely clean.",
+      "dm_at_a_glance": "Three arcs, each with a different tone. Sports Festival: pure energy, use the full bracket below, every fight has a story. Fracture Problem: moral complexity, Shard should land real arguments — and she means every one of them; she has no idea who's quietly keeping her movement funded. Convergence: three-division chaos that still reads to the class as three-faction chaos, Kuma is the boss fight, Splice is the complication, Undertow is the image Season 1 ends on. The class wins the immediate problem. The fact that it was one organisation all along stays open for Season 2.",
       "arcs": [
         {
           "name": "The Sports Festival",
@@ -400,7 +400,7 @@
             }
           },
           "villain_seeds": {
-            "all_factions": "All three factions are watching the Sports Festival broadcast. Null Signal is collecting comprehensive quirk activation data — better footage than the exam drone captured. Fracture cells are watching because the festival represents exactly the system they oppose: licensed quirk use as public spectacle. Undertow watches Chosen's final with specific interest. None of this is visible to the class."
+            "all_factions": "All three of Undertow's divisions are watching the Sports Festival broadcast, for their own separate reasons, none of them coordinating with each other. Null Signal is collecting comprehensive quirk activation data — better footage than the exam drone captured. Fracture cells are watching because the festival represents exactly the system they oppose: licensed quirk use as public spectacle. Undertow watches Chosen's final with specific interest, and unlike everyone else watching, he's watching all three feeds. None of this is visible to the class."
           }
         },
         {
@@ -426,7 +426,7 @@
           "name": "Convergence",
           "type": "Season 1 finale (2–3 sessions)",
           "sessions": "2–3",
-          "dm_goal": "All three factions in the same space. The class wins the immediate fight but walks out with Undertow at large, Null Signal's data collected, and no clean answer on Fracture. This is a victory that opens more questions than it closes.",
+          "dm_goal": "All three of Undertow's divisions in the same space, still reading to the class as three unrelated factions. The class wins the immediate fight but walks out with Undertow at large, Null Signal's data collected, and no clean answer on Fracture. This is a victory that opens more questions than it closes — and the biggest question, that it's all one organisation, isn't one they know to ask yet.",
           "description": "Acting on information from Oshiro (sourced through Patchwork's contacts), the class intercepts a Chain logistics operation in the port district warehouse district. Kuma is running it. What they don't know: Null Signal's Splice has identified this operation as a data acquisition target — the Chain is transporting experimental quirk-suppression equipment, and Null Signal wants it. Fracture is also here, sabotaging Chain equipment because the Chain extorts the unlicensed quirk users in their community. The class walks into three factions with three different agendas and has to make decisions in real time.",
           "beats": [
             "Arrival: the warehouse district at night. Signs of the Chain operation — logistics vehicles, a perimeter. Signs of something else — two Fracture cell members are already inside, cutting equipment cables. Signs of something else entirely — a Null Signal technical van is parked across the street monitoring equipment frequencies. The class has thirty seconds before Kuma notices the Fracture interference.",
@@ -445,11 +445,11 @@
             "null_tease": "Splice's retreating van. A plate number and a logo: 'Seika Advanced Systems.' The same name from Hamagawa's monitor screen in Tier 1, if anyone remembered it."
           },
           "villain_seeds": {
-            "all_factions": "All three factions are fully present and active. The Chain (Kuma) is the direct confrontation — arrested. Null Signal (Splice) achieves a partial objective regardless of what the class does. Fracture (Shard) is neither defeated nor allied. Undertow's observation and departure is the closing image of Season 1."
+            "all_factions": "All three of Undertow's divisions are fully present and active, in the same warehouse, on the same night, and not one of them clocks that the others are his too. The Chain (Kuma) is the direct confrontation — arrested. Null Signal (Splice) achieves a partial objective regardless of what the class does. Fracture (Shard) is neither defeated nor allied. Undertow's observation and departure is the closing image of Season 1 — and the only person in that warehouse who understood everything that happened in it."
           }
         }
       ],
-      "villain_presence": "All three factions are fully active in Tier 2. The Chain (Kuma) is the direct confrontation — a winnable boss fight. Null Signal (Splice) is the operationally sophisticated secondary threat who achieves something regardless of how the main fight goes. Fracture (Shard, Voltage) is the moral complication that doesn't resolve cleanly. Undertow's Season 1 closing appearance — watching, commenting, leaving untouched — establishes the scale of the problem the class is not yet equipped to address."
+      "villain_presence": "All three of Undertow's divisions are fully active in Tier 2, still presenting to the class — and to the Commission — as three unrelated organisations. The Chain (Kuma) is the direct confrontation — a winnable boss fight. Null Signal (Splice) is the operationally sophisticated secondary threat who achieves something regardless of how the main fight goes. Fracture (Shard, Voltage) is the moral complication that doesn't resolve cleanly, and is the one division that has no idea it's connected to the other two. Undertow's Season 1 closing appearance — watching, commenting, leaving untouched — establishes the scale of the problem the class is not yet equipped to address: not three villain groups, but one, wearing three faces, run by the one person they've barely seen."
     }
   ],
   "recurring_elements": {

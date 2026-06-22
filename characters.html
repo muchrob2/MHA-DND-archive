@@ -100,6 +100,11 @@
   .badge.supporting { background: rgba(255,255,255,0.08); color: var(--text-muted); }
   .badge.custom { background: var(--purple-light); color: var(--purple-text); }
   .char-meta { display: flex; gap: 6px; flex-wrap: wrap; font-size: 11px; color: var(--text-dim); }
+  .tag-chip {
+    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 999px;
+    background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border-strong);
+  }
+  .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
 
   #empty-state { grid-column: 1/-1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px; text-align: center; color: var(--text-dim); }
   #empty-state .es-icon { font-size: 36px; margin-bottom: 12px; }
@@ -192,6 +197,10 @@
       <div class="filter-opt" data-pc="false" onclick="togglePcFilter(this)">NPC</div>
     </div>
   </div>
+  <div class="filter-group">
+    <div class="filter-group-label">Tags</div>
+    <div class="filter-options" id="tag-filters"></div>
+  </div>
 </div>
 
 <div id="grid">
@@ -208,10 +217,25 @@ let allChars = [];
 let activeTypes = new Set();
 let activeGenders = new Set();
 let activePc = new Set();
+let activeTags = new Set();
 
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 const FS_CUSTOM_DOC = db.collection('mha-dnd').doc('custom-characters');
+const FS_OVERRIDES_DOC = db.collection('mha-dnd').doc('character-overrides');
+
+function isCustom(c) { return c._type === 'Custom'; }
+function charKey(c) { return isCustom(c) ? c._id : c._staticId; }
+
+async function loadOverrides() {
+  try {
+    await fbAuthReady;
+    const snap = await FS_OVERRIDES_DOC.get();
+    return snap.exists ? snap.data() : { fields: {}, deleted: [] };
+  } catch {
+    return { fields: {}, deleted: [] };
+  }
+}
 
 async function loadStaticCharacters() {
   const out = [];
@@ -258,6 +282,7 @@ async function loadStaticCharacters() {
     }
   } catch {}
 
+  for (const c of out) c._staticId = c._type + '::' + c.name;
   return out;
 }
 
@@ -273,8 +298,13 @@ async function loadCustomCharacters() {
 
 async function init() {
   try {
-    const [staticChars, customChars] = await Promise.all([loadStaticCharacters(), loadCustomCharacters()]);
-    allChars = staticChars.concat(customChars);
+    const [staticChars, customChars, overrides] = await Promise.all([loadStaticCharacters(), loadCustomCharacters(), loadOverrides()]);
+    const deleted = new Set(overrides.deleted || []);
+    const fields = overrides.fields || {};
+    const merged = staticChars
+      .filter(c => !deleted.has(c._staticId))
+      .map(c => fields[c._staticId] ? Object.assign({}, c, fields[c._staticId]) : c);
+    allChars = merged.concat(customChars);
   } catch (e) {
     allChars = [];
   }
@@ -292,6 +322,11 @@ function buildFilterOptions() {
   document.getElementById('gender-filters').innerHTML = genders.map(g =>
     `<div class="filter-opt" data-gender="${escHtml(g)}" onclick="toggleGenderFilter(this)">${escHtml(g)}</div>`
   ).join('');
+
+  const tags = [...new Set(allChars.flatMap(c => c.tags || []))].sort();
+  document.getElementById('tag-filters').innerHTML = tags.length
+    ? tags.map(t => `<div class="filter-opt" data-tag="${escHtml(t)}" onclick="toggleTagFilter(this)">${escHtml(t)}</div>`).join('')
+    : `<span style="font-size:11px;color:var(--text-dim);">No tags yet</span>`;
 }
 
 function toggleFilterPanel() {
@@ -308,6 +343,12 @@ function toggleGenderFilter(el) {
   const g = el.dataset.gender;
   el.classList.toggle('active');
   activeGenders.has(g) ? activeGenders.delete(g) : activeGenders.add(g);
+  renderGrid();
+}
+function toggleTagFilter(el) {
+  const t = el.dataset.tag;
+  el.classList.toggle('active');
+  activeTags.has(t) ? activeTags.delete(t) : activeTags.add(t);
   renderGrid();
 }
 function togglePcFilter(el) {
@@ -336,6 +377,7 @@ function renderGrid() {
     if (activeTypes.size && !activeTypes.has(c._type)) return false;
     if (activeGenders.size && !activeGenders.has(c.gender)) return false;
     if (activePc.size && !activePc.has(String(!!c.is_pc))) return false;
+    if (activeTags.size && !(c.tags||[]).some(t => activeTags.has(t))) return false;
     return true;
   });
 
@@ -359,6 +401,7 @@ function renderGrid() {
         ${c.is_pc ? `<span class="badge pc">PC</span>` : ''}
         ${c.role ? `<span>${escHtml(c.role)}</span>` : ''}
       </div>
+      ${(c.tags||[]).length ? `<div class="char-meta">${c.tags.map(t => `<span class="tag-chip">${escHtml(t)}</span>`).join('')}</div>` : ''}
     </div>`;
   }).join('');
 }
@@ -392,6 +435,11 @@ function showDetail(idx) {
     ${appearance ? `<div class="detail-section"><div class="detail-label">Appearance</div><div class="detail-body">${escHtml(appearance)}</div></div>` : ''}
     ${personality ? `<div class="detail-section"><div class="detail-label">Personality</div><div class="detail-body">${escHtml(personality)}</div></div>` : ''}
     ${bonus ? `<div class="detail-section"><div class="detail-label">Bonus Features / Notes</div><div class="detail-body">${escHtml(bonus)}</div></div>` : ''}
+    ${(c.tags||[]).length ? `<div class="detail-section"><div class="detail-label">Tags</div><div class="detail-body">${c.tags.map(t => `<span class="tag-chip">${escHtml(t)}</span>`).join(' ')}</div></div>` : ''}
+    <div class="modal-actions">
+      <button class="action-btn" onclick="openEditModal(${idx})">Edit</button>
+      <button class="action-btn" style="color:var(--red-text);border-color:rgba(239,68,68,0.4);" onclick="deleteCharacter(${idx})">Delete</button>
+    </div>
   `;
   document.getElementById('modal-overlay').classList.add('open');
 }
@@ -400,31 +448,53 @@ function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
 }
 
+function characterFormHtml(c) {
+  c = c || {};
+  const gender = c.gender || 'Female';
+  const physiology = c.physiology || 'Standard';
+  const appearance = typeof c.appearance === 'object' ? (c.appearance.other || c.appearance.build || '') : (c.appearance || '');
+  const personality = typeof c.personality === 'object' ? (c.personality.summary || '') : (c.personality || '');
+  return `
+    <div class="form-row"><label>Name</label><input class="form-input" id="nc-name" type="text" placeholder="Character name" value="${escHtml(c.name||'')}"></div>
+    <div class="form-row"><label>Quirk</label><input class="form-input" id="nc-quirk" type="text" placeholder="Quirk name" value="${escHtml(c.quirk||'')}"></div>
+    <div class="form-row"><label>Gender</label>
+      <select class="form-select" id="nc-gender">
+        ${['Female','Male','Other'].map(g => `<option value="${g}" ${g===gender?'selected':''}>${g}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-row"><label>Physiology</label>
+      <select class="form-select" id="nc-physiology">
+        ${['Standard','Heteromorph','Mutant'].map(p => `<option value="${p}" ${p===physiology?'selected':''}>${p}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-row"><label>Appearance</label><textarea class="form-textarea" id="nc-appearance" placeholder="What do they look like?">${escHtml(appearance)}</textarea></div>
+    <div class="form-row"><label>Personality</label><textarea class="form-textarea" id="nc-personality" placeholder="How do they act?">${escHtml(personality)}</textarea></div>
+    <div class="form-row"><label>Bonus Features</label><textarea class="form-textarea" id="nc-bonus" placeholder="Anything else — quirk quirks, notable traits, etc.">${escHtml(c.bonus_features||'')}</textarea></div>
+    <div class="form-row"><label>Tags</label><input class="form-input" id="nc-tags" type="text" placeholder="Comma-separated, e.g. villain-arc, recurring, sports-festival" value="${escHtml((c.tags||[]).join(', '))}"></div>
+    <div class="form-row checkbox-row"><input type="checkbox" id="nc-ispc" ${c.is_pc?'checked':''}><label style="margin:0;" for="nc-ispc">Player Character</label></div>
+  `;
+}
+
+function readCharacterForm() {
+  return {
+    name: document.getElementById('nc-name').value.trim(),
+    quirk: document.getElementById('nc-quirk').value.trim(),
+    gender: document.getElementById('nc-gender').value,
+    physiology: document.getElementById('nc-physiology').value,
+    appearance: document.getElementById('nc-appearance').value.trim(),
+    personality: document.getElementById('nc-personality').value.trim(),
+    bonus_features: document.getElementById('nc-bonus').value.trim(),
+    is_pc: document.getElementById('nc-ispc').checked,
+    tags: document.getElementById('nc-tags').value.split(',').map(t => t.trim()).filter(Boolean),
+  };
+}
+
 function openCreateModal() {
   document.getElementById('modal').innerHTML = `
     <span class="modal-close" onclick="closeModal()">✕</span>
     <h2>New Character</h2>
     <div class="modal-sub">Adds a new Class 1-A style character to the archive.</div>
-    <div class="form-row"><label>Name</label><input class="form-input" id="nc-name" type="text" placeholder="Character name"></div>
-    <div class="form-row"><label>Quirk</label><input class="form-input" id="nc-quirk" type="text" placeholder="Quirk name"></div>
-    <div class="form-row"><label>Gender</label>
-      <select class="form-select" id="nc-gender">
-        <option value="Female">Female</option>
-        <option value="Male">Male</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
-    <div class="form-row"><label>Physiology</label>
-      <select class="form-select" id="nc-physiology">
-        <option value="Standard">Standard</option>
-        <option value="Heteromorph">Heteromorph</option>
-        <option value="Mutant">Mutant</option>
-      </select>
-    </div>
-    <div class="form-row"><label>Appearance</label><textarea class="form-textarea" id="nc-appearance" placeholder="What do they look like?"></textarea></div>
-    <div class="form-row"><label>Personality</label><textarea class="form-textarea" id="nc-personality" placeholder="How do they act?"></textarea></div>
-    <div class="form-row"><label>Bonus Features</label><textarea class="form-textarea" id="nc-bonus" placeholder="Anything else — quirk quirks, notable traits, etc."></textarea></div>
-    <div class="form-row checkbox-row"><input type="checkbox" id="nc-ispc"><label style="margin:0;" for="nc-ispc">Player Character</label></div>
+    ${characterFormHtml()}
     <div class="form-actions">
       <button class="action-btn primary" onclick="submitCreate()">Create Character</button>
       <button class="action-btn" onclick="closeModal()">Cancel</button>
@@ -434,21 +504,13 @@ function openCreateModal() {
 }
 
 async function submitCreate() {
-  const name = document.getElementById('nc-name').value.trim();
-  if (!name) { alert('Name is required.'); return; }
+  const fields = readCharacterForm();
+  if (!fields.name) { alert('Name is required.'); return; }
 
-  const payload = {
-    name,
-    quirk: document.getElementById('nc-quirk').value.trim(),
-    gender: document.getElementById('nc-gender').value,
-    physiology: document.getElementById('nc-physiology').value,
-    appearance: document.getElementById('nc-appearance').value.trim(),
-    personality: document.getElementById('nc-personality').value.trim(),
-    bonus_features: document.getElementById('nc-bonus').value.trim(),
-    is_pc: document.getElementById('nc-ispc').checked,
+  const payload = Object.assign({}, fields, {
     _type: 'Custom',
     _id: Date.now().toString(36) + Math.random().toString(36).slice(2),
-  };
+  });
 
   try {
     await fbAuthReady;
@@ -457,14 +519,84 @@ async function submitCreate() {
       { merge: true }
     );
     closeModal();
-    const notice = document.getElementById('saved-notice');
-    notice.textContent = 'Character created ✓';
-    notice.classList.add('show');
-    setTimeout(() => notice.classList.remove('show'), 2000);
+    showSavedNotice('Character created ✓');
     await init();
   } catch (e) {
     alert('Could not create character: ' + e.message);
   }
+}
+
+function openEditModal(idx) {
+  const c = allChars[idx];
+  document.getElementById('modal').innerHTML = `
+    <span class="modal-close" onclick="closeModal()">✕</span>
+    <h2>Edit ${escHtml(c.name)}</h2>
+    <div class="modal-sub">${isCustom(c) ? 'Custom character' : 'Edits are saved as an override on top of the bundled data.'}</div>
+    ${characterFormHtml(c)}
+    <div class="form-actions">
+      <button class="action-btn primary" onclick="submitEdit(${idx})">Save Changes</button>
+      <button class="action-btn" onclick="closeModal()">Cancel</button>
+    </div>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+async function submitEdit(idx) {
+  const c = allChars[idx];
+  const fields = readCharacterForm();
+  if (!fields.name) { alert('Name is required.'); return; }
+
+  try {
+    await fbAuthReady;
+    if (isCustom(c)) {
+      const snap = await FS_CUSTOM_DOC.get();
+      const chars = (snap.data().characters || []).map(x => x._id === c._id ? Object.assign({}, x, fields) : x);
+      await FS_CUSTOM_DOC.set({ characters: chars });
+    } else {
+      const snap = await FS_OVERRIDES_DOC.get();
+      const data = snap.exists ? snap.data() : { fields: {}, deleted: [] };
+      const allFields = data.fields || {};
+      allFields[c._staticId] = fields;
+      await FS_OVERRIDES_DOC.set({ fields: allFields, deleted: data.deleted || [] });
+    }
+    closeModal();
+    showSavedNotice('Changes saved ✓');
+    await init();
+  } catch (e) {
+    alert('Could not save changes: ' + e.message);
+  }
+}
+
+async function deleteCharacter(idx) {
+  const c = allChars[idx];
+  if (!confirm(`Delete ${c.name}? This removes them from the Characters page.`)) return;
+
+  try {
+    await fbAuthReady;
+    if (isCustom(c)) {
+      const snap = await FS_CUSTOM_DOC.get();
+      const chars = (snap.data().characters || []).filter(x => x._id !== c._id);
+      await FS_CUSTOM_DOC.set({ characters: chars });
+    } else {
+      const snap = await FS_OVERRIDES_DOC.get();
+      const data = snap.exists ? snap.data() : { fields: {}, deleted: [] };
+      const deleted = new Set(data.deleted || []);
+      deleted.add(c._staticId);
+      await FS_OVERRIDES_DOC.set({ fields: data.fields || {}, deleted: [...deleted] });
+    }
+    closeModal();
+    showSavedNotice('Character deleted');
+    await init();
+  } catch (e) {
+    alert('Could not delete character: ' + e.message);
+  }
+}
+
+function showSavedNotice(text) {
+  const notice = document.getElementById('saved-notice');
+  notice.textContent = text;
+  notice.classList.add('show');
+  setTimeout(() => notice.classList.remove('show'), 2000);
 }
 
 init();

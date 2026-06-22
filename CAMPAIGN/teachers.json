@@ -27,7 +27,6 @@
       "quirk": "Steel",
       "quirk_type": "Transformation",
       "quirk_summary": "Oshiro can harden his entire body into dense steel-like matter. Grants massive damage resistance and strength boosts. His fists hit like cannonballs. He can selectively harden specific body parts for precision.",
-      "quirk_mechanics_ref": "Steel — see Quirk Compendium. Key features: Steel Form (full-body hardening, damage resistance), Steel Strike (enhanced unarmed attacks), structural damage bonuses.",
       "appearance": "Enormous. 6'4\", built like a wall. Cropped dark hair going grey at the temples. Usually wearing a suit that has clearly been repaired multiple times from combat damage. Looks like he's seen everything twice and was unimpressed both times.",
       "personality": "Gruff, dry, and relentlessly fair. Calls every student by their last name, every time, without exception. Never raises his voice — doesn't need to. Gives feedback bluntly and accurately. The class will not realise until mid-campaign how much he actually believes in them.",
       "teaching_style": "Show, don't tell. Demonstrations. Puts students against each other to see what happens under pressure. Minimal lectures — maximum doing.",
@@ -37,6 +36,22 @@
         "what_makes_him_laugh": "Students surprising him. He won't show it — small exhale through the nose — but he notices.",
         "campaign_role": "The teacher who is always there when it counts. If the class is in serious trouble, Oshiro is the one who shows up. Doesn't explain himself. Just shows up.",
         "secret": "He was Class 1-A's previous generation's homeroom teacher. One of those students became a villain. He's never talked about it."
+      },
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Steel",
+        "weakness": "Steel form can only absorb a limited amount of damage (5x level, scaling with character level) before it shatters, returning him to his normal body; damage beyond that threshold carries over. All uses reset after a long rest.",
+        "abilities": [
+          {
+            "name": "Harden Steel",
+            "type": "Bonus Action",
+            "description": "Turn his skin to steel, gaining resistance to all damage except necrotic, psychic, and poison for a number of minutes equal to half his Constitution modifier. As a reaction, he can move up to half his speed to intercept an attack aimed at an ally, taking the damage himself. He can only be forcibly moved up to 50 feet, and creatures directly behind him gain half cover."
+          },
+          {
+            "name": "Steel Weapon",
+            "type": "Passive (while Harden Steel is active)",
+            "description": "His arms harden into weapons — unarmed strikes deal 2d8 + Strength modifier bludgeoning damage, and he gains +1 to AC."
+          }
+        ]
       }
     },
     {
@@ -46,7 +61,6 @@
       "quirk": "Fiber Master",
       "quirk_type": "Emitter",
       "quirk_summary": "Fujisaki generates and manipulates ultra-strong fibers from her fingertips — she can weave them mid-air, bind, cut, or construct structures with them. She's extraordinarily fast with her hands. In combat she's a support tangler and terrain controller.",
-      "quirk_mechanics_ref": "Fiber Master — see Quirk Compendium. Key features: Fiber Construct (structure building), Binding (restrain), Cutting (slashing damage with woven wire).",
       "appearance": "Mid-40s. Small, always slightly dishevelled — there's usually thread or wire caught in her hair or on her cardigan. Smiles at everything. Has reading glasses she never wears correctly.",
       "personality": "Cheerful and genuinely scatterbrained. Remembers every student's birthday, forgets every administrative deadline. Somehow always knows what's happening in the dorms despite never apparently paying attention. Deeply kind. Harder than she looks when the situation demands it.",
       "teaching_style": "Project-based. Students build things. If a project fails spectacularly, she celebrates the data. The support lab is full of half-finished student experiments she keeps around because 'you never know.'",
@@ -56,6 +70,22 @@
         "what_makes_her_laugh": "Absurd situations. When Toshida's head gets stuck, she's the one laughing hardest.",
         "campaign_role": "The resource person. Students can come to her to modify gear, ask about tech, or get crafting help between arcs.",
         "secret": "She's been quietly upgrading the students' hero suits without telling them. She watches how they fight and improves the gear accordingly. She'll never mention it."
+      },
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Fiber Master",
+        "weakness": "Effectiveness depends on the amount of fabric/fiber available nearby. She must succeed on a DC 15 Concentration check at the end of each round or automatically release any active restraints or fiber constructs.",
+        "abilities": [
+          {
+            "name": "Thread Restraint",
+            "type": "Action",
+            "description": "Unravels clothing into fabric strings to restrain a number of targets equal to her proficiency bonus within 60 feet (Dexterity save vs. her Quirk save DC). Restrained creatures take 1d8 piercing damage at the start of their turn."
+          },
+          {
+            "name": "Fiber Shield",
+            "type": "Passive/Reaction",
+            "description": "Manipulates fibers into a protective barrier around herself or up to her proficiency bonus in allies within 60 feet, granting +2 AC for a number of rounds equal to her proficiency bonus."
+          }
+        ]
       }
     },
     {
@@ -65,7 +95,6 @@
       "quirk": "Erasure",
       "quirk_type": "Emitter",
       "quirk_summary": "Hamagawa can nullify quirks by looking directly at a target. While his eyes are open and on the target, their quirk is suppressed. The moment he blinks or looks away, it returns. Does not work on mutation-type quirks.",
-      "quirk_mechanics_ref": "Erasure — see Quirk Compendium. Key mechanic: sustained gaze required for ongoing suppression. Target's passive and active quirk effects are nullified while eye contact is maintained.",
       "appearance": "Tall, lean, perpetually looks like he slept in his clothes. Dark eyes with noticeable shadows beneath them. Wears his hair slightly messy. Carries a coffee cup at all times. The coffee is always cold.",
       "personality": "Extremely dry humour — the kind that students only recognise as a joke half a second after they've already responded. Assigns homework that seems impossible and is. Secretly the most available teacher in the building when students are actually struggling. Won't advertise this.",
       "teaching_style": "Socratic. He asks questions and waits. Silently. Until someone answers. The silence is intentional and extremely uncomfortable. It works.",
@@ -75,6 +104,17 @@
         "what_makes_him_laugh": "Unexpected intellectual precision from a student he underestimated. He doesn't hide it well.",
         "campaign_role": "The ethics mirror. When the class does something questionable, Hamagawa is the one who asks the uncomfortable question about it in the next class. No answers — just questions. This escalates as the campaign does.",
         "secret": "He knows something is wrong in Murano. He doesn't know what yet. He's been paying attention to patterns."
+      },
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Erasure",
+        "weakness": "Requires a clear line of sight to the target's physical body — targets can evade by hiding behind obstacles. If hit while maintaining the effect, she must succeed on a DC 13 Constitution save to keep her eyes open or the effect ends.",
+        "abilities": [
+          {
+            "name": "Erase",
+            "type": "Bonus Action",
+            "description": "Gazes at creatures within a 150-foot cone (DC 14 Perception check for targets beyond that range). Affected targets cannot use their Quirk or abilities for 4 rounds. She can maintain focus for a number of rounds equal to her proficiency bonus before eye strain sets in."
+          }
+        ]
       }
     },
     {
@@ -84,7 +124,6 @@
       "quirk": "Muscle Augmentation",
       "quirk_type": "Transformation",
       "quirk_summary": "Yuzuki can amplify the strength output of his muscles to extreme degrees — specifically his arms and hands. He hits hard enough to crack reinforced concrete without effort. Speed is modestly enhanced but raw power is the point.",
-      "quirk_mechanics_ref": "Muscle Augmentation — see Quirk Compendium. Key features: Augmented strikes (multiplied damage dice), structural damage, resistance while augmented.",
       "appearance": "Huge. Barrel-chested, arms that look structurally excessive, short cropped hair. Wears gym gear constantly. Always has chalk on his hands. Smiles with his whole face.",
       "personality": "Loudest person in any building. Enthusiastic about everything the students do — improvement, failure, effort, all of it gets the same reaction: louder than necessary encouragement. Cries at student milestones. Doesn't try to hide it. Brings homemade food to training sessions.",
       "teaching_style": "Repetition, endurance, and challenge escalation. 'If it was easy you wouldn't be getting better.' Zero mean spirit — just genuine relentless pushing. Students run extra laps and don't resent him for it because he's running them too.",
@@ -94,6 +133,22 @@
         "what_makes_him_laugh": "Students showing unexpected strength. He will absolutely pick them up in celebration and has been asked not to but does not remember this policy.",
         "campaign_role": "Emotional support and physical backup. If the class needs someone in their corner who is loudly and unconditionally on their side, it's Yuzuki.",
         "secret": "None. He's exactly what he appears to be. This is rare and valuable."
+      },
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Muscle Augmentation",
+        "weakness": "Prolonged use strains his muscle fibers. If struck by five or more attacks in a single turn, the Quirk is temporarily disabled until he rests.",
+        "abilities": [
+          {
+            "name": "Muscle Form",
+            "type": "Action (5 minutes)",
+            "description": "Strength and Constitution surge to 26; gains 10 points of damage reduction against all incoming damage; unarmed damage die increases to 4d12 plus bonus damage equal to double his Strength modifier; jump distance is doubled."
+          },
+          {
+            "name": "Muscle Shield",
+            "type": "Reaction",
+            "description": "Absorbs damage equal to five times his Constitution modifier from a single attack."
+          }
+        ]
       }
     },
     {
@@ -103,7 +158,6 @@
       "quirk": "Weather Manipulation",
       "quirk_type": "Emitter",
       "quirk_summary": "Shimoda can generate and manipulate weather conditions in a wide radius — wind, rain, lightning, fog, temperature. At full power she can create localised storms. Combat use tends toward area denial and support.",
-      "quirk_mechanics_ref": "Weather Manipulation — see Quirk Compendium. Key features: Storm Generation, Lightning Strike, Wind Wall, Fog Bank, temperature control.",
       "appearance": "Late 30s. Calm face, silver-streaked dark hair kept practical. Moves with unhurried precision. Always seems to know exactly where she is in a room.",
       "personality": "Still and precise in a way that feels reassuring rather than cold. Has clearly seen situations that went very wrong and carries that knowledge without wearing it visibly. Students go to her when they're genuinely scared. She doesn't dismiss what they're feeling — she also doesn't indulge it. She helps them find the practical path through.",
       "teaching_style": "Scenario-based. 'Here is the situation. What do you do first?' Emphasises triage, priorities, communication under pressure. Expects students to know when they're in over their heads and say so.",
@@ -113,6 +167,22 @@
         "what_makes_her_laugh": "Genuine cleverness applied to unusual problems. She appreciates people who find third options.",
         "campaign_role": "The one the class goes to when they find something they can't explain — and the one most likely to take them seriously when they do. Her instincts about The Chain predate anyone else's.",
         "secret": "Has been quietly feeding a journalist investigating the Chain for eight months. Doesn't know the journalist is about to become relevant to the plot."
+      },
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Weather Manipulation",
+        "weakness": "None known.",
+        "abilities": [
+          {
+            "name": "Thunder Strike",
+            "type": "Action",
+            "description": "Targets up to three 20-foot radius areas within 60 feet. Each creature in an area must succeed on a Dexterity save or take 2d8 thunder damage and gain a rank of Shocked (half damage, no Shocked on a success). Damage to constructs is doubled."
+          },
+          {
+            "name": "Tornado",
+            "type": "Action",
+            "description": "Summons tornadoes in up to two 30-foot radius areas within 60 feet. Creatures must succeed on a Strength save or take 2d8 force damage and be thrown 40 feet upward and 30 feet outward (half damage, no movement on a success). Tornadoes persist for 2 rounds."
+          }
+        ]
       }
     }
   ]

@@ -6,10 +6,19 @@
       "name": "Natsuki Kaori",
       "alias": "Blazewatch",
       "category": "Pro Hero",
-      "quirk": "Thermal Pulse",
-      "quirk_type": "Emitter",
-      "quirk_rarity": "Rare",
-      "quirk_summary": "Natsuki generates and projects concentrated waves of heat from her palms. The heat doesn't produce visible flame — it hits like a pressure wave you feel half a second before you register you've been burned. At full output she can warp steel. Precise enough at low levels to dry someone's soaked clothes without singeing them.",
+      "quirk": "Fire Skin",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Fire Skin",
+        "weakness": "After taking cold damage, she suffers muscle cramps, giving disadvantage on Dexterity checks for 1d4 rounds.",
+        "abilities": [
+          { "name": "Firery Burn Skin", "type": "Passive", "description": "Any creature that touches her takes 1d6 fire damage." },
+          { "name": "Fire Surge", "type": "Reaction", "description": "When attacked, releases a burst of fire in a 10-foot radius around herself, dealing 3d6 fire damage to the attackers." },
+          { "name": "Firestorm", "type": "Action", "description": "Creates a storm of fire in a 30-foot radius. All creatures in the area make a Dexterity saving throw; on a failure they take 5d6 fire damage and gain one rank of Burned." }
+        ]
+      },
+      "quirk_type": "Mutant",
+      "quirk_rarity": "Uncommon",
+      "quirk_summary": "Natsuki's body generates a living layer of fire just beneath her skin. Anyone who touches her gets burned, and she can flare it outward in a defensive burst or whip it into a full firestorm when she needs to clear a room. She keeps it banked low in everyday situations out of habit and courtesy.",
       "appearance": "Late 30s. Sharp features, copper-streaked dark hair worn in a practical braid. Her hero costume is regulation white-and-gold, always immaculate. Off-duty she looks vaguely disappointed by whatever room she's in.",
       "personality": "Exacting, precise, and privately very funny in a way she doesn't perform for anyone. Her feedback is the most useful feedback any student will receive — also the most uncomfortable, because she's always correct. Has a reputation for dropping interns the moment they start coasting.",
       "role": "Top-ranked Murano hero. Runs Blazewatch Agency in the Central Plaza district.",
@@ -38,7 +47,15 @@
       "name": "Tobari Jin",
       "alias": "Irongate",
       "category": "Pro Hero",
-      "quirk": "Barrier",
+      "quirk": "Lock Down",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Lock Down",
+        "weakness": "Requires direct physical contact with the target to initiate a lock, and locking down larger or more complex objects/creatures inflicts two levels of exhaustion on him from the strain of anchoring them in space.",
+        "abilities": [
+          { "name": "Lock Down", "type": "Action", "description": "Touches a creature, object, or piece of terrain; target makes a Strength save against his Quirk save DC or becomes immobilized for one minute, unable to move, take actions, bonus actions, or reactions. New save allowed at the end of each of its turns. Can maintain a number of locks equal to twice his Proficiency Bonus." },
+          { "name": "Deadbolt", "type": "Action", "description": "Places a hand on a surface and twists, anchoring everything within a 180-ft square in space for 2 minutes — halting all movement and shifting terrain. Causes one level of exhaustion afterward; only one Deadbolt active at a time." }
+        ]
+      },
       "quirk_type": "Emitter",
       "quirk_rarity": "Uncommon",
       "quirk_summary": "Tobari generates rigid translucent barriers at any point he can see within 60ft. He can hold up to four simultaneously, reposition them as a free action, and detonate any of them as an explosive force burst. Size scales from door-panel to full wall. The barriers are indestructible for three rounds; after that they crack and collapse.",
@@ -70,10 +87,19 @@
       "name": "Haruno Setsuko",
       "alias": "Silkwind",
       "category": "Pro Hero",
-      "quirk": "Air Current",
+      "quirk": "Whirlwind",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Whirlwind",
+        "weakness": "Requires focus and control — strong winds can harm allies or destroy terrain. Using multiple tornadoes or extreme speeds in a single turn forces a DC 15 Constitution save or she takes 2d6 true damage from exhaustion.",
+        "abilities": [
+          { "name": "Gale Blast", "type": "Action", "description": "Creates a 30-ft line or 20-ft cone of high-pressure wind. Targets make a Strength save, taking 3d8 bludgeoning damage and pushed 20 ft on a fail, or half damage and pushed 10 ft on a success. Structures take double damage." },
+          { "name": "Cyclone Reaction", "type": "Reaction", "description": "When a creature moves within range or makes a melee attack, creates a 10-ft gust pushing creatures 10 feet and dealing 2d6 bludgeoning damage to unattended objects or structures (double to fragile ones)." },
+          { "name": "Tornado Formation", "type": "Action (5th level)", "description": "Summons a tornado within 60 feet with a 10-ft radius lasting 1 minute, used for battlefield control and rescue lift." }
+        ]
+      },
       "quirk_type": "Emitter",
       "quirk_rarity": "Rare",
-      "quirk_summary": "Haruno generates and shapes precise air currents from her body. She can create lift, directional wind, pressure changes, and sustained atmospheric pockets. In rescue scenarios she can hold three people airborne simultaneously and guide them to safety. In combat she uses sustained wind-walls and targeted concussive gusts.",
+      "quirk_summary": "Haruno generates powerful, controlled gusts and miniature tornadoes from her body. She can blast a target off their feet, sweep a room clear with a directional gale, or spin up a sustained tornado to lift and carry people clear of danger. In rescue scenarios she's used a contained tornado to lift three people clear of a collapse simultaneously and guide them down gently. In combat she uses gale blasts for crowd control and tornado formation to dominate a battlefield.",
       "appearance": "Early 30s. Slight build, silver-white hair that moves constantly in the self-generated breeze she keeps around herself at low output. Always seems calm. Is always calm.",
       "personality": "The most patient person in any room. Explains things once, clearly, then watches what you do with the information. Not cold — genuinely interested in people. The kind of teacher students don't realise they've learned from until later.",
       "role": "Rescue specialist hero. Consults at U.A. for Shimoda Iku's field operations classes.",
@@ -101,7 +127,16 @@
       "name": "Mizushima Dayo",
       "alias": null,
       "category": "Civilian",
-      "quirk": "Perfect Recall",
+      "quirk": "Search",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Search",
+        "weakness": "Repeated use can mentally overwhelm him, making him susceptible to deception. He must maintain concentration — if damaged, distracted, or tracking too many targets, he must succeed on a DC 14 Constitution check at the end of his turn or lose track of all monitored targets. Subjects can also falsify biological samples to mislead the scan.",
+        "abilities": [
+          { "name": "Surveillance", "type": "Bonus Action", "description": "Scans a 1-mile radius to locate up to two targets and identify their immediate vulnerabilities (exposed body parts, low defenses, status effects)." },
+          { "name": "Mass Track", "type": "Passive", "description": "At 3rd level, monitors up to 5 targets within 1 mile, gaining insight into their general condition and positioning; at 5th level, up to 100 targets within 5 miles." },
+          { "name": "Persistent Insight", "type": "Passive", "description": "At 5th level, permanently stores detailed location, condition, weakness, and behavior information for up to 10 individuals, recallable instantly without needing to rescan them." }
+        ]
+      },
       "quirk_type": "Emitter",
       "quirk_rarity": "Uncommon",
       "quirk_summary": "Passive. Mizushima retains every sensory experience with perfect fidelity — every conversation, document, scene he's witnessed is available to him as if it just happened. No degradation. He can't process more than a normal human, but he never forgets any of it. He's been an investigative journalist for twelve years. He remembers everything.",
@@ -165,14 +200,23 @@
       "name": "Ryuto Hana",
       "alias": null,
       "category": "Civilian",
-      "quirk": "Sparkle",
+      "quirk": "Luminescence",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Luminescence",
+        "weakness": "Prolonged or excessive use may cause eye strain or temporary blindness to her, imposing disadvantage on Wisdom (Perception) checks that rely on sight for 1d4 rounds.",
+        "abilities": [
+          { "name": "Glow", "type": "Bonus Action", "description": "Sheds bright light in a 30-ft radius and dim light for an additional 30 feet; can activate or deactivate as a bonus action." },
+          { "name": "Flash Burst", "type": "Reaction", "description": "When targeted by an attack, releases a sudden flash of light. The attacker must succeed on a Constitution save or have disadvantage on the attack roll. Creatures within 10 feet must also save or be blinded until the start of their next turn." },
+          { "name": "Beacon", "type": "Action", "description": "Emits an intense flare of light in a 60-ft radius. Creatures of her choice that can see her must make a Constitution save or be blinded for 1 minute, repeating the save each turn to end it." }
+        ]
+      },
       "quirk_type": "Emitter",
       "quirk_rarity": "Common",
-      "quirk_summary": "Hana can emit decorative light bursts from her palms — controlled, colourful, visually beautiful. No heat, no force, no combat application. She has spent three years trying to find a way to make Sparkle useful in hero work. She's genuinely creative about it.",
+      "quirk_summary": "Hana can flood an area with light from her body bright enough to blind, or trigger a sudden defensive flash when she's caught off guard. The Commission's entrance exam scored it as 'low combat rating' against quirks that hit harder — but a hero who can't see is a hero who can't act, and Hana has spent three years figuring out exactly how to use that. She's genuinely creative about it.",
       "appearance": "14. Small, always in motion, light-up sneakers she's had for two years and refuses to replace. Round face, dark eyes, bandages on her knees from whatever she was practicing last week.",
       "personality": "Enthusiastic in a way that is too genuine to be annoying. Has opinions about every Class 1-A student based on the entrance exam footage that leaked. Completely unintimidated by heroes. Gets quieter and more focused when something she cares about is actually in danger.",
       "role": "Murano port district resident. Wants to be a hero. Knows Ren Suzuki's neighbourhood better than he does.",
-      "campaign_hook": "She's the first person in Murano to notice that three of the 'structural incidents' in the port district over the past year happened within two blocks of each other. She drew a map. She showed it to a hero she recognised — Ren Suzuki — during the agency visit arc. She thinks she's being helpful. She is.",
+      "campaign_hook": "She's the first person in Murano to notice that three of the 'structural incidents' in the port district over the past year happened within two blocks of each other. She drew a map. She showed it to a hero she recognised — Ren Suzuki — during the agency visit arc. She thinks she's being helpful. She is. (Her Luminescence got her noticed at the entrance exam for exactly the wrong reason — evaluators saw 'pretty lights' and missed that a kid who can blind an attacker on reflex has more hero potential than her score suggested.)",
       "dm_notes": {
         "secret": "Her older brother does odd jobs for a local business that the class will later discover is Chain-connected. She doesn't know. The moment she finds out will be one of the hardest scenes in the campaign if the class has built a relationship with her.",
         "relationship_to_pcs": "Specifically latches onto whichever PC showed her the most basic kindness first. Becomes a reliable local eyes-and-ears if the class treats her well.",
@@ -196,7 +240,14 @@
       "name": "Shirai Kenzo",
       "alias": "Sentinel",
       "category": "Commission Official",
-      "quirk": "Analysis",
+      "quirk": "Foresight",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Foresight",
+        "weakness": "Requires uninterrupted vision — if blinded, loses line of sight, or his view is obscured, the effect ends. After using it, he must succeed on a DC 14 Constitution save or gain one level of Concussed, and a failed DC 13 Perception check locks him out of using it again for three rounds.",
+        "abilities": [
+          { "name": "Foresight", "type": "Bonus Action/Reaction", "description": "After touching a target and making eye contact, predicts the next turn of visible creatures within 60 feet up to his Proficiency Bonus in number. While active, he knows every creature's current HP, AC, and initiative within 60 feet and automatically applies the Read Enemy action to all of them. A target may attempt a Wisdom save against his Quirk DC to alter one declared choice." }
+        ]
+      },
       "quirk_type": "Emitter",
       "quirk_rarity": "Very Rare",
       "quirk_summary": "Shirai perceives threat levels, structural weaknesses, and probability assessments as visible overlays when he focuses on a target. He can evaluate a person's quirk threat rating, a building's load-bearing weak points, or the tactical vulnerabilities in any formation. He cannot act on what he sees — he only perceives. He has never stopped perceiving.",
@@ -228,7 +279,16 @@
       "name": "Makoto Tsurugi",
       "alias": "Wireframe",
       "category": "Pro Hero",
-      "quirk": "Blueprint",
+      "quirk": "Weld",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Weld",
+        "weakness": "Requires direct hand contact with at least two objects or creatures to activate.",
+        "abilities": [
+          { "name": "Weld Touch / Restrain and Fuse", "type": "Action", "description": "Touches two objects or creatures in contact with each other. Target makes a Strength save against her Quirk DC or becomes restrained as their bodies/materials meld together, taking 1d8 force damage plus her proficiency bonus, until freed by a Strength check." },
+          { "name": "Weapon Fusion", "type": "Passive", "description": "Welding two items merges their properties temporarily — e.g., a welded sword and shield grants +1 AC and +1 damage; lasts 1 minute or until dismissed." },
+          { "name": "Construction-Done-Kwik (Weldcraft)", "type": "Bonus Action/Reaction", "description": "Forces a target to make a Dexterity save against her Quirk DC or be unable to react to her next Weld Touch." }
+        ]
+      },
       "quirk_type": "Emitter",
       "quirk_rarity": "Uncommon",
       "quirk_summary": "Makoto can generate precise schematic overlays of any structure she observes — full load-bearing maps, utility line paths, access points, structural vulnerabilities — appearing as ghostly blue wireframes visible only to her. She can share them as physical documents by sketching with uncanny accuracy. She has used this for hero agency coordination for eleven years. Nobody considers her a combatant.",
@@ -259,16 +319,25 @@
       "name": "Adachi Sora",
       "alias": null,
       "category": "Student",
-      "quirk": "Muffle",
+      "quirk": "Fold-A-Body",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Fold-A-Body",
+        "weakness": "Overuse causes disorientation — after using it for three consecutive turns, she must succeed on a DC 14 Constitution save or become incapacitated until the end of her next turn.",
+        "abilities": [
+          { "name": "Fold", "type": "Action/Reaction", "description": "Folds her body into a paper-thin form (usable as a reaction when grappled), allowing her to slip through openings as small as 0.5 inches. While in this state she becomes invisible, gains advantage on attack rolls, and can Dash as a bonus action." },
+          { "name": "Stealthy Maneuver", "type": "Passive", "description": "Advantage on Dexterity saving throws and Dexterity-based skill checks." },
+          { "name": "Precision Shot", "type": "Action", "description": "Dashes to an unoccupied space within 60 feet of an opponent, ending within 5 feet, then makes a ranged attack ignoring damage reduction. On a hit, deals 3d8 piercing damage and 1 rank of Bleed; target makes a Constitution save or becomes incapacitated until the end of its next turn." }
+        ]
+      },
       "quirk_type": "Emitter",
       "quirk_rarity": "Uncommon",
-      "quirk_summary": "Adachi generates a field of acoustic suppression around a target area — up to a 20ft radius. Inside the field, no sound passes in or out. She can sustain this for up to 10 minutes without effort. At full concentration she can target it to a single person, making them completely silent without affecting anything around them. The Commission's entrance exam evaluation noted: 'Passive utility, low combat rating.' She disagrees.",
+      "quirk_summary": "Adachi can fold her own body down into a paper-thin form, letting her slip through gaps no wider than half an inch — under doors, through grates, into spaces nobody thinks to guard. While folded she's effectively invisible and impossible to pin down. The Commission's entrance exam evaluation noted: 'Passive utility, low combat rating.' She disagrees — she can close distance and land a hit from an angle nobody's covering before they even register she's there.",
       "appearance": "Same age as Class 1-A. Medium height, dark bob, always carrying something to read. Wears the General Studies uniform and has clearly thought about exactly how she wears it.",
       "personality": "Not resentful, but precise about the distinction between being overlooked and being wrong. Confident in her own read of her quirk's potential in ways that the evaluation missed. Gets along well with people who listen and poorly with people who assume.",
       "role": "U.A. General Studies student. Seeking Hero Course transfer. Would do well in any infiltration or stealth-dependent scenario.",
-      "campaign_hook": "Her Muffle quirk would have been extremely useful in at least two situations the class has already been in. She's been tracking their performances in joint exercises and has opinions. If the class ever needs to move silently — and they will — she is the asset they didn't know they had.",
+      "campaign_hook": "Her Fold-A-Body quirk would have been extremely useful in at least two situations the class has already been in — there's no infiltration scenario where 'can fit through a half-inch gap and vanish' isn't an asset. She's been tracking their performances in joint exercises and has opinions. If the class ever needs to get somewhere they shouldn't — and they will — she is the asset they didn't know they had.",
       "dm_notes": {
-        "secret": "She applied to the Hero Course first. She passed the written examination in the 97th percentile. The combat evaluation scored her Muffle as insufficient for direct combat. She passed General Studies. She has not stopped working toward a transfer and she is not going to.",
+        "secret": "She applied to the Hero Course first. She passed the written examination in the 97th percentile. The combat evaluation scored Fold-A-Body as insufficient for direct combat — evaluators saw an evasion quirk and missed the precision-strike potential. She passed General Studies. She has not stopped working toward a transfer and she is not going to.",
         "relationship_to_pcs": "Natural ally for any student who values tactics over raw power. Could become a recurring collaborator in missions that require precision over force.",
         "arc_relevance": "Optional recurring asset. The class meeting her in Tier 1 and building a relationship pays off significantly in Arc 5 when a mission requires her exact skillset."
       },
@@ -290,10 +359,20 @@
       "name": "Dojima Hiroto",
       "alias": null,
       "category": "Student",
-      "quirk": "Personal Gravity",
+      "quirk": "Zero Gravity",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Zero Gravity",
+        "weakness": "Exerts tremendous pressure on his body each time he defies gravity — each use grants 1 level of Gravity Strain, and if total strain equals or exceeds his Level + double his Proficiency Bonus, he gains the Queasy condition. Strain clears on a short or long rest.",
+        "abilities": [
+          { "name": "Zero Gravity", "type": "Bonus Action (on hit)", "description": "Makes a struck object or creature weightless, sending it 30 feet into the air. Target makes a Strength save against his Quirk DC or is suspended at a fixed height, unable to take reactions (unless it can fly/levitate), and has disadvantage on Dexterity saves for a number of rounds equal to his Proficiency Bonus. Can be ended early to drop the target, dealing 1d12 bludgeoning damage per 10 feet fallen." },
+          { "name": "Meteor Strike", "type": "Action", "description": "Slams a hand into the ground, launching rubble skyward then crashing it down. Creatures in a 30-ft radius make a Dexterity save against his Quirk DC, taking Xd10 + Xd4 bludgeoning damage and being knocked prone on a failure (X scaling with fall height), or half damage with no prone on a success. Requires loose ground, rubble, or difficult terrain in range." },
+          { "name": "Self-Skill", "type": "Bonus Action", "description": "Taps his heels to activate weightlessness on himself, gaining a 60-ft hover speed until the end of his next turn, maintainable each turn with a bonus action." },
+          { "name": "Gravity Plus", "type": "Bonus Action (5th level)", "description": "When he uses Zero Gravity to lift a creature, he can immediately attempt to slam it back down." }
+        ]
+      },
       "quirk_type": "Transformation",
       "quirk_rarity": "Rare",
-      "quirk_summary": "Dojima can reverse, nullify, or amplify his personal gravity field — affecting only himself. He can walk on walls and ceilings, stop himself mid-fall, and launch himself with extreme force by toggling gravity direction. At full reversal he's effectively flying. He cannot affect anything he isn't touching. He has mastered the transitions to a degree that makes his movement look effortless.",
+      "quirk_summary": "Dojima can nullify gravity on whatever he touches with his fingertips, rendering it weightless while it keeps its full mass and momentum. On himself, a tap of the heels gives him a sustained hover — he can hang in open air, redirect a fall, or reposition over a battlefield with no wasted motion. On an opponent he's struck, he can send them thirty feet skyward and leave them stranded there. He has mastered the transitions to a degree that makes his movement look effortless.",
       "appearance": "Tall, lean build, Shiketsu High uniform worn with the hat slightly off-angle in a way that is precisely calculated. The kind of good-looking that he's aware of. Moves like he's already won whatever room he's in.",
       "personality": "Confident to a degree that should be irritating but is slightly undercut by the fact that the confidence is earned. He's good and he knows it. What he doesn't know is that he's been trained to compete against a specific kind of opponent and Class 1-A is a different kind.",
       "role": "Exchange student from Shiketsu High. At U.A. for one semester. Natural rival to multiple Class 1-A students.",
@@ -322,12 +401,20 @@
       "name": "Kurosawa Emi",
       "alias": null,
       "category": "Civilian",
-      "quirk": "Sonar",
+      "quirk": "Earphone Jack",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Earphone Jack",
+        "weakness": "Her earlobes count as her ears and are vulnerable to damage; using the Quirk more than her Level + double her Proficiency Bonus times causes a rank of unreducible bleed on each subsequent use until she takes a short rest.",
+        "abilities": [
+          { "name": "Earphone Jack", "type": "Action", "description": "Stretches her earlobes up to 25 feet to plug into solid surfaces, electronic ports, or creatures. Plugged into a device or creature, she can unleash a 30-ft long, 10-ft wide line of thunderous energy: targets make a Strength save, taking 3d8 thunder damage, deafened, and pushed 20 feet on a fail, or half damage and pushed 10 feet on a success. Directly targeting a creature instead allows a melee attack dealing 2d6 thunder damage on a hit." },
+          { "name": "Tracking Plug", "type": "Bonus Action", "description": "Plugs her Earphone Jacks into the ground to gain advantage on checks to track items or creatures (cannot roll lower than 10), though it does not work on silent or flying creatures." }
+        ]
+      },
       "quirk_type": "Emitter",
       "quirk_rarity": "Common",
-      "quirk_summary": "Passive echolocation — Kurosawa perceives spatial information through reflected sound waves she passively generates. She can 'see' in complete darkness, through thin walls, and at ranges up to 40ft. The Commission evaluated her quirk as insufficient for hero licensing. The Chain evaluated it differently: she can tell them when hero patrols are approaching and they never have to ask twice.",
+      "quirk_summary": "Kurosawa can stretch her earlobes out like jacks and plug them into solid surfaces — walls, lampposts, the ground itself — to pick up vibration and sound carried through the material from well beyond normal earshot. Plugged into the right surface, she can tell a hero patrol is coming blocks before it arrives. The Commission evaluated her quirk as insufficient for hero licensing. The Chain evaluated it differently: she can tell them when hero patrols are approaching and they never have to ask twice.",
       "appearance": "Mid-20s. Works in a waterfront import office in the port district. Keeps her head down. Has a specific quality of stillness that comes from being afraid for a sustained period.",
-      "personality": "Careful with words. Listens to everything — the Sonar means she always knows who's in a room. Not a villain. Was approached, then threatened, and has been doing what she's told for eight months. She hates it and sees no exit.",
+      "personality": "Careful with words. Listens to everything — Earphone Jack means she can plug into a wall and hear a patrol coming streets before they're in sight, so she always knows what's about to walk into a room. Not a villain. Was approached, then threatened, and has been doing what she's told for eight months. She hates it and sees no exit.",
       "role": "Unwilling Chain informant, port district. Monitors and reports hero patrol timing.",
       "campaign_hook": "She's one of the coverage-window sources Makoto Tsurugi noticed in the patrol data. She's also the person Ryuto Hana's brother knows, without knowing what she does. If the class encounters her in the port district, she reads as frightened rather than threatening — because she is.",
       "dm_notes": {
@@ -354,7 +441,16 @@
       "name": "Nakata Ren",
       "alias": "Wallbreaker (retired)",
       "category": "Civilian",
-      "quirk": "Impact",
+      "quirk": "Impact Recoil",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Impact Recoil",
+        "weakness": "Only functions against direct physical attacks (melee, thrown weapons, unarmed blows) — energy, elemental, psychic, or ranged projectile damage cannot be reflected. Using it three times in a row without a rest gives one level of exhaustion; using it again while exhausted deals 2d10 Force damage to him instead.",
+        "abilities": [
+          { "name": "Recoil Reflex", "type": "Reaction", "description": "When struck by a physical melee attack, reflects the force back. The attacker makes a Dexterity save, taking Force damage equal to the amount dealt to him on a fail (half on a success), and can be repelled 10 feet if they fail by 5 or more." },
+          { "name": "Reversal Strike", "type": "Reaction (once per short rest)", "description": "Immediately follows up Recoil Reflex with a melee or unarmed attack as part of the same reaction, dealing normal weapon damage plus 1d8 Force damage; target makes a Strength save or is knocked prone." },
+          { "name": "Impact Rebound", "type": "Reaction (on reaching 0 HP)", "description": "Before falling unconscious from a melee attack, unleashes stored kinetic energy — creatures within 10 feet make a Strength save, taking 3d10 Force damage, knocked prone, and pushed 15 feet on a fail, or half damage on a success." }
+        ]
+      },
       "quirk_type": "Transformation",
       "quirk_rarity": "Uncommon",
       "quirk_summary": "Nakata's body absorbs kinetic force and redistributes it at a chosen point of contact. He absorbed blows that should have broken him for fifteen years and redirected them into every surface he touched. He still has the quirk. He doesn't use it. The gym bags in his training space are double-stuffed with sand.",

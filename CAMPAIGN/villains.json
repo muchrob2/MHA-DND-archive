@@ -559,11 +559,18 @@
           "name": "Ryo Karashi",
           "alias": "Splice",
           "role": "Head of Acquisition. Responsible for finding and extracting research subjects. He's very good at it.",
-          "quirk": "Body Modification",
-          "quirk_rarity": "Rare",
-          "quirk_type": "Transformation",
-          "quirk_summary": "Splice can reshape the soft tissue of any body, including his own, on contact. On himself, he uses this to reconfigure his limbs mid-combat — extending reach, altering joint angles, hardening skin by compacting tissue density. On others, a touch can rearrange tendons, dislocate joints, or cause intense neurological pain. He cannot affect bone or organs.",
-          "quirk_mechanics_ref": "Body Modification — homebrew variant. See DM notes for subject interaction rules.",
+          "quirk": "Overhaul",
+          "quirk_rarity": "Legendary",
+          "quirk_type": "Emitter",
+          "quirk_summary": "Splice can disassemble and reassemble matter with his bare hands. By touching a creature, object, or terrain, he can pull it apart, reshape it, or restore it — living and non-living matter alike. On himself, he uses this to reconfigure his limbs mid-combat — extending reach, altering joint angles, hardening skin by compacting tissue density. On others, a touch can dismantle limb by limb, dislocate joints, or cause intense neurological pain.",
+          "quirk_mechanics": {
+            "source": "Quirk Compendium — Overhaul",
+            "weakness": "Requires physical contact with his hands to function — if he cannot use his hands, the Quirk is unusable. After using Disassemble or Reassemble, that ability cannot be used again until the start of his next turn.",
+            "abilities": [
+              { "name": "Disassemble", "type": "Action", "description": "Touches a target within 5 feet, making an unarmed strike. On a hit, the target makes a Constitution save or takes 3d10 necrotic damage (ignores resistance to necrotic). At the end of its turn the target loses one limb — legs first, then arms, hands, then torso; losing the torso kills it. He can target specific limbs without fully killing the target. On a success, the target takes half damage and suffers no additional effects." },
+              { "name": "Reassemble", "type": "Bonus Action", "description": "Touches a disassembled creature, limb, or object to restore it to its original form or reshape it into a modified state of equal or lesser mass. A restored creature regains half hit points and missing limbs; reshaping can grant effects such as extra damage on reassembly, knockback, halved movement, weakened limb restoration, or temporary hit points." }
+            ]
+          },
           "appearance": "Mid-30s. Unnervingly symmetrical face — the result of years of self-modification. Long fingers. Always wearing light gloves, which he removes with deliberate slowness when a fight is inevitable.",
           "personality": "Patient and personable to a disturbing degree. He talks to targets like they're already cooperating. He finds raised voices tacky. The only time his manner breaks is when something surprises him.",
           "combat_style": "Close range grapple-and-modify. He doesn't deal large damage — he incapacitates. A restrained target he touches becomes a major problem. He works alongside Null Signal Operatives who keep targets in his reach.",
@@ -634,14 +641,21 @@
           "name": "Maki Torune",
           "alias": "Shard",
           "role": "Co-founder of Fracture. The one who writes the manifestos. The voice.",
-          "quirk": "Glass",
-          "quirk_rarity": "Uncommon",
-          "quirk_type": "Emitter",
-          "quirk_summary": "Shard generates and propels razor-edged glass fragments from her skin. She can form them into barriers, projectile clouds, or razor wires. At full mastery she creates structural glass formations large enough to trap people. She bleeds glass when she overuses her quirk — a cost she has stopped noticing.",
-          "quirk_mechanics_ref": "Glass — see Quirk Compendium.",
+          "quirk": "Razor Sharp",
+          "quirk_rarity": "Common",
+          "quirk_type": "Transformation",
+          "quirk_summary": "Shard can produce large, razor-edged blades directly from her body. She can form them into sweeping arcs or single strikes, slicing through flesh and steel alike. At full mastery she can extend the blades in a wide sweeping arc to cut down multiple targets at once. She bleeds and strains her muscles when she overuses her quirk — a cost she has stopped noticing.",
+          "quirk_mechanics": {
+            "source": "Quirk Compendium — Razor Sharp",
+            "weakness": "Prolonged use severely strains her muscles — after using the Quirk for more than one minute continuously, she must succeed on a DC 15 Constitution save or take 1d12 true damage.",
+            "abilities": [
+              { "name": "Blade Strike", "type": "Action", "description": "Produces a razor-sharp blade from her arm and strikes a creature within 5 feet, dealing 2d12 slashing damage (double against constructs) and inflicting 1 rank of Bleed." },
+              { "name": "Razor Sweep", "type": "Action", "description": "Extends her arm blades in a sweeping arc, striking all creatures in a 30-foot line. Each target makes a Dexterity save against her Quirk save DC or takes 2d12 slashing damage (half on success) and gains 2 ranks of Bleed. After the attack she may move to the far end of the line." }
+            ]
+          },
           "appearance": "Late 20s. Cuts on her forearms that she's stopped trying to cover. Fracture's jagged-line symbol tattooed on her collarbone. Speaks like someone who's rehearsed everything and means all of it.",
           "personality": "True believer. Not naive — she knows Fracture has done things she can't fully defend. She believes the alternative is worse. She is smart, magnetic, and completely unwilling to compromise on the core premise. The class may find her hard to argue with and that's intentional.",
-          "combat_style": "Area control. She fills the space with glass, making movement costly. She targets support heroes and quirkless members first — not out of malice but strategy. She wants to end fights before someone gets killed.",
+          "combat_style": "Close-to-mid range area denial through blade arcs rather than ranged attacks. She keeps enemies at the edge of her reach with sweeping strikes, forcing them to either close in and eat a Blade Strike or hang back and let her reposition. She targets support heroes and quirkless members first — not out of malice but strategy. She wants to end fights before someone gets killed.",
           "stat_block": {
             "level": 10,
             "HP": 88,
@@ -658,10 +672,10 @@
             "quirk_ability": "Charisma",
             "proficiency_bonus": 4,
             "special_abilities": [
-              "Glass Volley: Ranged attack +7 to hit, range 60 ft. 3d6 slashing damage. Can target up to 2 creatures within 5 ft of each other as one action.",
-              "Glass Field: As an action, Shard scatters glass across a 20 ft radius area within 40 ft. The area becomes difficult terrain. Creatures who move through it take 1d4 slashing damage per 5 ft moved. Lasts 1 minute.",
-              "Barrier: As a reaction, Shard raises a glass wall (10 ft wide, 10 ft tall, 1 inch thick, 30 HP) between herself and an incoming attack. The attack must destroy the barrier to reach her.",
-              "Glass Rain: Recharge 5-6. All creatures in a 30 ft radius make DEX save DC 16 or take 5d6 slashing damage and begin bleeding (1d4 at start of each turn until they use an action to staunch it). Half damage on success, no bleed."
+              "Blade Strike (Scaled): Melee attack +7 to hit. On a hit, 3d8 slashing damage and 1 rank of Bleed. Can strike twice on her turn if both targets are within 5 ft of each other.",
+              "Razor Sweep (Scaled): As an action, extends her arm blades in a sweeping arc, striking all creatures in a 25-ft line. DEX save DC 16 or take 4d8 slashing damage and 2 ranks of Bleed (half damage, no Bleed on success). She may move to the far end of the line afterward.",
+              "Guard Blades: As a reaction, raises crossed forearm blades to block an incoming melee attack, reducing the damage by 2d8 plus her proficiency bonus.",
+              "Crimson Arc: Recharge 5-6. All creatures in a 30 ft radius make DEX save DC 16 or take 6d8 slashing damage and begin Bleeding (1d6 at start of each turn until they use an action to staunch it). Half damage on success, no Bleed. Afterward she must succeed on a DC 15 CON save or take 1d12 true damage from the strain."
             ]
           },
           "campaign_appearances": {

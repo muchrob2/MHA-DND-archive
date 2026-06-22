@@ -13,7 +13,17 @@
   "students": [
     {
       "name": "Morida Takeshi",
-      "quirk": "Ironclad",
+      "quirk": "Hardening",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Hardening",
+        "weakness": "His hardened form can only absorb a limited amount of damage before it shatters, ending the effect and returning him to normal — any damage taken beyond his absorption limit carries over to his normal form.",
+        "abilities": [
+          { "name": "Harden", "type": "Bonus Action/Reaction", "description": "Turns his skin to stone, gaining resistance to all damage types (except necrotic, psychic, and poison) for minutes equal to half his Constitution modifier. As a reaction, can move up to half his speed to intercept an incoming attack on an ally's behalf. Creatures within 10 ft directly behind him gain half cover." },
+          { "name": "Stone Weapon", "type": "Passive (while Harden active)", "description": "Fists become blades (slashing) or solid stone fists (bludgeoning), dealing 1d10 + Strength modifier damage. Once per turn on a hit, deals bonus Xd4 damage (X = half Constitution modifier, rounded down). Gains +1 AC." },
+          { "name": "Re-Harden", "type": "Reaction (5th level)", "description": "If his Harden threshold is breached, regains 10 HP instantly; usable up to five times in one reaction. After using it, falls unconscious for rounds equal to the number of uses beyond the first. Once per short rest." },
+          { "name": "Unbreakable", "type": "Action (7th level, once per day)", "description": "Hardens his entire body for 4 rounds, becoming immune to all damage except necrotic, psychic, and poison, and granting total cover to allies directly behind him. Gains piercing damage and a climbing speed. Falls unconscious for 3 rounds and gains three levels of exhaustion afterward." }
+        ]
+      },
       "quirk_type": "Transformation",
       "quirk_summary": "Full-body metallic plating. Morida's skin hardens into dense, layered steel armour that he can extend or retract at will. At full hardening he's nearly impervious to physical attacks. At partial hardening he trades some protection for mobility. He cannot harden his eyes — his one consistent weak point.",
       "personality": "Disciplined, methodical, and quietly contemptuous of flashy quirk use. He respects results and is suspicious of anything he can't measure. Doesn't talk during a fight. Will compliment a student after if they earned it — which sounds like 'That was efficient.' He means it as high praise.",
@@ -34,7 +44,15 @@
     },
     {
       "name": "Yashiro Fumiko",
-      "quirk": "Blink",
+      "quirk": "Warp Gate",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Warp Gate",
+        "weakness": "Part of her real body must be present to release the dark fog, exposing her to attack. Portals are coordinate-based, requiring her to know the exact location or have a clear line of sight, and she cannot create portals in heavy winds.",
+        "abilities": [
+          { "name": "Portal Creation", "type": "Action", "description": "Creates a number of 20-ft diameter portals up to her Proficiency Bonus within 30 feet, connecting to any location she can see or for which she has precise coordinates. Each portal lasts up to one minute or until dismissed. As a reaction, she can close a portal as a creature attempts to move through it — that creature makes a Dexterity save against her Quirk DC or takes 3d10 damage and is pushed back 10 feet." },
+          { "name": "Fog Shroud", "type": "Bonus Action (3rd level)", "description": "Envelops herself in dark fog, becoming heavily obscured for one minute. While shrouded she can create portals as a bonus action, and attacks against her while obscured have disadvantage." }
+        ]
+      },
       "quirk_type": "Transformation",
       "quirk_summary": "Short-range teleportation. Yashiro can teleport up to 10 ft in any direction as a free action. Longer jumps (up to 30ft) require a bonus action and a 3-round cooldown. She can't blink through solid objects but can blink around corners she can see around. She uses this continuously and casually, which is deeply disorienting to fight.",
       "personality": "Smug, playful, treats combat like a game she's already won. Finds 1-A's chaos endearing in the way that people find puppies endearing — they're trying so hard. Genuinely likes competition. Would rather lose a good fight than win a boring one. Her competitive sincerity is the thing that catches people off guard — they expect cheap tricks and get instead a student who is actually, seriously fast.",
@@ -55,7 +73,16 @@
     },
     {
       "name": "Denma Sora",
-      "quirk": "Gravity Well",
+      "quirk": "Black Hole",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Black Hole",
+        "weakness": "His fingers must be exposed to use the Quirk, and prolonged use risks collateral damage — a failed save against Black Hole within 10 feet of fragile structures may cause them to collapse. While his fingers are exposed, ranged attacks against him within 10 feet have disadvantage and loose objects under 50 pounds drift toward him.",
+        "abilities": [
+          { "name": "Black Hole", "type": "Action", "description": "Creates a gravitational pulse in a 30-ft cone. Each creature makes a Strength save against his Quirk DC, taking 2d8 force damage and being pulled 15 feet closer on a fail, or half damage on a success. A creature ending its turn within 5 feet of him after a failed save becomes Restrained, taking 2d8 force damage at the start of each turn until it saves again." },
+          { "name": "Singularity Vortex", "type": "Action (6th level)", "description": "Creates a miniature black hole at a point within 60 feet for 1 minute. Each creature starting its turn within 15 feet makes a Strength save or is pulled 10 feet closer and takes 6d8 force damage (half on success). The area is difficult terrain and ranged attacks through it have disadvantage. Can be moved up to 20 feet as a bonus action." },
+          { "name": "Micro Collapse", "type": "Passive", "description": "Can disintegrate up to 50 pounds of non-living material (metal, stone, wood) by focusing the black hole, useful for disarming or destroying small unattended items or weakened constructs." }
+        ]
+      },
       "quirk_type": "Emitter",
       "quirk_summary": "Creates localised gravitational anomalies. Denma can designate a 10ft sphere within 60ft as either a high-gravity zone (things pulled toward its centre) or a low-gravity zone (things float away from it). Maintaining a zone requires concentration. He can have two zones active simultaneously at full concentration, but cannot attack while doing so.",
       "personality": "Quiet. Unsettling. Speaks in short declarative sentences and rarely finishes thoughts that the other person can follow anyway. Not cold — just somewhere else most of the time. Will talk at length about gravitational physics and the difference between mass and weight in a way that is technically correct and socially obliterating. The moments where he's actually paying attention to a person are rare and feel significant.",
@@ -76,13 +103,22 @@
     },
     {
       "name": "Ogiwara Bunta",
-      "quirk": "Seismic",
+      "quirk": "Big Fist",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Big Fist",
+        "weakness": "Prolonged use strains his muscles and joints — after using Big Fist a number of times equal to his level times his proficiency bonus, he must make a DC 13 Constitution save or take 1d12 true damage.",
+        "abilities": [
+          { "name": "Giant Strength", "type": "Passive", "description": "Strength score maximum becomes 22, and carrying capacity is doubled." },
+          { "name": "Giant Punch", "type": "Action", "description": "Enlarges a hand and strikes all creatures in a 10-ft long, 10-ft wide line, dealing 2d12 bludgeoning damage and producing a wind shock that pushes targets back 15 feet." },
+          { "name": "Ground Pound", "type": "Action (6th level)", "description": "Slams an enlarged hand into the ground. All creatures within a 20-ft radius make a Dexterity save or take 4d12 bludgeoning damage and are knocked prone; the area becomes difficult terrain." }
+        ]
+      },
       "quirk_type": "Emitter",
-      "quirk_summary": "Stomping generates seismic shockwaves radiating outward from the impact point. The harder the impact, the wider and stronger the wave. Scaling: a normal stomp creates a 10ft tremor. A running jump stomp creates a 20ft, 2d6-damage wave that leaves difficult terrain. Doesn't work if he can't make physical ground contact.",
+      "quirk_summary": "Ogiwara can enlarge either hand to enormous size, vastly increasing his striking power and reach. A straight punch becomes a battering ram that flattens anything in a line; slammed into the ground it sends a shockwave of displaced air and debris radiating outward. Scaling: a standard Giant Punch hits everything in a 10-ft line. A full Ground Pound clears a 20-ft radius and leaves the area difficult terrain. Doesn't work if his hand can't reach the target or the ground.",
       "personality": "Loud. Genuinely, physically loud — his voice carries without him trying. Enthusiastic competitor in the way that makes it fun to lose to him because he's so happy about having a real contest. No subtlety. No hidden agenda. Will shake your hand and mean it. Will also absolutely try to put you through the floor.",
       "rival_in_1a": "Toshida Shogoro",
-      "rivalry_dynamic": "Sound vs Seismic. Both create broad-area chaos. Both are physically enormous and running at things is their default strategy. They'll either be best friends or destroy each other immediately at the Festival — the exact circumstances of their first meeting will determine which. Either outcome is correct.",
-      "sports_festival_role": "Devastating in group events that require movement or terrain control. In the tournament bracket, he's the crowd favourite — his Seismic stomps create visible, dramatic shockwaves that the audience loves. Weakness: if someone gets him airborne, his quirk is useless. Not a weakness he's addressed.",
+      "rivalry_dynamic": "Sound vs Big Fist. Both create broad-area chaos. Both are physically enormous and running at things is their default strategy. They'll either be best friends or destroy each other immediately at the Festival — the exact circumstances of their first meeting will determine which. Either outcome is correct.",
+      "sports_festival_role": "Devastating in group events that require movement or terrain control. In the tournament bracket, he's the crowd favourite — his Giant Punch and Ground Pound create visible, dramatic shockwaves that the audience loves. Weakness: if someone gets him airborne or out of arm's reach, his quirk is useless. Not a weakness he's addressed.",
       "tier1_appearance": "Two 7am shockwaves on move-in morning, felt through the dorm floor. If confronted: 'Warmup.' Delivered as a complete explanation. Gives the thumbs up through the Capture the Flag observation window — entirely genuine, completely unreadable.",
       "dm_notes": "Ogiwara is the relief. Run every Tier 1 scene with him as a moment of levity. He has no secrets, no agenda, no hidden depth to excavate. His arc at the Sports Festival is uncomplicated: he wants to test himself against Toshida. Give him that fight and let it be excellent.",
       "stat_block": {
@@ -90,51 +126,69 @@
         "STR": 18, "DEX": 10, "CON": 17, "INT": 9, "WIS": 11, "CHA": 14, "TECH": 9
       },
       "signature_moves": [
-        "Seismic Stomp: stomp creates a 10ft radius tremor. Creatures in range make DC 13 STR save or fall prone.",
-        "Running Stomp: move at least 20ft and jump-stomp. 20ft radius, 2d6 bludgeoning, DC 14 STR save or prone. Difficult terrain left behind. Recharge 5-6.",
-        "Ground Lock: repeated stomps keep a 15ft area in constant low-level tremor. Difficult terrain as long as Ogiwara concentrates (bonus action each round to maintain)."
+        "Giant Punch (Scaled): enlarges a hand and strikes everything in a 10-ft line. 2d10 bludgeoning damage and a wind-shock push of 10 feet.",
+        "Ground Pound (Scaled): slams an enlarged hand into the ground. 15-ft radius, 3d10 bludgeoning, DC 14 DEX save or knocked prone. Difficult terrain left behind. Recharge 5-6.",
+        "Giant Strength (Passive): his Strength score maximum is treated as 22, and his carrying capacity is doubled."
       ]
     },
     {
       "name": "Nashiro Aoi",
-      "quirk": "Copycast",
+      "quirk": "Copy",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Copy",
+        "weakness": "Physical contact is required to copy a Quirk, and each copied power fades after two minutes. Accumulation- or mutation-based Quirks cannot be properly replicated, and upon copying she inherits all of its drawbacks, requiring a successful DC 16 Athletics check — on a failure, she cannot attempt to copy that specific Quirk again for seven rounds.",
+        "abilities": [
+          { "name": "Mimic Touch", "type": "Bonus Action", "description": "When she lands an unarmed strike on a creature, she may copy their Quirk. The copied Quirk lasts two minutes (three at 5th level, five at 10th level)." },
+          { "name": "Quirk Swap", "type": "Bonus Action", "description": "Switches between stored copied Quirks. She may maintain up to two copied Quirks at once, increasing by one additional Quirk at 5th and 10th level." }
+        ]
+      },
       "quirk_type": "Emitter",
-      "quirk_summary": "Projects photorealistic visual and audio illusions of anything she's previously observed. Detail and scale are limited only by her observation — she's observed a lot. The illusions are convincing enough to fool casual inspection. They fall apart under direct physical interaction (touching one reveals nothing is there) or exceptionally high INT saves. She cannot duplicate herself convincingly.",
-      "personality": "Theatrical. Observant in the way that only people who spend a lot of time watching other people are. In public she's performing — always, slightly, a version of herself edited for the room. In private (which almost never happens with 1-A) she's dry and tired in an interesting way. She's been reading Class 1-A since the results board. She can do a note-perfect impression of Oshiro.",
+      "quirk_summary": "Nashiro can borrow a Quirk by landing a hit on its user — for two minutes she has full use of whatever ability they're carrying, layered over (or instead of) her own approach to a fight. She's spent years cataloguing how other people's powers actually work in practice, which means she rarely copies something she doesn't already know how to use well. She cannot copy mutation- or accumulation-based Quirks, and copying anything risky means inheriting its drawbacks too.",
+      "personality": "Theatrical. Observant in the way that only people who spend a lot of time watching other people are. In public she's performing — always, slightly, a version of herself edited for the room. In private (which almost never happens with 1-A) she's dry and tired in an interesting way. She's been reading Class 1-A since the results board, cataloguing every Quirk she's seen on tape and deciding which would actually be worth taking from them in a fight.",
       "rival_in_1a": "Kazama Kenji",
-      "rivalry_dynamic": "Fire counters illusion directly — Hellflame's light burns away visual deception, and its heat reveals physical reality by scorching anything not truly present. Nashiro knows this and has spent considerable time figuring out how to use it. Kazama doesn't know she exists yet. Their Sports Festival match, if it happens, is about whether Nashiro can win before Kazama figures out the counter.",
-      "sports_festival_role": "Nightmarish in group events that involve information — she can create false obstacles, fake teammates, phantom threats. In the tournament bracket, she's a puzzle encounter: students need to identify the real threat under the illusion layer while fighting something that might not be there at all.",
-      "tier1_appearance": "A 1-A student is certain they saw Hamagawa in the corridor. They didn't. Hamagawa was in class. Nobody can prove it was Nashiro. If directly confronted: 'I don't know what you're referring to.' She says it as Oshiro.",
-      "dm_notes": "Nashiro is a slow-burn reveal. Her Tier 1 appearances should all be deniable — the class sees something that might be an illusion or might not be. By the Sports Festival, players should be actively second-guessing information, which is exactly where she wants them.",
+      "rivalry_dynamic": "The obvious play for Nashiro against Hellflame is to land a hit and copy it — Kazama knows this, which means the real fight is about whether she can tag him before he adjusts his approach to deny her the touch. If she copies his fire, the fight changes entirely on her terms. Kazama doesn't know she exists yet. Their Sports Festival match, if it happens, is about whether Nashiro can land that first hit before Kazama figures out what she's doing.",
+      "sports_festival_role": "Nightmarish in group events that involve direct confrontation — she can absorb whoever hits her first and turn their own Quirk against the rest of the field. In the tournament bracket, she's a puzzle encounter: students need to avoid giving her a clean touch while she's actively hunting for the most dangerous Quirk on the field to borrow.",
+      "tier1_appearance": "A 1-A student swears Hamagawa tagged them with a light shove in a sparring drill, then suddenly fought like Hamagawa for thirty seconds. It wasn't Hamagawa. Nobody can prove it was Nashiro. If directly confronted: 'I don't know what you're referring to.' She says it with Hamagawa's exact dry cadence.",
+      "dm_notes": "Nashiro is a slow-burn reveal. Her Tier 1 appearances should all be deniable — a tagged opponent briefly fighting unlike themselves, easy to write off as imagination. By the Sports Festival, players should be actively wary of letting her land a hit, which is exactly where she wants them.",
       "stat_block": {
         "level": 3, "HP": 19, "AC": 13,
         "STR": 9, "DEX": 14, "CON": 10, "INT": 16, "WIS": 15, "CHA": 17, "TECH": 12
       },
       "signature_moves": [
-        "Copycast Illusion (Action): create a detailed visual and audio illusion of any observed scene or creature within 60ft. DC 15 INT save to see through. Concentration.",
-        "Burst Illusion (Bonus action): flash a sudden, shocking false image — DC 13 WIS save or frightened for 1 round. Single use, then 1-round cooldown.",
-        "Mirror Self: creates a convincing illusory duplicate. Attackers must make DC 14 INT check to target the real Nashiro — on fail, they target the illusion. 3 charges, depletes on failed saves."
+        "Mimic Touch (Bonus action): on landing an unarmed strike, copy the target's Quirk. Lasts two minutes. Cannot copy mutation- or accumulation-based Quirks, and inherits the copied Quirk's drawbacks.",
+        "Quirk Swap (Bonus action): switches which copied Quirk is currently active. Can hold up to two copied Quirks in reserve at once.",
+        "Cold Read (Passive): from prior observation of an opponent's Quirk in use, she has advantage on the Athletics check required when first copying it."
       ]
     },
     {
       "name": "Kitamura Sora",
-      "quirk": "Threadline",
+      "quirk": "Tape",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Tape",
+        "weakness": "Tape is durable but not unbreakable. She can produce tape for up to 10 minutes of use; after that, she cannot generate more until she takes a short rest to recover from the resulting dry skin.",
+        "abilities": [
+          { "name": "Grapple and Restrain", "type": "Action", "description": "Shoots tape at a target within 60 feet. On a hit, the target becomes grappled and restrained, with a Strength save against her Quirk DC at the end of its turn to break free. While grappled, she can move the creature left or right up to 30 feet." },
+          { "name": "Throwing Objects", "type": "Action", "description": "Attaches tape to up to two objects and throws them, making two separate attacks — each object deals bludgeoning damage based on its size per the Object Size table (e.g., Medium objects 1d8, Large objects 2d8)." },
+          { "name": "Rescue Maneuver", "type": "Reaction", "description": "Shoots tape at a grappled ally, pulling them toward her and allowing her to move up to 60 feet with them to reposition or avoid attacks." },
+          { "name": "Barricade Tape", "type": "Reaction", "description": "Rapidly ejects tape to cover up to a 10-ft square radius 60 feet away, creating a sticky barrier that provides half cover to allies and halves the speed of creatures moving through it." }
+        ]
+      },
       "quirk_type": "Emitter",
-      "quirk_summary": "Generates high-tensile monofilament wire from her fingertips. The wire is nearly invisible under normal light, can support 400kg, and cuts through soft materials cleanly. She can extend up to 40 metres simultaneously, maintain up to 8 independent strands, and recall them instantly. Setting a wire trap in a room takes her approximately six seconds. She has timed this.",
+      "quirk_summary": "Generates strong, adhesive tape from her forearms. She can fire it to bind a target at range, sling tape-wrapped objects as improvised weapons, throw a tether to pull an ally clear of danger, or flood an area with sticky barricade tape that bogs down anyone moving through it. Setting up a barricade or restraint line in a room takes her approximately six seconds. She has timed this.",
       "personality": "Precise. Economical. Considers Class 1-A's operational style inefficient in the way an architect considers a building that keeps falling down. She isn't contemptuous — she's concerned, professionally. Has extremely strong opinions about workspace organisation and does not volunteer them unsolicited. Will volunteer them if asked. Has very few opinions about things she considers not her domain. Says 'Yes.' and 'No.' as complete sentences.",
       "rival_in_1a": "Nakaya Emari",
-      "rivalry_dynamic": "Size vs Thread. Nakaya's enlargement makes her a large target — and large targets are exactly what Threadline is designed for. The wire scales to the problem. Nakaya's advantage is that at sufficient size, she can just walk through the trap, wires and all — but that leaves marks. Their rivalry is about Nakaya learning that raw scale has hard limits.",
-      "sports_festival_role": "Devastating in any event with structure — she pre-rigs environments during setup phases. In group contests, she's invisible until suddenly four students are tripped simultaneously. In the tournament bracket, she's the student everyone is afraid to face because they've seen her work and don't know where the wire is.",
-      "tier1_appearance": "Corridor encounter during the Agency Visit arc. 10 seconds. She's carrying precisely folded documents, doesn't introduce herself, continues walking. Her name badge faces inward. If a student catches a glimpse: Kitamura, S., 1-B. The practice room she used before leaving has three wire patterns still hanging in the air — invisible until the light catches them.",
-      "dm_notes": "Kitamura is the student who makes players feel like they've been outplayed by something they didn't see coming. Her Tier 1 presence should be minimal and precise — the corridor encounter, the wire patterns. Nothing else. By the Sports Festival, her reputation has been built entirely by absence. The fight against her should be the one that makes players think hard about the environment before they enter it.",
+      "rivalry_dynamic": "Size vs Tape. Nakaya's enlargement makes her a large target — and a large target takes a lot more tape to bring down, but once Kitamura's got enough of it on her, the restraint scales with the problem. Nakaya's advantage is that at sufficient size, she can simply tear through tape that would hold a normal-sized opponent — but that takes time and effort Kitamura can use against her. Their rivalry is about Nakaya learning that raw scale has hard limits.",
+      "sports_festival_role": "Devastating in any event with structure — she pre-rigs environments with barricade tape during setup phases. In group contests, she's invisible until suddenly four students are bound simultaneously. In the tournament bracket, she's the student everyone is afraid to face because they've seen her work and don't know where the tape is.",
+      "tier1_appearance": "Corridor encounter during the Agency Visit arc. 10 seconds. She's carrying precisely folded documents, doesn't introduce herself, continues walking. Her name badge faces inward. If a student catches a glimpse: Kitamura, S., 1-B. The practice room she used before leaving has tape patterns still strung across it at odd angles — easy to miss until someone almost walks into one.",
+      "dm_notes": "Kitamura is the student who makes players feel like they've been outplayed by something they didn't see coming. Her Tier 1 presence should be minimal and precise — the corridor encounter, the tape patterns. Nothing else. By the Sports Festival, her reputation has been built entirely by absence. The fight against her should be the one that makes players think hard about the environment before they enter it.",
       "stat_block": {
         "level": 3, "HP": 21, "AC": 14,
         "STR": 10, "DEX": 17, "CON": 11, "INT": 15, "WIS": 16, "CHA": 11, "TECH": 14
       },
       "signature_moves": [
-        "Threadline Trap (Action or Reaction): rig a 10ft section of terrain with wire. Any creature moving through makes DC 14 DEX save or restrained. Invisible until triggered (DC 16 Perception to spot beforehand).",
-        "Wire Bind: rapid wire application to a single target. DC 13 DEX save or restrained. On a fail, DC 14 STR to break free (action). Range 20ft.",
-        "Retraction Burst: instantly recall all wires simultaneously — any creature currently restrained takes 1d6 slashing damage as wires snap taut before releasing."
+        "Barricade Tape (Reaction): ejects tape to cover a 10-ft square up to 60ft away, creating a sticky barrier that grants allies half cover and halves the speed of creatures moving through it.",
+        "Grapple and Restrain (Action): shoots tape at a target within 60ft. On a hit, the target is grappled and restrained, with a Strength save at the end of its turn to break free.",
+        "Rescue Maneuver (Reaction): shoots tape at a grappled ally, pulling them toward her and repositioning up to 60 feet to get them clear of danger."
       ]
     }
   ]

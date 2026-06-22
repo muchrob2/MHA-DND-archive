@@ -4,10 +4,17 @@
       "name": "Arakawa Setsuna",
       "hero_name": "Watershed",
       "role": "Principal — U.A. High School Hero Course",
-      "quirk": "Resonance",
+      "quirk": "Vibrate",
       "quirk_type": "Emitter",
-      "quirk_summary": "Arakawa emits a continuous low-frequency resonance field that she can tune with precision. At ambient levels it's imperceptible — it does nothing visible. At focus, it can shatter stone, collapse steel load-bearing points, or induce disorientation in biological targets. At maximum output she has brought down the outer wall of a fortified building by holding a single sustained note for four seconds. She has not used it at maximum output in eleven years. She keeps a tuning fork on her desk.",
-      "quirk_mechanics_ref": "Resonance — custom. Key features: Ambient Field (passive, negligible effect), Focused Pulse (structural damage, ranged), Dissonance Wave (AOE disorientation, CON save), Resonant Collapse (full-power structural destruction, requires full action and concentration, 1/long rest).",
+      "quirk_summary": "Arakawa can generate and control vibrations and shockwaves that travel through air, solids, and liquids, tuning their speed, strength, and frequency with precision. At ambient levels the field is imperceptible. At focus, she can send a shockwave through a surface to shatter stone, collapse steel load-bearing points, or disorient anyone caught in the wave. She has not used it at full output in eleven years. She keeps a tuning fork on her desk.",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Vibrate",
+        "weakness": "The vibrations can strike allies as well as enemies, so she must be careful generating them near others. Producing powerful vibrations is physically taxing — after using Vibration Generation she must succeed on a DC 13 Constitution save or gain a level of exhaustion (to a maximum of 5).",
+        "abilities": [
+          { "name": "Vibration Generation", "type": "Action", "description": "Touching an object or surface, she sends a shockwave through a 60-foot radius or square. Creatures in the area make a Constitution save; on a failure they take 4d8 thunder damage, are disoriented (disadvantage on their next attack roll or ability check), and are knocked prone and pushed back; on a success they take half damage and are not moved or disoriented. Deals double damage to structures." },
+          { "name": "Shattering Strike", "type": "Passive/Action", "description": "She can enhance a melee attack with vibration, dealing an additional 2d8 thunder damage on a hit." }
+        ]
+      },
       "appearance": "Late 50s. Small — genuinely, surprisingly small, which everyone registers and then immediately forgets because of how she carries herself. Silver hair cut short and practical. Wears U.A. administrative dress with a single concession to personal taste: always a different colour of scarf. Her office is immaculate. The tuning fork on her desk is the only object that isn't perfectly placed — it's always slightly askew, and she never straightens it.",
       "personality": "Measured in a way that reads as warmth until you look more closely, at which point it reads as complete control. She is genuinely fond of students — of this class in particular — and she expresses it through high expectations rather than softness. Never raises her voice. The teachers are slightly afraid of her in the way that people are afraid of someone whose respect they want. The students are not afraid of her, which she prefers.",
       "teaching_style": "She doesn't teach classes. She appears at exercises without announcement and watches without commenting. Once a semester she takes a single student to her office for a conversation. Nobody knows what's said. Students come out looking thoughtful. She has an instinct for which student needs to be seen at exactly the right moment.",

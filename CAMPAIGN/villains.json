@@ -256,7 +256,6 @@
           "quirk_rarity": "Very Rare",
           "quirk_type": "Transformation",
           "quirk_summary": "Undertow can make his body intangible — he passes through solid matter, falls through floors, walks through walls. While phased, he cannot interact with the physical world but also cannot be hit. He can partially phase individual body parts, allowing selective interaction. At full mastery he can phase other people or objects he's in contact with.",
-          "quirk_mechanics_ref": "Permeation — see Quirk Compendium.",
           "appearance": "Lean, mid-40s. Unhurried about everything. The kind of person who looks completely comfortable wherever they are. Usually seen in unremarkable, well-fitted clothes. No dramatic villain aesthetic. That's the point.",
           "personality": "Dry, measured, occasionally funny. Treats Class 1-A as entertainment once they start interfering — they're interesting to him, not threatening. This will shift in Tier 3 when the class actually costs him something significant. He won't get loud about it. He'll get precise.",
           "combat_style": "Avoidance and precision. He lets attacks pass through him, repositions constantly, strikes only when certain. He doesn't brawl. The encounter with him in Tier 3 is designed to teach players that not every villain can be beaten by fighting harder.",
@@ -289,7 +288,18 @@
             "tier_4": "Final boss (with Flashpoint). His Permeation is his greatest defense but Flashpoint's unpredictability forces him to split focus — that's the window."
           },
           "dm_notes": "Never raise his voice. If he's being loud, something is wrong with his plan and that's more dangerous. The class beating him requires creativity — simply dealing damage doesn't work.",
-          "season_1_role": "Observer only in Season 1. Appears once in Convergence — watches the fight, looks at each PC for three seconds, says 'Good instincts. Wrong scale.' and phases out. Never targeted, never threatened. His Season 1 closing appearance is the image the campaign ends on."
+          "season_1_role": "Observer only in Season 1. Appears once in Convergence — watches the fight, looks at each PC for three seconds, says 'Good instincts. Wrong scale.' and phases out. Never targeted, never threatened. His Season 1 closing appearance is the image the campaign ends on.",
+          "quirk_mechanics": {
+            "source": "Quirk Compendium — Permeation",
+            "weakness": "While fully intangible he loses all sensory perception (blind, deaf, breathless) and begins suffocating after a number of rounds equal to his Constitution modifier. Deactivating the Quirk while inside a solid object instantly expels him to the nearest open space.",
+            "abilities": [
+              {
+                "name": "Phase",
+                "type": "Action, Bonus Action, or Reaction",
+                "description": "Renders his entire body or a single limb intangible. While phased, he can move through any structure, terrain, or obstacle and is immune to all physical damage and effects — only mental or psychic attacks can affect him. He cannot attack or physically interact with the environment while fully intangible."
+              }
+            ]
+          }
         },
         {
           "name": "Goda Miruki",
@@ -299,7 +309,6 @@
           "quirk_rarity": "Legendary",
           "quirk_type": "Emitter",
           "quirk_summary": "Flashpoint generates searing blue-white flames capable of incinerating almost anything. Her flames burn hotter than Hellflame and are harder to put out — they cling to surfaces and continue burning. She can control the direction and spread but not perfectly; her quirk tends toward excess.",
-          "quirk_mechanics_ref": "Cremation — see Quirk Compendium. Similar to Hellflame but higher temperature, blue-white flame, harder to extinguish (requires special effort or water quirk).",
           "appearance": "Lean and scarred across her arms from years of her own flames. Short hair, singed edges. Doesn't look like someone who should be as dangerous as she is until the moment she is.",
           "personality": "Minimal words. Pyromaniac instincts. Loyal to Undertow because he's the only person who's ever treated her capabilities as a feature rather than a problem. Not interested in conversation with heroes. Not cruel — just single-purpose.",
           "combat_style": "Overwhelming. She opens fights at maximum output. Area denial through fire. Anyone who gets close learns that her flames stick to skin and armour alike. Players should fear this fight the first time they see her in Tier 2.",
@@ -332,7 +341,23 @@
             "tier_4": "Final boss alongside Undertow. The challenge: stopping Flashpoint without being incinerated, in an enclosed venue, while also dealing with Undertow's Permeation. The fact that she and Undertow don't fight well together is the path to victory."
           },
           "dm_notes": "Make the Tier 2 fight feel genuinely dangerous. If the class tries to fight her head-on at level 5-7, they should be badly outmatched and need to retreat or use terrain. This is a loss that makes the eventual Tier 4 win matter.",
-          "season_1_role": "Teased, not fought. Season 1 foreshadowing only — referenced in a seized Chain memo ('Miruki's operation, port district, pending') found in the Convergence arc. The class won't know what the name means yet. Season 2 threat."
+          "season_1_role": "Teased, not fought. Season 1 foreshadowing only — referenced in a seized Chain memo ('Miruki's operation, port district, pending') found in the Convergence arc. The class won't know what the name means yet. Season 2 threat.",
+          "quirk_mechanics": {
+            "source": "Quirk Compendium — Cremation",
+            "weakness": "Builds a heat counter with every move used. At 35 heat points, he cannot use any move again until he takes 2d8 true damage that cannot be reduced. He always carries one rank of Burned that cannot be removed.",
+            "abilities": [
+              {
+                "name": "Flame",
+                "type": "Action",
+                "description": "Ranged or melee fire attack within 45 feet dealing 3d6 + his Dexterity modifier fire damage, ignoring fire resistance and treating immunity as resistance. Costs 1 heat point."
+              },
+              {
+                "name": "Flashfire Fist",
+                "type": "Action",
+                "description": "Maximizes his flame temperature for an empowered unarmed strike dealing 5d10 + 5 fire damage. On a hit, the target makes a Strength save — on a failure they fall prone, gain two ranks of Burned, and are pushed 25 feet away. Costs 10 heat points."
+              }
+            ]
+          }
         },
         {
           "name": "Sae Ichiro",
@@ -342,7 +367,6 @@
           "quirk_rarity": "Rare",
           "quirk_type": "Emitter",
           "quirk_summary": "Riddle can brainwash anyone who verbally responds to him while he speaks. Once triggered, the target enters a compliant state and follows simple commands. Extended exposure can create deeper conditioning. The effect wears off naturally or can be snapped by physical shock.",
-          "quirk_mechanics_ref": "Brainwashing — see Quirk Compendium. Key mechanic: verbal trigger required (target must respond to user's speech). Effect scales with extended use.",
           "appearance": "Late 20s. Conventionally attractive in an unassuming way. Warm eyes, easy laugh. The kind of person you feel immediately comfortable around. This is intentional.",
           "personality": "Genuinely charming. Listens well — really listens, which is rarer than it should be. He takes an interest in the students' actual problems and frustrations. This is manipulation but it's manipulation that started from something real. He was once a person who actually cared. The class will like him before they know what he is. His eventual exposure should land hard.",
           "combat_style": "Avoids it. Uses Brainwashing defensively. If cornered, he'll talk, and that talking is the danger.",
@@ -374,7 +398,18 @@
             "tier_4": "He gives himself up. He didn't want to be part of what The Chain is doing with the quirk-nullifying device. This is complicated, not redemptive — he still did real harm. What happens to him is the players' decision."
           },
           "dm_notes": "Play him warmly. Don't telegraph the villain. When students interact with him in Tier 2 and 3, he should feel like a genuinely good person to talk to. That's the point. The reveal hits harder if they liked him.",
-          "season_1_role": "Teased, not fought. A Chain cell member in the Convergence arrest says 'We have a friend who talks to people. He talked to someone you know.' Plant this ambiguously. Season 2 threat."
+          "season_1_role": "Teased, not fought. A Chain cell member in the Convergence arrest says 'We have a friend who talks to people. He talked to someone you know.' Plant this ambiguously. Season 2 threat.",
+          "quirk_mechanics": {
+            "source": "Quirk Compendium — Brainwashing",
+            "weakness": "Requires the target to verbally respond to him to activate — silence or nonverbal communication blocks the effect. He can only control one creature at a time; Brainwashing a new target immediately ends the effect on the previous one.",
+            "abilities": [
+              {
+                "name": "Command",
+                "type": "Action",
+                "description": "Activates the Quirk for 1 minute. Any creature that verbally responds to him becomes Brainwashed — dazed but able to act at full speed when commanded via his bonus action, except for commands that would directly harm themselves. The condition ends if he releases the target, the target takes 50+ damage in one round, the duration expires, or he is incapacitated."
+              }
+            ]
+          }
         },
         {
           "name": "Kuma",
@@ -384,7 +419,6 @@
           "quirk_rarity": "Rare",
           "quirk_type": "Transformation",
           "quirk_summary": "Kuma can grow his body to enormous size — up to 25 feet tall at peak. Growth increases strength, durability, and reach proportionally. At full size he's a walking natural disaster in enclosed spaces.",
-          "quirk_mechanics_ref": "Gigantification — see Quirk Compendium.",
           "appearance": "Even at normal size, large. Shaved head, extremely wide. Tends to break furniture by existing near it. Works for the Chain because the pay is good and the management leaves him alone.",
           "personality": "Overconfident, loud, not strategically inclined. Genuinely enjoys the fight. No particular malice — this is just his job and he's good at it. Getting beaten by a class of first-years is going to be very embarrassing for him.",
           "combat_style": "Grow large, hit hard, sweep everything. At full size his attacks cover huge areas. The challenge for the class is managing his growth and preventing him from reaching full size in the first place.",
@@ -444,6 +478,17 @@
               "Sweeping Strike (Huge only): 10 ft cone. DEX save DC 14 or take 3d10 bludgeoning and be pushed 10 ft."
             ],
             "dm_scaling_note": "Climax boss for a Level 6 party of 4. Should be genuinely threatening but beatable. The ceiling preventing Gargantuan is the terrain advantage — make sure the class can discover it."
+          },
+          "quirk_mechanics": {
+            "source": "Quirk Compendium — Gigantification",
+            "weakness": "Must fully commit to the transformation — size cannot be adjusted incrementally, and navigating tight or confined spaces becomes extremely difficult. Extreme stress, rage, or frustration can trigger the Quirk unintentionally.",
+            "abilities": [
+              {
+                "name": "Growth Spurt",
+                "type": "Action, Bonus Action, or Reaction",
+                "description": "Transforms into a Huge creature: Strength becomes 22 with advantage on Strength saves and checks; carrying capacity is quadrupled; unarmed strikes deal 3d12 damage; enemies within 10 feet must succeed on a Strength save or be knocked prone. Can be used as a reaction to absorb damage meant for an ally standing in front of him."
+              }
+            ]
           }
         }
       ]
@@ -465,7 +510,6 @@
           "quirk_rarity": "Very Rare",
           "quirk_type": "Emitter",
           "quirk_summary": "Null can nullify the quirks of any living being within her line of sight. Unlike Eraser Head's version, hers doesn't require sustained eye contact — once locked, suppression persists for up to one hour even if she looks away. She cannot suppress multiple targets simultaneously without splitting duration. Her eyes glow a flat, pale white when active.",
-          "quirk_mechanics_ref": "Erasure variant — see Quirk Compendium. Extended duration, no contact maintenance required.",
           "appearance": "Late 40s. White hair cropped close on one side, longer on the other. Lab coat over dark practical clothes. No dramatic villain aesthetic — she looks exactly like a senior researcher because that's what she was.",
           "personality": "Precise, clinical, and genuinely curious about how people work. She doesn't hate heroes. She finds them interesting subjects. The horror of dealing with her is that she's not cruel — she's just completely unbothered by the cost of her work.",
           "combat_style": "Null doesn't fight. She suppresses. She will negate the most dangerous quirk in the room and then let her Operatives handle the rest. In a direct confrontation she is physically unremarkable — she relies entirely on her quirk and on never being in a position where she needs to fight.",
@@ -498,7 +542,18 @@
             "tier_4": "Final confrontation in the Null Signal facility. Fighting her means fighting without quirks — or finding a way to reach her before she can lock someone down."
           },
           "dm_notes": "She suppresses the most dangerous PC first, every time. She's done the reading. If a PC's quirk was studied in Tier 2, she knows its exact limitations. Let her use that knowledge — it makes the encounter feel genuinely threatening.",
-          "season_1_role": "Teased, not fought. Season 1 foreshadowing only — referenced in the 'Seika Advanced Systems' external data request (Hamagawa's monitor, Tier 1) and as Splice's director. Her season 1 log entry on the class: 'worth acquiring.' Season 2 threat."
+          "season_1_role": "Teased, not fought. Season 1 foreshadowing only — referenced in the 'Seika Advanced Systems' external data request (Hamagawa's monitor, Tier 1) and as Splice's director. Her season 1 log entry on the class: 'worth acquiring.' Season 2 threat.",
+          "quirk_mechanics": {
+            "source": "Quirk Compendium — Erasure",
+            "weakness": "Requires a clear line of sight to the target's physical body — targets can evade by hiding behind obstacles. If hit while maintaining the effect, he must succeed on a DC 13 Constitution save to keep his eyes open or the effect ends.",
+            "abilities": [
+              {
+                "name": "Erase",
+                "type": "Bonus Action",
+                "description": "Gazes at creatures within a 150-foot cone (DC 14 Perception check for targets beyond that range). Affected targets cannot use their Quirk or abilities for 4 rounds. He can maintain focus for a number of rounds equal to his proficiency bonus before eye strain sets in."
+              }
+            ]
+          }
         },
         {
           "name": "Ryo Karashi",
@@ -626,7 +681,6 @@
           "quirk_rarity": "Rare",
           "quirk_type": "Emitter",
           "quirk_summary": "Voltage generates and discharges high-voltage electricity through his body and nearby conductive surfaces. Unlike standard Electrification quirks, his carries a paralytic charge that disrupts muscle control. He can regulate output with precision — from a numbing tingle to a strike that knocks a person unconscious in one hit.",
-          "quirk_mechanics_ref": "Electrification — see Quirk Compendium.",
           "appearance": "Early 30s. Scarred fingers, slightly singed hair that regrows burnt. Calm in a way that reads as dangerous — he doesn't get agitated before a fight. The Fracture symbol on the back of his jacket.",
           "personality": "Quiet and direct. He doesn't share Shard's gift for argument but he doesn't need to. He's there to protect the movement and its people, and he takes that seriously enough to fight heroes who are, in his view, protecting an unjust system.",
           "combat_style": "Crowd control into shutdown. He uses the environment — metal fences, wet ground, support equipment — as extensions of his quirk. He tries to disable rather than kill. If the class has fought him before, he's adapted.",
@@ -659,7 +713,23 @@
             "tier_4": "If Shard is cornered, Voltage is the last line. He won't surrender. He will try to get her out."
           },
           "dm_notes": "He's the tactician. He reads the room, reads the class. Use him to punish overconfidence — he knows that Hellflame can't run electricity through its own fire and will take advantage of it.",
-          "season_1_role": "Met directly in The Fracture Problem (Tier 2) — performs a hero move (protecting an elderly protester) while being a villain. Present but non-combative in Convergence, ensuring Shard's exit is clean. If forced into combat, use full stat block."
+          "season_1_role": "Met directly in The Fracture Problem (Tier 2) — performs a hero move (protecting an elderly protester) while being a villain. Present but non-combative in Convergence, ensuring Shard's exit is clean. If forced into combat, use full stat block.",
+          "quirk_mechanics": {
+            "source": "Quirk Compendium — Electrification",
+            "weakness": "Stores up to 1,000,000 watts of electricity, which builds as he uses the Quirk. As wattage rises his Intelligence drops and movement speed halves, culminating in unconsciousness at 1,000,000 watts.",
+            "abilities": [
+              {
+                "name": "Electrification",
+                "type": "Action",
+                "description": "Melee or ranged attack (30 feet) dealing 2d8 lightning damage. Costs 5,001 watts. As a reaction, he can also absorb lightning damage dealt to himself or an ally within 20 feet, reducing it to 0 and gaining resistance to lightning damage."
+              },
+              {
+                "name": "Human Stun Gun",
+                "type": "Action or Reaction",
+                "description": "Discharges electricity in a 10-foot radius or 15-foot line. Creatures must succeed on a Constitution save or take 2d8 lightning damage, become Stunned until the end of his next turn, and gain a rank of Shocked (half damage, no Stun on a success). Costs 10,001 watts."
+              }
+            ]
+          }
         }
       ]
     }

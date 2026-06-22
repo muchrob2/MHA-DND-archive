@@ -363,6 +363,20 @@ function renderGrid() {
   }).join('');
 }
 
+function quirkMechanicsHtml(mech) {
+  if (!mech) return '';
+  const abilities = (mech.abilities || []).map(a =>
+    `<div style="margin-top:8px;"><strong>${escHtml(a.name)}</strong>${a.type ? ` <span style="color:var(--text-dim);">(${escHtml(a.type)})</span>` : ''}<div>${escHtml(a.description||'')}</div></div>`
+  ).join('');
+  return `<div class="detail-section">
+    <div class="detail-label">Quirk Mechanics${mech.source ? ` — ${escHtml(mech.source)}` : ''}</div>
+    <div class="detail-body">
+      ${mech.weakness ? `<div><strong>Weakness</strong> ${escHtml(mech.weakness)}</div>` : ''}
+      ${abilities}
+    </div>
+  </div>`;
+}
+
 function showDetail(idx) {
   const c = allChars[idx];
   const personality = typeof c.personality === 'object' ? (c.personality.summary || JSON.stringify(c.personality)) : (c.personality || c.personality_tag || '');
@@ -374,6 +388,7 @@ function showDetail(idx) {
     <h2>${escHtml(c.name)}</h2>
     <div class="modal-sub">${escHtml(c._type||'')}${c.role ? ' — ' + escHtml(c.role) : ''}</div>
     <div class="detail-section"><div class="detail-label">Quirk</div><div class="detail-body">${escHtml(c.quirk||'—')}</div></div>
+    ${quirkMechanicsHtml(c.quirk_mechanics)}
     ${appearance ? `<div class="detail-section"><div class="detail-label">Appearance</div><div class="detail-body">${escHtml(appearance)}</div></div>` : ''}
     ${personality ? `<div class="detail-section"><div class="detail-label">Personality</div><div class="detail-body">${escHtml(personality)}</div></div>` : ''}
     ${bonus ? `<div class="detail-section"><div class="detail-label">Bonus Features / Notes</div><div class="detail-body">${escHtml(bonus)}</div></div>` : ''}

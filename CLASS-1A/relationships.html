@@ -43,6 +43,19 @@
   .av-npc { background: var(--teal-light); color: var(--teal-text); }
   .char-info .char-name { font-size: 12px; font-weight: 500; }
   .char-info .char-quirk { font-size: 11px; color: var(--text-muted); }
+  .av-1b       { background: var(--amber-light); color: var(--amber-text); }
+  .av-teacher  { background: var(--green-light); color: var(--green-text); }
+  .av-villain  { background: var(--red-light); color: var(--red-text); }
+  .av-supporting { background: rgba(99,102,241,0.13); color: #a5b4fc; }
+
+  /* ── Section filter pills ─────────────────────────────── */
+  #section-filters { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 10px 4px; flex-shrink: 0; }
+  .sf-pill { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 3px 7px; border-radius: 4px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text-dim); cursor: pointer; font-family: inherit;
+    transition: background 0.1s, color 0.1s, border-color 0.1s; }
+  .sf-pill:hover { color: var(--text-muted); border-color: var(--border-strong); }
+  .sf-pill.sf-active { background: var(--purple-light); color: var(--purple-text); border-color: rgba(232,160,32,0.4); }
 
   /* ── Main nav ─────────────────────────────────────────── */
   #main { display: flex; flex-direction: column; overflow: hidden; }
@@ -530,6 +543,22 @@
     #sidebar-mobile-nav { display: none; }
   }
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAX4qLRUWXFrA1sX-XC2KIYuGyc1aD8oX8",
+    authDomain: "mha-dnd-archive.firebaseapp.com",
+    projectId: "mha-dnd-archive",
+    storageBucket: "mha-dnd-archive.firebasestorage.app",
+    messagingSenderId: "1095293073071",
+    appId: "1:1095293073071:web:bba6898534bd713cec865a"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const fbAuthReady = firebase.auth().signInAnonymously().then(() => firebase.auth().currentUser);
+</script>
 </head>
 <body>
 <div id="app">
@@ -797,39 +826,15 @@
     </div>
 
     <div id="save-bar">
-      <span>Syncs via GitHub Gist</span>
+      <span>Syncs via Firestore</span>
       <div style="display:flex;gap:6px;margin-left:auto;align-items:center;">
         <button onclick="saveAllNow()" id="save-btn" style="padding:3px 10px;font-size:11px;border:1px solid var(--purple);border-radius:5px;background:var(--purple-light);color:var(--purple-text);cursor:pointer;font-weight:600;" title="Save all changes now">💾 Save</button>
         <button onclick="exportData()" style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Download a local backup">↓ Export</button>
         <label style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Restore from a backup file">↑ Import<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
-        <button onclick="openGistSettings()" style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Configure GitHub Gist sync">⚙ Gist</button>
         <span id="save-status"></span>
       </div>
     </div>
 
-    <!-- Gist Settings Modal -->
-    <div id="gist-settings-overlay" onclick="if(event.target===this)closeGistSettings()" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
-      <div style="background:var(--surface);border:1px solid rgba(232,160,32,0.2);border-radius:14px;width:380px;max-width:calc(100vw - 40px);box-shadow:0 24px 60px rgba(0,0,0,0.6);padding:24px;display:flex;flex-direction:column;gap:16px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <span style="font-size:13px;font-weight:800;letter-spacing:0.04em;color:var(--purple-text);">⚙ GIST SYNC</span>
-          <button onclick="closeGistSettings()" style="width:26px;height:26px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-dim);font-size:13px;cursor:pointer;">✕</button>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <label style="font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;">GitHub Personal Access Token</label>
-          <input id="gist-token-inp" type="password" placeholder="github_pat_…" style="padding:8px 10px;border:1px solid var(--border);border-radius:7px;background:var(--surface2);color:var(--text);font-size:12px;outline:none;font-family:monospace;">
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <label style="font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;">Gist ID</label>
-          <input id="gist-id-inp" type="text" placeholder="9511ee4cce316f89a9a3821e5d502803" style="padding:8px 10px;border:1px solid var(--border);border-radius:7px;background:var(--surface2);color:var(--text);font-size:12px;outline:none;font-family:monospace;">
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <button onclick="testGistConnection()" style="padding:6px 14px;font-size:11px;font-weight:700;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text-muted);cursor:pointer;">Test Connection</button>
-          <span id="gist-test-result" style="font-size:11px;font-weight:600;"></span>
-          <button onclick="saveGistSettings()" style="margin-left:auto;padding:7px 18px;font-size:12px;font-weight:800;border:none;border-radius:7px;background:var(--purple);color:#0C1017;cursor:pointer;box-shadow:0 0 12px var(--gold-glow);">Save Settings</button>
-        </div>
-        <p style="font-size:10px;color:var(--text-dim);line-height:1.5;margin:0;">Token is stored in your browser only — never sent anywhere except GitHub's API.</p>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -843,8 +848,38 @@ let ENEMIES = [];
 let selected = null;
 let activeTab = 'personality';
 let rels = {};
-let gistSaveTimer = null;
+let fsSaveTimer = null;
 let currentView = 'character';
+let sectionFilter = 'all';
+
+const SECTION_LABELS = { 'class-1a':'Class 1-A','class-1b':'Class 1-B','teachers':'Teachers','villains':'Villains','supporting':'Supporting' };
+const SECTION_ORDER  = ['class-1a','class-1b','teachers','villains','supporting'];
+
+function setSectionFilter(val) { sectionFilter = val; renderSidebar(); }
+
+function normalizeChar(src, section, id) {
+  const sb = src.stat_block || {};
+  const KEYS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
+  const sc = {}; const mo = {};
+  for (const k of KEYS) { sc[k] = sb[k]||10; mo[k] = Math.floor((sc[k]-10)/2); }
+  const personality = typeof src.personality === 'string' ? { summary: src.personality } : (src.personality || {});
+  const appearance  = typeof src.appearance  === 'string' ? { build: src.appearance  } : (src.appearance  || {});
+  const rawDm = src.dm_notes || {};
+  const dm_notes = typeof rawDm === 'string' ? { combat_role: rawDm } : Object.assign({}, rawDm);
+  if (!dm_notes.combat_role && src.combat_style) dm_notes.combat_role = src.combat_style;
+  if (!dm_notes.social_role)  dm_notes.social_role = src.role || '';
+  const quirk_mechanics = { source: src.quirk_mechanics_ref||'', weakness:'', abilities:[], _summary: src.quirk_summary||'' };
+  return {
+    name: src.name, quirk: src.quirk||'', quirk_type: src.quirk_type||'', quirk_rarity: src.quirk_rarity||'',
+    quirk_save_DC: sb.quirk_save_DC||'—', quirk_ability: '', quirk_mechanics,
+    is_pc: false, _file: null, _roster_id: id, _section: section,
+    _alias: src.alias||null, _faction: src._faction||null,
+    personality, appearance, dm_notes, ability_scores: sc, modifiers: mo,
+    level: sb.level||1, HP: sb.HP||10, AC: sb.AC||10,
+    physiology: src.physiology||src.category||'', height: src.height||'', gender: src.gender||'',
+    suggested_class: src.role||'',
+  };
+}
 
 /* ── Save status ──────────────────────────────────────── */
 function setSaveStatus(state, text) {
@@ -853,14 +888,9 @@ function setSaveStatus(state, text) {
   el.textContent = text;
 }
 
-/* ── Gist storage ─────────────────────────────────────── */
-const GIST_TOKEN_KEY = 'mha_gist_token';
-const GIST_ID_KEY    = 'mha_gist_id';
-const GIST_FILE      = 'mha-dnd-save.json';
-
-function gistCreds() {
-  return { token: localStorage.getItem(GIST_TOKEN_KEY), id: localStorage.getItem(GIST_ID_KEY) };
-}
+/* ── Firestore storage ────────────────────────────────── */
+const FS_COLLECTION = 'mha-dnd';
+const FS_DOC        = 'relationships-bundle';
 
 function buildBundle() {
   const characters = {};
@@ -868,37 +898,25 @@ function buildBundle() {
   return { version: 1, exported_at: new Date().toISOString(), relationships: rels, characters };
 }
 
-async function saveToGist() {
-  const { token, id } = gistCreds();
-  if (!token || !id) throw new Error('Gist not configured — open ⚙ Settings');
-  const r = await fetch(`https://api.github.com/gists/${id}`, {
-    method: 'PATCH',
-    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
-    body: JSON.stringify({ files: { [GIST_FILE]: { content: JSON.stringify(buildBundle(), null, 2) } } })
-  });
-  if (!r.ok) throw new Error(`GitHub API ${r.status}`);
+async function saveToFirestore() {
+  await fbAuthReady;
+  await db.collection(FS_COLLECTION).doc(FS_DOC).set(buildBundle());
 }
 
-async function loadFromGist() {
-  const { token, id } = gistCreds();
-  if (!token || !id) return null;
-  const r = await fetch(`https://api.github.com/gists/${id}`, {
-    headers: { 'Authorization': `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' }
-  });
-  if (!r.ok) return null;
-  const data = await r.json();
-  const content = data.files?.[GIST_FILE]?.content;
-  if (!content) return null;
-  const parsed = JSON.parse(content);
+async function loadFromFirestore() {
+  await fbAuthReady;
+  const snap = await db.collection(FS_COLLECTION).doc(FS_DOC).get();
+  if (!snap.exists) return null;
+  const parsed = snap.data();
   return (parsed.version === 1 && parsed.characters) ? parsed : null;
 }
 
-function scheduleGistSave() {
-  clearTimeout(gistSaveTimer);
+function scheduleFirestoreSave() {
+  clearTimeout(fsSaveTimer);
   setSaveStatus('saving', 'Saving…');
-  gistSaveTimer = setTimeout(async () => {
+  fsSaveTimer = setTimeout(async () => {
     try {
-      await saveToGist();
+      await saveToFirestore();
       setSaveStatus('saved', 'Saved ' + new Date().toLocaleTimeString());
     } catch (e) { setSaveStatus('error', e.message); }
   }, 600);
@@ -923,13 +941,13 @@ function setRelScore(fromId, toId, score) {
   rels[k] = rels[k] || { score: 0, note: '' };
   rels[k].score = Math.max(-10, Math.min(10, parseInt(score) || 0));
   updateScoreDisplay(fromId, toId, score);
-  scheduleGistSave();
+  scheduleFirestoreSave();
 }
 function setRelNote(fromId, toId, note) {
   const k = relKey(fromId, toId);
   rels[k] = rels[k] || { score: 0, note: '' };
   rels[k].note = note;
-  scheduleGistSave();
+  scheduleFirestoreSave();
 }
 function updateScoreDisplay(fromId, toId, score) {
   const el = document.getElementById('score-'+fromId+'-'+toId);
@@ -940,15 +958,15 @@ function updateScoreDisplay(fromId, toId, score) {
 }
 
 /* ── Character persistence ────────────────────────────── */
-function scheduleCharSave(c) { scheduleGistSave(); }
+function scheduleCharSave(c) { scheduleFirestoreSave(); }
 
 async function saveAllNow() {
-  clearTimeout(gistSaveTimer);
+  clearTimeout(fsSaveTimer);
   const btn = document.getElementById('save-btn');
   btn.disabled = true;
   setSaveStatus('saving', 'Saving…');
   try {
-    await saveToGist();
+    await saveToFirestore();
     setSaveStatus('saved', 'Saved ' + new Date().toLocaleTimeString());
   } catch (e) {
     setSaveStatus('error', e.message);
@@ -981,32 +999,54 @@ function onClassChange(value) { selected.suggested_class = value; scheduleCharSa
 /* ── Sidebar ──────────────────────────────────────────── */
 function initials(name) { return name.split(' ').slice(0,2).map(w=>w[0]).join(''); }
 
+const AV_CLASS = { 'class-1a': c => c.is_pc ? 'av-pc' : 'av-npc', 'class-1b': ()=>'av-1b', teachers: ()=>'av-teacher', villains: ()=>'av-villain', supporting: ()=>'av-supporting' };
+
 function renderSidebar() {
-  const pcs = CHARACTERS.filter(c => c.is_pc);
-  const npcs = CHARACTERS.filter(c => !c.is_pc);
-  let html = '<div class="section-label">Player Characters</div>';
-  for (const c of pcs) html += charItem(c);
-  html += '<div class="section-label">Class 1-A</div>';
-  for (const c of npcs) html += charItem(c);
+  const visible = sectionFilter === 'all' ? CHARACTERS : CHARACTERS.filter(c => c._section === sectionFilter);
+  const counts = {};
+  for (const c of CHARACTERS) counts[c._section] = (counts[c._section]||0)+1;
+
+  const pills = ['all', ...SECTION_ORDER].map(s => {
+    const active = sectionFilter === s ? ' sf-active' : '';
+    const label = s === 'all' ? `All (${CHARACTERS.length})` : `${SECTION_LABELS[s]||s} (${counts[s]||0})`;
+    return `<button class="sf-pill${active}" onclick="setSectionFilter('${s}')">${label}</button>`;
+  }).join('');
+
+  const grouped = {};
+  for (const c of visible) { if (!grouped[c._section]) grouped[c._section]=[]; grouped[c._section].push(c); }
+
+  let html = `<div id="section-filters">${pills}</div>`;
+  for (const sec of SECTION_ORDER) {
+    const chars = grouped[sec];
+    if (!chars?.length) continue;
+    if (sec === 'class-1a') {
+      const pcs = chars.filter(c => c.is_pc), npcs = chars.filter(c => !c.is_pc);
+      if (pcs.length)  { html += '<div class="section-label">Player Characters</div>'; for (const c of pcs)  html += charItem(c); }
+      if (npcs.length) { html += '<div class="section-label">Class 1-A</div>';          for (const c of npcs) html += charItem(c); }
+    } else {
+      html += `<div class="section-label">${SECTION_LABELS[sec]}</div>`;
+      for (const c of chars) html += charItem(c);
+    }
+  }
   document.getElementById('char-list').innerHTML = html;
 
-  // Populate encounter roster select
   const sel = document.getElementById('enc-roster-select');
   sel.innerHTML = '<option value="">— choose —</option>';
   for (const c of CHARACTERS) {
     const opt = document.createElement('option');
     opt.value = c._roster_id;
-    opt.textContent = c.name + ' (' + c.quirk + ')';
+    opt.textContent = c.name + (c._alias ? ' / '+c._alias : '') + ' (' + c.quirk + ')';
     sel.appendChild(opt);
   }
 }
 
 function charItem(c) {
-  const av = c.is_pc ? 'av-pc' : 'av-npc';
+  const av = (AV_CLASS[c._section] || (()=>'av-npc'))(c);
   const active = selected && c._roster_id === selected._roster_id ? ' active' : '';
+  const sub = c._alias ? c._alias : c.quirk;
   return `<div class="char-item${active}" onclick="selectChar(${c._roster_id})" id="item-${c._roster_id}">
     <div class="char-avatar ${av}">${initials(c.name)}</div>
-    <div class="char-info"><div class="char-name">${c.name}</div><div class="char-quirk">${c.quirk}</div></div>
+    <div class="char-info"><div class="char-name">${c.name}</div><div class="char-quirk">${sub}</div></div>
   </div>`;
 }
 
@@ -1046,10 +1086,13 @@ function renderProfile() {
   const c = selected;
   const avEl = document.getElementById('profile-avatar');
   avEl.textContent = initials(c.name);
-  avEl.style.background = c.is_pc ? 'var(--purple-light)' : 'var(--teal-light)';
-  avEl.style.color = c.is_pc ? 'var(--purple-text)' : 'var(--teal-text)';
+  const SEC_COLORS = { 'class-1a': c.is_pc ? ['var(--purple-light)','var(--purple-text)'] : ['var(--teal-light)','var(--teal-text)'], 'class-1b': ['var(--amber-light)','var(--amber-text)'], teachers: ['var(--green-light)','var(--green-text)'], villains: ['var(--red-light)','var(--red-text)'], supporting: ['rgba(99,102,241,0.13)','#a5b4fc'] };
+  const [avBg, avColor] = SEC_COLORS[c._section || 'class-1a'] || SEC_COLORS['class-1a'];
+  avEl.style.background = avBg; avEl.style.color = avColor;
   document.getElementById('profile-name').textContent = c.name;
-  document.getElementById('profile-sub').textContent = c.quirk+' · '+(c.physiology||'')+' · '+(c.height||'')+' · '+(c.gender||'');
+  const aliasPart = c._alias ? ' / ' + c._alias : '';
+  const subParts = [c.quirk + aliasPart, c.physiology, c.height, c.gender].filter(Boolean);
+  document.getElementById('profile-sub').textContent = subParts.join(' · ');
 
   const tags = document.getElementById('tags-row');
   const lv = c.level || 1;
@@ -1157,6 +1200,20 @@ function renderQuirkTab(c) {
   const qm = c.quirk_mechanics || {};
   const pn = c.player_notes || {};
   const charLevel = c.level || 1;
+
+  // Non-1A characters: show quirk_summary instead of full mechanics
+  if (qm._summary && !(qm.abilities||[]).length) {
+    const el = document.getElementById('tab-content');
+    el.innerHTML = `<div class="quirk-header">
+      <span class="quirk-name">${escHtml(c.quirk)}</span>
+      <span class="quirk-meta"> · ${escHtml(c.quirk_type||'')}${c.quirk_rarity ? ' · '+escHtml(c.quirk_rarity) : ''}</span>
+    </div>
+    ${qm.source ? `<div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">${escHtml(qm.source)}</div>` : ''}
+    <div style="font-size:13px;color:var(--text-muted);line-height:1.6;white-space:pre-wrap;">${escHtml(qm._summary)}</div>`;
+    el.classList.add('tab-quirk');
+    return;
+  }
+
   const SKIP = new Set(['name','type','description']);
   const EXTRA = { unarmed_strike:'Unarmed strike', damage:'Damage', pressure_tier_system:'Pressure tier' };
 
@@ -1209,7 +1266,7 @@ function renderQuirkTab(c) {
 function renderRelationships() {
   const c = selected;
   document.getElementById('rel-heading').textContent = c.name+"'s view of classmates";
-  const others = CHARACTERS.filter(o => o._roster_id !== c._roster_id);
+  const others = CHARACTERS.filter(o => o._roster_id !== c._roster_id && o._section === 'class-1a');
   let html = '';
   for (const o of others) {
     const rel = getRel(c._roster_id, o._roster_id);
@@ -1844,38 +1901,78 @@ function encAddEnemy() {
 
 /* ── Init ──────────────────────────────────────────────── */
 (async () => {
-  const [rosterRes, enemiesRes] = await Promise.all([
-    fetch('roster.json'), fetch('../CAMPAIGN/enemies.json', {cache: 'no-cache'})
+  const [rosterRes, enemiesRes, class1bRes, teachersRes, villainsRes, npcsRes] = await Promise.all([
+    fetch('roster.json'),
+    fetch('../CAMPAIGN/enemies.json', {cache:'no-cache'}),
+    fetch('../CAMPAIGN/class1b.json', {cache:'no-cache'}),
+    fetch('../CAMPAIGN/teachers.json', {cache:'no-cache'}),
+    fetch('../CAMPAIGN/villains.json', {cache:'no-cache'}),
+    fetch('../CAMPAIGN/npcs.json', {cache:'no-cache'}),
   ]);
   const roster = await rosterRes.json();
   try { const ed = await enemiesRes.json(); ENEMIES = ed.enemies || []; } catch {}
 
-  // Try Gist first, fall back to bundled JSON files
+  // Try Firestore first, fall back to bundled JSON files
   setSaveStatus('saving', 'Loading…');
-  let gistBundle = null;
-  try { gistBundle = await loadFromGist(); } catch {}
+  let fsBundle = null;
+  try { fsBundle = await loadFromFirestore(); } catch {}
 
-  if (gistBundle) {
-    rels = gistBundle.relationships || {};
+  if (fsBundle) {
+    rels = fsBundle.relationships || {};
     CHARACTERS = (roster.students || []).filter(s => s.file).map(s => {
-      const c = Object.assign({}, gistBundle.characters?.[s.file] || {});
-      c._file = s.file; c._roster_id = s.id;
+      const c = Object.assign({}, fsBundle.characters?.[s.file] || {});
+      c._file = s.file; c._roster_id = s.id; c._section = 'class-1a';
       return c;
     }).filter(c => c.name);
-    setSaveStatus('saved', 'Loaded from Gist ✓');
+    setSaveStatus('saved', 'Loaded from Firestore ✓');
   } else {
     const [relsRes, ...charResults] = await Promise.all([
       fetch('relationships.json'),
       ...(roster.students || []).filter(s => s.file).map(s =>
-        fetch(s.file).then(r => r.json()).then(c => { c._file = s.file; c._roster_id = s.id; return c; }).catch(() => null)
+        fetch(s.file).then(r => r.json()).then(c => { c._file = s.file; c._roster_id = s.id; c._section = 'class-1a'; return c; }).catch(() => null)
       )
     ]);
     rels = await relsRes.json();
     CHARACTERS = charResults.filter(Boolean);
-    setSaveStatus('saved', gistCreds().token ? 'Gist unreachable — loaded local' : '');
+    setSaveStatus('saved', 'Firestore unreachable — loaded local');
   }
 
-  CHARACTERS.sort((a, b) => { if (a.is_pc !== b.is_pc) return a.is_pc ? -1 : 1; return a._roster_id - b._roster_id; });
+  // Append campaign characters
+  let nextId = 1000;
+  try {
+    const d = await class1bRes.json();
+    for (const s of (d.students || [])) CHARACTERS.push(normalizeChar(s, 'class-1b', nextId++));
+  } catch {}
+  try {
+    const d = await teachersRes.json();
+    for (const t of (d.teachers || [])) CHARACTERS.push(normalizeChar(t, 'teachers', nextId++));
+  } catch {}
+  try {
+    const d = await villainsRes.json();
+    for (const v of (d.solo || []))    CHARACTERS.push(normalizeChar(v, 'villains', nextId++));
+    for (const v of (d.villains || [])) CHARACTERS.push(normalizeChar(Object.assign({}, v, {_faction:'standalone'}), 'villains', nextId++));
+    for (const f of (d.factions || [])) {
+      for (const v of (f.villains || [])) CHARACTERS.push(normalizeChar(Object.assign({}, v, {_faction: f.name}), 'villains', nextId++));
+    }
+    // Deduplicate villains by name (top-level villains array duplicates faction members)
+    const seen = new Set();
+    CHARACTERS = CHARACTERS.filter(c => {
+      if (c._section !== 'villains') return true;
+      if (seen.has(c.name)) return false;
+      seen.add(c.name); return true;
+    });
+  } catch {}
+  try {
+    const d = await npcsRes.json();
+    for (const n of (d.characters || [])) CHARACTERS.push(normalizeChar(n, 'supporting', nextId++));
+  } catch {}
+
+  CHARACTERS.sort((a, b) => {
+    const si = SECTION_ORDER.indexOf(a._section) - SECTION_ORDER.indexOf(b._section);
+    if (si !== 0) return si;
+    if (a._section === 'class-1a') { if (a.is_pc !== b.is_pc) return a.is_pc ? -1 : 1; }
+    return a._roster_id - b._roster_id;
+  });
   selected = CHARACTERS[0];
   encLoad();
   renderSidebar();
@@ -2851,44 +2948,10 @@ async function importData(input) {
         }
       }
     }
-    await saveToGist();
+    await saveToFirestore();
     setSaveStatus('saved', 'Imported ✓ — reloading…');
     setTimeout(() => location.reload(), 800);
   } catch (e) { setSaveStatus('error', 'Import failed: ' + e.message); }
-}
-
-/* ── Gist Settings modal ──────────────────────────────── */
-function openGistSettings() {
-  const { token, id } = gistCreds();
-  document.getElementById('gist-token-inp').value = token || '';
-  document.getElementById('gist-id-inp').value = id || '';
-  document.getElementById('gist-test-result').textContent = '';
-  document.getElementById('gist-settings-overlay').style.display = 'flex';
-}
-function closeGistSettings() {
-  document.getElementById('gist-settings-overlay').style.display = 'none';
-}
-function saveGistSettings() {
-  const token = document.getElementById('gist-token-inp').value.trim();
-  const id = document.getElementById('gist-id-inp').value.trim();
-  if (token) localStorage.setItem(GIST_TOKEN_KEY, token); else localStorage.removeItem(GIST_TOKEN_KEY);
-  if (id) localStorage.setItem(GIST_ID_KEY, id); else localStorage.removeItem(GIST_ID_KEY);
-  closeGistSettings();
-  setSaveStatus('saved', 'Settings saved — reload to sync');
-}
-async function testGistConnection() {
-  const el = document.getElementById('gist-test-result');
-  el.textContent = 'Testing…'; el.style.color = 'var(--text-dim)';
-  // Temporarily use the typed values without committing to localStorage
-  const token = document.getElementById('gist-token-inp').value.trim();
-  const id = document.getElementById('gist-id-inp').value.trim();
-  try {
-    const r = await fetch(`https://api.github.com/gists/${id}`, {
-      headers: { 'Authorization': `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' }
-    });
-    if (r.ok) { el.textContent = '✓ Connected'; el.style.color = 'var(--teal)'; }
-    else { el.textContent = `✗ Error ${r.status}`; el.style.color = 'var(--red)'; }
-  } catch { el.textContent = '✗ Network error'; el.style.color = 'var(--red)'; }
 }
 </script>
 </body>

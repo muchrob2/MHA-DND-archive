@@ -1,4 +1,5 @@
 {
+  "_note": "Category labels 'The Chain', 'Null Signal', and 'Fracture' are kept as separate stat-block groupings for table convenience, but per CAMPAIGN/villains.json they are three operational divisions of a single syndicate run by Undertow. Rank-and-file enemies in each category genuinely don't know about the other two divisions — don't let captured grunts leak that connection; only Undertow-tier NPCs know the whole shape.",
   "categories": [
     "Exam / Training",
     "The Chain",

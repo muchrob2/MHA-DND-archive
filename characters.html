@@ -97,6 +97,8 @@
   .badge.teacher { background: rgba(59,130,246,0.13); color: #93C5FD; }
   .badge.villain { background: var(--red-light); color: var(--red-text); }
   .badge.pc { background: var(--purple-light); color: var(--purple-text); }
+  .badge.supporting { background: rgba(255,255,255,0.08); color: var(--text-muted); }
+  .badge.custom { background: var(--purple-light); color: var(--purple-text); }
   .char-meta { display: flex; gap: 6px; flex-wrap: wrap; font-size: 11px; color: var(--text-dim); }
 
   #empty-state { grid-column: 1/-1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px; text-align: center; color: var(--text-dim); }
@@ -141,6 +143,22 @@
     #toolbar, #grid, #filter-panel { padding-left: 16px; padding-right: 16px; }
   }
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAX4qLRUWXFrA1sX-XC2KIYuGyc1aD8oX8",
+    authDomain: "mha-dnd-archive.firebaseapp.com",
+    projectId: "mha-dnd-archive",
+    storageBucket: "mha-dnd-archive.firebasestorage.app",
+    messagingSenderId: "1095293073071",
+    appId: "1:1095293073071:web:bba6898534bd713cec865a"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const fbAuthReady = firebase.auth().signInAnonymously().then(() => firebase.auth().currentUser);
+</script>
 </head>
 <body>
 
@@ -193,10 +211,70 @@ let activePc = new Set();
 
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+const FS_CUSTOM_DOC = db.collection('mha-dnd').doc('custom-characters');
+
+async function loadStaticCharacters() {
+  const out = [];
+
+  const roster = await fetch('CLASS-1A/roster.json', {cache:'no-cache'}).then(r => r.json());
+  const students = (roster.students || []).filter(s => s.file);
+  const class1aFiles = await Promise.all(students.map(s =>
+    fetch('CLASS-1A/' + s.file, {cache:'no-cache'}).then(r => r.json()).catch(() => null)
+  ));
+  for (const char of class1aFiles) {
+    if (char) { char._type = 'Student (1-A)'; out.push(char); }
+  }
+
+  try {
+    const class1b = await fetch('CAMPAIGN/class1b.json', {cache:'no-cache'}).then(r => r.json());
+    for (const student of (class1b.students || [])) {
+      out.push(Object.assign({}, student, { _type: 'Student (1-B)', is_pc: false }));
+    }
+  } catch {}
+
+  try {
+    const teachersData = await fetch('CAMPAIGN/teachers.json', {cache:'no-cache'}).then(r => r.json());
+    for (const teacher of (teachersData.teachers || [])) {
+      out.push(Object.assign({}, teacher, { _type: 'Teacher', is_pc: false }));
+    }
+  } catch {}
+
+  try {
+    const villainsData = await fetch('CAMPAIGN/villains.json', {cache:'no-cache'}).then(r => r.json());
+    const seen = new Set();
+    for (const faction of (villainsData.factions || [])) {
+      for (const villain of (faction.villains || [])) {
+        if (seen.has(villain.name)) continue;
+        seen.add(villain.name);
+        out.push(Object.assign({}, villain, { _type: 'Villain', is_pc: false, _faction: faction.name }));
+      }
+    }
+  } catch {}
+
+  try {
+    const npcsData = await fetch('CAMPAIGN/npcs.json', {cache:'no-cache'}).then(r => r.json());
+    for (const npc of (npcsData.characters || [])) {
+      out.push(Object.assign({}, npc, { _type: 'Supporting', is_pc: false, role: npc.role || npc.category }));
+    }
+  } catch {}
+
+  return out;
+}
+
+async function loadCustomCharacters() {
+  try {
+    await fbAuthReady;
+    const snap = await FS_CUSTOM_DOC.get();
+    return snap.exists ? (snap.data().characters || []) : [];
+  } catch {
+    return [];
+  }
+}
+
 async function init() {
   try {
-    const res = await fetch('/api/all-characters', {cache:'no-cache'});
-    allChars = await res.json();
+    const [staticChars, customChars] = await Promise.all([loadStaticCharacters(), loadCustomCharacters()]);
+    allChars = staticChars.concat(customChars);
   } catch (e) {
     allChars = [];
   }
@@ -244,6 +322,8 @@ function badgeClass(type) {
   if (type === 'Student (1-B)') return 'student-1b';
   if (type === 'Teacher') return 'teacher';
   if (type === 'Villain') return 'villain';
+  if (type === 'Supporting') return 'supporting';
+  if (type === 'Custom') return 'custom';
   return '';
 }
 
@@ -351,15 +431,16 @@ async function submitCreate() {
     personality: document.getElementById('nc-personality').value.trim(),
     bonus_features: document.getElementById('nc-bonus').value.trim(),
     is_pc: document.getElementById('nc-ispc').checked,
+    _type: 'Custom',
+    _id: Date.now().toString(36) + Math.random().toString(36).slice(2),
   };
 
   try {
-    const res = await fetch('/api/characters/create', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) throw new Error((await res.json()).error || 'Create failed');
+    await fbAuthReady;
+    await FS_CUSTOM_DOC.set(
+      { characters: firebase.firestore.FieldValue.arrayUnion(payload) },
+      { merge: true }
+    );
     closeModal();
     const notice = document.getElementById('saved-notice');
     notice.textContent = 'Character created ✓';

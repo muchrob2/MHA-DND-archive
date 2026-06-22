@@ -21,8 +21,16 @@
         "arc_relevance": "Arc 3 (Agency Visit), Arc 5 (The Fracture Problem) — her blocked investigation becomes relevant when the class starts pulling the same thread."
       },
       "stat_block": {
-        "level": 12, "HP": 94, "AC": 16,
-        "STR": 14, "DEX": 15, "CON": 16, "INT": 16, "WIS": 17, "CHA": 15, "TECH": 14
+        "level": 12,
+        "HP": 94,
+        "AC": 16,
+        "STR": 14,
+        "DEX": 15,
+        "CON": 16,
+        "INT": 16,
+        "WIS": 17,
+        "CHA": 15,
+        "TECH": 14
       }
     },
     {
@@ -45,8 +53,16 @@
         "arc_relevance": "Arc 3 (Agency Visit), Arc 5 (The Fracture Problem), Arc 6 (Convergence) — he is the closest thing the class has to a ground-level ally for the Chain investigation."
       },
       "stat_block": {
-        "level": 10, "HP": 82, "AC": 17,
-        "STR": 16, "DEX": 13, "CON": 17, "INT": 15, "WIS": 16, "CHA": 10, "TECH": 12
+        "level": 10,
+        "HP": 82,
+        "AC": 17,
+        "STR": 16,
+        "DEX": 13,
+        "CON": 17,
+        "INT": 15,
+        "WIS": 16,
+        "CHA": 10,
+        "TECH": 12
       }
     },
     {
@@ -68,8 +84,16 @@
         "arc_relevance": "Tier 1 training touchstone. Arc 5 and 6 first responder. Her early relationship with the class pays off when she's the one pulling them out of something in the endgame."
       },
       "stat_block": {
-        "level": 9, "HP": 70, "AC": 14,
-        "STR": 10, "DEX": 17, "CON": 13, "INT": 14, "WIS": 18, "CHA": 15, "TECH": 13
+        "level": 9,
+        "HP": 70,
+        "AC": 14,
+        "STR": 10,
+        "DEX": 17,
+        "CON": 13,
+        "INT": 14,
+        "WIS": 18,
+        "CHA": 15,
+        "TECH": 13
       }
     },
     {
@@ -92,8 +116,16 @@
         "arc_relevance": "Arc 5 trigger. His story is the stone that starts the avalanche. Arc 6 — he's either the person who helps the class understand what they're fighting, or a liability depending on what's happened to him."
       },
       "stat_block": {
-        "level": 1, "HP": 8, "AC": 11,
-        "STR": 9, "DEX": 11, "CON": 10, "INT": 18, "WIS": 16, "CHA": 14, "TECH": 13
+        "level": 1,
+        "HP": 8,
+        "AC": 11,
+        "STR": 9,
+        "DEX": 11,
+        "CON": 10,
+        "INT": 18,
+        "WIS": 16,
+        "CHA": 14,
+        "TECH": 13
       }
     },
     {
@@ -116,8 +148,16 @@
         "arc_relevance": "Arc 3 recurring space. Arc 5 — she noticed something before the class did and can confirm a detail they can't verify anywhere else."
       },
       "stat_block": {
-        "level": 1, "HP": 6, "AC": 10,
-        "STR": 10, "DEX": 10, "CON": 11, "INT": 14, "WIS": 18, "CHA": 16, "TECH": 8
+        "level": 1,
+        "HP": 6,
+        "AC": 10,
+        "STR": 10,
+        "DEX": 10,
+        "CON": 11,
+        "INT": 14,
+        "WIS": 18,
+        "CHA": 16,
+        "TECH": 8
       }
     },
     {
@@ -139,8 +179,16 @@
         "arc_relevance": "Arc 3 first appearance. Her map is a meaningful piece of evidence. Arc 5 — her brother thread becomes a moral complication."
       },
       "stat_block": {
-        "level": 1, "HP": 6, "AC": 10,
-        "STR": 8, "DEX": 13, "CON": 10, "INT": 14, "WIS": 12, "CHA": 15, "TECH": 10
+        "level": 1,
+        "HP": 6,
+        "AC": 10,
+        "STR": 8,
+        "DEX": 13,
+        "CON": 10,
+        "INT": 14,
+        "WIS": 12,
+        "CHA": 15,
+        "TECH": 10
       }
     },
     {
@@ -163,8 +211,16 @@
         "arc_relevance": "Background threat from Arc 1 onwards. Becomes active plot in Arc 5 when the class realises their Chain evidence isn't going anywhere. Central to Arc 6."
       },
       "stat_block": {
-        "level": 8, "HP": 62, "AC": 14,
-        "STR": 11, "DEX": 13, "CON": 13, "INT": 20, "WIS": 18, "CHA": 17, "TECH": 18
+        "level": 8,
+        "HP": 62,
+        "AC": 14,
+        "STR": 11,
+        "DEX": 13,
+        "CON": 13,
+        "INT": 20,
+        "WIS": 18,
+        "CHA": 17,
+        "TECH": 18
       }
     },
     {
@@ -186,8 +242,16 @@
         "arc_relevance": "Arc 3 (Agency Visit) — the contact who changes what the investigation looks like. Arc 5 — her data is a critical piece. She is in danger once The Chain realises she has it."
       },
       "stat_block": {
-        "level": 6, "HP": 44, "AC": 13,
-        "STR": 10, "DEX": 14, "CON": 12, "INT": 18, "WIS": 16, "CHA": 11, "TECH": 17
+        "level": 6,
+        "HP": 44,
+        "AC": 13,
+        "STR": 10,
+        "DEX": 14,
+        "CON": 12,
+        "INT": 18,
+        "WIS": 16,
+        "CHA": 11,
+        "TECH": 17
       }
     },
     {
@@ -209,8 +273,16 @@
         "arc_relevance": "Optional recurring asset. The class meeting her in Tier 1 and building a relationship pays off significantly in Arc 5 when a mission requires her exact skillset."
       },
       "stat_block": {
-        "level": 3, "HP": 20, "AC": 12,
-        "STR": 9, "DEX": 14, "CON": 11, "INT": 16, "WIS": 15, "CHA": 13, "TECH": 12
+        "level": 3,
+        "HP": 20,
+        "AC": 12,
+        "STR": 9,
+        "DEX": 14,
+        "CON": 11,
+        "INT": 16,
+        "WIS": 15,
+        "CHA": 13,
+        "TECH": 12
       }
     },
     {
@@ -233,8 +305,16 @@
         "growth_arc": "He came to evaluate. He ends up invested. That shift is the interesting thing about him."
       },
       "stat_block": {
-        "level": 3, "HP": 24, "AC": 14,
-        "STR": 13, "DEX": 16, "CON": 13, "INT": 14, "WIS": 13, "CHA": 14, "TECH": 11
+        "level": 3,
+        "HP": 24,
+        "AC": 14,
+        "STR": 13,
+        "DEX": 16,
+        "CON": 13,
+        "INT": 14,
+        "WIS": 13,
+        "CHA": 14,
+        "TECH": 11
       }
     },
     {
@@ -257,8 +337,16 @@
         "arc_relevance": "Arc 3 or 5 encounter. Her records are the piece of evidence that connects the patrol coverage to The Chain's operations. She is also in immediate danger if The Chain suspects she's been contacted by heroes."
       },
       "stat_block": {
-        "level": 1, "HP": 7, "AC": 11,
-        "STR": 9, "DEX": 12, "CON": 10, "INT": 13, "WIS": 15, "CHA": 11, "TECH": 10
+        "level": 1,
+        "HP": 7,
+        "AC": 11,
+        "STR": 9,
+        "DEX": 12,
+        "CON": 10,
+        "INT": 13,
+        "WIS": 15,
+        "CHA": 11,
+        "TECH": 10
       }
     },
     {
@@ -281,8 +369,64 @@
         "arc_relevance": "Arc 3 optional encounter. Arc 5 — his connection to Undertow becomes plot-critical. Arc 6 — he makes a decision about Hatch that the class has to live with."
       },
       "stat_block": {
-        "level": 8, "HP": 72, "AC": 15,
-        "STR": 18, "DEX": 13, "CON": 18, "INT": 14, "WIS": 16, "CHA": 12, "TECH": 10
+        "level": 8,
+        "HP": 72,
+        "AC": 15,
+        "STR": 18,
+        "DEX": 13,
+        "CON": 18,
+        "INT": 14,
+        "WIS": 16,
+        "CHA": 12,
+        "TECH": 10
+      }
+    },
+    {
+      "id": "npc-alucard",
+      "name": "Alucard Chosoji",
+      "alias": null,
+      "category": "Unaffiliated / Wildcard",
+      "quirk": "Black",
+      "quirk_type": "Transformation",
+      "quirk_rarity": "Uncommon",
+      "quirk_summary": "Alucard can fuse with any dark-colored object or shadow, natural or artificial. While merged he becomes one with the darkness, able to move unseen and unhindered through shadows and solid objects alike — which is how he can be standing in a crowd one second and simply gone the next.",
+      "quirk_mechanics": {
+        "source": "Quirk Compendium — Black",
+        "weakness": "Exposure to bright light forcibly ejects him from the shadow or object he is merged with, and he cannot merge at all if no dark surface or shaded area exists nearby.",
+        "abilities": [
+          {
+            "name": "Shadow Merge",
+            "type": "Bonus Action or Reaction",
+            "description": "Merges with a shadow or dark object within 30 feet, becoming invisible and silent. While merged he can move through darkness or solid matter freely and gains +20 movement speed. He can exit the shadow as a free action."
+          },
+          {
+            "name": "Dark Command",
+            "type": "Action",
+            "description": "Controls a creature or dark object within 10 feet. The target must succeed on a Wisdom save against his Quirk save DC or fall under his influence, performing basic movements or melee attacks for 2 rounds."
+          }
+        ]
+      },
+      "appearance": "Unnaturally tall and gaunt, with skin so pale it looks faintly grey under fluorescent light. Wears dark, nondescript clothing that seems to absorb light rather than reflect it. Pale eyes that don't blink as often as they should. Easy to overlook in a crowd — and far easier to notice once you realize he's been there the whole time.",
+      "personality": "Silent, unreadable, and utterly without affiliation — not hero, not villain, not faction. He doesn't explain himself, doesn't take sides, and doesn't seem to want anything from anyone he watches. He observes. Occasionally he speaks, briefly, and what he says is never small talk.",
+      "role": "Solo anti-hero. No registered hero license, no faction ties, no known agenda. Appears to be tracking something — or someone — across Murano, and Class 1-A appears to be incidental to whatever that is. Or it isn't.",
+      "campaign_hook": "Alucard should never be \"introduced\" in a normal scene. He appears unannounced at the edges of important moments — standing across the street during a Sports Festival match, half-seen in a hallway mirror, a shape in the back of a crowd that's gone the moment anyone looks twice. He does not interact. He watches, and then he's gone.\n\nUsage guidance: drop him in roughly once per arc, never on a schedule the players can predict. Good triggers: right after a major reveal, during a moment of celebration (so it reads as wrong), or in the background of an otherwise mundane scene so it's easy to miss on a first read. After 2-3 sightings, have a different PC each time mention, unprompted, \"some creepy pale guy was staring at me\" — let the players compare notes and realize it's the same person before the DM ever confirms it.\n\nWhen the class has accumulated enough unresolved tension around him (DM's call, typically Arc 4 or later), he can break pattern and actually approach a PC directly — alone, isolated from the group, when they least expect it. He says very little. He should raise more questions than he answers, and he should be gone again before anyone can react.",
+      "dm_notes": {
+        "true_allegiance": "Unknown — and it should stay that way for as long as possible. He is not secretly working for The Chain, Null Signal, or Fracture. He's an X-factor outside all three. Resist the temptation to reveal his motive early; the ambiguity is the point.",
+        "tone": "Horror-adjacent, not action. He should never be played as a combat threat in a normal scene — if a fight breaks out around him, he simply isn't there anymore by the next round. Save any actual mechanical engagement for a single, deliberate, rare moment.",
+        "first_direct_approach": "When he does finally speak to a PC, keep it under three sentences. He should imply he knows something about them or the wider plot that hasn't been revealed yet, then disengage (Shadow Merge) before they can press him.",
+        "frequency": "Roughly one sighting per arc from Tier 1 onward. Do not over-use him — his effectiveness depends entirely on scarcity and unpredictability."
+      },
+      "stat_block": {
+        "level": 14,
+        "HP": 88,
+        "AC": 15,
+        "STR": 12,
+        "DEX": 17,
+        "CON": 14,
+        "INT": 15,
+        "WIS": 18,
+        "CHA": 16,
+        "TECH": 11
       }
     }
   ]

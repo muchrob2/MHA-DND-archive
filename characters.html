@@ -136,6 +136,14 @@
   }
   .form-textarea { min-height: 70px; resize: vertical; }
   .form-actions { display: flex; gap: 8px; margin-top: 18px; }
+  .form-fieldset { border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 14px; }
+  .form-fieldset-label { font-size: 11px; font-weight: 700; color: var(--gold-text); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
+  .ability-row { background: var(--surface2); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 10px; margin-bottom: 8px; position: relative; }
+  .ability-row .form-row { margin-bottom: 8px; }
+  .ability-row .form-row:last-child { margin-bottom: 0; }
+  .ability-remove-btn { position: absolute; top: 8px; right: 8px; cursor: pointer; color: var(--text-dim); font-size: 13px; background: none; border: none; }
+  .ability-remove-btn:hover { color: var(--red-text); }
+  .add-ability-btn { margin-top: 4px; }
   .action-btn {
     padding: 9px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
     border: 1px solid var(--border-strong); background: var(--surface2); color: var(--text-muted);
@@ -420,20 +428,38 @@ function quirkMechanicsHtml(mech) {
   </div>`;
 }
 
+function dmNotesHtml(notes) {
+  if (!notes) return '';
+  const rows = [
+    ['Combat Role', notes.combat_role],
+    ['Social Role', notes.social_role],
+    ['Growth Arc', notes.growth_arc],
+    ['Weakness to Exploit', notes.weakness_to_exploit],
+  ].filter(([, v]) => v);
+  if (!rows.length) return '';
+  return rows.map(([label, v]) => `<div class="detail-section"><div class="detail-label">${escHtml(label)}</div><div class="detail-body">${escHtml(v)}</div></div>`).join('');
+}
+
 function showDetail(idx) {
   const c = allChars[idx];
-  const personality = typeof c.personality === 'object' ? (c.personality.summary || JSON.stringify(c.personality)) : (c.personality || c.personality_tag || '');
-  const appearance = typeof c.appearance === 'object' ? (c.appearance.other || c.appearance.build || JSON.stringify(c.appearance)) : (c.appearance || '');
+  const personalityObj = typeof c.personality === 'object' ? c.personality : {};
+  const personality = personalityObj.summary || (typeof c.personality === 'string' ? c.personality : '') || c.personality_tag || '';
+  const appearanceObj = typeof c.appearance === 'object' ? c.appearance : {};
+  const appearance = [appearanceObj.hair, appearanceObj.build, appearanceObj.other].filter(Boolean).join(' ') || (typeof c.appearance === 'string' ? c.appearance : '');
   const bonus = c.bonus_features || c.notable_trait || c.quirk_summary || '';
 
   document.getElementById('modal').innerHTML = `
     <span class="modal-close" onclick="closeModal()">✕</span>
     <h2>${escHtml(c.name)}</h2>
     <div class="modal-sub">${escHtml(c._type||'')}${c.role ? ' — ' + escHtml(c.role) : ''}</div>
-    <div class="detail-section"><div class="detail-label">Quirk</div><div class="detail-body">${escHtml(c.quirk||'—')}</div></div>
+    <div class="detail-section"><div class="detail-label">Quirk</div><div class="detail-body">${escHtml(c.quirk||'—')}${(c.quirk_type||c.quirk_rarity) ? ` <span style="color:var(--text-dim);">(${[c.quirk_type,c.quirk_rarity].filter(Boolean).map(escHtml).join(' · ')})</span>` : ''}</div></div>
     ${quirkMechanicsHtml(c.quirk_mechanics)}
     ${appearance ? `<div class="detail-section"><div class="detail-label">Appearance</div><div class="detail-body">${escHtml(appearance)}</div></div>` : ''}
     ${personality ? `<div class="detail-section"><div class="detail-label">Personality</div><div class="detail-body">${escHtml(personality)}</div></div>` : ''}
+    ${personalityObj.in_class ? `<div class="detail-section"><div class="detail-label">In Class</div><div class="detail-body">${escHtml(personalityObj.in_class)}</div></div>` : ''}
+    ${personalityObj.in_combat ? `<div class="detail-section"><div class="detail-label">In Combat</div><div class="detail-body">${escHtml(personalityObj.in_combat)}</div></div>` : ''}
+    ${personalityObj.quirk_of_character ? `<div class="detail-section"><div class="detail-label">Quirk of Character</div><div class="detail-body">${escHtml(personalityObj.quirk_of_character)}</div></div>` : ''}
+    ${dmNotesHtml(c.dm_notes)}
     ${bonus ? `<div class="detail-section"><div class="detail-label">Bonus Features / Notes</div><div class="detail-body">${escHtml(bonus)}</div></div>` : ''}
     ${(c.tags||[]).length ? `<div class="detail-section"><div class="detail-label">Tags</div><div class="detail-body">${c.tags.map(t => `<span class="tag-chip">${escHtml(t)}</span>`).join(' ')}</div></div>` : ''}
     <div class="modal-actions">
@@ -448,45 +474,161 @@ function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
 }
 
+let abilityRowCount = 0;
+
 function characterFormHtml(c) {
   c = c || {};
   const gender = c.gender || 'Female';
   const physiology = c.physiology || 'Standard';
-  const appearance = typeof c.appearance === 'object' ? (c.appearance.other || c.appearance.build || '') : (c.appearance || '');
-  const personality = typeof c.personality === 'object' ? (c.personality.summary || '') : (c.personality || '');
+  const appearanceObj = typeof c.appearance === 'object' ? c.appearance : {};
+  const appearanceFlat = typeof c.appearance === 'string' ? c.appearance : '';
+  const personalityObj = typeof c.personality === 'object' ? c.personality : {};
+  const personalityFlat = typeof c.personality === 'string' ? c.personality : (c.personality_tag || '');
+  const dmNotes = c.dm_notes || {};
+  const mech = c.quirk_mechanics || {};
+  const abilities = mech.abilities || [];
+  abilityRowCount = 0;
+
   return `
-    <div class="form-row"><label>Name</label><input class="form-input" id="nc-name" type="text" placeholder="Character name" value="${escHtml(c.name||'')}"></div>
-    <div class="form-row"><label>Quirk</label><input class="form-input" id="nc-quirk" type="text" placeholder="Quirk name" value="${escHtml(c.quirk||'')}"></div>
-    <div class="form-row"><label>Gender</label>
-      <select class="form-select" id="nc-gender">
-        ${['Female','Male','Other'].map(g => `<option value="${g}" ${g===gender?'selected':''}>${g}</option>`).join('')}
-      </select>
+    <div class="form-fieldset">
+      <div class="form-fieldset-label">Basics</div>
+      <div class="form-row"><label>Name</label><input class="form-input" id="nc-name" type="text" placeholder="Character name" value="${escHtml(c.name||'')}"></div>
+      <div class="form-row"><label>Gender</label>
+        <select class="form-select" id="nc-gender">
+          ${['Female','Male','Other'].map(g => `<option value="${g}" ${g===gender?'selected':''}>${g}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-row"><label>Physiology</label>
+        <select class="form-select" id="nc-physiology">
+          ${['Standard','Heteromorph','Mutant'].map(p => `<option value="${p}" ${p===physiology?'selected':''}>${p}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-row"><label>Height</label><input class="form-input" id="nc-height" type="text" placeholder="e.g. 5'9&quot;" value="${escHtml(c.height||'')}"></div>
+      <div class="form-row checkbox-row"><input type="checkbox" id="nc-ispc" ${c.is_pc?'checked':''}><label style="margin:0;" for="nc-ispc">Player Character</label></div>
     </div>
-    <div class="form-row"><label>Physiology</label>
-      <select class="form-select" id="nc-physiology">
-        ${['Standard','Heteromorph','Mutant'].map(p => `<option value="${p}" ${p===physiology?'selected':''}>${p}</option>`).join('')}
-      </select>
+
+    <div class="form-fieldset">
+      <div class="form-fieldset-label">Quirk</div>
+      <div class="form-row"><label>Quirk Name</label><input class="form-input" id="nc-quirk" type="text" placeholder="Quirk name" value="${escHtml(c.quirk||'')}"></div>
+      <div class="form-row"><label>Quirk Type</label>
+        <select class="form-select" id="nc-quirk-type">
+          ${['', 'Emitter', 'Transformation', 'Mutant'].map(t => `<option value="${t}" ${t===(c.quirk_type||'')?'selected':''}>${t||'—'}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-row"><label>Quirk Rarity</label>
+        <select class="form-select" id="nc-quirk-rarity">
+          ${['', 'Common', 'Uncommon', 'Rare', 'Very Rare'].map(r => `<option value="${r}" ${r===(c.quirk_rarity||'')?'selected':''}>${r||'—'}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-row"><label>Quirk Weakness</label><textarea class="form-textarea" id="nc-weakness" placeholder="The drawback or cost of using this quirk">${escHtml(mech.weakness||'')}</textarea></div>
+      <div class="form-row"><label>Quirk Abilities</label></div>
+      <div id="nc-abilities-list">
+        ${abilities.map(a => abilityRowHtml(a)).join('')}
+      </div>
+      <button type="button" class="action-btn add-ability-btn" onclick="addAbilityRow()">+ Add Ability</button>
     </div>
-    <div class="form-row"><label>Appearance</label><textarea class="form-textarea" id="nc-appearance" placeholder="What do they look like?">${escHtml(appearance)}</textarea></div>
-    <div class="form-row"><label>Personality</label><textarea class="form-textarea" id="nc-personality" placeholder="How do they act?">${escHtml(personality)}</textarea></div>
-    <div class="form-row"><label>Bonus Features</label><textarea class="form-textarea" id="nc-bonus" placeholder="Anything else — quirk quirks, notable traits, etc.">${escHtml(c.bonus_features||'')}</textarea></div>
-    <div class="form-row"><label>Tags</label><input class="form-input" id="nc-tags" type="text" placeholder="Comma-separated, e.g. villain-arc, recurring, sports-festival" value="${escHtml((c.tags||[]).join(', '))}"></div>
-    <div class="form-row checkbox-row"><input type="checkbox" id="nc-ispc" ${c.is_pc?'checked':''}><label style="margin:0;" for="nc-ispc">Player Character</label></div>
+
+    <div class="form-fieldset">
+      <div class="form-fieldset-label">Appearance</div>
+      <div class="form-row"><label>Hair</label><input class="form-input" id="nc-app-hair" type="text" placeholder="Hair description" value="${escHtml(appearanceObj.hair||'')}"></div>
+      <div class="form-row"><label>Build</label><input class="form-input" id="nc-app-build" type="text" placeholder="Body build / silhouette" value="${escHtml(appearanceObj.build||'')}"></div>
+      <div class="form-row"><label>Other</label><textarea class="form-textarea" id="nc-app-other" placeholder="Quirk-related features, distinguishing marks, etc.">${escHtml(appearanceObj.other||appearanceFlat)}</textarea></div>
+    </div>
+
+    <div class="form-fieldset">
+      <div class="form-fieldset-label">Personality</div>
+      <div class="form-row"><label>Summary</label><textarea class="form-textarea" id="nc-pers-summary" placeholder="Overall personality">${escHtml(personalityObj.summary||personalityFlat)}</textarea></div>
+      <div class="form-row"><label>In Class</label><textarea class="form-textarea" id="nc-pers-inclass" placeholder="How they behave day-to-day at school">${escHtml(personalityObj.in_class||'')}</textarea></div>
+      <div class="form-row"><label>In Combat</label><textarea class="form-textarea" id="nc-pers-incombat" placeholder="How they behave/think mid-fight">${escHtml(personalityObj.in_combat||'')}</textarea></div>
+      <div class="form-row"><label>Quirk of Character</label><textarea class="form-textarea" id="nc-pers-quirkchar" placeholder="A personal quirk/habit unrelated to their Quirk power">${escHtml(personalityObj.quirk_of_character||'')}</textarea></div>
+    </div>
+
+    <div class="form-fieldset">
+      <div class="form-fieldset-label">DM Notes — Roles &amp; Arc</div>
+      <div class="form-row"><label>Combat Role</label><textarea class="form-textarea" id="nc-combat-role" placeholder="Their function/value in a fight">${escHtml(dmNotes.combat_role||c.role||'')}</textarea></div>
+      <div class="form-row"><label>Social Role</label><textarea class="form-textarea" id="nc-social-role" placeholder="Their function/dynamic within the class">${escHtml(dmNotes.social_role||'')}</textarea></div>
+      <div class="form-row"><label>Growth Arc</label><textarea class="form-textarea" id="nc-growth-arc" placeholder="Where this character is headed over time">${escHtml(dmNotes.growth_arc||'')}</textarea></div>
+      <div class="form-row"><label>Weakness to Exploit</label><textarea class="form-textarea" id="nc-weakness-exploit" placeholder="A narrative/tactical weakness an enemy could use">${escHtml(dmNotes.weakness_to_exploit||'')}</textarea></div>
+    </div>
+
+    <div class="form-fieldset">
+      <div class="form-fieldset-label">Misc</div>
+      <div class="form-row"><label>Bonus Features / Notes</label><textarea class="form-textarea" id="nc-bonus" placeholder="Anything else — notable traits, etc.">${escHtml(c.bonus_features||c.notable_trait||'')}</textarea></div>
+      <div class="form-row"><label>Tags</label><input class="form-input" id="nc-tags" type="text" placeholder="Comma-separated, e.g. villain-arc, recurring, sports-festival" value="${escHtml((c.tags||[]).join(', '))}"></div>
+    </div>
   `;
 }
 
+function abilityRowHtml(a) {
+  a = a || {};
+  const id = abilityRowCount++;
+  return `<div class="ability-row" data-ability-id="${id}">
+    <button type="button" class="ability-remove-btn" onclick="removeAbilityRow(${id})">✕</button>
+    <div class="form-row"><label>Ability Name</label><input class="form-input" id="nc-ability-name-${id}" type="text" placeholder="e.g. Iron Claws" value="${escHtml(a.name||'')}"></div>
+    <div class="form-row"><label>Type</label><input class="form-input" id="nc-ability-type-${id}" type="text" placeholder="e.g. Action, Bonus Action, Passive" value="${escHtml(a.type||'')}"></div>
+    <div class="form-row"><label>Description</label><textarea class="form-textarea" id="nc-ability-desc-${id}" placeholder="What it does mechanically">${escHtml(a.description||'')}</textarea></div>
+  </div>`;
+}
+
+function addAbilityRow() {
+  document.getElementById('nc-abilities-list').insertAdjacentHTML('beforeend', abilityRowHtml());
+}
+
+function removeAbilityRow(id) {
+  document.querySelector(`.ability-row[data-ability-id="${id}"]`)?.remove();
+}
+
 function readCharacterForm() {
-  return {
+  const abilityRows = [...document.querySelectorAll('#nc-abilities-list .ability-row')];
+  const abilities = abilityRows.map(row => {
+    const id = row.dataset.abilityId;
+    return {
+      name: document.getElementById(`nc-ability-name-${id}`).value.trim(),
+      type: document.getElementById(`nc-ability-type-${id}`).value.trim(),
+      description: document.getElementById(`nc-ability-desc-${id}`).value.trim(),
+    };
+  }).filter(a => a.name || a.description);
+
+  const weakness = document.getElementById('nc-weakness').value.trim();
+  const quirk_mechanics = (weakness || abilities.length) ? { weakness, abilities } : undefined;
+
+  const appearance = {
+    hair: document.getElementById('nc-app-hair').value.trim(),
+    build: document.getElementById('nc-app-build').value.trim(),
+    other: document.getElementById('nc-app-other').value.trim(),
+  };
+
+  const personality = {
+    summary: document.getElementById('nc-pers-summary').value.trim(),
+    in_class: document.getElementById('nc-pers-inclass').value.trim(),
+    in_combat: document.getElementById('nc-pers-incombat').value.trim(),
+    quirk_of_character: document.getElementById('nc-pers-quirkchar').value.trim(),
+  };
+
+  const dm_notes = {
+    combat_role: document.getElementById('nc-combat-role').value.trim(),
+    social_role: document.getElementById('nc-social-role').value.trim(),
+    growth_arc: document.getElementById('nc-growth-arc').value.trim(),
+    weakness_to_exploit: document.getElementById('nc-weakness-exploit').value.trim(),
+  };
+
+  const result = {
     name: document.getElementById('nc-name').value.trim(),
     quirk: document.getElementById('nc-quirk').value.trim(),
+    quirk_type: document.getElementById('nc-quirk-type').value,
+    quirk_rarity: document.getElementById('nc-quirk-rarity').value,
     gender: document.getElementById('nc-gender').value,
     physiology: document.getElementById('nc-physiology').value,
-    appearance: document.getElementById('nc-appearance').value.trim(),
-    personality: document.getElementById('nc-personality').value.trim(),
+    height: document.getElementById('nc-height').value.trim(),
+    appearance,
+    personality,
+    dm_notes,
     bonus_features: document.getElementById('nc-bonus').value.trim(),
     is_pc: document.getElementById('nc-ispc').checked,
     tags: document.getElementById('nc-tags').value.split(',').map(t => t.trim()).filter(Boolean),
   };
+  if (quirk_mechanics) result.quirk_mechanics = quirk_mechanics;
+  return result;
 }
 
 function openCreateModal() {

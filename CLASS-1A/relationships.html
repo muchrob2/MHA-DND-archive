@@ -391,7 +391,7 @@
   .board-tray-token { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
   .board-tray-name { font-size: 11px; font-weight: 600; color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   #board-grid-wrap { flex: 1; overflow: auto; display: flex; align-items: flex-start; justify-content: flex-start; padding: 16px; background: var(--bg); cursor: crosshair; }
-  #board-canvas { display: block; image-rendering: pixelated; }
+  #board-canvas { display: block; image-rendering: pixelated; touch-action: none; }
   #board-footer { flex-shrink: 0; padding: 8px 18px; border-top: 1px solid var(--border); background: var(--surface2); }
   #board-hint { font-size: 11px; color: var(--text-dim); }
   #board-range-wrap {
@@ -542,6 +542,24 @@
 
     /* Save bar */
     #save-bar { padding: 6px 12px; }
+
+    /* Board mode: full-screen, stacked tray, wrapping controls, bigger touch targets */
+    #board-modal { width: 100vw; height: 100dvh; max-width: none; max-height: none; border-radius: 0; }
+    #board-header { flex-wrap: wrap; padding: 8px 10px; gap: 8px; }
+    #board-title { flex-basis: 100%; }
+    #board-distance-label { min-width: 0; flex: 1; }
+    #board-body { flex-direction: column; }
+    #board-tray {
+      width: 100%; height: 30vh; flex-shrink: 0; border-right: none; border-bottom: 1px solid var(--border);
+    }
+    #board-tray-list { flex-direction: row; flex-wrap: wrap; overflow-y: auto; }
+    .board-tray-item { flex-direction: column; text-align: center; padding: 6px; }
+    .board-tray-token { width: 36px; height: 36px; font-size: 13px; }
+    .board-tray-name { max-width: 60px; }
+    #board-grid-wrap { padding: 8px; }
+    .board-zoom-btn { width: 32px; height: 32px; font-size: 18px; }
+    #board-close-btn { width: 36px; height: 36px; }
+    #board-range-clear { width: 22px; height: 22px; font-size: 14px; }
   }
 
   @media (min-width: 641px) {
@@ -1377,6 +1395,37 @@ async function encLoad() {
   } catch {}
 }
 
+// Live feed: push board/encounter updates to every open tab in real time.
+let _pendingRemoteEncounter = null;
+function isBoardOpen() { return document.getElementById('board-overlay')?.classList.contains('open'); }
+function isEncEditing() {
+  const tag = document.activeElement?.tagName;
+  if (tag !== 'INPUT' && tag !== 'TEXTAREA') return false;
+  return !!document.activeElement.closest('#enc-list, #board-overlay');
+}
+function applyRemoteEncounter(data) {
+  encounter = data;
+  renderEncounter();
+  if (isBoardOpen()) renderBoard();
+}
+async function startEncLiveSync() {
+  await fbAuthReady;
+  FS_ENCOUNTER_DOC.onSnapshot(snap => {
+    if (!snap.exists) return;
+    const data = snap.data();
+    // Defer while a local drag/edit is in progress so the remote update doesn't yank the token or input mid-gesture.
+    if (boardState.dragging || boardPan || isEncEditing()) { _pendingRemoteEncounter = data; return; }
+    applyRemoteEncounter(data);
+  });
+}
+setInterval(() => {
+  if (_pendingRemoteEncounter && !boardState.dragging && !boardPan && !isEncEditing()) {
+    const data = _pendingRemoteEncounter;
+    _pendingRemoteEncounter = null;
+    applyRemoteEncounter(data);
+  }
+}, 800);
+
 function encAddFromRoster() {
   const sel = document.getElementById('enc-roster-select');
   const id = parseInt(sel.value);
@@ -1853,6 +1902,7 @@ function encAddEnemy() {
   });
   selected = CHARACTERS[0];
   await encLoad();
+  startEncLiveSync();
   renderSidebar();
   buildEnemySelect();
   renderProfile();
@@ -2232,7 +2282,8 @@ let boardHoverInfo = null; // { combatant, col, row }
 let boardPan = null;        // { startX, startY, scrollLeft, scrollTop } while panning
 let _boardWasPanning = false;
 
-function boardCell() { return Math.max(6, Math.round(CELL_BASE * boardZoom)); }
+const BOARD_IS_TOUCH = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+function boardCell() { return Math.max(BOARD_IS_TOUCH ? 20 : 6, Math.round(CELL_BASE * boardZoom)); }
 
 function boardZoomIn()  { boardZoom = Math.min(+(boardZoom * 1.25).toFixed(4), 3);   renderBoardCanvas(); updateZoomLabel(); }
 function boardZoomOut() { boardZoom = Math.max(+(boardZoom / 1.25).toFixed(4), 0.25); renderBoardCanvas(); updateZoomLabel(); }
@@ -2746,6 +2797,47 @@ function boardHandleCanvasRightClick(e) {
   }
 }
 
+// ── Touch support (mobile board mode) ───────────────────────
+let _boardPinch = null; // { dist, zoom }
+function boardPointFromTouch(t) { return { clientX: t.clientX, clientY: t.clientY, button: 0, preventDefault(){} }; }
+function boardTouchDistance(t1, t2) { return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY); }
+
+function boardHandleTouchStart(e) {
+  if (e.touches.length === 2) {
+    e.preventDefault();
+    boardState.dragging = null;
+    boardPan = null;
+    _boardPinch = { dist: boardTouchDistance(e.touches[0], e.touches[1]), zoom: boardZoom };
+    return;
+  }
+  if (e.touches.length !== 1) return;
+  e.preventDefault();
+  boardHandleMouseDown(boardPointFromTouch(e.touches[0]));
+}
+
+function boardHandleTouchMove(e) {
+  if (e.touches.length === 2 && _boardPinch) {
+    e.preventDefault();
+    const dist = boardTouchDistance(e.touches[0], e.touches[1]);
+    boardZoom = Math.max(0.25, Math.min(3, +(_boardPinch.zoom * (dist / _boardPinch.dist)).toFixed(4)));
+    updateZoomLabel();
+    renderBoardCanvas();
+    return;
+  }
+  if (e.touches.length !== 1) return;
+  e.preventDefault();
+  boardHandleMouseMove(boardPointFromTouch(e.touches[0]));
+}
+
+function boardHandleTouchEnd(e) {
+  if (_boardPinch) { _boardPinch = null; return; }
+  const t = e.changedTouches && e.changedTouches[0];
+  if (!t) return;
+  const point = boardPointFromTouch(t);
+  boardHandleMouseUp(point);
+  boardHandleCanvasClick(point);
+}
+
 // ── Keyboard shortcuts ─────────────────────────────────────
 document.addEventListener('keydown', e => {
   const tag = document.activeElement?.tagName;
@@ -2783,6 +2875,10 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.addEventListener('click', boardHandleCanvasClick);
     canvas.addEventListener('contextmenu', boardHandleCanvasRightClick);
     canvas.addEventListener('wheel', e => { e.preventDefault(); e.deltaY < 0 ? boardZoomIn() : boardZoomOut(); }, { passive: false });
+    canvas.addEventListener('touchstart', boardHandleTouchStart, { passive: false });
+    canvas.addEventListener('touchmove', boardHandleTouchMove, { passive: false });
+    canvas.addEventListener('touchend', boardHandleTouchEnd, { passive: false });
+    canvas.addEventListener('touchcancel', boardHandleTouchEnd, { passive: false });
   }
   const rangeInp = document.getElementById('board-range-input');
   if (rangeInp) {

@@ -147,18 +147,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAX4qLRUWXFrA1sX-XC2KIYuGyc1aD8oX8",
-    authDomain: "mha-dnd-archive.firebaseapp.com",
-    projectId: "mha-dnd-archive",
-    storageBucket: "mha-dnd-archive.firebasestorage.app",
-    messagingSenderId: "1095293073071",
-    appId: "1:1095293073071:web:bba6898534bd713cec865a"
-  };
-  firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
-  const fbAuthReady = firebase.auth().signInAnonymously().then(() => firebase.auth().currentUser);
 </script>
 </head>
 <body>
@@ -168,7 +159,7 @@
   <span class="nav-title">DM Scripts</span>
   <div class="nav-right">
     <span class="nav-saved" id="saved-notice">Saved ✓</span>
-    <button class="nav-btn" id="edit-toggle-btn" onclick="toggleEditMode()">✏️ Edit</button>
+    <button class="nav-btn" id="edit-toggle-btn" onclick="toggleEditMode()" style="display:none;">✏️ Edit</button>
     <button class="nav-btn save-btn" id="save-btn" onclick="saveAll()" style="display:none;">💾 Save</button>
     <button class="nav-btn" id="add-script-btn" onclick="toggleAddForm()" style="display:none;">+ Add Script</button>
   </div>
@@ -209,6 +200,11 @@ function uid() { return 'sc_'+Math.random().toString(36).slice(2,8); }
 
 /* ── Load ────────────────────────────────────────────── */
 const FS_SCRIPTS_DOC = db.collection('mha-dnd').doc('dm-scripts');
+
+document.addEventListener('auth-state-changed', (e) => {
+  const canWrite = e.detail.role === 'admin' || e.detail.role === 'editor';
+  document.getElementById('edit-toggle-btn').style.display = canWrite ? '' : 'none';
+});
 
 async function init() {
   try {

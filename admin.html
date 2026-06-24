@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — MHA D&D</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0C1017; --surface: #111923; --surface2: #18222E;
+    --border: rgba(255,255,255,0.07); --border-strong: rgba(255,255,255,0.14);
+    --text: #E8EDF3; --text-muted: #8A9BB0; --text-dim: #3E5068;
+    --gold: #E8A020; --gold-light: rgba(232,160,32,0.13); --gold-text: #F5C842;
+    --teal: #0EA572; --teal-light: rgba(14,165,114,0.13); --teal-text: #5FDBAA;
+    --red: #EF4444; --red-light: rgba(239,68,68,0.13); --red-text: #FCA5A5;
+    --purple: #8B47D4; --purple-light: rgba(139,71,212,0.13); --purple-text: #C09CEB;
+    --radius: 10px; --radius-lg: 14px;
+    --nav-h: 48px;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+
+  #topnav {
+    position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0;
+  }
+  #back-btn {
+    display: flex; align-items: center; gap: 6px; padding: 0 16px;
+    font-size: 13px; color: var(--text-muted); text-decoration: none;
+    border-right: 1px solid var(--border); height: 100%; white-space: nowrap; flex-shrink: 0;
+  }
+  #back-btn:hover { color: var(--gold-text); background: var(--gold-light); }
+  .nav-title { padding: 0 16px; font-size: 13px; font-weight: 700; color: var(--text); flex: 1; }
+  .nav-right { display: flex; align-items: center; gap: 8px; padding: 0 16px; }
+
+  #content { max-width: 900px; margin: 0 auto; padding: 24px; }
+  #gate-message { padding: 60px 24px; text-align: center; color: var(--text-muted); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: top; }
+  th { color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+  tr:last-child td { border-bottom: none; }
+
+  select, .char-picker {
+    background: var(--surface2); border: 1px solid var(--border-strong); border-radius: 6px;
+    color: var(--text); font-size: 12px; padding: 6px 8px; outline: none; font-family: inherit;
+  }
+  .char-picker { display: flex; flex-direction: column; gap: 4px; max-height: 140px; overflow-y: auto; margin-top: 6px; }
+  .char-picker label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); font-weight: 400; }
+  .save-row-btn {
+    padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1px solid rgba(14,165,114,0.25); background: rgba(14,165,114,0.12); color: var(--teal-text);
+    margin-top: 6px;
+  }
+  .save-row-btn:hover { background: rgba(14,165,114,0.2); }
+  .row-saved { font-size: 11px; color: var(--teal-text); margin-left: 8px; opacity: 0; transition: opacity 0.4s; }
+  .row-saved.show { opacity: 1; }
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script>
+  const db = firebase.firestore();
+</script>
+</head>
+<body>
+
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">Admin</span>
+  <div class="nav-right"></div>
+</nav>
+
+<div id="content">
+  <div id="gate-message" style="display:none;">Checking access…</div>
+  <div id="admin-body" style="display:none;">
+    <table id="users-table">
+      <thead>
+        <tr><th>Email</th><th>Role</th><th>Editable characters</th></tr>
+      </thead>
+      <tbody id="users-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+let allCharacterOptions = [];
+
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function loadCharacterOptions() {
+  const out = [];
+  try {
+    const roster = await fetch('CLASS-1A/roster.json', {cache:'no-cache'}).then(r => r.json());
+    for (const s of (roster.students || [])) {
+      if (s.file) out.push({ id: 'Student (1-A)::' + s.name, name: s.name });
+    }
+  } catch {}
+  try {
+    const snap = await db.collection('characters').get();
+    snap.forEach(doc => {
+      const data = doc.data();
+      if (data._type === 'Custom') out.push({ id: doc.id, name: data.name || doc.id });
+    });
+  } catch {}
+  return out;
+}
+
+async function loadUsers() {
+  const snap = await db.collection('users').get();
+  const tbody = document.getElementById('users-tbody');
+  tbody.innerHTML = '';
+  snap.forEach(doc => {
+    const uid = doc.id;
+    const data = doc.data();
+    const editable = new Set(data.editableCharacterIds || []);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escHtml(data.email || uid)}</td>
+      <td>
+        <select id="role-${uid}">
+          <option value="pending" ${data.role === 'pending' ? 'selected' : ''}>pending</option>
+          <option value="editor" ${data.role === 'editor' ? 'selected' : ''}>editor</option>
+          <option value="admin" ${data.role === 'admin' ? 'selected' : ''}>admin</option>
+        </select>
+      </td>
+      <td>
+        <div class="char-picker" id="chars-${uid}">
+          ${allCharacterOptions.map(c => `
+            <label><input type="checkbox" value="${escHtml(c.id)}" ${editable.has(c.id) ? 'checked' : ''}> ${escHtml(c.name)}</label>
+          `).join('')}
+        </div>
+        <button class="save-row-btn" onclick="saveUser('${uid}')">Save</button>
+        <span class="row-saved" id="saved-${uid}">Saved ✓</span>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function saveUser(uid) {
+  const role = document.getElementById('role-' + uid).value;
+  const checks = document.querySelectorAll('#chars-' + uid + ' input[type=checkbox]:checked');
+  const editableCharacterIds = [...checks].map(c => c.value);
+  try {
+    await db.collection('users').doc(uid).update({ role, editableCharacterIds });
+    const notice = document.getElementById('saved-' + uid);
+    notice.classList.add('show');
+    setTimeout(() => notice.classList.remove('show'), 1500);
+  } catch (e) {
+    alert('Could not save: ' + e.message);
+  }
+}
+
+document.addEventListener('auth-state-changed', async (state) => {
+  const { role } = state.detail;
+  const gate = document.getElementById('gate-message');
+  const body = document.getElementById('admin-body');
+  if (role !== 'admin') {
+    gate.style.display = '';
+    body.style.display = 'none';
+    gate.textContent = state.detail.user ? 'You do not have admin access.' : 'Sign in with an admin account to view this page.';
+    return;
+  }
+  gate.style.display = 'none';
+  body.style.display = '';
+  allCharacterOptions = await loadCharacterOptions();
+  await loadUsers();
+});
+</script>
+</body>
+</html>

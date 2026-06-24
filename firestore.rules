@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    function isAdmin() {
+      return request.auth != null && userDoc().role == 'admin';
+    }
+    function isEditorFor(id) {
+      return request.auth != null && userDoc().role == 'editor'
+        && id in userDoc().editableCharacterIds;
+    }
+    function isEditor() {
+      return request.auth != null && userDoc().role == 'editor';
+    }
+
+    match /characters/{id} {
+      allow read: if true;
+      allow write: if isAdmin() || isEditorFor(id);
+    }
+
+    match /users/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+      allow create: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.role == 'pending';
+      allow update, delete: if isAdmin();
+    }
+
+    match /mha-dnd/{doc} {
+      allow read: if true;
+      allow write: if isAdmin() || isEditor();
+    }
+  }
+}

@@ -360,18 +360,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAX4qLRUWXFrA1sX-XC2KIYuGyc1aD8oX8",
-    authDomain: "mha-dnd-archive.firebaseapp.com",
-    projectId: "mha-dnd-archive",
-    storageBucket: "mha-dnd-archive.firebasestorage.app",
-    messagingSenderId: "1095293073071",
-    appId: "1:1095293073071:web:bba6898534bd713cec865a"
-  };
-  firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
-  const fbAuthReady = firebase.auth().signInAnonymously().then(() => firebase.auth().currentUser);
 </script>
 </head>
 <body>

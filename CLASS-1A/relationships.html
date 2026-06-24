@@ -99,6 +99,8 @@
   .tab-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
   #tab-content { padding: 12px 20px; font-size: 13px; color: var(--text-muted); line-height: 1.6; max-height: 130px; overflow-y: auto; background: var(--surface); border-bottom: 1px solid var(--border); }
   #tab-content.tab-quirk { max-height: 280px; }
+  .tab-editable { width: 100%; min-height: 90px; font-size: 13px; line-height: 1.6; padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); color: var(--text); resize: vertical; outline: none; font-family: inherit; }
+  .tab-editable:focus { border-color: var(--purple); background: var(--surface); }
   .quirk-header { margin-bottom: 8px; }
   .quirk-name { font-size: 14px; font-weight: 600; color: var(--text); }
   .quirk-meta { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
@@ -958,7 +960,6 @@ function onStatChange(field, value, isFloat) {
   if (isNaN(num)) return;
   c[field] = num;
   scheduleCharSave(c);
-  if (field === 'level' && activeTab === 'quirk') showTab('quirk');
 }
 function onAbilityScoreChange(key, value) {
   const c = selected;
@@ -1122,101 +1123,41 @@ function showTab(tab) {
     b.classList.toggle('active', b.textContent.trim().toLowerCase().replace(' ','')===tab.replace(' ',''));
   });
   const c = selected;
-  const p = c.personality || {};
-  const app = c.appearance || {};
-  const dm = c.dm_notes || {};
+  if (tab==='personality') {
+    return renderEditableTab((c.personality||{}).summary||'', v => { c.personality = c.personality||{}; c.personality.summary = v; });
+  }
+  if (tab==='appearance') {
+    const app = c.appearance||{};
+    return renderEditableTab([app.hair,app.build,app.other].filter(Boolean).join(' — '), v => { c.appearance = { other: v }; });
+  }
+  if (tab==='combat') {
+    return renderEditableTab((c.dm_notes||{}).combat_role||'', v => { c.dm_notes = c.dm_notes||{}; c.dm_notes.combat_role = v; });
+  }
+  if (tab==='social') {
+    return renderEditableTab((c.dm_notes||{}).social_role||'', v => { c.dm_notes = c.dm_notes||{}; c.dm_notes.social_role = v; });
+  }
+  if (tab==='backstory') {
+    return renderEditableTab(c.backstory||'', v => { c.backstory = v; });
+  }
+}
+
+/* ── Editable tab content ────────────────────────────── */
+let currentTabSave = null;
+
+function renderEditableTab(value, onSave) {
+  currentTabSave = onSave;
   const tabContent = document.getElementById('tab-content');
   tabContent.classList.remove('tab-quirk');
-  if (tab==='personality') { tabContent.textContent = p.summary||''; return; }
-  if (tab==='appearance') { tabContent.textContent = [app.hair,app.build,app.other].filter(Boolean).join(' — '); return; }
-  if (tab==='combat') { tabContent.textContent = dm.combat_role||''; return; }
-  if (tab==='social') { tabContent.textContent = dm.social_role||''; return; }
-  if (tab==='quirk') { renderQuirkTab(c); return; }
+  if (canWrite) {
+    tabContent.innerHTML = `<textarea class="tab-editable" rows="4" placeholder="Nothing here yet — click to add." oninput="onTabEdit(this.value)">${escHtml(value)}</textarea>`;
+  } else {
+    tabContent.textContent = value;
+  }
 }
 
-/* ── Quirk tab ────────────────────────────────────────── */
-function parseRequiredLevel(ab) {
-  const haystack = ((ab.type||'')+' '+(ab.description||'')).toLowerCase();
-  for (const re of [/unlocks at level (\d+)/,/available from level (\d+)/,/\(level (\d+)\)/]) {
-    const m = haystack.match(re);
-    if (m) return parseInt(m[1]);
-  }
-  return 1;
-}
-function currentUpgradeNote(desc, charLevel) {
-  if (!desc) return null;
-  const re = /At level (\d+):([^.]+)\./gi;
-  let match, best = null;
-  while ((match = re.exec(desc)) !== null) {
-    if (parseInt(match[1]) <= charLevel) best = `Level ${match[1]} upgrade active: ${match[2].trim()}`;
-  }
-  return best;
-}
-
-function renderQuirkTab(c) {
-  const qm = c.quirk_mechanics || {};
-  const pn = c.player_notes || {};
-  const charLevel = c.level || 1;
-
-  // Non-1A characters: show quirk_summary instead of full mechanics
-  if (qm._summary && !(qm.abilities||[]).length) {
-    const el = document.getElementById('tab-content');
-    el.innerHTML = `<div class="quirk-header">
-      <span class="quirk-name">${escHtml(c.quirk)}</span>
-      <span class="quirk-meta"> · ${escHtml(c.quirk_type||'')}${c.quirk_rarity ? ' · '+escHtml(c.quirk_rarity) : ''}</span>
-    </div>
-    ${qm.source ? `<div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">${escHtml(qm.source)}</div>` : ''}
-    <div style="font-size:13px;color:var(--text-muted);line-height:1.6;white-space:pre-wrap;">${escHtml(qm._summary)}</div>`;
-    el.classList.add('tab-quirk');
-    return;
-  }
-
-  const SKIP = new Set(['name','type','description']);
-  const EXTRA = { unarmed_strike:'Unarmed strike', damage:'Damage', pressure_tier_system:'Pressure tier' };
-
-  let html = `<div class="quirk-header">
-    <span class="quirk-name">${escHtml(c.quirk)}</span>
-    <span class="quirk-meta"> · ${escHtml(c.quirk_type||'')} · ${escHtml(c.quirk_rarity||'')} · Save DC ${c.quirk_save_DC||'—'} (${escHtml(c.quirk_ability||'')})</span>
-  </div>`;
-  if (qm.source) html += `<div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">Source: ${escHtml(qm.source)}</div>`;
-  if (qm.weakness) html += `<div class="weakness-block"><strong>Weakness:</strong> ${escHtml(qm.weakness)}</div>`;
-  if (qm.pressure_tier_system) html += `<div class="ability-card" style="background:var(--surface2);">
-    <span class="ability-name">Pressure tier system</span>
-    <div class="ability-desc">${escHtml(qm.pressure_tier_system)}</div></div>`;
-
-  for (const ab of (qm.abilities||[])) {
-    const reqLevel = parseRequiredLevel(ab);
-    const locked = reqLevel > charLevel;
-    html += `<div class="ability-card${locked?' locked':''}">
-      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-        <span class="ability-name">${escHtml(ab.name)}</span>
-        <span class="ability-type">${escHtml(ab.type||'')}</span>
-        ${locked
-          ? `<span class="lock-badge">🔒 Unlocks at level ${reqLevel}</span>`
-          : reqLevel>1
-            ? `<span class="lock-badge" style="background:var(--teal-light);color:var(--teal-text);border-color:transparent;">✓ Unlocked lv ${reqLevel}</span>`
-            : ''}
-      </div>
-      <div class="ability-desc">${escHtml(ab.description||'')}</div>`;
-    if (!locked) {
-      const note = currentUpgradeNote(ab.description, charLevel);
-      if (note) html += `<div class="upgrade-note">${escHtml(note)}</div>`;
-    }
-    for (const [key, val] of Object.entries(ab)) {
-      if (SKIP.has(key)||val===null||val===undefined||val==='') continue;
-      const label = EXTRA[key]||key.replace(/_/g,' ');
-      html += `<div style="margin-top:5px;padding-top:5px;border-top:1px solid var(--border);">
-        <span style="font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;">${escHtml(label)}</span>
-        <div class="ability-desc" style="margin-top:2px;">${escHtml(String(val))}</div></div>`;
-    }
-    html += `</div>`;
-  }
-  if (pn.role_summary) html += `<div class="player-note"><strong>Player note:</strong> ${escHtml(pn.role_summary)}</div>`;
-  if (pn.growth_hook) html += `<div class="player-note" style="margin-top:6px;"><strong>Growth hook:</strong> ${escHtml(pn.growth_hook)}</div>`;
-
-  const el = document.getElementById('tab-content');
-  el.innerHTML = html;
-  el.classList.add('tab-quirk');
+function onTabEdit(value) {
+  if (currentTabSave) currentTabSave(value);
+  scheduleCharSave(selected);
 }
 
 /* ── Relationships ────────────────────────────────────── */

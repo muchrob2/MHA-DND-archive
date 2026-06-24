@@ -546,18 +546,10 @@
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script>window.AUTH_BASE = '../';</script>
+<script src="../auth.js"></script>
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAX4qLRUWXFrA1sX-XC2KIYuGyc1aD8oX8",
-    authDomain: "mha-dnd-archive.firebaseapp.com",
-    projectId: "mha-dnd-archive",
-    storageBucket: "mha-dnd-archive.firebasestorage.app",
-    messagingSenderId: "1095293073071",
-    appId: "1:1095293073071:web:bba6898534bd713cec865a"
-  };
-  firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
-  const fbAuthReady = firebase.auth().signInAnonymously().then(() => firebase.auth().currentUser);
 </script>
 </head>
 <body>
@@ -828,7 +820,7 @@
     <div id="save-bar">
       <span>Syncs via Firestore</span>
       <div style="display:flex;gap:6px;margin-left:auto;align-items:center;">
-        <button onclick="saveAllNow()" id="save-btn" style="padding:3px 10px;font-size:11px;border:1px solid var(--purple);border-radius:5px;background:var(--purple-light);color:var(--purple-text);cursor:pointer;font-weight:600;" title="Save all changes now">💾 Save</button>
+        <button onclick="saveAllNow()" id="save-btn" style="padding:3px 10px;font-size:11px;border:1px solid var(--purple);border-radius:5px;background:var(--purple-light);color:var(--purple-text);cursor:pointer;font-weight:600;display:none;" title="Save all changes now">💾 Save</button>
         <button onclick="exportData()" style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Download a local backup">↓ Export</button>
         <label style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Restore from a backup file">↑ Import<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
         <span id="save-status"></span>
@@ -863,6 +855,12 @@ function setSaveStatus(state, text) {
 /* ── Firestore storage ────────────────────────────────── */
 const FS_COLLECTION = 'mha-dnd';
 const FS_DOC        = 'relationships-bundle';
+
+document.addEventListener('auth-state-changed', (e) => {
+  const canWrite = e.detail.role === 'admin' || e.detail.role === 'editor';
+  const btn = document.getElementById('save-btn');
+  if (btn) btn.style.display = canWrite ? '' : 'none';
+});
 
 function buildBundle() {
   const characters = {};

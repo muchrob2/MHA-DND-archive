@@ -159,18 +159,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAX4qLRUWXFrA1sX-XC2KIYuGyc1aD8oX8",
-    authDomain: "mha-dnd-archive.firebaseapp.com",
-    projectId: "mha-dnd-archive",
-    storageBucket: "mha-dnd-archive.firebasestorage.app",
-    messagingSenderId: "1095293073071",
-    appId: "1:1095293073071:web:bba6898534bd713cec865a"
-  };
-  firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
-  const fbAuthReady = firebase.auth().signInAnonymously().then(() => firebase.auth().currentUser);
 </script>
 </head>
 <body>
@@ -180,7 +171,7 @@
   <span class="nav-title">Characters</span>
   <div class="nav-right">
     <span class="nav-saved" id="saved-notice">Saved ✓</span>
-    <button class="nav-btn save-btn" id="new-char-btn" onclick="openCreateModal()">+ New Character</button>
+    <button class="nav-btn save-btn" id="new-char-btn" onclick="openCreateModal()" style="display:none;">+ New Character</button>
   </div>
 </nav>
 
@@ -229,19 +220,28 @@ let activeTags = new Set();
 
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-const FS_CUSTOM_DOC = db.collection('mha-dnd').doc('custom-characters');
-const FS_OVERRIDES_DOC = db.collection('mha-dnd').doc('character-overrides');
+const FS_CHARACTERS = db.collection('characters');
 
 function isCustom(c) { return c._type === 'Custom'; }
 function charKey(c) { return isCustom(c) ? c._id : c._staticId; }
 
-async function loadOverrides() {
+async function loadCharacterDocs() {
   try {
     await fbAuthReady;
-    const snap = await FS_OVERRIDES_DOC.get();
-    return snap.exists ? snap.data() : { fields: {}, deleted: [] };
+    const snap = await FS_CHARACTERS.get();
+    const fields = {}, deletedIds = new Set(), customChars = [];
+    snap.forEach(doc => {
+      const data = doc.data();
+      if (data._type === 'Custom') {
+        customChars.push(Object.assign({}, data, { _id: doc.id }));
+      } else {
+        if (data.deleted) deletedIds.add(doc.id);
+        if (data.fields) fields[doc.id] = data.fields;
+      }
+    });
+    return { fields, deletedIds, customChars };
   } catch {
-    return { fields: {}, deleted: [] };
+    return { fields: {}, deletedIds: new Set(), customChars: [] };
   }
 }
 
@@ -294,23 +294,15 @@ async function loadStaticCharacters() {
   return out;
 }
 
-async function loadCustomCharacters() {
-  try {
-    await fbAuthReady;
-    const snap = await FS_CUSTOM_DOC.get();
-    return snap.exists ? (snap.data().characters || []) : [];
-  } catch {
-    return [];
-  }
-}
+document.addEventListener('auth-state-changed', (e) => {
+  document.getElementById('new-char-btn').style.display = e.detail.role === 'admin' ? '' : 'none';
+});
 
 async function init() {
   try {
-    const [staticChars, customChars, overrides] = await Promise.all([loadStaticCharacters(), loadCustomCharacters(), loadOverrides()]);
-    const deleted = new Set(overrides.deleted || []);
-    const fields = overrides.fields || {};
+    const [staticChars, { fields, deletedIds, customChars }] = await Promise.all([loadStaticCharacters(), loadCharacterDocs()]);
     const merged = staticChars
-      .filter(c => !deleted.has(c._staticId))
+      .filter(c => !deletedIds.has(c._staticId))
       .map(c => fields[c._staticId] ? Object.assign({}, c, fields[c._staticId]) : c);
     allChars = merged.concat(customChars);
   } catch (e) {
@@ -463,8 +455,10 @@ function showDetail(idx) {
     ${bonus ? `<div class="detail-section"><div class="detail-label">Bonus Features / Notes</div><div class="detail-body">${escHtml(bonus)}</div></div>` : ''}
     ${(c.tags||[]).length ? `<div class="detail-section"><div class="detail-label">Tags</div><div class="detail-body">${c.tags.map(t => `<span class="tag-chip">${escHtml(t)}</span>`).join(' ')}</div></div>` : ''}
     <div class="modal-actions">
+      ${canEdit(charKey(c)) ? `
       <button class="action-btn" onclick="openEditModal(${idx})">Edit</button>
       <button class="action-btn" style="color:var(--red-text);border-color:rgba(239,68,68,0.4);" onclick="deleteCharacter(${idx})">Delete</button>
+      ` : ''}
     </div>
   `;
   document.getElementById('modal-overlay').classList.add('open');
@@ -649,17 +643,12 @@ async function submitCreate() {
   const fields = readCharacterForm();
   if (!fields.name) { alert('Name is required.'); return; }
 
-  const payload = Object.assign({}, fields, {
-    _type: 'Custom',
-    _id: Date.now().toString(36) + Math.random().toString(36).slice(2),
-  });
+  const id = Date.now().toString(36) + Math.random().toString(36).slice(2);
+  const payload = Object.assign({}, fields, { _type: 'Custom' });
 
   try {
     await fbAuthReady;
-    await FS_CUSTOM_DOC.set(
-      { characters: firebase.firestore.FieldValue.arrayUnion(payload) },
-      { merge: true }
-    );
+    await FS_CHARACTERS.doc(id).set(payload);
     closeModal();
     showSavedNotice('Character created ✓');
     await init();
@@ -691,15 +680,9 @@ async function submitEdit(idx) {
   try {
     await fbAuthReady;
     if (isCustom(c)) {
-      const snap = await FS_CUSTOM_DOC.get();
-      const chars = (snap.data().characters || []).map(x => x._id === c._id ? Object.assign({}, x, fields) : x);
-      await FS_CUSTOM_DOC.set({ characters: chars });
+      await FS_CHARACTERS.doc(c._id).set(Object.assign({}, fields, { _type: 'Custom' }));
     } else {
-      const snap = await FS_OVERRIDES_DOC.get();
-      const data = snap.exists ? snap.data() : { fields: {}, deleted: [] };
-      const allFields = data.fields || {};
-      allFields[c._staticId] = fields;
-      await FS_OVERRIDES_DOC.set({ fields: allFields, deleted: data.deleted || [] });
+      await FS_CHARACTERS.doc(c._staticId).set({ fields }, { merge: true });
     }
     closeModal();
     showSavedNotice('Changes saved ✓');
@@ -716,15 +699,9 @@ async function deleteCharacter(idx) {
   try {
     await fbAuthReady;
     if (isCustom(c)) {
-      const snap = await FS_CUSTOM_DOC.get();
-      const chars = (snap.data().characters || []).filter(x => x._id !== c._id);
-      await FS_CUSTOM_DOC.set({ characters: chars });
+      await FS_CHARACTERS.doc(c._id).delete();
     } else {
-      const snap = await FS_OVERRIDES_DOC.get();
-      const data = snap.exists ? snap.data() : { fields: {}, deleted: [] };
-      const deleted = new Set(data.deleted || []);
-      deleted.add(c._staticId);
-      await FS_OVERRIDES_DOC.set({ fields: data.fields || {}, deleted: [...deleted] });
+      await FS_CHARACTERS.doc(c._staticId).set({ deleted: true }, { merge: true });
     }
     closeModal();
     showSavedNotice('Character deleted');

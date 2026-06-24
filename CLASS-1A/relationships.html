@@ -129,7 +129,7 @@
   .rel-char-quirk { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
   .rel-controls { display: flex; flex-direction: column; gap: 4px; }
   .slider-wrap { display: flex; align-items: center; gap: 8px; }
-  .rel-slider { flex: 1; accent-color: var(--purple); cursor: pointer; }
+  .rel-slider { flex: 1; accent-color: var(--purple); cursor: pointer; touch-action: pan-y; }
   .rel-score { font-size: 14px; font-weight: 600; text-align: center; padding-top: 2px; min-width: 32px; }
   .score-neg { color: var(--red); }
   .score-zero { color: var(--text-dim); }
@@ -503,11 +503,15 @@
     .rel-row {
       grid-template-columns: 1fr auto;
       grid-template-rows: auto auto;
-      gap: 6px;
+      gap: 10px;
+      padding: 16px 0;
     }
     .rel-row > :nth-child(1) { grid-column: 1; grid-row: 1; }
     .rel-row > :nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
     .rel-row > :nth-child(3) { grid-column: 2; grid-row: 1; align-self: center; }
+    .slider-wrap { padding: 8px 0; margin: 2px 0; }
+    .rel-slider { height: 32px; }
+    .rel-note { min-height: 34px; padding: 8px; }
 
     /* Dice roller */
     #view-dice { padding: 14px; gap: 14px; }
@@ -593,7 +597,7 @@
           <button class="tab-btn" onclick="showTab('appearance')">Appearance</button>
           <button class="tab-btn" onclick="showTab('combat')">Combat role</button>
           <button class="tab-btn" onclick="showTab('social')">Social role</button>
-          <button class="tab-btn" onclick="showTab('quirk')">Quirk</button>
+          <button class="tab-btn" onclick="showTab('backstory')">Backstory</button>
         </div>
         <div id="tab-content"></div>
       </div>
@@ -856,10 +860,13 @@ function setSaveStatus(state, text) {
 const FS_COLLECTION = 'mha-dnd';
 const FS_DOC        = 'relationships-bundle';
 
+let canWrite = false;
+
 document.addEventListener('auth-state-changed', (e) => {
-  const canWrite = e.detail.role === 'admin' || e.detail.role === 'editor';
+  canWrite = e.detail.role === 'admin' || e.detail.role === 'editor';
   const btn = document.getElementById('save-btn');
   if (btn) btn.style.display = canWrite ? '' : 'none';
+  if (selected) showTab(activeTab);
 });
 
 function buildBundle() {

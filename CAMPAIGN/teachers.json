@@ -114,12 +114,12 @@
       },
       "quirk_mechanics": {
         "source": "Quirk Compendium — Erasure",
-        "weakness": "Requires a clear line of sight to the target's physical body — targets can evade by hiding behind obstacles. If hit while maintaining the effect, she must succeed on a DC 13 Constitution save to keep her eyes open or the effect ends.",
+        "weakness": "Requires a clear line of sight to the target's physical body — targets can evade by hiding behind obstacles. If hit while maintaining the effect, he must succeed on a DC 13 Constitution save to keep his eyes open or the effect ends.",
         "abilities": [
           {
             "name": "Erase",
             "type": "Bonus Action",
-            "description": "Gazes at creatures within a 150-foot cone (DC 14 Perception check for targets beyond that range). Affected targets cannot use their Quirk or abilities for 4 rounds. She can maintain focus for a number of rounds equal to her proficiency bonus before eye strain sets in."
+            "description": "Gazes at creatures within a 150-foot cone (DC 14 Perception check for targets beyond that range). Affected targets cannot use their Quirk or abilities for 4 rounds. He can maintain focus for a number of rounds equal to his proficiency bonus before eye strain sets in."
           }
         ]
       }

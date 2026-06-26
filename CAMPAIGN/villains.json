@@ -1,7 +1,7 @@
 {
   "solo": [
     {
-      "name": "Alucard Chonokoji",
+      "name": "Alucard Chosoji",
       "alias": null,
       "role": "Anti-Hero. Unaffiliated. Unclassified.",
       "quirk": "BLACK",
@@ -38,11 +38,11 @@
         ]
       },
       "three_name_summon": {
-        "rule": "Once per arc, the players may invoke Alucard by speaking his full name aloud three times: 'Alucard Chonokoji. Alucard Chonokoji. Alucard Chonokoji.' He will come.",
+        "rule": "Once per Tier, the players may invoke Alucard by speaking his full name aloud three times: 'Alucard Chosoji. Alucard Chosoji. Alucard Chosoji.' He will come.",
         "how_he_gives_them_this": "The first random encounter is the handoff. He appears in a context that isn't a fight — a moment where the class is in trouble but not in danger, and he does something small that resolves it without being asked. Then, before he leaves, he stops. He turns back. He looks at whoever in the class is paying the most attention and says: 'If you find yourselves somewhere you cannot get out of. Say my name. Three times. I will hear it.' Then he steps into the nearest shadow and is gone. He does not explain why. He does not wait for a response.",
         "conditions": "He will not come for problems they can handle themselves. He will not come if they summon him out of convenience. He will come if they are genuinely in over their heads — if saying his name three times is the last move before someone dies or something irreversible happens. He knows the difference. Players who try to game the summon and call him into an easy fight will find he arrives, looks at the situation, and says: 'No.' Then leaves.",
         "what_he_does_when_summoned": "He arrives in the nearest shadow to wherever his name was spoken. He takes stock of the situation — one full round of observation, during which he is undetectable and will not act. Then he acts on his own judgement. He does not take requests. He does not take orders. When the immediate threat is resolved he will remain for exactly as long as he decides is necessary, then leave without ceremony. He may say something. He may not.",
-        "after_the_summon": "The summon resets at the start of each new arc. Whether the players have used it or not. He does not acknowledge previous summons. He does not comment on whether they called correctly, or not enough, or too late. He simply comes when his name is spoken and the need is real.",
+        "after_the_summon": "The summon resets at the start of each new Tier. Whether the players have used it or not. He does not acknowledge previous summons. He does not comment on whether they called correctly, or not enough, or too late. He simply comes when his name is spoken and the need is real.",
         "dm_note_on_the_gimmick": "The power of this gimmick is the restraint around it. The players need to believe they are saving it for something that matters. That means you need to sometimes let things get bad enough that they consider it. And once — once in the campaign — let them call too late, or not at all, and live with that decision."
       },
       "campaign_appearances": {
@@ -59,183 +59,6 @@
         "his_relationship_to_the_factions": "All three divisions of Undertow's syndicate are aware of him, though only Undertow himself understands that 'all three' is a meaningful phrase. None of them will discuss Alucard. Undertow, if pushed very hard on the subject, will say: 'We don't touch his work and he doesn't touch ours.' That is the entirety of the relationship. He is not affiliated with the syndicate. He is not fighting it. He is a separate variable that nobody in Murano — including Undertow — has figured out how to account for.",
         "secret": "He has been in Murano before. Three years ago. Whatever he was there for then and what he is there for now may or may not be the same thing. Arakawa Setsuna has a file on him. It is two pages long. The second page is blank except for a single line she wrote herself: 'Do not engage without preparation you do not currently have.'"
       }
-    }
-  ],
-  "organisation": {
-    "name": "The Chain",
-    "description": "A single villain syndicate that has been quietly building power in Murano for years — Undertow's syndicate, though almost nobody alive knows that all three of its faces answer to him. On the surface, Murano looks like it has three separate villain problems: a port-district extortion ring, a sealed black-site research outfit, and a grassroots anti-licensing movement. It has one. Undertow built it that way on purpose — three faces that never have to explain themselves to each other, so that if one face burns, the other two are untouched and the class never sees the whole shape of what they're fighting. Not ideologues — pragmatists, even the division that talks like a movement. They run quirk-for-hire operations, extortion rackets, illicit research, and a genuine-feeling civil rights front, all of it ultimately funding and feeding the same organisation. Low-profile by design. That changes when Class 1-A keeps getting in their way.",
-    "structure": "Undertow (Soryu Hatch) sits at the top of all three divisions and is the only person who does. Below him: The Chain proper (Flashpoint, Riddle, Kuma — extortion, muscle, recruitment, day-to-day Murano operations), Null Signal (Aoi Tenshin/Null, Ryo Karashi/Splice — research, quirk data, acquisition, funded through shell consultancy Seika Advanced Systems), and Fracture (Maki Torune/Shard, Daisuke Ren/Voltage — ideological front and recruitment pipeline). Division leads do not know about each other's existence as anything more than rumour. Null believes she runs an independent black-site lab that occasionally trades favours with 'a port contact.' Shard genuinely believes Fracture is its own movement and would walk away from it the day she learned otherwise — which is exactly why Undertow has never told her. Most rank-and-file members in any division don't know the leadership's identities, let alone that the identities are connected to each other.",
-    "public_awareness": "None in Tier 1. Street-level rumour in Tier 2 — as three separate, unconnected problems. Open threat by Tier 3, still read as three separate organisations by everyone except the Hero Commission's most paranoid analysts. The single-organisation structure is a Tier 3/4 reveal — Undertow's real shape is the thing Class 1-A is not yet equipped to see by the end of Season 1."
-  },
-  "villains": [
-    {
-      "name": "Soryu Hatch",
-      "alias": "Undertow",
-      "role": "The Chain's founder and strategist. The reason everything is as organised as it is.",
-      "quirk": "Permeation",
-      "quirk_rarity": "Very Rare",
-      "quirk_type": "Transformation",
-      "quirk_summary": "Undertow can make his body intangible — he passes through solid matter, falls through floors, walks through walls. While phased, he cannot interact with the physical world but also cannot be hit. He can partially phase individual body parts, allowing selective interaction. At full mastery he can phase other people or objects he's in contact with.",
-      "quirk_mechanics_ref": "Permeation — see Quirk Compendium.",
-      "appearance": "Lean, mid-40s. Unhurried about everything. The kind of person who looks completely comfortable wherever they are. Usually seen in unremarkable, well-fitted clothes. No dramatic villain aesthetic. That's the point.",
-      "personality": "Dry, measured, occasionally funny. Treats Class 1-A as entertainment once they start interfering — they're interesting to him, not threatening. This will shift in Tier 3 when the class actually costs him something significant. He won't get loud about it. He'll get precise.",
-      "combat_style": "Avoidance and precision. He lets attacks pass through him, repositions constantly, strikes only when certain. He doesn't brawl. The encounter with him in Tier 3 is designed to teach players that not every villain can be beaten by fighting harder.",
-      "stat_block": {
-        "level": 15,
-        "HP": 165,
-        "AC": 17,
-        "speed": "35 ft",
-        "STR": 14,
-        "DEX": 20,
-        "CON": 16,
-        "INT": 18,
-        "WIS": 16,
-        "CHA": 15,
-        "TECH": 12,
-        "quirk_save_DC": 18,
-        "quirk_ability": "Dexterity",
-        "proficiency_bonus": 5,
-        "special_abilities": [
-          "Phase: Undertow can activate Permeation as a bonus action, becoming intangible until the start of his next turn. While phased, he cannot be targeted by attacks or effects. He can move through solid objects and creatures.",
-          "Partial Phase Strike: While phased, he can reach a hand through solid surfaces to grab or strike. Melee attack +9 to hit, 3d8+5 force damage, target must make DC 18 STR save or be restrained.",
-          "Phase Carry: As an action, Undertow can pull a creature he is grappling into a phased state. The creature is removed from play until he releases them or takes damage exceeding 20 in one hit.",
-          "Untouchable: Attacks against Undertow while he is phased automatically miss. Magical effects, AoE, and sonic damage can still partially affect him — those deal half damage."
-        ]
-      },
-      "campaign_appearances": {
-        "tier_1": "Background — name heard in relation to Chain operations, never seen.",
-        "tier_2": "Glimpsed once after Flashpoint's attack. Doesn't engage. Watches.",
-        "tier_3": "First direct confrontation. He doesn't fight seriously. He leaves when he wants to. The message: he can reach them anywhere.",
-        "tier_4": "Final boss (with Flashpoint). His Permeation is his greatest defense but Flashpoint's unpredictability forces him to split focus — that's the window."
-      },
-      "dm_notes": "Never raise his voice. If he's being loud, something is wrong with his plan and that's more dangerous. The class beating him requires creativity — simply dealing damage doesn't work."
-    },
-    {
-      "name": "Goda Miruki",
-      "alias": "Flashpoint",
-      "role": "The Chain's enforcer. The blunt instrument. The reason other villain organisations in Murano don't cause the Chain problems.",
-      "quirk": "Cremation",
-      "quirk_rarity": "Legendary",
-      "quirk_type": "Emitter",
-      "quirk_summary": "Flashpoint generates searing blue-white flames capable of incinerating almost anything. Her flames burn hotter than Hellflame and are harder to put out — they cling to surfaces and continue burning. She can control the direction and spread but not perfectly; her quirk tends toward excess.",
-      "quirk_mechanics_ref": "Cremation — see Quirk Compendium. Similar to Hellflame but higher temperature, blue-white flame, harder to extinguish (requires special effort or water quirk).",
-      "appearance": "Lean and scarred across her arms from years of her own flames. Short hair, singed edges. Doesn't look like someone who should be as dangerous as she is until the moment she is.",
-      "personality": "Minimal words. Pyromaniac instincts. Loyal to Undertow because he's the only person who's ever treated her capabilities as a feature rather than a problem. Not interested in conversation with heroes. Not cruel — just single-purpose.",
-      "combat_style": "Overwhelming. She opens fights at maximum output. Area denial through fire. Anyone who gets close learns that her flames stick to skin and armour alike. Players should fear this fight the first time they see her in Tier 2.",
-      "stat_block": {
-        "level": 16,
-        "HP": 220,
-        "AC": 16,
-        "speed": "35 ft, fly 30 ft (via flame propulsion)",
-        "STR": 16,
-        "DEX": 17,
-        "CON": 19,
-        "INT": 10,
-        "WIS": 12,
-        "CHA": 13,
-        "TECH": 8,
-        "quirk_save_DC": 19,
-        "quirk_ability": "Constitution",
-        "proficiency_bonus": 5,
-        "special_abilities": [
-          "Cremation: As an action, target one creature or point within 60 ft. All creatures within 15 ft of target make DEX save DC 19 or take 8d8 fire damage and gain 2 ranks of BURNED. Half on success.",
-          "Clinging Flame: Fire from Cremation sticks to surfaces and creatures. Creatures hit take 2d6 fire damage at the start of each turn until they use an action to extinguish it (DC 16 CON check or water contact).",
-          "Blue Incineration: Once per short rest, as an action, Flashpoint channels full output into a 60ft line 10ft wide. All creatures make DEX save DC 19, taking 12d10 fire damage on a fail, half on success. Structures in the line are destroyed.",
-          "Flame Resistance: Immune to fire damage. Resistance to radiant damage.",
-          "Reckless Output: On rounds where Flashpoint uses Blue Incineration, she also takes 3d6 fire damage (her own flames exceed safe output). This does not stop her."
-        ]
-      },
-      "campaign_appearances": {
-        "tier_2": "Burns down a hero agency in the port district. Three heroes hospitalised. The class witnesses the aftermath, not the act — initially. Later in Tier 2 they fight her directly for the first time, escaping rather than defeating her.",
-        "tier_3": "Appears with Undertow in the Tier 3 climax. Does not fight — present as implicit threat only.",
-        "tier_4": "Final boss alongside Undertow. The challenge: stopping Flashpoint without being incinerated, in an enclosed venue, while also dealing with Undertow's Permeation. The fact that she and Undertow don't fight well together is the path to victory."
-      },
-      "dm_notes": "Make the Tier 2 fight feel genuinely dangerous. If the class tries to fight her head-on at level 5-7, they should be badly outmatched and need to retreat or use terrain. This is a loss that makes the eventual Tier 4 win matter."
-    },
-    {
-      "name": "Sae Ichiro",
-      "alias": "Riddle",
-      "role": "Recruiter, infiltrator, and social engineer. The Chain's most dangerous member in terms of long-term influence.",
-      "quirk": "Brainwashing",
-      "quirk_rarity": "Rare",
-      "quirk_type": "Emitter",
-      "quirk_summary": "Riddle can brainwash anyone who verbally responds to him while he speaks. Once triggered, the target enters a compliant state and follows simple commands. Extended exposure can create deeper conditioning. The effect wears off naturally or can be snapped by physical shock.",
-      "quirk_mechanics_ref": "Brainwashing — see Quirk Compendium. Key mechanic: verbal trigger required (target must respond to user's speech). Effect scales with extended use.",
-      "appearance": "Late 20s. Conventionally attractive in an unassuming way. Warm eyes, easy laugh. The kind of person you feel immediately comfortable around. This is intentional.",
-      "personality": "Genuinely charming. Listens well — really listens, which is rarer than it should be. He takes an interest in the students' actual problems and frustrations. This is manipulation but it's manipulation that started from something real. He was once a person who actually cared. The class will like him before they know what he is. His eventual exposure should land hard.",
-      "combat_style": "Avoids it. Uses Brainwashing defensively. If cornered, he'll talk, and that talking is the danger.",
-      "stat_block": {
-        "level": 12,
-        "HP": 110,
-        "AC": 14,
-        "speed": "30 ft",
-        "STR": 12,
-        "DEX": 15,
-        "CON": 13,
-        "INT": 16,
-        "WIS": 14,
-        "CHA": 20,
-        "TECH": 10,
-        "quirk_save_DC": 18,
-        "quirk_ability": "Charisma",
-        "proficiency_bonus": 4,
-        "special_abilities": [
-          "Brainwashing: As an action, Riddle speaks to a target within 30 ft. If the target verbally responds in any way, they make a WIS save DC 18. On a failure, they are Brainwashed for 1 minute and follow simple commands. On a success, they are immune for 24 hours.",
-          "Persistent Conditioning: Targets Riddle has brainwashed more than once in a week have disadvantage on their save.",
-          "Snap: A brainwashed target can be freed by taking 15+ damage in one hit or by being physically shaken by an ally (action, DC 14 Athletics check).",
-          "Read the Room: Riddle has advantage on all Insight checks and cannot be surprised."
-        ]
-      },
-      "campaign_appearances": {
-        "tier_2": "Operating in Murano, meeting vulnerable people. Background presence. DM plants seeds — a student mentions meeting someone interesting at a cafe.",
-        "tier_3": "His operation inside the class becomes apparent. The exposure is painful because the class has to account for what was real and what was manipulation — and some of it was both.",
-        "tier_4": "He gives himself up. He didn't want to be part of what The Chain is doing with the quirk-nullifying device. This is complicated, not redemptive — he still did real harm. What happens to him is the players' decision."
-      },
-      "dm_notes": "Play him warmly. Don't telegraph the villain. When students interact with him in Tier 2 and 3, he should feel like a genuinely good person to talk to. That's the point. The reveal hits harder if they liked him."
-    },
-    {
-      "name": "Kuma",
-      "alias": "Kuma (no hero alias, no villain alias, just Kuma)",
-      "role": "Mid-tier Chain enforcer. The Tier 2 boss fight.",
-      "quirk": "Gigantification",
-      "quirk_rarity": "Rare",
-      "quirk_type": "Transformation",
-      "quirk_summary": "Kuma can grow his body to enormous size — up to 25 feet tall at peak. Growth increases strength, durability, and reach proportionally. At full size he's a walking natural disaster in enclosed spaces.",
-      "quirk_mechanics_ref": "Gigantification — see Quirk Compendium.",
-      "appearance": "Even at normal size, large. Shaved head, extremely wide. Tends to break furniture by existing near it. Works for the Chain because the pay is good and the management leaves him alone.",
-      "personality": "Overconfident, loud, not strategically inclined. Genuinely enjoys the fight. No particular malice — this is just his job and he's good at it. Getting beaten by a class of first-years is going to be very embarrassing for him.",
-      "combat_style": "Grow large, hit hard, sweep everything. At full size his attacks cover huge areas. The challenge for the class is managing his growth and preventing him from reaching full size in the first place.",
-      "stat_block": {
-        "level": 8,
-        "HP": 140,
-        "AC": 15,
-        "speed": "30 ft (50 ft at full growth)",
-        "growth_sizes": {
-          "normal": "Size Medium, standard stats",
-          "large": "Size Large — STR +4, CON +2, unarmed attacks deal 3d8+STR, 15 ft reach",
-          "huge": "Size Huge — STR +8, CON +4, unarmed attacks deal 5d8+STR, 20 ft reach, all creatures in 10ft at turn start make STR save DC 16 or be knocked prone",
-          "gargantuan": "Size Gargantuan — STR +12, CON +6, unarmed attacks deal 8d8+STR, 25 ft reach, difficult terrain in 20ft radius, deals triple damage to structures"
-        },
-        "STR_base": 18,
-        "DEX": 10,
-        "CON_base": 16,
-        "INT": 9,
-        "WIS": 10,
-        "CHA": 12,
-        "TECH": 8,
-        "quirk_save_DC": 15,
-        "quirk_ability": "Strength",
-        "proficiency_bonus": 3,
-        "special_abilities": [
-          "Growth: Kuma can increase his size as a bonus action. He starts at Large and can grow to Huge (turn 2) and Gargantuan (turn 4).",
-          "Ground Slam: As an action at Huge or larger size, Kuma slams both fists into the ground. All creatures within 20 ft make DEX save DC 16 or take 6d8 bludgeoning damage and be knocked prone.",
-          "Sweeping Strike: At Huge or larger, Kuma's arm sweeps in a 15 ft cone. DEX save DC 16 or take 5d10 bludgeoning damage and be pushed 15 ft."
-        ]
-      },
-      "campaign_appearances": {
-        "tier_2": "Boss fight at end of Tier 2. The class faces him as a group for the first time as a real coordinated encounter. Hard, chaotic, messy. They win. Important that they win — this is the class's first real victory against an actual villain."
-      },
-      "dm_notes": "Make him loud and fun before and during the fight. He talks. He brags. He's not scared of them — until suddenly he should be. Play up the students' reactions to each other during this fight — it's a team-building moment masquerading as a combat encounter."
     }
   ],
   "factions": [
@@ -345,12 +168,12 @@
           "season_1_role": "Teased, not fought. Season 1 foreshadowing only — referenced in a seized Chain memo ('Miruki's operation, port district, pending') found in the Convergence arc. The class won't know what the name means yet. Season 2 threat.",
           "quirk_mechanics": {
             "source": "Quirk Compendium — Cremation",
-            "weakness": "Builds a heat counter with every move used. At 35 heat points, he cannot use any move again until he takes 2d8 true damage that cannot be reduced. He always carries one rank of Burned that cannot be removed.",
+            "weakness": "Builds a heat counter with every move used. At 35 heat points, she cannot use any move again until she takes 2d8 true damage that cannot be reduced. She always carries one rank of Burned that cannot be removed.",
             "abilities": [
               {
                 "name": "Flame",
                 "type": "Action",
-                "description": "Ranged or melee fire attack within 45 feet dealing 3d6 + his Dexterity modifier fire damage, ignoring fire resistance and treating immunity as resistance. Costs 1 heat point."
+                "description": "Ranged or melee fire attack within 45 feet dealing 3d6 + her Dexterity modifier fire damage, ignoring fire resistance and treating immunity as resistance. Costs 1 heat point."
               },
               {
                 "name": "Flashfire Fist",
@@ -547,12 +370,12 @@
           "season_1_role": "Teased, not fought. Season 1 foreshadowing only — referenced in the 'Seika Advanced Systems' external data request (Hamagawa's monitor, Tier 1) and as Splice's director. Her season 1 log entry on the class: 'worth acquiring.' Season 2 threat.",
           "quirk_mechanics": {
             "source": "Quirk Compendium — Erasure",
-            "weakness": "Requires a clear line of sight to the target's physical body — targets can evade by hiding behind obstacles. If hit while maintaining the effect, he must succeed on a DC 13 Constitution save to keep his eyes open or the effect ends.",
+            "weakness": "Requires a clear line of sight to the target's physical body — targets can evade by hiding behind obstacles. If hit while maintaining the effect, she must succeed on a DC 13 Constitution save to keep her eyes open or the effect ends.",
             "abilities": [
               {
                 "name": "Erase",
                 "type": "Bonus Action",
-                "description": "Gazes at creatures within a 150-foot cone (DC 14 Perception check for targets beyond that range). Affected targets cannot use their Quirk or abilities for 4 rounds. He can maintain focus for a number of rounds equal to his proficiency bonus before eye strain sets in."
+                "description": "Gazes at creatures within a 150-foot cone (DC 14 Perception check for targets beyond that range). Affected targets cannot use their Quirk or abilities for 4 rounds. She can maintain focus for a number of rounds equal to her proficiency bonus before eye strain sets in."
               }
             ]
           }

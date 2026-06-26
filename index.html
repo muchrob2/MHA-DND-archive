@@ -173,7 +173,7 @@
   .card-hero:hover .card-arrow { color: var(--gold); transform: translateX(3px); }
 
   /* ── Row of smaller cards ── */
-  .card-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+  .card-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 10px; }
   .card-sm {
     display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: inherit;
     background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
@@ -200,6 +200,17 @@
   @media (max-width: 400px) {
     .card-row { grid-template-columns: 1fr; }
   }
+
+  /* ── Keyboard focus visibility ── */
+  .role-btn:focus-visible,
+  .pin-key:focus-visible,
+  .pin-back-btn:focus-visible,
+  .switch-role-btn:focus-visible,
+  .card-hero:focus-visible,
+  .card-sm:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
 </style>
 </head>
 <body>
@@ -210,12 +221,12 @@
   <div class="role-title">My Hero Academia D&amp;D</div>
   <div class="role-sub">Who are you?</div>
   <div class="role-buttons">
-    <button class="role-btn player" onclick="chooseRole('player')">
+    <button type="button" class="role-btn player" onclick="chooseRole('player')" aria-label="Continue as Player">
       <span class="role-btn-icon">🎓</span>
       <span class="role-btn-label">Player</span>
       <span class="role-btn-desc">Access your character &amp; class tools</span>
     </button>
-    <button class="role-btn dm" onclick="showPin()">
+    <button type="button" class="role-btn dm" onclick="showPin()" aria-label="Continue as DM, requires PIN">
       <span class="role-btn-icon">⚡</span>
       <span class="role-btn-label">DM</span>
       <span class="role-btn-desc">Full dashboard including campaign</span>
@@ -303,12 +314,12 @@
 
   <p class="section-label">Rulebooks</p>
   <div class="card-row">
-    <a class="card-sm accent-gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Offical%20Handbook%20-%20The%20Homebrewery.pdf" target="_blank">
+    <a class="card-sm accent-gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Offical%20Handbook%20-%20The%20Homebrewery.pdf" target="_blank" rel="noopener noreferrer">
       <span class="card-sm-icon">📖</span>
       <span class="card-sm-title">Official Handbook</span>
       <span class="card-sm-desc">MHA5e core rules — PDF</span>
     </a>
-    <a class="card-sm accent-gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf" target="_blank">
+    <a class="card-sm accent-gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf" target="_blank" rel="noopener noreferrer">
       <span class="card-sm-icon">⚡</span>
       <span class="card-sm-title">Quirk Compendium</span>
       <span class="card-sm-desc">Full quirk mechanics — PDF</span>

@@ -143,6 +143,16 @@
     .script-body { padding: 20px; font-size: 15px; }
     .nav-title { font-size: 12px; }
   }
+
+  /* ── Keyboard focus visibility ── */
+  .script-link:focus-visible,
+  .nav-btn:focus-visible,
+  .action-btn:focus-visible,
+  .edit-input:focus-visible,
+  .edit-textarea:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
@@ -166,7 +176,7 @@
 </nav>
 
 <div id="layout">
-  <nav id="sidebar" id="script-sidebar"></nav>
+  <nav id="sidebar"></nav>
   <main id="panel">
     <div id="empty-state">
       <div class="es-icon">📜</div>
@@ -241,7 +251,6 @@ async function saveAll() {
 
 /* ── Render sidebar + panel shells ───────────────────── */
 function render() {
-  const sidebar = document.getElementById('sidebar') || document.querySelector('#script-sidebar');
   const sideEl  = document.getElementById('sidebar');
   const panel   = document.getElementById('panel');
 
@@ -250,7 +259,7 @@ function render() {
   for (const cat of (data.categories||[])) {
     sHtml += `<div class="cat-header"><span class="cat-icon">${escHtml(cat.icon||'')}</span>${escHtml(cat.label)}</div>`;
     for (const sc of (cat.scripts||[])) {
-      sHtml += `<a class="script-link" id="link-${escHtml(sc.id)}" onclick="showScript('${escHtml(sc.id)}')">${escHtml(sc.title)}</a>`;
+      sHtml += `<a class="script-link" id="link-${escHtml(sc.id)}" href="#" role="button" onclick="event.preventDefault();showScript('${escHtml(sc.id)}')">${escHtml(sc.title)}</a>`;
     }
   }
   sideEl.innerHTML = sHtml;

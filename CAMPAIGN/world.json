@@ -45,10 +45,10 @@
     "quirk_source": "My Hero Academia Quirk Compendium (RULEBOOKS folder)",
     "ability_scores": ["Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma", "Technology"],
     "level_tiers": {
-      "tier_1": "Levels 1-4: First year begins. U.A. campus. Training, dorm life, first real danger.",
-      "tier_2": "Levels 5-10: Sports Festival, Internships, Murano city patrol. Getting serious.",
-      "tier_3": "Levels 11-15: The Chain makes it personal. Culture Festival. Betrayal arc.",
-      "tier_4": "Levels 16-20: Final confrontation. Graduation. Epilogue."
+      "tier_1": "Levels 1-3: First year begins. U.A. campus. Training, dorm life, first real danger.",
+      "tier_2": "Levels 4-6: Sports Festival, Internships, Murano city patrol. Getting serious.",
+      "tier_3": "Levels 7-13: The Chain makes it personal. Culture Festival. Betrayal arc.",
+      "tier_4": "Levels 14-20: Final confrontation. Graduation. Epilogue."
     }
   }
 }

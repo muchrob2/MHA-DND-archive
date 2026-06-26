@@ -155,6 +155,18 @@
   @media (max-width: 640px) {
     #toolbar, #grid, #filter-panel { padding-left: 16px; padding-right: 16px; }
   }
+
+  /* ── Keyboard focus visibility ── */
+  .char-card:focus-visible,
+  .filter-opt:focus-visible,
+  .filter-chip:focus-visible,
+  .nav-btn:focus-visible,
+  .action-btn:focus-visible,
+  .modal-close:focus-visible,
+  #search-input:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
@@ -192,8 +204,8 @@
   <div class="filter-group">
     <div class="filter-group-label">Role</div>
     <div class="filter-options" id="pc-filters">
-      <div class="filter-opt" data-pc="true" onclick="togglePcFilter(this)">Player Character</div>
-      <div class="filter-opt" data-pc="false" onclick="togglePcFilter(this)">NPC</div>
+      <div class="filter-opt" data-pc="true" role="button" tabindex="0" onclick="togglePcFilter(this)">Player Character</div>
+      <div class="filter-opt" data-pc="false" role="button" tabindex="0" onclick="togglePcFilter(this)">NPC</div>
     </div>
   </div>
   <div class="filter-group">
@@ -315,17 +327,17 @@ async function init() {
 function buildFilterOptions() {
   const types = [...new Set(allChars.map(c => c._type).filter(Boolean))];
   document.getElementById('type-filters').innerHTML = types.map(t =>
-    `<div class="filter-opt" data-type="${escHtml(t)}" onclick="toggleTypeFilter(this)">${escHtml(t)}</div>`
+    `<div class="filter-opt" data-type="${escHtml(t)}" role="button" tabindex="0" onclick="toggleTypeFilter(this)">${escHtml(t)}</div>`
   ).join('');
 
   const genders = [...new Set(allChars.map(c => c.gender).filter(Boolean))];
   document.getElementById('gender-filters').innerHTML = genders.map(g =>
-    `<div class="filter-opt" data-gender="${escHtml(g)}" onclick="toggleGenderFilter(this)">${escHtml(g)}</div>`
+    `<div class="filter-opt" data-gender="${escHtml(g)}" role="button" tabindex="0" onclick="toggleGenderFilter(this)">${escHtml(g)}</div>`
   ).join('');
 
   const tags = [...new Set(allChars.flatMap(c => c.tags || []))].sort();
   document.getElementById('tag-filters').innerHTML = tags.length
-    ? tags.map(t => `<div class="filter-opt" data-tag="${escHtml(t)}" onclick="toggleTagFilter(this)">${escHtml(t)}</div>`).join('')
+    ? tags.map(t => `<div class="filter-opt" data-tag="${escHtml(t)}" role="button" tabindex="0" onclick="toggleTagFilter(this)">${escHtml(t)}</div>`).join('')
     : `<span style="font-size:11px;color:var(--text-dim);">No tags yet</span>`;
 }
 
@@ -388,7 +400,7 @@ function renderGrid() {
 
   grid.innerHTML = filtered.map((c, i) => {
     const idx = allChars.indexOf(c);
-    return `<div class="char-card" onclick="showDetail(${idx})">
+    return `<div class="char-card" onclick="showDetail(${idx})" role="button" tabindex="0" aria-label="View ${escHtml(c.name)} details">
       <div class="char-card-top">
         <div>
           <div class="char-name">${escHtml(c.name)}</div>
@@ -441,7 +453,7 @@ function showDetail(idx) {
   const bonus = c.bonus_features || c.notable_trait || c.quirk_summary || '';
 
   document.getElementById('modal').innerHTML = `
-    <span class="modal-close" onclick="closeModal()">✕</span>
+    <span class="modal-close" onclick="closeModal()" role="button" tabindex="0" aria-label="Close">✕</span>
     <h2>${escHtml(c.name)}</h2>
     <div class="modal-sub">${escHtml(c._type||'')}${c.role ? ' — ' + escHtml(c.role) : ''}</div>
     <div class="detail-section"><div class="detail-label">Quirk</div><div class="detail-body">${escHtml(c.quirk||'—')}${(c.quirk_type||c.quirk_rarity) ? ` <span style="color:var(--text-dim);">(${[c.quirk_type,c.quirk_rarity].filter(Boolean).map(escHtml).join(' · ')})</span>` : ''}</div></div>
@@ -627,7 +639,7 @@ function readCharacterForm() {
 
 function openCreateModal() {
   document.getElementById('modal').innerHTML = `
-    <span class="modal-close" onclick="closeModal()">✕</span>
+    <span class="modal-close" onclick="closeModal()" role="button" tabindex="0" aria-label="Close">✕</span>
     <h2>New Character</h2>
     <div class="modal-sub">Adds a new Class 1-A style character to the archive.</div>
     ${characterFormHtml()}
@@ -660,7 +672,7 @@ async function submitCreate() {
 function openEditModal(idx) {
   const c = allChars[idx];
   document.getElementById('modal').innerHTML = `
-    <span class="modal-close" onclick="closeModal()">✕</span>
+    <span class="modal-close" onclick="closeModal()" role="button" tabindex="0" aria-label="Close">✕</span>
     <h2>Edit ${escHtml(c.name)}</h2>
     <div class="modal-sub">${isCustom(c) ? 'Custom character' : 'Edits are saved as an override on top of the bundled data.'}</div>
     ${characterFormHtml(c)}
@@ -717,6 +729,13 @@ function showSavedNotice(text) {
   notice.classList.add('show');
   setTimeout(() => notice.classList.remove('show'), 2000);
 }
+
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role="button"][tabindex]')) {
+    e.preventDefault();
+    e.target.click();
+  }
+});
 
 init();
 </script>

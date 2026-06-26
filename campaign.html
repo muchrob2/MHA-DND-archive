@@ -334,6 +334,26 @@
   /* ── Loading ── */
   #loading { display: flex; align-items: center; justify-content: center; padding: 80px 0; color: var(--text-dim); font-size: 13px; }
 
+  /* ── Keyboard focus visibility ── */
+  .section-header:focus-visible,
+  .filter-pill:focus-visible,
+  .bm-btn:focus-visible,
+  .arc-bm-btn:focus-visible,
+  .collapse-btn:focus-visible,
+  .toggle-btn:focus-visible,
+  .sub-toggle:focus-visible,
+  .world-section-header:focus-visible,
+  .arc-search-input:focus-visible,
+  .filter-search:focus-visible,
+  #bm-toggle-btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  #sec-villains .section-header:focus-visible,
+  #sec-villains .collapse-btn:focus-visible {
+    outline-color: var(--v-crimson);
+  }
+
   /* ── Mobile ── */
   @media (max-width: 640px) {
     #main { padding: 0 12px 60px; }
@@ -404,7 +424,7 @@
 
   <!-- Story Arcs -->
   <section class="campaign-section" id="sec-arc" style="display:none">
-    <div class="section-header" onclick="toggleSection('sec-arc')">
+    <div class="section-header" onclick="toggleSection('sec-arc')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-arc')}">
       <div class="section-header-left">
         <span class="section-title">Story Arcs</span>
         <span class="section-meta" id="arc-meta"></span>
@@ -426,7 +446,7 @@
 
   <!-- Session Notes -->
   <section class="campaign-section" id="sec-tier1" style="display:none">
-    <div class="section-header" onclick="toggleSection('sec-tier1')">
+    <div class="section-header" onclick="toggleSection('sec-tier1')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-tier1')}">
       <div class="section-header-left">
         <span class="section-title">Session Notes</span>
         <span class="section-meta">Tier 1 detailed DM content</span>
@@ -441,7 +461,7 @@
 
   <!-- World Reference -->
   <section class="campaign-section" id="sec-world" style="display:none">
-    <div class="section-header" onclick="toggleSection('sec-world')">
+    <div class="section-header" onclick="toggleSection('sec-world')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-world')}">
       <div class="section-header-left">
         <span class="section-title">World Reference</span>
         <span class="section-meta">U.A., Murano, student life</span>
@@ -456,7 +476,7 @@
 
   <!-- Teachers -->
   <section class="campaign-section" id="sec-teachers" style="display:none">
-    <div class="section-header" onclick="toggleSection('sec-teachers')">
+    <div class="section-header" onclick="toggleSection('sec-teachers')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-teachers')}">
       <div class="section-header-left">
         <span class="section-title">Teachers</span>
         <span class="section-meta">Faculty profiles &amp; DM notes</span>
@@ -471,7 +491,7 @@
 
   <!-- Villains -->
   <section class="campaign-section" id="sec-villains" style="display:none">
-    <div class="section-header" onclick="toggleSection('sec-villains')">
+    <div class="section-header" onclick="toggleSection('sec-villains')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-villains')}">
       <div class="section-header-left">
         <span class="section-title">Villain Factions</span>
         <span class="section-meta">The Chain · Null Signal · Fracture</span>
@@ -487,19 +507,21 @@
   <!-- Class 1-B -->
   <!-- Class 1-A -->
   <section class="campaign-section" id="sec-class1a" style="display:none">
-    <div class="section-header" onclick="toggleSection('sec-class1a')">
+    <div class="section-header" onclick="toggleSection('sec-class1a')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-class1a')}">
       <div class="section-header-left">
         <span class="section-title">Class 1-A</span>
         <span class="section-meta">All 20 students — heroes in training</span>
       </div>
-      <button class="bm-btn" id="bm-sec-class1a" onclick="event.stopPropagation();toggleBookmark('sec-class1a','Class 1-A','#sec-class1a')" title="Bookmark">🔖</button>
-      <span class="section-toggle" id="tog-sec-class1a">▶</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button class="bm-btn" id="bm-sec-class1a" onclick="event.stopPropagation();toggleBookmark('sec-class1a','Class 1-A','#sec-class1a')" title="Bookmark">🔖</button>
+        <span class="section-toggle" id="tog-sec-class1a">▶</span>
+      </div>
     </div>
     <div class="section-body" id="body-sec-class1a"></div>
   </section>
 
   <section class="campaign-section" id="sec-class1b" style="display:none">
-    <div class="section-header" onclick="toggleSection('sec-class1b')">
+    <div class="section-header" onclick="toggleSection('sec-class1b')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-class1b')}">
       <div class="section-header-left">
         <span class="section-title">Class 1-B</span>
         <span class="section-meta">Rivals &amp; recurring NPCs</span>
@@ -514,7 +536,7 @@
 
   <!-- Supporting Characters -->
   <section class="campaign-section" id="sec-npcs" style="display:none">
-    <div class="section-header" onclick="toggleSection('sec-npcs')">
+    <div class="section-header" onclick="toggleSection('sec-npcs')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-npcs')}">
       <div class="section-header-left">
         <span class="section-title">Supporting Characters</span>
         <span class="section-meta">Pro heroes, civilians &amp; key NPCs</span>
@@ -1025,7 +1047,7 @@ function renderWorld(data, el) {
         if (depth === 0) {
           const sid = 'ws-'+k;
           out += `<div class="world-section">
-            <div class="world-section-header" onclick="toggleWorld('${sid}')">
+            <div class="world-section-header" onclick="toggleWorld('${sid}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleWorld('${sid}')}">
               <span class="world-section-title">${escHtml(label.charAt(0).toUpperCase()+label.slice(1))}</span>
               <span class="world-chevron" id="chev-${sid}">▶</span>
             </div>

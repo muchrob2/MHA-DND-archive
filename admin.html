@@ -36,10 +36,12 @@
   #content { max-width: 900px; margin: 0 auto; padding: 24px; }
   #gate-message { padding: 60px 24px; text-align: center; color: var(--text-muted); }
 
-  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  #table-wrap { overflow-x: auto; border-radius: var(--radius); }
+  table { width: 100%; min-width: 560px; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
   th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: top; }
   th { color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
   tr:last-child td { border-bottom: none; }
+  #users-empty { padding: 24px 12px; text-align: center; color: var(--text-dim); font-size: 13px; }
 
   select, .char-picker {
     background: var(--surface2); border: 1px solid var(--border-strong); border-radius: 6px;
@@ -55,6 +57,16 @@
   .save-row-btn:hover { background: rgba(14,165,114,0.2); }
   .row-saved { font-size: 11px; color: var(--teal-text); margin-left: 8px; opacity: 0; transition: opacity 0.4s; }
   .row-saved.show { opacity: 1; }
+
+  /* ── Keyboard focus visibility ── */
+  select:focus-visible, .save-row-btn:focus-visible, .char-picker input:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 640px) {
+    #content { padding: 16px; }
+  }
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
@@ -75,12 +87,15 @@
 <div id="content">
   <div id="gate-message" style="display:none;">Checking access…</div>
   <div id="admin-body" style="display:none;">
-    <table id="users-table">
-      <thead>
-        <tr><th>Email</th><th>Role</th><th>Editable characters</th></tr>
-      </thead>
-      <tbody id="users-tbody"></tbody>
-    </table>
+    <div id="table-wrap">
+      <table id="users-table">
+        <thead>
+          <tr><th>Email</th><th>Role</th><th>Editable characters</th></tr>
+        </thead>
+        <tbody id="users-tbody"></tbody>
+      </table>
+    </div>
+    <div id="users-empty" style="display:none;">No users yet.</div>
   </div>
 </div>
 
@@ -110,7 +125,11 @@ async function loadCharacterOptions() {
 async function loadUsers() {
   const snap = await db.collection('users').get();
   const tbody = document.getElementById('users-tbody');
+  const tableWrap = document.getElementById('table-wrap');
+  const emptyEl = document.getElementById('users-empty');
   tbody.innerHTML = '';
+  tableWrap.style.display = snap.empty ? 'none' : '';
+  emptyEl.style.display = snap.empty ? '' : 'none';
   snap.forEach(doc => {
     const uid = doc.id;
     const data = doc.data();

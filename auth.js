@@ -64,6 +64,10 @@
       #auth-modal button.primary { background: rgba(14,165,114,0.18); border-color: rgba(14,165,114,0.4); color: var(--teal-text, #5FDBAA); }
       #auth-modal-error { font-size: 12px; color: var(--red-text, #FCA5A5); min-height: 14px; }
       #auth-modal-close { align-self: flex-end; cursor: pointer; color: var(--text-muted, #8A9BB0); font-size: 12px; }
+      #auth-signin-btn:focus-visible, #auth-signout-btn:focus-visible, #auth-admin-link:focus-visible,
+      #auth-modal-close:focus-visible, #auth-modal input:focus-visible, #auth-modal button:focus-visible {
+        outline: 2px solid var(--gold, #E8A020); outline-offset: 2px;
+      }
     `;
     const style = document.createElement('style');
     style.textContent = css;
@@ -76,22 +80,22 @@
     widget.innerHTML = `
       <span id="auth-status"></span>
       <a id="auth-admin-link" href="${BASE}admin.html" style="display:none;">Admin</a>
-      <button id="auth-signin-btn">Sign in</button>
-      <a id="auth-signout-btn" style="display:none;">Sign out</a>
+      <button id="auth-signin-btn" type="button">Sign in</button>
+      <button id="auth-signout-btn" type="button" style="display:none;">Sign out</button>
     `;
 
     const overlay = document.createElement('div');
     overlay.id = 'auth-overlay';
     overlay.innerHTML = `
-      <div id="auth-modal">
-        <div id="auth-modal-close">✕</div>
-        <h3>Sign in</h3>
-        <input id="auth-email" type="email" placeholder="Email" autocomplete="username">
-        <input id="auth-password" type="password" placeholder="Password" autocomplete="current-password">
-        <div id="auth-modal-error"></div>
+      <div id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+        <div id="auth-modal-close" role="button" tabindex="0" aria-label="Close">✕</div>
+        <h3 id="auth-modal-title">Sign in</h3>
+        <input id="auth-email" type="email" placeholder="Email" autocomplete="username" aria-label="Email">
+        <input id="auth-password" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password">
+        <div id="auth-modal-error" role="alert"></div>
         <div class="auth-row">
-          <button id="auth-signin-submit" class="primary">Sign in</button>
-          <button id="auth-signup-submit">Sign up</button>
+          <button id="auth-signin-submit" type="button" class="primary">Sign in</button>
+          <button id="auth-signup-submit" type="button">Sign up</button>
         </div>
       </div>
     `;
@@ -99,24 +103,36 @@
 
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
     document.getElementById('auth-modal-close').addEventListener('click', closeModal);
+    document.getElementById('auth-modal-close').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); closeModal(); }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.getElementById('auth-overlay').classList.contains('open')) closeModal();
+    });
     widget.querySelector('#auth-signin-btn').addEventListener('click', openModal);
-    widget.querySelector('#auth-signout-btn').addEventListener('click', (e) => {
-      e.preventDefault();
+    widget.querySelector('#auth-signout-btn').addEventListener('click', () => {
       auth.signOut();
     });
 
     document.getElementById('auth-signin-submit').addEventListener('click', () => submit('signin'));
     document.getElementById('auth-signup-submit').addEventListener('click', () => submit('signup'));
+    const onEnterSubmit = (e) => { if (e.key === 'Enter') submit('signin'); };
+    document.getElementById('auth-email').addEventListener('keydown', onEnterSubmit);
+    document.getElementById('auth-password').addEventListener('keydown', onEnterSubmit);
 
     return widget;
   }
 
+  let lastFocusedEl = null;
   function openModal() {
+    lastFocusedEl = document.activeElement;
     document.getElementById('auth-modal-error').textContent = '';
     document.getElementById('auth-overlay').classList.add('open');
+    document.getElementById('auth-email').focus();
   }
   function closeModal() {
     document.getElementById('auth-overlay').classList.remove('open');
+    if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') lastFocusedEl.focus();
   }
 
   async function submit(mode) {

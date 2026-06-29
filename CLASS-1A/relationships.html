@@ -134,6 +134,8 @@
   .leg { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-muted); }
   .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
   #rel-list { padding: 0 20px 24px; }
+  #rel-list.collapsed { display: none; }
+  #rel-toggle-btn.collapsed { transform: rotate(-90deg); }
   .rel-row { display: grid; grid-template-columns: 180px 1fr 52px; align-items: start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
   .rel-row:last-child { border-bottom: none; }
   .rel-char-name { font-size: 13px; font-weight: 500; }
@@ -639,6 +641,7 @@
             <div class="leg"><div class="leg-dot" style="background:var(--text-dim)"></div>Neutral</div>
             <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Positive</div>
           </div>
+          <button id="rel-toggle-btn" class="enc-btn" onclick="toggleRelCollapse()" title="Show/hide classmates" style="margin-left:10px;">▾</button>
         </div>
         <div id="rel-list"></div>
       </div>
@@ -1276,6 +1279,22 @@ function renderRelationships() {
     </div>`;
   }
   document.getElementById('rel-list').innerHTML = html;
+  applyRelCollapseState();
+}
+
+function getRelCollapseKey() {
+  return 'relCollapsed-' + selected._roster_id;
+}
+function applyRelCollapseState() {
+  const collapsed = localStorage.getItem(getRelCollapseKey()) === '1';
+  document.getElementById('rel-list').classList.toggle('collapsed', collapsed);
+  document.getElementById('rel-toggle-btn').classList.toggle('collapsed', collapsed);
+}
+function toggleRelCollapse() {
+  const key = getRelCollapseKey();
+  const collapsed = localStorage.getItem(key) === '1';
+  localStorage.setItem(key, collapsed ? '0' : '1');
+  applyRelCollapseState();
 }
 
 /* ══════════════════════════════════════════════════════════

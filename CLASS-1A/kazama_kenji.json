@@ -5,34 +5,34 @@
   "height": "6'1\"",
   "body_type": "Athletic",
   "physiology": "Standard",
-  "quirk": "Hellflame",
-  "quirk_rarity": "Rare",
-  "quirk_type": "Emitter",
+  "quirk": "Steel",
+  "quirk_rarity": "Uncommon",
+  "quirk_type": "Transformation",
   "appearance": {
     "hair": "Dirty blonde. Slightly longer, usually pushed back. Scar running along his left cheek — old, healed smooth, from before U.A.",
     "build": "Athletic and tall. Good posture. Looks like someone who takes himself seriously without being arrogant about it.",
-    "other": "His Hellflame manifests blue-white — much hotter than standard fire emitters, which run orange or red. The colour difference is visible from a distance. He doesn't comment on it."
+    "other": "When he hardens, his skin takes on a bright, almost mirror-polished sheen rather than the dull grey most Steel users show — it catches light oddly under stadium lighting. He doesn't comment on it."
   },
   "personality": {
-    "summary": "Kind as a primary mode and a little cocky about specific things — namely his quirk output, which is genuinely impressive, and his tactical sense, which is somewhat more mixed. The kindness is the more important quality and he's not fully aware of how much the class relies on it.",
+    "summary": "Kind as a primary mode and a little cocky about specific things — namely how much punishment he can eat for the people around him, which is genuinely impressive, and his tactical sense, which is somewhat more mixed. The kindness is the more important quality and he's not fully aware of how much the class relies on it.",
     "in_class": "Attentive, good student. Helps classmates who are struggling without making it a big deal.",
-    "in_combat": "Controlled and confident. Knows what his flame can do and uses it efficiently. The cockiness shows most here, in the comfortable way he moves when fighting.",
+    "in_combat": "Controlled and confident. Knows exactly how much his shell can take and uses that margin efficiently. The cockiness shows most here, in the comfortable way he steps in front of a hit meant for someone else.",
     "quirk_of_character": "He's aware of the scar and aware that people are curious about it. He's never volunteered the story, but he's also never refused to answer if someone asks directly. Most people never ask directly."
   },
   "ability_scores": {
-    "note": "DEX primary — Hellflame emitter requires precise control of heat output direction and intensity. CON secondary for sustained high-temperature output without self-immolation.",
-    "STR": 12,
-    "DEX": 15,
-    "CON": 13,
+    "note": "STR primary — Steel's defensive and offensive value scales with how hard he can absorb and hit back. CON secondary to extend how long he can hold the hardened form before it shatters.",
+    "STR": 15,
+    "DEX": 12,
+    "CON": 14,
     "INT": 13,
     "WIS": 10,
     "CHA": 14,
     "TECH": 8
   },
   "modifiers": {
-    "STR": 1,
-    "DEX": 2,
-    "CON": 1,
+    "STR": 2,
+    "DEX": 1,
+    "CON": 2,
     "INT": 1,
     "WIS": 0,
     "CHA": 2,
@@ -40,28 +40,28 @@
   },
   "level": 1,
   "proficiency_bonus": 2,
-  "quirk_ability": "Dexterity",
+  "quirk_ability": "Strength",
   "quirk_save_DC": 12,
-  "HP": 10,
-  "AC": 13,
+  "HP": 11,
+  "AC": 11,
   "speed": "30 ft",
-  "suggested_class": "Quirk Savant",
-  "class_note": "Quirk Savant's enhanced quirk output and additional uses per rest suit Hellflame's sustained-fire playstyle. Alternatively Heroic Vanguard → Reckless Attacker for a closer-range approach.",
+  "suggested_class": "Heroic Vanguard",
+  "class_note": "Heroic Vanguard's frontline durability and melee proficiency suit Steel's tank-and-punish playstyle. Reckless Attacker archetype rewards committing fully to Steel Weapon strikes once hardened.",
   "quirk_mechanics": {
-    "source": "Quirk Compendium — Hellflame",
-    "weakness": "Hellflame tracks Heat Points — every move costs Heat Points, and once Kazama reaches 45 he can't use any move again unless he takes 2d6 true damage (which can't be reduced). Rain or snow grants 1 Heat Point at the start of his turn; taking cold damage or being cooled regains 3 Heat Points.",
+    "source": "Quirk Compendium — Steel",
+    "weakness": "Steel form can only absorb a limited amount of damage (5 × level) before the shell shatters and reverts him to his normal body; any excess damage carries over directly to his normal HP. All uses reset after a long rest, and once he's out of uses for the day he's just a guy.",
     "abilities": []
   },
   "player_notes": {
-    "role_summary": "Primary fire blaster. Your quirk is straightforward in the best way: aim and apply heat. Hellflame is your bread-and-butter attack, Flashfire Fist your harder-hitting unarmed strike, and Hells Curtain your area control once you hit 4th level. Manage your Heat Points — you have good output but it's not unlimited.",
+    "role_summary": "Primary frontline tank. Your quirk is straightforward in the best way: turn to steel, eat the hit, hit back harder. Harden Steel is your bread-and-butter defense, Steel Weapon your harder-hitting unarmed strike once hardened. Manage your daily uses — your durability is excellent but it isn't infinite.",
     "social_position": "Naturally well-regarded in the class. People are drawn to him, which he's somewhat aware of and doesn't exploit. He's genuinely just kind.",
     "growth_hook": "The scar is a story. The story is about a moment he didn't act when he should have, or couldn't, or chose wrong. When it comes out — if it comes out — it reframes some of his confidence.",
     "suggested_background": "Middle-class family in Murano. Has a younger sibling. Hero school was the plan from early on, never a question."
   },
   "dm_notes": {
-    "combat_role": "The class's primary ranged damage dealer. His base Hellflame attack gives consistent fire damage output, with Flashfire Fist for burst and Hells Curtain as a major battlefield-shaping tool once unlocked.",
+    "combat_role": "The class's primary frontline tank and damage soak. His base Harden Steel lets him absorb hits meant for allies, with Steel Weapon turning his hardened fists into a real offensive threat once he's committed to the form.",
     "social_role": "Emotional glue. The class likes him. He's kind, he's readable, he's dependable. When classmates fight, Kenji is usually the one who quietly helps both sides down without making it about himself.",
     "growth_arc": "The scar, and whatever it means. It's something he survived — possibly something someone else didn't. The campaign should give that story room at the right moment.",
-    "weakness_to_exploit": "Low TECH and WIS — he's not a technical problem-solver and he doesn't always read situations accurately on first pass. Rain or cold environments limit his output. Sustained fights drain him faster than burst engagements."
+    "weakness_to_exploit": "Low TECH and WIS — he's not a technical problem-solver and he doesn't always read situations accurately on first pass. His Steel form has a hard damage cap per use — sustained, heavy hits that blow through the threshold dump him back into his unarmored body mid-fight, often at the worst possible moment. Sustained fights also drain his daily uses faster than burst engagements."
   }
 }

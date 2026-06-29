@@ -147,14 +147,14 @@
                   "fighter_a": "Kazama Kenji (1-A)",
                   "fighter_b": "Takuma Rei (1-B, Hardening)",
                   "favored": "Kazama",
-                  "how_it_goes": "Hellflame draws the first massive crowd reaction of the day. Too much reaction — Kazama loses composure managing it. He wins anyway, but he's rattled and the crowd knows it. His exit from the arena is fast.",
+                  "how_it_goes": "Two defense-types in the same match makes for a slower, more technical fight than the crowd was primed for — Kazama hardens immediately and so does Takuma, and for two full rounds neither can get through the other's shell. Kazama breaks the stalemate first, switching to Steel Weapon strikes and grinding down Takuma's hardened surface faster than Takuma can return the favor. He wins, but it costs him more of his daily uses than any other R1 fight burns.",
                   "winner": "Kazama Kenji",
-                  "dm_note": "Play the crowd noise as a genuine obstacle for Kazama. He can't control that he's visually spectacular. If this is a PC fight, have spectators start cheering mid-move — forcing him to choose between commitment and crowd management.",
+                  "dm_note": "Play this as a genuine technical standoff rather than a spectacle fight — two characters who both know exactly what the other's shell can take. If this is a PC fight, let the players feel the grind: damage absorption ticking down on both sides until one threshold breaks first.",
                   "alternate_outcome": {
                     "if_winner": "Takuma Rei",
-                    "how_it_goes": "Kazama's critical moment hesitation — the crowd roar hitting right as he commits — costs him. He pulls the blast a fraction. Takuma walks through the reduced discharge and lands the deciding hit. The commentary team goes quiet. The crowd does not know how to react to Hellflame losing.",
-                    "downstream": "Takuma Rei advances to QF-3 instead of Kazama. Chozen faces hardening rather than Hellflame escalation — he wins QF-3 but at lower escalation than the default, meaning he's calmer going into SF-2.",
-                    "dm_note": "Kazama sitting in the stands for the rest of the tournament is a significant character beat. He has to watch. He doesn't leave. Masahata quietly removes the 'crowd factor: asset' notation from his chart."
+                    "how_it_goes": "Takuma has more experience reading exactly where his own hardened shell is thinnest and reinforces there before the fight even starts; Kazama commits to offense slightly too early and burns through his absorption faster than Takuma burns his. By round 3 Kazama's shell shatters first, and the follow-up hit decides it. The commentary team, having built the pre-fight hype around spectacle, has to recalibrate live — this is the first fight of the day that's actually about attrition math, not theatrics.",
+                    "downstream": "Takuma Rei advances to QF-3 instead of Kazama. Chozen faces Hardening rather than a Steel opponent who can also out-tank him, which changes his escalation curve in QF-3 — he wins QF-3 but calmer than the default, meaning he's quieter going into SF-2.",
+                    "dm_note": "Kazama sitting in the stands for the rest of the tournament is a significant character beat. He has to watch. He doesn't leave. Masahata quietly removes the 'defense outlasts everything' notation from his chart."
                   }
                 },
                 {
@@ -243,7 +243,7 @@
                   "alternate_outcome": {
                     "if_winner": "Kitamura Sora",
                     "how_it_goes": "Chozen is at round 1 stress — this is only his first fight. The escalation hasn't built yet. The wire network maps him completely and every approach route is contested before he can gain momentum. Kitamura wins cleanly because the variable that breaks his strategy hasn't had time to accumulate. He notes privately that five more minutes would have been different.",
-                    "downstream": "Kitamura advances to QF-3 vs Kazama (or Takuma Rei if alt R1-1). Hellflame melts the wire network within two rounds — Kitamura had a contingency but not for sustained high-temperature discharge. Kazama wins QF-3 dramatically, wires catching fire in visible arcs. SF-2 changes completely: Kazama vs whoever won QF-4.",
+                    "downstream": "Kitamura advances to QF-3 vs Kazama (or Takuma Rei if alt R1-1). The wire network's tension-detection is built for tracking soft tissue movement, not registering an opponent who simply hardens and walks straight through the lines — Kitamura had a contingency for evasive fighters, not for someone who doesn't need to evade. Kazama wins QF-3, wires snapping audibly as he pushes through. SF-2 changes completely: Kazama vs whoever won QF-4.",
                     "dm_note": "Chozen watching Kitamura in subsequent fights from the stands is worth playing. He's watching the wire technique specifically. He is cataloguing what he'd do with two more minutes of stress. He doesn't say this out loud."
                   }
                 },
@@ -302,13 +302,13 @@
                   "fighter_b": "Kazama Kenji (1-A)",
                   "note": "Fighter A is whoever won R1-7 (default Chozen; Kitamura if alt R1-7). Fighter B is whoever won R1-1 (default Kazama; Takuma Rei if alt R1-1)",
                   "favored": "50/50 — most dramatic QF fight",
-                  "how_it_goes": "Kazama's Hellflame escalates the ambient temperature and chaos — exactly the wrong environment for fighting Chozen Tadachi. Each fire blast makes Chozen more dangerous. The crowd is extremely loud about Hellflame and completely unprepared for what Stress looks like by round 4. Kazama loses a spectacular, close fight that the crowd talks about more than most of the wins.",
+                  "how_it_goes": "Kazama goes in exactly the way his quirk wants him to — close the distance, harden, trade. But Stress doesn't care what's hitting Chozen; every exchange, every committed strike, every round the fight drags on feeds the same accumulation a fire blast would, and there's no range to retreat to the way a blaster could. By round 4 Chozen is hitting harder than Kazama's shell was built to take in one sitting. Kazama's Steel shatters two rounds before he expected it to. He loses a spectacular, close fight that the crowd talks about more than most of the wins.",
                   "winner": "Chozen Tadachi",
-                  "dm_note": "First time the stadium sees Chozen at escalation. Run round 4 as genuinely alarming — Chozen should not feel comfortable to be near by the end. Kazama's loss should feel unfair in a way that's hard to articulate: he did everything right and it still made things worse.",
+                  "dm_note": "First time the stadium sees Chozen at escalation. Run round 4 as genuinely alarming — Chozen should not feel comfortable to be near by the end. Kazama's loss should feel unfair in a way that's hard to articulate: he did exactly what his quirk is built for and it still wasn't enough margin.",
                   "alternate_outcome": {
                     "if_winner": "Kazama Kenji",
-                    "how_it_goes": "Kazama's plan: end it before Chozen can build. He stops performing for the crowd entirely — the quietest Hellflame the stadium has ever seen. He fights like nobody's watching. Round 1 Chozen is manageable. Round 1 Chozen who hasn't escalated yet is winnable. Kazama wins before round 3. The crowd is slightly disappointed. Kazama looks more comfortable than he has all day.",
-                    "downstream": "Kazama advances to SF-2 vs Kinosho (QF-4 default winner). Kinosho deactivates Hellflame mid-charge. Kazama's physical technique without the quirk is still considerable — he trained before his quirk manifested. Kinosho wins after four rounds. Kazama finds this acceptable.",
+                    "how_it_goes": "Kazama's plan: end it before Chozen can build. He doesn't trade carefully — he hardens immediately and commits everything to Steel Weapon strikes in the first thirty seconds, before Chozen's stress has anywhere to climb from. Round 1 Chozen is manageable, especially against someone who can eat the opening exchange without flinching. Kazama wins before round 3, his shell down to its last few absorbed hits. The crowd, primed for a long grind, is slightly disappointed it ended fast.",
+                    "downstream": "Kazama advances to SF-2 vs Kinosho (QF-4 default winner). Kinosho deactivates his Steel mid-harden — his transformation never completes, and he's left fighting unarmored against someone who planned for exactly that. His underlying physical technique is still considerable — he trained before his quirk manifested — but it isn't enough without the shell. Kinosho wins after four rounds. Kazama finds this acceptable.",
                     "dm_note": "The crowd's reaction to a quiet Kazama win is interesting — they wanted the spectacle and didn't get it. He hears this. He is not sure how to feel about having won by being less than what people came to see."
                   }
                 },
@@ -324,7 +324,7 @@
                   "alternate_outcome": {
                     "if_winner": "Ogiwara Bunta",
                     "how_it_goes": "Kinosho's debris contraption works for thirty seconds. Ogiwara's second shockwave set dismantles it from underneath — she's building in a shaking building. She gets to the third component and the foundation isn't there. She concedes. Ogiwara says afterward: 'I don't know what she was building.' He says it like someone who genuinely wants to know.",
-                    "downstream": "Ogiwara advances to SF-2 vs Chozen (QF-3 default winner). Shockwaves plus crowd noise plus three prior fights feed Chozen's escalation. Chozen wins — the arena chaos helps him more than it hurts him. If Kazama won QF-3 instead: Ogiwara vs Kazama in SF-2. Seismic shockwaves destabilize Kazama's footing; Hellflame can't aim at something that's already moving the floor. Ogiwara wins.",
+                    "downstream": "Ogiwara advances to SF-2 vs Chozen (QF-3 default winner). Shockwaves plus crowd noise plus three prior fights feed Chozen's escalation. Chozen wins — the arena chaos helps him more than it hurts him. If Kazama won QF-3 instead: Ogiwara vs Kazama in SF-2. Seismic shockwaves destabilize Kazama's footing — Steel is heavy, and heavy doesn't help when the ground itself won't stay still. Ogiwara wins.",
                     "dm_note": "'What Is She Doing?' never airs for the second time. The second segment was going to be about this fight. The silence where it would have been is its own thing."
                   }
                 }
@@ -393,7 +393,7 @@
               "post_tournament_moments": [
                 "Morida finds Toragi after QF-2. 'Your Impact timing — I disrupted it once. That's the only time that's worked on anyone I've spoken to.' She says: 'I know.' He nods. They both write this down.",
                 "Ren finds Toragi after SF-1. 'The second hit.' She says: 'Yes.' That's the whole conversation. He thinks about it for the rest of the campaign.",
-                "Kazama's Hellflame drew the biggest crowd reaction of any fight. Someone sends him a photo of the crowd mid-blast. He never shows it to anyone.",
+                "Kazama's stalemate against Takuma in R1-1 ended up the slowest, most technical fight of the day — the crowd didn't expect a defense-vs-defense match to be the one everyone kept talking about. Someone sends him a photo of the two of them locked in stalemate mid-fight. He never shows it to anyone.",
                 "'What Is She Doing?' about Kinosho airs twice. She watches both replays once in the waiting room, alone. She seems satisfied.",
                 "Ogiwara, after losing to Kinosho: 'I don't know what she did.' He has never said this about an opponent. Masahata writes this down immediately.",
                 "The ranking chart — brought to the festival laminated — does not get updated for four days. When asked why: 'The model is broken.' He reprints it anyway."

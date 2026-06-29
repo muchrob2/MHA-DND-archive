@@ -94,8 +94,9 @@
   .score-val-input { width: 36px; font-size: 16px; font-weight: 800; color: var(--text); text-align: center; border: none; background: transparent; outline: none; padding: 0; }
   .score-val-input:focus { color: var(--purple); }
   .score-mod { font-size: 10px; color: var(--text-muted); font-weight: 600; }
-  #profile-tabs { display: flex; border-top: 1px solid var(--border); }
-  .tab-btn { padding: 7px 14px; font-size: 11px; cursor: pointer; border: none; background: none; color: var(--text-dim); border-bottom: 2px solid transparent; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+  #profile-tabs { display: flex; border-top: 1px solid var(--border); overflow-x: auto; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  #profile-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn { padding: 7px 14px; font-size: 11px; cursor: pointer; border: none; background: none; color: var(--text-dim); border-bottom: 2px solid transparent; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; }
   .tab-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
   #tab-content { padding: 12px 20px; font-size: 13px; color: var(--text-muted); line-height: 1.6; max-height: 130px; overflow-y: auto; background: var(--surface); border-bottom: 1px solid var(--border); }
   #tab-content.tab-quirk { max-height: 280px; }
@@ -492,9 +493,8 @@
     .stat-chip { font-size: 10px; }
 
     /* Profile tabs: horizontally scrollable */
-    #profile-tabs { overflow-x: auto; scrollbar-width: none; flex-shrink: 0; }
-    #profile-tabs::-webkit-scrollbar { display: none; }
-    .tab-btn { white-space: nowrap; padding: 7px 10px; flex-shrink: 0; }
+    #profile-tabs { flex-shrink: 0; }
+    .tab-btn { padding: 7px 10px; }
     #tab-content { max-height: 180px; padding: 10px 14px; }
     #tab-content.tab-quirk { max-height: 240px; }
 
@@ -617,7 +617,9 @@
           <button class="tab-btn" onclick="showTab('appearance')">Appearance</button>
           <button class="tab-btn" onclick="showTab('combat')">Combat role</button>
           <button class="tab-btn" onclick="showTab('social')">Social role</button>
-          <button class="tab-btn" onclick="showTab('backstory')">Backstory</button>
+          <button class="tab-btn" onclick="showTab('attacks')">Attacks</button>
+          <button class="tab-btn" onclick="showTab('background')">Background</button>
+          <button class="tab-btn" onclick="showTab('additionalfeatures')">Additional features</button>
         </div>
         <div id="tab-content"></div>
       </div>
@@ -1138,7 +1140,7 @@ function addSelectedToEncounter() {
 function showTab(tab) {
   activeTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => {
-    b.classList.toggle('active', b.textContent.trim().toLowerCase().replace(' ','')===tab.replace(' ',''));
+    b.classList.toggle('active', b.textContent.trim().toLowerCase().replace(/\s+/g,'')===tab.replace(/\s+/g,''));
   });
   const c = selected;
   if (tab==='personality') {
@@ -1154,9 +1156,32 @@ function showTab(tab) {
   if (tab==='social') {
     return renderEditableTab((c.dm_notes||{}).social_role||'', v => { c.dm_notes = c.dm_notes||{}; c.dm_notes.social_role = v; });
   }
-  if (tab==='backstory') {
+  if (tab==='background') {
     return renderEditableTab(c.backstory||'', v => { c.backstory = v; });
   }
+  if (tab==='attacks') {
+    return renderAttacksTab(c);
+  }
+  if (tab==='additionalfeatures') {
+    return renderEditableTab(c.additional_features||'', v => { c.additional_features = v; });
+  }
+}
+
+function renderAttacksTab(c) {
+  const tabContent = document.getElementById('tab-content');
+  tabContent.classList.remove('tab-quirk');
+  const abilities = (c.quirk_mechanics||{}).abilities || [];
+  if (!abilities.length) {
+    tabContent.innerHTML = `<div class="ability-card locked"><div class="ability-name">No attacks recorded</div></div>`;
+    return;
+  }
+  tabContent.innerHTML = abilities.map(a => `
+    <div class="ability-card">
+      <div class="ability-name">${escHtml(a.name||'')}${a.type ? `<span class="ability-type">${escHtml(a.type)}</span>` : ''}</div>
+      ${a.damage ? `<div class="ability-desc"><strong>Damage:</strong> ${escHtml(a.damage)}</div>` : ''}
+      ${a.description ? `<div class="ability-desc">${escHtml(a.description)}</div>` : ''}
+    </div>
+  `).join('');
 }
 
 /* ── Editable tab content ────────────────────────────── */

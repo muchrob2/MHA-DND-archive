@@ -130,7 +130,7 @@
                 },
                 {
                   "seed": 3,
-                  "name": "Chosen Tadachi",
+                  "name": "Chozen Tadachi",
                   "class": "1-A",
                   "note": "Placed well across both events. Notable for the quality of his obstacle race finish despite Stress not being a movement quirk."
                 },
@@ -153,7 +153,7 @@
                   "alternate_outcome": {
                     "if_winner": "Takuma Rei",
                     "how_it_goes": "Kazama's critical moment hesitation — the crowd roar hitting right as he commits — costs him. He pulls the blast a fraction. Takuma walks through the reduced discharge and lands the deciding hit. The commentary team goes quiet. The crowd does not know how to react to Hellflame losing.",
-                    "downstream": "Takuma Rei advances to QF-3 instead of Kazama. Chosen faces hardening rather than Hellflame escalation — he wins QF-3 but at lower escalation than the default, meaning he's calmer going into SF-2.",
+                    "downstream": "Takuma Rei advances to QF-3 instead of Kazama. Chozen faces hardening rather than Hellflame escalation — he wins QF-3 but at lower escalation than the default, meaning he's calmer going into SF-2.",
                     "dm_note": "Kazama sitting in the stands for the rest of the tournament is a significant character beat. He has to watch. He doesn't leave. Masahata quietly removes the 'crowd factor: asset' notation from his chart."
                   }
                 },
@@ -183,7 +183,7 @@
                   "alternate_outcome": {
                     "if_winner": "Aikawa Sakume",
                     "how_it_goes": "Kinosho's Neutralization requires a targeting window — a moment where she can identify the right limb and close. Aikawa's iron claws don't give her that window. The swings are too fast, too varied. Aikawa lands the hit Kinosho didn't expect because Kinosho's first plan assumed she'd get the window. She didn't. The genuine upset the crowd was expecting actually happens. 'What Is She Doing?' never airs.",
-                    "downstream": "Aikawa advances to QF-4 vs Ogiwara. Seismic shockwaves don't care about iron claws — the ground she's standing on isn't stable enough for her to drive the strikes. Ogiwara wins. SF-2 changes: Ogiwara faces Chosen or Kazama instead of Kinosho.",
+                    "downstream": "Aikawa advances to QF-4 vs Ogiwara. Seismic shockwaves don't care about iron claws — the ground she's standing on isn't stable enough for her to drive the strikes. Ogiwara wins. SF-2 changes: Ogiwara faces Chozen or Kazama instead of Kinosho.",
                     "dm_note": "Kinosho sitting in the stands is very quiet. She watches every subsequent fight. She is not visibly upset. She is watching something specific in each fight and nobody knows what."
                   }
                 },
@@ -234,17 +234,17 @@
                 },
                 {
                   "match": "R1-7",
-                  "fighter_a": "Chosen Tadachi (1-A, Seed 3)",
+                  "fighter_a": "Chozen Tadachi (1-A, Seed 3)",
                   "fighter_b": "Kitamura Sora (1-B, Wire)",
                   "favored": "Kitamura (tactically)",
-                  "how_it_goes": "Kitamura's wire network is up in four seconds — full arena coverage, tension-detection, every movement tracked. It's the same technique that eliminated Takazuki in the obstacle race. Chosen is not invisible and he is not trying to evade. He's been in three stressful situations this morning in front of thousands of people and the total is adding up. Round 2, Kitamura has to decide between holding the wire network and getting clear. The wire network is load-bearing for his entire strategy. He holds. Chosen walks through it. The wires register contact. Kitamura loses a tactically sound fight because the math stopped working.",
-                  "winner": "Chosen Tadachi",
-                  "dm_note": "Kitamura's technique was correct — this should be acknowledged by the commentary. He didn't make a mistake. Chosen's escalation is the variable that doesn't fit the model. If Chosen is a PC, let the player feel the crowd noise and prior fights as an accumulated resource, not a liability — they're winning because of the stress, not despite it.",
+                  "how_it_goes": "Kitamura's wire network is up in four seconds — full arena coverage, tension-detection, every movement tracked. It's the same technique that eliminated Takazuki in the obstacle race. Chozen is not invisible and he is not trying to evade. He's been in three stressful situations this morning in front of thousands of people and the total is adding up. Round 2, Kitamura has to decide between holding the wire network and getting clear. The wire network is load-bearing for his entire strategy. He holds. Chozen walks through it. The wires register contact. Kitamura loses a tactically sound fight because the math stopped working.",
+                  "winner": "Chozen Tadachi",
+                  "dm_note": "Kitamura's technique was correct — this should be acknowledged by the commentary. He didn't make a mistake. Chozen's escalation is the variable that doesn't fit the model. If Chozen is a PC, let the player feel the crowd noise and prior fights as an accumulated resource, not a liability — they're winning because of the stress, not despite it.",
                   "alternate_outcome": {
                     "if_winner": "Kitamura Sora",
-                    "how_it_goes": "Chosen is at round 1 stress — this is only his first fight. The escalation hasn't built yet. The wire network maps him completely and every approach route is contested before he can gain momentum. Kitamura wins cleanly because the variable that breaks his strategy hasn't had time to accumulate. He notes privately that five more minutes would have been different.",
+                    "how_it_goes": "Chozen is at round 1 stress — this is only his first fight. The escalation hasn't built yet. The wire network maps him completely and every approach route is contested before he can gain momentum. Kitamura wins cleanly because the variable that breaks his strategy hasn't had time to accumulate. He notes privately that five more minutes would have been different.",
                     "downstream": "Kitamura advances to QF-3 vs Kazama (or Takuma Rei if alt R1-1). Hellflame melts the wire network within two rounds — Kitamura had a contingency but not for sustained high-temperature discharge. Kazama wins QF-3 dramatically, wires catching fire in visible arcs. SF-2 changes completely: Kazama vs whoever won QF-4.",
-                    "dm_note": "Chosen watching Kitamura in subsequent fights from the stands is worth playing. He's watching the wire technique specifically. He is cataloguing what he'd do with two more minutes of stress. He doesn't say this out loud."
+                    "dm_note": "Chozen watching Kitamura in subsequent fights from the stands is worth playing. He's watching the wire technique specifically. He is cataloguing what he'd do with two more minutes of stress. He doesn't say this out loud."
                   }
                 },
                 {
@@ -298,16 +298,16 @@
                 },
                 {
                   "match": "QF-3",
-                  "fighter_a": "Chosen Tadachi (1-A, Seed 3)",
+                  "fighter_a": "Chozen Tadachi (1-A, Seed 3)",
                   "fighter_b": "Kazama Kenji (1-A)",
-                  "note": "Fighter A is whoever won R1-7 (default Chosen; Kitamura if alt R1-7). Fighter B is whoever won R1-1 (default Kazama; Takuma Rei if alt R1-1)",
+                  "note": "Fighter A is whoever won R1-7 (default Chozen; Kitamura if alt R1-7). Fighter B is whoever won R1-1 (default Kazama; Takuma Rei if alt R1-1)",
                   "favored": "50/50 — most dramatic QF fight",
-                  "how_it_goes": "Kazama's Hellflame escalates the ambient temperature and chaos — exactly the wrong environment for fighting Chosen Tadachi. Each fire blast makes Chosen more dangerous. The crowd is extremely loud about Hellflame and completely unprepared for what Stress looks like by round 4. Kazama loses a spectacular, close fight that the crowd talks about more than most of the wins.",
-                  "winner": "Chosen Tadachi",
-                  "dm_note": "First time the stadium sees Chosen at escalation. Run round 4 as genuinely alarming — Chosen should not feel comfortable to be near by the end. Kazama's loss should feel unfair in a way that's hard to articulate: he did everything right and it still made things worse.",
+                  "how_it_goes": "Kazama's Hellflame escalates the ambient temperature and chaos — exactly the wrong environment for fighting Chozen Tadachi. Each fire blast makes Chozen more dangerous. The crowd is extremely loud about Hellflame and completely unprepared for what Stress looks like by round 4. Kazama loses a spectacular, close fight that the crowd talks about more than most of the wins.",
+                  "winner": "Chozen Tadachi",
+                  "dm_note": "First time the stadium sees Chozen at escalation. Run round 4 as genuinely alarming — Chozen should not feel comfortable to be near by the end. Kazama's loss should feel unfair in a way that's hard to articulate: he did everything right and it still made things worse.",
                   "alternate_outcome": {
                     "if_winner": "Kazama Kenji",
-                    "how_it_goes": "Kazama's plan: end it before Chosen can build. He stops performing for the crowd entirely — the quietest Hellflame the stadium has ever seen. He fights like nobody's watching. Round 1 Chosen is manageable. Round 1 Chosen who hasn't escalated yet is winnable. Kazama wins before round 3. The crowd is slightly disappointed. Kazama looks more comfortable than he has all day.",
+                    "how_it_goes": "Kazama's plan: end it before Chozen can build. He stops performing for the crowd entirely — the quietest Hellflame the stadium has ever seen. He fights like nobody's watching. Round 1 Chozen is manageable. Round 1 Chozen who hasn't escalated yet is winnable. Kazama wins before round 3. The crowd is slightly disappointed. Kazama looks more comfortable than he has all day.",
                     "downstream": "Kazama advances to SF-2 vs Kinosho (QF-4 default winner). Kinosho deactivates Hellflame mid-charge. Kazama's physical technique without the quirk is still considerable — he trained before his quirk manifested. Kinosho wins after four rounds. Kazama finds this acceptable.",
                     "dm_note": "The crowd's reaction to a quiet Kazama win is interesting — they wanted the spectacle and didn't get it. He hears this. He is not sure how to feel about having won by being less than what people came to see."
                   }
@@ -324,7 +324,7 @@
                   "alternate_outcome": {
                     "if_winner": "Ogiwara Bunta",
                     "how_it_goes": "Kinosho's debris contraption works for thirty seconds. Ogiwara's second shockwave set dismantles it from underneath — she's building in a shaking building. She gets to the third component and the foundation isn't there. She concedes. Ogiwara says afterward: 'I don't know what she was building.' He says it like someone who genuinely wants to know.",
-                    "downstream": "Ogiwara advances to SF-2 vs Chosen (QF-3 default winner). Shockwaves plus crowd noise plus three prior fights feed Chosen's escalation. Chosen wins — the arena chaos helps him more than it hurts him. If Kazama won QF-3 instead: Ogiwara vs Kazama in SF-2. Seismic shockwaves destabilize Kazama's footing; Hellflame can't aim at something that's already moving the floor. Ogiwara wins.",
+                    "downstream": "Ogiwara advances to SF-2 vs Chozen (QF-3 default winner). Shockwaves plus crowd noise plus three prior fights feed Chozen's escalation. Chozen wins — the arena chaos helps him more than it hurts him. If Kazama won QF-3 instead: Ogiwara vs Kazama in SF-2. Seismic shockwaves destabilize Kazama's footing; Hellflame can't aim at something that's already moving the floor. Ogiwara wins.",
                     "dm_note": "'What Is She Doing?' never airs for the second time. The second segment was going to be about this fight. The silence where it would have been is its own thing."
                   }
                 }
@@ -342,22 +342,22 @@
                   "alternate_outcome": {
                     "if_winner": "Ren Suzuki",
                     "how_it_goes": "Ren clocks that Toragi is placing Impacts along predicted dodge corridors. His solution: don't dodge. He takes the first Impact and wins through it. Nobody anticipated this. Toragi had no contingency for an opponent who wasn't trying to avoid it. Ren wins. He looks slightly surprised by his own decision.",
-                    "downstream": "Ren advances to the Final vs Chosen (SF-2 default winner). Speed vs escalation — Ren needs to end it by round 2 at the latest. If he does, it's the fastest final in the festival's history. If he doesn't, round 3 Chosen is a different problem entirely. The post-fight Ren/Toragi conversation still happens: 'The first hit.' She says: 'Yes.' Same two sentences. Different hit.",
-                    "dm_note": "A Ren vs Chosen final has a completely different energy than Toragi vs Chosen. Ren is fast enough to beat Chosen's escalation if he's disciplined. Whether he's disciplined is the question. The class watching this final knows the answer better than Ren does."
+                    "downstream": "Ren advances to the Final vs Chozen (SF-2 default winner). Speed vs escalation — Ren needs to end it by round 2 at the latest. If he does, it's the fastest final in the festival's history. If he doesn't, round 3 Chozen is a different problem entirely. The post-fight Ren/Toragi conversation still happens: 'The first hit.' She says: 'Yes.' Same two sentences. Different hit.",
+                    "dm_note": "A Ren vs Chozen final has a completely different energy than Toragi vs Chozen. Ren is fast enough to beat Chozen's escalation if he's disciplined. Whether he's disciplined is the question. The class watching this final knows the answer better than Ren does."
                   }
                 },
                 {
                   "match": "SF-2",
-                  "fighter_a": "Chosen Tadachi (1-A)",
+                  "fighter_a": "Chozen Tadachi (1-A)",
                   "fighter_b": "Kinosho Kochimiko (1-A)",
-                  "note": "Fighter A is whoever won QF-3. Fighter B is whoever won QF-4. Default path is Chosen vs Kinosho.",
+                  "note": "Fighter A is whoever won QF-3. Fighter B is whoever won QF-4. Default path is Chozen vs Kinosho.",
                   "favored": "Kinosho (tactically)",
-                  "how_it_goes": "Kinosho targets Chosen's quirk with Neutralization. But Chosen's Stress isn't purely active — it's reactive. The crowd noise, the semifinal stakes, the previous three fights all feed the passive escalation that Kinosho can't fully suppress. She deactivates what she can. The ambient stress feeds what she can't. Chosen wins and is visibly running very hot walking out of the arena.",
-                  "winner": "Chosen Tadachi",
-                  "dm_note": "The crowd noise is a game mechanic here. Neutralization removes the quirk label but not the underlying stress response from competing in front of thousands of people. Chosen's win should feel slightly worrying, not triumphant.",
+                  "how_it_goes": "Kinosho targets Chozen's quirk with Neutralization. But Chozen's Stress isn't purely active — it's reactive. The crowd noise, the semifinal stakes, the previous three fights all feed the passive escalation that Kinosho can't fully suppress. She deactivates what she can. The ambient stress feeds what she can't. Chozen wins and is visibly running very hot walking out of the arena.",
+                  "winner": "Chozen Tadachi",
+                  "dm_note": "The crowd noise is a game mechanic here. Neutralization removes the quirk label but not the underlying stress response from competing in front of thousands of people. Chozen's win should feel slightly worrying, not triumphant.",
                   "alternate_outcome": {
                     "if_winner": "Kinosho Kochimiko",
-                    "how_it_goes": "Kinosho identifies that specific commentary vocal patterns correlate with Chosen's passive spikes. She suppresses active stimulation precisely — not reacting, not escalating the fight, giving him nothing to build on. The passive accumulation continues but slowly. She closes the window before it reaches critical. Kinosho wins. 'What Is She Doing?' — final segment — airs for the last time.",
+                    "how_it_goes": "Kinosho identifies that specific commentary vocal patterns correlate with Chozen's passive spikes. She suppresses active stimulation precisely — not reacting, not escalating the fight, giving him nothing to build on. The passive accumulation continues but slowly. She closes the window before it reaches critical. Kinosho wins. 'What Is She Doing?' — final segment — airs for the last time.",
                     "downstream": "Kinosho advances to the Final vs Toragi (SF-1 default winner). Two methodical fighters. Kinosho neutralizes Twin Impact once. Toragi has been drilling her approach without the Impact since the Morida fight showed her it could be disrupted. She lands the approach clean. Both are fighting at their actual ceiling. Kinosho wins on round four when Toragi's timing becomes predictable. The crowd goes quiet in a way that signals they watched something exceptional but aren't sure how to celebrate it.",
                     "dm_note": "A Kinosho vs Toragi final is the quietest possible ending for this tournament. Run it that way. No commentary on what's happening — just the two of them, and the audience slowly realising it was over before they understood what they were watching."
                   }
@@ -377,15 +377,15 @@
               },
               "final": {
                 "fighter_a": "Toragi Kayo (1-A)",
-                "fighter_b": "Chosen Tadachi (1-A)",
-                "note": "Fighters are the two SF winners. Default is Toragi vs Chosen.",
-                "favored": "Toragi — technically superior, has defeated Class 1-B's seed 2, has a tested plan for Chosen's escalation curve",
-                "how_it_goes": "Toragi has studied Chosen's last three fights. Her plan: end it before he escalates. She lands the first hit — a perfect technical strike, the cleanest move in the tournament. It is the worst decision she could have made. Chosen at round 1 stress level is manageable. Chosen after being struck in a national broadcast final, having already fought three escalating fights, is not. The fight drags into round 5. Nobody predicted round 5. The commentary team goes very quiet in round 4. It ends when Chosen's accumulated escalation exceeds anything Toragi's technique can counter. CHOSEN WINS. The commentary team is silent for four full seconds. Then very loud.",
-                "winner": "Chosen Tadachi",
-                "dm_note": "Toragi's plan should be visibly correct until the moment it isn't. Her frustration should come from having done everything right. Chosen's win should feel slightly too big for the arena — not triumphant, but overwhelming. He comes down slowly. Give that moment: the quiet after the final ends, Chosen standing in the arena while the crowd is still loud.",
+                "fighter_b": "Chozen Tadachi (1-A)",
+                "note": "Fighters are the two SF winners. Default is Toragi vs Chozen.",
+                "favored": "Toragi — technically superior, has defeated Class 1-B's seed 2, has a tested plan for Chozen's escalation curve",
+                "how_it_goes": "Toragi has studied Chozen's last three fights. Her plan: end it before he escalates. She lands the first hit — a perfect technical strike, the cleanest move in the tournament. It is the worst decision she could have made. Chozen at round 1 stress level is manageable. Chozen after being struck in a national broadcast final, having already fought three escalating fights, is not. The fight drags into round 5. Nobody predicted round 5. The commentary team goes very quiet in round 4. It ends when Chozen's accumulated escalation exceeds anything Toragi's technique can counter. CHOZEN WINS. The commentary team is silent for four full seconds. Then very loud.",
+                "winner": "Chozen Tadachi",
+                "dm_note": "Toragi's plan should be visibly correct until the moment it isn't. Her frustration should come from having done everything right. Chozen's win should feel slightly too big for the arena — not triumphant, but overwhelming. He comes down slowly. Give that moment: the quiet after the final ends, Chozen standing in the arena while the crowd is still loud.",
                 "alternate_outcome": {
                   "if_winner": "Toragi Kayo",
-                  "how_it_goes": "Toragi's plan was always correct. She identified round 2 as the window and she closes it. The first hit is perfect. She doesn't immediately go for the second — she waits, watches him start to build, then closes the window before it opens. She wins in round 2. Chosen walks out elevated. He sits with that for a long time.",
+                  "how_it_goes": "Toragi's plan was always correct. She identified round 2 as the window and she closes it. The first hit is perfect. She doesn't immediately go for the second — she waits, watches him start to build, then closes the window before it opens. She wins in round 2. Chozen walks out elevated. He sits with that for a long time.",
                   "downstream": "Toragi wins the Sports Festival. The commentary team calls it 'flawless.' She watches the replay once and privately disagrees with the word. The class gets the quieter closing moment: Toragi in the arena, the crowd loud around her, already thinking about the next problem.",
                   "dm_note": "A Toragi win is the technically correct outcome — it's what the data supported. Run her closing moment as satisfaction without triumph. She won because her preparation was better. That's enough. The Null Signal faction watching the broadcast takes specific interest in Toragi's precision: better footage of her technique than the exam drone captured."
                 }
@@ -401,7 +401,7 @@
             }
           },
           "villain_seeds": {
-            "all_factions": "All three of Undertow's divisions are watching the Sports Festival broadcast, for their own separate reasons, none of them coordinating with each other. Null Signal is collecting comprehensive quirk activation data — better footage than the exam drone captured. Fracture cells are watching because the festival represents exactly the system they oppose: licensed quirk use as public spectacle. Undertow watches Chosen's final with specific interest, and unlike everyone else watching, he's watching all three feeds. None of this is visible to the class."
+            "all_factions": "All three of Undertow's divisions are watching the Sports Festival broadcast, for their own separate reasons, none of them coordinating with each other. Null Signal is collecting comprehensive quirk activation data — better footage than the exam drone captured. Fracture cells are watching because the festival represents exactly the system they oppose: licensed quirk use as public spectacle. Undertow watches Chozen's final with specific interest, and unlike everyone else watching, he's watching all three feeds. None of this is visible to the class."
           }
         },
         {

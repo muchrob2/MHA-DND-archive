@@ -50,23 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Engine",
     "weakness": "Engine burns through the body's natural fluids, which can only be replenished with juice — a fully hydrated person carries about 32 cups of reserve. Below 8 cups, disadvantage on CON saves and damage dice drop one step; at 0 cups the Quirk shuts down entirely and Izuto gains a level of exhaustion until he drinks juice again.",
-    "abilities": [
-      {
-        "name": "Engines",
-        "type": "Passive / Natural Weapon",
-        "description": "Base speed becomes 60 ft, vertical jump 30 ft. The leg-engines work as a natural weapon: on a hit, 1d10 + DEX modifier bludgeoning damage, doubled against structures. Izuto never provokes opportunity attacks and gains +3 to initiative."
-      },
-      {
-        "name": "Recipro Burst",
-        "type": "Bonus Action (3rd level, uses = proficiency bonus, costs 5 cups of juice)",
-        "description": "Forcibly accelerate the Engine for 10 seconds: double speed and advantage on attacks for 5 rounds. Attacks push the target back 10 ft and damage die becomes a d12. Afterward, speed drops to 0 and he can't move for 5 rounds, or until cooled by water or ice."
-      },
-      {
-        "name": "Recipro Extend",
-        "type": "Bonus Action (7th level, uses = half proficiency bonus, costs 8 cups of juice)",
-        "description": "An extended Recipro Burst: double speed and attack advantage with one extra damage die for 8 rounds, pushing targets back 20 ft. Afterward, speed drops to 0 and he can't move for 8 rounds, or until cooled by water or ice."
-      }
-    ]
+    "abilities": []
   },
   "player_notes": {
     "role_summary": "The class's mobility engine — in the most literal sense. You control where the fight happens. Engines gives you raw speed and a natural-weapon kick at baseline; Recipro Burst (and later Recipro Extend) are your big speed-and-damage windows, but mind the juice cost and the forced stop afterward.",

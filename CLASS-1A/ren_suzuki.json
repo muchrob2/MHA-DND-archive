@@ -50,18 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Overclock",
     "weakness": "Overclock's extreme brain and muscle stimulation burns through neural energy and oxygen. When it ends, Ren must succeed on a DC 15 CON save or gain a level of exhaustion; failing this more than once per long rest causes neural backlash (disadvantage on INT/WIS checks for 1 hour, -25 ft speed until exhaustion clears). If Overclock ends abruptly or runs past its safe duration, he takes 4d10 psychic damage and is stunned until the end of his next turn.",
-    "abilities": [
-      {
-        "name": "Overclock",
-        "type": "Bonus Action",
-        "description": "Activate for a number of rounds equal to half CON modifier + half proficiency bonus (rounded down); cannot be reactivated until a short or long rest (early reactivation requires a DC 15 CON save or 2d10 psychic damage). While active: movement speed is multiplied by (1 + DEX modifier), up to x6 base speed; +AC equal to proficiency bonus; advantage on DEX, INT, and WIS saves and on initiative; one additional reaction and bonus action each round; moving 30+ ft before a melee attack adds an extra damage die; can move through creatures' spaces without provoking opportunity attacks."
-      },
-      {
-        "name": "Instant Eight",
-        "type": "Action (4th level, once per Overclock activation)",
-        "description": "Unleash six unarmed strikes in rapid succession, each dealing standard unarmed damage + DEX modifier, divided among targets in range as desired. Using this shortens the current Overclock duration by 2 rounds."
-      }
-    ]
+    "abilities": []
   },
   "player_notes": {
     "role_summary": "The class's speed-striker. Overclock makes you fast — your window is short, your burst is high, and the comedown is real if you push past your limit. Instant Eight is your big multi-strike play once you hit 4th level. Know your limits.",

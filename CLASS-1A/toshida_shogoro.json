@@ -50,13 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Comic",
     "weakness": "Tracks a Voice Meter — every use raises it by 1. Once it reaches twice his proficiency bonus, his throat tears: he takes 2d6 true damage at the start of each turn until he rests or goes 1 minute without using a vocal ability.",
-    "abilities": [
-      {
-        "name": "Word Manifestation",
-        "type": "Action",
-        "description": "Speak a word to manifest it as a physical object (20 HP, roughly 5 ft tall/long per letter, lasts 1 minute or until destroyed), choosing one Effect Type and one Modifier to combine. Effect Types: Impact (2d10 bludgeoning/force), Fire (2d8 fire, ignites a 10 ft radius), Shock (1d12 lightning + stun), Sound (2d6 thunder, deafens and pushes 15 ft), Wind (30 ft gust that moves creatures/objects), Water (creates slick terrain or damp mist), Ice (freezes ground, 15 ft slow field). Modifiers: Burst (15 ft radius AoE), Beam (60 ft line), Wave (30 ft cone), Bounce (reflects off surfaces toward a new target 30 ft away), Trap (10 ft radius of difficult terrain), Echo (repeats at half damage at the start of his next turn). At 8th and 20th level he gains an additional Effect Type or Modifier."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Disruption and area denial. Word Manifestation lets him mix an Effect Type with a Modifier to shape the battlefield — knockdowns, difficult terrain, line/cone damage — on demand. He's not a striker but he creates the conditions that make strikers devastating.",

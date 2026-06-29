@@ -50,19 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Double",
     "weakness": "Creating perfect clones requires precise measurements of the target. If measurements are inaccurate or the user fails a DC 14 History check after 1 hour of study, clones are imperfect: last only 1 minute, deal two fewer damage dice, have -5 HP. Clones don't carry equipment or weapons.",
-    "abilities": [
-      {
-        "name": "Duplicate",
-        "type": "Action",
-        "description": "Create a clone of a creature (self or touched target with precise measurements). Max 2 clones at once. Each clone: retains original's abilities/personality/memories, acts independently with full action/bonus action/reaction, moves at same speed. Clone HP: first clone = your HP, each subsequent = half previous (min 1). Clone deals one fewer damage die. Up to 10 clones controlled at once via bonus action; uncontrolled clones Dodge.",
-        "lead_clone_bonus": "When multiple clones attack the same target, the lead gains +1 to hit and +1 damage per additional clone aiding."
-      },
-      {
-        "name": "Sad Man's Parade",
-        "type": "Action (unlocks at level 10)",
-        "description": "Create two clones; doubling count each subsequent turn for 2 minutes. Max theoretical: 1 billion clones. Once per short rest."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Flexible — can use clone for flanking, distraction, cover, or raw additional attacks. Her most effective tactic is clone + self attacking separate targets to split enemy attention.",

@@ -50,23 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Invisibility",
     "weakness": "Invisibility does not extend to clothing or objects. Must remove all clothing to be fully unseen. Going fully naked exposes skin to environmental hazards. If wearing any visible clothing or equipment, she is considered seen.",
-    "abilities": [
-      {
-        "name": "Invisibility",
-        "type": "Passive (always active)",
-        "description": "Always invisible. Impossible to see without truesight or infravision. For hiding, treated as heavily obscured. Location detected only by noise, scent, or tracks. Attack rolls against her have disadvantage. Her attack rolls have advantage."
-      },
-      {
-        "name": "Warp Refraction",
-        "type": "Bonus Action",
-        "description": "In bright light, refract and amplify surrounding light to blind a creature within 15 feet. CHA save vs Quirk DC. On failure: blinded until end of your next turn. When used, distorted light briefly outlines her shape until start of her next turn."
-      },
-      {
-        "name": "Radiant Redirect",
-        "type": "Reaction",
-        "description": "When a creature within 50 feet makes an attack or quirk that deals radiant or fire damage, alter its trajectory: add one damage die of that attack (half proficiency bonus amount) and optionally redirect to hit up to two other creatures within 50 feet of the original target."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Scout and unseen striker. Advantage on all attacks (when unclothed) makes her hit rate exceptional. Her vulnerability is environmental damage when using the quirk fully — exposure to cold, heat, or rough terrain matters more for her than armoured classmates.",

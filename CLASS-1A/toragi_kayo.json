@@ -50,13 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Twin Impact",
     "weakness": "Overuse risks injury — after using Impact Echo a number of times equal to his level times his proficiency bonus in a day, he must succeed on a DC 14 CON save or take 1d12 true damage.",
-    "abilities": [
-      {
-        "name": "Impact Echo",
-        "type": "Bonus Action or Reaction (uses per turn = proficiency bonus)",
-        "description": "When Toragi hits a target with a melee or ranged attack, create a second impact at the same location dealing the same damage again. For ranged attacks, a missed shot that strikes a surface can bounce per a directional chart (forward, right, backward, or left), extending its effective range up to 4x normal and letting him choose a new creature in the new line to make a separate attack roll against."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "High single-target burst damage via repeated impacts. Impact Echo turns a single good hit into double damage, and missed ranged shots can bounce off terrain into a second target. If his hits land, he's devastating. If they don't, he's not doing much that round.",

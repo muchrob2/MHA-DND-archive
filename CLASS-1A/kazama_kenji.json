@@ -50,23 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Hellflame",
     "weakness": "Hellflame tracks Heat Points — every move costs Heat Points, and once Kazama reaches 45 he can't use any move again unless he takes 2d6 true damage (which can't be reduced). Rain or snow grants 1 Heat Point at the start of his turn; taking cold damage or being cooled regains 3 Heat Points.",
-    "abilities": [
-      {
-        "name": "Hellflame (Flame)",
-        "type": "Melee or ranged attack (45 ft or 5 ft); costs 1 Heat Point",
-        "description": "Make a melee or ranged attack against a creature within 45 ft or 5 ft. On a hit: 3d6 + DEX modifier fire damage. The base Hellflame package also grants fire resistance (ignoring resistance and treating immunity as resistance), a 60 ft fly/hover speed (Fire Fly), and Heatup — spend up to 8 Heat Points on an attack to add one extra damage die per point spent."
-      },
-      {
-        "name": "Flashfire Fist",
-        "type": "Action; costs 4 Heat Points",
-        "description": "Increase flame temperature to maximum and make an unarmed attack. On a hit: 4d10 fire damage, ignoring up to 8 damage reduction."
-      },
-      {
-        "name": "Hells Curtain",
-        "type": "Action or Reaction (4th level); costs 5 Heat Points",
-        "description": "Create a 50 ft radius flame barrier up to 100 ft tall around a target. Creatures in the barrier take 5d8 + STR modifier fire damage. A creature trying to move through it makes a DEX save: fail takes 5d8 fire damage, can't pass, and gains two ranks of Burned; success takes half damage, passes through, and gains one rank of Burned."
-      }
-    ]
+    "abilities": []
   },
   "player_notes": {
     "role_summary": "Primary fire blaster. Your quirk is straightforward in the best way: aim and apply heat. Hellflame is your bread-and-butter attack, Flashfire Fist your harder-hitting unarmed strike, and Hells Curtain your area control once you hit 4th level. Manage your Heat Points — you have good output but it's not unlimited.",

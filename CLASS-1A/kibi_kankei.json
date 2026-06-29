@@ -50,29 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Vines",
     "weakness": "Vines require water to grow effectively. Must remain wet for at least 4 hours per day or effectiveness is halved (range, damage, duration). Vines are vulnerable to slashing, fire, or cold damage.",
-    "abilities": [
-      {
-        "name": "Via Dolorosa",
-        "type": "Action",
-        "description": "Extend vines in a 10-foot cone within 30 feet. Target up to proficiency bonus number of creatures. Each must make STR save vs Quirk DC or become restrained and grappled.",
-        "damage": null
-      },
-      {
-        "name": "Crucifixion",
-        "type": "Action",
-        "description": "Extend vines up to 30 feet to grab multiple targets (up to proficiency bonus). STR save vs Quirk DC or become restrained 30 feet in the air. On a hit, vines deal 2d12 piercing damage. Reach increases by 10 ft at 5th, 10th, 15th, 20th levels."
-      },
-      {
-        "name": "Big Tree",
-        "type": "Reaction",
-        "description": "Erupt a barrier of thorny vines in a 20-foot radius. Any creature that starts or enters must make DEX save or take 3d12 piercing damage and become restrained. Barrier has 20 HP. Damage increases to 5d12 at 7th level."
-      },
-      {
-        "name": "Faith Shield",
-        "type": "Reaction",
-        "description": "Erupt a 20-foot tall, 10-foot wide wall of thorny vines. Wall has 30 HP and grants immunity to lightning damage."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Battlefield control. Kibi locks down enemy movement and creates chokepoints. He doesn't need to be the one dealing damage — he's the reason others can.",

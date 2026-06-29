@@ -50,23 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Poltergeist",
     "weakness": "Max weight controllable: ~275 lbs (approximately one person). High stamina drain. Number of simultaneously controlled objects = proficiency bonus.",
-    "abilities": [
-      {
-        "name": "Object Barrage",
-        "type": "Action",
-        "description": "Telekinetically launch a barrage of small objects in a 40-foot cone. DEX save vs Quirk DC. Fail: 4d6 bludgeoning damage, knocked back 20 ft. Success: half damage, no knockback."
-      },
-      {
-        "name": "Telekinetic Push or Pull",
-        "type": "Action",
-        "description": "Target one creature or two objects within 30 feet and move forcefully. Objects: instantly move up to 30 ft. Creatures: STR save vs Quirk DC. Fail: pushed/pulled 40 ft, 2d6 force damage, restrained or prone 10 ft in the air. Success: pushed/pulled 20 ft, half damage, no condition."
-      },
-      {
-        "name": "Telekinetic Shield",
-        "type": "Reaction",
-        "description": "Create a swirling 10-foot radius barrier of telekinetically controlled debris centered on self or up to two allies within 30 ft. Barrier has 20 HP, grants +1 AC to creatures inside. Enemies cannot enter while active. Friendly creatures can move out freely."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Area denial and creature repositioning. She moves enemies into bad positions and allies into good ones. Doesn't deal high damage but makes everyone else's damage land better.",

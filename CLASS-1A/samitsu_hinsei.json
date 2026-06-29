@@ -50,29 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Dupli-Arms",
     "weakness": "Tentacles and replicated body parts are vulnerable to damage. Regrowing a destroyed limb requires a full rest.",
-    "abilities": [
-      {
-        "name": "Dupli-Arms",
-        "type": "Bonus Action",
-        "description": "Grow a replicated limb at the tip of a tentacle. Max 10 replicated limbs at once, each with 10-foot reach. Each limb has HP = 5 + CON modifier.",
-        "pod_types": {
-          "Arm Pod": "Each active Arm Pod increases STR by +1 (max 18). Carrying capacity doubled. Reaction: Tentacle Shield (half cover +2 AC to self and allies within 10 ft).",
-          "Mouth Pod": "Free action to grow. Can bite as part of Attack action: 2d4 + STR piercing.",
-          "Ear Pod": "Advantage on hearing-based Perception. +1 per active tentacle to the check. Hear through walls at double normal distance.",
-          "Eye Pod": "Advantage on sight-based Perception. Sight range doubled. 15 ft blindsight."
-        }
-      },
-      {
-        "name": "Octo-Blow",
-        "type": "Action",
-        "description": "With 8 or more ARM pods active: convert all attacks into a 20-foot cone. DEX save vs Quirk DC. Fail: unarmed damage + 3d10 bludgeoning. Success: half damage."
-      },
-      {
-        "name": "Octospansion",
-        "type": "Action (unlocks at level 10)",
-        "description": "Combine all limbs into one massive fist. On hit: Xd10 damage (X = number of active limbs). Target becomes prone."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Defensive anchor and multi-target handler. Can protect adjacent allies with Tentacle Shield while still attacking. The more active pods he has, the stronger he gets — but managing pod count is the tactical layer.",

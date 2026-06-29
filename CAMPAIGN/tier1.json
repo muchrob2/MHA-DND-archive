@@ -20,7 +20,7 @@
           "player_hooks": {
             "ren": "Disappears mid-sprint almost immediately. Other players will ask where he went — good, let them wonder.",
             "chosen": "The crowd noise and chaos might trigger a stress response. His quirk activating accidentally in round 1 is great if it happens — it introduces his mechanic in a low-stakes, funny context.",
-            "kazama": "Hellflame in an urban environment with civilians nearby. He's going to be careful about fire range. Run the actor-civilians as actively running toward him by accident — he has to work around his quirk.",
+            "kazama": "Harden Steel and wade straight into the drone wave — civilians nearby aren't at risk from him the way a blaster's collateral would be, so he's the one who can fight at close range without worrying about who's behind his target. Let him notice that's a relief.",
             "izuto": "Engine warmup time. He's genuinely slower in round 1. Let him feel slightly behind before the engine kicks in."
           }
         },
@@ -50,7 +50,7 @@
           "dm_notes": "This is the cooperative moment. Don't engineer it — let it emerge. If the class doesn't coordinate, the Sentinel just waits them out and grinds through HP slowly. When they DO coordinate, make it feel like a genuine breakthrough. The Sentinel's Phase Armour dropping at 40 HP should be a visible, dramatic shift. Run that as a moment: 'Something in the drone's chassis shifts. You can see components realigning.'",
           "player_hooks": {
             "ren": "Overclock is perfect for Sentinel — can reach any angle in the Suppression Field. But the field slows his approach. First time he's had to work around a mobility limitation.",
-            "kazama": "Hellflame at range into a Suppression Field — he can still fire but can't control the blast spread as precisely. Forcing him to think about collateral.",
+            "kazama": "Suppression Field drags at his movement, but it doesn't stop him from closing the distance and hardening up against the Sentinel directly — he just eats the slowdown and walks in. First time he's had to grind instead of finishing something quickly.",
             "chosen": "The Sentinel is a machine. His quirk doesn't work on machines. He needs to shift to a support role — this is his first genuine limitation discovery.",
             "izuto": "Engine output can break through Suppression Field drag — at cost. He burns stamina faster. First introduction to the engine's real toll."
           }
@@ -223,7 +223,7 @@
       "arc_type": "First formal training encounter",
       "sessions": "1",
       "summary": "Oshiro's opening combat class. Two teams, live stakes. The losing team runs extra laps. The winning team picks one perk for the week. Students versus students. Rivalries become specific here.",
-      "dm_setup": "Split the class into two teams before the session — build the teams to create interesting matchups across ability types. Oshiro's design rule: nobody fights their obvious counter. Ren doesn't fight the slowest student. Kazama doesn't fight the fireproof one. Chozen fights someone high-stress. Give the matchups dramatic potential and let the players find the creative solutions.",
+      "dm_setup": "Split the class into two teams before the session — build the teams to create interesting matchups across ability types. Oshiro's design rule: nobody fights their obvious counter. Ren doesn't fight the slowest student. Kazama doesn't fight the one with an armor-piercing quirk. Chozen fights someone high-stress. Give the matchups dramatic potential and let the players find the creative solutions.",
       "major_beats": [
         {
           "name": "Team Assignments",
@@ -332,7 +332,7 @@
           "player_hooks": {
             "ren": "The neighbourhood knows him — not as 'student at UA' but as 'the Suzuki kid from the port.' Someone calls him by his first name. He doesn't correct them. The class notices.",
             "chosen": "Port district stress levels are lower than he expected — not the grim urban pressure he anticipated. Specific stress concentrations in specific locations. One alley. One building on the corner. He notes it and says nothing yet.",
-            "kazama": "A small child asks him to light something on fire for them (a sparkler, for a birthday). He does. The birthday is good. He's better at the social performance than he acts."
+            "kazama": "A small child asks him to flex his 'metal arm' for a birthday party. He hardens one forearm and lets the kid knock on it. The birthday is good. He's better at the social performance than he acts."
           }
         },
         {

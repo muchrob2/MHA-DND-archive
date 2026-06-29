@@ -132,7 +132,7 @@
           "quirk": "Cremation",
           "quirk_rarity": "Legendary",
           "quirk_type": "Emitter",
-          "quirk_summary": "Flashpoint generates searing blue-white flames capable of incinerating almost anything. Her flames burn hotter than Hellflame and are harder to put out — they cling to surfaces and continue burning. She can control the direction and spread but not perfectly; her quirk tends toward excess.",
+          "quirk_summary": "Flashpoint generates searing blue-white flames capable of incinerating almost anything. They're hot enough to soften most metal armor and harder to put out than ordinary fire — they cling to surfaces and continue burning. She can control the direction and spread but not perfectly; her quirk tends toward excess.",
           "appearance": "Lean and scarred across her arms from years of her own flames. Short hair, singed edges. Doesn't look like someone who should be as dangerous as she is until the moment she is.",
           "personality": "Minimal words. Pyromaniac instincts. Loyal to Undertow because he's the only person who's ever treated her capabilities as a feature rather than a problem. Not interested in conversation with heroes. Not cruel — just single-purpose.",
           "combat_style": "Overwhelming. She opens fights at maximum output. Area denial through fire. Anyone who gets close learns that her flames stick to skin and armour alike. Players should fear this fight the first time they see her in Tier 2.",
@@ -552,7 +552,7 @@
             "tier_3": "Direct confrontation. He's protecting Fracture members from a Hero Commission crackdown. He and the class may be on the same side for thirty seconds before it goes wrong.",
             "tier_4": "If Shard is cornered, Voltage is the last line. He won't surrender. He will try to get her out."
           },
-          "dm_notes": "He's the tactician. He reads the room, reads the class. Use him to punish overconfidence — he knows that Hellflame can't run electricity through its own fire and will take advantage of it.",
+          "dm_notes": "He's the tactician. He reads the room, reads the class. Use him to punish overconfidence — he knows that Steel conducts his electricity straight through, and will bait a hardened opponent into a hit they think they can shrug off.",
           "season_1_role": "Met directly in The Fracture Problem (Tier 2) — performs a hero move (protecting an elderly protester) while being a villain. Present but non-combative in Convergence, ensuring Shard's exit is clean. If forced into combat, use full stat block.",
           "quirk_mechanics": {
             "source": "Quirk Compendium — Electrification",

@@ -228,14 +228,14 @@
     {
       "id": 18,
       "name": "Kazama Kenji",
-      "quirk": "Hellflame",
+      "quirk": "Steel",
       "gender": "Male",
       "height": "6'1\"",
       "physiology": "Standard",
-      "role": "Ranged Blaster / Fire Control",
+      "role": "Frontline Tank / Damage Soak",
       "is_pc": true,
       "personality_tag": "Kind by default; a little cocky when confident; gets flustered by public attention",
-      "notable_trait": "Dirty blonde hair; scar on left cheek; his flames have a specific colour at peak temperature",
+      "notable_trait": "Dirty blonde hair; scar on left cheek; his hardened skin has a distinctive mirror-bright sheen",
       "file": "kazama_kenji.json"
     },
     {

@@ -877,7 +877,7 @@
         "Adaptive: After the first round, Voltage correctly identifies the class's most powerful combo and positions to break it.",
         "Protective Priority: If Shard or a Cell Leader is present and drops below 30 HP, Voltage immediately moves to their position and uses Paralytic Surge on whoever threatens them."
       ],
-      "tactics": "Picks his ground before combat if possible. Opens with Chain Discharge on clustered PCs. Targets fire or sonic quirk users who can arc through conductive surfaces. Knows Hellflame can't run electricity through its fire — uses that. Willing to take a hit to get Paralytic Surge off on the biggest threat."
+      "tactics": "Picks his ground before combat if possible. Opens with Chain Discharge on clustered PCs. Targets fire or sonic quirk users who can arc through conductive surfaces. Knows Steel conducts electricity straight through it and baits hardened opponents into eating a hit they think is safe. Willing to take a hit to get Paralytic Surge off on the biggest threat."
     },
     {
       "id": "undertow_boss",
@@ -898,7 +898,7 @@
       "category": "The Chain",
       "cr": "14",
       "tier": 3,
-      "description": "The Chain's enforcer. Cremation quirk — blue-white flames hotter than Hellflame that cling and continue burning. Overwhelming and unpredictable.",
+      "description": "The Chain's enforcer. Cremation quirk — blue-white flames hot enough to soften steel, that cling and continue burning. Overwhelming and unpredictable.",
       "hp": 220,
       "ac": 16,
       "speed": "30 ft",

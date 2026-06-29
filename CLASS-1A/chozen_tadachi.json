@@ -1,5 +1,5 @@
 {
-  "name": "Chosen Tadachi",
+  "name": "Chozen Tadachi",
   "is_pc": true,
   "gender": "Male",
   "height": "5'9\"",
@@ -16,8 +16,8 @@
   "personality": {
     "summary": "An overthinker who reaches conclusions quickly because he's already thought about it seventeen times in advance. This means he's frequently right and also frequently pre-worried about things that haven't happened yet. He is not anxious in a paralysed way — he's anxious in a brisk, prepared way. He will have already thought about the bad outcome and made a plan for it.",
     "in_class": "Thorough notes, thorough questions. The student who has already read the chapter before class. Sometimes this is visible in the quality of his answers; sometimes it's visible in the bags under his eyes.",
-    "in_combat": "Focused. Stress is reactive by nature — it gets stronger as the situation gets worse, which means Chosen actually gets stronger as he gets more stressed, which means bad situations push him into his best combat state. He's learned to lean into this.",
-    "quirk_of_character": "He prepares for contingencies. He has thought about what to do if approximately forty different bad things happen, including several that are very unlikely. He told Ren about the volcanic eruption plan once. Ren thought this was the funniest thing he had ever heard. Chosen was not joking."
+    "in_combat": "Focused. Stress is reactive by nature — it gets stronger as the situation gets worse, which means Chozen actually gets stronger as he gets more stressed, which means bad situations push him into his best combat state. He's learned to lean into this.",
+    "quirk_of_character": "He prepares for contingencies. He has thought about what to do if approximately forty different bad things happen, including several that are very unlikely. He told Ren about the volcanic eruption plan once. Ren thought this was the funniest thing he had ever heard. Chozen was not joking."
   },
   "ability_scores": {
     "note": "STR primary — Stress augments physical output proportional to stress level, STR governs both mechanics and raw output. CON secondary for the biological demands of the Stress transformation.",
@@ -54,7 +54,7 @@
       {
         "name": "Stress Build-Up",
         "type": "Passive (triggered by damage taken)",
-        "description": "Damage taken fuels the quirk. For every 20 damage Chosen receives, he gains 10% Stress, up to 100%. Each percentage tier grants escalating bonus damage dice plus boosts to Strength/Constitution, movement speed, and other effects — e.g. at 30% Stress: +3d6 damage and +2 STR/CON (max 26); at 50%: +5d6 damage, +2 STR/CON (max 28), one size larger, gains CON mod + proficiency bonus in temporary HP; at 100%: +10d6 damage, +2 STR/CON (max 34), +30 ft movement, ignores 5 damage resistance and gains 5 damage resistance, one size larger, attacks affect a 10 ft radius, and reach increases by 5 ft. Full tier table in the Quirk Compendium."
+        "description": "Damage taken fuels the quirk. For every 20 damage Chozen receives, he gains 10% Stress, up to 100%. Each percentage tier grants escalating bonus damage dice plus boosts to Strength/Constitution, movement speed, and other effects — e.g. at 30% Stress: +3d6 damage and +2 STR/CON (max 26); at 50%: +5d6 damage, +2 STR/CON (max 28), one size larger, gains CON mod + proficiency bonus in temporary HP; at 100%: +10d6 damage, +2 STR/CON (max 34), +30 ft movement, ignores 5 damage resistance and gains 5 damage resistance, one size larger, attacks affect a 10 ft radius, and reach increases by 5 ft. Full tier table in the Quirk Compendium."
       }
     ]
   },

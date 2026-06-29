@@ -240,7 +240,7 @@
     },
     {
       "id": 19,
-      "name": "Chosen Tadachi",
+      "name": "Chozen Tadachi",
       "quirk": "Stress",
       "gender": "Male",
       "height": "5'9\"",
@@ -249,7 +249,7 @@
       "is_pc": true,
       "personality_tag": "Overthinker who jumps to conclusions fast; black markings appear when his quirk activates",
       "notable_trait": "Black and red hair; average build at rest; his Stress quirk literally makes him larger and stronger as damage accumulates",
-      "file": "chosen_tadachi.json"
+      "file": "chozen_tadachi.json"
     },
     {
       "id": 20,

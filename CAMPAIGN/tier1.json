@@ -180,7 +180,7 @@
         "Takazuki's first silent appearance in the common room. Someone nearly sits on him. The look on their face when they realise. Takazuki just says 'I was here first.'",
         "Kinosho is found asleep in the stairwell between the second and third floors. She considers this her primary spot now. She has additional spots. Nobody has catalogued all of them.",
         "First communal cooking attempt. Kazama's offer to help with the stove is declined. He sits quietly and watches. The food is bad. He says nothing.",
-        "Ren starts his empirical evidence count: 'Number of things that should have stopped me: currently two. Evidence that worrying is useful: none.' He tells this to Chosen, who stares at him.",
+        "Ren starts his empirical evidence count: 'Number of things that should have stopped me: currently two. Evidence that worrying is useful: none.' He tells this to Chozen, who stares at him.",
         "Oshiro inspection — he walks every room in silence over exactly thirty minutes. Each student finds a single notecard under their door afterward. The notecards are accurate. They're also not comfortable. Ren's says 'You move fast when there's something to chase. Figure out what you're running toward.' He doesn't know what to do with this."
       ],
       "npc_interactions": [
@@ -208,7 +208,7 @@
       ],
       "encounters": [],
       "foreshadowing": [
-        "Oshiro's notecard for Chosen says: 'You notice what other people feel before they do. The city is going to need that more than the school does.' Chosen doesn't know what this means yet.",
+        "Oshiro's notecard for Chozen says: 'You notice what other people feel before they do. The city is going to need that more than the school does.' Chozen doesn't know what this means yet.",
         "The common room TV runs news in the background. Port district. Something about a business closure — a small support agency that ran gear consulting for unlicensed quirk users. Closed 'due to changing neighbourhood conditions.' The report is twelve seconds long.",
         "Hamagawa is visible through her office window one evening, late, reviewing a long document. The document header, visible to a sharp-eyed student passing: 'Provisional Licensing Review — Port District Incidence Report Q3.' She closes it when she notices anyone looking."
       ],
@@ -223,12 +223,12 @@
       "arc_type": "First formal training encounter",
       "sessions": "1",
       "summary": "Oshiro's opening combat class. Two teams, live stakes. The losing team runs extra laps. The winning team picks one perk for the week. Students versus students. Rivalries become specific here.",
-      "dm_setup": "Split the class into two teams before the session — build the teams to create interesting matchups across ability types. Oshiro's design rule: nobody fights their obvious counter. Ren doesn't fight the slowest student. Kazama doesn't fight the fireproof one. Chosen fights someone high-stress. Give the matchups dramatic potential and let the players find the creative solutions.",
+      "dm_setup": "Split the class into two teams before the session — build the teams to create interesting matchups across ability types. Oshiro's design rule: nobody fights their obvious counter. Ren doesn't fight the slowest student. Kazama doesn't fight the fireproof one. Chozen fights someone high-stress. Give the matchups dramatic potential and let the players find the creative solutions.",
       "major_beats": [
         {
           "name": "Team Assignments",
           "description": "Oshiro reads the teams from a list. No explanation of the logic. The teams are not random. He does not take complaints. Masahata has thoughts. Oshiro does not acknowledge them.",
-          "dm_notes": "The team split should separate at least two students who would naturally coordinate — Ren and Izuto, or Chosen and whoever he's been supporting. Forced improvisation is the lesson.",
+          "dm_notes": "The team split should separate at least two students who would naturally coordinate — Ren and Izuto, or Chozen and whoever he's been supporting. Forced improvisation is the lesson.",
           "player_hooks": {
             "masahata": "He immediately identifies the optimal winning strategy for both teams. He is on the team that his analysis says should lose. He revises his strategy. The revision is also correct."
           }
@@ -261,7 +261,7 @@
       ],
       "minor_beats": [
         "Masahata spent the night before the match compiling a weakness analysis of every student's quirk. He distributes it to his team. His team splits up to 'optimise' and immediately stops communicating. His analysis was correct. Their implementation was not.",
-        "Chosen's stress detection goes off at the match start — the competitive anxiety of the entire class hits him at once. He stands very still for one round, then adjusts. This is now a known quantity for his teammates.",
+        "Chozen's stress detection goes off at the match start — the competitive anxiety of the entire class hits him at once. He stands very still for one round, then adjusts. This is now a known quantity for his teammates.",
         "Izuto's engine timing goes wrong at the worst moment — he accelerates past the flag zone on his first run. The 'OVERSHOT' moment is audible.",
         "Ren starts the match before the signal. Oshiro: 'Foul.' Hamagawa, from the observation booth: 'Actually—' She is consulting a rulebook. The rulebook does not have a clear entry for this. Oshiro overrules her. Ren's points stand because the rulebook silence means permissible. Hamagawa makes a note.",
         "Takazuki wins his entire matchup by being invisible. This is technically within the rules. Masahata revises his chart to note: 'Quirk: invisibility, underweighted in initial analysis. Correction applied.'"
@@ -373,7 +373,7 @@
         {
           "npc": "Chain Hardskin",
           "context": "The villain encounter. Doesn't talk much. When subdued: says nothing about the Chain. If directly asked about affiliation: 'I'm a freelancer.' If the tattoo is found: holds eye contact. Says nothing. Looks scared — not of the students.",
-          "key_moment": "The fear spike. Chosen will likely pick it up. The Hardskin is scared that they were seen. Not caught — seen. The implication is that someone else is watching, and being seen by heroes is less dangerous than being seen by that someone.",
+          "key_moment": "The fear spike. Chozen will likely pick it up. The Hardskin is scared that they were seen. Not caught — seen. The implication is that someone else is watching, and being seen by heroes is less dangerous than being seen by that someone.",
           "dm_dialogue": "'I just do pickup and delivery.' (Grunt line — scripted.) / Hardskin: [silence]. / If pushed: 'You don't know what you're in the middle of.' He means the class. He is correct.",
           "trigger": "Encounter and post-encounter. After handoff to police, he's processed and says nothing further. The tattoo report goes into police records under a code Hamagawa will recognise later."
         },

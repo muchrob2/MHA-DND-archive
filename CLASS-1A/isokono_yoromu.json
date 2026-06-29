@@ -50,13 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Tail",
     "weakness": "The tail is vulnerable to damage and can be targeted. As a permanent mutation, makes sitting and lying down comfortably difficult. If the tail is injured, certain abilities become unavailable.",
-    "abilities": [
-      {
-        "name": "Tail",
-        "type": "Passive (extra limb) with attack, bonus action, and reaction options",
-        "description": "Her tail functions as an extra limb with double the HP of a regular limb, a 10-foot reach, and 200 lb carrying capacity, and can interact with objects like a hand. Unarmed Strike: 2d12 + double STR modifier bludgeoning; on a hit the target makes a STR save vs Quirk DC or is knocked back 20 feet (half on success). Grapple (bonus action): use the tail to grapple a creature — she can still attack and interact with objects using her arms while grappling; the grappled creature can attempt a STR save vs Quirk DC at the start of its turn to escape. Defensive Reaction: when hit by an attack, she can use her reaction to have her tail intercept the blow, reducing the damage by 1d12 — the tail takes the reduced damage instead."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Grapple control and knockback. She locks one enemy in place with her tail while using her arms to support allies. In a class full of high-damage dealers, she's the one making sure enemies stay where the big hitters can reach them.",

@@ -50,18 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Scales",
     "weakness": "Scales break off relatively easily after strong impacts — inferior to Hardening or Steel. Not indestructible.",
-    "abilities": [
-      {
-        "name": "Scale Armor",
-        "type": "Bonus Action / Reaction",
-        "description": "Cover body with scales. Grants +2 AC and reduces incoming attacks by 2d6 for 1 minute."
-      },
-      {
-        "name": "Scale Shot",
-        "type": "Attack",
-        "description": "Fire scales as projectiles at a target within 45 ft. On hit: 3d6 piercing damage. At 5th, 10th, and 15th level, add 1 extra damage die."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Front-line striker with defensive layering. Scale Armor lets him absorb early hits while Scale Shot gives him a ranged option. Works best in a class that can exploit the openings he creates.",

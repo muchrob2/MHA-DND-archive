@@ -50,13 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Neutralization",
     "weakness": "Must use right arm for activation. If right arm is injured, restrained, or severed, the quirk cannot be used. 1-hour cooldown after each successful suppression — attempting earlier deals 2d10 true damage and stuns until end of next turn.",
-    "abilities": [
-      {
-        "name": "Nullification",
-        "type": "Action (touch, right arm)",
-        "description": "Touch a creature with right arm. Target's Quirk is entirely suppressed for 2-4 hours — all passive, triggered, or sustained effects are nullified. This includes immunities, regeneration, elemental forms, transformation states, and active quirk enhancements. Continuous physical contact extends to maximum 24 hours. While suppressed, target also temporarily loses all Quirk drawbacks (biological reset). If used on a target under Overmodification, forcibly ends the enhancement immediately, reverting all boosted stats. Quirkless individuals are immune."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Counter-pick. Against any villain whose combat effectiveness depends on their quirk — Flashpoint, Undertow, Kuma — Kinosho is the answer, if she can get close enough to touch them. Her combat role is making other people's problems disappear. Then she goes to find a chair.",

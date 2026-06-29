@@ -51,38 +51,7 @@
     "source": "Quirk Compendium — Water Gun",
     "weakness": "Depends on hydration. Dehydration makes higher tiers unstable or unavailable. Extreme cold reduces output efficiency. Prolonged use risks internal strain.",
     "pressure_tier_system": "Tiers unlock as character levels increase. Higher tiers deal more damage and knockback but strain the user.",
-    "abilities": [
-      {
-        "name": "Spray Shot (Tier 1)",
-        "type": "Attack",
-        "description": "3d6 cold + 3d4 piercing. No knockback. Available from level 1."
-      },
-      {
-        "name": "Jet Blast (Tier 2)",
-        "type": "Attack",
-        "description": "4d6 cold + 4d4 piercing. 5 ft knockback. Available from level 2."
-      },
-      {
-        "name": "Pressurized Stream (Tier 3)",
-        "type": "Attack",
-        "description": "5d6 cold + 5d4 piercing. 10 ft knockback. Available from level 3."
-      },
-      {
-        "name": "High-Pressure Shot (Tier 4)",
-        "type": "Attack",
-        "description": "6d6 cold + 6d4 piercing. 15 ft knockback; target must succeed on a STR save or be knocked prone. Available from level 4."
-      },
-      {
-        "name": "Water Cannon (Tier 5)",
-        "type": "Attack",
-        "description": "7d6 cold + 7d4 piercing. 20 ft knockback; ignores the target's suit and other AC bonuses for this attack. Available from level 5."
-      },
-      {
-        "name": "Hydro Burst",
-        "type": "Action (unlocks at level 10)",
-        "description": "Unleash a condensed water discharge in a 30-foot line or 15-foot cone. STR save vs Quirk DC. Fail: 6d10 cold + 3d6 piercing damage, pushed up to 30 ft, knocked prone. Success: half damage, no push or prone. After use, Pressure Tier 5 (Water Cannon) can't be used again until a short or long rest."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Sustained ranged pressure and knockback control. His tier system means he gets more useful as a fight drags on and enemies are repositioned by the knockback. Pair him with students who benefit from enemies being knocked into position.",

@@ -50,23 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Size",
     "weakness": "Requires direct hand contact with all five fingers. Cannot affect living creatures.",
-    "abilities": [
-      {
-        "name": "Size Manipulation",
-        "type": "Action",
-        "description": "Increase or decrease an object by one size category. Each size category increased: +1 damage die, range +5 feet. Effect lasts 1 hour."
-      },
-      {
-        "name": "Massive Growth",
-        "type": "Action",
-        "description": "Triple an object's size, up to Gargantuan, for 2 minutes. All creatures within 30 ft radius of the object make DEX save vs Quirk DC. Fail: knocked prone under the object, take object's normal damage + 3 additional dice. Success: half damage, not prone. Crushed creatures make STR save vs Quirk DC to free themselves. Structure damage is tripled."
-      },
-      {
-        "name": "Miniaturize",
-        "type": "Full Turn Action",
-        "description": "Shrink an object to Tiny for 2 minutes. Creatures holding or using it make DEX save vs Quirk DC or drop it. Miniaturized objects can't be used until returned to normal size."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Environmental control and improvised heavy weaponry. She turns the battlefield into her toolkit — a car becomes a boulder, a boulder becomes enormous, a doorframe becomes impassable. Highest battlefield creativity ceiling in the class.",

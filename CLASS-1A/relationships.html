@@ -117,6 +117,14 @@
   .upgrade-note { font-size: 11px; color: var(--teal); margin-top: 5px; padding-top: 5px; border-top: 1px solid var(--border); font-style: italic; }
   .player-note { background: var(--amber-light); border-left: 3px solid var(--amber); border-radius: 0 var(--radius) var(--radius) 0; padding: 6px 10px; margin-top: 8px; font-size: 12px; color: var(--text-muted); }
   .player-note strong { color: var(--text); }
+  .ability-card-editable { display: flex; flex-direction: column; gap: 6px; }
+  .ability-edit-row { display: flex; align-items: center; gap: 6px; }
+  .ability-input { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: 12px; color: var(--text); font-family: inherit; width: 100%; resize: vertical; }
+  .ability-input:focus { outline: none; border-color: var(--purple); }
+  .ability-input-name { flex: 1; font-weight: 600; }
+  .ability-delete-btn { flex-shrink: 0; color: var(--red-text); }
+  .add-attack-btn { width: 100%; padding: 8px; border: 1px dashed var(--border); border-radius: var(--radius); background: none; color: var(--text-dim); font-size: 12px; cursor: pointer; }
+  .add-attack-btn:hover { background: var(--surface2); color: var(--text); }
 
   /* ── Relationships ────────────────────────────────────── */
   #rel-section { flex: 1; overflow-y: auto; }
@@ -1170,18 +1178,57 @@ function showTab(tab) {
 function renderAttacksTab(c) {
   const tabContent = document.getElementById('tab-content');
   tabContent.classList.remove('tab-quirk');
-  const abilities = (c.quirk_mechanics||{}).abilities || [];
-  if (!abilities.length) {
-    tabContent.innerHTML = `<div class="ability-card locked"><div class="ability-name">No attacks recorded</div></div>`;
-    return;
-  }
-  tabContent.innerHTML = abilities.map(a => `
+  c.quirk_mechanics = c.quirk_mechanics || {};
+  const abilities = c.quirk_mechanics.abilities = c.quirk_mechanics.abilities || [];
+
+  const cards = abilities.map((a, i) => {
+    if (canWrite) {
+      return `
+    <div class="ability-card ability-card-editable">
+      <div class="ability-edit-row">
+        <input class="ability-input ability-input-name" placeholder="Attack name" value="${escHtml(a.name||'')}" oninput="onAttackEdit(${i},'name',this.value)">
+        <button class="icon-btn ability-delete-btn" title="Delete attack" onclick="onAttackDelete(${i})">✕</button>
+      </div>
+      <input class="ability-input ability-input-type" placeholder="Type (e.g. Action; costs 2 Heat Points)" value="${escHtml(a.type||'')}" oninput="onAttackEdit(${i},'type',this.value)">
+      <textarea class="ability-input ability-input-desc" rows="2" placeholder="Description" oninput="onAttackEdit(${i},'description',this.value)">${escHtml(a.description||'')}</textarea>
+    </div>`;
+    }
+    return `
     <div class="ability-card">
       <div class="ability-name">${escHtml(a.name||'')}${a.type ? `<span class="ability-type">${escHtml(a.type)}</span>` : ''}</div>
       ${a.damage ? `<div class="ability-desc"><strong>Damage:</strong> ${escHtml(a.damage)}</div>` : ''}
       ${a.description ? `<div class="ability-desc">${escHtml(a.description)}</div>` : ''}
-    </div>
-  `).join('');
+    </div>`;
+  });
+
+  if (!abilities.length) {
+    cards.push(`<div class="ability-card locked"><div class="ability-name">No attacks recorded</div></div>`);
+  }
+
+  if (canWrite) {
+    cards.push(`<button class="add-attack-btn" onclick="onAttackAdd()">+ Add attack</button>`);
+  }
+
+  tabContent.innerHTML = cards.join('');
+}
+
+function onAttackEdit(i, field, value) {
+  const abilities = selected.quirk_mechanics.abilities;
+  if (!abilities[i]) return;
+  abilities[i][field] = value;
+  scheduleCharSave(selected);
+}
+
+function onAttackAdd() {
+  selected.quirk_mechanics.abilities.push({ name: '', type: '', description: '' });
+  scheduleCharSave(selected);
+  renderAttacksTab(selected);
+}
+
+function onAttackDelete(i) {
+  selected.quirk_mechanics.abilities.splice(i, 1);
+  scheduleCharSave(selected);
+  renderAttacksTab(selected);
 }
 
 /* ── Editable tab content ────────────────────────────── */

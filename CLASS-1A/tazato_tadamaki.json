@@ -50,13 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Dragon",
     "weakness": "None listed in the Quirk Compendium — Dragon has no built-in drawback or strain mechanic.",
-    "abilities": [
-      {
-        "name": "Dragon",
-        "type": "Bonus Action (transformation)",
-        "description": "Transform into a Huge draconic form: AC 16, +25 HP, 35 ft walk / 45 ft fly speed, STR 23 (+6), CON 21 (+5), proficiency bonus added to STR and CON saves, resistance to bludgeoning and slashing damage, darkvision 120 ft. Draconic Might lets her count as one size larger for carrying, pushing, and lifting, and squeeze through Large-sized spaces. Wings of the Sky grants the flying speed with hover and lets her ignore difficult terrain while flying or walking. Draconic Resilience grants temporary HP equal to half her level plus half her CON modifier at the start of each turn. In this form she can Multiattack (one Bite plus two Claws): Bite (10 ft reach, 2d8+6 piercing), Claw (5 ft reach, 3d12+6 slashing). Tail Sweep is usable as a bonus action whenever she moves 10+ feet: a Tail Attack against all creatures within 10 ft, 2d10+6 bludgeoning, STR save or knocked prone."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Front-line brawler who transforms into a genuine monster statblock. Dragon's Multiattack (Bite + two Claws) and Tail Sweep give her some of the highest sustained damage in the class once transformed — the DM should treat her transformed state as a real threat, not a timed gimmick.",

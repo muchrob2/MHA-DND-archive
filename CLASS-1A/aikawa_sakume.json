@@ -50,18 +50,7 @@
   "quirk_mechanics": {
     "source": "Quirk Compendium — Iron Claws",
     "weakness": "Hard to use hands in normal ways. Tasks requiring fine motor control or grip precision are at disadvantage.",
-    "abilities": [
-      {
-        "name": "Tunnel",
-        "type": "Passive/Action",
-        "description": "Use claws to drill into the ground. Gain a burrow speed equal to movement speed."
-      },
-      {
-        "name": "Iron Claws",
-        "type": "Attack",
-        "description": "Unarmed strikes deal 3d8 slashing damage, plus twice STR modifier. On a hit, target gains 1 rank of Bleed and takes additional damage equal to STR modifier at the start of their next turn."
-      }
-    ]
+    "abilities": []
   },
   "dm_notes": {
     "combat_role": "Close-range burst damage. Gets in fast, applies bleed, and keeps pressure on a single target. Not a tank — she hits hard but needs allies to absorb attention.",

@@ -904,8 +904,6 @@ let canWrite = false;
 
 document.addEventListener('auth-state-changed', (e) => {
   canWrite = e.detail.role === 'admin' || e.detail.role === 'editor';
-  const btn = document.getElementById('save-btn');
-  if (btn) btn.style.display = canWrite ? '' : 'none';
   if (selected) showTab(activeTab);
 });
 
@@ -915,18 +913,59 @@ function buildBundle() {
   return { version: 1, exported_at: new Date().toISOString(), relationships: rels, characters };
 }
 
+const FS_REL_DOC = db.collection(FS_COLLECTION).doc(FS_DOC);
+
 async function saveToFirestore() {
   await fbAuthReady;
-  await db.collection(FS_COLLECTION).doc(FS_DOC).set(buildBundle());
+  // merge:true so a tab with a stale/partial local copy can't wipe out
+  // characters or relationships it doesn't currently know about.
+  await FS_REL_DOC.set(buildBundle(), { merge: true });
 }
 
 async function loadFromFirestore() {
   await fbAuthReady;
-  const snap = await db.collection(FS_COLLECTION).doc(FS_DOC).get();
+  const snap = await FS_REL_DOC.get();
   if (!snap.exists) return null;
   const parsed = snap.data();
   return (parsed.version === 1 && parsed.characters) ? parsed : null;
 }
+
+// Live feed: pull in other tabs' character/relationship saves so this tab's
+// local copy never goes stale and clobbers them on its own next save.
+let _pendingRemoteRelBundle = null;
+function isProfileEditing() {
+  const tag = document.activeElement?.tagName;
+  if (tag !== 'INPUT' && tag !== 'TEXTAREA') return false;
+  return !!document.activeElement.closest('#profile, #view-relationships');
+}
+function applyRemoteRelBundle(data) {
+  rels = data.relationships || {};
+  for (const c of CHARACTERS) {
+    if (c._file && data.characters?.[c._file]) {
+      const f = c._file, rid = c._roster_id, sec = c._section;
+      Object.assign(c, data.characters[c._file]);
+      c._file = f; c._roster_id = rid; c._section = sec;
+    }
+  }
+  if (selected) renderProfile();
+  renderRelationships();
+}
+async function startRelLiveSync() {
+  await fbAuthReady;
+  FS_REL_DOC.onSnapshot(snap => {
+    if (!snap.exists) return;
+    const data = snap.data();
+    if (data.version !== 1 || !data.characters) return;
+    if (isProfileEditing()) { _pendingRemoteRelBundle = data; return; }
+    applyRemoteRelBundle(data);
+  });
+}
+setInterval(() => {
+  if (_pendingRemoteRelBundle && !isProfileEditing()) {
+    applyRemoteRelBundle(_pendingRemoteRelBundle);
+    _pendingRemoteRelBundle = null;
+  }
+}, 1500);
 
 function scheduleFirestoreSave() {
   clearTimeout(fsSaveTimer);
@@ -977,21 +1016,6 @@ function updateScoreDisplay(fromId, toId, score) {
 /* ── Character persistence ────────────────────────────── */
 function scheduleCharSave(c) { scheduleFirestoreSave(); }
 
-async function saveAllNow() {
-  clearTimeout(fsSaveTimer);
-  const btn = document.getElementById('save-btn');
-  btn.disabled = true;
-  setSaveStatus('saving', 'Saving…');
-  try {
-    await saveToFirestore();
-    setSaveStatus('saved', 'Saved ' + new Date().toLocaleTimeString());
-  } catch (e) {
-    setSaveStatus('error', e.message);
-  } finally {
-    btn.disabled = false;
-  }
-}
-
 function onStatChange(field, value, isFloat) {
   const c = selected;
   const num = isFloat ? parseFloat(value) : parseInt(value);
@@ -1023,7 +1047,7 @@ function renderSidebar() {
   let html = '';
   const pcs = visible.filter(c => c.is_pc), npcs = visible.filter(c => !c.is_pc);
   if (pcs.length)  { html += '<div class="section-label">Player Characters</div>'; for (const c of pcs)  html += charItem(c); }
-  if (npcs.length) { html += '<div class="section-label" style="display:flex;align-items:center;justify-content:space-between;">Class 1-A<button onclick="saveAllNow()" class="class1a-save-btn" style="padding:2px 8px;font-size:10px;border:1px solid var(--purple);border-radius:5px;background:var(--purple-light);color:var(--purple-text);cursor:pointer;font-weight:600;" title="Save all changes now">💾 Save</button></div>'; for (const c of npcs) html += charItem(c); }
+  if (npcs.length) { html += '<div class="section-label">Class 1-A</div>'; for (const c of npcs) html += charItem(c); }
   document.getElementById('char-list').innerHTML = html;
 
   const sel = document.getElementById('enc-roster-select');
@@ -2009,6 +2033,7 @@ function encAddEnemy() {
   await encLoad();
   renderAttackLog();
   startEncLiveSync();
+  if (fsBundle) startRelLiveSync();
   renderSidebar();
   buildEnemySelect();
   renderProfile();

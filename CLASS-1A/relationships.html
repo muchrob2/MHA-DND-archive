@@ -1460,10 +1460,8 @@ const TEAM_COLORS = [
   { name: 'Lime',   bg: '#65A30D', light: 'rgba(101,163,13,0.10)' },
 ];
 
-let encounter = { round: 1, currentIndex: 0, combatants: [] };
+let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [] };
 let _encId = 0;
-let attackLog = [];
-
 function encId() { return ++_encId; }
 
 const FS_ENCOUNTER_DOC = db.collection('mha-dnd').doc('encounter-state');
@@ -1480,12 +1478,13 @@ async function encLoad() {
   try {
     await fbAuthReady;
     const snap = await FS_ENCOUNTER_DOC.get();
-    if (snap.exists) { encounter = snap.data(); return; }
+    if (snap.exists) { encounter = snap.data(); encounter.attackLog = encounter.attackLog || []; return; }
   } catch {}
   try {
     const raw = localStorage.getItem('mha_encounter_v1');
     if (raw) encounter = JSON.parse(raw);
   } catch {}
+  encounter.attackLog = encounter.attackLog || [];
 }
 
 // Live feed: push board/encounter updates to every open tab in real time.
@@ -1498,7 +1497,9 @@ function isEncEditing() {
 }
 function applyRemoteEncounter(data) {
   encounter = data;
+  encounter.attackLog = encounter.attackLog || [];
   renderEncounter();
+  renderAttackLog();
   if (isBoardOpen()) renderBoard();
 }
 async function startEncLiveSync() {
@@ -1597,8 +1598,7 @@ function encPrevTurn() {
 
 function encReset() {
   if (!confirm('Reset encounter? This will clear all combatants and round count.')) return;
-  encounter = { round: 1, currentIndex: 0, combatants: [] };
-  attackLog = [];
+  encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [] };
   encSave(); document.getElementById('enc-round-num').textContent = 1; renderEncounter(); renderAttackLog();
 }
 
@@ -1882,13 +1882,16 @@ function encRandomAttack(attackerId) {
 }
 
 function addAttackLog(entry) {
-  attackLog.unshift(entry);
-  if (attackLog.length > 8) attackLog.pop();
+  encounter.attackLog = encounter.attackLog || [];
+  encounter.attackLog.unshift(entry);
+  if (encounter.attackLog.length > 8) encounter.attackLog.pop();
+  encSave();
   renderAttackLog();
 }
 
 function renderAttackLog() {
   const el = document.getElementById('enc-log');
+  const attackLog = encounter.attackLog || [];
   if (!attackLog.length) {
     el.innerHTML = '<div class="log-none">No attacks yet this encounter.</div>';
     return;
@@ -1996,6 +1999,7 @@ function encAddEnemy() {
   });
   selected = CHARACTERS[0];
   await encLoad();
+  renderAttackLog();
   startEncLiveSync();
   renderSidebar();
   buildEnemySelect();

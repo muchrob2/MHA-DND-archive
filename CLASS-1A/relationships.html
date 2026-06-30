@@ -1016,7 +1016,7 @@ function renderSidebar() {
   let html = '';
   const pcs = visible.filter(c => c.is_pc), npcs = visible.filter(c => !c.is_pc);
   if (pcs.length)  { html += '<div class="section-label">Player Characters</div>'; for (const c of pcs)  html += charItem(c); }
-  if (npcs.length) { html += '<div class="section-label">Class 1-A</div>';          for (const c of npcs) html += charItem(c); }
+  if (npcs.length) { html += '<div class="section-label" style="display:flex;align-items:center;justify-content:space-between;">Class 1-A<button onclick="saveAllNow()" class="class1a-save-btn" style="padding:2px 8px;font-size:10px;border:1px solid var(--purple);border-radius:5px;background:var(--purple-light);color:var(--purple-text);cursor:pointer;font-weight:600;" title="Save all changes now">💾 Save</button></div>'; for (const c of npcs) html += charItem(c); }
   document.getElementById('char-list').innerHTML = html;
 
   const sel = document.getElementById('enc-roster-select');
@@ -1970,6 +1970,7 @@ function encAddEnemy() {
     CHARACTERS = (roster.students || []).filter(s => s.file).map(s => {
       const c = Object.assign({}, fsBundle.characters?.[s.file] || {});
       c._file = s.file; c._roster_id = s.id; c._section = 'class-1a';
+      c.name = s.name; c.quirk = s.quirk;
       return c;
     }).filter(c => c.name);
     setSaveStatus('saved', 'Loaded from Firestore ✓');

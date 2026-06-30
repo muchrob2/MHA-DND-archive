@@ -100,15 +100,16 @@
   .tab-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
   #tab-content { padding: 12px 20px; font-size: 13px; color: var(--text-muted); line-height: 1.6; max-height: 130px; overflow-y: auto; background: var(--surface); border-bottom: 1px solid var(--border); }
   #tab-content.tab-quirk { max-height: 280px; }
+  #tab-content.tab-attacks { max-height: 360px; }
   .tab-editable { width: 100%; min-height: 90px; font-size: 13px; line-height: 1.6; padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); color: var(--text); resize: vertical; outline: none; font-family: inherit; }
   .tab-editable:focus { border-color: var(--purple); background: var(--surface); }
   .quirk-header { margin-bottom: 8px; }
   .quirk-name { font-size: 14px; font-weight: 600; color: var(--text); }
   .quirk-meta { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
   .weakness-block { background: var(--red-light); border-left: 3px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; padding: 6px 10px; margin-bottom: 8px; font-size: 12px; color: var(--red-text); }
-  .ability-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 10px; margin-bottom: 6px; }
+  .ability-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 8px; background: var(--surface2); transition: border-color 0.15s; }
   .ability-card:last-child { margin-bottom: 0; }
-  .ability-card.locked { opacity: 0.42; border-style: dashed; }
+  .ability-card.locked { opacity: 0.42; border-style: dashed; background: none; }
   .ability-card.locked .ability-name { color: var(--text-muted); }
   .ability-name { font-size: 12px; font-weight: 600; color: var(--text); }
   .ability-type { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; background: var(--purple-light); color: var(--purple-text); font-weight: 500; margin-left: 6px; vertical-align: middle; }
@@ -117,14 +118,18 @@
   .upgrade-note { font-size: 11px; color: var(--teal); margin-top: 5px; padding-top: 5px; border-top: 1px solid var(--border); font-style: italic; }
   .player-note { background: var(--amber-light); border-left: 3px solid var(--amber); border-radius: 0 var(--radius) var(--radius) 0; padding: 6px 10px; margin-top: 8px; font-size: 12px; color: var(--text-muted); }
   .player-note strong { color: var(--text); }
-  .ability-card-editable { display: flex; flex-direction: column; gap: 6px; }
+  .ability-card-editable { display: flex; flex-direction: column; gap: 6px; border-color: var(--border); }
+  .ability-card-editable:focus-within { border-color: var(--purple); }
   .ability-edit-row { display: flex; align-items: center; gap: 6px; }
-  .ability-input { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: 12px; color: var(--text); font-family: inherit; width: 100%; resize: vertical; }
+  .ability-input { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: 12px; color: var(--text); font-family: inherit; width: 100%; resize: vertical; transition: border-color 0.15s; }
   .ability-input:focus { outline: none; border-color: var(--purple); }
   .ability-input-name { flex: 1; font-weight: 600; }
+  .ability-input-type { font-size: 11px; color: var(--text-muted); }
+  .ability-input-desc { min-height: 44px; }
   .ability-delete-btn { flex-shrink: 0; color: var(--red-text); }
-  .add-attack-btn { width: 100%; padding: 8px; border: 1px dashed var(--border); border-radius: var(--radius); background: none; color: var(--text-dim); font-size: 12px; cursor: pointer; }
-  .add-attack-btn:hover { background: var(--surface2); color: var(--text); }
+  .ability-delete-btn:hover { background: var(--red-light); border-color: var(--red); }
+  .add-attack-btn { width: 100%; padding: 9px; border: 1px dashed var(--border); border-radius: var(--radius); background: none; color: var(--text-dim); font-size: 12px; cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s; }
+  .add-attack-btn:hover { background: var(--surface2); color: var(--purple-text); border-color: var(--purple); }
 
   /* ── Relationships ────────────────────────────────────── */
   #rel-section { flex: 1; overflow-y: auto; }
@@ -137,6 +142,8 @@
   #rel-list.collapsed { display: none; }
   #rel-toggle-btn.collapsed { transform: rotate(-90deg); }
   #rel-section.collapsed { flex: 0 0 auto; margin-top: auto; overflow-y: visible; }
+  #profile.expanded { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  #profile.expanded #tab-content { flex: 1; max-height: none; }
   .rel-row { display: grid; grid-template-columns: 180px 1fr 52px; align-items: start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
   .rel-row:last-child { border-bottom: none; }
   .rel-char-name { font-size: 13px; font-weight: 500; }
@@ -1182,6 +1189,7 @@ function showTab(tab) {
 function renderAttacksTab(c) {
   const tabContent = document.getElementById('tab-content');
   tabContent.classList.remove('tab-quirk');
+  tabContent.classList.add('tab-attacks');
   c.quirk_mechanics = c.quirk_mechanics || {};
   const abilities = c.quirk_mechanics.abilities = c.quirk_mechanics.abilities || [];
 
@@ -1241,7 +1249,7 @@ let currentTabSave = null;
 function renderEditableTab(value, onSave) {
   currentTabSave = onSave;
   const tabContent = document.getElementById('tab-content');
-  tabContent.classList.remove('tab-quirk');
+  tabContent.classList.remove('tab-quirk', 'tab-attacks');
   if (canWrite) {
     tabContent.innerHTML = `<textarea class="tab-editable" rows="4" placeholder="Nothing here yet — click to add." oninput="onTabEdit(this.value)">${escHtml(value)}</textarea>`;
   } else {
@@ -1291,6 +1299,7 @@ function applyRelCollapseState() {
   document.getElementById('rel-list').classList.toggle('collapsed', collapsed);
   document.getElementById('rel-toggle-btn').classList.toggle('collapsed', collapsed);
   document.getElementById('rel-section').classList.toggle('collapsed', collapsed);
+  document.getElementById('profile').classList.toggle('expanded', collapsed);
 }
 function toggleRelCollapse() {
   const key = getRelCollapseKey();

@@ -453,6 +453,7 @@
   #save-status.saving { color: var(--amber); }
   #save-status.saved { color: var(--teal); }
   #save-status.error { color: var(--red); }
+  #save-btn.save-btn-success { background: #1f9d55 !important; border-color: #1f9d55 !important; color: #fff !important; transition: background 0.3s, border-color 0.3s; }
 
   /* ── Mobile ──────────────────────────────────────────── */
   @media (max-width: 640px) {
@@ -865,7 +866,7 @@
     <div id="save-bar">
       <span>Syncs via Firestore</span>
       <div style="display:flex;gap:6px;margin-left:auto;align-items:center;">
-        <button onclick="saveAllNow()" id="save-btn" style="padding:3px 10px;font-size:11px;border:1px solid var(--purple);border-radius:5px;background:var(--purple-light);color:var(--purple-text);cursor:pointer;font-weight:600;display:none;" title="Save all changes now">💾 Save</button>
+        <button onclick="saveAllNow()" id="save-btn" style="position:fixed;top:14px;right:18px;z-index:1000;padding:10px 22px;font-size:16px;border:1px solid var(--purple);border-radius:8px;background:var(--purple-light);color:var(--purple-text);cursor:pointer;font-weight:700;display:none;box-shadow:0 2px 8px rgba(0,0,0,0.25);" title="Save all changes now">💾 Save</button>
         <button onclick="exportData()" style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Download a local backup">↓ Export</button>
         <label style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Restore from a backup file">↑ Import<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
         <span id="save-status"></span>
@@ -895,6 +896,8 @@ function setSaveStatus(state, text) {
   const el = document.getElementById('save-status');
   el.className = state;
   el.textContent = text;
+  const btn = document.getElementById('save-btn');
+  if (btn) btn.classList.toggle('save-btn-success', state === 'saved');
 }
 
 /* ── Firestore storage ────────────────────────────────── */

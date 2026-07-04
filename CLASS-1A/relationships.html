@@ -74,7 +74,18 @@
   #profile-avatar { width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; flex-shrink: 0; border: 2px solid var(--border-strong); }
   #profile-body { flex: 1; min-width: 0; }
   #profile-name { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
-  #profile-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600; }
+  .name-input { width: 100%; font: inherit; color: var(--text); background: transparent; border: 1px solid transparent; border-radius: 4px; outline: none; padding: 1px 4px; margin: -1px -4px; }
+  .name-input:hover { border-color: var(--border); }
+  .name-input:focus { border-color: var(--purple); color: var(--purple-text); }
+  #profile-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; letter-spacing: 0.05em; font-weight: 600; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+  #profile-sub .sub-sep { opacity: 0.6; }
+  .sub-input, .sub-select { font: inherit; text-transform: uppercase; letter-spacing: inherit; color: var(--text-dim); background: transparent; border: 1px solid transparent; border-radius: 4px; outline: none; padding: 1px 3px; }
+  .sub-input:hover, .sub-select:hover { border-color: var(--border); }
+  .sub-input:focus, .sub-select:focus { border-color: var(--purple); color: var(--purple-text); }
+  .sub-input-quirk { width: 90px; }
+  .sub-input-narrow { width: 54px; }
+  .sub-select { cursor: pointer; }
+  .sub-select option { background: var(--surface2); color: var(--text); text-transform: none; }
   #tags-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; align-items: center; }
   .tag { font-size: 10px; padding: 2px 7px; border-radius: 3px; border: 1px solid var(--border); color: var(--text-dim); background: var(--surface2); letter-spacing: 0.04em; font-weight: 600; text-transform: uppercase; }
   .tag-pc { background: var(--purple-light); color: var(--purple-text); border-color: rgba(232,160,32,0.3); }
@@ -101,6 +112,7 @@
   #tab-content { padding: 12px 20px; font-size: 14px; color: var(--text-muted); line-height: 1.6; max-height: 160px; overflow-y: auto; background: var(--surface); border-bottom: 1px solid var(--border); }
   #tab-content.tab-quirk { max-height: 320px; }
   #tab-content.tab-attacks { max-height: 400px; }
+  #tab-content.tab-inventory { max-height: 400px; }
   .tab-editable { width: 100%; min-height: 90px; font-size: 13px; line-height: 1.6; padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); color: var(--text); resize: vertical; outline: none; font-family: inherit; }
   .tab-editable:focus { border-color: var(--purple); background: var(--surface); }
   .quirk-header { margin-bottom: 8px; }
@@ -130,6 +142,21 @@
   .ability-delete-btn:hover { background: var(--red-light); border-color: var(--red); }
   .add-attack-btn { width: 100%; padding: 9px; border: 1px dashed var(--border); border-radius: var(--radius); background: none; color: var(--text-dim); font-size: 12px; cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s; }
   .add-attack-btn:hover { background: var(--surface2); color: var(--purple-text); border-color: var(--purple); }
+
+  /* ── Inventory ────────────────────────────────────────── */
+  .inv-currency-panel { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 12px; background: var(--surface2); }
+  .inv-currency-title { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; }
+  .inv-currency-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .inv-currency-block { display: flex; flex-direction: column; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 6px; min-width: 68px; }
+  .inv-currency-block label { font-size: 9px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; }
+  .inv-currency-input { width: 64px; font-size: 15px; font-weight: 700; color: var(--text); text-align: center; border: none; background: transparent; outline: none; padding: 0; font-family: inherit; }
+  .inv-currency-input:focus { color: var(--purple); }
+  .inv-currency-input:disabled { color: var(--text-muted); }
+  .inv-currency-total { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+  .inv-currency-total strong { color: var(--teal-text); }
+  .inv-items-title { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; }
+  .inv-item-qty { flex-shrink: 0; width: 52px !important; text-align: center; }
+  .inv-empty { color: var(--text-dim); font-style: italic; font-size: 12px; }
 
   /* ── Relationships ────────────────────────────────────── */
   #rel-section { flex: 1; overflow-y: auto; }
@@ -636,6 +663,7 @@
           <button class="tab-btn" onclick="showTab('combat')">Combat role</button>
           <button class="tab-btn" onclick="showTab('social')">Social role</button>
           <button class="tab-btn" onclick="showTab('attacks')">Attacks</button>
+          <button class="tab-btn" onclick="showTab('inventory')">Inventory</button>
           <button class="tab-btn" onclick="showTab('background')">Background</button>
           <button class="tab-btn" onclick="showTab('additionalfeatures')">Additional features</button>
         </div>
@@ -949,6 +977,7 @@ function applyRemoteRelBundle(data) {
   }
   if (selected) renderProfile();
   renderRelationships();
+  refreshSidebar();
 }
 async function startRelLiveSync() {
   await fbAuthReady;
@@ -1036,6 +1065,31 @@ function onAbilityScoreChange(key, value) {
 }
 function onClassChange(value) { selected.suggested_class = value; scheduleCharSave(selected); }
 
+function refreshSidebar() {
+  renderSidebar();
+  filterList(document.getElementById('search').value);
+}
+
+function onNameChange(value) {
+  const v = value.trim();
+  if (!v) { renderProfile(); return; }
+  selected.name = v;
+  scheduleCharSave(selected);
+  document.getElementById('profile-avatar').textContent = initials(selected.name);
+  refreshSidebar();
+}
+function onSubFieldChange(field, value) {
+  selected[field] = value;
+  scheduleCharSave(selected);
+  if (field === 'quirk') refreshSidebar();
+}
+function onCategoryChange(value) {
+  selected.is_pc = value === 'pc';
+  scheduleCharSave(selected);
+  refreshSidebar();
+  renderProfile();
+}
+
 /* ── Sidebar ──────────────────────────────────────────── */
 function initials(name) { return name.split(' ').slice(0,2).map(w=>w[0]).join(''); }
 
@@ -1109,10 +1163,23 @@ function renderProfile() {
   const SEC_COLORS = { 'class-1a': c.is_pc ? ['var(--purple-light)','var(--purple-text)'] : ['var(--teal-light)','var(--teal-text)'], 'class-1b': ['var(--amber-light)','var(--amber-text)'], teachers: ['var(--green-light)','var(--green-text)'], villains: ['var(--red-light)','var(--red-text)'], supporting: ['rgba(99,102,241,0.13)','#a5b4fc'] };
   const [avBg, avColor] = SEC_COLORS[c._section || 'class-1a'] || SEC_COLORS['class-1a'];
   avEl.style.background = avBg; avEl.style.color = avColor;
-  document.getElementById('profile-name').textContent = c.name;
-  const aliasPart = c._alias ? ' / ' + c._alias : '';
-  const subParts = [c.quirk + aliasPart, c.physiology, c.height, c.gender].filter(Boolean);
-  document.getElementById('profile-sub').textContent = subParts.join(' · ');
+  document.getElementById('profile-name').innerHTML =
+    `<input class="name-input" type="text" value="${escHtml(c.name||'')}" onchange="onNameChange(this.value)" title="Character name">`;
+
+  document.getElementById('profile-sub').innerHTML = `
+    <input class="sub-input sub-input-quirk" type="text" value="${escHtml(c.quirk||'')}" placeholder="Quirk" onchange="onSubFieldChange('quirk',this.value)" title="Quirk">
+    <span class="sub-sep">·</span>
+    <select class="sub-select" onchange="onCategoryChange(this.value)" title="Category">
+      <option value="npc" ${!c.is_pc?'selected':''}>Class 1-A</option>
+      <option value="pc" ${c.is_pc?'selected':''}>Player Character</option>
+    </select>
+    <span class="sub-sep">·</span>
+    <input class="sub-input" type="text" value="${escHtml(c.physiology||'')}" placeholder="Physiology" onchange="onSubFieldChange('physiology',this.value)" title="Physiology">
+    <span class="sub-sep">·</span>
+    <input class="sub-input sub-input-narrow" type="text" value="${escHtml(c.height||'')}" placeholder="Height" onchange="onSubFieldChange('height',this.value)" title="Height">
+    <span class="sub-sep">·</span>
+    <input class="sub-input sub-input-narrow" type="text" value="${escHtml(c.gender||'')}" placeholder="Gender" onchange="onSubFieldChange('gender',this.value)" title="Gender">
+  `;
 
   const tags = document.getElementById('tags-row');
   const lv = c.level || 1;
@@ -1204,6 +1271,9 @@ function showTab(tab) {
   if (tab==='attacks') {
     return renderAttacksTab(c);
   }
+  if (tab==='inventory') {
+    return renderInventoryTab(c);
+  }
   if (tab==='additionalfeatures') {
     return renderEditableTab(c.additional_features||'', v => { c.additional_features = v; });
   }
@@ -1211,7 +1281,7 @@ function showTab(tab) {
 
 function renderAttacksTab(c) {
   const tabContent = document.getElementById('tab-content');
-  tabContent.classList.remove('tab-quirk');
+  tabContent.classList.remove('tab-quirk', 'tab-inventory');
   tabContent.classList.add('tab-attacks');
   c.quirk_mechanics = c.quirk_mechanics || {};
   const abilities = c.quirk_mechanics.abilities = c.quirk_mechanics.abilities || [];
@@ -1266,13 +1336,100 @@ function onAttackDelete(i) {
   renderAttacksTab(selected);
 }
 
+/* ── Inventory ─────────────────────────────────────────
+   Currency denominations & Yen (¥) conversion rates are from
+   the MHA D&D Official Handbook, Chapter 4: Equipment. */
+const CURRENCY_KEYS = ['yen','pp','gp','ep','sp','cp'];
+const CURRENCY_LABELS = { yen: '¥ Yen', pp: 'PP', gp: 'GP', ep: 'EP', sp: 'SP', cp: 'CP' };
+const CURRENCY_TO_YEN = { yen: 1, cp: 10, sp: 100, ep: 500, gp: 1000, pp: 10000 };
+
+function renderInventoryTab(c) {
+  const tabContent = document.getElementById('tab-content');
+  tabContent.classList.remove('tab-quirk', 'tab-attacks');
+  tabContent.classList.add('tab-inventory');
+  c.inventory = c.inventory || {};
+  const currency = c.inventory.currency = c.inventory.currency || { yen: 0, cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 };
+  const items = c.inventory.items = c.inventory.items || [];
+
+  const totalYen = CURRENCY_KEYS.reduce((sum, k) => sum + (currency[k]||0) * CURRENCY_TO_YEN[k], 0);
+
+  const currencyBlocks = CURRENCY_KEYS.map(k => `
+    <div class="inv-currency-block">
+      <label>${CURRENCY_LABELS[k]}</label>
+      <input class="inv-currency-input" type="number" min="0" value="${currency[k]||0}"
+        ${canWrite ? `onchange="onCurrencyChange('${k}',this.value)"` : 'disabled'} title="${CURRENCY_LABELS[k]}">
+    </div>`).join('');
+
+  const itemCards = items.map((it, i) => {
+    if (canWrite) {
+      return `
+    <div class="ability-card ability-card-editable">
+      <div class="ability-edit-row">
+        <input class="ability-input ability-input-name" placeholder="Item name" value="${escHtml(it.name||'')}" oninput="onItemEdit(${i},'name',this.value)">
+        <input class="ability-input inv-item-qty" type="number" min="0" placeholder="Qty" value="${it.qty ?? 1}" oninput="onItemEdit(${i},'qty',this.value)" title="Quantity">
+        <button class="icon-btn ability-delete-btn" title="Delete item" onclick="onItemDelete(${i})">✕</button>
+      </div>
+      <textarea class="ability-input ability-input-desc" rows="2" placeholder="Notes (e.g. weight, effect, where it came from)" oninput="onItemEdit(${i},'notes',this.value)">${escHtml(it.notes||'')}</textarea>
+    </div>`;
+    }
+    return `
+    <div class="ability-card">
+      <div class="ability-name">${escHtml(it.name||'')}${(it.qty ?? 1) !== 1 ? `<span class="ability-type">×${it.qty ?? 1}</span>` : ''}</div>
+      ${it.notes ? `<div class="ability-desc">${escHtml(it.notes)}</div>` : ''}
+    </div>`;
+  });
+
+  if (!items.length) {
+    itemCards.push(`<div class="inv-empty">No items yet.</div>`);
+  }
+  if (canWrite) {
+    itemCards.push(`<button class="add-attack-btn" onclick="onItemAdd()">+ Add item</button>`);
+  }
+
+  tabContent.innerHTML = `
+    <div class="inv-currency-panel">
+      <div class="inv-currency-title">Currency</div>
+      <div class="inv-currency-row">${currencyBlocks}</div>
+      <div class="inv-currency-total">Total value: <strong>¥${totalYen.toLocaleString()}</strong> <span title="1cp=¥10 · 1sp=¥100 · 1ep=¥500 · 1gp=¥1,000 · 1pp=¥10,000">(handbook conversion)</span></div>
+    </div>
+    <div class="inv-items-title">Items</div>
+    ${itemCards.join('')}
+  `;
+}
+
+function onCurrencyChange(key, value) {
+  const num = Math.max(0, parseInt(value) || 0);
+  selected.inventory.currency[key] = num;
+  scheduleCharSave(selected);
+  renderInventoryTab(selected);
+}
+
+function onItemEdit(i, field, value) {
+  const items = selected.inventory.items;
+  if (!items[i]) return;
+  items[i][field] = field === 'qty' ? Math.max(0, parseInt(value) || 0) : value;
+  scheduleCharSave(selected);
+}
+
+function onItemAdd() {
+  selected.inventory.items.push({ name: '', qty: 1, notes: '' });
+  scheduleCharSave(selected);
+  renderInventoryTab(selected);
+}
+
+function onItemDelete(i) {
+  selected.inventory.items.splice(i, 1);
+  scheduleCharSave(selected);
+  renderInventoryTab(selected);
+}
+
 /* ── Editable tab content ────────────────────────────── */
 let currentTabSave = null;
 
 function renderEditableTab(value, onSave) {
   currentTabSave = onSave;
   const tabContent = document.getElementById('tab-content');
-  tabContent.classList.remove('tab-quirk', 'tab-attacks');
+  tabContent.classList.remove('tab-quirk', 'tab-attacks', 'tab-inventory');
   if (canWrite) {
     tabContent.innerHTML = `<textarea class="tab-editable" rows="4" placeholder="Nothing here yet — click to add." oninput="onTabEdit(this.value)">${escHtml(value)}</textarea>`;
   } else {
@@ -2007,7 +2164,7 @@ function encAddEnemy() {
     CHARACTERS = (roster.students || []).filter(s => s.file).map(s => {
       const c = Object.assign({}, fsBundle.characters?.[s.file] || {});
       c._file = s.file; c._roster_id = s.id; c._section = 'class-1a';
-      c.name = s.name; c.quirk = s.quirk;
+      c.name = c.name || s.name; c.quirk = c.quirk || s.quirk;
       return c;
     }).filter(c => c.name);
     setSaveStatus('saved', 'Loaded from Firestore ✓');

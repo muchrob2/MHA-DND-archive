@@ -1257,7 +1257,7 @@ function showTab(tab) {
   }
   if (tab==='appearance') {
     const app = c.appearance||{};
-    return renderEditableTab([app.hair,app.build,app.other].filter(Boolean).join(' — '), v => { c.appearance = { other: v }; });
+    return renderEditableTab([app.hair,app.build,app.other].filter(Boolean).join(' — '), v => { c.appearance = { hair: null, build: null, other: v }; });
   }
   if (tab==='combat') {
     return renderEditableTab((c.dm_notes||{}).combat_role||'', v => { c.dm_notes = c.dm_notes||{}; c.dm_notes.combat_role = v; });

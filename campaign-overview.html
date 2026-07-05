@@ -454,12 +454,8 @@
   <a id="back-btn" href="index.html">← Dashboard</a>
   <div class="anchor-bar" id="anchor-bar">
     <a class="anchor-btn" href="#sec-arc">Story Arcs</a>
-    <a class="anchor-btn" href="#sec-tier1">Session Notes</a>
     <a class="anchor-btn" href="#sec-world">World</a>
-    <a class="anchor-btn" href="#sec-teachers">Teachers</a>
     <a class="anchor-btn" href="#sec-villains">Villains</a>
-    <a class="anchor-btn" href="#sec-class1a">Class 1-A</a>
-    <a class="anchor-btn" href="#sec-class1b">Class 1-B</a>
     <a class="anchor-btn" href="#sec-npcs">Supporting</a>
     <a class="anchor-btn" href="#sec-scripts">DM Scripts</a>
   </div>
@@ -516,21 +512,6 @@
     </div>
   </section>
 
-  <!-- Session Notes -->
-  <section class="campaign-section" id="sec-tier1" style="display:none">
-    <div class="section-header" onclick="toggleSection('sec-tier1')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-tier1')}">
-      <div class="section-header-left">
-        <span class="section-title">Session Notes</span>
-        <span class="section-meta">Tier 1 detailed DM content</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <button class="bm-btn" id="bm-sec-tier1" onclick="event.stopPropagation();toggleBookmark('sec-tier1','Session Notes','#sec-tier1')" title="Bookmark">🔖</button>
-        <span class="section-toggle" id="tog-sec-tier1">▶</span>
-      </div>
-    </div>
-    <div class="section-body" id="body-sec-tier1"></div>
-  </section>
-
   <!-- World Reference -->
   <section class="campaign-section" id="sec-world" style="display:none">
     <div class="section-header" onclick="toggleSection('sec-world')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-world')}">
@@ -540,25 +521,10 @@
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
         <button class="bm-btn" id="bm-sec-world" onclick="event.stopPropagation();toggleBookmark('sec-world','World Reference','#sec-world')" title="Bookmark">🔖</button>
-        <span class="section-toggle" id="tog-sec-world">▶</span>
+        <span class="section-toggle open" id="tog-sec-world">▶</span>
       </div>
     </div>
-    <div class="section-body" id="body-sec-world"></div>
-  </section>
-
-  <!-- Teachers -->
-  <section class="campaign-section" id="sec-teachers" style="display:none">
-    <div class="section-header" onclick="toggleSection('sec-teachers')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-teachers')}">
-      <div class="section-header-left">
-        <span class="section-title">Teachers</span>
-        <span class="section-meta">Faculty profiles &amp; DM notes</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <button class="bm-btn" id="bm-sec-teachers" onclick="event.stopPropagation();toggleBookmark('sec-teachers','Teachers','#sec-teachers')" title="Bookmark">🔖</button>
-        <span class="section-toggle" id="tog-sec-teachers">▶</span>
-      </div>
-    </div>
-    <div class="section-body" id="body-sec-teachers"></div>
+    <div class="section-body open" id="body-sec-world"></div>
   </section>
 
   <!-- Villains -->
@@ -570,40 +536,10 @@
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
         <button class="bm-btn" id="bm-sec-villains" onclick="event.stopPropagation();toggleBookmark('sec-villains','Villain Factions','#sec-villains')" title="Bookmark">🔖</button>
-        <span class="section-toggle" id="tog-sec-villains">▶</span>
+        <span class="section-toggle open" id="tog-sec-villains">▶</span>
       </div>
     </div>
-    <div class="section-body" id="body-sec-villains"></div>
-  </section>
-
-  <!-- Class 1-B -->
-  <!-- Class 1-A -->
-  <section class="campaign-section" id="sec-class1a" style="display:none">
-    <div class="section-header" onclick="toggleSection('sec-class1a')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-class1a')}">
-      <div class="section-header-left">
-        <span class="section-title">Class 1-A</span>
-        <span class="section-meta">All 20 students — heroes in training</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <button class="bm-btn" id="bm-sec-class1a" onclick="event.stopPropagation();toggleBookmark('sec-class1a','Class 1-A','#sec-class1a')" title="Bookmark">🔖</button>
-        <span class="section-toggle" id="tog-sec-class1a">▶</span>
-      </div>
-    </div>
-    <div class="section-body" id="body-sec-class1a"></div>
-  </section>
-
-  <section class="campaign-section" id="sec-class1b" style="display:none">
-    <div class="section-header" onclick="toggleSection('sec-class1b')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-class1b')}">
-      <div class="section-header-left">
-        <span class="section-title">Class 1-B</span>
-        <span class="section-meta">Rivals &amp; recurring NPCs</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <button class="bm-btn" id="bm-sec-class1b" onclick="event.stopPropagation();toggleBookmark('sec-class1b','Class 1-B','#sec-class1b')" title="Bookmark">🔖</button>
-        <span class="section-toggle" id="tog-sec-class1b">▶</span>
-      </div>
-    </div>
-    <div class="section-body" id="body-sec-class1b"></div>
+    <div class="section-body open" id="body-sec-villains"></div>
   </section>
 
   <!-- Supporting Characters -->
@@ -615,10 +551,10 @@
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
         <button class="bm-btn" id="bm-sec-npcs" onclick="event.stopPropagation();toggleBookmark('sec-npcs','Supporting Characters','#sec-npcs')" title="Bookmark">🔖</button>
-        <span class="section-toggle" id="tog-sec-npcs">▶</span>
+        <span class="section-toggle open" id="tog-sec-npcs">▶</span>
       </div>
     </div>
-    <div class="section-body" id="body-sec-npcs"></div>
+    <div class="section-body open" id="body-sec-npcs"></div>
   </section>
 
   <!-- DM Scripts -->
@@ -630,10 +566,10 @@
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
         <button class="bm-btn" id="bm-sec-scripts" onclick="event.stopPropagation();toggleBookmark('sec-scripts','DM Scripts','#sec-scripts')" title="Bookmark">🔖</button>
-        <span class="section-toggle" id="tog-sec-scripts">▶</span>
+        <span class="section-toggle open" id="tog-sec-scripts">▶</span>
       </div>
     </div>
-    <div class="section-body" id="body-sec-scripts"></div>
+    <div class="section-body open" id="body-sec-scripts"></div>
   </section>
 </div>
 
@@ -913,7 +849,7 @@ function renderBmList() {
   const bms   = loadBookmarks();
   if (!bms.length) { empty.style.display = ''; list.innerHTML = ''; list.appendChild(empty); return; }
   empty.style.display = 'none';
-  const icons = { 'sec-arc':'📖','sec-tier1':'📋','sec-world':'🗺️','sec-teachers':'👨‍🏫','sec-villains':'💀','sec-class1a':'🏫','sec-class1b':'🎓','sec-npcs':'🧩','sec-scripts':'📜' };
+  const icons = { 'sec-arc':'📖','sec-world':'🗺️','sec-villains':'💀','sec-npcs':'🧩','sec-scripts':'📜' };
   list.innerHTML = bms.map(b => `
     <div class="bm-item" onclick="jumpToBookmark('${escHtml(b.href)}','${escHtml(b.id)}')">
       <span class="bm-item-icon">${icons[b.id]||'📌'}</span>
@@ -929,7 +865,7 @@ function restoreBmState() {
 
 /* ─── Scroll spy ─────────────────────────────────────── */
 function initScrollSpy() {
-  const sections = ['arc','tier1','world','teachers','villains','class1a','class1b','npcs','scripts'];
+  const sections = ['arc','world','villains','npcs','scripts'];
   const anchors  = document.querySelectorAll('.anchor-btn');
   function update() {
     let active = null;
@@ -1041,7 +977,72 @@ function renderSeasonHooks(hooks) {
   return h + '</div>';
 }
 
-function renderArc(data, el) {
+/* ─── Cross-reference helpers (characters &amp; villains woven into arcs) ─── */
+const TIER1_ARC_MAP = {
+  'The Entrance Exam': ['The Entrance Exam'],
+  'Dorm Life & Combat Training': ['Dorm Life Begins', 'Capture the Flag'],
+  'The Agency Visit': ['The Agency Visit'],
+};
+
+function charAnchorId(name) {
+  return 'char-'+String(name||'').replace(/[^a-zA-Z0-9]+/g,'-').toLowerCase().replace(/^-+|-+$/g,'');
+}
+
+function buildNameLookup(teachersData, class1bData) {
+  const map = {};
+  for (const t of (teachersData?.teachers||[])) map[t.name] = { type:'teacher', data:t };
+  for (const s of (class1bData?.students||[])) map[s.name] = { type:'class1b', data:s };
+  return map;
+}
+
+function buildVillainAnchorMap(villainsData) {
+  const map = {};
+  for (const f of (villainsData?.factions||[])) {
+    for (const v of (f.villains||[])) map[v.name] = 'villain-'+(v.name||'').replace(/\s+/g,'-').toLowerCase();
+  }
+  for (const v of (villainsData?.solo||[])) map[v.name] = 'villain-solo-'+(v.name||'').replace(/\s+/g,'-').toLowerCase();
+  return map;
+}
+
+function renderVillainChips(seedKeys, villainsData, villainAnchorMap) {
+  if (!villainsData) return '';
+  let names = [];
+  if (seedKeys.includes('all_factions')) {
+    for (const f of (villainsData.factions||[])) names.push(...(f.villains||[]).map(v=>v.name));
+    names.push(...(villainsData.solo||[]).map(v=>v.name));
+  } else {
+    for (const key of seedKeys) {
+      const f = (villainsData.factions||[]).find(fc => fc.id === key);
+      if (f) names.push(...(f.villains||[]).map(v=>v.name));
+    }
+  }
+  names = [...new Set(names)];
+  if (!names.length) return '';
+  return `<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;">${names.map(name => {
+    const anchorId = villainAnchorMap[name];
+    if (!anchorId) return '';
+    return `<a href="#${escHtml(anchorId)}" class="filter-pill" style="text-decoration:none;" onclick="event.preventDefault();document.getElementById('${escHtml(anchorId)}')?.scrollIntoView({behavior:'smooth',block:'center'});">💀 ${escHtml(name)}</a>`;
+  }).join('')}</div>`;
+}
+
+function renderNamedCharacterRef(rawName, nameLookup, renderedChars) {
+  const cleanName = String(rawName||'').replace(/\s*\([^)]*\)\s*$/, '').trim();
+  const entry = nameLookup[cleanName];
+  if (!entry) return null;
+  const anchorId = charAnchorId(cleanName);
+  if (renderedChars.has(cleanName)) {
+    const icon = entry.type === 'teacher' ? '🍎' : '🎓';
+    return `<a href="#${escHtml(anchorId)}" class="filter-pill" style="text-decoration:none;display:inline-block;margin-bottom:6px;" onclick="event.preventDefault();document.getElementById('${escHtml(anchorId)}')?.scrollIntoView({behavior:'smooth',block:'center'});">${icon} ${escHtml(cleanName)} — see full profile above</a>`;
+  }
+  renderedChars.add(cleanName);
+  const cardHtml = entry.type === 'teacher' ? buildTeacherCard(entry.data) : buildClass1BCard(entry.data);
+  return `<div id="${escHtml(anchorId)}" style="scroll-margin-top:60px;">${cardHtml}</div>`;
+}
+
+/* ─── Story Arcs (unified: arcs + session detail + cast) ─── */
+function renderArcsUnified(sources, el) {
+  const { arc: data, tier1, teachers, class1b, class1aRoster, class1aCharMap, villains } = sources;
+
   document.getElementById('camp-title').textContent = data.campaign_title||'Class 1-A';
   document.getElementById('camp-tone').textContent  = data.tone||'';
   const meta = document.getElementById('camp-meta');
@@ -1053,9 +1054,21 @@ function renderArc(data, el) {
   document.getElementById('arc-meta').textContent =
     (data.tiers?.length||0)+' tiers · '+(data.tiers?.reduce((a,t)=>a+(t.arcs?.length||0),0)||0)+' arcs';
 
+  const tier1ByName = {};
+  for (const t1arc of (tier1?.arcs||[])) tier1ByName[t1arc.name] = t1arc;
+  const nameLookup = buildNameLookup(teachers, class1b);
+  const villainAnchorMap = buildVillainAnchorMap(villains);
+  const renderedChars = new Set();
+
   // Render tiers into a temp div, then append to section body after the search bar
   const wrapper = document.createElement('div');
   wrapper.id = 'arc-tiers-wrapper';
+
+  if (tier1?.dm_overview) {
+    const overviewDiv = document.createElement('div');
+    overviewDiv.innerHTML = `<div class="dm-note" style="margin-bottom:16px;"><strong>Tier 1 DM overview:</strong> ${escHtml(tier1.dm_overview)}</div>`;
+    wrapper.appendChild(overviewDiv);
+  }
 
   for (const t of (data.tiers||[])) {
     const col = TIER_COLORS[(t.tier-1)%4];
@@ -1093,7 +1106,10 @@ function renderArc(data, el) {
           <ul class="toggle-list" id="${bId}">${arc.beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}</ul>`;
       }
       if (arc.tournament_bracket) tierHtml += renderTournamentBracket(arc.tournament_bracket);
-      if (arc.villain_seeds)      tierHtml += renderVillainSeeds(arc.villain_seeds);
+      if (arc.villain_seeds) {
+        tierHtml += renderVillainSeeds(arc.villain_seeds);
+        tierHtml += renderVillainChips(Object.keys(arc.villain_seeds), villains, villainAnchorMap);
+      }
       if (arc.season_1_hooks)     tierHtml += renderSeasonHooks(arc.season_1_hooks);
 
       if (arc.student_groupings?.length) {
@@ -1118,6 +1134,129 @@ function renderArc(data, el) {
         tierHtml += '</div>';
       }
       if (arc.coordination) tierHtml += `<div class="arc-sub-header">Coordination</div><div class="sub-item"><div class="sub-item-body">${escHtml(arc.coordination)}</div></div>`;
+
+      // ── Cast rosters, anchored to the arc where they're introduced ──
+      if (arc.name === 'The Entrance Exam') {
+        tierHtml += `<div class="arc-sub-header">Class 1-A &amp; Teachers — introduced here</div>`;
+        if (class1aRoster?.homeroom_teacher) {
+          tierHtml += `<div class="arc-desc" style="margin-bottom:8px;">${escHtml(class1aRoster.class||'Class 1-A')} · Homeroom: ${escHtml(class1aRoster.homeroom_teacher||'')}</div>`;
+        }
+        for (const teacher of (teachers?.teachers||[])) {
+          const anchorId = charAnchorId(teacher.name);
+          renderedChars.add(teacher.name);
+          tierHtml += `<div id="${escHtml(anchorId)}" style="scroll-margin-top:60px;">${buildTeacherCard(teacher)}</div>`;
+        }
+        const students = class1aRoster?.students || [];
+        const pcs = students.filter(s => s.is_pc);
+        const npcStudents = students.filter(s => !s.is_pc);
+        for (const s of [...pcs, ...npcStudents]) {
+          const anchorId = charAnchorId(s.name);
+          renderedChars.add(s.name);
+          tierHtml += `<div id="${escHtml(anchorId)}" style="scroll-margin-top:60px;">${buildClass1ACard(s, class1aCharMap)}</div>`;
+        }
+      }
+      if (arc.name === 'Dorm Life & Combat Training') {
+        tierHtml += `<div class="arc-sub-header">Class 1-B — introduced here</div>`;
+        if (class1b?.dm_overview) tierHtml += `<div class="arc-desc" style="margin-bottom:8px;">${escHtml(class1b.dm_overview)}</div>`;
+        if (class1b?.tier1_introduction_guide) {
+          const tId = uid();
+          tierHtml += `<span class="sub-toggle" onclick="toggleSub('${tId}',this)">▶ Tier 1 introduction guide (per arc)</span><div class="sub-body" id="${tId}">`;
+          for (const [k,v] of Object.entries(class1b.tier1_introduction_guide)) {
+            tierHtml += `<div class="sub-item"><div class="sub-item-label">${escHtml(k.replace(/_/g,' '))}</div><div class="sub-item-body">${escHtml(v)}</div></div>`;
+          }
+          tierHtml += '</div>';
+        }
+        for (const s of (class1b?.students||[])) {
+          const anchorId = charAnchorId(s.name);
+          renderedChars.add(s.name);
+          tierHtml += `<div id="${escHtml(anchorId)}" style="scroll-margin-top:60px;">${buildClass1BCard(s)}</div>`;
+        }
+      }
+
+      // ── Tier-1 session detail merge (major beats, NPC interactions, encounters) ──
+      const tier1Names = TIER1_ARC_MAP[arc.name];
+      if (tier1Names) {
+        for (const t1name of tier1Names) {
+          const t1arc = tier1ByName[t1name];
+          if (!t1arc) continue;
+          tierHtml += `<div class="arc-sub-header">Session detail — ${escHtml(t1name)}</div>`;
+          if (t1arc.dm_setup) tierHtml += `<div class="dm-prep"><div class="dm-prep-label">DM setup</div><div class="dm-prep-row">${escHtml(t1arc.dm_setup)}</div></div>`;
+          if (t1arc.major_beats?.length) {
+            tierHtml += `<div class="sub-label">Major beats</div>`;
+            for (const beat of t1arc.major_beats) {
+              const phId = uid();
+              tierHtml += `<div class="arc-card">
+                <div class="arc-name">${escHtml(beat.name)}</div>
+                <div class="arc-desc">${escHtml(beat.description||'')}</div>
+                ${beat.dm_notes?`<div class="dm-note" style="margin-top:6px;"><strong>DM:</strong> ${escHtml(beat.dm_notes)}</div>`:''}
+                ${beat.player_hooks&&Object.keys(beat.player_hooks).length
+                  ?`<span class="toggle-btn" onclick="toggleList('${phId}',this)">▶ Player hooks (${Object.keys(beat.player_hooks).length})</span>
+                    <ul class="toggle-list" id="${phId}">${Object.entries(beat.player_hooks).map(([k,v])=>`<li><strong>${escHtml(k)}:</strong> ${escHtml(v)}</li>`).join('')}</ul>`:''}
+              </div>`;
+            }
+          }
+          if (t1arc.minor_beats?.length) {
+            const mId = uid();
+            tierHtml += `<div class="sub-label">Minor beats</div>
+              <span class="toggle-btn" onclick="toggleList('${mId}',this)">▶ Show all (${t1arc.minor_beats.length})</span>
+              <ul class="toggle-list" id="${mId}">${t1arc.minor_beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}</ul>`;
+          }
+          if (t1arc.npc_interactions?.length) {
+            tierHtml += `<div class="sub-label">Who shows up</div>`;
+            for (const npc of t1arc.npc_interactions) {
+              const rawName = npc.npc || '';
+              const rendered = renderNamedCharacterRef(rawName, nameLookup, renderedChars);
+              if (rendered) {
+                tierHtml += rendered;
+                tierHtml += `<div class="sub-item">
+                  ${npc.context?`<div class="sub-item-label">${escHtml(npc.context)}</div>`:''}
+                  ${npc.key_moment?`<div class="sub-item-body">${escHtml(npc.key_moment)}</div>`:''}
+                  ${npc.dm_dialogue?`<div class="dm-note" style="margin-top:4px;"><strong>Dialogue:</strong> ${escHtml(npc.dm_dialogue)}</div>`:''}
+                  ${npc.trigger?`<div style="font-size:11px;color:var(--text-dim);margin-top:3px;">${escHtml(npc.trigger)}</div>`:''}
+                </div>`;
+              } else {
+                tierHtml += `<div class="arc-card">
+                  <div class="arc-name">${escHtml(rawName)}</div>
+                  <div class="arc-type">${escHtml(npc.context||'')}</div>
+                  ${npc.key_moment?`<div class="arc-desc" style="margin-top:5px;">${escHtml(npc.key_moment)}</div>`:''}
+                  ${npc.dm_dialogue?`<div class="dm-note" style="margin-top:6px;"><strong>Dialogue:</strong> ${escHtml(npc.dm_dialogue)}${npc.trigger?`<br><span style="font-size:11px;color:var(--text-dim);">${escHtml(npc.trigger)}</span>`:''}</div>`:''}
+                </div>`;
+              }
+            }
+          }
+          if (t1arc.encounters?.length) {
+            tierHtml += `<div class="sub-label">Encounters</div>`;
+            for (const enc of t1arc.encounters) {
+              const eId = uid();
+              tierHtml += `<div class="arc-card" style="border-left:3px solid var(--hero-red);">
+                <div class="arc-name">${escHtml(enc.name)}</div>
+                <span class="tag tag-red">⚔ ${escHtml(enc.enemies||'')}</span>
+                ${enc.terrain?`<div class="arc-desc" style="margin-top:5px;"><strong>Terrain:</strong> ${escHtml(enc.terrain)}</div>`:''}
+                <span class="toggle-btn" onclick="toggleList('${eId}',this)">▶ Setup &amp; tactics</span>
+                <ul class="toggle-list" id="${eId}">
+                  ${enc.setup?`<li><strong>Setup:</strong> ${escHtml(enc.setup)}</li>`:''}
+                  ${enc.tactics?`<li><strong>Tactics:</strong> ${escHtml(enc.tactics)}</li>`:''}
+                  ${enc.dm_notes?`<li><strong>DM notes:</strong> ${escHtml(enc.dm_notes)}</li>`:''}
+                  ${enc.rewards?`<li><strong>Rewards:</strong> ${escHtml(enc.rewards)}</li>`:''}
+                </ul>
+              </div>`;
+            }
+          }
+          if (t1arc.foreshadowing?.length) {
+            const fsId = uid();
+            tierHtml += `<div class="sub-label">Foreshadowing</div>
+              <span class="toggle-btn" onclick="toggleList('${fsId}',this)">▶ Seeds (${t1arc.foreshadowing.length})</span>
+              <ul class="toggle-list" id="${fsId}">${t1arc.foreshadowing.map(f=>`<li>${escHtml(f)}</li>`).join('')}</ul>`;
+          }
+          if (t1arc.class1b_seeds?.length) {
+            const cbId = uid();
+            tierHtml += `<div class="sub-label">Class 1-B seeds</div>
+              <span class="toggle-btn" onclick="toggleList('${cbId}',this)">▶ Foreshadowing (${t1arc.class1b_seeds.length})</span>
+              <ul class="toggle-list" id="${cbId}">${t1arc.class1b_seeds.map(s=>`<li>${escHtml(s)}</li>`).join('')}</ul>`;
+          }
+        }
+      }
+
       tierHtml += '</div>';
     }
 
@@ -1133,6 +1272,7 @@ function renderArc(data, el) {
     wrapper.appendChild(recDiv);
   }
   el.appendChild(wrapper);
+  applyHiddenOnLoad(el);
 }
 
 /* ─── WORLD renderer ─────────────────────────────────── */
@@ -1164,42 +1304,34 @@ function renderWorld(data, el) {
   el.innerHTML = renderObj(data,0);
 }
 
-/* ─── TEACHERS renderer ──────────────────────────────── */
-function renderTeachers(data, el) {
-  let html = '';
-  for (const t of (data.teachers||[])) {
-    const dmn = t.dm_notes||{};
-    const dId = 'td'+uid();
-    const qt = (t.quirk_type||'').toLowerCase();
-    const tags = [qt, 'teacher'].filter(Boolean).join(' ');
-    const searchText = [t.name, t.hero_name, t.quirk, t.role, t.personality].filter(Boolean).join(' ').toLowerCase();
-    const tId2 = 'teacher-'+t.name.replace(/\s+/g,'-').toLowerCase();
-    html += `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(tId2)}" data-char-name="${escHtml(t.name)}">
-      ${makeDeleteBtn(tId2, t.name, 'body-sec-teachers')}
-      <div class="person-avatar av-teacher">${initials(t.name)}</div>
-      <div>
-        <div class="person-name">${escHtml(t.name)}</div>
-        <div class="person-alias">${escHtml(t.hero_name||'')}${t.hero_name?' · ':''}${escHtml(t.role||'')}</div>
-        <div class="person-tags">
-          <span class="tag tag-gold">${escHtml(t.quirk||'')}</span>
-          <span class="tag tag-primary">${escHtml(t.quirk_type||'')}</span>
-        </div>
-        ${t.quirk_summary?`<div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(t.quirk_summary)}</div></div>`:''}
-        <div class="person-section"><div class="person-section-label">Appearance</div><div class="person-section-body">${escHtml(t.appearance||'')}</div></div>
-        <div class="person-section"><div class="person-section-label">Personality</div><div class="person-section-body">${escHtml(t.personality||'')}</div></div>
-        <span class="collapse-btn" onclick="toggleCollapse('${dId}',this)">▶ DM notes &amp; teaching style</span>
-        <div class="collapsible" id="${dId}">
-          ${t.teaching_style?`<div class="person-section"><div class="person-section-label">Teaching style</div><div class="person-section-body">${escHtml(t.teaching_style)}</div></div>`:''}
-          ${Object.keys(dmn).length?`<div class="dm-note"><strong>DM notes</strong><br>${Object.entries(dmn).map(([k,v])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(v))}`).join('<br>')}</div>`:''}
-        </div>
+/* ─── TEACHERS card builder ──────────────────────────── */
+function buildTeacherCard(t) {
+  const dmn = t.dm_notes||{};
+  const dId = 'td'+uid();
+  const qt = (t.quirk_type||'').toLowerCase();
+  const tags = [qt, 'teacher'].filter(Boolean).join(' ');
+  const searchText = [t.name, t.hero_name, t.quirk, t.role, t.personality].filter(Boolean).join(' ').toLowerCase();
+  const tId2 = 'teacher-'+t.name.replace(/\s+/g,'-').toLowerCase();
+  return `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(tId2)}" data-char-name="${escHtml(t.name)}">
+    ${makeDeleteBtn(tId2, t.name, 'body-sec-arc')}
+    <div class="person-avatar av-teacher">${initials(t.name)}</div>
+    <div>
+      <div class="person-name">${escHtml(t.name)}</div>
+      <div class="person-alias">${escHtml(t.hero_name||'')}${t.hero_name?' · ':''}${escHtml(t.role||'')}</div>
+      <div class="person-tags">
+        <span class="tag tag-gold">${escHtml(t.quirk||'')}</span>
+        <span class="tag tag-primary">${escHtml(t.quirk_type||'')}</span>
       </div>
-    </div>`;
-  }
-  el.innerHTML = html;
-  applyHiddenOnLoad(el);
-  buildFilterBar(el, [
-    { key:'qt', label:'Quirk Type', options:[{label:'Emitter',value:'emitter'},{label:'Transformation',value:'transformation'}] },
-  ], 'Search teachers…');
+      ${t.quirk_summary?`<div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(t.quirk_summary)}</div></div>`:''}
+      <div class="person-section"><div class="person-section-label">Appearance</div><div class="person-section-body">${escHtml(t.appearance||'')}</div></div>
+      <div class="person-section"><div class="person-section-label">Personality</div><div class="person-section-body">${escHtml(t.personality||'')}</div></div>
+      <span class="collapse-btn" onclick="toggleCollapse('${dId}',this)">▶ DM notes &amp; teaching style</span>
+      <div class="collapsible" id="${dId}">
+        ${t.teaching_style?`<div class="person-section"><div class="person-section-label">Teaching style</div><div class="person-section-body">${escHtml(t.teaching_style)}</div></div>`:''}
+        ${Object.keys(dmn).length?`<div class="dm-note"><strong>DM notes</strong><br>${Object.entries(dmn).map(([k,v])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(v))}`).join('<br>')}</div>`:''}
+      </div>
+    </div>
+  </div>`;
 }
 
 /* ─── VILLAIN card ───────────────────────────────────── */
@@ -1215,7 +1347,7 @@ function renderVillainCard(v, accentColor, factionId) {
   const tags = [qt, rarity, factionId||'', 'villain'].filter(Boolean).join(' ');
   const searchText = [v.name, v.alias, v.quirk, v.role, v.personality].filter(Boolean).join(' ').toLowerCase();
   const vCharId = 'villain-'+(v.name||'').replace(/\s+/g,'-').toLowerCase();
-  return `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(vCharId)}" data-char-name="${escHtml(v.name||'')}" style="border-left:4px solid ${accentColor||'var(--v-border)'};background:var(--v-surface);border-color:var(--v-border);">
+  return `<div class="person-card" id="${escHtml(vCharId)}" style="scroll-margin-top:60px;border-left:4px solid ${accentColor||'var(--v-border)'};background:var(--v-surface);border-color:var(--v-border);" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(vCharId)}" data-char-name="${escHtml(v.name||'')}">
     ${makeDeleteBtn(vCharId, v.name||'', 'body-sec-villains')}
     <div class="person-avatar" style="${avStyle}">${initials(v.name)}</div>
     <div>
@@ -1302,7 +1434,7 @@ function renderVillains(data, el) {
       const rarity = (v.quirk_rarity||'').toLowerCase().replace(/\s+/g,'-');
       const tags = [qt, rarity, 'solo', 'villain'].filter(Boolean).join(' ');
       const searchText = [v.name, v.alias, v.quirk, v.role].filter(Boolean).join(' ').toLowerCase();
-      html += `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(vCharId)}" data-char-name="${escHtml(v.name||'')}" style="background:#0d0d0d;border-color:#1a1a1a;border-left:4px solid #111;">
+      html += `<div class="person-card" id="${escHtml(vCharId)}" style="scroll-margin-top:60px;background:#0d0d0d;border-color:#1a1a1a;border-left:4px solid #111;" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(vCharId)}" data-char-name="${escHtml(v.name||'')}">
         ${makeDeleteBtn(vCharId, v.name||'', 'body-sec-villains')}
         <div class="person-avatar" style="background:#111;color:#555;font-size:16px;">?</div>
         <div>
@@ -1351,241 +1483,95 @@ function renderVillains(data, el) {
   ], 'Search villains…');
 }
 
-/* ─── TIER 1 detail ──────────────────────────────────── */
-function renderTier1(data, el) {
-  const ARC_COLORS = ['#1D3461','#1D9E75','#B8860B','#CC2936'];
-  let html = '';
-  if (data.dm_overview) html += `<div class="dm-note" style="margin-bottom:16px;"><strong>DM overview:</strong> ${escHtml(data.dm_overview)}</div>`;
-  for (const [arcIdx, arc] of (data.arcs||[]).entries()) {
-    const col = ARC_COLORS[arcIdx%4];
-    html += `<div class="card" style="margin-bottom:14px;border-left:4px solid ${col};">
-      <div class="tier-header">
-        <span class="tier-badge" style="background:${col}22;color:${col};">Arc ${arcIdx+1}</span>
-        <span class="tier-title">${escHtml(arc.name)}</span>
-        <span class="tier-levels">${escHtml(arc.sessions||'')} session${arc.sessions==='1'?'':arc.sessions?'s':''}</span>
+/* ─── CLASS 1-A / CLASS 1-B card builders ────────────── */
+const CLASS1A_STAT_KEYS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
+function buildClass1ACard(s, charMap) {
+  const ch  = (charMap && charMap[s.file]) || {};
+  const ab  = ch.ability_scores || {};
+  const qm  = ch.quirk_mechanics || {};
+  const abi = qm.abilities || [];
+  const app = ch.appearance || {};
+  const per = ch.personality || {};
+  const dmn = ch.dm_notes || {};
+  const pln = ch.player_notes || {};
+  const dId = 'c1a'+uid();
+  const isPC = !!s.is_pc;
+  const avBg = isPC ? 'background:var(--primary);color:#fff;' : 'background:var(--surface2);color:var(--text-muted);';
+  const pcBadge = isPC ? `<span class="tag tag-primary" style="font-size:10px;">PC</span>` : '';
+  const appText = [app.hair, app.build, app.other].filter(Boolean).join(' ');
+  const perText = [per.summary, per.quirk_of_character].filter(Boolean).join(' ');
+  const qt = (ch.quirk_type || '').toLowerCase().replace('mutation','mutant');
+  const tags = [qt, (s.physiology||'').toLowerCase(), isPC?'pc':'npc', 'class-1a'].filter(Boolean).join(' ');
+  const searchText = [s.name, s.quirk, s.personality_tag, per.summary, per.quirk_of_character].filter(Boolean).join(' ').toLowerCase();
+  const c1aCharId = 'class1a-'+s.name.replace(/\s+/g,'-').toLowerCase();
+  return `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(c1aCharId)}" data-char-name="${escHtml(s.name)}">
+    ${makeDeleteBtn(c1aCharId, s.name, 'body-sec-arc')}
+    <div class="person-avatar" style="${avBg}">${initials(s.name)}</div>
+    <div>
+      <div class="person-name">${escHtml(s.name)} ${pcBadge}</div>
+      <div class="person-alias">${escHtml(s.quirk||'')} · ${escHtml(s.physiology||'')} · ${escHtml(s.height||'')}</div>
+      <div class="person-tags">
+        <span class="tag tag-primary">${escHtml(s.quirk||'')}</span>
+        <span class="tag" style="background:var(--surface2);color:var(--text-muted);">${escHtml(s.role||'')}</span>
+        ${ch.quirk_rarity?`<span class="tag tag-gold">${escHtml(ch.quirk_rarity)}</span>`:''}
       </div>
-      <div class="tier-tone">${escHtml(arc.summary||'')}</div>
-      ${arc.dm_setup?`<div class="dm-prep" style="margin-bottom:10px;"><div class="dm-prep-label">DM setup</div><div class="dm-prep-row">${escHtml(arc.dm_setup)}</div></div>`:''}`;
-
-    if (arc.major_beats?.length) {
-      html += `<div class="sub-label">Major beats</div>`;
-      for (const beat of arc.major_beats) {
-        const phId = uid();
-        html += `<div class="arc-card">
-          <div class="arc-name">${escHtml(beat.name)}</div>
-          <div class="arc-desc">${escHtml(beat.description||'')}</div>
-          ${beat.dm_notes?`<div class="dm-note" style="margin-top:6px;"><strong>DM:</strong> ${escHtml(beat.dm_notes)}</div>`:''}
-          ${beat.player_hooks&&Object.keys(beat.player_hooks).length
-            ?`<span class="toggle-btn" onclick="toggleList('${phId}',this)">▶ Player hooks (${Object.keys(beat.player_hooks).length})</span>
-              <ul class="toggle-list" id="${phId}">${Object.entries(beat.player_hooks).map(([k,v])=>`<li><strong>${escHtml(k)}:</strong> ${escHtml(v)}</li>`).join('')}</ul>`:''}
-        </div>`;
-      }
-    }
-    if (arc.minor_beats?.length) {
-      const mId = uid();
-      html += `<div class="sub-label">Minor beats</div>
-        <span class="toggle-btn" onclick="toggleList('${mId}',this)">▶ Show all (${arc.minor_beats.length})</span>
-        <ul class="toggle-list" id="${mId}">${arc.minor_beats.map(b=>`<li>${escHtml(b)}</li>`).join('')}</ul>`;
-    }
-    if (arc.npc_interactions?.length) {
-      html += `<div class="sub-label">NPC interactions</div>`;
-      for (const npc of arc.npc_interactions) {
-        const nId = uid();
-        html += `<div class="arc-card">
-          <div class="arc-name">${escHtml(npc.npc)}</div>
-          <div class="arc-type">${escHtml(npc.context||'')}</div>
-          ${npc.key_moment?`<div class="arc-desc" style="margin-top:5px;">${escHtml(npc.key_moment)}</div>`:''}
-          ${npc.dm_dialogue?`<span class="toggle-btn" onclick="toggleList('${nId}',this)">▶ Dialogue &amp; trigger</span>
-            <ul class="toggle-list" id="${nId}">
-              <li style="list-style:none;padding-left:0;">${escHtml(npc.dm_dialogue)}</li>
-              ${npc.trigger?`<li style="list-style:none;padding-left:0;color:var(--text-dim);font-size:11px;margin-top:4px;">${escHtml(npc.trigger)}</li>`:''}
-            </ul>`:''}
-        </div>`;
-      }
-    }
-    if (arc.encounters?.length) {
-      html += `<div class="sub-label">Encounters</div>`;
-      for (const enc of arc.encounters) {
-        const eId = uid();
-        html += `<div class="arc-card" style="border-left:3px solid var(--hero-red);">
-          <div class="arc-name">${escHtml(enc.name)}</div>
-          <span class="tag tag-red">⚔ ${escHtml(enc.enemies||'')}</span>
-          ${enc.terrain?`<div class="arc-desc" style="margin-top:5px;"><strong>Terrain:</strong> ${escHtml(enc.terrain)}</div>`:''}
-          <span class="toggle-btn" onclick="toggleList('${eId}',this)">▶ Setup &amp; tactics</span>
-          <ul class="toggle-list" id="${eId}">
-            ${enc.setup?`<li><strong>Setup:</strong> ${escHtml(enc.setup)}</li>`:''}
-            ${enc.tactics?`<li><strong>Tactics:</strong> ${escHtml(enc.tactics)}</li>`:''}
-            ${enc.dm_notes?`<li><strong>DM notes:</strong> ${escHtml(enc.dm_notes)}</li>`:''}
-            ${enc.rewards?`<li><strong>Rewards:</strong> ${escHtml(enc.rewards)}</li>`:''}
-          </ul>
-        </div>`;
-      }
-    }
-    if (arc.foreshadowing?.length) {
-      const fsId = uid();
-      html += `<div class="sub-label">Foreshadowing</div>
-        <span class="toggle-btn" onclick="toggleList('${fsId}',this)">▶ Seeds (${arc.foreshadowing.length})</span>
-        <ul class="toggle-list" id="${fsId}">${arc.foreshadowing.map(f=>`<li>${escHtml(f)}</li>`).join('')}</ul>`;
-    }
-    if (arc.class1b_seeds?.length) {
-      const cbId = uid();
-      html += `<div class="sub-label">Class 1-B seeds</div>
-        <span class="toggle-btn" onclick="toggleList('${cbId}',this)">▶ Foreshadowing (${arc.class1b_seeds.length})</span>
-        <ul class="toggle-list" id="${cbId}">${arc.class1b_seeds.map(s=>`<li>${escHtml(s)}</li>`).join('')}</ul>`;
-    }
-    html += '</div>';
-  }
-  el.innerHTML = html;
+      ${s.personality_tag?`<div style="font-size:12px;color:var(--text-dim);margin:4px 0 0;font-style:italic;">"${escHtml(s.personality_tag)}"</div>`:''}
+      ${qm.source||ch.quirk_summary?`<div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(ch.quirk_summary||qm.source||'')}</div></div>`:''}
+      ${appText?`<div class="person-section"><div class="person-section-label">Appearance</div><div class="person-section-body">${escHtml(appText)}</div></div>`:''}
+      ${perText?`<div class="person-section"><div class="person-section-label">Personality</div><div class="person-section-body">${escHtml(perText)}</div></div>`:''}
+      <span class="collapse-btn" onclick="toggleCollapse('${dId}',this)">▶ Stats, moves &amp; DM notes</span>
+      <div class="collapsible" id="${dId}">
+        ${per.in_class||per.in_combat?`<div class="person-section"><div class="person-section-label">Behaviour</div><div class="person-section-body">${[per.in_class&&`<strong>In class:</strong> ${escHtml(per.in_class)}`,per.in_combat&&`<strong>In combat:</strong> ${escHtml(per.in_combat)}`].filter(Boolean).join('<br>')}</div></div>`:''}
+        ${qm.weakness?`<div class="person-section"><div class="person-section-label">Quirk weakness</div><div class="person-section-body">${escHtml(qm.weakness)}</div></div>`:''}
+        ${abi.length?`<div class="person-section"><div class="person-section-label">Quirk abilities</div><ul style="margin:4px 0 0;padding-left:16px;">${abi.map(a=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:4px;"><strong>${escHtml(a.name)}</strong> <em>(${escHtml(a.type||'')})</em><br>${escHtml(a.description||'')}</li>`).join('')}</ul></div>`:''}
+        ${Object.keys(ab).length>1?`<div class="person-section"><div class="person-section-label">Stats — Lv ${ch.level||'?'} · HP ${ch.HP||'?'} · AC ${ch.AC||'?'}</div>
+          <div class="stat-grid">${CLASS1A_STAT_KEYS.map(k=>ab[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${ab[k]}</span></div>`:'').join('')}</div>
+        </div>`:''}
+        ${isPC&&pln.role_summary?`<div class="person-section"><div class="person-section-label">Player notes</div><div class="person-section-body">${escHtml(pln.role_summary)}${pln.growth_hook?`<br><strong>Growth hook:</strong> ${escHtml(pln.growth_hook)}`:''}</div></div>`:''}
+        ${Object.keys(dmn).length?`<div class="dm-note"><strong>DM notes</strong><br>${Object.entries(dmn).map(([k,v])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(v))}`).join('<br>')}</div>`:''}
+      </div>
+    </div>
+  </div>`;
 }
 
-/* ─── CLASS 1-B renderer ─────────────────────────────── */
-function renderClass1A(roster, charMap, el) {
-  const STAT_KEYS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
-  const rosterData = roster.students || [];
-  let html = `<div class="arc-desc" style="margin-bottom:12px;">${escHtml(roster.class||'')} · Homeroom: ${escHtml(roster.homeroom_teacher||'')}</div>`;
-
-  // PC badge + NPC split
-  const pcs  = rosterData.filter(s => s.is_pc);
-  const npcs = rosterData.filter(s => !s.is_pc);
-
-  function renderStudent(s) {
-    const ch  = charMap[s.file] || {};
-    const ab  = ch.ability_scores || {};
-    const qm  = ch.quirk_mechanics || {};
-    const abi = qm.abilities || [];
-    const app = ch.appearance || {};
-    const per = ch.personality || {};
-    const dmn = ch.dm_notes || {};
-    const pln = ch.player_notes || {};
-    const dId = 'c1a'+uid();
-    const isPC = !!s.is_pc;
-    const avBg = isPC ? 'background:var(--primary);color:#fff;' : 'background:var(--surface2);color:var(--text-muted);';
-    const pcBadge = isPC ? `<span class="tag tag-primary" style="font-size:10px;">PC</span>` : '';
-    const appText = [app.hair, app.build, app.other].filter(Boolean).join(' ');
-    const perText = [per.summary, per.quirk_of_character].filter(Boolean).join(' ');
-
-    // Filter data attributes
-    const qt = (ch.quirk_type || '').toLowerCase().replace('mutation','mutant');
-    const phys = (s.physiology || '').toLowerCase();
-    const roleStr = (s.role || '').toLowerCase();
-    let roleTag = 'other';
-    if (/striker|blaster|bruiser/.test(roleStr)) roleTag = 'striker';
-    else if (/tank/.test(roleStr)) roleTag = 'tank';
-    else if (/support/.test(roleStr)) roleTag = 'support';
-    else if (/control|crowd/.test(roleStr)) roleTag = 'control';
-    else if (/utility/.test(roleStr)) roleTag = 'utility';
-    else if (/scout|infiltrat/.test(roleStr)) roleTag = 'scout';
-    const rarity = (ch.quirk_rarity || '').toLowerCase().replace(/\s+/g,'-');
-    const pcTag = isPC ? 'pc' : 'npc';
-    const tags = [qt, phys, roleTag, rarity, pcTag, 'class-1a'].filter(Boolean).join(' ');
-    const searchText = [s.name, s.quirk, s.personality_tag, per.summary, per.quirk_of_character].filter(Boolean).join(' ').toLowerCase();
-
-    const c1aCharId = 'class1a-'+s.name.replace(/\s+/g,'-').toLowerCase();
-    return `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(c1aCharId)}" data-char-name="${escHtml(s.name)}">
-      ${makeDeleteBtn(c1aCharId, s.name, 'body-sec-class1a')}
-      <div class="person-avatar" style="${avBg}">${initials(s.name)}</div>
-      <div>
-        <div class="person-name">${escHtml(s.name)} ${pcBadge}</div>
-        <div class="person-alias">${escHtml(s.quirk||'')} · ${escHtml(s.physiology||'')} · ${escHtml(s.height||'')}</div>
-        <div class="person-tags">
-          <span class="tag tag-primary">${escHtml(s.quirk||'')}</span>
-          <span class="tag" style="background:var(--surface2);color:var(--text-muted);">${escHtml(s.role||'')}</span>
-          ${ch.quirk_rarity?`<span class="tag tag-gold">${escHtml(ch.quirk_rarity)}</span>`:''}
-        </div>
-        ${s.personality_tag?`<div style="font-size:12px;color:var(--text-dim);margin:4px 0 0;font-style:italic;">"${escHtml(s.personality_tag)}"</div>`:''}
-        ${qm.source||ch.quirk_summary?`<div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(ch.quirk_summary||qm.source||'')}</div></div>`:''}
-        ${appText?`<div class="person-section"><div class="person-section-label">Appearance</div><div class="person-section-body">${escHtml(appText)}</div></div>`:''}
-        ${perText?`<div class="person-section"><div class="person-section-label">Personality</div><div class="person-section-body">${escHtml(perText)}</div></div>`:''}
-        <span class="collapse-btn" onclick="toggleCollapse('${dId}',this)">▶ Stats, moves &amp; DM notes</span>
-        <div class="collapsible" id="${dId}">
-          ${per.in_class||per.in_combat?`<div class="person-section"><div class="person-section-label">Behaviour</div><div class="person-section-body">${[per.in_class&&`<strong>In class:</strong> ${escHtml(per.in_class)}`,per.in_combat&&`<strong>In combat:</strong> ${escHtml(per.in_combat)}`].filter(Boolean).join('<br>')}</div></div>`:''}
-          ${qm.weakness?`<div class="person-section"><div class="person-section-label">Quirk weakness</div><div class="person-section-body">${escHtml(qm.weakness)}</div></div>`:''}
-          ${abi.length?`<div class="person-section"><div class="person-section-label">Quirk abilities</div><ul style="margin:4px 0 0;padding-left:16px;">${abi.map(a=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:4px;"><strong>${escHtml(a.name)}</strong> <em>(${escHtml(a.type||'')})</em><br>${escHtml(a.description||'')}</li>`).join('')}</ul></div>`:''}
-          ${Object.keys(ab).length>1?`<div class="person-section"><div class="person-section-label">Stats — Lv ${ch.level||'?'} · HP ${ch.HP||'?'} · AC ${ch.AC||'?'}</div>
-            <div class="stat-grid">${STAT_KEYS.map(k=>ab[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${ab[k]}</span></div>`:'').join('')}</div>
-          </div>`:''}
-          ${isPC&&pln.role_summary?`<div class="person-section"><div class="person-section-label">Player notes</div><div class="person-section-body">${escHtml(pln.role_summary)}${pln.growth_hook?`<br><strong>Growth hook:</strong> ${escHtml(pln.growth_hook)}`:''}</div></div>`:''}
-          ${Object.keys(dmn).length?`<div class="dm-note"><strong>DM notes</strong><br>${Object.entries(dmn).map(([k,v])=>`<strong>${escHtml(k.replace(/_/g,' '))}:</strong> ${escHtml(String(v))}`).join('<br>')}</div>`:''}
-        </div>
+const CLASS1B_STAT_KEYS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
+function buildClass1BCard(s) {
+  const sb = s.stat_block||{};
+  const dId = uid();
+  const tags = [(s.quirk_type||'').toLowerCase(), 'class-1b'].filter(Boolean).join(' ');
+  const searchText = [s.name, s.quirk, s.personality, s.rival_in_1a].filter(Boolean).join(' ').toLowerCase();
+  const b1bId = 'class1b-'+s.name.replace(/\s+/g,'-').toLowerCase();
+  return `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(b1bId)}" data-char-name="${escHtml(s.name)}">
+    ${makeDeleteBtn(b1bId, s.name, 'body-sec-arc')}
+    <div class="person-avatar" style="background:var(--teal-light);color:var(--teal-text);">${initials(s.name)}</div>
+    <div>
+      <div class="person-name">${escHtml(s.name)}</div>
+      <div class="person-alias">${escHtml(s.quirk||'')} · ${escHtml(s.quirk_type||'')}</div>
+      <div class="person-tags">
+        <span class="tag tag-teal">${escHtml(s.quirk||'')}</span>
+        ${s.rival_in_1a?`<span class="tag tag-primary">Rivals: ${escHtml(s.rival_in_1a)}</span>`:''}
       </div>
-    </div>`;
-  }
-
-  pcs.forEach(s => { html += renderStudent(s); });
-  npcs.forEach(s => { html += renderStudent(s); });
-
-  el.innerHTML = html;
-  applyHiddenOnLoad(el);
-  buildFilterBar(el, [
-    { key:'pc',    label:'Status',     options:[{label:'PC',value:'pc'},{label:'NPC',value:'npc'}] },
-    { key:'qt',    label:'Quirk Type', options:[{label:'Emitter',value:'emitter'},{label:'Transformation',value:'transformation'},{label:'Mutant',value:'mutant'}] },
-    { key:'phys',  label:'Physiology', options:[{label:'Standard',value:'standard'},{label:'Heteromorph',value:'heteromorph'}] },
-    { key:'role',  label:'Role',       options:[{label:'Striker',value:'striker'},{label:'Tank',value:'tank'},{label:'Support',value:'support'},{label:'Control',value:'control'},{label:'Utility',value:'utility'},{label:'Scout',value:'scout'}] },
-    { key:'rarity',label:'Rarity',     options:[{label:'Common',value:'common'},{label:'Uncommon',value:'uncommon'},{label:'Rare',value:'rare'},{label:'Very Rare',value:'very-rare'}] },
-  ], 'Search Class 1-A…');
-}
-
-function renderClass1B(data, el) {
-  const STAT_KEYS = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
-  let html = '';
-  if (data.teacher)     html += `<div class="dm-note" style="margin-bottom:10px;"><strong>Teacher:</strong> ${escHtml(data.teacher)}</div>`;
-  if (data.dm_overview) html += `<div class="arc-desc" style="margin-bottom:12px;">${escHtml(data.dm_overview)}</div>`;
-  if (data.tier1_introduction_guide) {
-    const tId = uid();
-    html += `<div class="card" style="margin-bottom:14px;border-left:4px solid var(--teal);">
-      <div class="sub-label" style="margin-top:0;">Tier 1 introduction guide</div>
-      <span class="collapse-btn" onclick="toggleCollapse('${tId}',this)">▶ Show per-arc notes</span>
-      <div class="collapsible" id="${tId}">`;
-    for (const [k,v] of Object.entries(data.tier1_introduction_guide)) {
-      html += `<div class="person-section"><div class="person-section-label">${escHtml(k.replace(/_/g,' '))}</div><div class="person-section-body">${escHtml(v)}</div></div>`;
-    }
-    html += '</div></div>';
-  }
-  html += `<div class="sub-label">Students</div>`;
-  for (const s of (data.students||[])) {
-    const sb = s.stat_block||{};
-    const dId = uid();
-    const qt = (s.quirk_type||'').toLowerCase();
-    const tags = [qt, 'class-1b'].filter(Boolean).join(' ');
-    const searchText = [s.name, s.quirk, s.personality, s.rival_in_1a].filter(Boolean).join(' ').toLowerCase();
-    const b1bId = 'class1b-'+s.name.replace(/\s+/g,'-').toLowerCase();
-    html += `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(b1bId)}" data-char-name="${escHtml(s.name)}">
-      ${makeDeleteBtn(b1bId, s.name, 'body-sec-class1b')}
-      <div class="person-avatar" style="background:var(--teal-light);color:var(--teal-text);">${initials(s.name)}</div>
-      <div>
-        <div class="person-name">${escHtml(s.name)}</div>
-        <div class="person-alias">${escHtml(s.quirk||'')} · ${escHtml(s.quirk_type||'')}</div>
-        <div class="person-tags">
-          <span class="tag tag-teal">${escHtml(s.quirk||'')}</span>
-          ${s.rival_in_1a?`<span class="tag tag-primary">Rivals: ${escHtml(s.rival_in_1a)}</span>`:''}
-        </div>
-        <div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(s.quirk_summary||'')}</div></div>
-        <div class="person-section"><div class="person-section-label">Personality</div><div class="person-section-body">${escHtml(s.personality||'')}</div></div>
-        <div class="person-section"><div class="person-section-label">Rivalry with ${escHtml(s.rival_in_1a||'')}</div><div class="person-section-body">${escHtml(s.rivalry_dynamic||'')}</div></div>
-        <div class="person-section"><div class="person-section-label">Tier 1 appearance</div><div class="person-section-body">${escHtml(s.tier1_appearance||'')}</div></div>
-        <span class="collapse-btn" onclick="toggleCollapse('${dId}',this)">▶ Sports festival, stat block &amp; moves</span>
-        <div class="collapsible" id="${dId}">
-          ${s.sports_festival_role?`<div class="person-section"><div class="person-section-label">Sports festival role</div><div class="person-section-body">${escHtml(s.sports_festival_role)}</div></div>`:''}
-          ${s.dm_notes?`<div class="dm-note"><strong>DM notes:</strong> ${escHtml(s.dm_notes)}</div>`:''}
-          ${Object.keys(sb).length?`<div class="person-section"><div class="person-section-label">Stat block</div>
-            <div class="stat-grid">
-              ${sb.level!=null?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${sb.level}</span></div>`:''}
-              ${sb.HP!=null?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${sb.HP}</span></div>`:''}
-              ${sb.AC!=null?`<div class="stat-chip"><span class="stat-chip-label">AC</span><span class="stat-chip-val">${sb.AC}</span></div>`:''}
-              ${STAT_KEYS.map(k=>sb[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${sb[k]}</span></div>`:'').join('')}
-            </div></div>`:''}
-          ${s.signature_moves?.length?`<div class="person-section"><div class="person-section-label">Signature moves</div>
-            <ul style="margin-top:4px;padding-left:16px;">${s.signature_moves.map(m=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:3px;">${escHtml(m)}</li>`).join('')}</ul>
-          </div>`:''}
-        </div>
+      <div class="person-section"><div class="person-section-label">Quirk</div><div class="person-section-body">${escHtml(s.quirk_summary||'')}</div></div>
+      <div class="person-section"><div class="person-section-label">Personality</div><div class="person-section-body">${escHtml(s.personality||'')}</div></div>
+      <div class="person-section"><div class="person-section-label">Rivalry with ${escHtml(s.rival_in_1a||'')}</div><div class="person-section-body">${escHtml(s.rivalry_dynamic||'')}</div></div>
+      <div class="person-section"><div class="person-section-label">Tier 1 appearance</div><div class="person-section-body">${escHtml(s.tier1_appearance||'')}</div></div>
+      <span class="collapse-btn" onclick="toggleCollapse('${dId}',this)">▶ Sports festival, stat block &amp; moves</span>
+      <div class="collapsible" id="${dId}">
+        ${s.sports_festival_role?`<div class="person-section"><div class="person-section-label">Sports festival role</div><div class="person-section-body">${escHtml(s.sports_festival_role)}</div></div>`:''}
+        ${s.dm_notes?`<div class="dm-note"><strong>DM notes:</strong> ${escHtml(s.dm_notes)}</div>`:''}
+        ${Object.keys(sb).length?`<div class="person-section"><div class="person-section-label">Stat block</div>
+          <div class="stat-grid">
+            ${sb.level!=null?`<div class="stat-chip"><span class="stat-chip-label">Level</span><span class="stat-chip-val">${sb.level}</span></div>`:''}
+            ${sb.HP!=null?`<div class="stat-chip"><span class="stat-chip-label">HP</span><span class="stat-chip-val">${sb.HP}</span></div>`:''}
+            ${sb.AC!=null?`<div class="stat-chip"><span class="stat-chip-label">AC</span><span class="stat-chip-val">${sb.AC}</span></div>`:''}
+            ${CLASS1B_STAT_KEYS.map(k=>sb[k]!=null?`<div class="stat-chip"><span class="stat-chip-label">${k}</span><span class="stat-chip-val">${sb[k]}</span></div>`:'').join('')}
+          </div></div>`:''}
+        ${s.signature_moves?.length?`<div class="person-section"><div class="person-section-label">Signature moves</div>
+          <ul style="margin-top:4px;padding-left:16px;">${s.signature_moves.map(m=>`<li style="font-size:12px;color:var(--text-muted);margin-bottom:3px;">${escHtml(m)}</li>`).join('')}</ul>
+        </div>`:''}
       </div>
-    </div>`;
-  }
-  el.innerHTML = html;
-  applyHiddenOnLoad(el);
-  buildFilterBar(el, [
-    { key:'qt', label:'Quirk Type', options:[{label:'Emitter',value:'emitter'},{label:'Transformation',value:'transformation'}] },
-  ], 'Search Class 1-B…');
+    </div>
+  </div>`;
 }
 
 /* ─── Delete / restore ───────────────────────────────── */
@@ -1699,7 +1685,7 @@ function renderNPCs(data, el) {
       const tagClass = CAT_TAG[cat] || 'tag-primary';
       const avStyle = `background:${accentColor}22;color:${accentColor};`;
 
-      html += `<div class="person-card" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(c.id)}" data-char-name="${escHtml(c.name)}">
+      html += `<div class="person-card" id="npc-${escHtml(c.id)}" style="scroll-margin-top:60px;" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(c.id)}" data-char-name="${escHtml(c.name)}">
         ${makeDeleteBtn(c.id, c.name, 'body-sec-npcs')}
         <div class="person-avatar" style="${avStyle}">${initials(c.name)}</div>
         <div>
@@ -1967,13 +1953,11 @@ const FILES = [
   { key:'class1b',  url:'CAMPAIGN/class1b.json' },
   { key:'npcs',     url:'CAMPAIGN/npcs.json' },
 ];
+// arc/tier1/teachers/class1b feed the unified Story Arcs renderer instead of their own section.
+const ARC_INPUT_KEYS = ['arc','tier1','teachers','class1b'];
 const RENDERERS = {
-  arc:      (d,el) => renderArc(d,el),
-  tier1:    (d,el) => renderTier1(d,el),
   world:    (d,el) => renderWorld(d,el),
-  teachers: (d,el) => renderTeachers(d,el),
   villains: (d,el) => renderVillains(d,el),
-  class1b:  (d,el) => renderClass1B(d,el),
   npcs:     (d,el) => renderNPCs(d,el),
 };
 
@@ -1995,17 +1979,31 @@ async function init() {
   ]);
   document.getElementById('loading').style.display = 'none';
 
-  // Render class 1-A
-  const c1aSec  = document.getElementById('sec-class1a');
-  const c1aBody = document.getElementById('body-sec-class1a');
-  if (c1aSec && c1aBody && class1aResult && !class1aResult.error) {
+  // Build a lookup of every fetched file's data, then feed arc/tier1/teachers/class1b
+  // (plus the separately-loaded Class 1-A roster) into the unified Story Arcs renderer.
+  const dataByKey = {};
+  for (const r of fileResults) {
+    if (r.status === 'rejected') continue;
+    dataByKey[r.value.key] = r.value.data;
+  }
+  const arcSec  = document.getElementById('sec-arc');
+  const arcBody = document.getElementById('body-sec-arc');
+  if (arcSec && arcBody && dataByKey.arc) {
     try {
-      renderClass1A(class1aResult.roster, class1aResult.charMap, c1aBody);
-      c1aSec.style.display = '';
+      renderArcsUnified({
+        arc: dataByKey.arc,
+        tier1: dataByKey.tier1,
+        teachers: dataByKey.teachers,
+        class1b: dataByKey.class1b,
+        class1aRoster: !class1aResult?.error ? class1aResult.roster : null,
+        class1aCharMap: !class1aResult?.error ? class1aResult.charMap : {},
+        villains: dataByKey.villains,
+      }, arcBody);
+      arcSec.style.display = '';
     } catch(e) {
-      console.error('Render error class1a', e);
-      c1aBody.innerHTML = `<div style="color:var(--hero-red);font-size:12px;padding:8px;">Failed to render Class 1-A: ${e.message}</div>`;
-      c1aSec.style.display = '';
+      console.error('Render error arc', e);
+      arcBody.innerHTML = `<div style="color:var(--hero-red);font-size:12px;padding:8px;">Failed to render Story Arcs: ${e.message}</div>`;
+      arcSec.style.display = '';
     }
   }
 
@@ -2029,6 +2027,7 @@ async function init() {
   for (const r of fileResults) {
     if (r.status === 'rejected') continue;
     const {key,data} = r.value;
+    if (ARC_INPUT_KEYS.includes(key)) continue; // handled above via renderArcsUnified
     const sec  = document.getElementById('sec-'+key);
     const body = document.getElementById('body-sec-'+key);
     if (!sec||!body) continue;

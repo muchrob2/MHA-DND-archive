@@ -29,11 +29,11 @@
     },
     {
       "name": "Oshiro Daikichi",
-      "hero_name": "Ironveil",
+      "hero_name": "Warden",
       "role": "Homeroom Teacher / Combat Training",
-      "quirk": "Steel",
-      "quirk_type": "Transformation",
-      "quirk_summary": "Oshiro can harden his entire body into dense steel-like matter. Grants massive damage resistance and strength boosts. His fists hit like cannonballs. He can selectively harden specific body parts for precision.",
+      "quirk": "Aftershock",
+      "quirk_type": "Emitter",
+      "quirk_summary": "Oshiro's strikes carry a concussive aftershock that travels through whatever surface he and his target share — a punch that also knocks down everyone standing nearby, a floor that transmits the hit further than the fist ever reached. He doesn't need to armor up first. He just hits, and the room feels it.",
       "appearance": "Enormous. 6'4\", built like a wall. Cropped dark hair going grey at the temples. Usually wearing a suit that has clearly been repaired multiple times from combat damage. Looks like he's seen everything twice and was unimpressed both times.",
       "personality": "Gruff, dry, and relentlessly fair. Calls every student by their last name, every time, without exception. Never raises his voice — doesn't need to. Gives feedback bluntly and accurately. The class will not realise until mid-campaign how much he actually believes in them.",
       "teaching_style": "Show, don't tell. Demonstrations. Puts students against each other to see what happens under pressure. Minimal lectures — maximum doing.",
@@ -45,18 +45,23 @@
         "secret": "He was Class 1-A's previous generation's homeroom teacher. One of those students became a villain. He's never talked about it."
       },
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Steel",
-        "weakness": "Steel form can only absorb a limited amount of damage (5x level, scaling with character level) before it shatters, returning him to his normal body; damage beyond that threshold carries over. All uses reset after a long rest.",
+        "source": "Quirk Compendium — Aftershock",
+        "weakness": "The shockwave travels through solid ground or floor — airborne opponents, or anyone not in contact with the same surface he is, take no secondary effect from it. Prolonged full-power use over-strains his joints; after his fifth heavy strike in an encounter he must succeed on a DC 13 Constitution save or take 1d10 damage.",
         "abilities": [
           {
-            "name": "Harden Steel",
-            "type": "Bonus Action",
-            "description": "Turn his skin to steel, gaining resistance to all damage except necrotic, psychic, and poison for a number of minutes equal to half his Constitution modifier. As a reaction, he can move up to half his speed to intercept an attack aimed at an ally, taking the damage himself. He can only be forcibly moved up to 50 feet, and creatures directly behind him gain half cover."
+            "name": "Heavy Hand",
+            "type": "Passive",
+            "description": "Unarmed strikes deal 2d8 + Strength modifier bludgeoning damage."
           },
           {
-            "name": "Steel Weapon",
-            "type": "Passive (while Harden Steel is active)",
-            "description": "His arms harden into weapons — unarmed strikes deal 2d8 + Strength modifier bludgeoning damage, and he gains +1 to AC."
+            "name": "Ground Shock",
+            "type": "Bonus Action (on a hit with Heavy Hand)",
+            "description": "Sends a shockwave through the surface both combatants are standing on. The target makes a Strength save or is knocked prone; every other creature within 15 feet standing on the same surface makes the same save."
+          },
+          {
+            "name": "Full Swing",
+            "type": "Action (5th level)",
+            "description": "A single overhead strike that ignores the surface requirement entirely — the target makes a Strength save or is thrown 20 feet and takes an additional 2d10 bludgeoning damage."
           }
         ]
       }
@@ -97,11 +102,11 @@
     },
     {
       "name": "Hamagawa Rei",
-      "hero_name": "Nullpoint",
+      "hero_name": "Reflex",
       "role": "Hero Ethics, Law, and Practical Theory",
-      "quirk": "Erasure",
+      "quirk": "Mirror",
       "quirk_type": "Emitter",
-      "quirk_summary": "Hamagawa can nullify quirks by looking directly at a target. While his eyes are open and on the target, their quirk is suppressed. The moment he blinks or looks away, it returns. Does not work on mutation-type quirks.",
+      "quirk_summary": "Hamagawa can turn a Quirk's own attack back on the person using it — but only once he's actually felt it land. The first hit from any given power, he takes in full, cataloguing exactly how it works. After that, he can send it straight back. Students find this out the hard way exactly once, generally during a sparring demonstration, and never again.",
       "appearance": "Tall, lean, perpetually looks like he slept in his clothes. Dark eyes with noticeable shadows beneath them. Wears his hair slightly messy. Carries a coffee cup at all times. The coffee is always cold.",
       "personality": "Extremely dry humour — the kind that students only recognise as a joke half a second after they've already responded. Assigns homework that seems impossible and is. Secretly the most available teacher in the building when students are actually struggling. Won't advertise this.",
       "teaching_style": "Socratic. He asks questions and waits. Silently. Until someone answers. The silence is intentional and extremely uncomfortable. It works.",
@@ -113,13 +118,18 @@
         "secret": "He knows something is wrong in Murano. He doesn't know what yet. He's been paying attention to patterns."
       },
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Erasure",
-        "weakness": "Requires a clear line of sight to the target's physical body — targets can evade by hiding behind obstacles. If hit while maintaining the effect, he must succeed on a DC 13 Constitution save to keep his eyes open or the effect ends.",
+        "source": "Quirk Compendium — Mirror",
+        "weakness": "Only functions on the exact Quirk-based attack he's currently reflecting — he cannot store or reuse a reflected effect for later, and using it against an ability he's never seen before requires him to first take the hit at full effect once to 'read' it.",
         "abilities": [
           {
-            "name": "Erase",
-            "type": "Bonus Action",
-            "description": "Gazes at creatures within a 150-foot cone (DC 14 Perception check for targets beyond that range). Affected targets cannot use their Quirk or abilities for 4 rounds. He can maintain focus for a number of rounds equal to his proficiency bonus before eye strain sets in."
+            "name": "Read",
+            "type": "Passive",
+            "description": "The first time he is affected by a specific creature's Quirk-based attack in an encounter, he takes full effect but permanently learns its exact mechanics for the rest of the encounter."
+          },
+          {
+            "name": "Reflect",
+            "type": "Reaction",
+            "description": "Against a Quirk-based attack he has already Read, he can attempt to redirect it entirely back at its source. The original user makes a save against Hamagawa's Quirk DC using the same save type as their own ability, or suffers the full effect of their own attack."
           }
         ]
       }

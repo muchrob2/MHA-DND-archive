@@ -177,7 +177,7 @@
       "role": "Owner, The Anchor café, Murano port district.",
       "campaign_hook": "The Anchor is where port district locals go. The class ends up here after arc 3 fieldwork. Okabe has noticed the graffiti — the jagged Fracture symbol, the Chain's mark — appearing on walls she's been looking at for thirty years. She doesn't know it means anything. She's mentioned it to a journalist who came in three weeks ago.",
       "dm_notes": {
-        "secret": "She knows Nakata Ren (the retired hero) and knows he's been approached by someone recently. She hasn't asked what about. She's worried in the low-level persistent way of someone who grew up in a district where you learn not to ask too many questions.",
+        "secret": "She knows Nakata Isamu (the retired hero) and knows he's been approached by someone recently. She hasn't asked what about. She's worried in the low-level persistent way of someone who grew up in a district where you learn not to ask too many questions.",
         "relationship_to_pcs": "Safe ground. The Anchor is where the class comes to decompress. Okabe feeds them, listens without prying, and says one true thing per visit that they'll think about later.",
         "what_she_knows": "She can identify by description anyone who regularly moves through the port district. She doesn't know she's a valuable intelligence asset.",
         "arc_relevance": "Arc 3 recurring space. Arc 5 — she noticed something before the class did and can confirm a detail they can't verify anywhere else."
@@ -316,7 +316,7 @@
     },
     {
       "id": "npc-gen-studies",
-      "name": "Adachi Sora",
+      "name": "Adachi Yui",
       "alias": null,
       "category": "Student",
       "quirk": "Fold-A-Body",
@@ -438,7 +438,7 @@
     },
     {
       "id": "npc-retired-hero",
-      "name": "Nakata Ren",
+      "name": "Nakata Isamu",
       "alias": "Wallbreaker (retired)",
       "category": "Civilian",
       "quirk": "Impact Recoil",

@@ -145,15 +145,15 @@
                 {
                   "match": "R1-1",
                   "fighter_a": "Kazama Kenji (1-A)",
-                  "fighter_b": "Takuma Rei (1-B, Hardening)",
+                  "fighter_b": "Habara Jun (1-B, Shell)",
                   "favored": "Kazama",
-                  "how_it_goes": "Two defense-types in the same match makes for a slower, more technical fight than the crowd was primed for — Kazama hardens immediately and so does Takuma, and for two full rounds neither can get through the other's shell. Kazama breaks the stalemate first, switching to Steel Weapon strikes and grinding down Takuma's hardened surface faster than Takuma can return the favor. He wins, but it costs him more of his daily uses than any other R1 fight burns.",
+                  "how_it_goes": "Two defense-types in the same match makes for a slower, more technical fight than the crowd was primed for — Kazama hardens immediately and Habara raises his own carapace-like shell, and for two full rounds neither can get through the other's defense. Kazama breaks the stalemate first, switching to Steel Weapon strikes and grinding down Habara's shell faster than Habara can return the favor. He wins, but it costs him more of his daily uses than any other R1 fight burns.",
                   "winner": "Kazama Kenji",
-                  "dm_note": "Play this as a genuine technical standoff rather than a spectacle fight — two characters who both know exactly what the other's shell can take. If this is a PC fight, let the players feel the grind: damage absorption ticking down on both sides until one threshold breaks first.",
+                  "dm_note": "Play this as a genuine technical standoff rather than a spectacle fight — two characters who both know exactly what the other's defense can take. If this is a PC fight, let the players feel the grind: damage absorption ticking down on both sides until one threshold breaks first.",
                   "alternate_outcome": {
-                    "if_winner": "Takuma Rei",
-                    "how_it_goes": "Takuma has more experience reading exactly where his own hardened shell is thinnest and reinforces there before the fight even starts; Kazama commits to offense slightly too early and burns through his absorption faster than Takuma burns his. By round 3 Kazama's shell shatters first, and the follow-up hit decides it. The commentary team, having built the pre-fight hype around spectacle, has to recalibrate live — this is the first fight of the day that's actually about attrition math, not theatrics.",
-                    "downstream": "Takuma Rei advances to QF-3 instead of Kazama. Chozen faces Hardening rather than a Steel opponent who can also out-tank him, which changes his escalation curve in QF-3 — he wins QF-3 but calmer than the default, meaning he's quieter going into SF-2.",
+                    "if_winner": "Habara Jun",
+                    "how_it_goes": "Habara has more experience reading exactly where his own shell is thinnest and reinforces there before the fight even starts; Kazama commits to offense slightly too early and burns through his absorption faster than Habara burns his. By round 3 Kazama's shell shatters first, and the follow-up hit decides it. The commentary team, having built the pre-fight hype around spectacle, has to recalibrate live — this is the first fight of the day that's actually about attrition math, not theatrics.",
+                    "downstream": "Habara Jun advances to QF-3 instead of Kazama. Chozen faces Shell rather than a Steel opponent who can also out-tank him, which changes his escalation curve in QF-3 — he wins QF-3 but calmer than the default, meaning he's quieter going into SF-2.",
                     "dm_note": "Kazama sitting in the stands for the rest of the tournament is a significant character beat. He has to watch. He doesn't leave. Masahata quietly removes the 'defense outlasts everything' notation from his chart."
                   }
                 },
@@ -243,7 +243,7 @@
                   "alternate_outcome": {
                     "if_winner": "Kitamura Sora",
                     "how_it_goes": "Chozen is at round 1 stress — this is only his first fight. The escalation hasn't built yet. The wire network maps him completely and every approach route is contested before he can gain momentum. Kitamura wins cleanly because the variable that breaks his strategy hasn't had time to accumulate. He notes privately that five more minutes would have been different.",
-                    "downstream": "Kitamura advances to QF-3 vs Kazama (or Takuma Rei if alt R1-1). The wire network's tension-detection is built for tracking soft tissue movement, not registering an opponent who simply hardens and walks straight through the lines — Kitamura had a contingency for evasive fighters, not for someone who doesn't need to evade. Kazama wins QF-3, wires snapping audibly as he pushes through. SF-2 changes completely: Kazama vs whoever won QF-4.",
+                    "downstream": "Kitamura advances to QF-3 vs Kazama (or Habara Jun if alt R1-1). The wire network's tension-detection is built for tracking soft tissue movement, not registering an opponent who simply hardens and walks straight through the lines — Kitamura had a contingency for evasive fighters, not for someone who doesn't need to evade. Kazama wins QF-3, wires snapping audibly as he pushes through. SF-2 changes completely: Kazama vs whoever won QF-4.",
                     "dm_note": "Chozen watching Kitamura in subsequent fights from the stands is worth playing. He's watching the wire technique specifically. He is cataloguing what he'd do with two more minutes of stress. He doesn't say this out loud."
                   }
                 },
@@ -300,7 +300,7 @@
                   "match": "QF-3",
                   "fighter_a": "Chozen Tadachi (1-A, Seed 3)",
                   "fighter_b": "Kazama Kenji (1-A)",
-                  "note": "Fighter A is whoever won R1-7 (default Chozen; Kitamura if alt R1-7). Fighter B is whoever won R1-1 (default Kazama; Takuma Rei if alt R1-1)",
+                  "note": "Fighter A is whoever won R1-7 (default Chozen; Kitamura if alt R1-7). Fighter B is whoever won R1-1 (default Kazama; Habara Jun if alt R1-1)",
                   "favored": "50/50 — most dramatic QF fight",
                   "how_it_goes": "Kazama goes in exactly the way his quirk wants him to — close the distance, harden, trade. But Stress doesn't care what's hitting Chozen; every exchange, every committed strike, every round the fight drags on feeds the same accumulation a fire blast would, and there's no range to retreat to the way a blaster could. By round 4 Chozen is hitting harder than Kazama's shell was built to take in one sitting. Kazama's Steel shatters two rounds before he expected it to. He loses a spectacular, close fight that the crowd talks about more than most of the wins.",
                   "winner": "Chozen Tadachi",
@@ -393,7 +393,7 @@
               "post_tournament_moments": [
                 "Morida finds Toragi after QF-2. 'Your Impact timing — I disrupted it once. That's the only time that's worked on anyone I've spoken to.' She says: 'I know.' He nods. They both write this down.",
                 "Ren finds Toragi after SF-1. 'The second hit.' She says: 'Yes.' That's the whole conversation. He thinks about it for the rest of the campaign.",
-                "Kazama's stalemate against Takuma in R1-1 ended up the slowest, most technical fight of the day — the crowd didn't expect a defense-vs-defense match to be the one everyone kept talking about. Someone sends him a photo of the two of them locked in stalemate mid-fight. He never shows it to anyone.",
+                "Kazama's stalemate against Habara in R1-1 ended up the slowest, most technical fight of the day — the crowd didn't expect a defense-vs-defense match to be the one everyone kept talking about. Someone sends him a photo of the two of them locked in stalemate mid-fight. He never shows it to anyone.",
                 "'What Is She Doing?' about Kinosho airs twice. She watches both replays once in the waiting room, alone. She seems satisfied.",
                 "Ogiwara, after losing to Kinosho: 'I don't know what she did.' He has never said this about an opponent. Masahata writes this down immediately.",
                 "The ranking chart — brought to the festival laminated — does not get updated for four days. When asked why: 'The model is broken.' He reprints it anyway."

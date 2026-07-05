@@ -72,7 +72,7 @@
       ]
     },
     {
-      "name": "Denma Sora",
+      "name": "Denma Ryusei",
       "quirk": "Black Hole",
       "quirk_mechanics": {
         "source": "Quirk Compendium — Black Hole",
@@ -162,169 +162,166 @@
     },
     {
       "name": "Kitamura Sora",
-      "quirk": "Tape",
+      "quirk": "Wire",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Tape",
-        "weakness": "Tape is durable but not unbreakable. She can produce tape for up to 10 minutes of use; after that, she cannot generate more until she takes a short rest to recover from the resulting dry skin.",
+        "source": "Quirk Compendium — Wire",
+        "weakness": "Deploying a full network takes several seconds and requires anchor points (walls, fixtures, the ground) within range — in a completely open space with nothing to anchor to, she has nothing to work with. Destroying enough of the network in one area collapses her coverage there.",
         "abilities": [
-          { "name": "Grapple and Restrain", "type": "Action", "description": "Shoots tape at a target within 60 feet. On a hit, the target becomes grappled and restrained, with a Strength save against her Quirk DC at the end of its turn to break free. While grappled, she can move the creature left or right up to 30 feet." },
-          { "name": "Throwing Objects", "type": "Action", "description": "Attaches tape to up to two objects and throws them, making two separate attacks — each object deals bludgeoning damage based on its size per the Object Size table (e.g., Medium objects 1d8, Large objects 2d8)." },
-          { "name": "Rescue Maneuver", "type": "Reaction", "description": "Shoots tape at a grappled ally, pulling them toward her and allowing her to move up to 60 feet with them to reposition or avoid attacks." },
-          { "name": "Barricade Tape", "type": "Reaction", "description": "Rapidly ejects tape to cover up to a 10-ft square radius 60 feet away, creating a sticky barrier that provides half cover to allies and halves the speed of creatures moving through it." }
+          { "name": "Wire Network", "type": "Action", "description": "Deploys near-invisible tripwire filaments across a 30-ft radius area within 60 feet, anchored to available surfaces. For as long as the network is up (concentration, up to 10 minutes), she knows the exact position of every creature that has moved through it, and can reveal the wires as a bonus action to make each entangled creature make a Dexterity save or become restrained." },
+          { "name": "Snap Line", "type": "Reaction", "description": "When a restrained creature within her Wire Network attempts to break free, she can retract a section of wire to deal 2d8 slashing damage to it instead of allowing an automatic escape attempt." }
         ]
       },
       "quirk_type": "Emitter",
-      "quirk_summary": "Generates strong, adhesive tape from her forearms. She can fire it to bind a target at range, sling tape-wrapped objects as improvised weapons, throw a tether to pull an ally clear of danger, or flood an area with sticky barricade tape that bogs down anyone moving through it. Setting up a barricade or restraint line in a room takes her approximately six seconds. She has timed this.",
+      "quirk_summary": "Kitamura generates and controls thin, incredibly strong filament wire from her fingertips, which she strings across a space faster than most people can register it's happening. Once a network is up, she knows exactly where everyone in it is and how they're moving — tension vectors, weight shifts, the works — without needing to see them directly. Setting up a full-coverage network in a room takes her approximately four seconds. She has timed this.",
       "personality": "Precise. Economical. Considers Class 1-A's operational style inefficient in the way an architect considers a building that keeps falling down. She isn't contemptuous — she's concerned, professionally. Has extremely strong opinions about workspace organisation and does not volunteer them unsolicited. Will volunteer them if asked. Has very few opinions about things she considers not her domain. Says 'Yes.' and 'No.' as complete sentences.",
       "rival_in_1a": "Nakaya Emari",
-      "rivalry_dynamic": "Size vs Tape. Nakaya's enlargement makes her a large target — and a large target takes a lot more tape to bring down, but once Kitamura's got enough of it on her, the restraint scales with the problem. Nakaya's advantage is that at sufficient size, she can simply tear through tape that would hold a normal-sized opponent — but that takes time and effort Kitamura can use against her. Their rivalry is about Nakaya learning that raw scale has hard limits.",
-      "sports_festival_role": "Devastating in any event with structure — she pre-rigs environments with barricade tape during setup phases. In group contests, she's invisible until suddenly four students are bound simultaneously. In the tournament bracket, she's the student everyone is afraid to face because they've seen her work and don't know where the tape is.",
-      "tier1_appearance": "Corridor encounter during the Agency Visit arc. 10 seconds. She's carrying precisely folded documents, doesn't introduce herself, continues walking. Her name badge faces inward. If a student catches a glimpse: Kitamura, S., 1-B. The practice room she used before leaving has tape patterns still strung across it at odd angles — easy to miss until someone almost walks into one.",
-      "dm_notes": "Kitamura is the student who makes players feel like they've been outplayed by something they didn't see coming. Her Tier 1 presence should be minimal and precise — the corridor encounter, the tape patterns. Nothing else. By the Sports Festival, her reputation has been built entirely by absence. The fight against her should be the one that makes players think hard about the environment before they enter it.",
+      "rivalry_dynamic": "Size vs Wire. Nakaya's enlargement makes her a large target for the network to track — and a large target snaps more tripwires at once, which the network is built to register regardless of scale. Nakaya's advantage is that at sufficient size, she can simply tear through wire that would hold a normal-sized opponent — but that takes time and effort Kitamura can use against her. Their rivalry is about Nakaya learning that raw scale has hard limits.",
+      "sports_festival_role": "Devastating in any event with structure — she pre-rigs environments with wire during setup phases. In group contests, she's invisible until suddenly four students are tracked and tangled simultaneously. In the tournament bracket, she's the student everyone is afraid to face because they've seen her work and don't know where the wire is.",
+      "tier1_appearance": "Corridor encounter during the Agency Visit arc. 10 seconds. She's carrying precisely folded documents, doesn't introduce herself, continues walking. Her name badge faces inward. If a student catches a glimpse: Kitamura, S., 1-B. The practice room she used before leaving has wire patterns still strung across it at odd angles — easy to miss until someone almost walks into one.",
+      "dm_notes": "Kitamura is the student who makes players feel like they've been outplayed by something they didn't see coming. Her Tier 1 presence should be minimal and precise — the corridor encounter, the wire patterns. Nothing else. By the Sports Festival, her reputation has been built entirely by absence. The fight against her should be the one that makes players think hard about the environment before they enter it.",
       "stat_block": {
         "level": 3, "HP": 21, "AC": 14,
         "STR": 10, "DEX": 17, "CON": 11, "INT": 15, "WIS": 16, "CHA": 11, "TECH": 14
       },
       "signature_moves": [
-        "Barricade Tape (Reaction): ejects tape to cover a 10-ft square up to 60ft away, creating a sticky barrier that grants allies half cover and halves the speed of creatures moving through it.",
-        "Grapple and Restrain (Action): shoots tape at a target within 60ft. On a hit, the target is grappled and restrained, with a Strength save at the end of its turn to break free.",
-        "Rescue Maneuver (Reaction): shoots tape at a grappled ally, pulling them toward her and repositioning up to 60 feet to get them clear of danger."
+        "Wire Network (Action, concentration): deploys a 30-ft radius tripwire field for up to 10 minutes. Tracks every creature that moves through it.",
+        "Tension Read (Passive): advantage on Perception/Insight against anyone inside an active network; cannot be surprised by them.",
+        "Snap Line (Reaction): deals 2d8 slashing damage to a restrained creature attempting to escape the network instead of allowing a free attempt."
       ]
     },
     {
       "name": "Hatsuda Renko",
-      "quirk": "Electrification",
+      "quirk": "Pressure Point",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Electrification",
-        "weakness": "Sustained use builds a static charge in her own body — after three rounds of continuous Electrification, she takes 1d6 lightning damage at the start of her turn until she stops for a round to discharge safely.",
+        "source": "Quirk Compendium — Pressure Point",
+        "weakness": "Requires a precise touch — a grapple, a restrained target, or anything that keeps her from making clean contact prevents the burst from forming properly, and each burst leaves her fingertips numb for a round afterward.",
         "abilities": [
-          { "name": "Charged Strikes", "type": "Passive", "description": "Unarmed strikes deal an additional 1d6 lightning damage." },
-          { "name": "Conductive Surge", "type": "Action", "description": "Touches a conductive surface or creature, sending a surge through it. Each creature in contact with the same surface within 30 feet makes a Constitution save against her Quirk DC, taking 3d6 lightning damage and being stunned until the end of their next turn on a fail, or half damage on a success." },
-          { "name": "Static Field", "type": "Bonus Action (5th level)", "description": "Surrounds herself with a crackling field for one minute. Any creature that hits her with a melee attack takes 1d8 lightning damage. Metal weapons used against her have disadvantage." }
+          { "name": "Tap", "type": "Action", "description": "Touches a creature, releasing a concentrated burst of compressed air at the point of contact. Target makes a Constitution save or takes 2d8 bludgeoning damage and is pushed 10 feet directly away from her (half damage, not pushed, on a success)." },
+          { "name": "Chain Tap", "type": "Bonus Action (5th level)", "description": "If her last Tap this turn hit, she can immediately Tap a second creature within 5 feet of the first, at disadvantage." }
         ]
       },
       "quirk_type": "Emitter",
-      "quirk_summary": "Hatsuda generates and channels electrical current through her skin. She's most dangerous through contact — a touch, a handshake, a held railing — and the entire dorm building's plumbing taught her this the hard way during move-in week. She can't discharge through the air at range; everything she does requires a conductive bridge, which means she spends a lot of time thinking three steps ahead about what's metal in the room.",
-      "personality": "Restless, fidgety, talks fast when she's nervous and faster when she's not. Treats every space she enters as a tactical map of conductive surfaces — railings, lockers, puddles — without really meaning to. Funny in a way that lands half the time. The other half she's already moved on to the next thought before anyone's caught up.",
+      "quirk_summary": "Hatsuda can compress the air at a single point of contact into a concentrated, invisible burst — a tap on the shoulder that lands like a punch, a handshake that knocks someone back a full stride. It's precise, it's fast, and it means she's constantly thinking about who's in reach and in what order, the same restless calculation she brings to everything else.",
+      "personality": "Restless, fidgety, talks fast when she's nervous and faster when she's not. Treats every space she enters as a tactical map of who's within arm's reach — railings, doorways, crowded corridors — without really meaning to. Funny in a way that lands half the time. The other half she's already moved on to the next thought before anyone's caught up.",
       "rival_in_1a": "Masahata Shikoji",
-      "rivalry_dynamic": "Water Gun vs Electrification is the worst possible matchup for one of them and Hatsuda has already worked out which. Masahata's water becomes a conductor the instant she touches it — his own quirk turns into her delivery system. He hasn't realised this yet. She has, and is saving it.",
-      "sports_festival_role": "Lethal in any event involving water, metal terrain, or grouped opponents in contact with the same surface. In the tournament bracket, the smart play against her is to stay on dry, non-conductive ground — most opponents don't think to ask before the match starts.",
-      "tier1_appearance": "A 1-A student grabs a stair railing during a fire drill and gets a static shock sharp enough to swear about. Hatsuda is three floors up, not even looking, and apologises without sounding sorry.",
-      "dm_notes": "Hatsuda's threat is entirely about terrain awareness. Tier 1 should establish that she's always cataloguing what's conductive in a room. Her match against Masahata at the Festival should hinge on whether he realises what his own water is doing before it's too late.",
+      "rivalry_dynamic": "Water Gun vs Pressure Point. Masahata's ranged blasts keep distance between them — exactly the range where Hatsuda's touch-based quirk does nothing at all. The whole fight is about whether she can close the gap before he's put enough water between them that she never gets a single Tap in.",
+      "sports_festival_role": "Lethal in close-quarters events where opponents can't keep her at range. In the tournament bracket, the smart play against her is distance — most opponents don't think to keep it until she's already closed on them once.",
+      "tier1_appearance": "A 1-A student high-fives Hatsuda in the hallway and stumbles back a full step, more startled than hurt. Hatsuda apologises without sounding sorry, already three thoughts ahead about who else is in reach.",
+      "dm_notes": "Hatsuda's threat is entirely about closing distance and reading who's reachable. Tier 1 should establish that she's always calculating who's in arm's reach. Her match against Masahata at the Festival should hinge on whether he can keep range on her long enough for it to matter.",
       "stat_block": {
         "level": 3, "HP": 21, "AC": 13,
         "STR": 10, "DEX": 15, "CON": 12, "INT": 14, "WIS": 13, "CHA": 14, "TECH": 13
       },
       "signature_moves": [
-        "Charged Strikes (Passive): unarmed strikes deal an extra 1d6 lightning damage.",
-        "Conductive Surge (Action): touches a conductive surface; everyone touching it within 30 feet makes a CON save or takes 3d6 lightning damage and is stunned.",
-        "Static Field (Bonus Action): for one minute, melee attackers take 1d8 lightning damage on a hit against her."
+        "Tap (Action): touch attack. CON save or 2d8 bludgeoning damage and pushed 10 feet.",
+        "Chain Tap (Bonus Action, 5th level): after a hit, taps a second target within 5 feet at disadvantage.",
+        "Fingertip Control (Passive): can scale Tap's force down to be nonlethal and harmless at will, useful outside combat."
       ]
     },
     {
       "name": "Fujikawa Renta",
-      "quirk": "Steel",
+      "quirk": "Ballast",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Steel",
-        "weakness": "His body's mass increases significantly while steeled, reducing his speed by 10 feet and making him vulnerable to forced movement effects which deal an extra 1d6 damage to him on a failed save.",
+        "source": "Quirk Compendium — Ballast",
+        "weakness": "His increased mass means falling or unstable surfaces become a serious hazard — he can crack or collapse flooring not built to hold his weight, and being forcibly moved while at full mass deals him an extra 1d6 damage from the sheer inertia involved.",
         "abilities": [
-          { "name": "Steel Body", "type": "Bonus Action", "description": "Transforms his body into steel for one minute. Gains resistance to bludgeoning, piercing, and slashing damage, advantage on Strength checks and saves, but speed is reduced by 10 feet." },
-          { "name": "Steel Fist", "type": "Passive (while Steel Body active)", "description": "Unarmed strikes deal 1d10 + Strength modifier bludgeoning damage and count as magical for the purpose of overcoming resistance." },
-          { "name": "Immovable Stance", "type": "Reaction (5th level)", "description": "While in Steel Body, can brace against an incoming forced-movement or knockback effect, automatically succeeding the save against being moved, at the cost of his reaction." }
+          { "name": "Full Mass", "type": "Bonus Action", "description": "Compacts his body's density to several times normal for one minute. Gains advantage on Strength checks and saves and automatically succeeds saves against being moved or knocked prone, but speed is reduced by 15 feet." },
+          { "name": "Dead Weight Strike", "type": "Passive (while Full Mass active)", "description": "Unarmed strikes deal 1d10 + Strength modifier bludgeoning damage, and on a hit the target must succeed on a Strength save or be knocked prone by the sheer mass behind the blow." },
+          { "name": "Anchor", "type": "Reaction (5th level)", "description": "While at Full Mass, grants advantage on a single Strength check or save made to resist being moved, grappled, or shoved — usable even outside his turn." }
         ]
       },
       "quirk_type": "Transformation",
-      "quirk_summary": "Fujikawa's entire body turns to dense, lustrous steel — heavier, slower, nearly impervious. Unlike Morida's stone hardening, his transformation is total and can't be partial; it's all or nothing, and once he's steeled, he's committed to the trade-off of speed for permanence. He treats this as an honest deal rather than a flaw.",
+      "quirk_summary": "Fujikawa can compact his own body's density to several times normal, becoming immensely heavy without changing shape or appearance — no metal skin, no visible transformation, just a person who suddenly weighs as much as a car. Once he's settled his weight, moving him takes actual physics, not effort. He treats this as an honest deal rather than a flaw: total commitment, total stillness, total presence.",
       "personality": "Stoic to the point of being mistaken for boring, which he finds mildly amusing. Has an old-fashioned sense of duty about being the class's anchor in group events. Doesn't volunteer opinions about other people's quirks but will defend Morida's methods to anyone who calls 1-B's style 'rigid.' Plays a lot of shogi against himself between classes.",
       "rival_in_1a": "Kibi Kankei",
-      "rivalry_dynamic": "Vines vs Steel is patience against patience — Kibi can bind and constrict, but binding something that doesn't need to breathe or bend buys Fujikawa time he's happy to spend. The fight, if it happens, is a long one and neither of them minds that.",
+      "rivalry_dynamic": "Vines vs Ballast is patience against patience — Kibi can bind and constrict, but binding something whose weight alone breaks most anchoring points buys Fujikawa time he's happy to spend. The fight, if it happens, is a long one and neither of them minds that.",
       "sports_festival_role": "An anchor in any event requiring someone to hold a position or absorb sustained pressure. Slow enough that speed-based opponents can simply outrun him — a gap he knows about and has made peace with rather than solved.",
-      "tier1_appearance": "Seen in the practice yard standing motionless in full Steel Body for the full one-minute duration, timing himself with a stopwatch held in a normal hand he didn't bother to steel.",
+      "tier1_appearance": "Seen in the practice yard standing motionless at Full Mass for the full one-minute duration, timing himself with a stopwatch. The floor tile beneath him has a fine crack radiating outward that nobody's mentioned yet.",
       "dm_notes": "Fujikawa is a straightforward wall-archetype with one clean exploitable weakness — speed. Use him as a teaching encounter for kiting tactics. His rivalry with Kibi should be a slow, almost friendly war of attrition rather than a dramatic clash.",
       "stat_block": {
         "level": 3, "HP": 27, "AC": 17,
         "STR": 16, "DEX": 9, "CON": 16, "INT": 11, "WIS": 12, "CHA": 9, "TECH": 9
       },
       "signature_moves": [
-        "Steel Body (Bonus Action): transforms for one minute. Resistance to bludgeoning/piercing/slashing, advantage on STR checks/saves, speed -10 ft.",
-        "Steel Fist: while steeled, unarmed strikes deal 1d10 + STR bludgeoning damage.",
-        "Immovable Stance (Reaction): while steeled, automatically succeeds a save against forced movement."
+        "Full Mass (Bonus Action): compacts for one minute. Advantage on STR checks/saves, automatically succeeds against forced movement, speed -15 ft.",
+        "Dead Weight Strike: while at Full Mass, unarmed strikes deal 1d10 + STR bludgeoning damage and a failed STR save knocks the target prone.",
+        "Anchor (Reaction): while at Full Mass, grants advantage on a save/check to resist being moved, grappled, or shoved."
       ]
     },
     {
       "name": "Soga Mitsuru",
-      "quirk": "Permeation",
+      "quirk": "Blind Spot",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Permeation",
-        "weakness": "While phased, he cannot interact with the physical world at all — no attacks, no items, no allies. If a solid object closes around the space he's phasing through and he ends his phase inside it, he takes 2d6 bludgeoning damage and is shunted to the nearest open space.",
+        "source": "Quirk Compendium — Blind Spot",
+        "weakness": "The effect only works on creatures who aren't already focused directly on him — anyone actively engaged with him in melee combat, or who has succeeded a save against him in the last minute, sees him perfectly and cannot be affected again for 24 hours.",
         "abilities": [
-          { "name": "Phase", "type": "Action", "description": "Becomes incorporeal for up to one minute, able to move through solid objects and terrain at normal speed. Immune to non-magical damage while phased but cannot affect the physical world." },
-          { "name": "Partial Phase", "type": "Bonus Action (5th level)", "description": "Phases only an arm or leg, allowing him to reach through walls or floors to grab, retrieve, or strike — counts as an unarmed strike that ignores cover from the intervening barrier." }
+          { "name": "Slip Notice", "type": "Bonus Action", "description": "For one minute, becomes difficult to notice — attacks against him have disadvantage from any creature that hasn't already targeted him this fight, and he doesn't provoke opportunity attacks while moving." },
+          { "name": "Nobody Here", "type": "Action (5th level)", "description": "Emits a pulse in a 15-foot radius. Each creature that has not already saved against him this encounter makes a Wisdom save or completely loses track of his location for 1 round, treating the space he's in as empty even if directly looking at it." }
         ]
       },
-      "quirk_type": "Transformation",
-      "quirk_summary": "Soga can render his body partially or fully intangible, passing through walls, floors, and most solid matter. Full Phase makes him untouchable but also unable to act on anything around him — he's a ghost for as long as it lasts. Partial Phase is the practical version: reach a hand through a wall, grab something, pull it back, all without ever being seen doing it.",
+      "quirk_type": "Emitter",
+      "quirk_summary": "Soga isn't invisible — he's unremarkable in a very specific, quirk-powered way. People's attention simply doesn't catch on him, the way you don't notice a familiar hallway or a person who's 'supposed' to be there. It stops working the moment someone actually engages him directly; commit to fighting him and the effect breaks entirely. He's spent a long time thinking about the exact borderline between 'unnoticed' and 'not present,' and he's very precise about which side of it he's standing on.",
       "personality": "Quiet, watchful, faintly amused by how much other people worry about doors. Doesn't see the point of confrontation when he can simply not be where the confrontation is. This makes him hard to provoke and harder to actually fight. Has a dry running commentary he mostly keeps to himself.",
       "rival_in_1a": "Aikawa Sakume",
-      "rivalry_dynamic": "Iron Claws vs Permeation. Aikawa hits hard and fast in close range — exactly the range where Soga simply isn't solid. The entire fight is Aikawa learning that committing to a strike against someone who can opt out of being hit is its own kind of trap, and Soga learning that eventually he has to solidify to do anything back.",
-      "sports_festival_role": "A nightmare for capture or containment events — there's no cage that holds him. In the tournament bracket, his weakness is exposed the moment he needs to actually attack: he has to drop the phase, and that's the window.",
-      "tier1_appearance": "A locked equipment closet in the gym is found open from the inside with no sign of forced entry. Soga is seen walking out of an adjacent hallway a minute later, looking unbothered.",
-      "dm_notes": "Soga should feel genuinely unfair in defense and genuinely limited in offense — that tension is the whole character. Don't let him solo a fight; the moment he commits to hitting something, he's vulnerable, and smart players should learn to bait that moment.",
+      "rivalry_dynamic": "Iron Claws vs Blind Spot. Aikawa hits hard and fast in close range — but she has to find him first, and find him again every time he resets the field. The entire fight is Aikawa learning that the moment she actually engages him, the trick is gone for good, and Soga learning that eventually somebody commits and he has to actually be somewhere.",
+      "sports_festival_role": "A nightmare for point-based or capture events — judges and opponents alike keep losing track of where he is entirely. In the tournament bracket, his weakness is exposed the moment an opponent successfully lands a hit or lock on him: after that, he's just a person standing in a ring like everyone else.",
+      "tier1_appearance": "A hallway monitor reviews footage of an empty corridor and insists someone must have walked through it, because the door at the far end opens on its own. Soga is seen a minute later, several floors away, looking unbothered.",
+      "dm_notes": "Soga should feel genuinely strange to fight — not stealthy in a cinematic sense, but structurally hard to keep track of until someone actually commits to him. Once a player succeeds a save or lands a hit, let him become fully, ordinarily present for the rest of that fight — that's the whole balance lever.",
       "stat_block": {
         "level": 3, "HP": 18, "AC": 12,
         "STR": 10, "DEX": 14, "CON": 11, "INT": 13, "WIS": 16, "CHA": 10, "TECH": 12
       },
       "signature_moves": [
-        "Phase (Action): becomes incorporeal for up to one minute. Immune to non-magical damage, cannot affect the physical world.",
-        "Partial Phase (Bonus Action): phases an arm or leg to reach through a barrier — counts as an unarmed strike ignoring cover from that barrier.",
-        "Walk Through Walls (Passive, while phased): moves through solid terrain at normal speed without provoking opportunity attacks."
+        "Slip Notice (Bonus Action): for one minute, attacks against him from anyone who hasn't already targeted him this fight have disadvantage; no opportunity attacks against him while moving.",
+        "Nobody Here (Action): 15-ft pulse. Creatures who haven't already saved against him this encounter make a WIS save or lose track of his location for 1 round.",
+        "Reset (Passive): once a creature saves against him or lands a hit, that creature sees him clearly for the rest of the encounter — the effect never reapplies to them."
       ]
     },
     {
       "name": "Anrakuji Hisame",
-      "quirk": "Foresight",
+      "quirk": "Echo",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Foresight",
-        "weakness": "Visions are brief and disorienting — after using her Quirk, she suffers disadvantage on Wisdom (Perception) checks until the end of her next turn, as the vision overlays her real sight.",
+        "source": "Quirk Compendium — Echo",
+        "weakness": "Only works on things that will make sound — silent attacks, ranged weapons loosed without a telltale noise, or anything happening for the first time in total silence give her nothing to hear ahead of time.",
         "abilities": [
-          { "name": "Flash Foresight", "type": "Reaction", "description": "When a creature within 30 feet makes an attack roll, she may grant herself or an ally within 30 feet a glimpse of the outcome — that creature gains advantage on its next saving throw or AC check against that specific attack." },
-          { "name": "Path Sight", "type": "Action", "description": "Concentrates briefly to glimpse several seconds into the immediate future of a single creature within 60 feet, learning the general nature of its next action (attack, movement, ability use) before it happens. Usable a number of times equal to her proficiency bonus per long rest." }
+          { "name": "Early Ear", "type": "Reaction", "description": "When a creature within 30 feet is about to make an attack roll or loud action, she hears it fractions of a second before it happens, granting herself or an ally within 30 feet advantage on their next saving throw or AC-relevant check against it." },
+          { "name": "Playback", "type": "Action", "description": "Concentrates to hear a few seconds into a single creature's immediate future within 60 feet, learning the general category of its next action (attack, movement, ability use) before it happens. Usable a number of times equal to her proficiency bonus per long rest." }
         ]
       },
       "quirk_type": "Emitter",
-      "quirk_summary": "Anrakuji catches brief, fragmentary glimpses of what's about to happen — not full futures, just a few seconds, usually centred on one person at a time. It's unreliable as a fortune-telling trick and devastating as a combat read. She's learned not to trust it for big decisions and to trust it completely for the next six seconds.",
+      "quirk_summary": "Anrakuji hears things before they make noise — a punch a half-second before impact, a shout before it's spoken, footsteps before the foot lands. It's not the future, exactly; it's an echo arriving early, and only for things that are going to be loud enough to hear. Silent things give her nothing. She's learned not to trust it for big decisions and to trust it completely for the next six seconds.",
       "personality": "Calm in a way that unsettles people who don't know why. Speaks carefully, like she's already heard the conversation once. Genuinely warm to people she trusts, which is a short list and entirely intentional. Hates being asked 'so what happens next' as a party trick — it doesn't work that way and she's tired of explaining it.",
       "rival_in_1a": "Setaka Toko",
-      "rivalry_dynamic": "Iron Ball vs Foresight. Setaka's attacks are heavy, telegraphed, and devastating if they land — exactly the kind of thing Anrakuji's glimpses are built to dodge. The real contest is whether Setaka can vary his pattern enough that her foresight stops being useful before the fight's decided.",
-      "sports_festival_role": "An incredible support piece in team events — warning allies a half-second before a hit lands changes outcomes constantly. In the tournament bracket, she's vulnerable to anyone whose attacks are genuinely unpredictable even to herself a few seconds out, which is rare but not impossible.",
+      "rivalry_dynamic": "Iron Ball vs Echo. Setaka's attacks are heavy, telegraphed, and loud — exactly the kind of thing Anrakuji hears coming from a mile off. The real contest is whether he can land a hit quietly enough, or fast enough, that the sound arrives at the same moment as the blow instead of before it.",
+      "sports_festival_role": "An incredible support piece in team events — warning allies a half-second before a loud hit lands changes outcomes constantly. In the tournament bracket, she's vulnerable to anyone whose attacks are naturally silent, which is rare but a real counter for the right opponent.",
       "tier1_appearance": "She tells a classmate to move a half-second before a dropped supply crate would have hit them. Doesn't explain. They thank her anyway, more confused than grateful.",
-      "dm_notes": "Anrakuji is best run as a constant low-grade advantage rather than a flashy one — small warnings, redirected attacks, near-misses that look like luck. Keep her vision limited (seconds, not plans) so she never feels like she's solved the encounter in advance.",
+      "dm_notes": "Anrakuji is best run as a constant low-grade advantage rather than a flashy one — small warnings, redirected attacks, near-misses that look like luck. Keep the limitation (has to make noise) visible so smart players can find the counter.",
       "stat_block": {
         "level": 3, "HP": 17, "AC": 12,
         "STR": 8, "DEX": 13, "CON": 10, "INT": 14, "WIS": 18, "CHA": 13, "TECH": 12
       },
       "signature_moves": [
-        "Flash Foresight (Reaction): when a creature within 30ft makes an attack roll, grant advantage on the next save/AC check against that attack to herself or an ally.",
-        "Path Sight (Action): glimpse a creature's next action a few seconds early. Limited uses per long rest.",
-        "Borrowed Half-Second (Passive): advantage on initiative rolls."
+        "Early Ear (Reaction): when a creature within 30ft is about to make an attack or loud action, grant advantage on the next save/AC-relevant check against it to herself or an ally.",
+        "Playback (Action): hear a creature's next action category a few seconds early. Limited uses per long rest.",
+        "Quiet Room (Passive): disadvantage on Stealth checks made against her by anyone who has made noise in the last minute."
       ]
     },
     {
       "name": "Karube Genta",
-      "quirk": "Muscle Augmentation",
+      "quirk": "Slow Burn",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Muscle Augmentation",
-        "weakness": "Augmentation must build over several rounds and cannot be triggered instantly — at the start of combat he is at his weakest, and abandoning a build-up (by being stunned or losing concentration) resets it to zero.",
+        "source": "Quirk Compendium — Slow Burn",
+        "weakness": "The escalation must build over several rounds and cannot be triggered instantly — at the start of combat he is at his weakest, and anything that resets his focus (being stunned, losing concentration) sends the buildup back to zero.",
         "abilities": [
-          { "name": "Building Power", "type": "Passive", "description": "At the start of each of his turns in combat, gains a stacking +1 bonus to Strength-based attack and damage rolls, to a maximum of +5 after five rounds." },
-          { "name": "Overdrive Release", "type": "Action", "description": "Expends all current Building Power stacks in a single attack, adding the full stacked bonus as additional damage on a hit, then resets stacks to zero." }
+          { "name": "Rising Heat", "type": "Passive", "description": "At the start of each of his turns in combat, gains a stacking +1 bonus to Strength-based attack and damage rolls, to a maximum of +5 after five rounds." },
+          { "name": "Release", "type": "Action", "description": "Expends all current Rising Heat stacks in a single attack, adding the full stacked bonus as additional damage on a hit, then resets stacks to zero." }
         ]
       },
       "quirk_type": "Mutant",
-      "quirk_summary": "Karube's muscles compound their own output the longer a fight runs — slow to start, terrifying by round five. The trade-off is brutal: anything that resets his momentum (a stun, a hard knockdown, a long pause) sends him back to square one. Fights against him are fights against a clock he's trying to survive long enough to win.",
+      "quirk_summary": "Karube's body builds toward its own peak the longer a fight runs — slow to start, terrifying by round five. Unlike a fixed strength boost, this is momentum: something in his output compounds turn over turn as long as nothing interrupts the escalation. The trade-off is brutal — anything that resets his focus (a stun, a hard knockdown, a long pause) sends him back to square one.",
       "personality": "Patient to a degree that frustrates faster classmates. Treats early-fight setbacks with total calm because he knows what round five looks like. Doesn't trash-talk. Will, however, very quietly count out loud when he's winning, which everyone finds more unnerving than any taunt.",
       "rival_in_1a": "Samitsu Hinsei",
-      "rivalry_dynamic": "Dupli-Arms vs Muscle Augmentation. Samitsu's extra limbs let him overwhelm early with sheer action economy — precisely the window where Karube is weakest. If Samitsu can't close it out fast, round five arrives and the math flips hard in Karube's favour.",
+      "rivalry_dynamic": "Dupli-Arms vs Slow Burn. Samitsu's extra limbs let him overwhelm early with sheer action economy — precisely the window where Karube is weakest. If Samitsu can't close it out fast, round five arrives and the math flips hard in Karube's favour.",
       "sports_festival_role": "A slow-burn threat in any extended bout — the longer an event runs, the worse a proposition he becomes. In short, fast events he's mediocre, which the entrance exam scores reflected and which 1-A has no reason to suspect changes everything by round five.",
       "tier1_appearance": "Sparring drill footage shows him losing badly for the first four rounds and then ending it in two hits. Nobody who saw only the first half believes the second half happened.",
       "dm_notes": "Karube rewards players who either end fights fast or specifically target his concentration to reset his stacks. Telegraph the build clearly (describe the visible escalation each round) so the threat feels earned rather than arbitrary.",
@@ -333,272 +330,272 @@
         "STR": 16, "DEX": 11, "CON": 15, "INT": 10, "WIS": 12, "CHA": 11, "TECH": 10
       },
       "signature_moves": [
-        "Building Power (Passive): +1 to STR attack/damage rolls at the start of each turn in combat, stacking to +5.",
-        "Overdrive Release (Action): spends all stacks on one attack as bonus damage, then resets to zero.",
+        "Rising Heat (Passive): +1 to STR attack/damage rolls at the start of each turn in combat, stacking to +5.",
+        "Release (Action): spends all stacks on one attack as bonus damage, then resets to zero.",
         "Steady Pace (Passive): immune to being frightened; resets to zero on a failed concentration check instead of automatic loss."
       ]
     },
     {
       "name": "Ezumi Wakana",
-      "quirk": "Razor Sharp",
+      "quirk": "Splinter",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Razor Sharp",
-        "weakness": "Her edges are fragile against anything harder than flesh — striking a hardened or armoured surface with a Razor Strike forces a Constitution save or the edge dulls, losing the bonus damage until she takes an action to resharpen.",
+        "source": "Quirk Compendium — Splinter",
+        "weakness": "Her shards are limited in number — she carries a finite reserve that regrows only on a long rest — and each one that misses or is destroyed is gone until then. Against heavily armoured targets, shards that connect often lodge without penetrating deep enough to draw blood.",
         "abilities": [
-          { "name": "Razor Strike", "type": "Passive", "description": "Unarmed strikes are treated as slashing and deal an additional 1d6 damage." },
-          { "name": "Whirling Edge", "type": "Action", "description": "Spins rapidly, making a slashing attack against every creature within 5 feet, each taking 2d8 slashing damage on a hit." },
-          { "name": "Resharpen", "type": "Action", "description": "Restores a dulled edge, removing the penalty from Razor Strike." }
+          { "name": "Shard Loose", "type": "Action", "description": "Launches a spray of dense, needle-thin bone shards from her forearm at a target within 30 feet. On a hit, deals 1d10 piercing damage and the target begins Bleeding (1d4 at the start of each of its turns until treated)." },
+          { "name": "Scatter Volley", "type": "Action", "description": "Launches shards at up to three targets within 30 feet, each requiring a separate attack roll, dealing 1d6 piercing damage and a stack of Bleed on a hit." },
+          { "name": "Regrow", "type": "Passive", "description": "Recovers half her spent shard reserve on a short rest, and her full reserve on a long rest." }
         ]
       },
       "quirk_type": "Mutant",
-      "quirk_summary": "Ezumi's skin grows razor-edged ridges along her forearms and shins that she can extend at will. Fast, precise, and brutal in close range, but the edges are surprisingly delicate against anything armoured — she's learned to read what she's about to hit before she commits to hitting it.",
+      "quirk_summary": "Ezumi's body grows and sheds dense, needle-sharp bone shards from her forearms, which she can launch at range hard enough to punch through skin and lodge deep enough to keep bleeding. It looks unassuming until the first one lands — brutal for a straight-line attacker to see coming, and murder on unarmoured targets. She reads whether a target's likely to be worth the ammunition before she spends it.",
       "personality": "Sharp-tongued in exactly the way you'd expect, and aware enough of the joke to be tired of making it herself. Competitive in short bursts, then disinterested once she's proven her point. Genuinely kind to people who aren't currently in a fight with her.",
       "rival_in_1a": "Ando Iorai",
-      "rivalry_dynamic": "Scales vs Razor Sharp. Ando's natural armour is exactly the surface that dulls her edges fastest — she has to find the gaps in his scales rather than meeting him head-on, which goes against every instinct she has for closing a fight quickly.",
-      "sports_festival_role": "Devastating against unarmoured opponents in close-quarters events, considerably less so against anything hardened or plated. In the tournament bracket, her matchups are extremely lopsided in one direction or the other.",
-      "tier1_appearance": "A training dummy in the gym is found sliced clean through at a diagonal. The instructor says nothing, just adds another dummy to the supply order.",
-      "dm_notes": "Ezumi is a glass-cannon against soft targets and a genuine puzzle against armoured ones. Lean into the read-your-opponent angle — let her hesitate visibly against Morida or Fujikawa-type targets, and go all-in against anyone unarmoured.",
+      "rivalry_dynamic": "Scales vs Splinter. Ando's natural armour is exactly the kind of surface her shards struggle to punch through cleanly — she has to find the gaps in his scales rather than blanketing him, which goes against every instinct she has for closing a fight fast.",
+      "sports_festival_role": "Devastating against unarmoured opponents at range, considerably less so against anything hardened or plated where her shards can't punch deep enough to matter. In the tournament bracket, her matchups are extremely lopsided in one direction or the other.",
+      "tier1_appearance": "A training dummy in the gym is found bristling with a dozen bone-white splinters, all clustered in a fist-sized area. The instructor says nothing, just adds another dummy to the supply order.",
+      "dm_notes": "Ezumi is a glass-cannon against soft targets and a genuine puzzle against armoured ones. Lean into the read-your-opponent angle, and track her ammunition — running dry mid-fight should be a real, discoverable consequence.",
       "stat_block": {
         "level": 3, "HP": 20, "AC": 14,
         "STR": 13, "DEX": 16, "CON": 12, "INT": 11, "WIS": 12, "CHA": 13, "TECH": 11
       },
       "signature_moves": [
-        "Razor Strike (Passive): unarmed strikes deal an extra 1d6 slashing damage.",
-        "Whirling Edge (Action): slashing attack against everything within 5 feet, 2d8 damage each on a hit.",
-        "Resharpen (Action): removes the dulled-edge penalty after striking a hard surface."
+        "Shard Loose (Action): ranged bone-shard attack, 30ft, 1d10 piercing damage and Bleed on a hit.",
+        "Scatter Volley (Action): launches shards at up to three targets within 30ft, 1d6 piercing and Bleed each on a hit.",
+        "Regrow (Passive): recovers half her spent shards on a short rest, all of them on a long rest."
       ]
     },
     {
       "name": "Tsukikage Renji",
-      "quirk": "Luminescence",
+      "quirk": "Afterimage",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Luminescence",
-        "weakness": "Generating a bright flash leaves his own eyes unprotected — anyone he blinds with Flash Burst also forces him to make the same Constitution save, or he is blinded alongside them until the end of his next turn.",
+        "source": "Quirk Compendium — Afterimage",
+        "weakness": "The afterimage is purely visual and offers no protection against attacks that don't rely on sight — and it only forms from movement, so standing still leaves him with nothing to hide behind.",
         "abilities": [
-          { "name": "Flash Burst", "type": "Action", "description": "Emits a blinding pulse of light in a 20-ft radius. Each creature in the area, including himself, makes a Constitution save against his Quirk DC or is blinded until the end of its next turn." },
-          { "name": "Guiding Light", "type": "Bonus Action", "description": "Emits a soft, controlled glow that illuminates a 30-ft radius for one minute, and grants advantage on the next attack roll made by an ally who can see the light against a target within it." },
-          { "name": "Dazzle Step", "type": "Reaction (5th level)", "description": "When targeted by an attack, emits a localized flash at the attacker only, forcing a Constitution save or the attack is made with disadvantage." }
+          { "name": "Trailing Light", "type": "Passive", "description": "Whenever he moves at least 10 feet, leaves a faint, glowing duplicate of himself at his prior position for a few seconds." },
+          { "name": "Wrong Target", "type": "Reaction", "description": "When targeted by an attack while an afterimage exists within 5 feet of him, forces the attacker to make a Wisdom save; on a failure, the attack instead strikes the afterimage and automatically misses." },
+          { "name": "Flood the Frame", "type": "Action (5th level)", "description": "Creates three afterimages simultaneously around himself that mimic his last few seconds of movement, each lasting one round." }
         ]
       },
       "quirk_type": "Mutant",
-      "quirk_summary": "Tsukikage's body produces light at will, from a soft ambient glow to a blinding pulse bright enough to whiteout a room. He's spent more time than anyone admits learning to control the brightness curve so he doesn't blind himself every single time, with mixed success.",
+      "quirk_summary": "Tsukikage's body leaves a faint trail of light behind it when he moves — a lingering, glowing duplicate of where he just was, bright enough to read as 'him' for a half-second too long. He's spent years learning to move in ways that make the afterimage lie convincingly, misdirecting attacks toward the ghost instead of the person.",
       "personality": "Easygoing, a little dramatic, treats his own quirk like a stage light he gets to operate. Enjoys being the centre of attention in a literal sense and is fine with it being figurative too. Surprisingly tactical when it matters — the showmanship is real but it's not the whole picture.",
       "rival_in_1a": "Yoshibara Hiyoko",
-      "rivalry_dynamic": "Double vs Luminescence. Yoshibara's duplicate is visually identical to her — right up until Tsukikage floods the area with light bright enough to expose any tell, a shadow that falls wrong, a half-second of hesitation the real one doesn't have. The fight is about whether she can act fast enough that it doesn't matter which one he's looking at.",
-      "sports_festival_role": "Excellent in night or visibility-based events, and useful in any group contest as a battlefield-wide debuff. In the tournament bracket, his own blind-spot weakness gives sighted, fast opponents a real window if they're willing to eat the flash to get it.",
-      "tier1_appearance": "The dorm hallway lights flicker out during a blackout drill and Tsukikage is visible glowing faintly at the end of the corridor, entirely unbothered, reading by his own light.",
-      "dm_notes": "Tsukikage's blindness-on-himself clause is the built-in balance lever — make sure players learn it exists, ideally by him blinding himself at an inconvenient moment once in Tier 1, so it reads as established rather than a Festival-only reveal.",
+      "rivalry_dynamic": "Double vs Afterimage. Yoshibara's duplicate is a fully real, physical copy of her; Tsukikage's is a lie made of light with nothing behind it. The fight is about whether she can tell the difference between a fake that hits back and a fake that doesn't fast enough to matter — and whether he can keep moving convincingly enough that his trail keeps working.",
+      "sports_festival_role": "Excellent in fast-paced, high-movement events where his trailing image keeps confusing pursuit. In the tournament bracket, opponents who stop trying to track him visually — sound, vibration, anything non-visual — cut straight through his biggest advantage.",
+      "tier1_appearance": "The dorm hallway lights flicker out during a blackout drill and for a moment there are two Tsukikages at the end of the corridor, one of them fading gently, both equally unbothered.",
+      "dm_notes": "Tsukikage's afterimage-only-from-movement clause is the built-in balance lever — make sure players learn it exists, ideally by him standing still and looking suddenly very exposed once in Tier 1.",
       "stat_block": {
         "level": 3, "HP": 19, "AC": 13,
         "STR": 9, "DEX": 14, "CON": 11, "INT": 12, "WIS": 13, "CHA": 16, "TECH": 12
       },
       "signature_moves": [
-        "Flash Burst (Action): 20-ft radius blinding pulse. Everyone inside, including himself, makes a CON save or is blinded.",
-        "Guiding Light (Bonus Action): illuminates 30 ft for one minute, granting an ally advantage on their next attack against a target in the light.",
-        "Dazzle Step (Reaction): flashes an attacker targeting him, forcing a CON save or disadvantage on their attack."
+        "Trailing Light (Passive): moving at least 10ft leaves a glowing afterimage at his prior position for a few seconds.",
+        "Wrong Target (Reaction): an attacker targeting him within 5ft of an active afterimage makes a WIS save or hits the afterimage instead, automatically missing.",
+        "Flood the Frame (Action, 5th level): creates three simultaneous afterimages mimicking his recent movement, each lasting one round."
       ]
     },
     {
       "name": "Onogawa Subaru",
-      "quirk": "Vibrate",
+      "quirk": "Concussive Clap",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Vibrate",
-        "weakness": "Vibration travels through whatever he's touching — using it while grappled or restrained deals equal damage back to himself, and he cannot use it underwater without the effect dissipating harmlessly.",
+        "source": "Quirk Compendium — Concussive Clap",
+        "weakness": "Requires both hands free and a clear line for the blast — grappled, restrained, or with only one hand free, he can't generate enough compression to matter. The blast has no effect on anything already braced or behind full cover.",
         "abilities": [
-          { "name": "Resonant Touch", "type": "Action", "description": "On contact with a creature or object, channels high-frequency vibration. A struck creature takes 2d10 force damage and must make a Constitution save or be deafened for one minute. Objects take double damage from this effect for the purpose of breaking them." },
-          { "name": "Standing Wave", "type": "Action (5th level)", "description": "Sends vibration through the ground in a 15-ft radius centered on himself. Creatures in the area make a Dexterity save or are knocked prone and take 2d8 force damage." }
+          { "name": "Clap", "type": "Action", "description": "Claps his hands together, releasing a burst of compressed air in a 15-foot cone. Each creature in the area makes a Strength save or takes 2d10 thunder damage and is pushed back 15 feet (half damage, not pushed, on a success)." },
+          { "name": "Focused Report", "type": "Action (5th level)", "description": "Compresses the blast into a tight line instead of a cone — 30 feet long, 5 feet wide — dealing 3d10 thunder damage and forcing a Strength save or the target is also knocked prone." }
         ]
       },
       "quirk_type": "Emitter",
-      "quirk_summary": "Onogawa can generate intense vibration through any surface he's in contact with — a touch that shatters glass, a floor-slam that drops everyone standing nearby. It's contact-based and surface-based, which means he's constantly thinking about footing and what he's touching, much like Hatsuda but for an entirely different reason.",
+      "quirk_summary": "Onogawa can compress and release air between his palms hard enough to produce a directional shockwave — a clap that sounds like a gunshot and hits like one too. No contact needed, no surface required, just clear air in front of him and both hands free. He likes that it's loud. He likes that everyone in the room knows exactly when it happened.",
       "personality": "Blunt, a little gruff, says exactly what he thinks and is occasionally surprised when that lands badly. Respects effort over results, which makes him an easy training partner and a hard one to actually beat in his own estimation. Likes things that make satisfying noises.",
       "rival_in_1a": "Isokono Yoromu",
-      "rivalry_dynamic": "Tail vs Vibrate. Isokono's tail gives him reach and balance Onogawa doesn't have — but every time that tail makes contact to strike, grapple, or brace, it becomes a conduit. The fight comes down to whether Isokono can fight Onogawa without ever letting the tail touch him directly.",
-      "sports_festival_role": "Strong in terrain-destruction events and group events on shared surfaces — a single Standing Wave can take out several opponents sharing solid ground. In the tournament bracket, opponents who stay airborne or off solid contact neutralise him almost entirely.",
-      "tier1_appearance": "A vending machine in the common room develops a hairline crack across the glass after Onogawa leans on it the wrong way during an argument. He pays for it without being asked.",
-      "dm_notes": "Onogawa's vulnerability — underwater and aerial opponents — should be discoverable rather than announced. Let a smart player figure it out mid-fight. His rivalry with Isokono should hinge on tail-contact as the explicit fail condition for Isokono's usual strategy.",
+      "rivalry_dynamic": "Tail vs Concussive Clap. Isokono's tail gives him reach and balance Onogawa doesn't have — but the moment she closes to a range where the tail matters, she's well inside his blast cone. The fight comes down to whether Isokono can close that gap fast enough to matter before he gets both hands free and lined up.",
+      "sports_festival_role": "Strong in any event that rewards controlling space at range — a clean Clap clears a doorway or a chokepoint instantly. In the tournament bracket, opponents who close to grappling range before he can line up a shot take that option away from him entirely.",
+      "tier1_appearance": "A vending machine in the common room develops a hairline crack across the glass after Onogawa claps his hands to make a point during an argument, from ten feet away, without meaning to hit it.",
+      "dm_notes": "Onogawa's vulnerability — grapple range and having a hand occupied — should be discoverable rather than announced. Let a smart player figure it out mid-fight. His rivalry with Isokono should hinge on closing distance as the explicit fail condition for his usual strategy.",
       "stat_block": {
         "level": 3, "HP": 24, "AC": 13,
         "STR": 15, "DEX": 11, "CON": 14, "INT": 11, "WIS": 12, "CHA": 10, "TECH": 13
       },
       "signature_moves": [
-        "Resonant Touch (Action): on contact, 2d10 force damage and a CON save or deafened for one minute. Double damage to objects.",
-        "Standing Wave (Action): 15-ft radius ground slam, DC 14 DEX save or knocked prone and 2d8 force damage.",
-        "Shatterpoint (Passive): vibration damage ignores resistance granted purely by an object's hardness (e.g. glass, stone)."
+        "Clap (Action): 15-ft cone of compressed air. STR save or 2d10 thunder damage and pushed back 15 feet.",
+        "Focused Report (Action, 5th level): 30-ft line, 5 ft wide. 3d10 thunder damage and a STR save or knocked prone.",
+        "Full Volume (Passive): creatures that fail their save against either ability are also deafened until the end of their next turn."
       ]
     },
     {
       "name": "Mizuhana Kotori",
-      "quirk": "Weather Manipulation",
+      "quirk": "Humidity",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Weather Manipulation",
-        "weakness": "Effects are localized and require concentration; if her concentration breaks, the weather effect dissipates over the following round rather than ending instantly, sometimes inconveniencing her own allies before it clears.",
+        "source": "Quirk Compendium — Humidity",
+        "weakness": "Effects require moisture already present in the air or ground nearby — in genuinely arid conditions she has very little to work with, and pulling too much moisture from an area too quickly leaves her lightheaded, imposing disadvantage on her next Constitution save.",
         "abilities": [
-          { "name": "Localized Squall", "type": "Action", "description": "Conjures a 20-ft radius zone of heavy wind and rain within 60 feet for up to one minute (concentration). The area is lightly obscured, ranged attacks through it have disadvantage, and difficult terrain applies to anyone moving against the wind direction." },
-          { "name": "Static Charge", "type": "Action (6th level)", "description": "Within an active Localized Squall, can call down a lightning strike on a point within the zone. Each creature within 10 feet of the point makes a Dexterity save, taking 4d8 lightning damage on a fail or half on a success." }
+          { "name": "Fogbank", "type": "Action", "description": "Condenses moisture from the air into a thick fog filling a 20-ft radius zone within 60 feet for up to one minute (concentration). The area is heavily obscured." },
+          { "name": "Wring Dry", "type": "Action (6th level)", "description": "Within an active Fogbank, pulls all moisture from a 15-ft radius zone. Each creature in the area makes a Constitution save or takes 3d8 damage from sudden dehydration and gains a level of exhaustion (half damage, no exhaustion, on a success)." }
         ]
       },
       "quirk_type": "Emitter",
-      "quirk_summary": "Mizuhana can summon small, localized weather systems — wind, rain, and at higher intensity, lightning — centered on a point she can see. It's slow to build and entirely dependent on her staying focused, but a fully formed squall changes the terms of an entire fight, not just her part of it.",
-      "personality": "Dreamy, unhurried, talks about weather the way other people talk about close friends. Surprisingly tactical underneath the soft exterior — she's run the numbers on exactly how much wind it takes to ruin a ranged attacker's day. Doesn't rattle easily; rain was never going to listen to her shouting at it, so she stopped shouting at anything.",
+      "quirk_summary": "Mizuhana can draw the moisture out of the air around her — thickening it into a rolling fog thick enough to blind a room, or pulling it out entirely until the air feels like a desert. It's slow to build and entirely dependent on staying focused, but a fully formed fogbank changes the terms of an entire fight, not just her part of it.",
+      "personality": "Dreamy, unhurried, talks about weather the way other people talk about close friends. Surprisingly tactical underneath the soft exterior — she's run the numbers on exactly how much fog it takes to ruin a ranged attacker's day. Doesn't rattle easily; the air was never going to listen to her shouting at it, so she stopped shouting at anything.",
       "rival_in_1a": "Takazuki Hanori",
-      "rivalry_dynamic": "Invisibility vs Weather Manipulation. Takazuki's biggest asset is not being seen — Mizuhana's storm fills the air with visible rain and wind-blown debris that outlines anything moving through it, invisible or not. The fight is about whether Takazuki can stay out of the squall entirely, which is a smaller battlefield than usual.",
-      "sports_festival_role": "Quietly one of the most dangerous students at the Festival in any outdoor group event — a squall reshapes the entire field, not just her immediate area. In the tournament bracket, her concentration requirement is the obvious target; break her focus and the storm folds.",
-      "tier1_appearance": "The practice yard floods with unscheduled light rain for exactly four minutes during her lunch break. No weather warning was issued. She apologises to a groundskeeper, who has stopped asking questions about it.",
-      "dm_notes": "Mizuhana works best as a slow-building threat — give the squall time to visibly form before it matters, then let it dominate the back half of an encounter. Her concentration dependency is the fair counterplay; telegraph it so players learn to look for the opening.",
+      "rivalry_dynamic": "Invisibility vs Humidity. Takazuki's biggest asset is not being seen — Mizuhana's fog beads on skin and clothing, outlining the shape of anything moving through it, invisible or not. The fight is about whether Takazuki can stay out of the fogbank entirely, which is a smaller battlefield than usual.",
+      "sports_festival_role": "Quietly one of the most dangerous students at the Festival in any enclosed group event — a fogbank reshapes visibility for the entire field, not just her immediate area. In the tournament bracket, her concentration requirement is the obvious target; break her focus and the fog clears.",
+      "tier1_appearance": "The practice yard fills with unscheduled ground fog for exactly four minutes during her lunch break. No weather warning was issued. She apologises to a groundskeeper, who has stopped asking questions about it.",
+      "dm_notes": "Mizuhana works best as a slow-building threat — give the fog time to visibly form before it matters, then let it dominate the back half of an encounter. Her concentration dependency is the fair counterplay; telegraph it so players learn to look for the opening.",
       "stat_block": {
         "level": 3, "HP": 18, "AC": 12,
         "STR": 9, "DEX": 12, "CON": 11, "INT": 13, "WIS": 16, "CHA": 13, "TECH": 14
       },
       "signature_moves": [
-        "Localized Squall (Action, concentration): 20-ft radius wind and rain zone for up to one minute. Lightly obscured, ranged disadvantage, difficult terrain against the wind.",
-        "Static Charge (Action, within an active Squall): lightning strike at a point; creatures within 10 ft make a DEX save, 4d8 lightning damage on a fail.",
-        "Eye of the Storm (Passive): she and allies within 5 feet of her are unaffected by her own Squall's obscurement and difficult terrain."
+        "Fogbank (Action, concentration): 20-ft radius heavily obscuring fog for up to one minute.",
+        "Wring Dry (Action, within an active Fogbank): 15-ft radius CON save or 3d8 damage and a level of exhaustion.",
+        "Clear Sight (Passive): she and allies within 5 feet of her can see normally through her own Fogbank."
       ]
     },
     {
       "name": "Hirosegawa Daichi",
-      "quirk": "Lock Down",
+      "quirk": "Fixed Point",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Lock Down",
-        "weakness": "Can only affect one target at a time and must maintain line of sight and concentration — if he loses sight of the target or his concentration breaks, the effect ends immediately.",
+        "source": "Quirk Compendium — Fixed Point",
+        "weakness": "He must maintain line of sight and concentration on the marked point itself, not a creature — if he loses sight of the exact point or his concentration breaks, the anchor releases immediately.",
         "abilities": [
-          { "name": "Anchor Gaze", "type": "Action", "description": "Targets one creature within 60 feet he can see. That creature makes a Wisdom save against his Quirk DC or has its speed reduced to 0 for as long as he maintains concentration (up to one minute). The target may repeat the save at the end of each of its turns." },
-          { "name": "Total Lock", "type": "Action (7th level)", "description": "As Anchor Gaze, but on a failed save the target is also restrained, and disadvantage applies to its repeated saves while he maintains concentration." }
+          { "name": "Mark", "type": "Action", "description": "Designates a point in space within 60 feet he can see as anchored, for as long as he maintains concentration (up to one minute)." },
+          { "name": "Recall", "type": "Passive (while a Mark is active)", "description": "Any creature that moves more than 15 feet from the anchored point must succeed on a Wisdom save or be yanked back to the point, taking 1d10 force damage from the impact." }
         ]
       },
       "quirk_type": "Emitter",
-      "quirk_summary": "Hirosegawa can fix a single target's position in place through sustained eye contact — not telekinesis, more like locally suspending their ability to move at all. It's a single-target lockdown, total commitment, no multitasking: he picks one person and that's the whole fight for him until it ends.",
+      "quirk_summary": "Hirosegawa can anchor a single point in space through sustained eye contact and concentration — not a person, a location. Anything that tries to move away from that point gets pulled back, hard. It's a leash on geography rather than on a body, and it means the fight is never really about who he's looking at — it's about where he decided the fight happens.",
       "personality": "Intense, focused to the point of unnerving, rarely blinks during a conversation that matters to him (which is most of them, as far as anyone can tell). Doesn't do small talk well. Genuinely cares about his classmates in a way that comes out as overprotective vigilance rather than warmth.",
       "rival_in_1a": "Nomi Igisa",
-      "rivalry_dynamic": "Poltergeist vs Lock Down. Nomi doesn't need to move to be dangerous — she can hurl objects around the battlefield without her own body going anywhere, which makes locking down her movement almost beside the point. Hirosegawa's whole strategy needs a rethink against her, and he knows it, which makes this the rivalry he respects most and trusts least.",
-      "sports_festival_role": "A precision tool against single dangerous targets — exactly what you want against a Festival favourite, exactly useless against anyone who fights through telekinesis or ranged effects rather than movement. In the tournament bracket, he's the student most likely to be intentionally paired against whoever the bracket considers the biggest threat.",
-      "tier1_appearance": "A 1-A student in a hallway suddenly can't take a step for about four seconds, looks around in confusion, and Hirosegawa is already walking away by the time they figure out who did it.",
-      "dm_notes": "Hirosegawa is a single-target control specialist; he should feel oppressive against one enemy and irrelevant against everyone else nearby. His rivalry with Nomi is conceptual — a control specialist meeting the one archetype his control doesn't really touch.",
+      "rivalry_dynamic": "Poltergeist vs Fixed Point. Nomi doesn't need to move to be dangerous — she can hurl objects around the battlefield without her own body going anywhere, which makes anchoring a point almost beside it: she just throws things at whoever's stuck there. Hirosegawa's whole strategy needs a rethink against her, and he knows it, which makes this the rivalry he respects most and trusts least.",
+      "sports_festival_role": "A precision tool against any single dangerous target he can pin to a location — exactly what you want against a Festival favourite, exactly useless against anyone who fights through telekinesis or ranged effects rather than movement. In the tournament bracket, he's the student most likely to be intentionally paired against whoever the bracket considers the biggest threat.",
+      "tier1_appearance": "A 1-A student in a hallway suddenly finds themselves yanked back a full step for no visible reason, looks around in confusion, and Hirosegawa is already walking away by the time they figure out who did it.",
+      "dm_notes": "Hirosegawa is a single-point control specialist; he should feel oppressive against anyone forced to fight near his anchor and irrelevant against anyone who fights from range. His rivalry with Nomi is conceptual — a control specialist meeting the one archetype his control doesn't really touch.",
       "stat_block": {
         "level": 3, "HP": 19, "AC": 12,
         "STR": 10, "DEX": 12, "CON": 12, "INT": 13, "WIS": 16, "CHA": 11, "TECH": 13
       },
       "signature_moves": [
-        "Anchor Gaze (Action, concentration): target within 60 ft makes a WIS save or speed becomes 0 until it saves again at the end of its turn.",
-        "Total Lock (Action, concentration): as Anchor Gaze, but also restrains the target and gives disadvantage on its repeated saves.",
+        "Mark (Action, concentration): anchors a point within 60ft for up to one minute.",
+        "Recall (Passive, while a Mark is active): creatures moving more than 15ft from the anchored point make a WIS save or are yanked back, taking 1d10 force damage.",
         "Unblinking (Passive): advantage on checks/saves to maintain concentration against effects that would force him to look away."
       ]
     },
     {
       "name": "Natsukawa Riho",
-      "quirk": "Fold",
+      "quirk": "Kiln",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Fold",
-        "weakness": "Can only fold flat, non-living materials — anything thicker than a few inches or anything organic resists entirely, and over-folding a single object beyond its limit causes it to tear or break permanently.",
+        "source": "Quirk Compendium — Kiln",
+        "weakness": "Her clay reserve is finite and regenerates slowly — roughly one construct's worth every hour of rest — and anything she shapes crumbles to inert dust after about an hour, whether it's been used or not.",
         "abilities": [
-          { "name": "Origami Construct", "type": "Action", "description": "Folds a flat material (paper, thin metal sheet, cloth) within reach into a rigid construct — a blade, a shield, a glider wing — that functions mechanically as that item for one hour or until unfolded." },
-          { "name": "Rapid Refold", "type": "Bonus Action (5th level)", "description": "Unfolds and refolds an existing Origami Construct into a different shape without needing a fresh action." }
+          { "name": "Shape", "type": "Action", "description": "Secretes and instantly hardens a lump of dense, clay-like material from her palms into a rigid construct — a blade, a shield, a tool — that functions mechanically as that item for one hour." },
+          { "name": "Reshape", "type": "Bonus Action (5th level)", "description": "Unshapes and reshapes an existing construct into a different form without needing a fresh action." }
         ]
       },
       "quirk_type": "Emitter",
-      "quirk_summary": "Natsukawa can fold any flat, non-living material into rigid, functional shapes — a sheet of paper into a blade sharp enough to cut, a tarp into a glider, a length of foil into a makeshift shield. The constructs hold their shape and mechanical function for about an hour before the material's own structure starts giving out. She's spent years getting genuinely good at this in a way that looks like a parlor trick until it isn't.",
-      "personality": "Meticulous, a little precious about her materials, will absolutely lecture you about the correct way to store origami paper. Quietly proud of a craft that most people dismiss as cute. Funny about it in a self-aware way — she knows exactly how this looks and has stopped caring what people think.",
+      "quirk_summary": "Natsukawa's palms produce a dense, clay-like substance that hardens to a rigid, functional shape the instant she finishes forming it — a blade, a shield, a makeshift tool, whatever the moment calls for. Unlike a crafter who needs raw material lying around, she brings her own; the tradeoff is that her reserve is limited and slow to replenish, so she thinks hard about what's actually worth making before she commits to it.",
+      "personality": "Meticulous, a little precious about her materials, will absolutely lecture you about the correct way to condition clay before shaping it. Quietly proud of a craft that most people dismiss as cute. Funny about it in a self-aware way — she knows exactly how this looks and has stopped caring what people think.",
       "rival_in_1a": "Ichitaka Shijime",
-      "rivalry_dynamic": "Hologram vs Fold. Both build things that aren't what they first appear to be — Ichitaka's projections trick the eye, Natsukawa's constructs are real and tangible the moment you touch them. The fight is a question of whether Ichitaka's illusions can bait Natsukawa into wasting a fold on something that turns out to be fake.",
-      "sports_festival_role": "Versatile and resourceful in scavenger or obstacle-based events — give her materials and she'll build a solution. In the tournament bracket, she's at a disadvantage against opponents who deny her any flat material to work with, which is rare but a real counter if anyone thinks of it.",
-      "tier1_appearance": "A paper crane left on a 1-A student's desk turns out, on close inspection, to have a folded edge sharp enough to have actually cut the desk slightly. Nobody saw her do it.",
-      "dm_notes": "Natsukawa rewards creative DMing — let players hand her unusual materials mid-encounter and have her improvise constructs from them. Her limitation (flat, non-living, time-limited) keeps her grounded; don't let her fold anything thick or organic.",
+      "rivalry_dynamic": "Hologram vs Kiln. Both build things that aren't quite what they first appear to be — Ichitaka's projections trick the eye, Natsukawa's constructs are real and load-bearing the moment you touch them. The fight is a question of whether Ichitaka's illusions can bait Natsukawa into wasting one of her limited constructs on something that turns out to be fake.",
+      "sports_festival_role": "Versatile and resourceful in objective-based events — whatever the problem is, she can probably shape a tool for it, within her reserve. In the tournament bracket, opponents who can force her to burn through her limited supply early put her at a real, discoverable disadvantage.",
+      "tier1_appearance": "A small clay bird is found sitting on a 1-A student's desk, and on close inspection its wingtip is honed sharp enough to have actually scored the wood slightly. Nobody saw her do it.",
+      "dm_notes": "Natsukawa rewards creative DMing — let players describe an unusual problem and have her improvise a construct for it. Her limitation (finite reserve, hour-long lifespan) keeps her grounded; track how much she's used in a given session.",
       "stat_block": {
         "level": 3, "HP": 17, "AC": 12,
         "STR": 9, "DEX": 15, "CON": 10, "INT": 15, "WIS": 13, "CHA": 12, "TECH": 16
       },
       "signature_moves": [
-        "Origami Construct (Action): folds flat material into a functional weapon, shield, or tool for one hour.",
-        "Rapid Refold (Bonus Action): reshapes an existing construct into a different one instantly.",
-        "Paper Edge (Passive): folded blade constructs deal 1d6 slashing damage and ignore the first point of an opponent's natural armor bonus."
+        "Shape (Action): forms a construct — weapon, shield, or tool — from her own material, lasting one hour.",
+        "Reshape (Bonus Action): reforms an existing construct into a different one instantly.",
+        "Fired Edge (Passive): bladed constructs deal 1d6 slashing damage and ignore the first point of an opponent's natural armor bonus."
       ]
     },
     {
       "name": "Kuromine Sosuke",
-      "quirk": "Earphone Jack",
+      "quirk": "Metronome",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Earphone Jack",
-        "weakness": "Cords must physically connect to a surface or creature to transmit a heartbeat shockwave, and severing or removing a connected cord ends the effect immediately. He has a limited number of cords (six) and damaged cords don't regenerate until a long rest.",
+        "source": "Quirk Compendium — Metronome",
+        "weakness": "Only affects creatures capable of hearing him and only works at conversational range — loud environments that drown out his own rhythm-setting, or targets that are deafened, are immune.",
         "abilities": [
-          { "name": "Jack In", "type": "Action", "description": "Extends a retractable cord from his earlobes up to 30 feet, attaching it to a surface or creature. Once attached, the cord transmits an amplified heartbeat pulse — an attached creature makes a Constitution save or takes 2d8 thunder damage and is pushed 5 feet away from the source." },
-          { "name": "Network Pulse", "type": "Action (6th level)", "description": "If multiple cords are currently attached, sends a synchronized pulse through all of them simultaneously, each connected creature taking the Jack In damage again without a new attachment roll." }
+          { "name": "Set the Tempo", "type": "Action", "description": "Targets a creature within 30 feet, imposing his internal rhythm on their reactions. Target makes a Wisdom save; on a failure, choose one: their speed is halved until the start of their next turn (off-beat), or their next attack roll before the start of their next turn has disadvantage (rushed)." },
+          { "name": "Downbeat", "type": "Reaction (6th level)", "description": "When a creature currently affected by his Set the Tempo makes an attack roll, he can force it to reroll and take the worse result." }
         ]
       },
-      "quirk_type": "Mutant",
-      "quirk_summary": "Kuromine's earlobes extend into retractable, jack-like cords that can attach to surfaces or people and transmit an amplified shockwave pulse — used for both offense and improvised binding/climbing. He thinks about cord management the way Kitamura thinks about tape, and the two of them have had exactly one very long, very nerdy conversation about logistics that neither will admit to enjoying as much as they did.",
+      "quirk_type": "Emitter",
+      "quirk_summary": "Kuromine perceives and can impose tempo — a rhythm that gets inside a target's reactions and either slows them down or rushes them into overcommitting. He doesn't need contact or a device, just a target who can hear him keep the beat. He's spent years learning to read someone's natural rhythm before he changes it, which is most of the actual skill involved.",
       "personality": "Cool and a little aloof on the surface, genuinely enthusiastic underneath about anything mechanical or rhythmic. Listens more than he talks. Has a habit of tapping a beat against his own leg when he's thinking, which classmates have learned means don't interrupt yet.",
       "rival_in_1a": "Toragi Kayo",
-      "rivalry_dynamic": "Twin Impact vs Earphone Jack. Toragi's twin-strike rhythm and Kuromine's cord network are both about timing and connection points — the fight comes down to whose rhythm the other can disrupt first. Kuromine has been quietly tracking Toragi's strike cadence from footage for weeks.",
-      "sports_festival_role": "Strong in events with multiple simultaneous targets or grapple-and-control objectives — Network Pulse rewards setting up several connections before committing. In the tournament bracket, severing or avoiding his cords entirely shuts him down fast, which is a known, learnable counter.",
-      "tier1_appearance": "A length of cord is found looped neatly around a stair railing in the dorm, clearly used to test grip strength, just as neatly retrieved before anyone asks who left it.",
-      "dm_notes": "Kuromine plays like a setup specialist — give him a round or two to attach cords before Network Pulse becomes available, and let smart players sever or dodge the cords to deny him the payoff. His friendship-adjacent rivalry-of-craft with Kitamura is a nice beat to use in a shared scene if both classes cross paths.",
+      "rivalry_dynamic": "Twin Impact vs Metronome. Toragi's twin-strike relies on precise internal timing — exactly the kind of rhythm Kuromine's quirk is built to disrupt from the outside. The fight comes down to whether he can get his tempo into her head before her own timing wins out.",
+      "sports_festival_role": "Strong in prolonged one-on-one exchanges where disrupting an opponent's rhythm compounds over time. In the tournament bracket, opponents who fight from a distance he can't be heard at, or who don't rely on precise timing to begin with, are much harder for him to touch.",
+      "tier1_appearance": "A sparring partner reports that their footwork kept 'feeling wrong' during a drill, half a beat off from where it should have landed, the whole time Kuromine was standing nearby tapping his leg.",
+      "dm_notes": "Kuromine plays like a debuff specialist — his effect compounds the longer he stays in the fight uninterrupted. Let smart players shut him down by getting out of earshot or overwhelming the environment with noise. His quiet rivalry-of-craft with Kitamura — both precision setup specialists in their own way — is a nice beat to use in a shared scene if both classes cross paths.",
       "stat_block": {
         "level": 3, "HP": 21, "AC": 13,
         "STR": 11, "DEX": 15, "CON": 12, "INT": 13, "WIS": 13, "CHA": 13, "TECH": 14
       },
       "signature_moves": [
-        "Jack In (Action): extends a cord up to 30 ft to attach to a target. CON save or 2d8 thunder damage and pushed 5 feet.",
-        "Network Pulse (Action): re-triggers Jack In's damage on every currently attached creature at once.",
-        "Six Cords (Passive): can have up to six cords attached simultaneously; severing a cord requires an attack roll against it (AC 12)."
+        "Set the Tempo (Action): target within 30ft makes a WIS save or suffers halved speed or disadvantage on their next attack, his choice.",
+        "Downbeat (Reaction, 6th level): forces a currently-affected target to reroll an attack and take the worse result.",
+        "Perfect Pitch (Passive): advantage on checks to notice or track a creature by sound alone."
       ]
     },
     {
       "name": "Wakatabi Senri",
-      "quirk": "Impact Recoil",
+      "quirk": "Debt Collector",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Impact Recoil",
-        "weakness": "Redirected force must go somewhere — if there is no valid open direction to send it, the recoil instead deals half the absorbed damage to her directly, even though the original attack was negated.",
+        "source": "Quirk Compendium — Debt Collector",
+        "weakness": "The stored damage must be spent as a single melee strike delivered personally — if she's incapacitated, restrained, or can't reach a target before the end of her next turn after banking it, the stored damage dissipates harmlessly.",
         "abilities": [
-          { "name": "Absorb and Redirect", "type": "Reaction", "description": "When hit by an attack, can negate all damage from it and instead redirect the force as a burst in a direction of her choice within 15 feet, dealing the same damage to anything in a 5-ft-wide line in that direction." },
-          { "name": "Stored Recoil", "type": "Passive (5th level)", "description": "Can hold up to two instances of absorbed force in reserve, releasing them on a later turn as a single combined burst instead of immediately." }
+          { "name": "Bank It", "type": "Reaction", "description": "When hit by an attack, negates all damage from it and instead stores the amount as banked force, up to a maximum equal to twice her level." },
+          { "name": "Collect", "type": "Action", "description": "Makes a melee attack against any creature; on a hit, adds all currently banked force to the damage as a single lump payment, then resets banked force to zero." }
         ]
       },
       "quirk_type": "Emitter",
-      "quirk_summary": "Wakatabi can absorb the force of an attack that hits her and immediately redirect it outward as a kinetic blast in a direction of her choosing — she doesn't take the hit, something else does. It only works reactively, on attacks that actually land, which means she has to be willing to get hit on purpose more often than most people would like.",
+      "quirk_summary": "Wakatabi can shrug off an attack that would have hit her and store the force instead of taking the damage — then deliver it all back later, in person, through her fists. It only works reactively, on attacks that actually land, which means she has to be willing to get hit on purpose more often than most people would like, and patient enough to wait for the right moment to collect.",
       "personality": "Fearless in a slightly worrying way — getting hit is half her kit, so she stops flinching from it long before her classmates do. Blunt, encouraging, the person who tells you to take the hit and trust the plan. People do, mostly because it's worked so far.",
       "rival_in_1a": "Kinosho Kochimiko",
-      "rivalry_dynamic": "Neutralization vs Impact Recoil. Kinosho can shut down a quirk on contact — and Wakatabi's entire kit depends on her quirk being active the moment she's hit. If Kinosho lands the neutralizing touch first, Wakatabi just takes the damage like anyone else. The whole fight is a race to see who touches whom in what order.",
-      "sports_festival_role": "Punishing in any event where opponents commit to a big single hit, since that hit becomes their problem redirected back at them or their allies. In the tournament bracket, opponents who use sustained, low-damage pressure rather than big single attacks deny her the leverage she needs.",
-      "tier1_appearance": "A sparring partner's full-strength kick lands clean on Wakatabi and the practice dummy behind her explodes outward instead. The sparring partner checks their own foot, confused about why nothing hurts.",
-      "dm_notes": "Wakatabi is a high-skill-expression reactive fighter — she's only as good as the attacks she's allowed to redirect. Her rivalry with Kinosho is a clean hard-counter dynamic; let that be the explicit tension if they ever meet on-screen.",
+      "rivalry_dynamic": "Neutralization vs Debt Collector. Kinosho can shut down a quirk on contact — and Wakatabi's entire kit depends on the quirk being active the moment she's hit. If Kinosho lands the neutralizing touch first, Wakatabi just takes the damage like anyone else, with nothing banked to collect on. The whole fight is a race to see who touches whom in what order.",
+      "sports_festival_role": "Punishing in any event where opponents commit to a few big hits, since all of that damage eventually comes back at once, on her schedule. In the tournament bracket, opponents who use sustained, low-damage pressure rather than big single attacks deny her the leverage she needs to bank anything worth collecting.",
+      "tier1_appearance": "A sparring partner's full-strength kick lands clean on Wakatabi. Nothing happens. Two exchanges later it happens to them instead, all at once, and they check their own ribs, confused about the delay.",
+      "dm_notes": "Wakatabi is a high-skill-expression reactive fighter — she's only as good as the attacks she's allowed to bank and the openings she gets to collect on. Her rivalry with Kinosho is a clean hard-counter dynamic; let that be the explicit tension if they ever meet on-screen.",
       "stat_block": {
         "level": 3, "HP": 22, "AC": 13,
         "STR": 12, "DEX": 14, "CON": 13, "INT": 11, "WIS": 13, "CHA": 13, "TECH": 12
       },
       "signature_moves": [
-        "Absorb and Redirect (Reaction): negate an attack's damage, redirect it as a 5-ft-wide line burst within 15 feet for equal damage.",
-        "Stored Recoil (Passive, 5th level): holds up to two absorbed instances in reserve to release as a combined burst later.",
-        "No Flinch (Passive): immune to being frightened by an attack she intends to absorb."
+        "Bank It (Reaction): negates an attack's damage, storing it as banked force up to twice her level.",
+        "Collect (Action): melee attack that adds all banked force as bonus damage on a hit, then resets to zero.",
+        "No Flinch (Passive): immune to being frightened by an attack she intends to bank."
       ]
     },
     {
       "name": "Ibarada Shun",
-      "quirk": "Zero Gravity",
+      "quirk": "Unmoored",
       "quirk_mechanics": {
-        "source": "Quirk Compendium — Zero Gravity",
-        "weakness": "Touch is required to nullify gravity on a target, and the effect only lasts while he maintains concentration — releasing concentration drops the target immediately, from whatever height it's currently at.",
+        "source": "Quirk Compendium — Unmoored",
+        "weakness": "Touch is required to strip friction and inertia control from a target, and the effect only lasts while he maintains concentration — releasing concentration returns normal physics to the target instantly, wherever its momentum has carried it.",
         "abilities": [
-          { "name": "Gravity Nullify", "type": "Action", "description": "Touches a creature or object up to Large size, removing the effects of gravity on it for as long as he maintains concentration (up to one minute). The target floats and can be pushed in any direction with minimal force; it has no fall damage and cannot move under its own propulsion unless it has one." },
-          { "name": "Drop Cancel", "type": "Reaction (5th level)", "description": "When a creature affected by Gravity Nullify would take fall or impact damage immediately after the effect ends, halves that damage." }
+          { "name": "Frictionless", "type": "Action", "description": "Touches a creature or object up to Large size, removing its ability to control its own friction and inertia for as long as he maintains concentration (up to one minute). Any force applied to it — a push, a gust, its own momentum — continues unopposed until something solid stops it or the effect ends." },
+          { "name": "Dead Stop", "type": "Reaction (5th level)", "description": "When a creature affected by Frictionless would collide with something at high speed, he can end the effect early to restore normal friction just before impact, halving the resulting damage." }
         ]
       },
       "quirk_type": "Emitter",
-      "quirk_summary": "Ibarada can touch a creature or object and remove its weight entirely, leaving it weightless and drifting until he lets go of the effect — at which point gravity reasserts itself all at once, wherever the target happens to be. He's quiet about how precisely he's worked out the timing on dropping someone from exactly the wrong height.",
+      "quirk_summary": "Ibarada can touch a creature or object and strip away its grip on its own momentum — once he's done it, anything that was already moving keeps moving, and anything pushed keeps sliding, until something stops it or he lets go. On himself he barely uses it; on something large and already committed to a direction, one touch turns their own momentum into the problem.",
       "personality": "Calm to the point of seeming detached, picks his moments rather than his fights. Doesn't enjoy conflict for its own sake but has a sharp, dry sense of when to act. Tends to be underestimated by people who don't realize how much of the fight is over the moment he gets a hand on you.",
       "rival_in_1a": "Tazato Tadamaki",
-      "rivalry_dynamic": "Dragon vs Zero Gravity. Tazato's draconic form is huge, strong, and built for aerial dominance — exactly the kind of mass and altitude Ibarada's quirk is designed to strip away. One clean touch and Tazato's biggest advantages, weight and flight control, both disappear at once. The trick is getting that touch on something that large and that dangerous.",
-      "sports_festival_role": "A precision answer to any oversized or airborne opponent — genuinely frightening once he closes the distance. In the tournament bracket, the entire fight against him is about denying him that first touch, because everything after it goes his way.",
-      "tier1_appearance": "A dropped textbook in the library hallway simply doesn't fall — it hangs at waist height for a few seconds before Ibarada, walking past without slowing, flicks two fingers and lets it drop the rest of the way into his own hand.",
-      "dm_notes": "Ibarada is a control specialist whose entire threat profile hinges on landing one touch. Play him as patient and opportunistic rather than aggressive — he waits for the opening rather than forcing it. His rivalry with Tazato is the clean 'the bigger they are' dynamic.",
+      "rivalry_dynamic": "Dragon vs Unmoored. Tazato's draconic form is huge, fast, and built around controlled, powerful momentum — exactly what Ibarada's quirk is designed to take out of her hands. One clean touch and she can't stop, can't turn, can't do anything but keep going in whatever direction she committed to. The trick is getting that touch on something that large and that dangerous before it's already moving too fast to matter.",
+      "sports_festival_role": "A precision answer to any large, fast, or momentum-committed opponent — genuinely frightening once he closes the distance. In the tournament bracket, the entire fight against him is about denying him that first touch, because everything after it goes his way.",
+      "tier1_appearance": "A dropped textbook in the library hallway keeps sliding along the floor in a dead straight line long after it should have stopped, and Ibarada, walking past without slowing, catches it with a foot at the last second.",
+      "dm_notes": "Ibarada is a control specialist whose entire threat profile hinges on landing one touch. Play him as patient and opportunistic rather than aggressive — he waits for the opening rather than forcing it. His rivalry with Tazato is the clean 'the bigger and faster they are, the worse it goes' dynamic.",
       "stat_block": {
         "level": 3, "HP": 19, "AC": 13,
         "STR": 10, "DEX": 14, "CON": 12, "INT": 13, "WIS": 15, "CHA": 12, "TECH": 13
       },
       "signature_moves": [
-        "Gravity Nullify (Action, concentration): touch a creature or object up to Large size, removing gravity's effect on it for up to one minute.",
-        "Drop Cancel (Reaction, 5th level): halves fall/impact damage when a Nullified target's weightlessness ends.",
-        "Light Touch (Passive): advantage on grapple checks made to establish the initial touch required for Gravity Nullify."
+        "Frictionless (Action, concentration): touch a creature or object up to Large size, removing its control over its own friction and momentum for up to one minute.",
+        "Dead Stop (Reaction, 5th level): ends Frictionless early to halve impact damage from a resulting collision.",
+        "Light Touch (Passive): advantage on grapple checks made to establish the initial touch required for Frictionless."
       ]
     }
   ]

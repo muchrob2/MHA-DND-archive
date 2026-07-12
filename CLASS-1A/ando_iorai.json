@@ -11,7 +11,7 @@
   "appearance": {
     "hair": "Green buzzcut. Sharp.",
     "build": "Athletic. Compact and quick.",
-    "other": "Hard reptile scales cover his body under his clothing — he wears the sunglasses at all times. The scales along his arms can be seen when he rolls up his sleeves, which he does more often than necessary."
+    "other": "Hard reptile scales cover his body under his clothing. He wears the sunglasses at all times, partly for style and partly because his eyes have narrow, vertical reptilian pupils he would rather people not clock first. The scales along his arms show when he rolls up his sleeves, which he does more often than necessary."
   },
   "personality": {
     "summary": "Cocky and jokes constantly, even in situations that don't call for it. Genuinely believes he is the best person in the class until proven wrong, at which point he is briefly very quiet and then resumes being cocky. Gets scared easily but has constructed an impressive wall of banter around this fact. The sunglasses are part of the architecture.",
@@ -19,6 +19,7 @@
     "in_combat": "Jumps in early and hard. The jokes stop. He's actually competent when he drops the performance.",
     "quirk_of_character": "He is afraid of surprisingly mundane things (specific loud sounds, the dark, sudden movement from above). He covers these immediately with a joke. The class has started to recognise the pattern."
   },
+  "backstory": "Grew up in the apartment above his family's noodle shop, one of four kids in a loud house on an even louder street. The sunglasses started because his older brother wore a pair and Ando thought they looked good. They stuck around long after the reason did.",
   "ability_scores": {
     "note": "CON primary (Scales is protective, durability-oriented). STR secondary for striker role.",
     "STR": 14,

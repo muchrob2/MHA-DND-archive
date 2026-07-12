@@ -19,6 +19,7 @@
     "in_combat": "Wall of arms. Uses his tentacles to shield allies, grab enemies, and attack simultaneously. The most versatile defensive profile in the class.",
     "quirk_of_character": "When he's concentrating on something he enjoys — especially cooking — his extra arms do different things independently without him directing them. One stirs, one chops, one tastes. It's completely unconscious. He doesn't notice."
   },
+  "backstory": "Raised mostly by his grandmother after his parents took work overseas when he was young. She taught him to cook, and cooking is still the one thing that gets him to fully relax. His hair went grey early for reasons no doctor has fully explained, and since nobody in the family made it a big deal, neither does he.",
   "ability_scores": {
     "note": "STR primary (physical, multiple arms). CON for durability while taking damage in the tank role.",
     "STR": 15,

@@ -11,7 +11,7 @@
   "appearance": {
     "hair": "Brown, curly, voluminous. Takes up substantial space relative to his height.",
     "build": "Chubby and short. The shortest person in the class.",
-    "other": "Often damp from using his quirk in training. Has a printed ranking chart. He updates it. He laminates it. It lives on the fridge."
+    "other": "Often damp from using his quirk in training. Has a printed ranking chart. He updates it. He laminates it. It lives on the fridge. A ring of pale aqua colors the outer edge of both irises, quirk backwash that never fully faded after years of use, and the pads of his index fingers carry small permanent calluses shaped like the nozzles the water actually leaves from."
   },
   "personality": {
     "summary": "Arrogant in a specific, sustained, completely committed way. Believes with complete sincerity that he is the best member of Class 1-A, and maintains evidence of this belief in laminated form. Loud. Annoying to people who don't understand him and also to people who do. Has not, at any point, questioned whether his ranking chart makes him popular. It does not make him popular.",
@@ -19,6 +19,7 @@
     "in_combat": "Aggressive and vocal about his own performance during combat. Surprisingly effective. His Water Gun's pressure tier system actually scales well and he understands how to use it.",
     "quirk_of_character": "He is annoying and he is also correct, sometimes, and the class hates that. He tracks their performances more carefully than anyone else does — which means he occasionally gives genuinely useful feedback, entirely without warmth."
   },
+  "backstory": "Middle child in a competitive family that treats ranking things as a normal way to talk to each other over dinner. He was raised to think keeping score is just what people do. Nobody has corrected this yet.",
   "ability_scores": {
     "note": "CON primary (Water Gun depends on hydration and internal pressure — CON governs both mechanics and physical resilience). DEX secondary for ranged accuracy.",
     "STR": 8,

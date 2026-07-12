@@ -11,7 +11,7 @@
   "appearance": {
     "hair": "Blonde ponytail. The irony of a girl with a tail also wearing her hair in a ponytail is not lost on her. She knows.",
     "build": "Small and athletic. Compact.",
-    "other": "Her tail extends from her lower back — thick, strong, and prehensile. It moves with her emotions somewhat involuntarily."
+    "other": "Her tail extends from her lower back, thick, strong, and prehensile, with a small tuft of darker blonde fur right at the tip that matches her ponytail. It moves with her emotions somewhat involuntarily."
   },
   "personality": {
     "summary": "Shy and quiet in groups. Deeply and genuinely loving toward people she trusts. Cries easily — not from weakness but from sensitivity — and doesn't hide it. Makes no apology for this.",
@@ -19,6 +19,7 @@
     "in_combat": "Steadier than expected. The shyness disappears when her friends need her. Uses her tail for grapples and support rather than pure offense.",
     "quirk_of_character": "Her tail wags when she's happy. Stiffens when she's nervous. Wraps around nearby friendly people when she's scared. She can't entirely control this. The class finds it endearing."
   },
+  "backstory": "Youngest of three in a quiet household that prizes calm over noise. Her tail runs in the family, her mother has one too, so it was never treated as strange at home even though strangers still stare.",
   "ability_scores": {
     "note": "STR primary for Tail attacks (2d12 + double STR). WIS secondary for perceptive support role.",
     "STR": 14,

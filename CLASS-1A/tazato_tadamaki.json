@@ -19,6 +19,7 @@
     "in_combat": "Completely in her element. She is genuinely more comfortable here than anywhere else. Her cranky edge disappears because the situation is clear.",
     "quirk_of_character": "She helps people. She just doesn't frame it as helping — she finds a reason that is technically about efficiency or practicality and does the kind thing that way. The class has noticed. She knows they've noticed. She does not comment on it."
   },
+  "backstory": "The only girl among four cousins raised in the same house, all loud, all competitive, none able to out-argue her. Her family runs a small forge, which she finds funny given what her own quirk turned into.",
   "ability_scores": {
     "note": "STR primary for Dragon transformation's physical enhancement — raw power is the quirk's core output. CON secondary for the sustained transformation and dragon physiology requirements.",
     "STR": 15,

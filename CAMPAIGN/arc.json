@@ -20,7 +20,7 @@
           "description": "A staged disaster scenario in a simulated city block. Students must rescue civilians (actors and prop mannequins) while combat drones provide the villain opposition. No predetermined groupings — everyone is on their own. This is how the class meets each other.",
           "beats": [
             "Opening chaos: the exam starts without warning — no countdown, no announcement. Students scatter and self-organise in real time. The first interaction most PCs have is nearly colliding with each other.",
-            "Key moments: Toshida shouts a word and accidentally levels a wall. Nakaya enlarges a bus to use as a ramp, then can't unshrink it. Ren disappears mid-sprint — no one sees him move, they just notice he's somewhere else.",
+            "Key moments: Toshida shouts a word and accidentally levels a wall. Nakaya jump-starts a stalled bus's dead battery with a controlled arc to use it as a ramp, then can't get the engine to switch off afterward. Ren disappears mid-sprint — no one sees him move, they just notice he's somewhere else.",
             "Conflict point: Masahata loudly criticises everyone else's technique during the exam. He is correct about roughly half of it, which makes it significantly worse.",
             "Drone boss: the final obstacle is a single large combat drone targeting the highest-scoring candidates. Students have to cooperate — or use each other as distractions — to take it down.",
             "Resolution: the class passes collectively. Score rankings are posted. Masahata reads them twice. The ranking chart era begins."
@@ -36,10 +36,10 @@
           "type": "Social arc + first formal training encounter",
           "sessions": "2",
           "dm_goal": "Establish who these students are to each other before anything is on the line. The dorm incidents build personality. Capture the Flag is where rivalries get specific. Both should feel low-stakes and character-driven.",
-          "description": "The class moves into Heights Alliance. First week is pure character chaos — personalities collide, routines form, the common room becomes a social ecosystem. Oshiro's opening combat class (Capture the Flag) runs in the second session: two teams, live stakes, no mercy. The same students who argued about the couch are now trying to beat each other for lap-running rights.",
+          "description": "The class moves into Heights Alliance. First week is pure character chaos — personalities collide, routines form, the common room becomes a social ecosystem. Oshiro's opening combat class (Capture the Flag) runs in the second session: two teams, live stakes, no mercy. The same students who argued about the fried phone charger are now trying to beat each other for lap-running rights.",
           "beats": [
             "The doorframe incident (Toshida, day one): a word escapes him mid-yawn. A panel falls out of the doorframe. He apologises and fixes it. The panel falls again the next morning.",
-            "The couch incident (Nakaya, day two): she absentmindedly enlarges a throw pillow. It cannot be un-enlarged. The couch is now partially obscured. This is simply the couch now.",
+            "The charger incident (Nakaya, day two): she jump-starts Masahata's dead phone charger with a small controlled arc, purely as a favor. It works, technically. It also fuses the charging port shut permanently. This is simply how his phone charges now.",
             "Masahata prints and laminates a ranking chart based on exam scores. It appears on the fridge, fully formatted with tier brackets. No one asked him to do this. Kinosho stares at it for a long time and says nothing.",
             "Capture the Flag — Oshiro's opening combat class: team assignments calibrated for discomfort, not balance. Yoshibara immediately doubles herself — Oshiro rules it legal because he didn't say it wasn't. Kinosho correctly predicts the outcome of three matchups and declines to share until after. Ando loses to someone he was certain he'd beat and wears his sunglasses for the next 36 hours including during sleep.",
             "Masahata updates the ranking chart to include 'combat performance (preliminary).' No methodology is explained. It is accurate.",

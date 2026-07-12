@@ -19,6 +19,7 @@
     "in_combat": "Precise and planned. Uses holograms to redirect attention, create tactical confusion, and support the class's actual attackers.",
     "quirk_of_character": "He occasionally creates small holograms for no reason — a bird perched on his desk, a flame, something abstract. He doesn't explain these. They're practice, but they look like art."
   },
+  "backstory": "Only child of two university professors, raised on the expectation that he would be excellent at whatever he chose. He was. He picked hero work over academia mainly because it seemed like the harder problem, and hard problems are the only ones that hold his interest.",
   "ability_scores": {
     "note": "INT primary (Hologram requires concentration, mental projection, and understanding of what you're projecting). CHA secondary (convincing illusions benefit from understanding of what people believe).",
     "STR": 8,

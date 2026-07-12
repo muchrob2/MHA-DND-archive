@@ -69,7 +69,7 @@
         "Ren disappears mid-sprint in the first round — blink-and-miss, other students will ask where he went.",
         "Masahata announces his point total at regular intervals throughout the exam, unprompted.",
         "Toshida's shout brings down a wall segment, civilian actors scatter, somehow this scores two rescue points.",
-        "Nakaya tries to enlarge a Mk.I drone to use as a shield — drone safety protocols eject her 10 ft. Drone is fine. Nakaya is also fine. Points scored.",
+        "Nakaya tries to short out a Mk.I drone's targeting system with a jolt to use it as cover — drone safety protocols eject her 10 ft. Drone reboots fine. Nakaya is also fine. Points scored.",
         "Kinosho is spotted at the end of the exam on a building roof nobody saw her climb. She is asleep. She is still somehow ranked in the top 5.",
         "During civilian rescue, an actor drops character momentarily and says 'You kids actually showed up fast — better than last year.' Small, human, real. A seed."
       ],
@@ -162,9 +162,9 @@
           }
         },
         {
-          "name": "The Couch Incident",
-          "description": "Day two. Nakaya sits on the common room couch. The couch was not designed for a student who is actively enlarging. The exact circumstances are up to the table — but the couch loses.",
-          "dm_notes": "Pure comedy. The couch is fine by session 3 — someone fixes it. Let the class decide who fixed it and how. This is also the story they will tell at the Sports Festival when journalists ask them about dorm life."
+          "name": "The Charger Incident",
+          "description": "Day two. Nakaya notices Masahata's phone charger has died and offers to fix it with a small controlled arc, purely as a favor. It works. The port also fuses solid at roughly double voltage. His phone now charges, slowly, through a hairline crack in the case.",
+          "dm_notes": "Pure comedy. Masahata is furious in a way that undercuts his usual self-importance, since the fix objectively worked. Let the class decide whether Nakaya offers to 'fix' anything else afterward, and whether anyone lets her. This is also the story they will tell at the Sports Festival when journalists ask them about dorm life."
         },
         {
           "name": "The Chart",

@@ -19,6 +19,7 @@
     "in_combat": "Aggressive and direct. Gets in close immediately. Uses her claws to create bleeds and push through armour.",
     "quirk_of_character": "Her iron claws make tasks like holding a cup or typing complicated. She's developed workarounds for everything. She doesn't complain about it."
   },
+  "backstory": "Only child of two accountants who are still faintly surprised by how loud she turned out. She decided she wanted to be a hero at six years old, after watching a rescue on the news, and never once reconsidered. Her parents are supportive, if a little worn out.",
   "ability_scores": {
     "note": "STR primary for Iron Claws (unarmed striker). CON secondary for durability in close range.",
     "STR": 15,

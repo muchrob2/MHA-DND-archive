@@ -19,6 +19,7 @@
     "in_combat": "Formal in a way that's slightly unusual for combat — announces his attack before it lands if there's time, acknowledges good moves from opponents. People find this unsettling.",
     "quirk_of_character": "He writes thank-you notes. Physical ones. He carries cards. Other students have received these after normal interactions that Setaka found meaningful."
   },
+  "backstory": "Raised by parents who valued manners above almost everything else. Dinner was never served until everyone had said please and meant it. He has never once considered this excessive.",
   "ability_scores": {
     "note": "STR primary — Iron Ball's cannon fire and close-range strikes are raw physical projection. CON secondary for sustained combat durability at his size.",
     "STR": 15,

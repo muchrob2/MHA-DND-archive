@@ -11,7 +11,7 @@
   "appearance": {
     "hair": "Pink. Usually slightly messy from the latest nap.",
     "build": "Athletic but you wouldn't know it from her resting posture, which is 'recently collapsed on a surface.'",
-    "other": "Almost always has visible under-eye shadows. Carries a small blanket in her bag. This is not unusual or a surprise to anyone."
+    "other": "Almost always has visible under-eye shadows. Carries a small blanket in her bag. This is not unusual or a surprise to anyone. When Neutralization activates, both eyes flatten to a dull pewter grey for a second or two before her normal color drains back in. Classmates call it turning off."
   },
   "personality": {
     "summary": "A strategic genius with extraordinary common sense who deploys both properties almost exclusively in service of finding the optimal napping location. When she does decide to engage with a problem, she solves it completely, accurately, and in about 45 seconds. Then she goes back to sleep. The class is both annoyed by and completely dependent on this.",
@@ -19,6 +19,7 @@
     "in_combat": "Alert, quiet, and precise. Neutralization requires direct physical contact so she has to actually move, which she does when it matters. Very fast over short distances.",
     "quirk_of_character": "She predicted the outcome of the capture-the-flag exercise in advance, told no one, and was completely correct. She did this to verify a hypothesis. The hypothesis was: no one would believe her. She was right."
   },
+  "backstory": "Comes from a family of early risers who have never quite understood her. She has been falling asleep in inconvenient places since she was old enough to sit up, and her parents stopped fighting it around the time she started solving problems faster asleep than the rest of them could awake.",
   "ability_scores": {
     "note": "INT primary (Neutralization is a precise biological override — requires understanding of Quirk Factor mechanics and anatomical targeting). WIS secondary for strategic awareness.",
     "STR": 8,

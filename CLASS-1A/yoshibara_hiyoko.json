@@ -11,7 +11,7 @@
   "appearance": {
     "hair": "Orange. Kept loose. Easy to identify in a crowd, which is relevant because she sometimes needs to be distinguished from her clone.",
     "build": "Athletic and quick. Moves with a lot of energy.",
-    "other": "Her clone looks exactly like her. They have the same expressions and the same voice. This has caused confusion in the dorms on multiple occasions."
+    "other": "Her clone looks exactly like her, right down to the small mole under her left eye. The one difference nobody has worked out how to use yet: the clone runs slightly cold to the touch. This has caused confusion in the dorms on multiple occasions."
   },
   "personality": {
     "summary": "Funny and friendly under normal circumstances. Gets wound up faster than anyone else in the class and then explodes with genuine anger — not malicious, just sudden and total. Recovers quickly and without residual bitterness.",
@@ -19,6 +19,7 @@
     "in_combat": "Chaotic and effective. Her clone fights with her own instincts. They don't always agree on tactics. This is sometimes a problem and sometimes the most effective thing in the room.",
     "quirk_of_character": "Her clone has the exact same personality, which means two Hiyokos is simply more of everything — more jokes, more warmth, more sudden explosions of anger. The clone doesn't experience this as strange. Neither does she."
   },
+  "backstory": "Comes from an entirely ordinary family that had no idea what to do the day she duplicated herself in the kitchen at age eight. Her parents adjusted fast. Within about a month, having two of her in the house was simply how things were.",
   "ability_scores": {
     "note": "CHA primary (Double is personality/charisma-resonant; clone retains her abilities and personality). INT secondary (understanding clone mechanics requires precise mental control).",
     "STR": 10,

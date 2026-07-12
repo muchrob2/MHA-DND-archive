@@ -19,6 +19,7 @@
     "in_combat": "Unhurried and effective. Treats vine control like a conversation — patient, precise, building toward something.",
     "quirk_of_character": "His vine-hair reacts to his emotions involuntarily. When he's annoyed, the vines tighten. When he's genuinely content, small flowers bloom. Everyone notices. He is aware of this and does not discuss it."
   },
+  "backstory": "Grew up outside the city with two working parents and an older sister, in a house nobody would call eventful. His parents run a small plant nursery, which everyone assumes explains the vines, though his quirk actually showed up before he ever set foot in the greenhouse. He was a calm baby and has stayed a calm person ever since.",
   "ability_scores": {
     "note": "STR is primary quirk ability (Vines is physical/mutant). WIS reflects his perceptive, relaxed awareness.",
     "STR": 15,

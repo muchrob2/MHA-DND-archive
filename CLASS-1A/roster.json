@@ -124,14 +124,14 @@
     {
       "id": 10,
       "name": "Nakaya Emari",
-      "quirk": "Size",
+      "quirk": "Element (Lightning)",
       "gender": "Female",
       "height": "5'5\"",
       "physiology": "Standard",
-      "role": "Utility / Environmental Manipulation",
+      "role": "Ranged Utility / Electrical Disruption",
       "is_pc": false,
-      "personality_tag": "Giggly and passionate; finds everything exciting; no object is the wrong size",
-      "notable_trait": "Black hair; muscular; has accidentally enlarged at least three items of common room furniture",
+      "personality_tag": "Giggly and passionate; finds everything exciting; no charge is too much charge",
+      "notable_trait": "Black hair with a permanent static frizz; muscular; has accidentally short-circuited at least three pieces of common room electronics",
       "file": "nakaya_emari.json"
     },
     {

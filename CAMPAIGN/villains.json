@@ -1,4 +1,10 @@
 {
+  "organisation": {
+    "name": "Ruin",
+    "founder": "Undertow — the name every member answers to. No confirmed photograph, arrest, or real identity has ever stuck to it, though most of the Hero Commission's dossier assumes it belongs to Soryu Hatch.",
+    "description": "Tokyo's biggest open secret. Everyone from beat cops to first-year hero students knows the name Ruin — a small, dangerous team of named villains, not a corporation with departments. Everyone in it answers to Undertow. The mystery was never what Ruin is. It's who's actually standing at the top.",
+    "public_awareness": "Fully public. Ruin is a known villain group headquartered out of Kurogane Wharf, referenced on the news and in Commission briefings alike, the same way any other named villain team would be. Catching Undertow, not identifying him, is the actual problem."
+  },
   "solo": [
     {
       "name": "Alucard Chosoji",
@@ -54,40 +60,39 @@
       "dm_notes": {
         "how_to_introduce_him": "The class sees something from a distance. A figure standing still on a rooftop across the street. He's just standing there. When they look away and look back, he's gone. No footprints. No footage. The only evidence he was there is a small circle of ground where the concrete is faintly, wrongly cold.",
         "how_to_play_him": "Never loud. Never dramatic. The three-name gimmick only works if the players are slightly unsure whether he'll actually come — play him in early encounters as genuinely unknowable so the offer feels like a risk, not a safety net. When he is summoned and does arrive, his presence should feel different from every other NPC in the campaign. He is operating at a different altitude.",
-        "what_he_wants": "Decide this yourself, or leave it open and let it emerge. Some options: he is watching the class because one of them reminds him of someone; he has a history with whatever is actually behind The Chain that predates the campaign; he has decided, for reasons he will never articulate, that these specific students are worth keeping alive until they're ready. The not-knowing is the point, until the moment it isn't.",
+        "what_he_wants": "Decide this yourself, or leave it open and let it emerge. Some options: he is watching the class because one of them reminds him of someone; he has a history with Undertow that predates the campaign; he has decided, for reasons he will never articulate, that these specific students are worth keeping alive until they're ready. The not-knowing is the point, until the moment it isn't.",
         "what_he_is_not": "He is not a villain with a redemption arc. He is not secretly warm. He is not redeemable via good social rolls. He is an anti-hero in the original sense: someone who operates outside the hero system and does not apologise for it, but whose actions, when you add them up, are net good — for reasons he may not entirely understand himself.",
-        "his_relationship_to_the_factions": "All three divisions of Undertow's syndicate are aware of him, though only Undertow himself understands that 'all three' is a meaningful phrase. None of them will discuss Alucard. Undertow, if pushed very hard on the subject, will say: 'We don't touch his work and he doesn't touch ours.' That is the entirety of the relationship. He is not affiliated with the syndicate. He is not fighting it. He is a separate variable that nobody in Murano — including Undertow — has figured out how to account for.",
-        "secret": "He has been in Murano before. Three years ago. Whatever he was there for then and what he is there for now may or may not be the same thing. Arakawa Setsuna has a file on him. It is two pages long. The second page is blank except for a single line she wrote herself: 'Do not engage without preparation you do not currently have.'"
+        "his_relationship_to_ruin": "Every member of Ruin is aware of him, and none of them will discuss him. Undertow, if pushed very hard on the subject, will say: 'We don't touch his work and he doesn't touch ours.' That is the entirety of the relationship. He is not affiliated with Ruin. He is not fighting it. He is a separate variable that nobody in Tokyo — including Undertow — has figured out how to account for.",
+        "secret": "He has been in Tokyo before. Three years ago. Whatever he was there for then and what he is there for now may or may not be the same thing. Arakawa Setsuna has a file on him. It is two pages long. The second page is blank except for a single line she wrote herself: 'Do not engage without preparation you do not currently have.'"
       }
     }
   ],
   "factions": [
     {
-      "id": "the_chain",
-      "name": "The Chain (Operations Division)",
-      "description": "The street-facing division of Undertow's syndicate, and the only one that looks like a stereotypical villain organisation. Runs quirk-for-hire operations, extortion rackets targeting unlicensed quirk users who can't call heroes for protection, and supplies illicit support gear to smaller villain groups in Murano's port district. Low-profile by design. This is the division Class 1-A meets first and the one most likely to get caught — which is by design too. If the Operations Division falls, the syndicate loses muscle, not its head.",
-      "structure": "Undertow founded and still personally directs this division alongside Flashpoint (enforcement) and Riddle (recruitment/social engineering), with Kuma as a mid-tier enforcer. Most cell members don't know the leadership's identities, let alone that Undertow answers to no one and quietly funds two other operations the rest of the Chain has never heard of.",
-      "public_awareness": "None in Tier 1. Street-level rumour in Tier 2. Open threat by Tier 3. This division's anonymity is the syndicate's first line of defence — losing it costs Undertow nothing he isn't prepared to lose.",
+      "id": "ruin",
+      "name": "Ruin",
+      "description": "One villain group, six named members, no departments and no org chart — the same shape as any other supervillain team. Undertow founded it and everyone in it answers to him, full stop. Kuma and Flashpoint are muscle. Riddle is the long game. Null and Splice study quirks for reasons that aren't ideological or even really profit-driven. They all know each other, they all know who's in charge, and none of them pretend otherwise. Ruin runs out of Kurogane Wharf and has for years.",
+      "structure": "Undertow founded it and leads it. Flashpoint handles enforcement and demolitions. Riddle handles recruitment and information. Kuma is the muscle everyone's actually met. Null runs Ruin's quirk research, fronted by a shell company called Seika Advanced Systems; Splice is her acquisitions specialist. Six people, one team.",
+      "public_awareness": "Fully public. Named in Commission reports, referenced on the news, tagged across Kurogane Wharf — a known villain group the way any hero-tracked team would be known. The open question is Undertow's real identity, not whether the others belong together.",
       "tier_introduced": 1,
       "colour": "#E24B4A",
-      "division_of": "Undertow's syndicate. This division IS the syndicate's founding identity — Undertow built Null Signal and Fracture afterward as separate, deniable faces of the same operation.",
       "villains": [
         {
           "name": "Soryu Hatch",
           "alias": "Undertow",
-          "role": "The Chain's founder and strategist. The reason everything is as organised as it is.",
-          "quirk": "Permeation",
+          "role": "Ruin's founder and leader. The name everyone in the group answers to.",
+          "quirk": "Riptide",
           "quirk_rarity": "Very Rare",
           "quirk_type": "Transformation",
-          "quirk_summary": "Undertow can make his body intangible — he passes through solid matter, falls through floors, walks through walls. While phased, he cannot interact with the physical world but also cannot be hit. He can partially phase individual body parts, allowing selective interaction. At full mastery he can phase other people or objects he's in contact with.",
-          "appearance": "Lean, mid-40s. Unhurried about everything. The kind of person who looks completely comfortable wherever they are. Usually seen in unremarkable, well-fitted clothes. No dramatic villain aesthetic. That's the point.",
-          "personality": "Dry, measured, occasionally funny. Treats Class 1-A as entertainment once they start interfering — they're interesting to him, not threatening. This will shift in Tier 3 when the class actually costs him something significant. He won't get loud about it. He'll get precise.",
-          "combat_style": "Avoidance and precision. He lets attacks pass through him, repositions constantly, strikes only when certain. He doesn't brawl. The encounter with him in Tier 3 is designed to teach players that not every villain can be beaten by fighting harder.",
+          "quirk_summary": "Soryu can turn part or all of his body to seawater — a genuine phase change, weight and momentum included, not a costume of water. Liquefied, he can't be grabbed or cut, and he can flow through any gap that isn't sealed airtight. He can also pull the water back out of the environment around him — a puddle, a length of wet rope, the air itself on a humid night — and drag it into a current. At full mastery, people find themselves face-down in an undertow that wasn't there a second ago.",
+          "appearance": "Lean, mid-40s. Unhurried about everything. Dresses like he's already about to leave the room he's in. Nothing about him reads as dangerous until the exact moment it does — and even then, calmly.",
+          "personality": "Dry, measured, occasionally funny. Treats Class 1-A as an interesting variable once they start interfering, not a threat — at least at first. This shifts in Tier 3 when the class actually costs him something. He won't get loud about it. He'll get precise.",
+          "combat_style": "Avoidance and drag. He doesn't brawl — he liquefies through incoming attacks and waits for an opening to pull someone off their feet. The Tier 3 fight against him is designed to teach the class that not every villain gets solved by hitting harder.",
           "stat_block": {
             "level": 15,
             "HP": 165,
             "AC": 17,
-            "speed": "35 ft",
+            "speed": "35 ft, swim 40 ft",
             "STR": 14,
             "DEX": 20,
             "CON": 16,
@@ -99,94 +104,67 @@
             "quirk_ability": "Dexterity",
             "proficiency_bonus": 5,
             "special_abilities": [
-              "Phase: Undertow can activate Permeation as a bonus action, becoming intangible until the start of his next turn. While phased, he cannot be targeted by attacks or effects. He can move through solid objects and creatures.",
-              "Partial Phase Strike: While phased, he can reach a hand through solid surfaces to grab or strike. Melee attack +9 to hit, 3d8+5 force damage, target must make DC 18 STR save or be restrained.",
-              "Phase Carry: As an action, Undertow can pull a creature he is grappling into a phased state. The creature is removed from play until he releases them or takes damage exceeding 20 in one hit.",
-              "Untouchable: Attacks against Undertow while he is phased automatically miss. Magical effects, AoE, and sonic damage can still partially affect him — those deal half damage."
+              "Undertow (Bonus Action): Liquefies on the spot. While liquid, he is untouchable by physical attacks and can flow through any non-airtight gap at double speed. Reforming to solid is a free action on his turn.",
+              "Riptide (Action): Pulls moisture from the environment — or from an unliquefied target's own body — into a dragging current in a 20 ft radius. Each creature in the area makes a DC 18 STR save or is pulled 15 ft toward him and knocked prone.",
+              "Drag Under (Action, requires a prone or grappled target): Pulls a target beneath a surface of his own liquefied body. The target is Restrained and takes 2d8 force damage at the start of each of its turns until it escapes (DC 18 STR) or he releases it.",
+              "Untouchable (Passive): Attacks against Undertow while liquefied automatically miss. Sonic and area effects still deal half damage. He cannot attack while fully liquid and takes minor HP loss for every full minute spent liquid outside water or shade."
             ]
           },
           "campaign_appearances": {
-            "tier_1": "Background — name heard in relation to Chain operations, never seen.",
-            "tier_2": "Glimpsed once after Flashpoint's attack. Doesn't engage. Watches.",
-            "tier_3": "First direct confrontation. He doesn't fight seriously. He leaves when he wants to. The message: he can reach them anywhere.",
-            "tier_4": "Final boss (with Flashpoint). His Permeation is his greatest defense but Flashpoint's unpredictability forces him to split focus — that's the window."
+            "tier_1": "Background — the name Undertow surfaces in rumour about Ruin, never seen.",
+            "tier_2": "Glimpsed once at range after a Flashpoint job goes loud. Doesn't engage. Watches.",
+            "tier_3": "First direct confrontation. He doesn't fight seriously. He leaves when he wants to. The message: he can reach them anywhere there's water.",
+            "tier_4": "Final boss (with Flashpoint). Riptide is his greatest defence, but Flashpoint's unpredictability forces him to split focus — that's the window."
           },
           "dm_notes": "Never raise his voice. If he's being loud, something is wrong with his plan and that's more dangerous. The class beating him requires creativity — simply dealing damage doesn't work.",
-          "season_1_role": "Observer only in Season 1. Appears once in Convergence — watches the fight, looks at each PC for three seconds, says 'Good instincts. Wrong scale.' and phases out. Never targeted, never threatened. His Season 1 closing appearance is the image the campaign ends on.",
-          "quirk_mechanics": {
-            "source": "Quirk Compendium — Permeation",
-            "weakness": "While fully intangible he loses all sensory perception (blind, deaf, breathless) and begins suffocating after a number of rounds equal to his Constitution modifier. Deactivating the Quirk while inside a solid object instantly expels him to the nearest open space.",
-            "abilities": [
-              {
-                "name": "Phase",
-                "type": "Action, Bonus Action, or Reaction",
-                "description": "Renders his entire body or a single limb intangible. While phased, he can move through any structure, terrain, or obstacle and is immune to all physical damage and effects — only mental or psychic attacks can affect him. He cannot attack or physically interact with the environment while fully intangible."
-              }
-            ]
-          }
+          "season_1_role": "Observer only in Season 1. Appears once in Convergence — watches the fight, looks at each PC for three seconds, says 'Good instincts. Wrong current.' and pours himself into the nearest drain. Never targeted, never threatened. His Season 1 closing appearance is the image the campaign ends on."
         },
         {
           "name": "Goda Miruki",
           "alias": "Flashpoint",
-          "role": "The Chain's enforcer. The blunt instrument. The reason other villain organisations in Murano don't cause the Chain problems.",
-          "quirk": "Cremation",
+          "role": "Ruin's enforcer and demolitions specialist. When Ruin needs a building to come down exactly where they want it, she's the one they call.",
+          "quirk": "Combustion Point",
           "quirk_rarity": "Legendary",
           "quirk_type": "Emitter",
-          "quirk_summary": "Flashpoint generates searing blue-white flames capable of incinerating almost anything. They're hot enough to soften most metal armor and harder to put out than ordinary fire — they cling to surfaces and continue burning. She can control the direction and spread but not perfectly; her quirk tends toward excess.",
-          "appearance": "Lean and scarred across her arms from years of her own flames. Short hair, singed edges. Doesn't look like someone who should be as dangerous as she is until the moment she is.",
-          "personality": "Minimal words. Pyromaniac instincts. Loyal to Undertow because he's the only person who's ever treated her capabilities as a feature rather than a problem. Not interested in conversation with heroes. Not cruel — just single-purpose.",
-          "combat_style": "Overwhelming. She opens fights at maximum output. Area denial through fire. Anyone who gets close learns that her flames stick to skin and armour alike. Players should fear this fight the first time they see her in Tier 2.",
+          "quirk_summary": "Flashpoint can mark any point she's touched — a wall, a support beam, a person — and detonate it later, on command, from any range she can see it. She's spent years learning exactly how much force collapses a stairwell without touching the room next door. She can still throw raw fire when a job calls for it, but the marks are the actual craft, and by the time a fight is visibly hers, half the room usually already belongs to her.",
+          "appearance": "Lean, scarred across her forearms from early experiments before she learned control. Short hair, singed at the edges out of habit rather than accident. Doesn't look like someone who should be this dangerous until the moment she is.",
+          "personality": "Minimal words. Methodical rather than wild. Loyal to Undertow because he's the only person who ever treated her precision as an asset instead of a liability. Doesn't monologue — she's already planted the charge three sentences ago.",
+          "combat_style": "Sets up before the fight starts. By the time she's visibly involved, several points in the room are already marked. Overwhelming once she starts detonating — area denial through architecture, not just flame. Players should fear this fight the first time they see her.",
           "stat_block": {
             "level": 16,
             "HP": 220,
             "AC": 16,
-            "speed": "35 ft, fly 30 ft (via flame propulsion)",
+            "speed": "35 ft, fly 20 ft (controlled blast propulsion)",
             "STR": 16,
-            "DEX": 17,
+            "DEX": 18,
             "CON": 19,
-            "INT": 10,
+            "INT": 13,
             "WIS": 12,
             "CHA": 13,
-            "TECH": 8,
+            "TECH": 12,
             "quirk_save_DC": 19,
-            "quirk_ability": "Constitution",
+            "quirk_ability": "Dexterity",
             "proficiency_bonus": 5,
             "special_abilities": [
-              "Cremation: As an action, target one creature or point within 60 ft. All creatures within 15 ft of target make DEX save DC 19 or take 8d8 fire damage and gain 2 ranks of BURNED. Half on success.",
-              "Clinging Flame: Fire from Cremation sticks to surfaces and creatures. Creatures hit take 2d6 fire damage at the start of each turn until they use an action to extinguish it (DC 16 CON check or water contact).",
-              "Blue Incineration: Once per short rest, as an action, Flashpoint channels full output into a 60ft line 10ft wide. All creatures make DEX save DC 19, taking 12d10 fire damage on a fail, half on success. Structures in the line are destroyed.",
-              "Flame Resistance: Immune to fire damage. Resistance to radiant damage.",
-              "Reckless Output: On rounds where Flashpoint uses Blue Incineration, she also takes 3d6 fire damage (her own flames exceed safe output). This does not stop her."
+              "Mark (Bonus Action): Touches a point — surface, object, or creature — leaving a latent charge. She can hold a number of active marks equal to her proficiency bonus at once.",
+              "Detonate (Free Action): Triggers one or more active marks she can see or knows the exact location of. Each detonation: all creatures within 10 ft of that point make a DC 19 DEX save, taking 8d8 fire damage on a fail (half on success). Marked structural points fail outright.",
+              "Sequenced Detonation: Triggering three or more marks in the same round adds a cumulative +1d8 fire damage to each detonation after the first.",
+              "Blast Propulsion (Bonus Action): Uses a small controlled detonation beneath herself to move up to 20 ft through the air without provoking opportunity attacks.",
+              "Reckless Payload: Overcharging a single mark deals an additional 4d8 fire damage but costs Flashpoint 3d6 fire damage of her own. She uses this when the job requires it, not to show off."
             ]
           },
           "campaign_appearances": {
-            "tier_2": "Burns down a hero agency in the port district. Three heroes hospitalised. The class witnesses the aftermath, not the act — initially. Later in Tier 2 they fight her directly for the first time, escaping rather than defeating her.",
-            "tier_3": "Appears with Undertow in the Tier 3 climax. Does not fight — present as implicit threat only.",
-            "tier_4": "Final boss alongside Undertow. The challenge: stopping Flashpoint without being incinerated, in an enclosed venue, while also dealing with Undertow's Permeation. The fact that she and Undertow don't fight well together is the path to victory."
+            "tier_2": "Levels a support agency's stairwell in Kurogane Wharf with three marks nobody saw her place. The class meets the aftermath before they meet her. Later in Tier 2 they fight her directly for the first time and escape rather than win.",
+            "tier_3": "Appears alongside Undertow in the Tier 3 climax as an implicit threat, not an active combatant.",
+            "tier_4": "Final boss alongside Undertow. The marks are already set before initiative is even rolled — the challenge is finding them before they matter."
           },
-          "dm_notes": "Make the Tier 2 fight feel genuinely dangerous. If the class tries to fight her head-on at level 5-7, they should be badly outmatched and need to retreat or use terrain. This is a loss that makes the eventual Tier 4 win matter.",
-          "season_1_role": "Teased, not fought. Season 1 foreshadowing only — referenced in a seized Chain memo ('Miruki's operation, port district, pending') found in the Convergence arc. The class won't know what the name means yet. Season 2 threat.",
-          "quirk_mechanics": {
-            "source": "Quirk Compendium — Cremation",
-            "weakness": "Builds a heat counter with every move used. At 35 heat points, she cannot use any move again until she takes 2d8 true damage that cannot be reduced. She always carries one rank of Burned that cannot be removed.",
-            "abilities": [
-              {
-                "name": "Flame",
-                "type": "Action",
-                "description": "Ranged or melee fire attack within 45 feet dealing 3d6 + her Dexterity modifier fire damage, ignoring fire resistance and treating immunity as resistance. Costs 1 heat point."
-              },
-              {
-                "name": "Flashfire Fist",
-                "type": "Action",
-                "description": "Maximizes his flame temperature for an empowered unarmed strike dealing 5d10 + 5 fire damage. On a hit, the target makes a Strength save — on a failure they fall prone, gain two ranks of Burned, and are pushed 25 feet away. Costs 10 heat points."
-              }
-            ]
-          }
+          "dm_notes": "Show the marks after the blast, not before. She should feel like she was already three moves ahead of the fight starting. If the class tries to fight her head-on at level 5-7, they should be outmatched and need to retreat or use terrain — this loss is what makes the eventual Tier 4 win matter.",
+          "season_1_role": "Teased, not fought. Season 1 foreshadowing only — referenced in a seized memo ('Miruki's job, Wharf side, pending approval') found in the Convergence arc. Season 2 threat."
         },
         {
           "name": "Sae Ichiro",
           "alias": "Riddle",
-          "role": "Recruiter, infiltrator, and social engineer. The Chain's most dangerous member in terms of long-term influence.",
+          "role": "Recruiter, infiltrator, and social engineer. Ruin's most dangerous member in terms of long-term influence.",
           "quirk": "Brainwashing",
           "quirk_rarity": "Rare",
           "quirk_type": "Emitter",
@@ -217,33 +195,22 @@
             ]
           },
           "campaign_appearances": {
-            "tier_2": "Operating in Murano, meeting vulnerable people. Background presence. DM plants seeds — a student mentions meeting someone interesting at a cafe.",
+            "tier_2": "Operating across Tokyo, meeting vulnerable people. Background presence. DM plants seeds — a student mentions meeting someone interesting at a cafe.",
             "tier_3": "His operation inside the class becomes apparent. The exposure is painful because the class has to account for what was real and what was manipulation — and some of it was both.",
-            "tier_4": "He gives himself up. He didn't want to be part of what The Chain is doing with the quirk-nullifying device. This is complicated, not redemptive — he still did real harm. What happens to him is the players' decision."
+            "tier_4": "He gives himself up. He didn't want to be part of what Ruin is doing with the quirk-nullifying device. This is complicated, not redemptive — he still did real harm. What happens to him is the players' decision."
           },
           "dm_notes": "Play him warmly. Don't telegraph the villain. When students interact with him in Tier 2 and 3, he should feel like a genuinely good person to talk to. That's the point. The reveal hits harder if they liked him.",
-          "season_1_role": "Teased, not fought. A Chain cell member in the Convergence arrest says 'We have a friend who talks to people. He talked to someone you know.' Plant this ambiguously. Season 2 threat.",
-          "quirk_mechanics": {
-            "source": "Quirk Compendium — Brainwashing",
-            "weakness": "Requires the target to verbally respond to him to activate — silence or nonverbal communication blocks the effect. He can only control one creature at a time; Brainwashing a new target immediately ends the effect on the previous one.",
-            "abilities": [
-              {
-                "name": "Command",
-                "type": "Action",
-                "description": "Activates the Quirk for 1 minute. Any creature that verbally responds to him becomes Brainwashed — dazed but able to act at full speed when commanded via his bonus action, except for commands that would directly harm themselves. The condition ends if he releases the target, the target takes 50+ damage in one round, the duration expires, or he is incapacitated."
-              }
-            ]
-          }
+          "season_1_role": "Teased, not fought. A processed Ruin member in the Convergence arrest says 'We have a friend who talks to people. He talked to someone you know.' Plant this ambiguously. Season 2 threat."
         },
         {
           "name": "Kuma",
           "alias": "Kuma (no hero alias, no villain alias, just Kuma)",
-          "role": "Mid-tier Chain enforcer. The Tier 2 boss fight.",
+          "role": "Ruin's heavy. The Tier 2 boss fight.",
           "quirk": "Gigantification",
           "quirk_rarity": "Rare",
           "quirk_type": "Transformation",
           "quirk_summary": "Kuma can grow his body to enormous size — up to 25 feet tall at peak. Growth increases strength, durability, and reach proportionally. At full size he's a walking natural disaster in enclosed spaces.",
-          "appearance": "Even at normal size, large. Shaved head, extremely wide. Tends to break furniture by existing near it. Works for the Chain because the pay is good and the management leaves him alone.",
+          "appearance": "Even at normal size, large. Shaved head, extremely wide. Tends to break furniture by existing near it. Works for Ruin because the pay is good and the management leaves him alone.",
           "personality": "Overconfident, loud, not strategically inclined. Genuinely enjoys the fight. No particular malice — this is just his job and he's good at it. Getting beaten by a class of first-years is going to be very embarrassing for him.",
           "combat_style": "Grow large, hit hard, sweep everything. At full size his attacks cover huge areas. The challenge for the class is managing his growth and preventing him from reaching full size in the first place.",
           "stat_block": {
@@ -274,10 +241,10 @@
             ]
           },
           "campaign_appearances": {
-            "tier_2": "Boss fight at end of Tier 2. The class faces him as a group for the first time as a real coordinated encounter. Hard, chaotic, messy. They win. Important that they win — this is the class's first real victory against an actual villain."
+            "tier_2": "Boss fight at end of Tier 2. The class faces him as a group for the first time as a real coordinated encounter. Hard, chaotic, messy. They win. Important that they win — this is the class's first real victory against an actual Ruin member."
           },
           "dm_notes": "Make him loud and fun before and during the fight. He talks. He brags. He's not scared of them — until suddenly he should be. Play up the students' reactions to each other during this fight — it's a team-building moment masquerading as a combat encounter.",
-          "season_1_role": "Season 1 Convergence boss fight (Level 6). The class's first victory against a real villain — hard, chaotic, messy. They win. That's important.",
+          "season_1_role": "Season 1 Convergence boss fight (Level 6). The class's first victory against a real Ruin member — hard, chaotic, messy. They win. That's important.",
           "scaled_stat_block": {
             "level": 6,
             "HP": 90,
@@ -302,42 +269,19 @@
               "Sweeping Strike (Huge only): 10 ft cone. DEX save DC 14 or take 3d10 bludgeoning and be pushed 10 ft."
             ],
             "dm_scaling_note": "Climax boss for a Level 6 party of 4. Should be genuinely threatening but beatable. The ceiling preventing Gargantuan is the terrain advantage — make sure the class can discover it."
-          },
-          "quirk_mechanics": {
-            "source": "Quirk Compendium — Gigantification",
-            "weakness": "Must fully commit to the transformation — size cannot be adjusted incrementally, and navigating tight or confined spaces becomes extremely difficult. Extreme stress, rage, or frustration can trigger the Quirk unintentionally.",
-            "abilities": [
-              {
-                "name": "Growth Spurt",
-                "type": "Action, Bonus Action, or Reaction",
-                "description": "Transforms into a Huge creature: Strength becomes 22 with advantage on Strength saves and checks; carrying capacity is quadrupled; unarmed strikes deal 3d12 damage; enemies within 10 feet must succeed on a Strength save or be knocked prone. Can be used as a reaction to absorb damage meant for an ally standing in front of him."
-              }
-            ]
           }
-        }
-      ]
-    },
-    {
-      "id": "null_signal",
-      "name": "Null Signal (Research Division)",
-      "description": "Undertow's research arm, operating under the cover of a tech consultancy called Seika Advanced Systems. Their goal isn't profit or ideology — it's data. They study quirk suppression, forced activation, and the physical limits of quirk users, funding experiments that the Hero Commission quietly tolerated before they went too far. Now disavowed and off-grid, they've begun acquiring 'subjects' more aggressively. Aoi Tenshin believes she is running an independent black-site operation with a useful, anonymous patron in the port district. She has no idea the patron is Undertow, or that Undertow reads every file she produces. What makes this division dangerous isn't its villains — it's that they know exactly what every quirk in their files is capable of, including most of Class 1-A's, and that knowledge eventually reaches the one person in Murano nobody suspects of wanting it.",
-      "structure": "Cell-based with a scientific hierarchy. Director Aoi Tenshin (Null) sits at the top of what she believes is the whole organisation. Below her are department heads who run Acquisition (Ryo Karashi/Splice), Research, and Security. Field operatives are ranked Analyst, Specialist, and Operative — they know their own team but nothing above Null. Data flows up to Null; from Null, a private channel nobody else in this division knows exists flows further up still, to Undertow.",
-      "public_awareness": "Publicly nonexistent. The Hero Commission has a sealed file. In Tier 2, Class 1-A may find fragments. In Tier 3, they surface deliberately — they want the class in their database. Its connection to The Chain proper is not common knowledge in either division.",
-      "tier_introduced": 2,
-      "colour": "#0891B2",
-      "division_of": "Undertow's syndicate (unknown even to Null herself — see organisation.structure above).",
-      "villains": [
+        },
         {
           "name": "Aoi Tenshin",
           "alias": "Null",
-          "role": "Director of Null Signal. The architect of everything. She built the organisation from a legitimate research lab that crossed a line it couldn't come back from.",
-          "quirk": "Erasure",
+          "role": "Ruin's chief scientist — the one who reads every quirk in the Commission's files and starts thinking about its limits.",
+          "quirk": "Dead Air",
           "quirk_rarity": "Very Rare",
           "quirk_type": "Emitter",
-          "quirk_summary": "Null can nullify the quirks of any living being within her line of sight. Unlike Eraser Head's version, hers doesn't require sustained eye contact — once locked, suppression persists for up to one hour even if she looks away. She cannot suppress multiple targets simultaneously without splitting duration. Her eyes glow a flat, pale white when active.",
-          "appearance": "Late 40s. White hair cropped close on one side, longer on the other. Lab coat over dark practical clothes. No dramatic villain aesthetic — she looks exactly like a senior researcher because that's what she was.",
+          "quirk_summary": "Null can drop a zone of total signal death around herself — no active quirks, no electronics, no radio, nothing broadcasting or receiving inside it. It isn't targeted; it's a bubble, and everything inside goes quiet at once, her own gear included. She's spent a career learning to work inside a room where nothing works, which is the only reason the ability serves her instead of just inconveniencing her.",
+          "appearance": "Late 40s. White hair cropped close on one side, longer on the other. Lab coat over dark practical clothes. Looks exactly like the senior researcher she used to be, before the line got crossed.",
           "personality": "Precise, clinical, and genuinely curious about how people work. She doesn't hate heroes. She finds them interesting subjects. The horror of dealing with her is that she's not cruel — she's just completely unbothered by the cost of her work.",
-          "combat_style": "Null doesn't fight. She suppresses. She will negate the most dangerous quirk in the room and then let her Operatives handle the rest. In a direct confrontation she is physically unremarkable — she relies entirely on her quirk and on never being in a position where she needs to fight.",
+          "combat_style": "Null doesn't fight. She drops Dead Air or a Focused Null lock on the most dangerous quirk in the room, then lets Ruin's people handle the rest. Physically unremarkable without the field active.",
           "stat_block": {
             "level": 14,
             "HP": 120,
@@ -354,8 +298,8 @@
             "quirk_ability": "Intelligence",
             "proficiency_bonus": 5,
             "special_abilities": [
-              "Sustained Erasure: As a bonus action, Null targets one creature within 60 ft she can see. That creature's quirk is suppressed for 1 hour — no concentration required. She can only sustain one target at a time. Switching targets ends the previous suppression immediately.",
-              "Full Nullification: Once per long rest, as an action, Null suppresses all quirks in a 30 ft radius for 1 minute. This includes her own. She uses this as a panic button.",
+              "Dead Air (Action, concentration): Drops a 30 ft radius field for up to 1 minute. No quirks or powered electronics function inside it — hers included. She can end it early as a free action.",
+              "Focused Null (Bonus Action): Instead of the full field, sustains a single creature's quirk suppression for 1 hour with no concentration required. She can only maintain one Focused Null at a time; starting a new one ends the previous.",
               "Database Access: Null has files on every Class 1-A student. As a bonus action she can call out a specific student's quirk weakness — that student has disadvantage on quirk-based attacks until the start of Null's next turn.",
               "Tactical Withdrawal: Null is never the last person in a room. When she drops below 40 HP, she activates an emergency extraction device and is removed from combat unless she has been restrained or her equipment was destroyed."
             ]
@@ -364,41 +308,22 @@
             "tier_1": "Not present. Referenced in corrupted data logs if the class investigates Seika Advanced Systems.",
             "tier_2": "Identified by name only — seen briefly through a security camera feed before it cuts. She knows the class is getting close.",
             "tier_3": "First direct encounter. She comes to observe in person, which means she's already decided the class is worth studying rather than avoiding.",
-            "tier_4": "Final confrontation in the Null Signal facility. Fighting her means fighting without quirks — or finding a way to reach her before she can lock someone down."
+            "tier_4": "Final confrontation at Null's research facility. Fighting her means fighting without quirks — or finding a way to reach her before she can lock someone down."
           },
           "dm_notes": "She suppresses the most dangerous PC first, every time. She's done the reading. If a PC's quirk was studied in Tier 2, she knows its exact limitations. Let her use that knowledge — it makes the encounter feel genuinely threatening.",
-          "season_1_role": "Teased, not fought. Season 1 foreshadowing only — referenced in the 'Seika Advanced Systems' external data request (Hamagawa's monitor, Tier 1) and as Splice's director. Her season 1 log entry on the class: 'worth acquiring.' Season 2 threat.",
-          "quirk_mechanics": {
-            "source": "Quirk Compendium — Erasure",
-            "weakness": "Requires a clear line of sight to the target's physical body — targets can evade by hiding behind obstacles. If hit while maintaining the effect, she must succeed on a DC 13 Constitution save to keep her eyes open or the effect ends.",
-            "abilities": [
-              {
-                "name": "Erase",
-                "type": "Bonus Action",
-                "description": "Gazes at creatures within a 150-foot cone (DC 14 Perception check for targets beyond that range). Affected targets cannot use their Quirk or abilities for 4 rounds. She can maintain focus for a number of rounds equal to her proficiency bonus before eye strain sets in."
-              }
-            ]
-          }
+          "season_1_role": "Teased, not fought. Season 1 foreshadowing only — referenced in the 'Seika Advanced Systems' external data request (Hamagawa's monitor, Tier 1) and as Splice's boss. Her season 1 log entry on the class: 'worth acquiring.' Season 2 threat."
         },
         {
           "name": "Ryo Karashi",
           "alias": "Splice",
-          "role": "Head of Acquisition. Responsible for finding and extracting research subjects. He's very good at it.",
-          "quirk": "Overhaul",
+          "role": "Null's acquisitions specialist. Finds and extracts research subjects. He's very good at it.",
+          "quirk": "Graft",
           "quirk_rarity": "Legendary",
           "quirk_type": "Emitter",
-          "quirk_summary": "Splice can disassemble and reassemble matter with his bare hands. By touching a creature, object, or terrain, he can pull it apart, reshape it, or restore it — living and non-living matter alike. On himself, he uses this to reconfigure his limbs mid-combat — extending reach, altering joint angles, hardening skin by compacting tissue density. On others, a touch can dismantle limb by limb, dislocate joints, or cause intense neurological pain.",
-          "quirk_mechanics": {
-            "source": "Quirk Compendium — Overhaul",
-            "weakness": "Requires physical contact with his hands to function — if he cannot use his hands, the Quirk is unusable. After using Disassemble or Reassemble, that ability cannot be used again until the start of his next turn.",
-            "abilities": [
-              { "name": "Disassemble", "type": "Action", "description": "Touches a target within 5 feet, making an unarmed strike. On a hit, the target makes a Constitution save or takes 3d10 necrotic damage (ignores resistance to necrotic). At the end of its turn the target loses one limb — legs first, then arms, hands, then torso; losing the torso kills it. He can target specific limbs without fully killing the target. On a success, the target takes half damage and suffers no additional effects." },
-              { "name": "Reassemble", "type": "Bonus Action", "description": "Touches a disassembled creature, limb, or object to restore it to its original form or reshape it into a modified state of equal or lesser mass. A restored creature regains half hit points and missing limbs; reshaping can grant effects such as extra damage on reassembly, knockback, halved movement, weakened limb restoration, or temporary hit points." }
-            ]
-          },
-          "appearance": "Mid-30s. Unnervingly symmetrical face — the result of years of self-modification. Long fingers. Always wearing light gloves, which he removes with deliberate slowness when a fight is inevitable.",
+          "quirk_summary": "Splice can fuse foreign material into a living body on contact — metal, stone, wire, even parts of another creature — grafting it into muscle and bone until it's functionally part of the target. On himself, he grafts plating and tools mid-combat, extending his reach or armouring a limb on demand. On others, a single touch can fuse fingers together, weld a knee solid, or graft dead weight onto a limb they need free.",
+          "appearance": "Mid-30s. Unnervingly symmetrical face — the result of years of grafting improvements onto himself. Long fingers. Always wearing light gloves, which he removes with deliberate slowness when a fight is inevitable.",
           "personality": "Patient and personable to a disturbing degree. He talks to targets like they're already cooperating. He finds raised voices tacky. The only time his manner breaks is when something surprises him.",
-          "combat_style": "Close range grapple-and-modify. He doesn't deal large damage — he incapacitates. A restrained target he touches becomes a major problem. He works alongside Null Signal Operatives who keep targets in his reach.",
+          "combat_style": "Close range grapple-and-modify. He doesn't deal large damage — he incapacitates, permanently-feeling, in the moment. A grafted target becomes somebody else's problem to fix later. He works alongside other Ruin field agents who keep targets in his reach.",
           "stat_block": {
             "level": 11,
             "HP": 105,
@@ -415,20 +340,20 @@
             "quirk_ability": "Dexterity",
             "proficiency_bonus": 4,
             "special_abilities": [
-              "Modification Touch: Melee attack +8 to hit. On hit, target makes DC 16 CON save or gains one of: Disadvantage on attack rolls (tendons), halved movement (leg modification), or 2d8 necrotic damage and must save against dropping held items (hand modification). Lasts until end of their next turn.",
-              "Self-Reshape: As a bonus action, Splice reconfigures his own body — either extend reach by 5 ft for the turn, or gain +3 AC until the start of his next turn.",
+              "Graft Touch: Melee attack +8 to hit. On hit, target makes DC 16 CON save or gains one of: a fused hand (can't hold or use hands), a fused leg (halved movement), or a fused jaw (can't speak — disrupts quirks with verbal components). Gloves off: +1d8 necrotic damage.",
+              "Self-Graft: As a bonus action, Splice fuses plating or a tool onto himself — either extend reach by 5 ft for the turn, or gain +3 AC until the start of his next turn.",
               "Acquisition Protocol: If Splice has a grappled target, as an action he can attempt full incapacitation — the target makes DC 16 CON save or is Paralysed until the end of their next turn. Splice cannot move while using this.",
-              "Glove Removal: If Splice removes his gloves (bonus action), his Modification Touch now deals an additional 1d8 necrotic damage. He rarely does this before he has to."
+              "Glove Removal: If Splice removes his gloves (bonus action), his Graft Touch now deals an additional 1d8 necrotic damage. He rarely does this before he has to."
             ]
           },
           "campaign_appearances": {
             "tier_1": "Not present.",
             "tier_2": "First appearance — the class may encounter him attempting to extract a person of interest. He talks first. He fights only if the class forces it.",
             "tier_3": "Returns with preparation. He's been briefed on the class's quirks and has adjusted his approach accordingly.",
-            "tier_4": "Optional encounter if the class pursues the Acquisition division subplot. He can be flipped if the class offers him something more interesting than the job."
+            "tier_4": "Optional encounter if the class pursues Null's research subplot. He can be flipped if the class offers him something more interesting than the job."
           },
-          "dm_notes": "He should feel like a horror villain in combat — not because he deals big numbers, but because being touched by him has consequences. Narrate his modifications vividly.",
-          "season_1_role": "Active in Season 1 — appears at Patchwork Agency (Tier 1), at The Fracture Problem protest (Tier 2), and in the Convergence warehouse fight (Tier 2). The class may fight him in Convergence if they block his path to the equipment.",
+          "dm_notes": "He should feel like a horror villain in combat — not because he deals big numbers, but because being touched by him has consequences. Narrate his grafts vividly.",
+          "season_1_role": "Active in Season 1 — appears at the Kurogane Wharf agency visit (Tier 1), at the Fracture Problem protest (Tier 2), and in the Convergence warehouse fight (Tier 2). The class may fight him in Convergence if they block his path to the equipment.",
           "scaled_stat_block": {
             "level": 7,
             "HP": 70,
@@ -443,10 +368,10 @@
             "quirk_save_DC": 15,
             "proficiency_bonus": 3,
             "special_abilities": [
-              "Modification Touch: Melee +7 to hit. On hit, CON save DC 15 or one of: Disadvantage on attacks (tendon), halved move (leg), 2d6 necrotic and save vs dropping held item (hand). Until end of their next turn.",
-              "Self-Reshape: Bonus action — extend reach 5 ft, OR +2 AC until start of next turn.",
+              "Graft Touch: Melee +7 to hit. On hit, CON save DC 15 or one of: fused hand, halved move (fused leg), or fused jaw. Until end of their next turn.",
+              "Self-Graft: Bonus action — extend reach 5 ft, OR +2 AC until start of next turn.",
               "Acquisition Protocol: Grappled target makes CON save DC 15 or is Paralysed until end of their next turn. Splice cannot move while using this.",
-              "Glove Removal: Bonus action. Modification Touch deals +1d6 necrotic. He does this only when the objective is failing."
+              "Glove Removal: Bonus action. Graft Touch deals +1d6 necrotic. He does this only when the objective is failing."
             ],
             "dm_note": "Splice is not here to fight the class. He's here to take the equipment. If the class lets him work, he goes. If they engage him, run him as evasive — he tries to complete the objective while avoiding a full fight. He retreats at 35 HP."
           }
@@ -455,33 +380,24 @@
     },
     {
       "id": "fracture",
-      "name": "Fracture (Ideological Division)",
-      "description": "Undertow's third face, and the one the syndicate could least afford to lose, because it's the only one that's true. Fracture is built around a single belief: that the hero licensing system is a form of control, and that unlicensed quirk use is an act of liberation. Shard and Voltage built this movement, believe in it completely, and have no idea that a percentage of the resources keeping it running — safe houses, legal defence funds, the occasional 'anonymous donor' — trace back to Undertow, laundered through enough intermediaries that even Riddle doesn't know the connection. Undertow doesn't control Fracture's message or its actions. He funds its survival because a real, popular, sympathetic movement is the best cover a syndicate could ask for — every time the Commission focuses on Fracture's politics, nobody is looking at the port. Most members are young, angry, and genuinely grieved by the system's failures. Class 1-A are going to become symbols in that conflict whether they want to be or not.",
-      "structure": "Horizontal by design, hierarchical in practice. Shard and Voltage are the genuine, public-facing co-founders and have no superior they answer to that they know about. Below them, Cell Leaders coordinate local action. The ideology holds cells together more than any command structure does — which is exactly why Undertow has never needed to control it directly, and exactly why he never will tell Shard the truth about where some of her funding comes from.",
-      "public_awareness": "Visible graffiti and minor incidents from Tier 1. A known named movement by Tier 2 — the Commission is watching. Direct clash with hero infrastructure in Tier 3. By Tier 4, Fracture forces Class 1-A into a moral question: are the people they're fighting actually wrong? Its quiet financial link to The Chain is a Tier 4/Season 2 reveal — and when Shard learns it, it will cost her something the campaign should not undersell.",
+      "name": "Fracture",
+      "description": "Not Ruin. Fracture is a real, independent movement built around one belief: that the hero licensing system is a form of control, and unlicensed quirk use is an act of liberation. Shard and Voltage built it themselves, believe in it completely, and have no idea that a portion of its safe houses and legal defence funds are quietly bankrolled by Undertow — laundered through enough intermediaries that even Riddle, if he ever thought to check, wouldn't find the thread easily. Undertow doesn't control Fracture's message or its actions. He funds its survival because a real, popular, sympathetic movement is the best cover Ruin could ask for — every time the Commission's attention is on Fracture's politics, nobody is looking at Kurogane Wharf.",
+      "structure": "Shard and Voltage are the genuine, public-facing co-founders and answer to no one they know about. Cell Leaders coordinate local action. The ideology holds cells together far more than any command structure does.",
+      "public_awareness": "Visible graffiti and minor incidents from Tier 1. A known named movement by Tier 2 — the Commission is watching, and watching Fracture closely enough that they've started quietly floating the idea it might be connected to Ruin. Shard has heard that theory and finds it insulting. By Tier 4, Fracture forces Class 1-A into a moral question: are the people they're fighting actually wrong? Its financial link to Undertow is a Tier 4/Season 2 reveal — and when Shard learns it, it will cost her something the campaign should not undersell.",
       "tier_introduced": 1,
       "colour": "#8B47D4",
-      "division_of": "Undertow's syndicate (unknown to Shard, Voltage, or any Fracture member — see organisation.structure above). The only division that is ideologically genuine; Undertow funds it but does not direct it.",
       "villains": [
         {
           "name": "Maki Torune",
           "alias": "Shard",
           "role": "Co-founder of Fracture. The one who writes the manifestos. The voice.",
-          "quirk": "Razor Sharp",
-          "quirk_rarity": "Common",
-          "quirk_type": "Transformation",
-          "quirk_summary": "Shard can produce large, razor-edged blades directly from her body. She can form them into sweeping arcs or single strikes, slicing through flesh and steel alike. At full mastery she can extend the blades in a wide sweeping arc to cut down multiple targets at once. She bleeds and strains her muscles when she overuses her quirk — a cost she has stopped noticing.",
-          "quirk_mechanics": {
-            "source": "Quirk Compendium — Razor Sharp",
-            "weakness": "Prolonged use severely strains her muscles — after using the Quirk for more than one minute continuously, she must succeed on a DC 15 Constitution save or take 1d12 true damage.",
-            "abilities": [
-              { "name": "Blade Strike", "type": "Action", "description": "Produces a razor-sharp blade from her arm and strikes a creature within 5 feet, dealing 2d12 slashing damage (double against constructs) and inflicting 1 rank of Bleed." },
-              { "name": "Razor Sweep", "type": "Action", "description": "Extends her arm blades in a sweeping arc, striking all creatures in a 30-foot line. Each target makes a Dexterity save against her Quirk save DC or takes 2d12 slashing damage (half on success) and gains 2 ranks of Bleed. After the attack she may move to the far end of the line." }
-            ]
-          },
-          "appearance": "Late 20s. Cuts on her forearms that she's stopped trying to cover. Fracture's jagged-line symbol tattooed on her collarbone. Speaks like someone who's rehearsed everything and means all of it.",
+          "quirk": "Fault",
+          "quirk_rarity": "Rare",
+          "quirk_type": "Emitter",
+          "quirk_summary": "Shard can touch any solid surface — concrete, steel, glass, bone — and seed a fracture that propagates outward on her command, weakening or shattering whatever it runs through. A touched wall becomes a spiderweb of failure points she can collapse at will; a touched weapon shears apart in an opponent's grip; seeded points can be triggered from clear across a room. Cracking things takes a toll on whatever's doing the cracking — she bleeds from her own hands after heavy use and has stopped trying to hide it.",
+          "appearance": "Late 20s. Cracked calluses across her palms that she's stopped covering. Fracture's break-line symbol tattooed on her collarbone. Speaks like someone who's rehearsed everything and means all of it.",
           "personality": "True believer. Not naive — she knows Fracture has done things she can't fully defend. She believes the alternative is worse. She is smart, magnetic, and completely unwilling to compromise on the core premise. The class may find her hard to argue with and that's intentional.",
-          "combat_style": "Close-to-mid range area denial through blade arcs rather than ranged attacks. She keeps enemies at the edge of her reach with sweeping strikes, forcing them to either close in and eat a Blade Strike or hang back and let her reposition. She targets support heroes and quirkless members first — not out of malice but strategy. She wants to end fights before someone gets killed.",
+          "combat_style": "Seeds fracture points early — across terrain and people both — then triggers them from a distance while she keeps talking. She wants to end a fight before someone gets killed, hers or theirs.",
           "stat_block": {
             "level": 10,
             "HP": 88,
@@ -498,10 +414,10 @@
             "quirk_ability": "Charisma",
             "proficiency_bonus": 4,
             "special_abilities": [
-              "Blade Strike (Scaled): Melee attack +7 to hit. On a hit, 3d8 slashing damage and 1 rank of Bleed. Can strike twice on her turn if both targets are within 5 ft of each other.",
-              "Razor Sweep (Scaled): As an action, extends her arm blades in a sweeping arc, striking all creatures in a 25-ft line. DEX save DC 16 or take 4d8 slashing damage and 2 ranks of Bleed (half damage, no Bleed on success). She may move to the far end of the line afterward.",
-              "Guard Blades: As a reaction, raises crossed forearm blades to block an incoming melee attack, reducing the damage by 2d8 plus her proficiency bonus.",
-              "Crimson Arc: Recharge 5-6. All creatures in a 30 ft radius make DEX save DC 16 or take 6d8 slashing damage and begin Bleeding (1d6 at start of each turn until they use an action to staunch it). Half damage on success, no Bleed. Afterward she must succeed on a DC 15 CON save or take 1d12 true damage from the strain."
+              "Seed Fracture (Action): Touches a surface or creature within 5 ft, seeding a fracture point. She can maintain up to 4 seeded points at once.",
+              "Trigger (Bonus Action): Detonates one or more seeded points from any range she can see them. A seeded creature makes a DC 16 CON save, taking 3d8 slashing damage and 1 rank of Bleed on a fail (half, no Bleed on success). A seeded structure or object fails outright.",
+              "Guard Line (Reaction): Seeds and instantly triggers a fracture along an incoming weapon or limb, reducing the damage of that attack by 2d8 plus her proficiency bonus.",
+              "Cascade (Recharge 5-6): Triggers every currently seeded point simultaneously for full damage against each target, then must succeed on a DC 15 CON save or take 1d12 true damage from the strain."
             ]
           },
           "campaign_appearances": {
@@ -517,13 +433,13 @@
           "name": "Tatsumi Yuma",
           "alias": "Voltage",
           "role": "Fracture's most capable field operative. Co-founder. The one who handles problems Shard's words can't solve.",
-          "quirk": "Electrification",
+          "quirk": "Blackout",
           "quirk_rarity": "Rare",
           "quirk_type": "Emitter",
-          "quirk_summary": "Voltage generates and discharges high-voltage electricity through his body and nearby conductive surfaces. Unlike standard Electrification quirks, his carries a paralytic charge that disrupts muscle control. He can regulate output with precision — from a numbing tingle to a strike that knocks a person unconscious in one hit.",
-          "appearance": "Early 30s. Scarred fingers, slightly singed hair that regrows burnt. Calm in a way that reads as dangerous — he doesn't get agitated before a fight. The Fracture symbol on the back of his jacket.",
-          "personality": "Quiet and direct. He doesn't share Shard's gift for argument but he doesn't need to. He's there to protect the movement and its people, and he takes that seriously enough to fight heroes who are, in his view, protecting an unjust system.",
-          "combat_style": "Crowd control into shutdown. He uses the environment — metal fences, wet ground, support equipment — as extensions of his quirk. He tries to disable rather than kill. If the class has fought him before, he's adapted.",
+          "quirk_summary": "Voltage generates a discharge that does more than hurt — it kills power. Support gear, comms, drones, cybernetic prosthetics, hero-issue tracking tags: anything running on a charge goes dark inside his radius, heroes' equipment included. He can still deliver a straight paralytic shock to a person on contact, but the reason Fracture keeps him close is what he does to a room full of Commission tech.",
+          "appearance": "Early 30s. Scarred fingers, slightly singed hair that regrows burnt. Calm in a way that reads as dangerous — he doesn't get agitated before a fight. Fracture's break-line symbol on the back of his jacket.",
+          "personality": "Quiet and direct. He doesn't share Shard's gift for argument but he doesn't need to. He learned his quirk alone as a kid, with no training and no support, and that's the entire reason he's here. He's there to protect the movement and its people, and takes that seriously enough to fight heroes who are, in his view, protecting an unjust system.",
+          "combat_style": "Opens a fight by killing whatever tech the class is relying on, then closes to protect Fracture's people. Tries to disable rather than kill. If the class has fought him before, he's adapted.",
           "stat_block": {
             "level": 12,
             "HP": 115,
@@ -540,10 +456,10 @@
             "quirk_ability": "Constitution",
             "proficiency_bonus": 4,
             "special_abilities": [
-              "Shock Strike: Melee attack +6 to hit. 2d8+3 lightning damage. Target makes DC 16 CON save or has their movement halved until end of their next turn (muscle disruption).",
-              "Chain Discharge: As an action, discharge through a conductive surface (metal, water, wet ground). All creatures within 15 ft of the surface make DC 16 DEX save or take 3d8 lightning damage and are Stunned until end of their next turn. Half damage on success, not stunned.",
-              "Paralytic Surge: Once per short rest. One creature Voltage can touch makes DC 16 CON save or is Paralysed for 1 minute. They repeat the save at the end of each turn.",
-              "Grounded: Voltage is immune to lightning damage and has advantage on saves against quirks that affect the nervous system."
+              "Shock Strike: Melee attack +6 to hit. 2d8+3 lightning damage. Target makes DC 16 CON save or has their movement halved until end of their next turn.",
+              "Blackout (Action): Kills power in a 15 ft radius for 1 minute. Support gear, comms, drones, and powered prosthetics inside it stop functioning; creatures relying on tech-based abilities lose them for the duration. All creatures inside when it triggers make a DC 16 DEX save or take 3d8 lightning damage and are Stunned until end of their next turn (half damage, not stunned, on success).",
+              "Grounded: Immune to lightning damage. Advantage on saves against quirks affecting the nervous system.",
+              "Dead Zone Recovery: After using Blackout, Voltage has disadvantage on his own attack rolls until the start of his next turn while his body resets."
             ]
           },
           "campaign_appearances": {
@@ -552,24 +468,8 @@
             "tier_3": "Direct confrontation. He's protecting Fracture members from a Hero Commission crackdown. He and the class may be on the same side for thirty seconds before it goes wrong.",
             "tier_4": "If Shard is cornered, Voltage is the last line. He won't surrender. He will try to get her out."
           },
-          "dm_notes": "He's the tactician. He reads the room, reads the class. Use him to punish overconfidence — he knows that Steel conducts his electricity straight through, and will bait a hardened opponent into a hit they think they can shrug off.",
-          "season_1_role": "Met directly in The Fracture Problem (Tier 2) — performs a hero move (protecting an elderly protester) while being a villain. Present but non-combative in Convergence, ensuring Shard's exit is clean. If forced into combat, use full stat block.",
-          "quirk_mechanics": {
-            "source": "Quirk Compendium — Electrification",
-            "weakness": "Stores up to 1,000,000 watts of electricity, which builds as he uses the Quirk. As wattage rises his Intelligence drops and movement speed halves, culminating in unconsciousness at 1,000,000 watts.",
-            "abilities": [
-              {
-                "name": "Electrification",
-                "type": "Action",
-                "description": "Melee or ranged attack (30 feet) dealing 2d8 lightning damage. Costs 5,001 watts. As a reaction, he can also absorb lightning damage dealt to himself or an ally within 20 feet, reducing it to 0 and gaining resistance to lightning damage."
-              },
-              {
-                "name": "Human Stun Gun",
-                "type": "Action or Reaction",
-                "description": "Discharges electricity in a 10-foot radius or 15-foot line. Creatures must succeed on a Constitution save or take 2d8 lightning damage, become Stunned until the end of his next turn, and gain a rank of Shocked (half damage, no Stun on a success). Costs 10,001 watts."
-              }
-            ]
-          }
+          "dm_notes": "He's the tactician. He reads the room, reads the class, and drops Blackout the instant they lean on hero-issue gear. Use him to punish overconfidence — he'll bait a hardened opponent into a hit they think they can shrug off.",
+          "season_1_role": "Met directly in The Fracture Problem (Tier 2) — performs a hero move (protecting an elderly protester) while being a villain. Present but non-combative in Convergence, ensuring Shard's exit is clean. If forced into combat, use full stat block."
         }
       ]
     }

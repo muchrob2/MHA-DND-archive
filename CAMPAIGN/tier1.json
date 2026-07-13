@@ -2,409 +2,399 @@
   "tier": 1,
   "levels": "1-4",
   "title": "Welcome to U.A.",
-  "tone": "Almost entirely fun. Orientation. The class is meeting each other, discovering the school is hard and also ridiculous. The Chain, Null Signal, and Fracture are all background noise — and all, unbeknownst to anyone but their founder, the same organisation. Class 1-B is a name on a results board. By level 4, the students feel like a cohort — and the world should feel like it's about to ask something of them.",
-  "dm_overview": "Tier 1 is about establishing. Run the encounters lightly — drones that can be joked about, villains who are incompetent by design. The danger is real but the consequence of failure is embarrassment, not catastrophe. Save consequence for Tier 2. What you're building here is the baseline: who these students are to each other, how they handle a fight, whether they're actually going to be heroes or just people who wanted to be.",
+  "tone": "Almost entirely fun. Orientation. The class is meeting each other, discovering the school is hard and also ridiculous. Ruin is a name everyone in Tokyo already recognises — background noise the class hasn't touched yet. Fracture, the separate anti-licensing movement getting louder across the city, hasn't either. Class 1-B is a name on a results board. By level 4, the students feel like a cohort — and the world should feel like it's about to ask something of them.",
+  "dm_overview": "Tier 1 is about establishing who these twenty specific people are, not just what their quirks do. Every beat below is written from the actual character sheets — their real fears, habits, and backstories — not generic quirk demonstrations. Run the danger lightly; the consequence of failure here is embarrassment, not catastrophe. Save consequence for Tier 2.",
   "session_estimate": "6-8 sessions across 4 arcs",
   "arcs": [
     {
       "name": "The Entrance Exam",
       "arc_type": "Opening session / character introduction",
       "sessions": "1",
-      "summary": "A staged disaster scenario in a simulated city block. Rescue civilians (actors), destroy drones (points), and survive long enough to see the results board. The last wave is a boss drone that can't be taken down solo — the class's first forced cooperation moment.",
-      "dm_setup": "Run this as the very first session, ideally before the players know each other's characters. Drop them into the arena with minimal explanation — Oshiro's PA announcement is three sentences. Students scatter. The exam has no stated win condition beyond 'do well.' The chaos is the point.",
+      "summary": "A staged disaster scenario in a simulated city block. Rescue civilians (actors), destroy drones (points), survive to the results board. The last wave is a boss drone nobody can solo — the class's first forced cooperation moment.",
+      "dm_setup": "Run this as the very first session, before players necessarily know each other's characters. Oshiro's PA announcement is three sentences. No stated win condition beyond 'do well.' The chaos is the point — who these people are under pressure is the data you want, not the score.",
       "major_beats": [
         {
           "name": "The Whistle",
-          "description": "Oshiro's PA announcement: 'Simulated urban rescue scenario. Exam begins now.' That's it. The arena starts immediately — drone hatches open, a building facade collapses (safe, controlled, but loud), civilian actors start shouting for help.",
-          "dm_notes": "Run this fast and without pause. Don't give players time to plan. The instinct reads are the interesting data — who charges forward, who hesitates, who immediately starts coordinating, who looks for the rules. These are character moments.",
+          "description": "Oshiro's PA cuts in with no countdown: 'Simulated urban rescue scenario. Exam begins now.' Drone hatches open. A building facade collapses (safe, loud). Civilian actors start shouting.",
+          "dm_notes": "Don't give players time to plan. Let the instinct reads happen naturally.",
           "player_hooks": {
-            "ren": "Disappears mid-sprint almost immediately. Other players will ask where he went — good, let them wonder.",
-            "chosen": "The crowd noise and chaos might trigger a stress response. His quirk activating accidentally in round 1 is great if it happens — it introduces his mechanic in a low-stakes, funny context.",
-            "kazama": "Harden Steel and wade straight into the drone wave — civilians nearby aren't at risk from him the way a blaster's collateral would be, so he's the one who can fight at close range without worrying about who's behind his target. Let him notice that's a relief.",
-            "izuto": "Engine warmup time. He's genuinely slower in round 1. Let him feel slightly behind before the engine kicks in."
+            "ren": "Gone before anyone registers he moved — Overclock's faint blue vein-lines are the only trace, and even those are hard to catch. Other students will ask where he went. Let them wonder.",
+            "chozen": "This is loud, chaotic, and stressful, and his Stress quirk doesn't ask permission — it just reads the environment. A tremor of unwanted activation (visible vein-darkening across his neck) hits him in round 1 before he's decided to fight anything. He didn't choose this. He's already thought through what to do about it, because he's already thought through everything, but 'plan for accidental activation during a school exam' wasn't on the list he made at home.",
+            "kazama": "Hardens immediately and wades straight into drone fire — no civilians at risk from him the way a blaster's stray shot would be, so close range is simply the safe option for everyone else. His steel catches the exam lighting with that unusual mirror-bright sheen instead of the dull grey most Steel users show. He doesn't think about why. Nobody's ever told him it's unusual.",
+            "izuto": "Needs a beat before he's at full output — the engine components on his calves have to spin up. He's noticeably behind in round 1, which he hates, and is already doing mental maintenance math about how much 'juice' this exam is going to cost him before it's even started."
           }
         },
         {
           "name": "First Contact",
-          "description": "Initial drone wave. Mk.I drones, 2-3 at a time, targeting the nearest student. The scoring board in the arena shows point totals in real time — students can see exactly where they rank.",
-          "dm_notes": "This is where character dynamics emerge from point competition. Masahata will try to optimise. Ren will just go fast. Someone will try to steal someone else's kill — handle that at the table. Let students develop their own approach before any coordination is needed.",
+          "description": "Mk.I drone wave, 2-3 at a time, targeting nearest student. Real-time scoreboard visible in the arena.",
+          "dm_notes": "Character dynamics emerge from the point competition, not from the DM forcing it.",
           "player_hooks": {
-            "masahata": "He's been calculating optimal point routes since the announcement. His analysis is correct. It's also deeply annoying to whoever he's talking at.",
-            "yoshibara": "The natural doubling response to 'more targets means more points.' Oshiro is watching — this is the moment he registers her as someone to watch.",
-            "toshida": "His Loud Voice brings a wall segment down by accident. Civilian actors sprint away from it, not the drones. It's a hilarious mess that still scores points somehow."
+            "masahata": "Has been mentally ranking optimal drone routes since the PA announcement ended. His family ranks things at the dinner table as a matter of course; this is just Tuesday to him. He announces his running total out loud, unprompted, to nobody in particular.",
+            "aikawa": "First to charge anything. She's wanted this exact moment since she was six years old and watched a rescue on the news — this is not a metaphor, she has said this out loud to at least four people already today. Claws out, in close, loud about it.",
+            "yoshibara": "Doubles herself the second she registers 'more targets = more points.' Someone bumps into the double mid-fight and is visibly startled that it's a few degrees colder than skin should be. Oshiro notes this — not the doubling, the fact that she thought of it first.",
+            "toshida": "A shout escapes mid-exam and a wall segment goes down. Civilian actors run from the falling wall, not the drones. Somehow this still nets rescue points."
           }
         },
         {
           "name": "The Civilian Problem",
-          "description": "Civilian actors are scattered through the arena, being 'endangered' by drones and structural damage. Rescuing them scores triple points — but requires leaving drone fights and moving slowly with a panicked civilian.",
-          "dm_notes": "This is the first pressure test on the class's values. Some students will immediately pivot to rescue. Others will calculate whether the triple points are worth the combat loss. There's no wrong answer — both are valid hero approaches — but the split should generate in-character friction.",
+          "description": "Civilian actors are scattered through the arena, 'endangered' by drones and debris. Rescuing scores triple — but costs combat time.",
+          "dm_notes": "First values test. No wrong answer between rescuing and fighting — the split should generate real in-character friction.",
           "player_hooks": {
-            "chosen": "Stress manipulation quirk should be noted by Oshiro as unusually effective at calming panicked civilians. A seed for his social potential.",
-            "izuto": "Engine power is excellent for physically moving civilians quickly. Let him be good at this.",
-            "nakaya": "Enlargement for carrying multiple civilians at once — if she thinks of it, reward it. If she doesn't, let an actor-civilian suggest it ('Can you just... get bigger?')."
+            "chozen": "The panic and noise around a trapped civilian actor spikes his stress in a way he didn't plan for — he crosses into a low-grade activation without deciding to, faint darkening along his forearms. He gets the civilian clear fine. He also spends the next ten minutes annoyed that his body did something before he told it to.",
+            "izuto": "Excellent at moving civilians fast and safely — this is exactly what Engine is for, and he knows it without needing to be told. Let him be quietly, competently good at this.",
+            "setaka": "Physically carries two actors out under each arm without breaking stride, then apologises to both of them for the indignity of being carried. One of them tries to give him their contact info afterward, mistaking him for a real hero already. He writes their name down. He will actually send that thank-you note later."
           }
         },
         {
           "name": "The Sentinel Arrives",
-          "description": "The boss drone drops in when Oshiro judges the class has spent enough time working individually. It immediately activates Suppression Field — all students feel the ground start to resist. Solo attacks barely scratch it. The class needs to concentrate fire from multiple angles simultaneously.",
-          "dm_notes": "This is the cooperative moment. Don't engineer it — let it emerge. If the class doesn't coordinate, the Sentinel just waits them out and grinds through HP slowly. When they DO coordinate, make it feel like a genuine breakthrough. The Sentinel's Phase Armour dropping at 40 HP should be a visible, dramatic shift. Run that as a moment: 'Something in the drone's chassis shifts. You can see components realigning.'",
+          "description": "Boss drone drops when Oshiro judges the class has spent enough time working solo. Suppression Field goes up immediately — everyone feels the ground start to resist.",
+          "dm_notes": "Don't engineer the cooperation moment — let it emerge. If they don't coordinate, the Sentinel grinds them down slowly. When they do, make the Phase Armour breaking at 40 HP feel like a genuine turn.",
           "player_hooks": {
-            "ren": "Overclock is perfect for Sentinel — can reach any angle in the Suppression Field. But the field slows his approach. First time he's had to work around a mobility limitation.",
-            "kazama": "Suppression Field drags at his movement, but it doesn't stop him from closing the distance and hardening up against the Sentinel directly — he just eats the slowdown and walks in. First time he's had to grind instead of finishing something quickly.",
-            "chosen": "The Sentinel is a machine. His quirk doesn't work on machines. He needs to shift to a support role — this is his first genuine limitation discovery.",
-            "izuto": "Engine output can break through Suppression Field drag — at cost. He burns stamina faster. First introduction to the engine's real toll."
+            "ren": "Fast enough to reach any angle of the Suppression Field, but the field itself drags at him — his first real experience of a mobility limit that isn't about how fast he can go.",
+            "kazama": "The field slows him down like everyone else, but doesn't stop him closing distance and hardening up directly against the drone. First time this exam he's had to grind instead of finishing something clean.",
+            "chozen": "The Sentinel is a machine. It has no fear response, no stress of its own for him to key off, and the fight itself is stressful enough on its own terms — which means by the time Phase Armour cracks, he's running hotter than he expected to be this early in his first day.",
+            "izuto": "Burning through 'juice' faster than he budgeted for, fighting the field's drag. First real lesson in what the reserve actually costs him."
           }
         },
         {
           "name": "The Result Board",
-          "description": "Scores revealed. All students pass. Individual rankings posted. The ranking chart era begins — Masahata has a notebook open before the announcement finishes.",
-          "dm_notes": "Read the scores in Oshiro's voice: flat, without inflection, alphabetical. Don't comment on them. Don't compare them. The class will do that themselves immediately, which is exactly right. The result board also shows Class 1-B's top score in a second column: Morida Takeshi, 84 pts. Whether 1-A's top beats it depends on the session.",
+          "description": "Scores posted. All students pass. Individual rankings go up. Masahata has a notebook open before Oshiro finishes reading.",
+          "dm_notes": "Read scores in Oshiro's voice: flat, alphabetical, no commentary. The class will editorialise themselves. Also shows Class 1-B's top score in a second column: Morida Takeshi, 84 pts.",
           "player_hooks": {
-            "masahata": "His score is high. His ranking is correct. He announces it before Oshiro finishes reading. The class is already tired of him and this is session one. This is correct.",
-            "ren": "His score reflects his chaos — high drone count, low civilian rescues. The civilian rescue points are the miss. He'll dismiss it. Oshiro writes something in a notebook."
+            "masahata": "Announces his own score before Oshiro finishes reading it. The class is already tired of him. It's session one. This is correct.",
+            "ren": "High drone count, low civilian rescues — the miss is obvious in hindsight. He shrugs it off out loud. Oshiro writes something down and doesn't share it."
           }
         }
       ],
       "minor_beats": [
-        "Ren disappears mid-sprint in the first round — blink-and-miss, other students will ask where he went.",
-        "Masahata announces his point total at regular intervals throughout the exam, unprompted.",
-        "Toshida's shout brings down a wall segment, civilian actors scatter, somehow this scores two rescue points.",
-        "Nakaya tries to short out a Mk.I drone's targeting system with a jolt to use it as cover — drone safety protocols eject her 10 ft. Drone reboots fine. Nakaya is also fine. Points scored.",
-        "Kinosho is spotted at the end of the exam on a building roof nobody saw her climb. She is asleep. She is still somehow ranked in the top 5.",
-        "During civilian rescue, an actor drops character momentarily and says 'You kids actually showed up fast — better than last year.' Small, human, real. A seed."
+        "Kinosho is found asleep on a rooftop nobody saw her climb, in the top 5 regardless. When Neutralization actually activates near the end, her eyes flatten to a dull pewter grey for a second before colour drains back in — the first time most of the class sees it happen. Someone will eventually call this 'turning off.'",
+        "Nakaya tries to short a Mk.I drone's targeting system with a controlled arc — drone safety protocols eject her ten feet. She's fine. She's delighted. She scores the point anyway.",
+        "Ando's scales shrug off a glancing drone hit and he immediately turns it into a bit for the nearest classmate — the sunglasses do not come off even once, including for the part where a drone detonation goes off directly behind him and everyone sees him flinch first and joke second.",
+        "Ichitaka doesn't chase points. He projects a convincing decoy of himself standing still in the open, lets two drones waste their volley on it, and picks off the real targets while they reset. Nobody asked him to be efficient about it. He just is.",
+        "An actor drops character for one sentence mid-rescue: 'You kids actually showed up fast — better than last year.' Small, human, real. A seed."
       ],
       "npc_interactions": [
         {
           "npc": "Oshiro Daikichi",
-          "context": "Observing from the control room throughout. Visible through the observation glass. Does not enter the arena.",
-          "key_moment": "After the exam ends, reads scores aloud in a flat voice. Pauses — not dramatically — after Morida's 1-B score. Then continues. Nobody knows what the pause means. It means something.",
-          "dm_dialogue": "Scores. Class 1-A, exam sequence one. [reads alphabetically, no inflection]. Class 1-B reference score, posted for comparison: Morida Takeshi, eighty-four. [closes clipboard]. You're all in.",
-          "trigger": "Any student who approaches Oshiro after the exam to ask about a specific score, technique, or the Sentinel drone gets a single-sentence response. Accurate. Not encouraging. Not discouraging. 'Your rescue time was poor. Work on civilian carry.' or 'The drone weak point is visible at range. You didn't look.'"
+          "context": "Observing from the control room throughout. Does not enter the arena.",
+          "key_moment": "Reads scores aloud after, flat, alphabetical. Pauses — not dramatically — after Morida's 1-B score. Continues. Nobody knows what the pause means. It means something.",
+          "dm_dialogue": "Scores. Class 1-A, exam sequence one. [reads alphabetically, no inflection]. Class 1-B reference score, posted for comparison: Morida Takeshi, eighty-four. You're all in.",
+          "trigger": "Any student who approaches him after gets one flat, accurate sentence. Not encouraging. Not discouraging. 'Your rescue time was poor. Work on civilian carry.' Or: 'The drone's weak point is visible at range. You didn't look.'"
         },
         {
           "npc": "Fujisaki Nene",
-          "context": "At the arena gate before the exam. Doing last-minute gear checks on any student who approaches.",
-          "key_moment": "If a student approaches: she's already looking at their costume, hands moving toward her thread tools. 'Stand still.' — not unkind, just focused. Makes a small adjustment they didn't ask for. It helps.",
-          "dm_dialogue": "On 1-B: 'They had a different site this year. Quieter, I heard. But thorough — Matsunami runs thorough.' She doesn't compare scores. She doesn't recommend comparing scores. She does note, off-handedly, that 'Matsunami has been coaching Morida on close-range defences for months. Interesting tactical choice.' Then her attention is elsewhere.",
-          "trigger": "Available before the exam. After the exam she's already looking at the medical report for anyone who took heavy hits from the Sentinel."
-        },
-        {
-          "npc": "Hamagawa Rei",
-          "context": "In the observation booth with a legal notepad. If students do anything technically ambiguous (and they will), she's watching.",
-          "key_moment": "If a student does something borderline illegal (unlicensed aggressive use beyond exam scope, etc.), they may notice a small flag going up on the observation window and then coming down. Hamagawa decided it was fine. She didn't have to. Remember this later.",
-          "dm_dialogue": "Post-exam if approached: 'The Sentinel's Suppression Field creates an interesting question about whether activating a quirk within the field constitutes offensive or defensive use under the provisional licensing draft.' She is genuinely interested in this question. She is the only one.",
-          "trigger": "Only appears in post-exam wrap-up if students approach the observation booth."
+          "context": "At the arena gate before the exam, doing last-minute gear checks.",
+          "key_moment": "If a student approaches: she's already looking at their costume before they finish the sentence. 'Stand still.' Makes an adjustment they didn't ask for. It helps.",
+          "dm_dialogue": "On 1-B: 'Different site this year. Quieter, I heard. But thorough — Matsunami runs thorough.' She doesn't compare scores. She does note that Matsunami's been coaching Morida on close-range defence for months. 'Interesting tactical choice.' Then her attention is elsewhere.",
+          "trigger": "Available before the exam. After, she's already reading medical reports for anyone who took a heavy hit from the Sentinel."
         }
       ],
       "encounters": [
         {
           "name": "Drone Wave 1 — Initial Scatter",
-          "enemies": "6× Combat Drone Mk.I (deploy in pairs of 2, staggered — 2 appear round 1, 2 more round 2, 2 more round 3)",
-          "terrain": "Simulated urban block: three city streets, two building interiors accessible (one 2-storey, one single storey), debris fields from 'structural damage', open plaza centre.",
-          "setup": "Students are dropped in from different entry points, spread across the arena. They start 60+ ft apart from each other. The first drones target whoever is nearest — which is probably nobody who wants to be targeted first.",
-          "tactics": "Drones fire on nearest target each round. No cooperation. Staggered arrival keeps the pressure from spiking all at once. Let students handle 1-2 drones solo before the Mk.IIs appear.",
-          "rewards": "1 exam point per Mk.I destroyed. Points visible on arena leaderboard in real time."
+          "enemies": "6× Combat Drone Mk.I (2 per round, staggered)",
+          "terrain": "Simulated urban block: three streets, two accessible buildings, debris fields, open plaza centre.",
+          "setup": "Students dropped in from different entry points, 60+ ft apart. First drones target whoever's nearest.",
+          "tactics": "No cooperation logic. Staggered arrival keeps pressure from spiking. Let students handle 1-2 solo before Mk.IIs appear.",
+          "rewards": "1 exam point per Mk.I destroyed, visible on the live leaderboard."
         },
         {
           "name": "Drone Wave 2 — Heavy Support",
-          "enemies": "2× Combat Drone Mk.II, 4× Combat Drone Mk.I (remaining from Wave 1, or fresh if all destroyed)",
-          "terrain": "Same arena. Some debris from Wave 1 provides cover.",
-          "setup": "Mk.IIs drop in from above, flanking the heaviest combat area. They immediately acquire the highest-scoring student as a target.",
-          "tactics": "Mk.IIs use Missile Burst when 2+ students cluster. Mk.Is continue filling from the sides. The pressure escalates without requiring coordination yet.",
-          "rewards": "3 points per Mk.II destroyed. Running civilian rescue total also visible on the board."
+          "enemies": "2× Combat Drone Mk.II, 4× Combat Drone Mk.I",
+          "terrain": "Same arena. Debris from Wave 1 provides cover.",
+          "setup": "Mk.IIs flank the heaviest combat area and acquire the highest-scoring student as target.",
+          "tactics": "Mk.IIs use Missile Burst when 2+ students cluster. Mk.Is keep filling from the sides.",
+          "rewards": "3 points per Mk.II destroyed."
         },
         {
           "name": "Wave 3 — Sentinel",
-          "enemies": "1× Sentinel Boss Drone (see enemies.json: boss stat block)",
-          "terrain": "The arena plaza centre — maximum open space. Sentinel is designed for open-field dominance.",
-          "setup": "Drops from above with a visible announcement — 'FINAL ASSESSMENT SEQUENCE INITIATED.' Students hear it. If they're paying attention to the leaderboard, this is worth 10 points split among the class. That's the incentive for cooperation.",
-          "tactics": "See Sentinel Boss Drone tactics entry. Key: Suppression Field on, Railgun on highest scorer, Stomp when students cluster. Phase Armour drops at 40 HP — this is the visible turning point. At 20 HP, drops Suppression Field as a last-ditch lure.",
-          "rewards": "10 points split among students who dealt the final 20 HP. Oshiro is watching who coordinates and who doesn't. The cooperation data matters more to him than the point totals."
+          "enemies": "1× Sentinel Boss Drone",
+          "terrain": "Arena plaza centre — maximum open space.",
+          "setup": "Drops with 'FINAL ASSESSMENT SEQUENCE INITIATED.' Worth 10 points split among the class — the incentive to coordinate.",
+          "tactics": "Suppression Field on immediately. Railgun on the highest scorer. Stomp when students cluster. Phase Armour drops at 40 HP — the visible turning point.",
+          "rewards": "10 points split among students who dealt the final 20 HP."
         }
       ],
       "foreshadowing": [
-        "During civilian rescue, an actor — a working professional, been doing this for years — drops character for a sentence: 'You actually got here fast. Better than the real calls lately.' He's referring to port district response times that have been slipping. Doesn't know why. Just notices.",
-        "Post-exam, while students are reviewing their scores, Oshiro glances at a message on his earpiece. He puts it away. His expression doesn't change. He files the message mentally and returns to the debrief.",
-        "Among the exam paperwork a student finds in the holding area: a coverage report showing UA exam site coverage and a column for 'active incidents during exam window.' The port district column has three entries. All marked resolved. The resolution timestamps are very fast — faster than a police response would explain."
+        "The rescue actor's line about response times slipping — port-adjacent incidents nobody's explaining.",
+        "Post-exam, Oshiro's earpiece buzzes once. He absorbs it, expression unchanged, and returns to the debrief.",
+        "Exam paperwork in the holding area includes a coverage report: a column for 'active incidents during exam window,' three entries, all marked resolved, resolution timestamps faster than any real response should be."
       ],
       "class1b_seeds": [
-        "The results board shows 1-B's top score: Morida Takeshi, 84 pts. Whether 1-A beats it depends on the session. If 1-A tops it, Oshiro acknowledges this with silence. If they don't, he also acknowledges this with silence. The difference is texture.",
-        "Fujisaki's comment: 'Matsunami has been coaching Morida on close-range defences for months. Interesting tactical choice.' She trails off. She was going to say something else.",
-        "Exam site footage (which goes up on U.A.'s internal board later) includes a split-screen of 1-A and 1-B exams. 1-B's footage is quieter. More coordinated. Less interesting to watch. Significantly fewer walls falling over."
+        "Results board shows 1-B's top score: Morida Takeshi, 84. Whether 1-A beats it depends on the session. Oshiro's reaction is silence either way — the difference is texture.",
+        "Fujisaki's aside about Matsunami coaching Morida on close-range defence trails off before she finishes the thought.",
+        "Exam footage later posted to the internal board shows a split-screen with 1-B's site: quieter, more coordinated, fewer walls falling over."
       ]
     },
     {
       "name": "Dorm Life Begins",
       "arc_type": "Downtime / social arc",
-      "sessions": "1-2 (flexible, expand to fill)",
-      "summary": "The class moves into Heights Alliance. No combat. Pure character chaos. This is how the class becomes a class instead of a score bracket.",
-      "dm_setup": "Give every player at least one moment where their character's personality manifests in the domestic setting. The incidents (doorframe, couch, ranking chart) are scheduled — but the space in between is pure improvisation. Follow the players. The best moments in this arc will be ones you didn't plan.",
+      "sessions": "1-2",
+      "summary": "The class moves into Heights Alliance. No combat. Pure character chaos — this is how a class becomes a class instead of a results column.",
+      "dm_setup": "Give every player at least one moment where their character's actual personality — not just their quirk — shows up in a domestic setting. Follow the players; the best moments here won't be the scheduled ones.",
       "major_beats": [
         {
           "name": "Moving Day",
-          "description": "Heights Alliance. Everyone arrives with their things. Common spaces are first-come-first-served for furniture arrangement claims. There will be arguments about the couch.",
-          "dm_notes": "Run this as a montage of arrivals unless a player has a specific bit they want to do. The dorm is warm, functional, and clearly designed by someone who thought about what students actually need. Oshiro didn't design it but he approved the layout. This information is available if anyone asks.",
+          "description": "Arrivals at Heights Alliance. Common-space furniture claims are first-come-first-served. There will be an argument about the couch.",
+          "dm_notes": "Run as a montage unless a player wants a specific bit.",
           "player_hooks": {
-            "ren": "Arrives last. Has the least stuff. Has clearly not thought about this. A student finds him standing in his room looking at it like it's a problem to solve.",
-            "masahata": "Arrives first. Has labelled everything. Has a printed map of the common spaces with optimal furniture arrangements highlighted.",
-            "izuto": "Engine quirk makes moving heavy furniture extremely efficient. He's done with his room in three minutes. Spends the rest of the day helping people who didn't ask.",
-            "chosen": "Stress detection activates in the noise and crowd of moving-in. He's aware of everyone's stress levels in the building simultaneously. He finds a corner and stays very still for ten minutes.",
-            "kinosho": "Her stuff arrives in a single small bag. Her room is bare except for a kettle. She seems content."
+            "izuto": "Done unpacking in three minutes flat, then spends the rest of the afternoon helping people who didn't ask — he doesn't know how to just sit with nothing to fix.",
+            "masahata": "Arrives with a printed floor map and colour-coded furniture proposal. Nobody asked for this.",
+            "samitsu": "Quietly claims the kitchen as his own territory within the hour. Nobody argues. Something already smells excellent.",
+            "kinosho": "Her belongings fit in one small bag. Her room has a kettle and nothing else. She seems entirely satisfied by this."
           }
         },
         {
           "name": "The Doorframe Incident",
-          "description": "Day one. Toshida is in the common room. He says something to someone — a normal sentence, animated delivery, not even particularly loud. A doorframe cracks. This is how Class 1-A learns about Loud Voice.",
-          "dm_notes": "This is the icebreaker that reveals everyone's character in reaction. Run it fast. The crack. The silence. Toshida's face. Then go around the room: how does each PC respond?",
+          "description": "Day one. Toshida is mid-sentence in the common room — not even shouting — and a word escapes with enough force to crack a doorframe panel loose.",
+          "dm_notes": "This is the icebreaker. Run it fast: the crack, the silence, Toshida's face, then go around the room for reactions.",
           "player_hooks": {
-            "toshida": "He's mortified. He knows this happens. He was being careful. He wasn't careful enough. There's a practiced apology forming — he's done this before.",
-            "masahata": "Has already revised his seating chart based on proximity to Toshida's likely vocal range."
+            "toshida": "Mortified but practiced — he's done this before, has an apology ready, fixes the panel himself. It falls out again the next morning. He has already, privately, named the doorframe Hiroshi, and has decided this is a rivalry now."
           }
         },
         {
           "name": "The Charger Incident",
-          "description": "Day two. Nakaya notices Masahata's phone charger has died and offers to fix it with a small controlled arc, purely as a favor. It works. The port also fuses solid at roughly double voltage. His phone now charges, slowly, through a hairline crack in the case.",
-          "dm_notes": "Pure comedy. Masahata is furious in a way that undercuts his usual self-importance, since the fix objectively worked. Let the class decide whether Nakaya offers to 'fix' anything else afterward, and whether anyone lets her. This is also the story they will tell at the Sports Festival when journalists ask them about dorm life."
+          "description": "Day two. Nakaya notices Masahata's phone charger is dead and offers to fix it with a small controlled arc, purely as a favour. It works — technically. It also fuses the charging port shut at roughly double voltage, permanently.",
+          "dm_notes": "Pure comedy. Masahata is furious in a way that undercuts his usual self-importance, because the fix objectively worked. This is also the story the class tells reporters at the Sports Festival.",
+          "player_hooks": {
+            "nakaya": "Considers this an unambiguous success and is delighted every time someone brings it up, which is often."
+          }
         },
         {
           "name": "The Chart",
-          "description": "Day four. A printed, laminated ranking chart appears on the common room fridge. It has the entrance exam scores, a column for Masahata's projected rankings at level 4, a column marked 'Class 1-B benchmark,' and a note at the bottom: 'Updated weekly.' Nobody asked him to do this.",
-          "dm_notes": "The chart is accurate. That's the thing — Masahata's projections are going to be roughly correct, and everyone can see it, and nobody likes it. The chart stays on the fridge for all of Tier 1. By Tier 2 it has coffee stains and exactly two additional columns that Masahata added without announcement.",
+          "description": "Day four. A laminated ranking chart appears on the fridge: entrance exam scores, a projected-rankings column, a 'Class 1-B benchmark' column, and 'Updated weekly' at the bottom. Nobody asked for this either.",
+          "dm_notes": "The chart is accurate, which is the actual problem. It survives the whole of Tier 1 accumulating coffee stains and re-lamination.",
           "player_hooks": {
-            "masahata": "He has a second chart. This one is more detailed. He shows it to no one unless directly asked. It has a column for Class 1-B individuals. It also has a column that says only 'Other variables?' with a question mark.",
-            "ren": "He's listed as 'speed: high / rescue efficiency: low / improvement potential: significant.' He reads this and says it's wrong. Masahata says 'Empirically.' Ren says 'Empirically means something specific.' Masahata says 'I know what it means.'"
+            "masahata": "Keeps a second, more detailed version he shows no one unless directly asked. It has a column labelled only 'Other variables?' with a question mark and no elaboration.",
+            "ren": "Listed as 'speed: high / rescue efficiency: low / improvement potential: significant.' Calls it wrong. Masahata says 'Empirically.' Ren points out that's not what the word means. Masahata says he knows what it means."
           }
         }
       ],
       "minor_beats": [
-        "Takazuki's first silent appearance in the common room. Someone nearly sits on him. The look on their face when they realise. Takazuki just says 'I was here first.'",
-        "Kinosho is found asleep in the stairwell between the second and third floors. She considers this her primary spot now. She has additional spots. Nobody has catalogued all of them.",
-        "First communal cooking attempt. Kazama's offer to help with the stove is declined. He sits quietly and watches. The food is bad. He says nothing.",
-        "Ren starts his empirical evidence count: 'Number of things that should have stopped me: currently two. Evidence that worrying is useful: none.' He tells this to Chozen, who stares at him.",
-        "Oshiro inspection — he walks every room in silence over exactly thirty minutes. Each student finds a single notecard under their door afterward. The notecards are accurate. They're also not comfortable. Ren's says 'You move fast when there's something to chase. Figure out what you're running toward.' He doesn't know what to do with this."
+        "Takazuki's first silent appearance in the common room — someone nearly sits on her. She says only: 'I was here first.'",
+        "Kinosho is found asleep in the stairwell between floors two and three. This becomes her primary spot. She has others. Nobody has catalogued them all.",
+        "First communal cooking attempt goes badly. Samitsu watches from the doorway, says nothing, and is in the kitchen unprompted the next night. Nobody has had a bad meal since.",
+        "Ichitaka projects a small hologram bird onto his own desk for no stated reason and lets it sit there for an hour before dismissing it. He doesn't explain. It looked like art.",
+        "Toragi leaves something small and useful — a pencil, a snack — on Yoshibara's desk with no note, then leaves before she notices. This happens three more times across the tier. She starts leaving him things back. Neither of them has said a word about it out loud.",
+        "Oshiro's room inspection: ninety seconds per room, silent, no warning. A notecard appears under every door before breakfast. Ren's says: 'You move fast when there's something to chase. Figure out what you're running toward.' He has no idea what to do with this.",
+        "Setaka mails three physical thank-you cards this week for entirely ordinary interactions. The recipients are unsettled in a way that becomes, over time, fond."
       ],
       "npc_interactions": [
         {
           "npc": "Oshiro Daikichi",
-          "context": "Room inspection, day five. He does not announce it. He is simply there when students return from dinner.",
-          "key_moment": "He inspects each room alone, closed door, ninety seconds. Students who hover in the hallway hear nothing. The notecards are under the doors before breakfast. They are never discussed in class. He never asks about them.",
-          "dm_dialogue": "If caught in the hallway during inspection: 'Rooms. Not a request.' If students ask about the notecards: 'You read it. Good.' Nothing more.",
-          "trigger": "The notecard content should reflect something the student is actually working on — their quirk development, their social position in the class, their relationship to a specific fear. Make them land."
+          "context": "Room inspection, day five. Unannounced.",
+          "key_moment": "Notecards under doors before breakfast, never discussed in class, never explained.",
+          "dm_dialogue": "If caught in the hallway: 'Rooms. Not a request.' If asked about the notecards: 'You read it. Good.' Nothing more.",
+          "trigger": "Make each notecard land — something the specific student is actually working through, per their bio, not a generic compliment."
         },
         {
           "npc": "Fujisaki Nene",
-          "context": "Gear check visit, day two. She comes to see if anyone needs costume adjustments for dormitory use. She ends up staying three hours.",
-          "key_moment": "Yoshibara has questions. Many questions. About whether her duplicates count as separate legal entities for the purposes of gear damage liability. Fujisaki is genuinely delighted by this question. A very long conversation begins.",
-          "dm_dialogue": "If other students approach: she's always doing three things at once with her fiber threads — fixing, adjusting, measuring — while also talking. 'Your left shoulder seam is going to go in about two weeks. Stand still.' Whether the student was asking for help or not.",
-          "trigger": "Any student who approaches about gear gets a real, useful interaction. Any student who doesn't approach: she notices what their costume is doing under stress conditions anyway and leaves a note."
+          "context": "Gear check visit, day two. Comes to see about dormitory-use costume adjustments. Stays three hours.",
+          "key_moment": "Yoshibara has extensive questions about whether her duplicate counts as a separate legal entity for gear-damage liability. Fujisaki is delighted. A very long conversation follows.",
+          "dm_dialogue": "To anyone nearby, mid-adjustment: 'Your left shoulder seam is going to go in about two weeks. Stand still.' Whether they asked or not.",
+          "trigger": "Any student who approaches gets a genuinely useful interaction."
         },
         {
           "npc": "Morida Takeshi (Class 1-B)",
-          "context": "Cafeteria next morning. He and Yashiro are at an adjacent table.",
-          "key_moment": "Morida's tray is arranged geometrically. He eats with focused efficiency. He looks at the Class 1-A table once — a full survey, two seconds, deliberate — and then looks away. He has taken everything he needs from that look.",
-          "dm_dialogue": "If approached: 'Morida.' Pause. 'Morida Takeshi. Class 1-B.' He extends a hand. Firm grip, one shake, release. 'Good exam.' Then he returns to eating. He means it as a complete, sufficient interaction.",
-          "trigger": "Yashiro, if present, catches the eye of whoever's watching and winks. She teleports two seats to the left while maintaining eye contact."
+          "context": "Cafeteria, next morning. Seated with Yashiro at an adjacent table.",
+          "key_moment": "A full, deliberate two-second survey of the 1-A table. Then he looks away. He's taken everything he needs from it.",
+          "dm_dialogue": "If approached: 'Morida. Class 1-B.' A firm single handshake. 'Good exam.' Returns to eating. He considers this complete.",
+          "trigger": "Yashiro, if present, winks and teleports two seats over while holding eye contact."
         }
       ],
       "encounters": [],
       "foreshadowing": [
-        "Oshiro's notecard for Chozen says: 'You notice what other people feel before they do. The city is going to need that more than the school does.' Chozen doesn't know what this means yet.",
-        "The common room TV runs news in the background. Port district. Something about a business closure — a small support agency that ran gear consulting for unlicensed quirk users. Closed 'due to changing neighbourhood conditions.' The report is twelve seconds long.",
-        "Hamagawa is visible through her office window one evening, late, reviewing a long document. The document header, visible to a sharp-eyed student passing: 'Provisional Licensing Review — Port District Incidence Report Q3.' She closes it when she notices anyone looking."
+        "Oshiro's notecard for Chozen: 'You notice what other people feel before they do. The city is going to need that more than the school does.' He doesn't know what this means yet — and it isn't strictly true the way he thinks it is; what he notices first is his own stress climbing, not anyone else's.",
+        "Common room TV, low volume: a small support agency for unlicensed quirk users in Kurogane Wharf has closed 'due to changing neighbourhood conditions.' Twelve seconds of airtime.",
+        "Hamagawa is visible through her office window one evening, reviewing a document headed 'Provisional Licensing Review — Kurogane Wharf Incidence Report Q3.' She closes it when she notices anyone looking."
       ],
       "class1b_seeds": [
-        "Morida's cafeteria visit. His assessment of the table. The way Yashiro treats it as a game.",
-        "Practice room bookings: 1-B has 6am Monday through Friday. They never cancel. The booking notes always include a specific drill objective.",
-        "Ogiwara's 7am warmup shockwaves. The dorm shakes twice. The building doesn't shake from Toshida anymore — everyone is used to it. The shakes from next-door are new. Masahata adds a row to his chart: 'Ogiwara, Bunta. Seismic. Notes: consistent.'"
+        "Morida's cafeteria survey. Yashiro's teleport-wink.",
+        "1-B's practice room is booked 6am Monday through Friday. They never cancel. The booking notes always name a specific drill objective.",
+        "Ogiwara's 7am warmup shockwaves rattle the dorm twice. Masahata adds a row to the chart: 'Ogiwara, Bunta. Seismic. Notes: consistent.'"
       ]
     },
     {
       "name": "Capture the Flag",
       "arc_type": "First formal training encounter",
       "sessions": "1",
-      "summary": "Oshiro's opening combat class. Two teams, live stakes. The losing team runs extra laps. The winning team picks one perk for the week. Students versus students. Rivalries become specific here.",
-      "dm_setup": "Split the class into two teams before the session — build the teams to create interesting matchups across ability types. Oshiro's design rule: nobody fights their obvious counter. Ren doesn't fight the slowest student. Kazama doesn't fight the one with an armor-piercing quirk. Chozen fights someone high-stress. Give the matchups dramatic potential and let the players find the creative solutions.",
+      "summary": "Oshiro's opening combat class. Two teams, live stakes. Losing team runs extra laps; winners pick one perk. Rivalries get specific here.",
+      "dm_setup": "Split the class into two teams built for interesting matchups, not balance. Oshiro's rule: nobody fights their obvious counter. Give the matchups dramatic potential and let players find creative answers.",
       "major_beats": [
         {
           "name": "Team Assignments",
-          "description": "Oshiro reads the teams from a list. No explanation of the logic. The teams are not random. He does not take complaints. Masahata has thoughts. Oshiro does not acknowledge them.",
-          "dm_notes": "The team split should separate at least two students who would naturally coordinate — Ren and Izuto, or Chozen and whoever he's been supporting. Forced improvisation is the lesson.",
+          "description": "Oshiro reads teams from a list. No explanation. Not random. No complaints taken.",
+          "dm_notes": "Split apart at least two students who'd naturally coordinate. Forced improvisation is the lesson.",
           "player_hooks": {
-            "masahata": "He immediately identifies the optimal winning strategy for both teams. He is on the team that his analysis says should lose. He revises his strategy. The revision is also correct."
+            "masahata": "Immediately identifies the optimal strategy for both teams — and is on the one his own analysis says should lose. Revises his strategy. The revision is also correct."
           }
         },
         {
           "name": "First Blood",
-          "description": "Someone gets eliminated early and it's not who anyone predicted. This is the moment that resets everyone's assumptions about how the match will go.",
-          "dm_notes": "Let this happen organically. If it doesn't happen to a PC, it happens to a notable NPC student — whoever the class thought was the safe pick. If Toshida goes out in round 2, the whole dynamic shifts. If Masahata goes out in round 1 (having executed his strategy perfectly but having been countered by something he didn't model), even better.",
-          "player_hooks": {}
+          "description": "Someone goes out early, and it's not who anyone predicted.",
+          "dm_notes": "Let it happen organically. If no PC, give it to a notable NPC — the 'safe pick' going down first resets everyone's assumptions."
         },
         {
           "name": "The Doubling Problem",
-          "description": "Yoshibara doubles herself. Both versions move toward the flag. Both versions look identical. The opposing team has to decide which one to tag. Both of them probably want to be tagged by a slightly different person for slightly different reasons.",
-          "dm_notes": "Run both versions of Yoshibara as slightly distinct — same base personality, but let one be bolder and one be more analytical in this moment. The distinction should be subtle enough to be a clue, not an answer. Let the class argue about it. Let the wrong team member chase the wrong Yoshibara. Let it cost them. It's fine.",
+          "description": "Yoshibara doubles. Both versions move toward the flag, identical in every visible way. The opposing team has to guess which to tag.",
+          "dm_notes": "Run both versions with the same base personality but let one be slightly bolder, one slightly more careful — a clue, not an answer.",
           "player_hooks": {
-            "chosen": "He can feel both Yoshibaras' stress levels simultaneously. They're different. This is the first practical data he's ever had about duplicates. He doesn't know what to do with it yet."
+            "chozen": "This close to the flag, in front of the whole class, with real stakes — his stress is climbing whether he wants it to or not, and it's making him faster to commit to a read than he normally would be. He guesses. He's not totally sure why he's so sure."
           }
         },
         {
           "name": "The Moment",
-          "description": "One decision — by a PC, by a player who's been quiet, by someone who does something nobody expected — that changes the match. This is unscripted. Make space for it and recognise it when it happens.",
-          "dm_notes": "Know what the 'moment' is in retrospect. If a player does something creative and it works, that's The Moment. If nothing emerges, give it to Kinosho — she was somewhere nobody expected, did something nobody saw coming, and won't explain herself afterward."
+          "description": "One unscripted decision changes the match.",
+          "dm_notes": "If nothing emerges naturally, give it to Kinosho — she was somewhere nobody expected, did something nobody saw coming, and won't explain herself after."
         },
         {
           "name": "The Exhale",
-          "description": "After the match, Oshiro announces the results. Flat voice. Accurate. He turns to leave. One student — probably the one who did something Oshiro didn't predict — gets 'the exhale.' A small sound through the nose. He doesn't look back.",
-          "dm_notes": "Do not over-sell this. If players don't notice it, someone in the class comments later: 'Did Oshiro... almost react?' Nobody is sure. It happened.",
-          "player_hooks": {}
+          "description": "Oshiro announces results, flat, accurate, turns to leave. One student — probably whoever did something he didn't predict — gets a small exhale through his nose. He doesn't look back.",
+          "dm_notes": "Don't oversell it. If players miss it, someone comments later: 'Did Oshiro just... almost react?'"
         }
       ],
       "minor_beats": [
-        "Masahata spent the night before the match compiling a weakness analysis of every student's quirk. He distributes it to his team. His team splits up to 'optimise' and immediately stops communicating. His analysis was correct. Their implementation was not.",
-        "Chozen's stress detection goes off at the match start — the competitive anxiety of the entire class hits him at once. He stands very still for one round, then adjusts. This is now a known quantity for his teammates.",
-        "Izuto's engine timing goes wrong at the worst moment — he accelerates past the flag zone on his first run. The 'OVERSHOT' moment is audible.",
-        "Ren starts the match before the signal. Oshiro: 'Foul.' Hamagawa, from the observation booth: 'Actually—' She is consulting a rulebook. The rulebook does not have a clear entry for this. Oshiro overrules her. Ren's points stand because the rulebook silence means permissible. Hamagawa makes a note.",
-        "Takazuki wins his entire matchup by being invisible. This is technically within the rules. Masahata revises his chart to note: 'Quirk: invisibility, underweighted in initial analysis. Correction applied.'"
+        "Masahata distributes a weakness analysis to his team the night before. His team splits up to 'optimise' and immediately stops communicating. His analysis was correct. Their execution wasn't.",
+        "Izuto's engine timing misfires at the worst moment — he overshoots the flag zone entirely. Audible.",
+        "Ren starts before the signal. Oshiro: 'Foul.' Hamagawa, consulting a rulebook that has no clear entry for this: 'Actually—' Oshiro overrules her. Points stand. Hamagawa makes a note anyway.",
+        "Takazuki wins her matchup by being invisible the entire time. Technically within the rules. Masahata's chart gets a correction: 'Quirk: invisibility, underweighted in initial analysis.'"
       ],
       "npc_interactions": [
         {
           "npc": "Oshiro Daikichi",
-          "context": "Running the match from the field edge. Never enters the arena. Calls penalties in real time without raising his voice.",
-          "key_moment": "Penalty call: 'Out.' Nothing else. Students who ask for justification get: 'You know why.' Students who argue get: [silence, same tone, continue watching match]. The one exhale — see major beat 5.",
-          "dm_dialogue": "After the match: 'Losing team, laps start in ten minutes. Winning team, see the schedule for perk options. Everyone: what did you learn?' He does not wait for an answer. He has already started writing his notes. The question was not rhetorical but the timing suggests otherwise.",
-          "trigger": "If students approach him afterward with a genuine analysis of the match, he will engage — one sentence of acknowledgement per genuine observation. 'You noticed the Yoshibara problem too late.' or 'Your recovery after the flag drop was clean.' These responses are the closest he gets to teaching voluntarily."
+          "context": "Running the match from the field edge. Never enters the arena.",
+          "key_moment": "Penalty calls delivered flat: 'Out.' No justification offered. The one exhale — see major beat 5.",
+          "dm_dialogue": "After the match: 'Losing team, laps in ten minutes. Winning team, see the schedule for perks. Everyone: what did you learn?' Doesn't wait for an answer.",
+          "trigger": "Students who bring a genuine post-match analysis get one sentence of acknowledgement each — the closest he gets to teaching voluntarily."
         },
         {
           "npc": "Hamagawa Rei",
           "context": "Observation booth, legal notepad.",
-          "key_moment": "The Ren signal moment — she's mid-rulebook and comes close to overruling Oshiro. She doesn't. She files the note. The note is 'Edge case: pre-signal movement. Review for provisional licensing impact.' It will come up again in Tier 2.",
-          "dm_dialogue": "If approached post-match: 'Yoshibara's duplication creates an unresolved identification problem under the provisional license framework. You can't technically tag a duplicate — it's not the licensed individual. I've submitted a query to the hero board. Don't tell Yoshibara that yet.' She returns to her notes immediately.",
-          "trigger": "Only available if students approach the booth."
+          "key_moment": "Nearly overrules Oshiro on the Ren signal-jump, doesn't, files it as 'Edge case: pre-signal movement. Review for provisional licensing impact.'",
+          "dm_dialogue": "Post-match, if approached: 'Yoshibara's duplication creates an unresolved identification problem under the provisional license framework — you can't technically tag a duplicate, it isn't the licensed individual. I've submitted a query. Don't tell her yet.'",
+          "trigger": "Only available if approached."
         },
         {
           "npc": "Ogiwara Bunta (Class 1-B)",
-          "context": "Visible through the observation window during the match.",
-          "key_moment": "When the class does something impressive — a creative play, the Sentinel cooperation equivalent — he gives a slow, genuine thumbs up through the glass. If Toshida is involved in whatever the moment is: the thumbs up becomes a point at Toshida specifically. He is already thinking about the Sports Festival.",
-          "dm_dialogue": "No dialogue in this arc. He's just there. Present. Watching. The thumbs up is the whole interaction.",
-          "trigger": "Only visible if students look at the observation window."
+          "context": "Visible through the observation window.",
+          "key_moment": "A slow, genuine thumbs-up whenever the class does something impressive. If Toshida's involved: the thumbs-up points at him specifically.",
+          "dm_dialogue": "None. Just present, watching.",
+          "trigger": "Only visible if students look at the window."
         }
       ],
       "encounters": [
         {
           "name": "Capture the Flag — Class 1-A vs Class 1-A",
-          "enemies": "NPC versions of the opposing student team — run each with simplified stats: HP = 15 + (3 × level), AC = 11 + DEX mod, attack = +3 to hit, 1d6 + STR/DEX mod damage. Use their known quirks creatively.",
-          "terrain": "Open training ground with four cover positions, two flag zones at opposite ends, one central choke point.",
-          "setup": "Two-team capture the flag. First team to capture opponent's flag and return it wins. Elimination by tag (touch, reduce HP to 0, or successful grapple hold of 3 seconds). No lethal quirk use — Oshiro calls violations.",
-          "tactics": "NPC students play to their strengths. Let the players feel like they're fighting people with actual plans. Yoshibara duplicates immediately. Takazuki goes invisible. Masahata executes his strategy regardless of whether it's working.",
-          "rewards": "Winning team picks one perk from: extended curfew for a week, premium meal options, priority training room access, or (if a player suggests something else reasonable) Oshiro considers it."
+          "enemies": "NPC versions of the opposing student team — simplified stats: HP = 15 + (3 × level), AC = 11 + DEX mod, attack +3 to hit, 1d6 + STR/DEX damage.",
+          "terrain": "Open training ground, four cover positions, two flag zones, one central choke point.",
+          "setup": "Two-team capture the flag. Elimination by tag, HP-to-0, or a 3-second grapple hold. No lethal quirk use.",
+          "tactics": "NPC students play to their actual character strengths — Yoshibara duplicates immediately, Takazuki goes invisible, Masahata executes his plan regardless of whether it's working.",
+          "rewards": "Winning team picks: extended curfew, premium meals, priority training room access, or a reasonable player suggestion."
         }
       ],
       "foreshadowing": [
-        "During the match, Oshiro's earpiece activates. He touches it once, absorbs the information, and continues watching the match. His expression is the same. He does not leave. He files the information. Something in the port district. He'll check after.",
-        "Hamagawa's legal query about Yoshibara's duplicate status has a second, smaller note underneath it: 'Similar unresolved status exists for unlicensed quirk users operating under Chain-adjacent organisations. Cross-reference port district incident report.' Nobody reads this except her.",
-        "After the match, the winning team's perk board has a note at the bottom, added by someone (probably Masahata): 'Note: Class 1-B Capture equivalent score — Kitamura S., Morida T. flagged as exceptional performers. Data source: Matsunami's office noticeboard, photographed.'"
+        "Oshiro's earpiece activates mid-match. He absorbs it, keeps watching, doesn't leave. Something in Kurogane Wharf. He'll check after.",
+        "Hamagawa's legal query about Yoshibara's status has a smaller note underneath: 'Similar unresolved status exists for unlicensed quirk users operating under Ruin-adjacent organisations.' Nobody reads this except her.",
+        "The perk board gets an addition, probably from Masahata: 'Note: Class 1-B equivalent score — Kitamura S., Morida T. flagged as exceptional. Source: Matsunami's office noticeboard, photographed.'"
       ],
       "class1b_seeds": [
-        "Oshiro's benchmark comment: 'Class 1-B had three students who topped this score in their equivalent drill. That's your benchmark.' He doesn't name the three students. Masahata's chart gains three new names.",
-        "Ogiwara's observation window presence — the thumbs up. If Toshida was the one who got the thumbs up specifically, plant that seed. Toshida wonders about it. Ogiwara thinks about it. They haven't spoken yet.",
-        "Practice room booking board visible in the corridor: 1-B has 'Team Drill — Counterquirk Positioning' booked for Saturday morning. The drill is named specifically. It is named for a technique. The technique is one that counters a known 1-A quirk pattern."
+        "Oshiro's benchmark line: 'Class 1-B had three students who topped this score in their equivalent drill.' No names given. Masahata's chart gains three anonymous entries.",
+        "Ogiwara's thumbs-up, possibly aimed at Toshida specifically. Neither of them has said anything about it yet.",
+        "1-B's practice room board: 'Team Drill — Counterquirk Positioning' booked for Saturday, named for a technique that counters a known 1-A quirk pattern."
       ]
     },
     {
       "name": "The Agency Visit",
-      "arc_type": "Low-stakes mission / Chain seed",
+      "arc_type": "Low-stakes mission / Ruin seed",
       "sessions": "1-2",
-      "summary": "Class 1-A assists a small hero agency in the port district for one day. Filing, crowd management, publicity work. Then something goes wrong. The Chain appears for the first time — small, underdramatic, almost missable. That's the point.",
-      "dm_setup": "This arc is the first time the students operate in the real world without exam conditions. The agency is good at its job in a way that's unglamorous. Patchwork (the agency hero) knows things they don't. The villain encounter should feel like a Tuesday for her and a significant event for the students. The Chain seed is planted in the background and should be findable in retrospect rather than obvious in the moment.",
+      "summary": "Class 1-A assists a small hero agency in Kurogane Wharf for one day. Filing, crowd management, publicity. Then something goes wrong. Ruin appears for the first time — small, underdramatic, almost missable. That's the point.",
+      "dm_setup": "First time the students operate in the real world without exam conditions. Patchwork knows things they don't. The villain encounter should feel like a Tuesday for her and a significant event for the students. The Ruin seed is findable in retrospect, not obvious in the moment.",
       "major_beats": [
         {
           "name": "The Assignment",
-          "description": "Oshiro announces it with zero ceremony. 'Agency visit. Port district. You're there by eight.' A small printed sheet with the address. The agency is called Patchwork Agency. Most students have never heard of it.",
-          "dm_notes": "The contrast with the flashy UA branding is intentional. Port district agencies are workhorses. Patchwork has been running for eleven years without a major PR moment. Masahata's chart does not have a column for this agency. He creates one on the way there.",
+          "description": "Oshiro, zero ceremony: 'Agency visit. Kurogane Wharf. You're there by eight.' Patchwork Agency. Most students have never heard of it.",
+          "dm_notes": "The contrast with U.A.'s branding is intentional — Wharf agencies are workhorses. Masahata doesn't have a column for this agency. He makes one on the way there.",
           "player_hooks": {
-            "ren": "Port district is where he grew up. He has opinions about the neighbourhood that he hasn't shared with the class. He knows exactly what Patchwork Agency is because he watched Patchwork work, from the street, when he was eleven."
+            "ren": "Grew up here. Has opinions about the neighbourhood he hasn't shared with the class. He watched Patchwork work from the street when he was eleven, long before U.A. was a plan."
           }
         },
         {
           "name": "A Quiet Tuesday",
-          "description": "Most of the day is filing, crowd management at a small community event, and publicity work (photos with locals). The agency is warm and the neighbourhood is welcoming. A kid recognises one of the PCs from the entrance exam publicity footage.",
-          "dm_notes": "Let this breathe. The mundane is the point — heroes do paperwork, manage queues, take photos. The class is used to adrenaline. A long, functional, boring morning is its own challenge. Also: Ren is slightly different here. Small. Specific. Home.",
+          "description": "Most of the day is filing, crowd management at a small community event, and photos with locals. A kid recognises someone from the entrance exam footage.",
+          "dm_notes": "Let this breathe. The mundane is the point — the class is used to adrenaline; a long, functional, boring morning is its own challenge.",
           "player_hooks": {
-            "ren": "The neighbourhood knows him — not as 'student at UA' but as 'the Suzuki kid from the port.' Someone calls him by his first name. He doesn't correct them. The class notices.",
-            "chosen": "Port district stress levels are lower than he expected — not the grim urban pressure he anticipated. Specific stress concentrations in specific locations. One alley. One building on the corner. He notes it and says nothing yet.",
-            "kazama": "A small child asks him to flex his 'metal arm' for a birthday party. He hardens one forearm and lets the kid knock on it. The birthday is good. He's better at the social performance than he acts."
+            "ren": "The neighbourhood knows him — not 'student at U.A.,' just 'the Suzuki kid.' Someone uses his first name. He doesn't correct them. The class notices.",
+            "aikawa": "Reorganises the entire agency filing system without being asked. It's objectively better than what they had. They are mildly resentful and quietly grateful.",
+            "setaka": "A kid asks him to lift a car for a photo. He explains, with complete sincerity, why that's not something he should do for fun in front of children, then does something small and impressive and appropriate instead. He writes the kid's name down."
           }
         },
         {
           "name": "The Incident",
-          "description": "Partway through the afternoon, something escalates nearby — a street confrontation that's about to go wrong. Three individuals. The class is on standby, Patchwork is thirty seconds away. Students have to decide how to handle it before she arrives.",
-          "dm_notes": "The three individuals are 2 Chain Grunts and 1 Chain Hardskin. They're not doing anything overtly dramatic — it looks like intimidation of a shopkeeper. The shopkeeper is not cooperating. The Grunts are escalating. Students who intervene will face the first real villain encounter of the campaign. Students who wait for Patchwork miss the Chain Hardskin's tattoo. Design the moment so both choices are defensible.",
+          "description": "A street confrontation starts going wrong nearby. Patchwork is thirty seconds out. Students have to decide how to handle it before she arrives.",
+          "dm_notes": "Two Ruin Grunts and a Ruin Hardskin intimidating a shopkeeper — not overtly dramatic. Students who intervene face the first real villain encounter of the campaign. Both waiting and intervening are defensible; design the moment so neither is obviously correct.",
           "player_hooks": {
-            "ren": "The shopkeeper is someone from his neighbourhood. He knows them by name. The 'should we wait for Patchwork' calculation takes zero time.",
-            "chosen": "He can feel the Hardskin's stress — it's different from the Grunts. Controlled. Professional. The Grunts are anxious. The Hardskin isn't.",
-            "izuto": "Port district, confined street. Engine output has to be calibrated for collateral. The structural calculation is automatic for him by now — he knows what he can do without bringing a wall down."
+            "ren": "The shopkeeper is someone from his neighbourhood, by name. The 'wait for Patchwork' calculation takes no time at all.",
+            "izuto": "A confined street means calibrating Engine output for collateral — a calculation he makes instinctively by now, without needing to think about it consciously."
           }
         },
         {
           "name": "The Aftermath",
-          "description": "Patchwork arrives as the encounter resolves. Her feedback is direct, accurate, and slightly alarming — she clocked everything and has opinions about it. One grunt mentions something under his breath that she files immediately. Something about the port district. The Chain seed.",
-          "dm_notes": "Patchwork is not doing a debrief to make students feel good. She's doing it because she's a professional and this is how she works. If a student found the tattoo: she knows. She doesn't say the word 'Chain' yet. She says 'affiliated.' If they didn't find it: she also doesn't say anything, but she makes a quiet call after they leave.",
+          "description": "Patchwork arrives as it resolves. Direct, accurate, slightly alarming feedback — she's clocked everything.",
+          "dm_notes": "She doesn't say 'Ruin' outright yet if a student found the tattoo — she says 'affiliated.' If they missed it, she says nothing but makes a quiet call after they leave.",
           "player_hooks": {
-            "chosen": "The Hardskin's controlled stress during the fight — and the spike of fear when they're contained. Not fear of the students. Fear of something else. Fear of having been seen.",
-            "ren": "Patchwork's twelve-second post-encounter silence before she speaks. He's seen her do this before. It means she's deciding what to say and what to leave out."
+            "ren": "Recognises her post-encounter twelve-second silence. He's seen her do this before. It means she's deciding what to leave out."
           }
         }
       ],
       "minor_beats": [
-        "The agency's filing system is a functional disaster. Someone (probably Masahata) starts reorganising it without being asked. Patchwork watches this happen and says nothing. The files are better organised in an hour than they've been in two years.",
-        "Izuto gets overexcited when a crowd situation develops — activates his engine before it's needed, overshoot of the mark, corrects immediately. The crowd scatters briefly. A photographer captures it. The photo is later titled 'Young Hero Overenthusiastic.' Izuto does not find this funny.",
-        "A kid in the crowd has a Class 1-A poster. It's from the entrance exam publicity shot. The kid asks someone to sign it. The student is in the shot but the photo is so action-blurry that the kid isn't sure it's actually them.",
-        "Among the papers Masahata reorganises: a report flagged for follow-up — 'Quirk-for-hire operation, Port District, reference number PCR-7741.' The follow-up column is blank. The flagging date was eight months ago.",
-        "Patchwork makes a comment about the neighbourhood: 'The old rules about who goes where stopped applying about eighteen months ago. I don't know why. I just started noticing.' She moves on. She's been trying to figure it out. She hasn't."
+        "Izuto gets a crowd-control moment slightly wrong — activates Engine a half-second early, overshoots the mark, corrects. A photographer catches it. The caption reads 'Young Hero Overenthusiastic.' He does not find this funny.",
+        "A kid in the crowd has a Class 1-A poster from the entrance exam footage, too action-blurry to confirm who's actually in it, and asks for a signature anyway.",
+        "Among papers Aikawa reorganises: a follow-up flagged report — 'Quirk-for-hire operation, Kurogane Wharf, reference number PCR-7741.' The follow-up column is blank. Flagged eight months ago.",
+        "Patchwork, off-hand: 'The old rules about who goes where stopped applying about eighteen months ago. I don't know why. I just started noticing.'"
       ],
       "npc_interactions": [
         {
           "npc": "Mori Tsuya 'Patchwork'",
-          "context": "Agency hero, port district. Has been here eleven years. She knows this neighbourhood the way structural engineers know buildings — every load point, every potential failure.",
-          "key_moment": "Post-encounter debrief. She's looking at the subdued Grunts while she talks, not the students. 'The one who didn't run — the quiet one. That's a professional. Not a local. You ran into someone's business trip, not their territory.' She stops there. She won't say more today.",
-          "dm_dialogue": "On the neighbourhood: 'Eighteen months ago I started getting calls that resolved before I got there. Street-level stuff — intimidation, property, minor assault. Resolved. Nobody pressed charges. Nobody wanted to talk. When your neighbourhood stops complaining to you, that's when you know something's changed.' / On the students: 'You were faster than I expected. The one with the engine — calibration was off, but the instinct was right. The nervous one — your readings are good. Trust them more.'",
-          "trigger": "Available for conversation throughout the day. Each student who approaches gets a specific observation — she's been watching them since they arrived."
+          "context": "Agency hero, Kurogane Wharf. Eleven years here. Knows this neighbourhood the way structural engineers know buildings.",
+          "key_moment": "Post-encounter debrief, watching the subdued Grunts, not the students. 'The one who didn't run — the quiet one. That's a professional. Not local. You walked into someone's business trip, not their territory.' She stops there.",
+          "dm_dialogue": "On the neighbourhood: 'Eighteen months ago I started getting calls that resolved before I got there. Nobody wanted to talk. When your neighbourhood stops complaining to you, that's when you know something's changed.' On the students, specific to each: she's been watching since arrival and has an actual observation ready for anyone who approaches.",
+          "trigger": "Available throughout the day."
         },
         {
-          "npc": "Chain Hardskin",
-          "context": "The villain encounter. Doesn't talk much. When subdued: says nothing about the Chain. If directly asked about affiliation: 'I'm a freelancer.' If the tattoo is found: holds eye contact. Says nothing. Looks scared — not of the students.",
-          "key_moment": "The fear spike. Chozen will likely pick it up. The Hardskin is scared that they were seen. Not caught — seen. The implication is that someone else is watching, and being seen by heroes is less dangerous than being seen by that someone.",
-          "dm_dialogue": "'I just do pickup and delivery.' (Grunt line — scripted.) / Hardskin: [silence]. / If pushed: 'You don't know what you're in the middle of.' He means the class. He is correct.",
-          "trigger": "Encounter and post-encounter. After handoff to police, he's processed and says nothing further. The tattoo report goes into police records under a code Hamagawa will recognise later."
+          "npc": "Ruin Hardskin",
+          "context": "The villain encounter. Doesn't talk much. Says nothing about Ruin when subdued. If asked about affiliation: 'I'm a freelancer.'",
+          "key_moment": "His fear when contained isn't fear of the students — it's fear of being seen. That gap is the important data.",
+          "dm_dialogue": "'I just do pickup and delivery.' (Grunt line.) Hardskin, if pushed: 'You don't know what you're in the middle of.' He means the class. He's right.",
+          "trigger": "During and immediately after the encounter."
         },
         {
           "npc": "Kitamura Sora (Class 1-B)",
           "context": "Different agency, same district. Corridor encounter only.",
-          "key_moment": "10 seconds. She's carrying precisely folded documents. She doesn't introduce herself. Continues walking. Her name badge faces inward. If a student looks: Kitamura, S., 1-B. The agency corridor she came from smells faintly of ozone. Three wire patterns are still hanging in the air near the ceiling of the room she used. Invisible unless the light catches them.",
-          "dm_dialogue": "No dialogue. If a student blocks her path: she waits exactly two seconds, then moves around them with minimum displacement. If directly addressed: 'Excuse me.' She keeps walking.",
-          "trigger": "One brief corridor crossing during the visit. She's on her own assignment. It's going fine."
+          "key_moment": "Ten seconds. Precisely folded documents, doesn't introduce herself, keeps walking. Name badge faces inward. If a student looks: Kitamura, S., 1-B.",
+          "dm_dialogue": "If blocked: waits two seconds, moves around with minimum displacement. If addressed: 'Excuse me.' Keeps walking.",
+          "trigger": "One brief crossing during the visit."
         }
       ],
       "encounters": [
         {
-          "name": "Street Confrontation — Chain Operatives",
-          "enemies": "2× Chain Grunt, 1× Chain Hardskin",
-          "terrain": "Port district street. Narrow — 15ft wide. Three-storey buildings both sides. One shopfront (where the victim is). One alley exit (north). Civilians present at start, scatter on round 1.",
-          "setup": "Grunts are visible intimidating a shopkeeper. Hardskin is standing 10ft back, not engaging, watching. Students arrive with 6 seconds before Patchwork. Decision point: wait or intervene.",
-          "tactics": "Grunts engage immediately if challenged. Hardskin waits one round, assessing. On round 2, Hardskin enters combat and both Grunts coordinate with him — Pack Fighter activates. Hardskin goes for whoever looks most capable. Grunts try to grapple the small students. If the fight goes badly for them: Grunts surrender at 5HP. Hardskin doesn't surrender — just takes the hit and says nothing.",
-          "dm_notes": "The tattoo is visible on DC 15 Perception during the encounter, DC 12 if specifically searching a subdued Hardskin. Whether the class finds it determines how much Chain context they carry into Tier 2. Both outcomes are valid — finding it makes them investigators, missing it makes them reactive. Neither is wrong.",
-          "rewards": "No material rewards. Patchwork's feedback. The Hardskin's fear. The blank follow-up column in Masahata's newly filed report. These are the rewards."
+          "name": "Street Confrontation — Ruin Operatives",
+          "enemies": "2× Ruin Grunt, 1× Ruin Hardskin",
+          "terrain": "Kurogane Wharf street, 15ft wide, buildings both sides, one shopfront, one alley exit north. Civilians scatter round 1.",
+          "setup": "Grunts visibly intimidating a shopkeeper. Hardskin holds back ten feet, watching. Six seconds before Patchwork arrives.",
+          "tactics": "Grunts engage if challenged. Hardskin waits one round then joins, coordinating with Pack Fighter. Goes for whoever looks most capable. Grunts surrender at 5 HP; Hardskin takes the hit silently.",
+          "dm_notes": "Tattoo visible on DC 15 Perception, DC 12 on a subdued target. Whether the class finds it shapes how much context they carry into Tier 2 — both outcomes are valid.",
+          "rewards": "No material reward. Patchwork's feedback and the blank follow-up column are the actual payoff."
         }
       ],
       "foreshadowing": [
-        "PCR-7741 — the blank follow-up report Masahata filed. It exists in the police system. If any student is ever in a position to search port district crime records, this number comes up. The report describes a quirk-for-hire network operating out of three port district businesses. The follow-up was never assigned. The original filer was transferred.",
-        "The Hardskin's fear. This is the most important seed of the arc. Whatever organisation he's part of has enough power that getting identified by student heroes — which would normally be a minor problem — is instead a genuine threat. That is not normal for low-level criminal organisations.",
-        "Patchwork's 18-month observation. The timeline overlaps exactly with the founding of the Chain's first port district cell, which the students won't be able to date until Tier 3. When they do: they'll remember this conversation.",
-        "Ren knows this neighbourhood. He'll know when it changes. He's already noticed that one of the businesses Patchwork mentioned — a gear consulting shop he went to when he was twelve — is dark. Closed. There's a Chain-adjacent business in that space now. He doesn't know that yet."
+        "PCR-7741, the blank follow-up report. Describes a quirk-for-hire network out of three Kurogane Wharf businesses. Never assigned. Original filer transferred.",
+        "The Hardskin's disproportionate fear of being identified. Whoever he answers to has enough reach that getting caught by student heroes should be minor and clearly isn't.",
+        "Patchwork's eighteen-month timeline lines up exactly with the founding of Ruin's first Wharf operation, which the students can't date until Tier 3. When they can, they'll remember this conversation.",
+        "Ren notices a gear-consulting shop he used as a kid is dark now, replaced by something Ruin-adjacent. He doesn't know that yet."
       ],
       "class1b_seeds": [
-        "The entrance exam publicity photo — a student on crowd management duty recognises one of the PCs from it. 'Are you from 1-A? The exam photos were all over the school boards.' If a student asks about 1-B: 'Oh, they had a different site. Separate building. I heard their scores were different. Better in some areas.' The source doesn't know more than this.",
-        "Kitamura's corridor crossing. Three wire patterns near the ceiling. Invisible unless the light hits them right. The impression is: someone very precise was here and is entirely comfortable leaving evidence of it because they know it won't be a problem."
+        "A crowd-management civilian recognises a 1-A student from the exam footage. Asked about 1-B: 'Different site. I heard their scores were better in some areas.' No more detail than that.",
+        "Kitamura's corridor crossing. Precision as a personality trait, visible even in ten seconds."
       ]
     }
   ]

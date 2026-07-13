@@ -1,29 +1,29 @@
 {
   "setting": {
     "school": "U.A. High School",
-    "school_description": "The most prestigious hero-track school in the country. Known across the nation for producing top Pro Heroes. Entry is highly competitive — the entrance exam is genuinely dangerous and only the top performers earn a spot. Class 1-A is the elite hero course cohort, the class everyone outside watches and resents a little.",
+    "school_description": "Japan's most prestigious hero-track school, tucked into the quiet residential blocks of Nerima Ward on Tokyo's western edge. Known nationwide for producing top Pro Heroes. Entry is brutally competitive — the entrance exam is genuinely dangerous, and only the top performers earn a spot. Class 1-A is the flagship hero course cohort, the class everyone outside watches and resents a little.",
     "school_features": {
-      "grounds": "Sprawling campus with state-of-the-art training grounds, Battle Centres simulating real urban environments, dormitories (Heights Alliance), support labs, and classrooms designed for quirk-integrated learning.",
+      "grounds": "A walled campus that looks small from the street and isn't — training grounds, Battle Centres simulating real urban environments, dormitories (Heights Alliance), support labs, and classrooms built around quirk-integrated learning.",
       "heights_alliance": "The student dormitories. Each student has their own room but shares common spaces — kitchen, living room, laundry. Most of the campaign's downtime drama happens here.",
-      "battle_centres": "Numbered training areas (I through VII) with different environments: city simulation, forest, industrial, interior combat, etc. Used for both formal training and exams.",
+      "battle_centres": "Numbered training areas (I through VII) with different environments: city block, forest, industrial yard, interior combat. Used for both formal training and exams.",
       "recommendations_and_rankings": "Students are ranked internally. This matters more than it probably should to several members of Class 1-A."
     }
   },
   "city": {
-    "name": "Murano",
-    "description": "A large, modern coastal city adjacent to U.A.'s campus. Busy and alive — hero sightings are a regular occurrence, hero merchandise lines entire districts, and civilians have strong opinions about the Pro Hero rankings. The city has distinct districts with different flavours.",
+    "name": "Tokyo",
+    "description": "The real city, mostly — busy, dense, and completely used to heroes by now. Hero sightings are a daily occurrence, agency branding is stitched into half the storefronts in Shibuya, and civilians have strong, loud opinions about the Pro Hero rankings. The wards the class actually spends time in each have their own texture.",
     "districts": {
-      "central_plaza": "Downtown commercial core. Agency towers, hero-branded stores, big public screens showing hero ranking updates. Where the class goes on free weekends.",
-      "port_district": "Working-class waterfront. Older buildings, smaller heroes, real crime. Where the class gets sent during internships. Less glamorous, more honest.",
-      "east_ward": "Residential sprawl. Middle-class families, schools, parks. Where many of the class's rescue missions will take place.",
-      "hero_row": "The street where the highest-ranked local agencies are headquartered. Glass and steel and sponsorship banners. Looks impressive, feels sterile."
+      "shibuya": "Downtown commercial core. Agency-sponsored storefronts, the crossing's big public screens running hero ranking updates between ads. Where the class goes on free weekends.",
+      "marunouchi": "Glass-and-steel business district where the highest-ranked agencies keep their towers. Looks like money. Feels like a lobby.",
+      "setagaya": "Residential sprawl — quiet streets, parks, schools, families. Where most of the class's rescue-and-patrol work happens. Nothing here is glamorous and that's the point.",
+      "kurogane_wharf": "A working waterfront pocket on the Koto side of Tokyo Bay — old fish-market blocks, container yards, warehouses that changed hands too many times for anyone to track. Officially still part of the city's shipping backbone. Unofficially, it's Ruin's home turf, and has been for years."
     }
   },
   "hero_society": {
     "tone": "Mostly functioning and genuinely exciting. Being a hero is cool. Hero rankings are watched like sports. U.A. students are minor celebrities at public events. The world feels alive and worth protecting.",
-    "licensing": "Heroes must hold a Hero License to engage in combat. Students operate under provisional licenses before graduating. Unlicensed quirk use in combat is technically criminal, which creates tension during internship arcs.",
+    "licensing": "Heroes must hold a Hero License to engage in combat. Students operate under provisional licenses before graduating. Unlicensed quirk use in combat is technically criminal, which creates tension during patrol and internship arcs.",
     "pro_hero_culture": "Pro heroes have sponsors, fan rankings, social media followings. Some are genuine legends. Some are PR machines. The class will meet both kinds.",
-    "background_rot": "The villain organisation The Chain has been operating in Murano's port district for years, exploiting coverage gaps and preying on unlicensed quirk users. What almost nobody knows — not the Commission, not the class, not most of the syndicate's own members — is that The Chain, the black-site research outfit calling itself Null Signal, and the anti-licensing movement Fracture are three faces of the same organisation, all of it built and quietly held together by one man: Undertow. Most people don't know how organised any one of them is yet. Nobody knows they're the same problem."
+    "background_rot": "Everyone in Tokyo knows the name Ruin. It's been running out of Kurogane Wharf for years — extortion, quirk-for-hire jobs, black-market support gear, a quiet quirk-research operation hiding behind a tech-consultancy shell. One villain group, six named members, no departments. The Hero Commission's dossier on Ruin is thick, but what it doesn't have is a face for the top of it. Everyone who's ever named a leader has used the same word — Undertow — and nobody official will confirm he exists. Separately, a real anti-licensing movement called Fracture has been getting louder at protests across the city; nobody — not the Commission, not Fracture's own leadership — has connected it to Ruin's money yet. Ruin isn't a mystery. Undertow is."
   },
   "student_life": {
     "tone": "The backbone of the campaign between dramatic arcs. Cooking arguments, study chaos, dorm drama, class rivalries, gossip about who likes who, culture festival disasters, sports festival tensions. This is as important as the combat.",
@@ -46,8 +46,8 @@
     "ability_scores": ["Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma", "Technology"],
     "level_tiers": {
       "tier_1": "Levels 1-3: First year begins. U.A. campus. Training, dorm life, first real danger.",
-      "tier_2": "Levels 4-6: Sports Festival, Internships, Murano city patrol. Getting serious.",
-      "tier_3": "Levels 7-13: The Chain makes it personal. Culture Festival. Betrayal arc.",
+      "tier_2": "Levels 4-6: Sports Festival, Internships, Tokyo patrol. Getting serious.",
+      "tier_3": "Levels 7-13: Ruin makes it personal. Culture Festival. Betrayal arc.",
       "tier_4": "Levels 14-20: Final confrontation. Graduation. Epilogue."
     }
   }

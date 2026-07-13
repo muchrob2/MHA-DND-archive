@@ -1,9 +1,8 @@
 {
-  "_note": "Category labels 'The Chain', 'Null Signal', and 'Fracture' are kept as separate stat-block groupings for table convenience, but per CAMPAIGN/villains.json they are three operational divisions of a single syndicate run by Undertow. Rank-and-file enemies in each category genuinely don't know about the other two divisions — don't let captured grunts leak that connection; only Undertow-tier NPCs know the whole shape.",
+  "_note": "Per CAMPAIGN/villains.json, Ruin is one flat villain group (Undertow, Flashpoint, Riddle, Kuma, Null, Splice) — not a set of branded divisions. All rank-and-file 'Ruin' category enemies below know they work for Ruin and will say so if pressed. Fracture is a separate, independent movement (Shard, Voltage) that isn't part of Ruin at all — its members genuinely don't know about Undertow's funding. The only real unknown anywhere is Undertow's true identity: nobody below the six named Ruin members has ever met him in person.",
   "categories": [
     "Exam / Training",
-    "The Chain",
-    "Null Signal",
+    "Ruin",
     "Fracture",
     "Villain",
     "Boss",
@@ -142,11 +141,11 @@
     },
     {
       "id": "chain_grunt",
-      "name": "Chain Grunt",
-      "category": "The Chain",
+      "name": "Ruin Grunt",
+      "category": "Ruin",
       "cr": "1/4",
       "tier": 1,
-      "description": "Low-level Chain muscle. No quirk. Hired for physical work — moving things, intimidating people, holding doors. Knows enough not to ask questions and not enough to be a real threat to a student.",
+      "description": "Low-level Ruin muscle. No quirk. Hired for physical work — moving things, intimidating people, holding doors. Knows enough not to ask questions and not enough to be a real threat to a student.",
       "hp": 16,
       "ac": 12,
       "speed": "30 ft",
@@ -178,15 +177,15 @@
         "Pack Fighter: deals +1d4 damage when adjacent ally is also in melee",
         "Surrender Threshold: at 0 HP, doesn't die — immediately surrenders and spills nothing useful ('I just do pickup and delivery, I swear')"
       ],
-      "tactics": "Tries to grapple the smallest-looking student so an ally can beat on them. Not courageous — will flee at 5HP if no Chain enforcer is present to stop them."
+      "tactics": "Tries to grapple the smallest-looking student so an ally can beat on them. Not courageous — will flee at 5HP if no Ruin enforcer is present to stop them."
     },
     {
       "id": "chain_enforcer",
-      "name": "Chain Enforcer",
-      "category": "The Chain",
+      "name": "Ruin Enforcer",
+      "category": "Ruin",
       "cr": "1",
       "tier": 1,
-      "description": "Mid-tier Chain operative. Has a minor quirk and uses it. Knows the organisation's first-layer structure — cells, not leadership. Disciplined enough not to run, smart enough to know when a fight is lost.",
+      "description": "Mid-tier Ruin operative. Has a minor quirk and uses it. Knows how Ruin's day-to-day work gets done, not who's really at the top. Disciplined enough not to run, smart enough to know when a fight is lost.",
       "hp": 38,
       "ac": 14,
       "speed": "30 ft",
@@ -216,18 +215,18 @@
       ],
       "traits": [
         "Hardened: resistant to bludgeoning damage",
-        "Command Presence: Chain Grunts within 30 ft can't be frightened and deal +1d4 damage",
+        "Command Presence: Ruin Grunts within 30 ft can't be frightened and deal +1d4 damage",
         "Composure: advantage on saves against fear and charm"
       ],
-      "tactics": "Gets into melee and holds position. Uses Shockwave Clap when 2+ students are adjacent. Will not abandon wounded allies — will drag them away before retreating. If captured: gives false name, asks for a lawyer, says nothing about the Chain beyond 'I'm a freelancer.'"
+      "tactics": "Gets into melee and holds position. Uses Shockwave Clap when 2+ students are adjacent. Will not abandon wounded allies — will drag them away before retreating. If captured: gives false name, asks for a lawyer, says nothing about Ruin beyond 'I'm a freelancer.'"
     },
     {
       "id": "chain_hardskin",
-      "name": "Chain Hardskin",
-      "category": "The Chain",
+      "name": "Ruin Hardskin",
+      "category": "Ruin",
       "cr": "1",
       "tier": 1,
-      "description": "A Chain quirk-user with hardening ability. Dense, slow, nearly impossible to hurt with normal attacks. Has a Chain tattoo partially visible under a collar if someone looks. Doesn't know who Undertow is — just knows who pays them.",
+      "description": "A Ruin quirk-user with hardening ability. Dense, slow, nearly impossible to hurt with normal attacks. Has a Ruin tattoo partially visible under a collar if someone looks. Knows who he works for — everyone does. Has no idea who's really behind the name 'Undertow,' and isn't paid enough to wonder.",
       "hp": 42,
       "ac": 16,
       "speed": "25 ft",
@@ -258,18 +257,18 @@
       "traits": [
         "Skin of Steel: resistant to bludgeoning, slashing, and piercing damage from non-magical sources",
         "Quirk Weakness: vulnerable to lightning damage (double damage)",
-        "Chain Mark: a partial tattoo is visible under the collar. DC 15 Perception to spot, DC 12 Investigation to identify as an organisation mark.",
+        "Ruin Mark: a partial tattoo is visible under the collar. DC 15 Perception to spot, DC 12 Investigation to identify as an organisation mark.",
         "Immovable: immune to the prone condition while Hardskin stance is active (toggle off as bonus action)"
       ],
       "tactics": "Absorbs hits without flinching, trying to demoralise students. Aims for Hardened Rush to knock someone prone, then stands over them. Doesn't talk during a fight. If students discover the lightning weakness, their satisfaction is visible even through the stoicism."
     },
     {
       "id": "chain_blaster",
-      "name": "Chain Blaster",
-      "category": "The Chain",
+      "name": "Ruin Blaster",
+      "category": "Ruin",
       "cr": "1",
       "tier": 1,
-      "description": "Long-range Chain operative. Energy projection quirk. Prefers distance and cover. Hired for jobs that need firepower without getting close. Nervous when cornered.",
+      "description": "Long-range Ruin operative. Energy projection quirk. Prefers distance and cover. Hired for jobs that need firepower without getting close. Nervous when cornered.",
       "hp": 24,
       "ac": 12,
       "speed": "30 ft",
@@ -373,7 +372,7 @@
       "traits": [
         "Minor Quirk (DM chooses): weak energy burst (1d4 fire, 20ft), minor hardening (+1 AC, 1 minute), brief invisibility (1 round, recharge on 5-6), minor levitation (hover 5ft, move 20ft, no weight-bearing)",
         "Panicked: disadvantage on attacks if reduced below half HP",
-        "Wants Out: will attempt to flee if an escape route opens. If cornered, surrenders. Will talk if treated well — might mention neighbourhood changes, the Chain's name if they've heard it."
+        "Wants Out: will attempt to flee if an escape route opens. If cornered, surrenders. Will talk if treated well — might mention neighbourhood changes, Ruin's name if they've heard it."
       ],
       "tactics": "Erratic. Uses quirk first, panics when it doesn't work, tries to run. Best encounter resolution is often social rather than combat. Has information if students choose de-escalation."
     },
@@ -545,8 +544,8 @@
     },
     {
       "id": "ns_analyst",
-      "name": "Null Signal Analyst",
-      "category": "Null Signal",
+      "name": "Ruin Analyst",
+      "category": "Ruin",
       "cr": "1/2",
       "tier": 2,
       "description": "Low-level field operative. Observes, documents, and backs up Specialists. Usually armed with a suppression baton and a data capture device. They are paid to not ask questions.",
@@ -580,14 +579,14 @@
       ],
       "traits": [
         "Cell Discipline: Will not retreat unless half the cell is down. Breaks routing saves at advantage.",
-        "Data Collar: Carries a device that transmits biometric data on any quirk user they touch to Null Signal. Destroying it (AC 10, 5 HP) stops the feed."
+        "Data Collar: Carries a device that transmits biometric data on any quirk user they touch back to Ruin. Destroying it (AC 10, 5 HP) stops the feed."
       ],
       "tactics": "Hangs back at 20-30 ft. Uses Tranq Dart early to create a poisoned target for the Specialist to focus. Never engages in melee unless forced."
     },
     {
       "id": "ns_specialist",
-      "name": "Null Signal Specialist",
-      "category": "Null Signal",
+      "name": "Ruin Specialist",
+      "category": "Ruin",
       "cr": "2",
       "tier": 2,
       "description": "Mid-rank operative with a suppression quirk or suppression tech equivalent. Acquisition's primary field unit. Trained in restraint and extraction — these people have done this before.",
@@ -634,8 +633,8 @@
     },
     {
       "id": "ns_operative",
-      "name": "Null Signal Operative",
-      "category": "Null Signal",
+      "name": "Ruin Operative",
+      "category": "Ruin",
       "cr": "4",
       "tier": 3,
       "description": "Elite field agent. Each Operative has a notable combat quirk and has been briefed on the target's abilities. They are not mercenaries — they are invested in the outcome.",
@@ -677,14 +676,14 @@
       "traits": [
         "Briefed: Operative has full dossiers on Class 1-A PCs. On the first round, they correctly predict the PC's most likely action and are not surprised by it.",
         "Field Professionalism: Immune to Frightened. Advantage on saves against Charmed.",
-        "Tactical Comm: As a bonus action, can relay target intel — all Null Signal allies gain advantage on their next attack against one target this turn."
+        "Tactical Comm: As a bonus action, can relay target intel — all Ruin allies gain advantage on their next attack against one target this turn."
       ],
       "tactics": "Opens by identifying the most dangerous PC and calling it out to the cell. Uses Counter Protocol aggressively — these people have fought quirk users before. Protects Analysts from focus fire."
     },
     {
       "id": "splice_boss",
       "name": "Splice (Ryo Karashi)",
-      "category": "Null Signal",
+      "category": "Ruin",
       "cr": "8",
       "tier": 3,
       "description": "Head of Acquisition. Boss encounter. Prefers incapacitation to damage — he wants the class intact for study. Should be fought with his Operatives screening for him.",
@@ -702,14 +701,14 @@
       },
       "attacks": [
         {
-          "name": "Modification Touch",
+          "name": "Graft Touch",
           "to_hit": "+8",
           "damage": "2d6+4 necrotic",
           "range": "5 ft",
-          "notes": "Target makes DC 16 CON save or suffers one of: Disadvantage on attacks, halved speed, or must drop held item. Gloves off: +1d8 necrotic."
+          "notes": "Target makes DC 16 CON save or suffers one of: fused hand (disadvantage on attacks), fused leg (halved speed), or fused jaw (can't speak). Gloves off: +1d8 necrotic."
         },
         {
-          "name": "Self-Reshape (Bonus)",
+          "name": "Self-Graft (Bonus)",
           "to_hit": null,
           "damage": "none",
           "range": "self",
@@ -727,11 +726,11 @@
           "to_hit": null,
           "damage": "none",
           "range": "self",
-          "notes": "Two Modification Touch attacks."
+          "notes": "Two Graft Touch attacks."
         }
       ],
       "traits": [
-        "Glove Removal: Splice starts with gloves on. Removing them (bonus action) adds 1d8 necrotic to Modification Touch. He only does this when forced.",
+        "Glove Removal: Splice starts with gloves on. Removing them (bonus action) adds 1d8 necrotic to Graft Touch. He only does this when forced.",
         "Briefed: Has dossiers on all PCs. On round 1, correctly anticipates the most dangerous PC's action.",
         "Acquisition Priority: Below 40 HP, Splice stops attacking and attempts to withdraw with any incapacitated target he can carry."
       ],
@@ -850,11 +849,11 @@
           "notes": "Target makes DC 16 CON save or movement halved until end of next turn."
         },
         {
-          "name": "Chain Discharge",
+          "name": "Blackout",
           "to_hit": null,
           "damage": "3d8 lightning",
-          "range": "15 ft cone from surface",
-          "notes": "DC 16 DEX save. On fail: full damage + Stunned until end of next turn. Half on success."
+          "range": "15 ft radius",
+          "notes": "Kills power in the radius for 1 minute — support gear, comms, drones, and powered prosthetics inside stop functioning. Creatures in the area on trigger make DC 16 DEX save or take full damage and are Stunned until end of next turn (half damage, not stunned, on success)."
         },
         {
           "name": "Paralytic Surge",
@@ -873,19 +872,20 @@
       ],
       "traits": [
         "Grounded: Immune to lightning damage. Advantage on saves against quirks affecting the nervous system.",
-        "Environmental Read: Voltage starts combat by identifying conductive surfaces (metal fences, wet ground, pipes). He has advantage on Chain Discharge attacks if he set up his position before combat started.",
+        "Environmental Read: Voltage starts combat by identifying conductive surfaces and anything tech-reliant on the class. He has advantage on his first Blackout if he set up his position before combat started.",
         "Adaptive: After the first round, Voltage correctly identifies the class's most powerful combo and positions to break it.",
+        "Dead Zone Recovery: After using Blackout, Voltage has disadvantage on his own attack rolls until the start of his next turn.",
         "Protective Priority: If Shard or a Cell Leader is present and drops below 30 HP, Voltage immediately moves to their position and uses Paralytic Surge on whoever threatens them."
       ],
-      "tactics": "Picks his ground before combat if possible. Opens with Chain Discharge on clustered PCs. Targets fire or sonic quirk users who can arc through conductive surfaces. Knows Steel conducts electricity straight through it and baits hardened opponents into eating a hit they think is safe. Willing to take a hit to get Paralytic Surge off on the biggest threat."
+      "tactics": "Picks his ground before combat if possible. Opens with Blackout on clustered PCs, especially anyone leaning on support gear. Knows Steel conducts electricity straight through it and baits hardened opponents into eating a hit they think is safe. Willing to take a hit to get Paralytic Surge off on the biggest threat."
     },
     {
       "id": "undertow_boss",
       "name": "Undertow (Soryu Hatch)",
-      "category": "The Chain",
+      "category": "Ruin",
       "cr": "12",
       "tier": 3,
-      "description": "Founder and strategist of The Chain. Permeation quirk — can turn intangible, pass through matter, and phase individual body parts. Never raises his voice.",
+      "description": "Founder of Ruin. Riptide quirk — liquefies his own body to seawater, untouchable and able to flow through any unsealed gap, then drags targets under with a current pulled from the environment. Never raises his voice.",
       "hp": 165,
       "ac": 17,
       "speed": "35 ft",
@@ -895,10 +895,10 @@
     {
       "id": "flashpoint_boss",
       "name": "Flashpoint (Goda Miruki)",
-      "category": "The Chain",
+      "category": "Ruin",
       "cr": "14",
       "tier": 3,
-      "description": "The Chain's enforcer. Cremation quirk — blue-white flames hot enough to soften steel, that cling and continue burning. Overwhelming and unpredictable.",
+      "description": "Ruin's enforcer and demolitions specialist. Combustion Point quirk — marks surfaces or people with a latent charge and detonates them later, from range, with surgical precision. Overwhelming once the marks are already set.",
       "hp": 220,
       "ac": 16,
       "speed": "30 ft",
@@ -908,10 +908,10 @@
     {
       "id": "riddle_boss",
       "name": "Riddle (Sae Ichiro)",
-      "category": "The Chain",
+      "category": "Ruin",
       "cr": "9",
       "tier": 2,
-      "description": "The Chain's information broker and manipulator. Brainwashing quirk — commands implanted through voice. Prefers never to be in the room when things go wrong.",
+      "description": "Ruin's information broker and manipulator. Brainwashing quirk — commands implanted through voice. Prefers never to be in the room when things go wrong.",
       "hp": 110,
       "ac": 14,
       "speed": "30 ft",
@@ -921,10 +921,10 @@
     {
       "id": "kuma_boss",
       "name": "Kuma",
-      "category": "The Chain",
+      "category": "Ruin",
       "cr": "6",
       "tier": 2,
-      "description": "The Chain's heavy. Gigantification quirk — grows to enormous size, dramatically increasing strength and durability. No alias, no pretense. Just Kuma.",
+      "description": "Ruin's heavy. Gigantification quirk — grows to enormous size, dramatically increasing strength and durability. No alias, no pretense. Just Kuma.",
       "hp": 140,
       "ac": 15,
       "speed": "30 ft (40 ft gigantified)",
@@ -934,10 +934,10 @@
     {
       "id": "null_boss",
       "name": "Null (Aoi Tenshin)",
-      "category": "Null Signal",
+      "category": "Ruin",
       "cr": "11",
       "tier": 3,
-      "description": "Head of Null Signal. Erasure quirk — cancels the quirks of any person they make eye contact with. Calm, methodical, and terrifying in a quiet room.",
+      "description": "Ruin's chief scientist. Dead Air quirk — drops a radius where no quirks or powered electronics function at all, her own gear included. Calm, methodical, and terrifying in a quiet room.",
       "hp": 120,
       "ac": 14,
       "speed": "30 ft",
@@ -1028,7 +1028,7 @@
       "category": "Miscellaneous",
       "cr": "3",
       "tier": 1,
-      "description": "An unlicensed quirk user operating outside the law. Dangerous but not exceptional. Average across the board — the benchmark for what a villain looks like before the Chain gets involved.",
+      "description": "An unlicensed quirk user operating outside the law. Dangerous but not exceptional. Average across the board — the benchmark for what a villain looks like before Ruin gets involved.",
       "hp": 45,
       "ac": 12,
       "speed": "30 ft",
@@ -1041,7 +1041,7 @@
       "category": "Fracture",
       "cr": "6",
       "tier": 3,
-      "description": "Co-founder of Fracture. Boss encounter. She doesn't want to fight. She will fight. Area control specialist — the encounter is as much about navigating her Glass Field as defeating her. She should have talking opportunities built in.",
+      "description": "Co-founder of Fracture. Boss encounter. She doesn't want to fight. She will fight. Area control specialist — the encounter is as much about navigating a floor riddled with her seeded fracture points as defeating her. She should have talking opportunities built in.",
       "hp": 88,
       "ac": 15,
       "speed": "30 ft",
@@ -1056,40 +1056,40 @@
       },
       "attacks": [
         {
-          "name": "Glass Volley",
+          "name": "Fracture Volley",
           "to_hit": "+7",
           "damage": "3d6 slashing",
           "range": "60 ft",
-          "notes": "Can target 2 creatures within 5 ft of each other as one action."
+          "notes": "Flings shards torn from a fractured surface. Can target 2 creatures within 5 ft of each other as one action."
         },
         {
-          "name": "Glass Field",
+          "name": "Fault Line",
           "to_hit": null,
           "damage": "1d4 slashing per 5 ft",
           "range": "20 ft radius within 40 ft",
-          "notes": "Difficult terrain, 1 minute. Action to place."
+          "notes": "Seeds fractures across the ground itself. Difficult terrain, 1 minute. Action to place."
         },
         {
           "name": "Barrier (Reaction)",
           "to_hit": null,
           "damage": "none",
           "range": "self",
-          "notes": "Glass wall: 10 ft wide, 10 ft tall, 30 HP. Must destroy barrier to hit her."
+          "notes": "Fractures a section of wall or floor upward into a jagged crystalline barricade: 10 ft wide, 10 ft tall, 30 HP. Must destroy barrier to hit her."
         },
         {
-          "name": "Glass Rain",
+          "name": "Shatterpoint",
           "to_hit": null,
           "damage": "5d6 slashing",
           "range": "30 ft radius",
-          "notes": "Recharge 5-6. DC 16 DEX save or take full damage + begin bleeding (1d4/turn, action to stop). Half on success, no bleed."
+          "notes": "Triggers every fracture she's seeded in the area at once. Recharge 5-6. DC 16 DEX save or take full damage + begin bleeding (1d4/turn, action to stop). Half on success, no bleed."
         }
       ],
       "traits": [
         "Won't Kill: Shard does not make attacks that would reduce a target to 0 HP if she knows they're already below half health. She will incapacitate, not kill.",
         "Debate Opening: Once per encounter, as an action, Shard stops fighting and addresses one PC directly. That PC makes a DC 14 WIS save. On fail, they are compelled to respond for 1 round (can't attack Shard, can still defend). On success, they are unaffected but Shard gains no further debate opportunities.",
-        "Glass Sight: Shard has tremorsense 30 ft via vibrations through her glass. Invisible creatures don't gain advantage against her within this range if they're standing on her glass."
+        "Fracture Sense: Shard has tremorsense 30 ft through any surface she's seeded with a fracture. Invisible creatures don't gain advantage against her within this range if they're standing on seeded ground."
       ],
-      "tactics": "Opens with Glass Field to control the space. Uses Barrier reactively to buy time for talking. Glass Volley at range. Uses Glass Rain when cornered. Always tries to create one conversation — if a PC engages honestly, she responds in kind, even mid-fight."
+      "tactics": "Opens with Fault Line to control the space. Uses Barrier reactively to buy time for talking. Fracture Volley at range. Uses Shatterpoint when cornered. Always tries to create one conversation — if a PC engages honestly, she responds in kind, even mid-fight."
     }
   ]
 }

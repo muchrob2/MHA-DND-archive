@@ -520,7 +520,7 @@
     <div class="section-header" onclick="toggleSection('sec-world')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-world')}">
       <div class="section-header-left">
         <span class="section-title">World Reference</span>
-        <span class="section-meta">U.A., Murano, student life</span>
+        <span class="section-meta">U.A., Tokyo, student life</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
         <button class="bm-btn" id="bm-sec-world" onclick="event.stopPropagation();toggleBookmark('sec-world','World Reference','#sec-world')" title="Bookmark">🔖</button>
@@ -534,8 +534,8 @@
   <section class="campaign-section" id="sec-villains" style="display:none">
     <div class="section-header" onclick="toggleSection('sec-villains')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-villains')}">
       <div class="section-header-left">
-        <span class="section-title">Villain Factions</span>
-        <span class="section-meta">The Chain · Null Signal · Fracture</span>
+        <span class="section-title">Villains</span>
+        <span class="section-meta">Ruin · Fracture</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
         <button class="bm-btn" id="bm-sec-villains" onclick="event.stopPropagation();toggleBookmark('sec-villains','Villain Factions','#sec-villains')" title="Bookmark">🔖</button>
@@ -887,8 +887,8 @@ const TIER_COLORS = ['#1D3461','#1D9E75','#B8860B','#CC2936'];
 
 function renderVillainSeeds(seeds) {
   if (!seeds) return '';
-  const CLS = {the_chain:'seed-chain',null_signal:'seed-null',fracture:'seed-fracture',all_factions:'seed-all'};
-  const LBL = {the_chain:'The Chain',null_signal:'Null Signal',fracture:'Fracture',all_factions:'All Factions'};
+  const CLS = {the_chain:'seed-chain',null_signal:'seed-chain',fracture:'seed-fracture',all_factions:'seed-all'};
+  const LBL = {the_chain:'Ruin',null_signal:'Ruin',fracture:'Fracture',all_factions:'Ruin & Fracture'};
   let h = '<div class="arc-sub-header">Faction seeds</div>';
   for (const [k,v] of Object.entries(seeds)) {
     const cls = CLS[k]||'seed-all', lbl = LBL[k]||k.replace(/_/g,' ');
@@ -1009,13 +1009,15 @@ function buildVillainAnchorMap(villainsData) {
 
 function renderVillainChips(seedKeys, villainsData, villainAnchorMap) {
   if (!villainsData) return '';
+  const FACTION_ID_ALIASES = {the_chain:'ruin', null_signal:'ruin', fracture:'fracture'};
   let names = [];
   if (seedKeys.includes('all_factions')) {
     for (const f of (villainsData.factions||[])) names.push(...(f.villains||[]).map(v=>v.name));
     names.push(...(villainsData.solo||[]).map(v=>v.name));
   } else {
     for (const key of seedKeys) {
-      const f = (villainsData.factions||[]).find(fc => fc.id === key);
+      const factionId = FACTION_ID_ALIASES[key] || key;
+      const f = (villainsData.factions||[]).find(fc => fc.id === factionId);
       if (f) names.push(...(f.villains||[]).map(v=>v.name));
     }
   }
@@ -1469,7 +1471,7 @@ function renderVillains(data, el) {
     for (const f of data.factions) renderFaction(f);
   } else {
     const org = data.organisation||{};
-    renderFaction({ name:org.name||'The Chain', id:'the-chain', description:org.description, structure:org.structure, public_awareness:org.public_awareness, colour:'#E24B4A', villains:data.villains||[] });
+    renderFaction({ name:org.name||'Ruin', id:'ruin', description:org.description, structure:org.structure, public_awareness:org.public_awareness, colour:'#E24B4A', villains:data.villains||[] });
   }
   el.innerHTML = html;
   applyHiddenOnLoad(el);

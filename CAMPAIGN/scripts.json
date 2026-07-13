@@ -15,7 +15,7 @@
           "id": "previously_on",
           "title": "Previously on Class 1-A…",
           "when": "Read at the start of every session after the first",
-          "body": "Last time: [RECAP HERE]\n\nYou are still first-year students. You are still alive. Murano city is still standing. Whether that's to your credit or your luck — you haven't decided yet."
+          "body": "Last time: [RECAP HERE]\n\nYou are still first-year students. You are still alive. Tokyo is still standing. Whether that's to your credit or your luck — you haven't decided yet."
         },
         {
           "id": "session_rules_reminder",
@@ -33,7 +33,7 @@
           "id": "open_before_festival_day",
           "title": "Festival Morning",
           "when": "Start of the first Sports Festival session — before the bus",
-          "body": "You didn't sleep well. You wouldn't admit that to anyone.\n\nThe bus to the venue leaves at seven. You're all in the lobby at six forty. Nobody talks much. Masahata has a printed itinerary with colour-coded time slots. Toshida's head briefly becomes the words 'I'm fine' — which tells you he isn't. Kinosho is asleep against the window. You have no idea when she got there.\n\nForty thousand people are going to watch you today. Hero agencies are going to watch you today. One of you is going to lose. Most of you are going to lose.\n\nThe bus pulls out. Murano city slides past the windows. Somewhere across the city, Class 1-B is on their own bus. Their coach has a different expression on his face.\n\nYou have forty minutes."
+          "body": "You didn't sleep well. You wouldn't admit that to anyone.\n\nThe bus to the venue leaves at seven. You're all in the lobby at six forty. Nobody talks much. Masahata has a printed itinerary with colour-coded time slots. Toshida's head briefly becomes the words 'I'm fine' — which tells you he isn't. Kinosho is asleep against the window. You have no idea when she got there.\n\nForty thousand people are going to watch you today. Hero agencies are going to watch you today. One of you is going to lose. Most of you are going to lose.\n\nThe bus pulls out. Tokyo slides past the windows. Somewhere across the city, Class 1-B is on their own bus. Their coach has a different expression on his face.\n\nYou have forty minutes."
         }
       ]
     },
@@ -58,13 +58,13 @@
           "id": "fracture_problem_open",
           "title": "The Fracture Problem",
           "when": "Opening scene — news broadcast the class sees in the common room",
-          "body": "The common room television is on. The news anchor looks uncomfortable.\n\n'A demonstration outside the Hero Commission's Murano district office has escalated this afternoon. A group identifying themselves as Fracture — a civil-rights organisation advocating for unlicensed quirk users — has refused dispersal orders. Three support heroes have attempted to intervene. All three have been restrained without injury, according to Fracture's own broadcast.\n\nThe group's spokesperson, who goes by the name Shard, has stated: the demonstration will end when someone official agrees to talk to them.'\n\nOshiro walks in. He looks at the screen. He looks at you.\n\n'Get your gear.'"
+          "body": "The common room television is on. The news anchor looks uncomfortable.\n\n'A demonstration outside the Hero Commission's Shibuya office has escalated this afternoon. A group identifying themselves as Fracture — a civil-rights organisation advocating for unlicensed quirk users — has refused dispersal orders. Three support heroes have attempted to intervene. All three have been restrained without injury, according to Fracture's own broadcast.\n\nThe group's spokesperson, who goes by the name Shard, has stated: the demonstration will end when someone official agrees to talk to them.'\n\nOshiro walks in. He looks at the screen. He looks at you.\n\n'Get your gear.'"
         },
         {
           "id": "convergence_open",
-          "title": "Convergence — The Port District",
-          "when": "Opening of the Convergence arc — arriving at Murano port",
-          "body": "The port district at night. Container yards, loading cranes, the smell of salt water and diesel. The tip came in two hours ago: suspected Chain operation, warehouse seven, south dock.\n\nOshiro dropped you at the perimeter. He said: 'Observe first. Three minutes minimum. Then you make a decision.' He didn't say what the decision was.\n\nYou are standing in the dark between two shipping containers. Something is happening in that warehouse. You can hear it — machinery, voices, something that doesn't sound like cargo.\n\nYou have been here for ninety seconds."
+          "title": "Convergence — Kurogane Wharf",
+          "when": "Opening of the Convergence arc — arriving at Kurogane Wharf",
+          "body": "Kurogane Wharf at night. Container yards, loading cranes, the smell of salt water and diesel. The tip came in two hours ago: suspected Ruin operation, warehouse seven, south dock.\n\nOshiro dropped you at the perimeter. He said: 'Observe first. Three minutes minimum. Then you make a decision.' He didn't say what the decision was.\n\nYou are standing in the dark between two shipping containers. Something is happening in that warehouse. You can hear it — machinery, voices, something that doesn't sound like cargo.\n\nYou have been here for ninety seconds."
         },
         {
           "id": "dorm_life_open",
@@ -76,7 +76,7 @@
           "id": "agency_visit_open",
           "title": "The Agency Visit",
           "when": "Opening of the work-experience arc — arriving at Patchwork Hero Agency",
-          "body": "Patchwork Hero Agency operates out of the Murano port district. The building was a logistics office before the agency moved in. It still has the original carpet.\n\nYour contact is Patchwork — Mori Tsuya. She shakes your hand with the hand that isn't reinforced steel. She says: 'We handle three to five calls per shift. Low-level. Domestic disputes, noise complaints, the occasional Chain-adjacent situation. Don't let 'low-level' make you sloppy.'\n\nOut the window: the Murano port. Container cranes. The warehouse district.\n\nPatchwork adds, without looking up from her desk: 'Stay in pairs. The port district is friendly until it isn't.'"
+          "body": "Patchwork Hero Agency operates out of Kurogane Wharf. The building was a logistics office before the agency moved in. It still has the original carpet.\n\nYour contact is Patchwork — Mori Tsuya. She shakes your hand with the hand that isn't reinforced steel. She says: 'We handle three to five calls per shift. Low-level. Domestic disputes, noise complaints, the occasional Ruin-adjacent situation. Don't let 'low-level' make you sloppy.'\n\nOut the window: the Wharf. Container cranes. The warehouse district.\n\nPatchwork adds, without looking up from her desk: 'Stay in pairs. Kurogane Wharf is friendly until it isn't.'"
         }
       ]
     },
@@ -113,7 +113,7 @@
           "id": "undertow_voice",
           "title": "Undertow — Voice & Manner",
           "when": "Reference for the Convergence arc appearance",
-          "body": "MANNER: He sounds like someone who has already read the room, already decided how it ends, and is only still here because he finds you marginally interesting. Precise diction. No wasted words.\n\nHE SAYS EXACTLY ONE THING TO THE CLASS:\n'Good instincts. Wrong scale.'\n\nThen he phases out.\n\nDo not elaborate. Do not let him be drawn into conversation. He has already left by the time someone tries to respond. The line should feel like a compliment and an insult at the same time, and the players should be uncertain which one it was."
+          "body": "MANNER: He sounds like someone who has already read the room, already decided how it ends, and is only still here because he finds you marginally interesting. Precise diction. No wasted words.\n\nHE SAYS EXACTLY ONE THING TO THE CLASS:\n'Good instincts. Wrong current.'\n\nThen he pours himself into the nearest drain and is gone.\n\nDo not elaborate. Do not let him be drawn into conversation. He has already left by the time someone tries to respond. The line should feel like a compliment and an insult at the same time, and the players should be uncertain which one it was."
         },
         {
           "id": "morida_voice",
@@ -137,7 +137,7 @@
           "id": "voltage_voice",
           "title": "Voltage (Fracture) — Voice & Manner",
           "when": "Reference for the Fracture Problem arc",
-          "body": "MANNER: Quiet where Shard is articulate. He doesn't want to debate — he just knows what he thinks is right and acts on it. He's not threatening the students. He's not trying to be a villain. He's a twenty-three-year-old from the port district who learned his quirk in secret because he had no other option.\n\nKEY LINES TO HAVE READY:\n• 'She's not asking you to fight us. She's asking you to think.'\n• [Intervening between a guard and a protester] No lines. Just positions himself there and doesn't move.\n• 'I've been using this quirk since I was eight. Nobody taught me. Nobody helped me. That's the problem.'\n• [When the class seems to be following orders they disagree with] 'You know this is wrong.'\n\nNEVER: Antagonises students unprovoked. Fights unless defending someone specific. Explains himself at length — Shard handles the arguments; Voltage handles the action."
+          "body": "MANNER: Quiet where Shard is articulate. He doesn't want to debate — he just knows what he thinks is right and acts on it. He's not threatening the students. He's not trying to be a villain. He's a twenty-three-year-old from Kurogane Wharf who learned his quirk in secret because he had no other option.\n\nKEY LINES TO HAVE READY:\n• 'She's not asking you to fight us. She's asking you to think.'\n• [Intervening between a guard and a protester] No lines. Just positions himself there and doesn't move.\n• 'I've been using this quirk since I was eight. Nobody taught me. Nobody helped me. That's the problem.'\n• [When the class seems to be following orders they disagree with] 'You know this is wrong.'\n\nNEVER: Antagonises students unprovoked. Fights unless defending someone specific. Explains himself at length — Shard handles the arguments; Voltage handles the action."
         },
         {
           "id": "alucard_voice",
@@ -180,7 +180,7 @@
           "id": "level_6",
           "title": "Level 6 — End of Season 1",
           "when": "Read at the close of the Convergence arc — the final scene",
-          "body": "The port district is quiet now. Emergency services. Paperwork. Someone from the Hero Commission who doesn't introduce himself taking photographs of the warehouse.\n\nOshiro is sitting on a loading crate, reading a report someone handed him. He's been reading it for four minutes without saying anything.\n\nHe folds it. Looks up.\n\n'Get some sleep.'\n\nAs you leave, one of you notices the heading on the report, visible for a moment before he puts it in his pocket:\n\nUNDERTOW — CONFIRMED ACTIVE, MURANO PORT. STATUS: AT LARGE.\n\nOshiro is still sitting there when the last of you goes."
+          "body": "Kurogane Wharf is quiet now. Emergency services. Paperwork. Someone from the Hero Commission who doesn't introduce himself taking photographs of the warehouse.\n\nOshiro is sitting on a loading crate, reading a report someone handed him. He's been reading it for four minutes without saying anything.\n\nHe folds it. Looks up.\n\n'Get some sleep.'\n\nAs you leave, one of you notices the heading on the report, visible for a moment before he puts it in his pocket:\n\nUNDERTOW — CONFIRMED ACTIVE, KUROGANE WHARF. STATUS: AT LARGE.\n\nOshiro is still sitting there when the last of you goes."
         }
       ]
     },
@@ -199,13 +199,13 @@
           "id": "kuma_appearance",
           "title": "Kuma — First Appearance",
           "when": "When Kuma first transforms in front of the class",
-          "body": "You've read the file. Chain Hardskin, goes by Kuma. Quirk: progressive mass accumulation — the longer a fight runs, the larger and denser the mass becomes.\n\nThe file had a photograph. The photograph did not prepare you for this.\n\nThe ground is shaking. The containers behind him are denting from proximity alone. He hasn't moved yet.\n\nHe says: 'I'm going to make this quick.'\n\nHe is not going to make this quick."
+          "body": "You've read the file. Ruin Hardskin, goes by Kuma. Quirk: progressive mass accumulation — the longer a fight runs, the larger and denser the mass becomes.\n\nThe file had a photograph. The photograph did not prepare you for this.\n\nThe ground is shaking. The containers behind him are denting from proximity alone. He hasn't moved yet.\n\nHe says: 'I'm going to make this quick.'\n\nHe is not going to make this quick."
         },
         {
           "id": "splice_appearance",
           "title": "Splice — First Appearance",
           "when": "When Splice is identified in a scene",
-          "body": "You almost missed her. That was the point.\n\nShe's been in this room for four minutes. She has a camera. She has already photographed everyone present. The camera is now put away and she looks like someone who is simply leaving — except she's walking toward the Chain's data terminal, not the exit.\n\nShe notices you've noticed her.\n\nShe smiles like someone who just moved a piece on a board you didn't know you were playing on."
+          "body": "You almost missed her. That was the point.\n\nShe's been in this room for four minutes. She has a camera. She has already photographed everyone present. The camera is now put away and she looks like someone who is simply leaving — except she's walking toward Ruin's data terminal, not the exit.\n\nShe notices you've noticed her.\n\nShe smiles like someone who just moved a piece on a board you didn't know you were playing on."
         },
         {
           "id": "kuma_growth",
@@ -284,7 +284,7 @@
           "id": "sf_final_toragi_vs_chozen",
           "title": "Final · Toragi vs. Chozen",
           "when": "Read for the tournament final — the match that ends the Sports Festival arc",
-          "body": "The bracket board has two names left. The class has watched Toragi win three fights. They've watched Chozen win three fights and get progressively harder to be near.\n\nThe final begins.\n\nToragi's plan is visible in retrospect: end it fast, before the escalation curve compounds. She has studied Chozen's last three fights and she knows exactly where round 4 goes.\n\nShe lands the first hit in the opening exchange. It is the cleanest technical strike of the entire tournament. Perfect timing, perfect placement.\n\nIt is the worst decision she could have made.\n\nChozen at round 1 stress level is manageable. Chozen in the final of a nationally broadcast tournament, having already run three escalating fights, having now been struck cleanly in front of forty million viewers — is something the crowd is not prepared for.\n\nThe broadcast commentary goes quieter through round 3.\n\nBy round 4, the commentary team isn't filling the space with words. The audio is just crowd noise and the sound of the fight.\n\nRound 5. Nobody predicted round 5. Toragi's technique is still correct at round 5. Correct against the thing Chozen is at round 5 is not the same as sufficient.\n\nChozen wins.\n\nThe commentary team is silent for four full seconds.\n\nThen very loud.\n\nChozen is still in the arena. The crowd is still loud. He comes down slowly — not savoring, just taking the time to come down. Give that moment: the noise still going, him standing in the centre of the field, the crowd that just watched something that wasn't purely a competition.\n\nOshiro, watching from the faculty section, says nothing. He looks at Oshiro's notes on the desk beside him: one sentence, legible from two seats over: Good instincts. Wrong scale? — and then a question mark he didn't have before tonight."
+          "body": "The bracket board has two names left. The class has watched Toragi win three fights. They've watched Chozen win three fights and get progressively harder to be near.\n\nThe final begins.\n\nToragi's plan is visible in retrospect: end it fast, before the escalation curve compounds. She has studied Chozen's last three fights and she knows exactly where round 4 goes.\n\nShe lands the first hit in the opening exchange. It is the cleanest technical strike of the entire tournament. Perfect timing, perfect placement.\n\nIt is the worst decision she could have made.\n\nChozen at round 1 stress level is manageable. Chozen in the final of a nationally broadcast tournament, having already run three escalating fights, having now been struck cleanly in front of forty million viewers — is something the crowd is not prepared for.\n\nThe broadcast commentary goes quieter through round 3.\n\nBy round 4, the commentary team isn't filling the space with words. The audio is just crowd noise and the sound of the fight.\n\nRound 5. Nobody predicted round 5. Toragi's technique is still correct at round 5. Correct against the thing Chozen is at round 5 is not the same as sufficient.\n\nChozen wins.\n\nThe commentary team is silent for four full seconds.\n\nThen very loud.\n\nChozen is still in the arena. The crowd is still loud. He comes down slowly — not savoring, just taking the time to come down. Give that moment: the noise still going, him standing in the centre of the field, the crowd that just watched something that wasn't purely a competition.\n\nOshiro, watching from the faculty section, says nothing. He looks at Oshiro's notes on the desk beside him: one sentence, legible from two seats over: Good instincts. Wrong current? — and then a question mark he didn't have before tonight."
         },
         {
           "id": "sf_cavalry_1b_coordination",

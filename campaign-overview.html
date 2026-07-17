@@ -991,6 +991,21 @@ function charAnchorId(name) {
   return 'char-'+String(name||'').replace(/[^a-zA-Z0-9]+/g,'-').toLowerCase().replace(/^-+|-+$/g,'');
 }
 
+function revealAndScrollTo(anchorId) {
+  const target = document.getElementById(anchorId);
+  if (!target) return;
+  let node = target;
+  while (node) {
+    if (node.classList?.contains('sub-body') && !node.classList.contains('open')) {
+      node.classList.add('open');
+      const btn = node.previousElementSibling;
+      if (btn?.classList.contains('sub-toggle')) btn.textContent = btn.textContent.replace(/^▶/, '▼');
+    }
+    node = node.parentElement;
+  }
+  target.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
 function buildNameLookup(teachersData, class1bData) {
   const map = {};
   for (const t of (teachersData?.teachers||[])) map[t.name] = { type:'teacher', data:t };
@@ -1026,7 +1041,7 @@ function renderVillainChips(seedKeys, villainsData, villainAnchorMap) {
   return `<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;">${names.map(name => {
     const anchorId = villainAnchorMap[name];
     if (!anchorId) return '';
-    return `<a href="#${escHtml(anchorId)}" class="filter-pill" style="text-decoration:none;" onclick="event.preventDefault();document.getElementById('${escHtml(anchorId)}')?.scrollIntoView({behavior:'smooth',block:'center'});">💀 ${escHtml(name)}</a>`;
+    return `<a href="#${escHtml(anchorId)}" class="filter-pill" style="text-decoration:none;" onclick="event.preventDefault();revealAndScrollTo('${escHtml(anchorId)}');">💀 ${escHtml(name)}</a>`;
   }).join('')}</div>`;
 }
 
@@ -1037,7 +1052,7 @@ function renderNamedCharacterRef(rawName, nameLookup, renderedChars) {
   const anchorId = charAnchorId(cleanName);
   if (renderedChars.has(cleanName)) {
     const icon = entry.type === 'teacher' ? '🍎' : '🎓';
-    return `<a href="#${escHtml(anchorId)}" class="filter-pill" style="text-decoration:none;display:inline-block;margin-bottom:6px;" onclick="event.preventDefault();document.getElementById('${escHtml(anchorId)}')?.scrollIntoView({behavior:'smooth',block:'center'});">${icon} ${escHtml(cleanName)} — see full profile above</a>`;
+    return `<a href="#${escHtml(anchorId)}" class="filter-pill" style="text-decoration:none;display:inline-block;margin-bottom:6px;" onclick="event.preventDefault();revealAndScrollTo('${escHtml(anchorId)}');">${icon} ${escHtml(cleanName)} — see full profile above</a>`;
   }
   renderedChars.add(cleanName);
   const cardHtml = entry.type === 'teacher' ? buildTeacherCard(entry.data) : buildClass1BCard(entry.data);
@@ -1142,7 +1157,11 @@ function renderArcsUnified(sources, el) {
 
       // ── Cast rosters, anchored to the arc where they're introduced ──
       if (arc.name === 'The Entrance Exam') {
-        tierHtml += `<div class="arc-sub-header">Class 1-A &amp; Teachers — introduced here</div>`;
+        const castId = 'cast'+id;
+        const castCount = (teachers?.teachers?.length||0) + (class1aRoster?.students?.length||0);
+        tierHtml += `<div class="arc-sub-header">Class 1-A &amp; Teachers — introduced here</div>
+          <span class="sub-toggle" onclick="toggleSub('${castId}',this)">▶ Show cast (${castCount})</span>
+          <div class="sub-body" id="${castId}">`;
         if (class1aRoster?.homeroom_teacher) {
           tierHtml += `<div class="arc-desc" style="margin-bottom:8px;">${escHtml(class1aRoster.class||'Class 1-A')} · Homeroom: ${escHtml(class1aRoster.homeroom_teacher||'')}</div>`;
         }
@@ -1159,8 +1178,10 @@ function renderArcsUnified(sources, el) {
           renderedChars.add(s.name);
           tierHtml += `<div id="${escHtml(anchorId)}" style="scroll-margin-top:60px;">${buildClass1ACard(s, class1aCharMap)}</div>`;
         }
+        tierHtml += '</div>';
       }
       if (arc.name === 'Dorm Life & Combat Training') {
+        const castId = 'cast'+id;
         tierHtml += `<div class="arc-sub-header">Class 1-B — introduced here</div>`;
         if (class1b?.dm_overview) tierHtml += `<div class="arc-desc" style="margin-bottom:8px;">${escHtml(class1b.dm_overview)}</div>`;
         if (class1b?.tier1_introduction_guide) {
@@ -1171,11 +1192,13 @@ function renderArcsUnified(sources, el) {
           }
           tierHtml += '</div>';
         }
+        tierHtml += `<span class="sub-toggle" onclick="toggleSub('${castId}',this)">▶ Show cast (${class1b?.students?.length||0})</span><div class="sub-body" id="${castId}">`;
         for (const s of (class1b?.students||[])) {
           const anchorId = charAnchorId(s.name);
           renderedChars.add(s.name);
           tierHtml += `<div id="${escHtml(anchorId)}" style="scroll-margin-top:60px;">${buildClass1BCard(s)}</div>`;
         }
+        tierHtml += '</div>';
       }
 
       // ── Tier-1 session detail merge (major beats, NPC interactions, encounters) ──

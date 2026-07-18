@@ -62,9 +62,10 @@
 
   /* ── Main nav ─────────────────────────────────────────── */
   #main { display: flex; flex-direction: column; overflow: hidden; }
-  #main-nav { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  #main-nav { display: flex; align-items: center; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
   #back-to-dash { display: flex; align-items: center; gap: 5px; padding: 10px 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-dim); text-decoration: none; border-right: 1px solid var(--border); white-space: nowrap; text-transform: uppercase; }
   #back-to-dash:hover { color: var(--purple); background: var(--purple-light); }
+  .nav-right { display: flex; align-items: center; gap: 8px; padding: 0 16px; margin-left: auto; flex-shrink: 0; }
   .nav-btn { padding: 10px 20px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; border: none; background: none; color: var(--text-dim); border-bottom: 2px solid transparent; transition: color 0.1s; }
   .nav-btn:hover { color: var(--text-muted); }
   .nav-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
@@ -441,8 +442,9 @@
   .board-tray-name { font-size: 11px; font-weight: 600; color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   #board-grid-wrap { flex: 1; overflow: auto; display: flex; align-items: flex-start; justify-content: flex-start; padding: 16px; background: var(--bg); cursor: crosshair; }
   #board-canvas { display: block; image-rendering: pixelated; touch-action: none; }
-  #board-footer { flex-shrink: 0; padding: 8px 18px; border-top: 1px solid var(--border); background: var(--surface2); }
-  #board-hint { font-size: 11px; color: var(--text-dim); }
+  #board-footer { flex-shrink: 0; padding: 8px 18px; border-top: 1px solid var(--border); background: var(--surface2); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  #board-hint { font-size: 11px; color: var(--text-dim); flex: 1; min-width: 160px; }
+  #board-footer .enc-btn.danger { flex-shrink: 0; }
   #board-range-wrap {
     display: flex; align-items: center; gap: 5px;
     background: rgba(14,158,133,0.1); border: 1px solid rgba(14,158,133,0.3);
@@ -646,6 +648,7 @@
       <button class="nav-btn active" onclick="setView('character')">Characters</button>
       <button class="nav-btn" onclick="setView('dice')">Dice Roller</button>
       <button class="nav-btn" onclick="setView('encounter')">Encounter</button>
+      <div class="nav-right"></div>
     </div>
 
     <!-- ── Character view ── -->
@@ -874,7 +877,6 @@
             <button class="board-zoom-btn" onclick="boardFitZoom()" title="Fit grid to window">Fit</button>
           </div>
           <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-            <button class="enc-btn" onclick="boardClearPositions()" title="Remove all units from grid">Clear Grid</button>
             <button id="board-close-btn" onclick="closeBoardMode()" title="Close">✕</button>
           </div>
         </div>
@@ -889,6 +891,7 @@
         </div>
         <div id="board-footer">
           <span id="board-hint">Click a unit in the tray, then click a grid square to place it. Click placed tokens to select and measure distance.</span>
+          <button class="enc-btn danger" onclick="boardClearPositions()" title="Remove all units from grid">Clear Grid</button>
         </div>
       </div>
     </div>
@@ -2576,6 +2579,15 @@ let _boardWasPanning = false;
 const BOARD_IS_TOUCH = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 function boardCell() { return Math.max(BOARD_IS_TOUCH ? 20 : 6, Math.round(CELL_BASE * boardZoom)); }
 
+// Coalesce the flood of mousemove/touchmove events fired during drag/hover/pinch
+// into at most one redraw per animation frame, instead of one per event.
+let _boardRenderQueued = false;
+function boardRequestRender() {
+  if (_boardRenderQueued) return;
+  _boardRenderQueued = true;
+  requestAnimationFrame(() => { _boardRenderQueued = false; renderBoardCanvas(); });
+}
+
 function boardZoomIn()  { boardZoom = Math.min(+(boardZoom * 1.25).toFixed(4), 3);   renderBoardCanvas(); updateZoomLabel(); }
 function boardZoomOut() { boardZoom = Math.max(+(boardZoom / 1.25).toFixed(4), 0.25); renderBoardCanvas(); updateZoomLabel(); }
 function updateZoomLabel() {
@@ -2583,16 +2595,53 @@ function updateZoomLabel() {
   if (el) el.textContent = Math.round(boardZoom * 100) + '%';
 }
 
+// The board is a fixed 100x100 grid so there's room to lay out a big map, but
+// almost every encounter only uses a small corner of it. Fitting/centering on
+// the *entire* grid (the old behaviour) meant "Fit" could never actually fit
+// on a phone screen, and there was nothing to anchor the initial scroll
+// position to — you'd land on an arbitrary, likely-empty corner. Fit to the
+// bounding box of the tokens actually in play instead, padded a bit, and
+// scroll to it.
+function boardComputeBBox() {
+  const placed = encounter.combatants.filter(c => c.boardX != null);
+  const PAD = 4;
+  if (!placed.length) {
+    const midC = Math.floor(BOARD_COLS / 2), midR = Math.floor(BOARD_ROWS / 2);
+    return { minC: midC - 10, maxC: midC + 10, minR: midR - 10, maxR: midR + 10 };
+  }
+  let minC = Infinity, maxC = -Infinity, minR = Infinity, maxR = -Infinity;
+  for (const c of placed) {
+    minC = Math.min(minC, c.boardX); maxC = Math.max(maxC, c.boardX);
+    minR = Math.min(minR, c.boardY); maxR = Math.max(maxR, c.boardY);
+  }
+  return {
+    minC: Math.max(0, minC - PAD), maxC: Math.min(BOARD_COLS - 1, maxC + PAD),
+    minR: Math.max(0, minR - PAD), maxR: Math.min(BOARD_ROWS - 1, maxR + PAD),
+  };
+}
+
+function boardScrollToBBox(bbox, SZ) {
+  const wrap = document.getElementById('board-grid-wrap');
+  if (!wrap) return;
+  const cx = ((bbox.minC + bbox.maxC + 1) / 2) * SZ;
+  const cy = ((bbox.minR + bbox.maxR + 1) / 2) * SZ;
+  wrap.scrollLeft = Math.max(0, cx - wrap.clientWidth / 2);
+  wrap.scrollTop  = Math.max(0, cy - wrap.clientHeight / 2);
+}
+
 function boardFitZoom() {
   const wrap = document.getElementById('board-grid-wrap');
+  const bbox = boardComputeBBox();
   if (wrap) {
     const availW = wrap.clientWidth  - 32;
     const availH = wrap.clientHeight - 32;
-    const fit = Math.min(availW / (BOARD_COLS * CELL_BASE), availH / (BOARD_ROWS * CELL_BASE));
-    boardZoom = Math.max(+fit.toFixed(4), 0.25);
+    const cols = bbox.maxC - bbox.minC + 1, rows = bbox.maxR - bbox.minR + 1;
+    const fit = Math.min(availW / (cols * CELL_BASE), availH / (rows * CELL_BASE));
+    boardZoom = Math.max(Math.min(+fit.toFixed(4), 3), 0.25);
   }
   updateZoomLabel();
   renderBoardCanvas();
+  boardScrollToBBox(bbox, boardCell());
 }
 
 function openBoardMode() {
@@ -2614,6 +2663,8 @@ function boardClearRange() {
 }
 
 function boardClearPositions() {
+  if (!encounter.combatants.some(c => c.boardX != null)) return;
+  if (!confirm('Remove all units from the grid?')) return;
   encounter.combatants.forEach(c => { c.boardX = null; c.boardY = null; });
   boardState = { pendingId: null, selectedIds: [] };
   encSave();
@@ -2670,36 +2721,36 @@ function renderBoardTray() {
   }).join('');
 }
 
-function renderBoardCanvas() {
-  const canvas = boardInitCanvas();
-  const ctx = canvas.getContext('2d');
-  const SZ = boardCell();
-  const isDark = getComputedStyle(document.body).getPropertyValue('--bg').trim().startsWith('#0');
-  const showLabels = SZ >= 10;
+// The grid background (fill + alternating squares + grid lines + labels) never
+// changes between frames unless zoom, theme, or canvas size changes — redrawing
+// all ~10,000 cells of it on every mousemove during a drag was the main source
+// of board-mode jank. Cache it on an offscreen canvas and blit it instead.
+let _boardBgCache = { key: '', canvas: null };
+
+function boardBuildBgLayer(width, height, SZ, isDark, showLabels) {
+  const bg = document.createElement('canvas');
+  bg.width = width; bg.height = height;
+  const ctx = bg.getContext('2d');
 
   // Background
   ctx.fillStyle = isDark ? '#141820' : '#f0f0f0';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, width, height);
 
   // Alternating squares
+  ctx.fillStyle = isDark ? '#1a1f2a' : '#e4e4e4';
   for (let r = 0; r < BOARD_ROWS; r++) {
     for (let c = 0; c < BOARD_COLS; c++) {
-      if ((r + c) % 2 === 1) {
-        ctx.fillStyle = isDark ? '#1a1f2a' : '#e4e4e4';
-        ctx.fillRect(c * SZ, r * SZ, SZ, SZ);
-      }
+      if ((r + c) % 2 === 1) ctx.fillRect(c * SZ, r * SZ, SZ, SZ);
     }
   }
 
-  // Grid lines
+  // Grid lines — batched into a single path instead of one stroke() call per line
   ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.12)';
   ctx.lineWidth = 1;
-  for (let c = 0; c <= BOARD_COLS; c++) {
-    ctx.beginPath(); ctx.moveTo(c * SZ, 0); ctx.lineTo(c * SZ, canvas.height); ctx.stroke();
-  }
-  for (let r = 0; r <= BOARD_ROWS; r++) {
-    ctx.beginPath(); ctx.moveTo(0, r * SZ); ctx.lineTo(canvas.width, r * SZ); ctx.stroke();
-  }
+  ctx.beginPath();
+  for (let c = 0; c <= BOARD_COLS; c++) { ctx.moveTo(c * SZ, 0); ctx.lineTo(c * SZ, height); }
+  for (let r = 0; r <= BOARD_ROWS; r++) { ctx.moveTo(0, r * SZ); ctx.lineTo(width, r * SZ); }
+  ctx.stroke();
 
   // Row/col labels (skip at very small zoom)
   if (showLabels) {
@@ -2717,6 +2768,25 @@ function renderBoardCanvas() {
       if ((r + 1) % step === 0 || r === 0) ctx.fillText(r + 1, SZ - 2, r * SZ + SZ / 2 + fontSize / 2 - 1);
     }
   }
+  return bg;
+}
+
+function boardGetBgLayer(width, height, SZ, isDark, showLabels) {
+  const key = [width, height, SZ, isDark, showLabels].join('|');
+  if (_boardBgCache.key !== key) {
+    _boardBgCache = { key, canvas: boardBuildBgLayer(width, height, SZ, isDark, showLabels) };
+  }
+  return _boardBgCache.canvas;
+}
+
+function renderBoardCanvas() {
+  const canvas = boardInitCanvas();
+  const ctx = canvas.getContext('2d');
+  const SZ = boardCell();
+  const isDark = getComputedStyle(document.body).getPropertyValue('--bg').trim().startsWith('#0');
+  const showLabels = SZ >= 10;
+
+  ctx.drawImage(boardGetBgLayer(canvas.width, canvas.height, SZ, isDark, showLabels), 0, 0);
 
   // Range overlay
   if (boardState.rangeFt > 0 && boardState.selectedIds.length >= 1) {
@@ -2986,7 +3056,7 @@ function boardHandleMouseMove(e) {
     const prev = boardHoverInfo;
     boardHoverInfo = hit ? { combatant: hit, col, row } : null;
     if ((prev == null) !== (boardHoverInfo == null) || prev?.combatant?.id !== boardHoverInfo?.combatant?.id) {
-      renderBoardCanvas();
+      boardRequestRender();
     }
     return;
   }
@@ -2996,7 +3066,7 @@ function boardHandleMouseMove(e) {
   if (cc !== boardState.dragging.curCol || cr !== boardState.dragging.curRow) {
     boardState.dragging.curCol = cc;
     boardState.dragging.curRow = cr;
-    renderBoardCanvas();
+    boardRequestRender();
   }
 }
 
@@ -3112,7 +3182,7 @@ function boardHandleTouchMove(e) {
     const dist = boardTouchDistance(e.touches[0], e.touches[1]);
     boardZoom = Math.max(0.25, Math.min(3, +(_boardPinch.zoom * (dist / _boardPinch.dist)).toFixed(4)));
     updateZoomLabel();
-    renderBoardCanvas();
+    boardRequestRender();
     return;
   }
   if (e.touches.length !== 1) return;

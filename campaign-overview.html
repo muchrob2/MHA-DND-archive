@@ -639,11 +639,32 @@ function initials(name) { return name.split(' ').slice(0,2).map(w=>w[0]).join(''
 function uid() { return Math.random().toString(36).slice(2); }
 
 /* ─── Section toggle ─────────────────────────────────── */
+const SECTION_STATE_KEY = 'campaignSectionState';
+function getSectionState() {
+  try { return JSON.parse(localStorage.getItem(SECTION_STATE_KEY) || '{}'); } catch { return {}; }
+}
+function setSectionState(id, open) {
+  const state = getSectionState();
+  state[id] = open;
+  try { localStorage.setItem(SECTION_STATE_KEY, JSON.stringify(state)); } catch {}
+}
+function restoreSectionState() {
+  const state = getSectionState();
+  for (const id of ['sec-arc','sec-world','sec-villains','sec-npcs','sec-scripts']) {
+    if (state[id] === false) {
+      const body = document.getElementById('body-'+id);
+      const tog  = document.getElementById('tog-'+id);
+      if (body) body.classList.remove('open');
+      if (tog) tog.classList.remove('open');
+    }
+  }
+}
 function toggleSection(id) {
   const body = document.getElementById('body-'+id);
   const tog  = document.getElementById('tog-'+id);
   const open = body.classList.toggle('open');
   if (tog) tog.classList.toggle('open', open);
+  setSectionState(id, open);
   if (open) {
     const el = document.getElementById(id);
     if (el) setTimeout(() => el.scrollIntoView({behavior:'smooth', block:'start'}), 50);
@@ -2137,6 +2158,7 @@ async function init() {
   }
   initScrollSpy();
   restoreBmState();
+  restoreSectionState();
   if (location.hash) {
     setTimeout(() => {
       const sKey = location.hash.replace('#sec-','');

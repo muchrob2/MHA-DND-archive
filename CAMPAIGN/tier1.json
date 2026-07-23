@@ -3,7 +3,7 @@
   "levels": "1-4",
   "title": "Welcome to U.A.",
   "tone": "Almost entirely fun. Orientation. The class is meeting each other, discovering the school is hard and also ridiculous. Ruin is a name everyone in Tokyo already recognises — background noise the class hasn't touched yet. Fracture, the separate anti-licensing movement getting louder across the city, hasn't either. Class 1-B is a name on a results board. By level 4, the students feel like a cohort — and the world should feel like it's about to ask something of them.",
-  "dm_overview": "Tier 1 is about establishing who these twenty specific people are, not just what their quirks do. Every beat below is written from the actual character sheets — their real fears, habits, and backstories — not generic quirk demonstrations. Run the danger lightly; the consequence of failure here is embarrassment, not catastrophe. Save consequence for Tier 2.",
+  "dm_overview": "Every beat in Tier 1 comes straight off the character sheets — Ren going missing mid-sprint because Overclock genuinely moves too fast to track, Chozen's Stress activating on its own in round one because it doesn't ask permission, Nakaya short-circuiting the common room toaster and refusing to apologize for it. Nothing here draws blood that matters. The entrance exam's danger is embarrassment in front of nineteen strangers, not injury; the worst outcome of Capture the Flag is losing to Yoshibara's clones and hearing about it from Masahata's fridge chart for a week. That changes starting Tier 2.",
   "session_estimate": "6-8 sessions across 4 arcs",
   "arcs": [
     {
@@ -11,7 +11,7 @@
       "arc_type": "Opening session / character introduction",
       "sessions": "1",
       "summary": "A staged disaster scenario in a simulated city block. Rescue civilians (actors), destroy drones (points), survive to the results board. The last wave is a boss drone nobody can solo — the class's first forced cooperation moment.",
-      "dm_setup": "Run this as the very first session, before players necessarily know each other's characters. Oshiro's PA announcement is three sentences. No stated win condition beyond 'do well.' The chaos is the point — who these people are under pressure is the data you want, not the score.",
+      "dm_setup": "This is the first time these twenty characters are in a room together. Oshiro's PA cuts in with three flat sentences and no countdown — 'Simulated urban rescue scenario. Exam begins now.' — and then it's just noise: drone hatches opening, a building facade coming down, civilian actors shouting for help. There's no stated win condition beyond doing well, so nobody's coordinating, everybody's improvising, and the first real information about who these people are shows up in what they do in the first thirty seconds, not their final score.",
       "major_beats": [
         {
           "name": "The Whistle",
@@ -131,7 +131,7 @@
       "arc_type": "Downtime / social arc",
       "sessions": "1-2",
       "summary": "The class moves into Heights Alliance. No combat. Pure character chaos — this is how a class becomes a class instead of a results column.",
-      "dm_setup": "Give every player at least one moment where their character's actual personality — not just their quirk — shows up in a domestic setting. Follow the players; the best moments here won't be the scheduled ones.",
+      "dm_setup": "Heights Alliance in the first week is burnt rice, an argument about whose turn it is to do dishes, and Takazuki startling someone new every other day just by existing invisibly in the kitchen. Toshida's speech bubble catches on a doorway again. Nakaya insists the toaster was already broken. These are small, and that's the whole point — this is where personality shows up without a quirk attached to it, and the best moments are the ones nobody scheduled: an unplanned late-night conversation, a rivalry starting over something as small as who gets the last of the good rice.",
       "major_beats": [
         {
           "name": "Moving Day",
@@ -219,7 +219,7 @@
       "arc_type": "First formal training encounter",
       "sessions": "1",
       "summary": "Oshiro's opening combat class. Two teams, live stakes. Losing team runs extra laps; winners pick one perk. Rivalries get specific here.",
-      "dm_setup": "Split the class into two teams built for interesting matchups, not balance. Oshiro's rule: nobody fights their obvious counter. Give the matchups dramatic potential and let players find creative answers.",
+      "dm_setup": "Oshiro splits the teams himself, and his one rule — nobody fights their obvious counter — is what makes the matches interesting instead of predictable. Morida ends up across from someone he can't just armor through. Ren ends up against a problem-solver like Izuto instead of someone he can simply outrun. The fun is watching people improvise around a matchup they didn't choose, not watching the 'correct' answer play out.",
       "major_beats": [
         {
           "name": "Team Assignments",
@@ -308,7 +308,7 @@
       "arc_type": "Low-stakes mission / Ruin seed",
       "sessions": "1-2",
       "summary": "Class 1-A assists a small hero agency in Kurogane Wharf for one day. Filing, crowd management, publicity. Then something goes wrong. Ruin appears for the first time — small, underdramatic, almost missable. That's the point.",
-      "dm_setup": "First time the students operate in the real world without exam conditions. Patchwork knows things they don't. The villain encounter should feel like a Tuesday for her and a significant event for the students. The Ruin seed is findable in retrospect, not obvious in the moment.",
+      "dm_setup": "Patchwork handles the villain encounter the way she'd handle a delayed bus — mildly annoyed, completely unsurprised — while the students are having the first real-world fight of their lives. That gap in reaction is the whole scene: she's seen this before, they haven't. The Ruin seed sitting nearby — a tag, a face, a name Hardskin won't finish saying — doesn't register as important in the moment. It's the kind of detail a player only recognizes later, when it comes back around.",
       "major_beats": [
         {
           "name": "The Assignment",

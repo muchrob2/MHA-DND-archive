@@ -59,7 +59,7 @@
         {
           "name": "The Result Board",
           "description": "Scores posted. All students pass. Individual rankings go up. Masahata has a notebook open before Oshiro finishes reading.",
-          "dm_notes": "Read scores in Oshiro's voice: flat, alphabetical, no commentary. The class will editorialise themselves. Also shows Class 1-B's top score in a second column: Morida Takeshi, 84 pts.",
+          "dm_notes": "Read scores in Oshiro's voice: flat, alphabetical, no commentary. The class will editorialise themselves. Also shows Class 1-B's top score in a second column: Yamaru Todao, 84 pts.",
           "player_hooks": {
             "masahata": "Announces his own score before Oshiro finishes reading it. The class is already tired of him. It's session one. This is correct.",
             "ren": "High drone count, low civilian rescues — the miss is obvious in hindsight. He shrugs it off out loud. Oshiro writes something down and doesn't share it."
@@ -77,15 +77,15 @@
         {
           "npc": "Oshiro Daikichi",
           "context": "Observing from the control room throughout. Does not enter the arena.",
-          "key_moment": "Reads scores aloud after, flat, alphabetical. Pauses — not dramatically — after Morida's 1-B score. Continues. Nobody knows what the pause means. It means something.",
-          "dm_dialogue": "Scores. Class 1-A, exam sequence one. [reads alphabetically, no inflection]. Class 1-B reference score, posted for comparison: Morida Takeshi, eighty-four. You're all in.",
+          "key_moment": "Reads scores aloud after, flat, alphabetical. Pauses — not dramatically — after Yamaru's 1-B score. Continues. Nobody knows what the pause means. It means something.",
+          "dm_dialogue": "Scores. Class 1-A, exam sequence one. [reads alphabetically, no inflection]. Class 1-B reference score, posted for comparison: Yamaru Todao, eighty-four. You're all in.",
           "trigger": "Any student who approaches him after gets one flat, accurate sentence. Not encouraging. Not discouraging. 'Your rescue time was poor. Work on civilian carry.' Or: 'The drone's weak point is visible at range. You didn't look.'"
         },
         {
           "npc": "Fujisaki Nene",
           "context": "At the arena gate before the exam, doing last-minute gear checks.",
           "key_moment": "If a student approaches: she's already looking at their costume before they finish the sentence. 'Stand still.' Makes an adjustment they didn't ask for. It helps.",
-          "dm_dialogue": "On 1-B: 'Different site this year. Quieter, I heard. But thorough — Matsunami runs thorough.' She doesn't compare scores. She does note that Matsunami's been coaching Morida on close-range defence for months. 'Interesting tactical choice.' Then her attention is elsewhere.",
+          "dm_dialogue": "On 1-B: 'Different site this year. Quieter, I heard. But thorough — Matsunami runs thorough.' She doesn't compare scores. She does note that Matsunami's been running Yamaru through sustained-damage drills for months. 'Interesting tactical choice.' Then her attention is elsewhere.",
           "trigger": "Available before the exam. After, she's already reading medical reports for anyone who took a heavy hit from the Sentinel."
         }
       ],
@@ -121,8 +121,8 @@
         "Exam paperwork in the holding area includes a coverage report: a column for 'active incidents during exam window,' three entries, all marked resolved, resolution timestamps faster than any real response should be."
       ],
       "class1b_seeds": [
-        "Results board shows 1-B's top score: Morida Takeshi, 84. Whether 1-A beats it depends on the session. Oshiro's reaction is silence either way — the difference is texture.",
-        "Fujisaki's aside about Matsunami coaching Morida on close-range defence trails off before she finishes the thought.",
+        "Results board shows 1-B's top score: Yamaru Todao, 84. Whether 1-A beats it depends on the session. Oshiro's reaction is silence either way — the difference is texture.",
+        "Fujisaki's aside about Matsunami running Yamaru through sustained-damage drills trails off before she finishes the thought.",
         "Exam footage later posted to the internal board shows a split-screen with 1-B's site: quieter, more coordinated, fewer walls falling over."
       ]
     },
@@ -171,7 +171,7 @@
         }
       ],
       "minor_beats": [
-        "Takazuki's first silent appearance in the common room — someone nearly sits on her. She says only: 'I was here first.'",
+        "Zaro's first appearance in the common room is the fog before she is — someone nearly walks straight into a drift of deep purple haze in the corner, then jumps when a flat voice from inside it says: 'I was here first.'",
         "Kinosho is found asleep in the stairwell between floors two and three. This becomes her primary spot. She has others. Nobody has catalogued them all.",
         "First communal cooking attempt goes badly. Samitsu watches from the doorway, says nothing, and is in the kitchen unprompted the next night. Nobody has had a bad meal since.",
         "Ichitaka projects a small hologram bird onto his own desk for no stated reason and lets it sit there for an hour before dismissing it. He doesn't explain. It looked like art.",
@@ -195,11 +195,11 @@
           "trigger": "Any student who approaches gets a genuinely useful interaction."
         },
         {
-          "npc": "Morida Takeshi (Class 1-B)",
-          "context": "Cafeteria, next morning. Seated with Yashiro at an adjacent table.",
-          "key_moment": "A full, deliberate two-second survey of the 1-A table. Then he looks away. He's taken everything he needs from it.",
-          "dm_dialogue": "If approached: 'Morida. Class 1-B.' A firm single handshake. 'Good exam.' Returns to eating. He considers this complete.",
-          "trigger": "Yashiro, if present, winks and teleports two seats over while holding eye contact."
+          "npc": "Yamaru Todao (Class 1-B)",
+          "context": "Cafeteria, next morning. Seated with Domoto at an adjacent table.",
+          "key_moment": "A full, unhurried survey of the 1-A table, taking exactly as long as he wants it to. Then he looks away. He's taken everything he needs from it.",
+          "dm_dialogue": "If approached: 'Yamaru. Class 1-B.' A firm single handshake. 'Good exam.' Returns to eating, unhurried. He considers this complete.",
+          "trigger": "Domoto, if present, winks and covers three seats in a single explosive hop while holding eye contact the whole way."
         }
       ],
       "encounters": [],
@@ -209,9 +209,9 @@
         "Hamagawa is visible through her office window one evening, reviewing a document headed 'Provisional Licensing Review — Kurogane Wharf Incidence Report Q3.' She closes it when she notices anyone looking."
       ],
       "class1b_seeds": [
-        "Morida's cafeteria survey. Yashiro's teleport-wink.",
+        "Yamaru's cafeteria survey. Domoto's hop-and-wink.",
         "1-B's practice room is booked 6am Monday through Friday. They never cancel. The booking notes always name a specific drill objective.",
-        "Ogiwara's 7am warmup shockwaves rattle the dorm twice. Masahata adds a row to the chart: 'Ogiwara, Bunta. Seismic. Notes: consistent.'"
+        "Kagamo's 7am warmup blasts rattle the dorm twice. Masahata adds a row to the chart: 'Kagamo, Akake. Air Cannon. Notes: consistent.'"
       ]
     },
     {
@@ -257,7 +257,7 @@
         "Masahata distributes a weakness analysis to his team the night before. His team splits up to 'optimise' and immediately stops communicating. His analysis was correct. Their execution wasn't.",
         "Izuto's engine timing misfires at the worst moment — he overshoots the flag zone entirely. Audible.",
         "Ren starts before the signal. Oshiro: 'Foul.' Hamagawa, consulting a rulebook that has no clear entry for this: 'Actually—' Oshiro overrules her. Points stand. Hamagawa makes a note anyway.",
-        "Takazuki wins her matchup by being invisible the entire time. Technically within the rules. Masahata's chart gets a correction: 'Quirk: invisibility, underweighted in initial analysis.'"
+        "Zaro wins her matchup by portaling behind the flag line before anyone's finished scanning the field. Technically within the rules. Masahata's chart gets a correction: 'Quirk: Warp Gate, underweighted in initial analysis.'"
       ],
       "npc_interactions": [
         {
@@ -275,10 +275,10 @@
           "trigger": "Only available if approached."
         },
         {
-          "npc": "Ogiwara Bunta (Class 1-B)",
+          "npc": "Kagamo Akake (Class 1-B)",
           "context": "Visible through the observation window.",
-          "key_moment": "A slow, genuine thumbs-up whenever the class does something impressive. If Toshida's involved: the thumbs-up points at him specifically.",
-          "dm_dialogue": "None. Just present, watching.",
+          "key_moment": "An exaggerated double thumbs-up whenever the class does something impressive, delivered with her whole body. If Toshida's involved: the thumbs-up points at him specifically.",
+          "dm_dialogue": "None. Just present, watching, occasionally mouthing 'OKAY' at the glass.",
           "trigger": "Only visible if students look at the window."
         }
       ],
@@ -288,18 +288,18 @@
           "enemies": "NPC versions of the opposing student team — simplified stats: HP = 15 + (3 × level), AC = 11 + DEX mod, attack +3 to hit, 1d6 + STR/DEX damage.",
           "terrain": "Open training ground, four cover positions, two flag zones, one central choke point.",
           "setup": "Two-team capture the flag. Elimination by tag, HP-to-0, or a 3-second grapple hold. No lethal quirk use.",
-          "tactics": "NPC students play to their actual character strengths — Yoshibara duplicates immediately, Takazuki goes invisible, Masahata executes his plan regardless of whether it's working.",
+          "tactics": "NPC students play to their actual character strengths — Yoshibara duplicates immediately, Zaro drops a fog shroud and pre-places a portal, Masahata executes his plan regardless of whether it's working.",
           "rewards": "Winning team picks: extended curfew, premium meals, priority training room access, or a reasonable player suggestion."
         }
       ],
       "foreshadowing": [
         "Oshiro's earpiece activates mid-match. He absorbs it, keeps watching, doesn't leave. Something in Kurogane Wharf. He'll check after.",
         "Hamagawa's legal query about Yoshibara's status has a smaller note underneath: 'Similar unresolved status exists for unlicensed quirk users operating under Ruin-adjacent organisations.' Nobody reads this except her.",
-        "The perk board gets an addition, probably from Masahata: 'Note: Class 1-B equivalent score — Kitamura S., Morida T. flagged as exceptional. Source: Matsunami's office noticeboard, photographed.'"
+        "The perk board gets an addition, probably from Masahata: 'Note: Class 1-B equivalent score — Hashige T., Yamaru T. flagged as exceptional. Source: Matsunami's office noticeboard, photographed.'"
       ],
       "class1b_seeds": [
         "Oshiro's benchmark line: 'Class 1-B had three students who topped this score in their equivalent drill.' No names given. Masahata's chart gains three anonymous entries.",
-        "Ogiwara's thumbs-up, possibly aimed at Toshida specifically. Neither of them has said anything about it yet.",
+        "Kagamo's double thumbs-up, possibly aimed at Toshida specifically. Neither of them has said anything about it yet.",
         "1-B's practice room board: 'Team Drill — Counterquirk Positioning' booked for Saturday, named for a technique that counters a known 1-A quirk pattern."
       ]
     },
@@ -368,9 +368,9 @@
           "trigger": "During and immediately after the encounter."
         },
         {
-          "npc": "Kitamura Sora (Class 1-B)",
+          "npc": "Hashige Tataka (Class 1-B)",
           "context": "Different agency, same district. Corridor encounter only.",
-          "key_moment": "Ten seconds. Precisely folded documents, doesn't introduce herself, keeps walking. Name badge faces inward. If a student looks: Kitamura, S., 1-B.",
+          "key_moment": "Ten seconds. Precisely organised equipment cases, doesn't introduce himself, keeps walking. Name badge faces inward. If a student looks: Hashige, T., 1-B.",
           "dm_dialogue": "If blocked: waits two seconds, moves around with minimum displacement. If addressed: 'Excuse me.' Keeps walking.",
           "trigger": "One brief crossing during the visit."
         }
@@ -394,7 +394,7 @@
       ],
       "class1b_seeds": [
         "A crowd-management civilian recognises a 1-A student from the exam footage. Asked about 1-B: 'Different site. I heard their scores were better in some areas.' No more detail than that.",
-        "Kitamura's corridor crossing. Precision as a personality trait, visible even in ten seconds."
+        "Hashige's corridor crossing. Precision as a personality trait, visible even in ten seconds."
       ]
     }
   ]

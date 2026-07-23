@@ -89,7 +89,7 @@
           "description": "U.A.'s annual Sports Festival. Public, broadcast, massive audience. Full tournament structure: obstacle race → cavalry battle → individual brackets with Class 1-B competing alongside Class 1-A. The 1-A vs 1-B rivalry becomes concrete here for the first time.",
           "beats": [
             "Pre-festival: the class arrives to a stadium already full. Kazama is recognised from the entrance exam footage and loses his composure for about four seconds — long enough for someone to notice his ears go red before the mirror-bright hardening kicks in and hides it.",
-            "Obstacle race: Takazuki wins her heat invisible the whole way — nobody knew she was competing until she crossed the line. Ren places first overall; nobody saw him pass anyone, he was just suddenly at the front. Setaka's iron cannon-balls ricochet through a bottleneck and eliminate four competitors at once, and he apologises to each of them individually afterward. Kinosho places top five in a near-sleep state for most of the course. Morida Takeshi (1-B) places third — the class's first look at him in a competitive context.",
+            "Obstacle race: Zaro wins her heat by portaling ahead through gaps nobody else could see, fog trailing behind her the whole way — nobody realised how far ahead she was until the leaderboard updated. Ren places first overall; nobody saw him pass anyone, he was just suddenly at the front. Setaka's iron cannon-balls ricochet through a bottleneck and eliminate four competitors at once, and he apologises to each of them individually afterward. Kinosho places top five in a near-sleep state for most of the course. Yamaru Todao (1-B) places third — the class's first look at him in a competitive context.",
             "Cavalry battle: alliances form and collapse. Class 1-B's coordination is visibly drilled and slightly alarming to watch. Yoshibara doubles the wrong person at the wrong moment — an opponent already in the lead. This becomes a permanent campaign reference.",
             "Broadcast: the commentary team is unprepared for half the quirks on display. 'What Is She Doing?' about Kinosho trends nationally within twenty minutes. Masahata's ongoing scoring commentary in the waiting room is caught on a spectator's phone and briefly goes viral.",
             "Post-festival: the ranking chart, brought to the festival laminated, doesn't get updated for four days. When asked why: 'The model is broken.' He reprints it anyway."
@@ -98,11 +98,11 @@
             "event_1_obstacle_race": {
               "summary": "All participants, mixed classes. Results seed the individual brackets.",
               "key_moments": [
-                "Takazuki wins her heat invisible the entire race",
+                "Zaro portals through gaps nobody else could see, fog trailing the whole route",
                 "Ren places 1st overall — nobody saw him pass anyone",
                 "Setaka's iron balls ricochet through a bottleneck and eliminate four at once, apologies included",
                 "Kinosho places top 5 in a near-sleep state for most of the course",
-                "Morida Takeshi (1-B) places 3rd — Class 1-A has had his exam score on the fridge chart since week one"
+                "Yamaru Todao (1-B) places 3rd — Class 1-A has had his exam score on the fridge chart since week one"
               ]
             },
             "event_2_cavalry_battle": {
@@ -117,23 +117,23 @@
               "format": "16 competitors, mixed 1-A and 1-B. Top 4 seeded. Single elimination.",
               "seeds": [
                 { "seed": 1, "name": "Ren Suzuki", "class": "1-A", "note": "1st in the obstacle race. The class has been watching him move. Nobody knows what his speed looks like in a direct fight yet." },
-                { "seed": 2, "name": "Morida Takeshi", "class": "1-B", "note": "3rd in the obstacle race. Quiet about being on the fridge chart. Thinking about it too." },
+                { "seed": 2, "name": "Yamaru Todao", "class": "1-B", "note": "3rd in the obstacle race. Quiet about being on the fridge chart. Thinking about it too." },
                 { "seed": 3, "name": "Chozen Tadachi", "class": "1-A", "note": "Placed well across both events despite Stress not being a movement quirk — his obstacle finish was pure discipline." },
-                { "seed": 4, "name": "Ogiwara Bunta", "class": "1-B", "note": "Seismic shockwaves felt across the arena in the cavalry battle. He was in a different quadrant entirely." }
+                { "seed": 4, "name": "Kagamo Akake", "class": "1-B", "note": "Palm Cannon blasts felt across the arena in the cavalry battle. She was in a different quadrant entirely." }
               ],
               "round_1": [
                 {
                   "match": "R1-1",
                   "fighter_a": "Kazama Kenji (1-A)",
-                  "fighter_b": "Habara Jun (1-B, Shell)",
+                  "fighter_b": "Isosato Sari (1-B, Solid Air)",
                   "favored": "Kazama",
-                  "how_it_goes": "Two defense-types make for a slow, technical fight the crowd wasn't primed for. Kazama hardens immediately, Habara raises his own carapace, and for two rounds neither breaks through. Kazama switches to Steel Weapon strikes first and grinds Habara's shell down faster than Habara can return the favor — but it costs him more of his daily hardening uses than any other R1 fight burns.",
+                  "how_it_goes": "A slow, technical fight the crowd wasn't primed for. Kazama hardens immediately and closes; Isosato answers by compressing a wall directly in his path, buying a full round while it solidifies. For two rounds he's grinding through fresh constructs almost as fast as she can raise them. Kazama switches to Steel Weapon strikes and starts timing his hits for the moment a wall is still soft — punching clean through the third one before it sets, and closing the gap before she can raise a fourth.",
                   "winner": "Kazama Kenji",
-                  "dm_note": "Play this as a genuine technical standoff, not a spectacle fight. If PC, let the player feel the grind — damage absorption ticking down on both sides.",
+                  "dm_note": "Play this as a genuine technical standoff, not a spectacle fight. If PC, let the player feel the grind — Isosato's constructs ticking down almost as fast as she raises them, Kazama's hardening uses burning faster than any other R1 fight costs him.",
                   "alternate_outcome": {
-                    "if_winner": "Habara Jun",
-                    "how_it_goes": "Habara's read on his own shell's thin points beats Kazama's slightly-too-early commitment to offense. Round 3, Kazama's shell shatters first.",
-                    "downstream": "Habara advances to QF-3 instead of Kazama. Chozen's escalation curve into QF-3 shifts slightly — he still wins, just quieter.",
+                    "if_winner": "Isosato Sari",
+                    "how_it_goes": "Isosato reads Kazama's timing and starts leaving walls a half-second longer in their soft state on purpose — he commits to a strike that punches through empty air as the real wall solidifies a foot further back than he expected. Round 3, he's boxed into a corridor of his own hardened footprints with nowhere left to charge from.",
+                    "downstream": "Isosato advances to QF-3 instead of Kazama. Chozen's escalation curve into QF-3 shifts slightly — he still wins, just quieter, against someone who never intended to trade damage with him directly.",
                     "dm_note": "Kazama watching from the stands for the rest of the tournament is a real beat. He doesn't leave."
                   }
                 },
@@ -148,8 +148,8 @@
                   "alternate_outcome": {
                     "if_winner": "Toshida Shogoro",
                     "how_it_goes": "His second disruption lands better than either of them expected. Toragi runs out of prepared responses. Toshida wins by surviving to the end of her playbook.",
-                    "downstream": "Toshida advances to QF-2 vs Morida, whose deflection works by feel, not rhythm — sound disruption doesn't touch it. Morida wins QF-2 cleanly.",
-                    "dm_note": "Toragi watching Morida beat Toshida with the same disruption that beat her is worth a beat. She writes something down."
+                    "downstream": "Toshida advances to QF-2 vs Yamaru — a shout can't disrupt something that was never relying on timing to begin with. Yamaru wins QF-2 cleanly.",
+                    "dm_note": "Toragi watching Yamaru beat Toshida with none of the disruption that beat her is worth a beat. She writes something down."
                   }
                 },
                 {
@@ -163,7 +163,7 @@
                   "alternate_outcome": {
                     "if_winner": "Aikawa Sakume",
                     "how_it_goes": "Neutralization needs a targeting window — the right limb, a moment to close. Aikawa's claws are too fast and varied to give her one. Aikawa lands the hit Kinosho didn't expect, because Kinosho's plan assumed a window that never opened.",
-                    "downstream": "Aikawa advances to QF-4 vs Ogiwara. Seismic shockwaves don't care about claws — unstable ground beats her strikes. Ogiwara wins.",
+                    "downstream": "Aikawa advances to QF-4 vs Kagamo. Palm Cannon blasts don't care about claws — ranged force beats her close-in strikes before she can close the gap. Kagamo wins.",
                     "dm_note": "Kinosho watching from the stands afterward is very quiet. She's studying something specific in every subsequent fight."
                   }
                 },
@@ -185,61 +185,61 @@
                 {
                   "match": "R1-5",
                   "fighter_a": "Ren Suzuki (1-A, Seed 1)",
-                  "fighter_b": "Takazuki Hanori (1-A)",
+                  "fighter_b": "Zaro Brando (1-A)",
                   "favored": "Ren",
-                  "how_it_goes": "Takazuki disappears before the opening bell. Ren wins in eleven seconds — he crossed the arena faster than the introduction finished. Her plan assumed her opponent needed to find her first. He didn't look; he just arrived. The crowd replays the footage three times trying to find the contact point.",
+                  "how_it_goes": "Zaro drops a shroud of deep purple fog around herself before the opening bell and puts a portal down at the arena's far edge. Ren wins in eleven seconds — he crossed the arena faster than the introduction finished, arriving at the portal's mouth before she'd finished routing anything through it. Her plan assumed her opponent needed to find the portal first. He didn't look for it; he just arrived. The crowd replays the footage three times trying to find the contact point.",
                   "winner": "Ren Suzuki",
-                  "dm_note": "Run this as a demonstration, not a fight. The class should clock that Takazuki had a real plan and it simply didn't matter — Ren's own private tally of 'things that should have stopped me' gets a new entry he'll never admit counts.",
+                  "dm_note": "Run this as a demonstration, not a fight. The class should clock that Zaro had a real plan and it simply didn't matter — Ren's own private tally of 'things that should have stopped me' gets a new entry he'll never admit counts. Zaro is a PC — if a player is running her, let this be about her plan being sound and the outcome not being humiliating, just outpaced.",
                   "alternate_outcome": {
-                    "if_winner": "Takazuki Hanori",
-                    "how_it_goes": "She stays invisible past the bell. Ren's eleven-second plan assumes a location she isn't at. He overshoots; in the half-second he's reorienting, she lands the hit nobody saw.",
-                    "downstream": "MAJOR UPSET — Ren eliminated Round 1. Takazuki advances to QF-1 vs Izuto, who reads her displacement pattern through air-current tells and wins.",
+                    "if_winner": "Zaro Brando",
+                    "how_it_goes": "She opens a second, closer portal she never announced, and steps through it the instant Ren commits to the first one. Ren's eleven-second plan assumes a location she isn't at anymore. He overshoots; in the half-second he's reorienting, she lands the hit nobody saw coming from behind the fog.",
+                    "downstream": "MAJOR UPSET — Ren eliminated Round 1. Zaro advances to QF-1 vs Izuto, who reads her portal placement through the way the fog thins right before she opens one, and wins.",
                     "dm_note": "The class's reaction to Ren losing matters more than the fight. Masahata does not update the chart for a long time."
                   }
                 },
                 {
                   "match": "R1-6",
-                  "fighter_a": "Morida Takeshi (1-B, Seed 2)",
+                  "fighter_a": "Yamaru Todao (1-B, Seed 2)",
                   "fighter_b": "Yoshibara Hiyoko (1-A)",
-                  "favored": "Morida",
-                  "how_it_goes": "Yoshibara doubles immediately — standard opening. Morida deflects the double's first attack without hesitation: 'Different weight. Clean tell.' She tries four more doubles; he reads every one, then deflects her direct hit too. First definitive 1-B win of the tournament.",
-                  "winner": "Morida Takeshi",
-                  "dm_note": "Yoshibara is genuinely adapting, not being outsmarted stupidly — he's just reading her perfectly. Post-fight, she looks at her hands, nods. Respects it.",
+                  "favored": "Yamaru",
+                  "how_it_goes": "Yoshibara doubles immediately — standard opening, both copies committing to hits at once. Yamaru just takes both. Neither lands anything close to what would actually put him down, and he doesn't bother guessing which one's real before responding to both in turn. She tries four more doubles across three rounds; every hit registers, none of them change the fight. First definitive 1-B win of the tournament, and one of the least dramatic-looking ones.",
+                  "winner": "Yamaru Todao",
+                  "dm_note": "Yoshibara is genuinely doing everything right — the doubling works exactly as designed. It just isn't enough damage against someone whose whole Quirk is absorbing exactly this kind of accumulating pressure. Post-fight, she looks at her hands, shrugs. Respects it more than she expected to.",
                   "alternate_outcome": {
                     "if_winner": "Yoshibara Hiyoko",
-                    "how_it_goes": "She doubles Morida instead of herself. He deflects his own double's attack for three seconds before registering what he's actually deflecting. She hits him from behind mid-confusion.",
-                    "downstream": "Yoshibara advances to QF-2 vs Toragi. Twin Impact doesn't distinguish real from double — it detonates where it's placed. Toragi wins QF-2 cleanly.",
-                    "dm_note": "Morida watching Yoshibara lose to Toragi is a good moment — he sees exactly what beat the doubling and writes her name down next to the note."
+                    "how_it_goes": "She and her double land enough consecutive hits, fast enough, that Yamaru's hidden threshold gets crossed before either of them realises how close it was — he goes down suddenly, mid-sentence, with no visible warning beforehand.",
+                    "downstream": "Yoshibara advances to QF-2 vs Toragi. Twin Impact doesn't care how much punishment an opponent can already absorb — it detonates where it's placed. Toragi wins QF-2 cleanly.",
+                    "dm_note": "Yamaru watching Yoshibara lose to Toragi afterward, from the stands, entirely unbothered — he clocks exactly what beat him and files it away without comment."
                   }
                 },
                 {
                   "match": "R1-7",
                   "fighter_a": "Chozen Tadachi (1-A, Seed 3)",
-                  "fighter_b": "Kitamura Sora (1-B, Wire)",
-                  "favored": "Kitamura (tactically)",
-                  "how_it_goes": "Kitamura's wire network is up in four seconds — full coverage, every movement tracked, the same technique that caught Takazuki in the obstacle race. Chozen isn't invisible and isn't trying to evade — he's simply already absorbed two rounds of solid hits from a tournament fight, and his Stress percentage is climbing off real accumulated damage, not nerves. Round 2, Kitamura has to choose between holding the network or getting clear; he holds. Chozen walks through it anyway — the damage he's already banked from landing blows is enough on its own. The wires register contact. Kitamura loses a tactically sound fight because the math changed mid-fight.",
+                  "fighter_b": "Hashige Tataka (1-B, Metal Manipulation)",
+                  "favored": "Hashige (tactically)",
+                  "how_it_goes": "Hashige reshapes the arena's scattered metal fixtures into a full restraining lattice in four seconds — every movement tracked, a wall raised, a set of cuffs half-formed and waiting. Chozen isn't trying to evade any of it — he's simply already absorbed two rounds of solid hits from a tournament fight, and his Stress percentage is climbing off real accumulated damage, not nerves. Round 2, Hashige has to choose between holding the lattice or getting clear; he holds. Chozen walks through it anyway — the damage he's already banked from landing blows is enough on its own. The restraints register contact and buckle. Hashige loses a tactically sound fight because the math changed mid-fight.",
                   "winner": "Chozen Tadachi",
-                  "dm_note": "Kitamura didn't make a mistake — acknowledge that in the commentary. Chozen's rising damage percentage is the variable her model didn't have room for. If PC, this is banked damage becoming a resource, not stress-as-vibes.",
+                  "dm_note": "Hashige didn't make a mistake — acknowledge that in the commentary. Chozen's rising damage percentage is the variable his model didn't have room for. If PC, this is banked damage becoming a resource, not stress-as-vibes.",
                   "alternate_outcome": {
-                    "if_winner": "Kitamura Sora",
-                    "how_it_goes": "This is only Chozen's first fight of the day — his Stress percentage hasn't had time to build from actual damage taken yet. The network maps him completely before he's banked enough hits to break through it.",
-                    "downstream": "Kitamura advances to QF-3 vs Kazama. Her tension-detection is built for evasive fighters, not someone who hardens and walks straight through the lines. Kazama wins, wires snapping audibly.",
-                    "dm_note": "Chozen watching Kitamura's technique from the stands afterward — cataloguing, not sulking."
+                    "if_winner": "Hashige Tataka",
+                    "how_it_goes": "This is only Chozen's first fight of the day — his Stress percentage hasn't had time to build from actual damage taken yet. The lattice locks him down completely before he's banked enough hits to break through it.",
+                    "downstream": "Hashige advances to QF-3 vs Kazama. His metal control is built to restrain evasive fighters, not someone who hardens and simply walks through the lines. Kazama wins, the restraints snapping audibly.",
+                    "dm_note": "Chozen watching Hashige's technique from the stands afterward — cataloguing, not sulking."
                   }
                 },
                 {
                   "match": "R1-8",
-                  "fighter_a": "Ogiwara Bunta (1-B, Seed 4)",
-                  "fighter_b": "Yashiro (1-B, Teleport)",
-                  "favored": "Ogiwara",
-                  "how_it_goes": "Yashiro teleports to a safe position; Ogiwara's first shockwave hits the whole arena floor at once. She teleports again; the second wave tells her there are no safe positions left. She thinks about it for a genuine moment, then raises her hand. Ogiwara looks mildly disappointed it ended there.",
-                  "winner": "Ogiwara Bunta",
-                  "dm_note": "Yashiro's pause before surrendering is doing the math, not giving up. Ogiwara wanted a harder problem.",
+                  "fighter_a": "Kagamo Akake (1-B, Seed 4)",
+                  "fighter_b": "Domoto Fumiju (1-B, Rabbit)",
+                  "favored": "Kagamo",
+                  "how_it_goes": "Domoto kicks off to a safe position on the far side of the arena; Kagamo's first Palm Cannon blast hits the whole quadrant at once. Domoto bursts again to a new landing spot; the second blast tells her there are no safe landing spots left in range. She thinks about it for a genuine moment, then raises her hand. Kagamo looks mildly disappointed it ended there.",
+                  "winner": "Kagamo Akake",
+                  "dm_note": "Domoto's pause before surrendering is doing the math, not giving up. Kagamo wanted a harder problem.",
                   "alternate_outcome": {
-                    "if_winner": "Yashiro",
-                    "how_it_goes": "She reads the third wave's pulse pattern and teleports directly into Ogiwara's personal space instead of away from it — too close for a shockwave to aim. Neither of them planned for close range. She wins on improvisation, visibly bewildered by her own success.",
-                    "downstream": "Yashiro advances to QF-4 vs Kinosho, who simply deactivates the teleport mid-arc. Kinosho wins.",
-                    "dm_note": "Ogiwara watching Kinosho work is a quiet beat — genuinely curious, not sore about the loss."
+                    "if_winner": "Domoto Fumiju",
+                    "how_it_goes": "She reads the third blast's wind-up and kicks off directly into Kagamo's personal space instead of away from it — too close for a Palm Cannon to aim properly. Neither of them planned for close range. She wins on improvisation, visibly bewildered by her own success.",
+                    "downstream": "Domoto advances to QF-4 vs Kinosho, who simply deactivates the Rabbit Quirk's burst mid-jump. Kinosho wins.",
+                    "dm_note": "Kagamo watching Kinosho work is a quiet beat — genuinely curious, not sore about the loss."
                   }
                 }
               ],
@@ -248,7 +248,7 @@
                   "match": "QF-1",
                   "fighter_a": "Ren Suzuki (1-A, Seed 1)",
                   "fighter_b": "Izuto Kutsu (1-A)",
-                  "note": "Fighter B is whoever won R1-4 (default Izuto; Ando if alt R1-4; Takazuki takes the slot if she upset Ren in R1-5, in which case fighter A becomes Takazuki)",
+                  "note": "Fighter B is whoever won R1-4 (default Izuto; Ando if alt R1-4; Zaro takes the slot if she upset Ren in R1-5, in which case fighter A becomes Zaro)",
                   "favored": "Ren",
                   "how_it_goes": "The fastest fight of the tournament. Izuto has been clocking Ren's movement since the entrance exam and built a three-move plan; he gets through two. Ren wins. Izuto is already thinking about the third move he didn't land — the same methodical instinct he uses maintaining his own leg components.",
                   "winner": "Ren Suzuki",
@@ -262,17 +262,17 @@
                 },
                 {
                   "match": "QF-2",
-                  "fighter_a": "Morida Takeshi (1-B, Seed 2)",
+                  "fighter_a": "Yamaru Todao (1-B, Seed 2)",
                   "fighter_b": "Toragi Kayo (1-A)",
-                  "note": "Fighter B is whoever won R1-2 (default Toragi; Toshida if alt R1-2). Fighter A is whoever won R1-6 (default Morida; Yoshibara if alt R1-6)",
-                  "favored": "Morida (slight)",
-                  "how_it_goes": "Best fight of the quarterfinals. Morida disrupts the timing on Toragi's first Twin Impact — the delayed detonation breaks. Nobody has done this to her before. She adjusts; the second Impact lands. Both fighters are satisfied with the result in a way that's unusual for a tournament.",
+                  "note": "Fighter B is whoever won R1-2 (default Toragi; Toshida if alt R1-2). Fighter A is whoever won R1-6 (default Yamaru; Yoshibara if alt R1-6)",
+                  "favored": "Toragi (slight)",
+                  "how_it_goes": "Best fight of the quarterfinals. Toragi's first Twin Impact lands clean — full detonation, textbook placement. Nobody's shrugged it off like this before. She adjusts, escalates, lands a second and a third. Yamaru is still standing. By the fourth exchange the crowd has stopped waiting for him to go down and started waiting to find out if he can.",
                   "winner": "Toragi Kayo",
-                  "dm_note": "Post-fight: Morida approaches. 'Your Impact timing — I disrupted it once. That's the only time anyone's managed it.' 'I know.' He nods. The beginning of mutual respect.",
+                  "dm_note": "Toragi's technique is genuinely flawless here — this isn't a fight she loses through error, it's a fight Yamaru survives through sheer accumulated threshold, right up until he doesn't. Post-fight: Yamaru approaches. 'Your Impact timing. Never seen anyone land four clean.' 'I know.' He nods. The beginning of mutual respect.",
                   "alternate_outcome": {
-                    "if_winner": "Morida Takeshi",
-                    "how_it_goes": "Morida disrupts the follow-through mechanics of her adjustment too, not just the initial timing. She runs out of prepared variants. Morida wins the best fight of the quarterfinals.",
-                    "downstream": "Morida advances to SF-1 vs Ren, who's too fast for reliable deflection contact and wins on the third exchange.",
+                    "if_winner": "Yamaru Todao",
+                    "how_it_goes": "Toragi's fourth Impact is the one meant to finally close it out — it lands exactly where she wants. Yamaru's threshold holds by a margin neither of them can see from the outside. He's still standing when she runs out of prepared follow-ups.",
+                    "downstream": "Yamaru advances to SF-1 vs Ren, who's too fast for a straightforward war of attrition and wins on pure speed before Yamaru's endurance becomes relevant.",
                     "dm_note": "The class watching a 1-B student reach the final matters for the rivalry dynamic. Masahata's chart has been updated three times by now."
                   }
                 },
@@ -280,7 +280,7 @@
                   "match": "QF-3",
                   "fighter_a": "Chozen Tadachi (1-A, Seed 3)",
                   "fighter_b": "Kazama Kenji (1-A)",
-                  "note": "Fighter A is whoever won R1-7 (default Chozen; Kitamura if alt R1-7). Fighter B is whoever won R1-1 (default Kazama; Habara Jun if alt R1-1)",
+                  "note": "Fighter A is whoever won R1-7 (default Chozen; Hashige if alt R1-7). Fighter B is whoever won R1-1 (default Kazama; Isosato if alt R1-1)",
                   "favored": "50/50 — most dramatic QF fight",
                   "how_it_goes": "Kazama does exactly what Steel wants — close, harden, trade. But every exchange he lands and takes both feed Chozen's rising damage percentage the same way any accumulating hit would; there's no range to retreat to the way a blaster could use. By round 4, Chozen is hitting harder than Kazama's shell was built to take in one sitting. Steel shatters two rounds earlier than Kazama expected.",
                   "winner": "Chozen Tadachi",
@@ -294,17 +294,17 @@
                 },
                 {
                   "match": "QF-4",
-                  "fighter_a": "Ogiwara Bunta (1-B, Seed 4)",
+                  "fighter_a": "Kagamo Akake (1-B, Seed 4)",
                   "fighter_b": "Kinosho Kochimiko (1-A)",
-                  "note": "Fighter A is whoever won R1-8 (default Ogiwara; Yashiro if alt R1-8). Fighter B is whoever won R1-3 (default Kinosho; Aikawa if alt R1-3)",
-                  "favored": "Ogiwara",
-                  "how_it_goes": "Ogiwara's shockwaves are structural — Neutralization can't deactivate something already moving through the ground. Her first plan fails visibly. Her second plan is assembling something from arena debris mid-fight; Ogiwara ends up briefly suspended by a contraption she built in forty seconds. She doesn't have a construction quirk. Nobody asks how she did it.",
+                  "note": "Fighter A is whoever won R1-8 (default Kagamo; Domoto if alt R1-8). Fighter B is whoever won R1-3 (default Kinosho; Aikawa if alt R1-3)",
+                  "favored": "Kagamo",
+                  "how_it_goes": "Kagamo's blasts are pure kinetic force at range — Neutralization can't deactivate something that's already left her hands as displaced air. Her first plan fails visibly. Her second plan is assembling something from arena debris mid-fight; Kagamo ends up briefly airborne, caught by a contraption Kinosho built in forty seconds. She doesn't have a construction quirk. Nobody asks how she did it.",
                   "winner": "Kinosho Kochimiko",
-                  "dm_note": "Ogiwara afterward: 'I don't know what she did.' Genuinely interested, not embarrassed.",
+                  "dm_note": "Kagamo afterward: 'I don't know what she did.' Genuinely interested, not embarrassed.",
                   "alternate_outcome": {
-                    "if_winner": "Ogiwara Bunta",
-                    "how_it_goes": "Kinosho's contraption holds for thirty seconds; his second shockwave dismantles it from underneath before the third component locks in. She concedes.",
-                    "downstream": "Ogiwara advances to SF-2 vs Chozen (or Kazama). Against Chozen, the arena chaos and accumulated fight damage feed his escalation and he wins. Against Kazama, seismic instability beats Steel's footing and Ogiwara wins.",
+                    "if_winner": "Kagamo Akake",
+                    "how_it_goes": "Kinosho's contraption holds for thirty seconds; a second Palm Cannon blast dismantles it from underneath before the third component locks in. She concedes.",
+                    "downstream": "Kagamo advances to SF-2 vs Chozen (or Kazama). Against Chozen, the arena chaos and accumulated fight damage feed his escalation and he wins. Against Kazama, her blasts keep breaking his footing before Steel Weapon can close the gap, and Kagamo wins.",
                     "dm_note": "'What Is She Doing?' never airs a second segment. The silence where it would've been is its own thing."
                   }
                 }
@@ -371,11 +371,11 @@
                 }
               },
               "post_tournament_moments": [
-                "Morida finds Toragi after QF-2. 'Your Impact timing — I disrupted it once.' 'I know.' Both write it down.",
+                "Yamaru finds Toragi after QF-2. 'Your Impact timing. Never seen anyone land four clean.' 'I know.' Both write it down.",
                 "Ren finds Toragi after SF-1. 'The second hit.' 'Yes.' He thinks about it for the rest of the campaign.",
-                "Kazama's stalemate against Habara in R1-1 becomes the slowest, most talked-about fight of the day. Someone sends him a photo of the two of them locked mid-fight. He never shows it to anyone.",
+                "Kazama's stalemate against Isosato in R1-1 becomes the slowest, most talked-about fight of the day. Someone sends him a photo of the two of them locked mid-fight, a half-solidified wall between them. He never shows it to anyone.",
                 "'What Is She Doing?' about Kinosho airs twice. She watches both replays alone in the waiting room, satisfied.",
-                "Ogiwara, after losing to Kinosho: 'I don't know what she did.' Genuinely interested. Masahata writes it down immediately.",
+                "Kagamo, after losing to Kinosho: 'I don't know what she did.' Genuinely interested. Masahata writes it down immediately.",
                 "The ranking chart — brought to the festival laminated — doesn't get updated for four days. 'The model is broken.' He reprints it anyway."
               ]
             }

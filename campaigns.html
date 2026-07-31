@@ -160,7 +160,14 @@
   .callout-dm .callout-label { color: var(--gold-text); }
   .callout-aside { background: rgba(122,32,32,0.08); border-left: 3px solid var(--mod-heading); }
   .callout-aside .callout-label { color: var(--mod-heading); }
+  .callout-developments { background: var(--mod-bg3); border-left: 3px solid var(--mod-ink-muted); }
+  .callout-developments .callout-label { color: var(--mod-ink-muted); }
+  .callout-treasure { background: rgba(29,158,117,0.10); border-left: 3px solid var(--teal); }
+  .callout-treasure .callout-label { color: var(--teal-text); }
   .callout-closing { background: var(--mod-bg2); border: 1px solid var(--mod-border); border-left: 4px solid var(--mod-heading); margin-top: 22px; }
+  .callout-milestone { background: rgba(184,134,11,0.14); border: 1px solid var(--gold); text-align: center; margin-top: 14px; }
+  .callout-milestone .callout-label { justify-content: center; color: var(--gold-text); }
+  .callout-milestone p { margin-bottom: 0; font-weight: 700; }
 
   .section-block { margin-top: 20px; }
   .section-heading-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid var(--mod-border); padding-bottom: 4px; margin-bottom: 8px; }
@@ -384,6 +391,7 @@ function submitNewChapter(campId) {
     estimate: document.getElementById('f-ch-estimate').value.trim(),
     intro: document.getElementById('f-ch-intro').value.trim(),
     dmNote: document.getElementById('f-ch-dmnote').value.trim(),
+    milestone: document.getElementById('f-ch-milestone').value.trim(),
     sections: [],
   });
   openEditId = null;
@@ -398,6 +406,7 @@ function updateChapter(campId, chId) {
   ch.estimate = document.getElementById('f-ch-estimate').value.trim();
   ch.intro = document.getElementById('f-ch-intro').value.trim();
   ch.dmNote = document.getElementById('f-ch-dmnote').value.trim();
+  ch.milestone = document.getElementById('f-ch-milestone').value.trim();
   openEditId = null;
   saveCampaigns();
   render();
@@ -436,6 +445,8 @@ function submitNewSection(campId, chId) {
     type: document.getElementById('f-sec-type').value,
     readAloud: document.getElementById('f-sec-readaloud').value.trim(),
     body: document.getElementById('f-sec-body').value.trim(),
+    developments: document.getElementById('f-sec-developments').value.trim(),
+    treasure: document.getElementById('f-sec-treasure').value.trim(),
     dmNote: document.getElementById('f-sec-dmnote').value.trim(),
     aside: (document.getElementById('f-sec-aside-label').value.trim() || document.getElementById('f-sec-aside-body').value.trim())
       ? { label: document.getElementById('f-sec-aside-label').value.trim() || 'Note', body: document.getElementById('f-sec-aside-body').value.trim() }
@@ -453,6 +464,8 @@ function updateSection(campId, chId, secId) {
   s.type = document.getElementById('f-sec-type').value;
   s.readAloud = document.getElementById('f-sec-readaloud').value.trim();
   s.body = document.getElementById('f-sec-body').value.trim();
+  s.developments = document.getElementById('f-sec-developments').value.trim();
+  s.treasure = document.getElementById('f-sec-treasure').value.trim();
   s.dmNote = document.getElementById('f-sec-dmnote').value.trim();
   const aLabel = document.getElementById('f-sec-aside-label').value.trim();
   const aBody = document.getElementById('f-sec-aside-body').value.trim();
@@ -762,6 +775,9 @@ function renderChapter(c, ch, idx, total) {
   if (ch.closing?.body) {
     html += `<div class="callout callout-closing"><div class="callout-label">${escHtml(ch.closing.label||'Closing Note')}</div>${renderProse(ch.closing.body)}</div>`;
   }
+  if (ch.milestone) {
+    html += `<div class="callout callout-milestone"><div class="callout-label">🏅 Milestone</div>${renderProse(ch.milestone)}</div>`;
+  }
   html += `</div>`;
   return html;
 }
@@ -779,6 +795,8 @@ function chapterEditFormHtml(campId, ch) {
     <textarea class="edit-textarea" id="f-ch-intro" placeholder="What this chapter is about, and how it should feel.">${escHtml(ch?.intro||'')}</textarea>
     <div class="edit-label">DM at a glance (optional)</div>
     <textarea class="edit-textarea" id="f-ch-dmnote" placeholder="Running notes for the table.">${escHtml(ch?.dmNote||'')}</textarea>
+    <div class="edit-label">Milestone (optional — shown at the end of the chapter)</div>
+    <input class="edit-input" id="f-ch-milestone" type="text" value="${escHtml(ch?.milestone||'')}" placeholder="e.g. Reaching Shadowgrange completes a story milestone — Level 2!">
     <div class="form-actions">
       <button class="mini-btn" onclick="${action}">✓ Save Chapter</button>
       <button class="mini-btn ghost" onclick="closeEdit()">Cancel</button>
@@ -803,6 +821,8 @@ function renderSection(c, ch, s, idx, total) {
     </div>`;
   if (s.readAloud) html += `<div class="callout callout-readaloud"><div class="callout-label">📖 Read Aloud</div>${renderProse(s.readAloud)}</div>`;
   if (s.body) html += `<div class="prose">${renderProse(s.body)}</div>`;
+  if (s.developments) html += `<div class="callout callout-developments"><div class="callout-label">🔀 Developments</div>${renderProse(s.developments)}</div>`;
+  if (s.treasure) html += `<div class="callout callout-treasure"><div class="callout-label">💰 Treasure</div>${renderProse(s.treasure)}</div>`;
   if (s.dmNote) html += `<div class="callout callout-dm"><div class="callout-label">🎲 DM Note</div>${renderProse(s.dmNote)}</div>`;
   if (s.aside?.body) html += `<div class="callout callout-aside"><div class="callout-label">${escHtml(s.aside.label||'Note')}</div>${renderProse(s.aside.body)}</div>`;
   html += `<div class="mini-row edit-only section-controls">
@@ -828,6 +848,10 @@ function sectionEditFormHtml(campId, chId, s) {
     <textarea class="edit-textarea" id="f-sec-readaloud" placeholder="Scene-setting text to read or paraphrase to players.">${escHtml(s?.readAloud||'')}</textarea>
     <div class="edit-label">Body</div>
     <textarea class="edit-textarea" id="f-sec-body" style="min-height:140px;" placeholder="Beats, details, whatever this subheading needs. Blank line = new paragraph; lines starting with • become a bulleted list.">${escHtml(s?.body||'')}</textarea>
+    <div class="edit-label">Developments (optional — what happens as a result of player choices)</div>
+    <textarea class="edit-textarea" id="f-sec-developments" placeholder="Branches, consequences, what changes based on what the players did.">${escHtml(s?.developments||'')}</textarea>
+    <div class="edit-label">Treasure (optional)</div>
+    <textarea class="edit-textarea" id="f-sec-treasure" placeholder="Loot, gear, favors, or recognition earned here.">${escHtml(s?.treasure||'')}</textarea>
     <div class="edit-label">DM note (optional)</div>
     <textarea class="edit-textarea" id="f-sec-dmnote" placeholder="Guidance for running this, not meant to be read aloud.">${escHtml(s?.dmNote||'')}</textarea>
     <div class="edit-label">Extra callout (optional — e.g. villain threads, foreshadowing)</div>

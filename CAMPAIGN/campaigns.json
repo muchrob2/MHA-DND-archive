@@ -28,6 +28,26 @@
           "heading": "Student Life",
           "body": "The backbone of the campaign between dramatic arcs. Cooking arguments, study chaos, dorm drama, class rivalries, gossip about who likes who, culture festival disasters, sports festival tensions. This is as important as the combat.\n\n• Toshida Shogoro's speech bubble head makes doorways a recurring hazard\n• Zaro Brando keeps a protective shroud of purple fog around herself, and it occasionally swallows small objects she's holding — they turn up in odd places whenever a portal she forgot about finally closes\n• Nakaya Emari has accidentally short-circuited several pieces of common room electronics and refuses to apologise\n• Masahata Shikoji maintains a printed personal ranking chart on the common room fridge that everyone else ignores\n• Kinosho Kochimiko has the best strategic mind in the class and uses it exclusively to find the optimal napping location\n\nRivalries — Ando Iorai and Toragi Kayo both think they're the most dangerous person in the room. They are not. The most dangerous person in the room is usually Chozen Tadachi, who is currently staring at a wall.\n\nFriendships — Kibi Kankei and Isokono Yoromu have an unspoken alliance based on being the most laid-back people in a class full of very intense personalities. Yoshibara Hiyoko's chaotic energy pairs oddly well with Nomi Igisa's quietness — they are somehow best friends.",
           "id": "bg-9jr7a2"
+        },
+        {
+          "id": "bg-kl7jxc",
+          "heading": "Running This Season",
+          "body": "Class 1-A — Season 1 is written for milestone leveling, not tracked XP: the class starts Season 1 at Level 1 and reaches Level 3 by the end of Chapter 1, then Level 6 by the end of Chapter 2 — the milestone moment is called out at the close of each chapter below. Don't award levels encounter-by-encounter; these are big, ensemble scenes and the pacing is built around chapter breaks, not individual fights.\n\nThis campaign assumes a full-ensemble table: most or all twenty named Class 1-A students exist in the fiction, with a handful of players each controlling one PC and the DM running the rest as a live, reactive cast — that's how every chapter's beats are written, named students doing named things whether or not a player happens to be behind them that session. If your table is smaller, let players double up on secondary students in scenes their own PC isn't central to, rather than trimming the roster down. The ensemble texture — Masahata's chart, the 1-A/1-B rivalry, twenty specific people finding out what they're like under pressure — is a deliberate feature of this campaign, not incidental color.\n\nFor combat-adjacent encounters (the Entrance Exam's drone boss, the Agency Visit's Ruin Grunts, Convergence's three-way mess), scale enemy count and HP to your actual number of seated players rather than to the fictional headcount of the class — a scene can be narratively full of twenty students in chaos while remaining mechanically sized for four to six PCs at the table."
+        },
+        {
+          "id": "bg-5jvh3i",
+          "heading": "The Season's Throughline",
+          "body": "Ruin has run Kurogane Wharf for years, comfortably, because nobody with real power has ever needed to look at it closely. Six named members, no departments, and at the top of it a name — Undertow — that the Hero Commission's own dossier can't confirm as more than a rumor repeated by street-level operatives too scared to be specific. That absence of a face is the engine of this whole season: everyone the class meets who works for Ruin is competent, specific, and only loosely coordinated with everyone else who works for Ruin, because Undertow runs it the way water finds the shape of a container — pressure, not structure.\n\nKuma is the visible edge: loud, physical, a logistics problem the class can actually solve, and by design the season's one clean win. Splice is the quieter problem underneath him — Ruin's research arm, working for a separate interior party (Null) who wants combat and quirk-activation data more than she wants territory, and who has been collecting exactly that data on Class 1-A since the entrance exam's unmarked drone. Neither Kuma nor Splice is working toward the same goal, and neither is fully aware how little the other knows — which is itself the shape of how Undertow prefers to run things.\n\nFracture is not Ruin, and that distinction matters more than anything else in this season's back half. Shard's grievance is real, and when she makes her case to the class directly in The Fracture Problem, at least two of her specific points should land without a clean rebuttal available. What she doesn't know — and what the class shouldn't be handed outright either — is that a meaningful share of Fracture's operating money traces back to Ruin, laundered clean enough that even Shard's own leadership hasn't connected it. Ruin funds the exact movement that gives it moral cover and political noise to hide inside, and Fracture has no idea it's being used this way. Convergence is the one night all three threads occupy the same physical space — Kuma's operation, Null's extraction, Fracture's own sabotage crew — with no coordination between any of them, which is exactly why it goes as chaotically as it does.\n\nUndertow's single appearance, at the very end of Convergence, is not a fight and was never supposed to be. He is a shape that stands up out of standing water, watches the class for exactly as long as it takes to form an opinion, says four words, and leaves through a drain. Season 1 should end with the class certain they can handle Ruin's people, and considerably less certain what to do about the man running it — or the movement quietly bankrolling itself off his money without knowing it. That uncertainty is the real cliffhanger, not a bigger fight waiting next season."
+        },
+        {
+          "id": "bg-f2h43z",
+          "heading": "Overview",
+          "body": "Class 1-A — Season 1 unfolds across two chapters.\n\nIn Chapter 1, \"Welcome to U.A.,\" the class survives the entrance exam, moves into Heights Alliance, and takes its first low-stakes field assignment at Patchwork Agency in Kurogane Wharf — where Ruin stops being a name on the news and becomes something they've stood next to. Fracture is present only as texture here: graffiti, a leaflet, a symbol scratched in concrete, never yet a name attached.\n\nIn Chapter 2, \"Getting Good,\" the Sports Festival gives the whole class — and the 1-A/1-B rivalry — its first real public stage, before The Fracture Problem forces a harder, less winnable conversation about who the licensing system actually serves. The season closes with Convergence: Ruin's own operation, one of Null's extraction teams, and a Fracture sabotage crew colliding in the same Kurogane Wharf warehouse on the same night, followed by the season's only direct look at Undertow himself — watching, unbothered, gone before anyone can follow."
+        },
+        {
+          "id": "bg-ku9pr9",
+          "heading": "Adventure Hooks",
+          "body": "Not every table runs Class 1-A — Season 1 with the same students in the spotlight every session. Roll a d8 (or just pick) whenever you want to hand a personal thread to whichever student a player is running that night — new to the table, returning after time away, or simply due for a spotlight beat.\n\n• 1 — Family in Kurogane Wharf. Someone in your family still lives or works near the Wharf. You've told nobody at U.A. this. You notice things there other students don't.\n• 2 — You were at the Agency Visit and clocked Splice yourself. You never mentioned it out loud, and you've been quietly watching for the same slim tablet since.\n• 3 — Masahata's ranking chart bothers you more than you'll admit. You have a specific, private opinion about where you belong on it, and this arc is a chance to prove it wrong.\n• 4 — You've seen the Fracture symbol before U.A. — somewhere in your own neighborhood, years ago, long before it had a name. You've never told anyone.\n• 5 — Oshiro pulled you aside once, briefly, and said something that's stuck with you since — vague enough to mean several things, specific enough that you've never forgotten the exact words.\n• 6 — You have a sibling, cousin, or childhood friend on a provisional license track at a different school, and you compare notes. They've mentioned hearing the name \"Undertow\" somewhere you haven't.\n• 7 — Something about a classmate's quirk — Kinosho's Neutralization, Chozen's Stress, or another — quietly unsettles you, for a personal reason you haven't examined closely. This arc is going to make you examine it.\n• 8 — You genuinely believe the ranking chart, the Sports Festival, all of it, is the whole point of being here — being seen, being ranked, being chosen. Convergence is going to complicate that belief badly."
         }
       ],
       "chapters": [
@@ -51,7 +71,9 @@
               "aside": {
                 "label": "Villain Threads",
                 "body": "Fracture — Graffiti on the arena's exterior wall during student arrival: 'HEROES SERVE COMMISSIONS, NOT COMMUNITIES' in the jagged-line Fracture style. Weathered enough to have been there for weeks. Nobody on the exam staff comments on it.\n\nNull Signal — A compact black drone with no UA markings logged the exam from the upper observation tier. The exam team assumed it was another faculty member's equipment. It was not in the manifest. No footage was flagged.\n\nThe Chain — Absent from direct play. A single offhand comment from an agency worker at the venue gates: 'Avoid Kurogane Wharf after dark this week. Ruin's been busy lately.' Said the way you'd mention traffic. Nobody asks a follow-up question."
-              }
+              },
+              "developments": "If the class works the drone boss as a coordinated problem rather than a scramble, note it — this is the first real data point for who instinctively defers to whom under pressure, and it colors how Masahata's ranking chart gets read later. If several students go down before the drone is handled, that's fine too; Recovery Girl handles injuries offscreen and nobody's provisional status is at risk from a rough first day. Either way, the class passes collectively — individual placement only matters socially, not mechanically.",
+              "treasure": "No physical loot from an exam, but real: provisional standing at U.A., a bunk in Heights Alliance, and the first entry on Masahata's ranking chart — which several students will spend the rest of the season pretending not to care about."
             },
             {
               "id": "sec-poloz4",
@@ -64,7 +86,9 @@
               "aside": {
                 "label": "Villain Threads",
                 "body": "Fracture — A leaflet appears under a dorm door on day three. Black print, spare design, jagged-line symbol. 'Your quirk is yours — not your license.' Someone pushed it through. Nobody saw who.\n\nNull Signal — If any student explores Hamagawa's open-door office in the evening, a monitor in standby shows a file header before the screensaver kicks in: 'Provisional License Cohort Data — External Access Request, Ref: SA/7-91.' Requesting party: 'Seika Advanced Systems.' The file is already closed when they look.\n\nThe Chain — The common room TV runs news in the background one evening. Kurogane Wharf. A small support agency for unlicensed quirk users has closed 'due to changing neighbourhood conditions.' The report is twelve seconds long."
-              }
+              },
+              "developments": "Capture the Flag's final score matters less than who it reveals: track which pairings surprised each other, since Oshiro deliberately built the bracket to manufacture exactly those data points. Whatever the result, this is the session where the class stops being twenty strangers and starts being readable to each other — and to you, as the DM.",
+              "treasure": "A dorm room in Heights Alliance, a place at the common-room table, and — for whoever loses most memorably in Capture the Flag — a nickname that will not go away."
             },
             {
               "id": "sec-pdyec2",
@@ -77,13 +101,16 @@
               "aside": {
                 "label": "Villain Threads",
                 "body": "The Chain — The Hardskin has a chain-link tattoo visible on DC 15 Perception during the fight, DC 12 on a subdued target. His fear of being identified is disproportionate for a low-level criminal caught by student heroes. That gap is the important data. Patchwork says 'affiliated' once and doesn't elaborate.\n\nNull Signal — Ryo Karashi ('Splice') appears in a corridor inside Patchwork Agency. Visitor badge: 'Seika Consulting — Dr. R. Karashi.' Slim tablet, unhurried, claims wrong floor. If stopped: warm, apologetic, gives nothing away. The tablet, if glimpsed, shows a student photo grid — the class's entrance exam publicity shots. He is gone in thirty seconds.\n\nFracture — The Fracture jagged-line symbol is scratched into the concrete of the alley wall behind where the Ruin Hardskin was standing. Old enough to be weathered — months, not weeks. Not a message placed for today. A marker. Someone was using this alley before Ruin was."
-              }
+              },
+              "developments": "If the class intervenes against the Ruin Grunts and Hardskin immediately, the confrontation resolves faster, with more direct (if brief) villain contact and less time for Splice to linger unnoticed. If they wait for Patchwork, the fight is safer but the Hardskin has more time to consider running, and Patchwork has to explain afterward why she let it develop that far. Either choice is correct and should be validated, not graded.",
+              "treasure": "Patchwork's private contact number (\"for real questions, not homework\"), a Kurogane Wharf incident report with the class's name properly logged, and — quietly, unseen by the players until it matters — a line in Ruin's own internal notes confirming Class 1-A now exists on their radar."
             }
           ],
           "closing": {
             "label": "Villain Presence — Chapter 1",
             "body": "Ruin is background texture in Tier 1. Its street-level side is the most visible — one direct encounter with low-tier operatives, planted through a pro hero's offhand comment. Its research side is glimpsed twice: the unmarked exam drone, Splice's thirty-second corridor appearance. Fracture — a separate movement — is found rather than encountered: graffiti, a leaflet, a symbol scratched in concrete. Nobody from Ruin has spoken to the class directly yet, and Undertow himself hasn't shown his face to anyone — that starts in Tier 2."
-          }
+          },
+          "milestone": "Completing Chapter 1 is a story milestone — the class reaches Level 3."
         },
         {
           "id": "ch-2jnpr7",
@@ -105,7 +132,9 @@
               "aside": {
                 "label": "Villain Threads",
                 "body": "All Factions — Ruin is watching the Sports Festival broadcast like the rest of Tokyo. Null is collecting comprehensive quirk activation data — better footage than the exam drone captured. Fracture, completely separately, is watching because the festival represents exactly the system they oppose: licensed quirk use as public spectacle. Undertow watches Chozen's final with specific interest — the only person in Tokyo tracking both angles at once. None of this is visible to the class."
-              }
+              },
+              "developments": "The full bracket (see the Campaign Overview page) already branches every match with an alternate outcome designed to reroute cleanly into later seeding — use those. The one developmental thread worth tracking regardless of who wins what: how the class reacts to a 1-B upset (Yamaru advancing) versus a clean 1-A sweep. That reaction carries into the rivalry going forward more than the bracket result itself does.",
+              "treasure": "Tournament placement (broadcast nationally), a small stipend for top performers, and the single most valuable thing on offer: public visibility. Whatever a PC's placement, professional agencies now know their name — this is what unlocks meaningful internship offers later in the season and beyond."
             },
             {
               "id": "sec-gnwpsx",
@@ -118,7 +147,9 @@
               "aside": {
                 "label": "Villain Threads",
                 "body": "Fracture — Shard and Voltage are fully visible — named, confronted, argued with. The class knows who they are now. What the class does with Shard's arguments is the open question they carry into the finale.\n\nNull Signal — Splice's photographic operation in the crowd. Ruin now has comprehensive quirk-activation footage of every PC under stress conditions. Whether the class noticed him determines how much warning they have.\n\nThe Chain — Shard mentions once that the Commission ignored Ruin's Kurogane Wharf operation for eighteen months. She has documentation. She doesn't share it today. She knows the class was at Patchwork Agency — she has sources in the neighbourhood."
-              }
+              },
+              "developments": "How the class responds to Voltage's intervention — arrest, stand down, argue, or quietly let it go — is this arc's real branch point, and it should follow the party into Convergence: whether Shard considers them worth warning if things go bad on the roof. There's no mechanically \"correct\" response here; track it as relationship, not score.",
+              "treasure": "No loot in the usual sense — the actual reward is information nobody can act on cleanly yet: Shard's name, Voltage's face, and a set of arguments about the licensing system that at least one PC should be quietly unable to fully dismiss going forward."
             },
             {
               "id": "sec-8cntyn",
@@ -135,13 +166,16 @@
               "seedsIntoNext": {
                 "label": "Threads Into Season 2",
                 "body": "Undertow — At large. 'Wrong current' is not a dismissal — it's an assessment. He's decided the class is interesting. Season 2 opens with Undertow being specifically interested in Class 1-A.\n\nNull Signal — Whether Splice got the equipment or not, Null has comprehensive combat data on every PC's quirk activation. Her log entry describes the class as 'worth acquiring.' Coming from her, that means something specific.\n\nFracture — Shard's question — 'which side are you on?' — is unanswered. The class's relationship with Fracture in Season 2 depends entirely on how they handled The Fracture Problem.\n\nFlashpoint (tease) — Among Ruin's seized equipment: an internal memo referencing 'Miruki's job, Wharf side, pending approval.' The name means nothing to the class yet.\n\nRiddle (tease) — One Ruin member being processed says: 'We have a friend who talks to people. He talked to someone you know.' He won't say more. Plant this ambiguously — it could be Riddle, or it could be a bluff.\n\nNull (tease) — Splice's retreating van. A plate number and a logo: 'Seika Advanced Systems.' The same name from Hamagawa's monitor screen in Tier 1, if anyone remembered it."
-              }
+              },
+              "developments": "Whether Splice completes his objective depends on whether the class is occupied with Kuma when he arrives — either way, Null gets something, which shapes how confident her presence feels whenever this campaign continues. Whether Shard intervenes if things go badly depends entirely on how The Fracture Problem resolved. Undertow's appearance is fixed regardless of outcome; he isn't here to fight, he's here to look.",
+              "treasure": "Kuma's seized equipment (quirk-suppression hardware, real evidence for a future Commission inquiry into Ruin), a formal commendation through Oshiro's chain of command, and the single most valuable and least comfortable item to come out of the night: a case file with Undertow's name finally attached to something official."
             }
           ],
           "closing": {
             "label": "Villain Presence — Chapter 2",
             "body": "Ruin is fully active in Tier 2, and everyone — the class, the Commission, Ruin's own members — knows exactly what it is. What nobody has is a face for Undertow. Kuma is the direct confrontation — a winnable boss fight. Splice, working for Null, is the operationally sophisticated secondary threat who achieves something regardless of how the main fight goes. Fracture (Shard, Voltage) is the moral complication that doesn't resolve cleanly, and is genuinely independent of Ruin — even though Ruin's money is quietly keeping it alive. Undertow's Season 1 closing appearance — watching, commenting, leaving untouched — establishes the scale of the problem the class is not yet equipped to address: not a villain group to defeat, but a man behind it they've barely even seen."
-          }
+          },
+          "milestone": "Completing Chapter 2 closes out Season 1 — the class reaches Level 6, cliffhanger and all."
         }
       ],
       "appendix": [

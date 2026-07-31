@@ -1,0 +1,419 @@
+{
+  "campaigns": [
+    {
+      "id": "class-1a-season-1",
+      "title": "Class 1-A — Season 1",
+      "tagline": "Welcome to U.A. High School",
+      "icon": "⚡",
+      "levelRange": "Levels 1-6",
+      "estimate": "5–6 sessions + 8–10 sessions across 2 chapters",
+      "tone": "Primarily lighthearted and fun — dorm life, rivalries, chaos, friendship, competition — with genuine dramatic stakes that escalate through each tier. The comedy and the tragedy earn each other. Season 1 ends with the class intact but the world more complicated than it was.",
+      "background": [
+        {
+          "id": "bg-kkkzv1",
+          "heading": "U.A. High School",
+          "body": "Japan's most prestigious hero-track school, tucked into the quiet residential blocks of Nerima Ward on Tokyo's western edge. Known nationwide for producing top Pro Heroes. Entry is brutally competitive — the entrance exam is genuinely dangerous, and only the top performers earn a spot. Class 1-A is the flagship hero course cohort, the class everyone outside watches and resents a little.\n\nHeights Alliance (the dorms) — The student dormitories. Each student has their own room but shares common spaces — kitchen, living room, laundry. Most of the campaign's downtime drama happens here.\n\nBattle Centres — Numbered training areas (I through VII) with different environments: city block, forest, industrial yard, interior combat. Used for both formal training and exams.\n\nRankings — Students are ranked internally. This matters more than it probably should to several members of Class 1-A."
+        },
+        {
+          "heading": "Tokyo",
+          "body": "The real city, mostly — busy, dense, and completely used to heroes by now. Hero sightings are a daily occurrence, agency branding is stitched into half the storefronts in Shibuya, and civilians have strong, loud opinions about the Pro Hero rankings. The wards the class actually spends time in each have their own texture.\n\nShibuya — Downtown commercial core. Agency-sponsored storefronts, the crossing's big public screens running hero ranking updates between ads. Where the class goes on free weekends.\n\nMarunouchi — Glass-and-steel business district where the highest-ranked agencies keep their towers. Looks like money. Feels like a lobby.\n\nSetagaya — Residential sprawl — quiet streets, parks, schools, families. Where most of the class's rescue-and-patrol work happens. Nothing here is glamorous and that's the point.\n\nKurogane Wharf — A working waterfront pocket on the Koto side of Tokyo Bay — old fish-market blocks, container yards, warehouses that changed hands too many times for anyone to track. Officially still part of the city's shipping backbone. Unofficially, it's Ruin's home turf, and has been for years.",
+          "id": "bg-8ca6hl"
+        },
+        {
+          "heading": "Hero Society & the Undertow Problem",
+          "body": "Mostly functioning and genuinely exciting. Being a hero is cool. Hero rankings are watched like sports. U.A. students are minor celebrities at public events. The world feels alive and worth protecting.\n\nLicensing — Heroes must hold a Hero License to engage in combat. Students operate under provisional licenses before graduating. Unlicensed quirk use in combat is technically criminal, which creates tension during patrol and internship arcs.\n\nPro Hero Culture — Pro heroes have sponsors, fan rankings, social media followings. Some are genuine legends. Some are PR machines. The class will meet both kinds.\n\nEveryone in Tokyo knows the name Ruin. It's been running out of Kurogane Wharf for years — extortion, quirk-for-hire jobs, black-market support gear, a quiet quirk-research operation hiding behind a tech-consultancy shell. One villain group, six named members, no departments. The Hero Commission's dossier on Ruin is thick, but what it doesn't have is a face for the top of it. Everyone who's ever named a leader has used the same word — Undertow — and nobody official will confirm he exists. Separately, a real anti-licensing movement called Fracture has been getting louder at protests across the city; nobody — not the Commission, not Fracture's own leadership — has connected it to Ruin's money yet. Ruin isn't a mystery. Undertow is.",
+          "id": "bg-j6s8cm"
+        },
+        {
+          "heading": "Student Life",
+          "body": "The backbone of the campaign between dramatic arcs. Cooking arguments, study chaos, dorm drama, class rivalries, gossip about who likes who, culture festival disasters, sports festival tensions. This is as important as the combat.\n\n• Toshida Shogoro's speech bubble head makes doorways a recurring hazard\n• Zaro Brando keeps a protective shroud of purple fog around herself, and it occasionally swallows small objects she's holding — they turn up in odd places whenever a portal she forgot about finally closes\n• Nakaya Emari has accidentally short-circuited several pieces of common room electronics and refuses to apologise\n• Masahata Shikoji maintains a printed personal ranking chart on the common room fridge that everyone else ignores\n• Kinosho Kochimiko has the best strategic mind in the class and uses it exclusively to find the optimal napping location\n\nRivalries — Ando Iorai and Toragi Kayo both think they're the most dangerous person in the room. They are not. The most dangerous person in the room is usually Chozen Tadachi, who is currently staring at a wall.\n\nFriendships — Kibi Kankei and Isokono Yoromu have an unspoken alliance based on being the most laid-back people in a class full of very intense personalities. Yoshibara Hiyoko's chaotic energy pairs oddly well with Nomi Igisa's quietness — they are somehow best friends.",
+          "id": "bg-9jr7a2"
+        }
+      ],
+      "chapters": [
+        {
+          "id": "ch-0zbbmr",
+          "number": 1,
+          "title": "Welcome to U.A.",
+          "levels": "Levels 1-3",
+          "estimate": "5–6 sessions",
+          "intro": "Almost entirely fun. This is orientation. The class is meeting each other, figuring out who they are, discovering the school is hard and also ridiculous. Everyone in Tokyo knows the name Ruin — a small, dangerous villain group that's been running Kurogane Wharf for years. Fracture, the anti-licensing movement getting louder across the city, is a completely separate thing — though nobody knows that yet. None of it has touched the class directly, and Undertow himself is still just a name on a rumor.",
+          "dmNote": "U.A.'s campus in Tier 1 still feels new — hallways nobody has memorized yet, a dorm kitchen nobody's claimed territory in. The class is twenty strangers figuring out who's actually dangerous and who just looks it. Ruin exists at the edge of things: a name on a news ticker, something Fujisaki mentions and moves past, graffiti near Kurogane Wharf nobody in the class has been to yet. Nobody says the word \"Undertow\" — it hasn't been said yet, by anyone. When things go wrong here, they go wrong the way a bad dorm fire drill goes wrong: loud, red-faced, survivable. Chozen's Stress spiking during the entrance exam isn't a crisis, it's the first time his classmates see him flinch. Toshida cratering a wall mid-panic gets him a look from Fujisaki, not a lecture. This tier is twenty specific people finding out what they're actually like under pressure.",
+          "sections": [
+            {
+              "id": "sec-ybgyrj",
+              "heading": "The Entrance Exam",
+              "tag": "Opening session / character introduction · 1 session",
+              "type": "encounter",
+              "readAloud": "A staged disaster scenario in a simulated city block. Students must rescue civilians (actors and prop mannequins) while combat drones provide the villain opposition. No predetermined groupings — everyone is on their own. This is how the class meets each other.",
+              "body": "• Opening chaos: the exam starts without warning — no countdown, no announcement. Students scatter and self-organise in real time. Ren is simply gone mid-sprint; nobody sees him move.\n• Key moments: Toshida shouts a word and levels a wall segment. Nakaya jump-starts a stalled bus's dead battery with a controlled arc to use it as a ramp, then can't get the engine to switch off. Chozen's Stress activates on its own in round one — it doesn't need his permission, and the noise and chaos are enough to trigger a small, unwanted spike before he's decided to fight anything.\n• Conflict point: Masahata loudly critiques everyone else's technique mid-exam. He's correct about roughly half of it, which makes it worse.\n• Drone boss: the final obstacle is a single large combat drone targeting the highest-scoring candidates. Students have to cooperate — or use each other as distractions — to bring it down.\n• Resolution: the class passes collectively. Score rankings post. Masahata reads them twice. The ranking chart era begins.",
+              "dmNote": "The exam starts with no warning and no plan — drones hatch, a wall comes down, civilian actors start shouting, and twenty strangers have to decide in real time whether to work together or not. Oshiro is quietly grading the cooperation instinct. What the table actually gets is better: who reaches for the wall Toshida just leveled, who's already gone before anyone registers Ren moved, whose first instinct under real pressure surprises even them.",
+              "aside": {
+                "label": "Villain Threads",
+                "body": "Fracture — Graffiti on the arena's exterior wall during student arrival: 'HEROES SERVE COMMISSIONS, NOT COMMUNITIES' in the jagged-line Fracture style. Weathered enough to have been there for weeks. Nobody on the exam staff comments on it.\n\nNull Signal — A compact black drone with no UA markings logged the exam from the upper observation tier. The exam team assumed it was another faculty member's equipment. It was not in the manifest. No footage was flagged.\n\nThe Chain — Absent from direct play. A single offhand comment from an agency worker at the venue gates: 'Avoid Kurogane Wharf after dark this week. Ruin's been busy lately.' Said the way you'd mention traffic. Nobody asks a follow-up question."
+              }
+            },
+            {
+              "id": "sec-poloz4",
+              "heading": "Dorm Life & Combat Training",
+              "tag": "Social arc + first formal training encounter · 2 sessions",
+              "type": "encounter",
+              "readAloud": "The class moves into Heights Alliance. First week is pure character chaos — personalities collide, routines form, the common room becomes a social ecosystem. Oshiro's opening combat class (Capture the Flag) runs in the second session: two teams, live stakes, no mercy.",
+              "body": "• The doorframe incident (Toshida, day one): a word escapes him mid-yawn. A panel falls out of the doorframe. He apologises and fixes it. The panel falls again the next morning. He has quietly named the doorframe Hiroshi and considers this an ongoing rivalry.\n• The charger incident (Nakaya, day two): she jump-starts Masahata's dead phone charger with a small controlled arc, purely as a favor. It works, technically. It also fuses the charging port shut permanently at roughly double voltage. She considers this an unambiguous success.\n• Masahata prints and laminates a ranking chart based on exam scores. It appears on the fridge, fully formatted with tier brackets. No one asked him to do this. Kinosho stares at it for a long time and says nothing.\n• Capture the Flag — Oshiro's opening combat class: team assignments calibrated for discomfort, not balance. Yoshibara immediately doubles herself — Oshiro rules it legal because he didn't say it wasn't. Kinosho predicted this exact outcome days ago, told no one, purely to test a hypothesis about whether anyone would believe her if she had. Ando loses to someone he was certain he'd beat and wears his sunglasses for the next 36 hours including during sleep.\n• Masahata updates the ranking chart to include 'combat performance (preliminary).' No methodology is explained. It is accurate.\n• Cafeteria crossover: Class 1-B eats on the same schedule. First real contact is small and unremarkable — a shared table because the room is full, Matsunami's class visibly running a tighter ship than Oshiro's. No rivalry yet, just the first time 1-A registers there's another class exactly like them, a hallway away.",
+              "dmNote": "This is the class figuring out who's who once the exam adrenaline wears off — burnt rice, a short-circuited toaster nobody will own up to, Masahata's ranking chart appearing on the fridge unasked. Capture the Flag turns that same energy competitive: Oshiro splits teams so nobody fights their obvious counter, and the matchups are where rivalries stop being vibes and start being specific grudges. Nothing here is dangerous. It's just the first time the class looks like a class.",
+              "aside": {
+                "label": "Villain Threads",
+                "body": "Fracture — A leaflet appears under a dorm door on day three. Black print, spare design, jagged-line symbol. 'Your quirk is yours — not your license.' Someone pushed it through. Nobody saw who.\n\nNull Signal — If any student explores Hamagawa's open-door office in the evening, a monitor in standby shows a file header before the screensaver kicks in: 'Provisional License Cohort Data — External Access Request, Ref: SA/7-91.' Requesting party: 'Seika Advanced Systems.' The file is already closed when they look.\n\nThe Chain — The common room TV runs news in the background one evening. Kurogane Wharf. A small support agency for unlicensed quirk users has closed 'due to changing neighbourhood conditions.' The report is twelve seconds long."
+              }
+            },
+            {
+              "id": "sec-pdyec2",
+              "heading": "The Agency Visit",
+              "tag": "Low-stakes mission / villain seed convergence · 1–2 sessions",
+              "type": "encounter",
+              "readAloud": "The class assists at Patchwork Agency in Kurogane Wharf for a day. Filing, crowd management at a public event, basic patrol. Their first taste of actual hero work. Mostly administrative and slightly boring. A minor incident near the end brings the class's first real Ruin encounter — and if students are paying attention, a Ruin researcher and a Fracture marker are also present in the margins.",
+              "body": "• Arrival: the agency is underwhelmed by having twenty students in their breakroom simultaneously. They did not fully plan for this.\n• Aikawa organises an entire filing system the agency didn't ask for. It is objectively better than what they had. They are mildly resentful.\n• Crowd management at a small community event. Toshida is stationed away from the speakers. This is communicated very clearly. He is stationed near the speakers anyway due to a logistical mix-up.\n• The incident: two Ruin Grunts and a Ruin Hardskin are intimidating a shopkeeper in a side street. The class has six seconds before Patchwork arrives. Decision point: wait or intervene. Both choices are defensible. The Hardskin's fear when contained — not of the students, but of being seen by them — is the most important data in the encounter.\n• Patchwork's debrief: direct, accurate, slightly alarming. She's been watching since they arrived. 'The quiet one — that's not local. You walked into someone's business trip.' She won't say more today. She makes a quiet call after they leave.",
+              "dmNote": "First time outside the walls without exam conditions telling them what's safe. Patchwork treats the actual villain encounter like a Tuesday; the students don't. Ruin stops being a name on a news ticker and becomes a tag on a warehouse door, a delivery schedule that doesn't add up, a face Hardskin won't explain. Fracture's presence is in the same neighborhood at the same time — a flyer, a chant two streets over — and nothing connects the two out loud. A player who's paying attention notices. Nobody points it out for them.",
+              "aside": {
+                "label": "Villain Threads",
+                "body": "The Chain — The Hardskin has a chain-link tattoo visible on DC 15 Perception during the fight, DC 12 on a subdued target. His fear of being identified is disproportionate for a low-level criminal caught by student heroes. That gap is the important data. Patchwork says 'affiliated' once and doesn't elaborate.\n\nNull Signal — Ryo Karashi ('Splice') appears in a corridor inside Patchwork Agency. Visitor badge: 'Seika Consulting — Dr. R. Karashi.' Slim tablet, unhurried, claims wrong floor. If stopped: warm, apologetic, gives nothing away. The tablet, if glimpsed, shows a student photo grid — the class's entrance exam publicity shots. He is gone in thirty seconds.\n\nFracture — The Fracture jagged-line symbol is scratched into the concrete of the alley wall behind where the Ruin Hardskin was standing. Old enough to be weathered — months, not weeks. Not a message placed for today. A marker. Someone was using this alley before Ruin was."
+              }
+            }
+          ],
+          "closing": {
+            "label": "Villain Presence — Chapter 1",
+            "body": "Ruin is background texture in Tier 1. Its street-level side is the most visible — one direct encounter with low-tier operatives, planted through a pro hero's offhand comment. Its research side is glimpsed twice: the unmarked exam drone, Splice's thirty-second corridor appearance. Fracture — a separate movement — is found rather than encountered: graffiti, a leaflet, a symbol scratched in concrete. Nobody from Ruin has spoken to the class directly yet, and Undertow himself hasn't shown his face to anyone — that starts in Tier 2."
+          }
+        },
+        {
+          "id": "ch-2jnpr7",
+          "number": 2,
+          "title": "Getting Good",
+          "levels": "Levels 4-6",
+          "estimate": "8–10 sessions",
+          "intro": "The Sports Festival is peak chaos and excitement — the class gets to show off and it is almost entirely fun. Then the world gets complicated: Fracture becomes a real moral problem the class can't punch away, and the Convergence finale puts Kuma's logistics run, one of Null's extraction teams, and a Fracture sabotage crew in the same Kurogane Wharf warehouse on the same night — Ruin's own people not coordinating with each other, and Fracture not coordinating with anyone but themselves. Season 1 ends with a win that doesn't feel entirely clean, and Undertow walking out of a fight he was never really in.",
+          "dmNote": "Three arcs, three different colors. The Sports Festival is stadium lights and a live crowd — every match in the bracket below is written as a specific rivalry, not a stat comparison. The Fracture Problem puts Shard in front of the class with real, uncomfortable arguments about the licensing system — she believes every word of it, and has no idea that a chunk of Fracture's funding traces back to Ruin, the group she insists has nothing to do with her movement. Convergence is Ruin's own operation and Fracture's sabotage crew colliding in the same warehouse on the same night, neither side expecting the other. Kuma is the fight the class can't talk their way out of. Splice is the wrinkle nobody predicted. Undertow is a shape in a doorway as everyone else is still catching their breath — seen, not caught. The class walks out having won the room. Season 2 is what happens when they go looking for the man who wasn't in it.",
+          "sections": [
+            {
+              "id": "sec-ammixr",
+              "heading": "The Sports Festival",
+              "tag": "Major event arc (3–4 sessions)",
+              "type": "encounter",
+              "readAloud": "U.A.'s annual Sports Festival. Public, broadcast, massive audience. Full tournament structure: obstacle race → cavalry battle → individual brackets with Class 1-B competing alongside Class 1-A. The 1-A vs 1-B rivalry becomes concrete here for the first time.",
+              "body": "Pre-festival: the class arrives to a stadium already full. Kazama is recognised from the entrance exam footage and loses his composure for about four seconds — long enough for someone to notice his ears go red before the mirror-bright hardening kicks in and hides it.\nObstacle race: Zaro wins her heat by portaling ahead through gaps nobody else could see, fog trailing behind her the whole way — nobody realised how far ahead she was until the leaderboard updated. Ren places first overall; nobody saw him pass anyone, he was just suddenly at the front. Setaka's iron cannon-balls ricochet through a bottleneck and eliminate four competitors at once, and he apologises to each of them individually afterward. Kinosho places top five in a near-sleep state for most of the course. Yamaru Todao (1-B) places third — the class's first look at him in a competitive context.\nCavalry battle: alliances form and collapse. Class 1-B's coordination is visibly drilled and slightly alarming to watch. Yoshibara doubles the wrong person at the wrong moment — an opponent already in the lead. This becomes a permanent campaign reference.\nBroadcast: the commentary team is unprepared for half the quirks on display. 'What Is She Doing?' about Kinosho trends nationally within twenty minutes. Masahata's ongoing scoring commentary in the waiting room is caught on a spectator's phone and briefly goes viral.\nPost-festival: the ranking chart, brought to the festival laminated, doesn't get updated for four days. When asked why: 'The model is broken.' He reprints it anyway.\n\nTOURNAMENT SHAPE — obstacle race → cavalry battle (teams of 4) → 16-competitor single-elimination bracket, mixed 1-A/1-B:\n  Seed 1: Ren Suzuki (1-A) — 1st in the obstacle race. The class has been watching him move. Nobody knows what his speed looks like in a direct fight yet.\n  Seed 2: Yamaru Todao (1-B) — 3rd in the obstacle race. Quiet about being on the fridge chart. Thinking about it too.\n  Seed 3: Chozen Tadachi (1-A) — Placed well across both events despite Stress not being a movement quirk — his obstacle finish was pure discipline.\n  Seed 4: Kagamo Akake (1-B) — Palm Cannon blasts felt across the arena in the cavalry battle. She was in a different quadrant entirely.\n\nTHE FINAL — Toragi Kayo (1-A) vs Chozen Tadachi (1-A). Favored: Toragi — technically superior, has beaten 1-B's seed 2, has a plan for Chozen's escalation curve.\nToragi's plan: end it before he escalates. She lands the cleanest technical strike of the tournament in the opening exchange. It is the worst decision she could have made — Chozen has already fought two escalating rounds today, his damage percentage already elevated before this fight even started, and her perfect hit just adds directly to a total that was never at zero. The fight drags to round 5. Nobody predicted round 5. It ends when his accumulated total exceeds anything her technique can counter.\nWinner: Chozen Tadachi. Toragi's plan is visibly correct until the moment the math changes on her. Chozen's win should feel too big for the arena — overwhelming, not triumphant. Give him the quiet moment coming down while the crowd is still loud.\n\nFull round-by-round bracket (every match, alternate outcomes, and downstream effects) is written out in the Campaign Overview page — run it live from there.",
+              "dmNote": "Stadium lights, a real crowd, Masahata's chart getting updated in real time from the stands. Every match in the bracket below is written as two specific people, not two quirks — Yamaru absorbing four clean Impacts from Toragi before he finally goes down, because his whole Quirk is refusing to register how much that should have hurt, Chozen's win feeling too big for the arena because it's damage he can't undo, not a triumphant finish. Play PC fights out in full. NPC fights get one paragraph, read aloud, and then the class's reaction to what they just watched.",
+              "aside": {
+                "label": "Villain Threads",
+                "body": "All Factions — Ruin is watching the Sports Festival broadcast like the rest of Tokyo. Null is collecting comprehensive quirk activation data — better footage than the exam drone captured. Fracture, completely separately, is watching because the festival represents exactly the system they oppose: licensed quirk use as public spectacle. Undertow watches Chozen's final with specific interest — the only person in Tokyo tracking both angles at once. None of this is visible to the class."
+              }
+            },
+            {
+              "id": "sec-gnwpsx",
+              "heading": "The Fracture Problem",
+              "tag": "Moral confrontation arc · 2 sessions",
+              "type": "encounter",
+              "readAloud": "Fracture stages a large public protest outside a Hero Commission building in Shibuya. Unlicensed quirk users are demanding licensing reform, backed by Fracture cells providing protection. When the protest tips into a confrontation with Commission security, Class 1-A is deployed for crowd management. They meet Shard and Voltage directly. The situation is complicated by the fact that some protesters have genuine grievances, Fracture is genuinely protecting people in this moment, and a Ruin operative is photographing quirk activation patterns from the crowd periphery.",
+              "body": "• Arrival: the protest is peaceful, large, and legally ambiguous. Fracture's jagged-line symbol is everywhere. The students have seen it before — exam graffiti, dorm leaflet, alley concrete. It lands differently at scale.\n• Shard approaches the class directly, no aggression. She wants to debate. Her points are specific: the licensing system disadvantages people in communities like Kurogane Wharf. The Commission the class works for actively suppressed investigation into Ruin. Heroes who could have stopped the Wharf problem chose not to. 'I'm not asking you to agree with me. I'm asking you to explain why I'm wrong.' Give her at least two points that land with the players.\n• The escalation: Commission security physically moves an elderly protester who wasn't causing problems. Voltage intervenes — a burst of Blackout kills the charge in the guard's control baton before it activates, and he positions himself between the guard and the protester. This is a hero move performed by a villain. The class has to decide how to respond.\n• Ruin in the margins: Splice is in the crowd, two rows back from the Commission building's west entrance. He's photographing the class — specifically their quirk activation patterns under stress. DC 18 Perception to notice him. If noticed, he's gone by the time anyone looks twice.\n• Resolution: Shard withdraws the Fracture cells before things become unmanageable. She does not run. She says: 'We'll be back when you've figured out which side you're on.' Voltage leaves last, making sure the elderly protester is clear before he goes.",
+              "dmNote": "Shard stands in front of the class and makes her case without raising her voice, and at least two of her points don't have a clean rebuttal — the licensing system really does work better for people who already have money and connections, and provisional heroes really do get treated as disposable. Nobody throws a punch. The class leaves uncertain, which is the point. Somewhere in the crowd, one of Ruin's people is watching Shard work and taking notes on a movement she doesn't know is bankrolling her — the class walks right past him.",
+              "aside": {
+                "label": "Villain Threads",
+                "body": "Fracture — Shard and Voltage are fully visible — named, confronted, argued with. The class knows who they are now. What the class does with Shard's arguments is the open question they carry into the finale.\n\nNull Signal — Splice's photographic operation in the crowd. Ruin now has comprehensive quirk-activation footage of every PC under stress conditions. Whether the class noticed him determines how much warning they have.\n\nThe Chain — Shard mentions once that the Commission ignored Ruin's Kurogane Wharf operation for eighteen months. She has documentation. She doesn't share it today. She knows the class was at Patchwork Agency — she has sources in the neighbourhood."
+              }
+            },
+            {
+              "id": "sec-8cntyn",
+              "heading": "Convergence",
+              "tag": "Season 1 finale (2–3 sessions)",
+              "type": "encounter",
+              "readAloud": "Acting on information from Oshiro (sourced through Patchwork's contacts), the class intercepts a Ruin logistics operation in a Kurogane Wharf warehouse. Kuma is running it. What they don't know: Splice has identified this operation as a data acquisition target for Null — Kuma is transporting experimental quirk-suppression equipment, and Null wants it, whether or not Kuma's expecting him. Fracture is also here, sabotaging the equipment because Ruin extorts the unlicensed quirk users in their community. Ruin's own people aren't coordinating with each other, Fracture is running its own agenda entirely, and the class has to make decisions in real time.",
+              "body": "• Arrival: the warehouse district at night. Signs of Kuma's operation — logistics vehicles, a perimeter. Signs of something else — two Fracture cell members are already inside, cutting equipment cables. Signs of something else entirely — one of Null's technical vans is parked across the street monitoring equipment frequencies. The class has thirty seconds before Kuma notices the Fracture interference.\n• Kuma: loud, overconfident, not in on Null's plans or Fracture's presence. 'You're graduating early, students.' He starts Large. He reaches Huge by round 2. His growth is capped at Huge — the warehouse ceiling prevents Gargantuan. Use this. The class should figure out that the architecture is their advantage.\n• Splice: enters from the north loading door in round 3, after assessing that the fight will compromise the equipment he came for. He does not engage the class unless they block his path to the crates. If the class is occupied with Kuma, he takes what he came for and leaves clean. Either way, Null gets something.\n• Shard: she's on the roof of the adjacent building, watching. If the class gets into serious trouble, she could intervene — whether she does depends on how they handled The Fracture Problem. She will not fight the class tonight regardless.\n• Undertow: condensation on the warehouse's cold pipes has been gathering and running together across the floor all fight, unnoticed. In the final round, the puddle at the room's edge stands up. He watches Kuma go down. He watches Splice complete or abandon his objective. He looks at each PC for three seconds each — unhurried, interested. Then he says one thing and pours himself down the nearest floor drain: 'Good instincts. Wrong current.' He is gone.\n• Resolution: Kuma is arrested and in custody. Splice has retreated. Shard is gone. Undertow was never touchable. The class has won the immediate fight. Oshiro arrives — without being called. He reads a single-line report. He puts it down. He says: 'Get some sleep.' The report heading, visible to a sharp-eyed player: 'Undertow — confirmed active, Kurogane Wharf. Status: at large.'",
+              "dmNote": "Ruin's people and Fracture's sabotage crew are both in the warehouse, on the same night, neither side expecting the other — the class walks into a three-way mess nobody planned. They win the fight in front of them. Null still gets her data out. Undertow is a shape leaving through a side door as the dust settles — close enough to be real, gone before anyone can follow. The class ends the night certain Ruin is beatable and completely unsure what to do about Fracture, whose funding they still haven't traced back to the group they just fought. Catching the man behind the name is next season's problem.",
+              "aside": {
+                "label": "Villain Threads",
+                "body": "All Factions — Ruin and Fracture are both fully present and active in the same warehouse, on the same night, running completely uncoordinated agendas — Kuma doesn't know Splice is here for Null, and neither of them knows Fracture is here at all until the sabotage starts. Kuma is the direct confrontation — arrested. Splice achieves a partial objective for Null regardless of what the class does. Shard is neither defeated nor allied. Undertow's observation and departure is the closing image of Season 1 — the one person in that warehouse who understood everything that happened in it, and the one nobody could touch."
+              },
+              "seedsIntoNext": {
+                "label": "Threads Into Season 2",
+                "body": "Undertow — At large. 'Wrong current' is not a dismissal — it's an assessment. He's decided the class is interesting. Season 2 opens with Undertow being specifically interested in Class 1-A.\n\nNull Signal — Whether Splice got the equipment or not, Null has comprehensive combat data on every PC's quirk activation. Her log entry describes the class as 'worth acquiring.' Coming from her, that means something specific.\n\nFracture — Shard's question — 'which side are you on?' — is unanswered. The class's relationship with Fracture in Season 2 depends entirely on how they handled The Fracture Problem.\n\nFlashpoint (tease) — Among Ruin's seized equipment: an internal memo referencing 'Miruki's job, Wharf side, pending approval.' The name means nothing to the class yet.\n\nRiddle (tease) — One Ruin member being processed says: 'We have a friend who talks to people. He talked to someone you know.' He won't say more. Plant this ambiguously — it could be Riddle, or it could be a bluff.\n\nNull (tease) — Splice's retreating van. A plate number and a logo: 'Seika Advanced Systems.' The same name from Hamagawa's monitor screen in Tier 1, if anyone remembered it."
+              }
+            }
+          ],
+          "closing": {
+            "label": "Villain Presence — Chapter 2",
+            "body": "Ruin is fully active in Tier 2, and everyone — the class, the Commission, Ruin's own members — knows exactly what it is. What nobody has is a face for Undertow. Kuma is the direct confrontation — a winnable boss fight. Splice, working for Null, is the operationally sophisticated secondary threat who achieves something regardless of how the main fight goes. Fracture (Shard, Voltage) is the moral complication that doesn't resolve cleanly, and is genuinely independent of Ruin — even though Ruin's money is quietly keeping it alive. Undertow's Season 1 closing appearance — watching, commenting, leaving untouched — establishes the scale of the problem the class is not yet equipped to address: not a villain group to defeat, but a man behind it they've barely even seen."
+          }
+        }
+      ],
+      "appendix": [
+        {
+          "id": "apx-maxm8e",
+          "heading": "Ranking Chart",
+          "body": "Masahata's ranking chart on the common room fridge persists through the entire campaign — a habit from a family that ranks things at dinner as a matter of course. Reference it at least once per tier. By Season 1's end it has been annotated, defaced, coffee-stained, and re-laminated over the original lamination. He reprints it every time. This is never commented on directly."
+        },
+        {
+          "id": "apx-os8ma3",
+          "heading": "Oshiro Arrivals",
+          "body": "Whenever things get genuinely serious, Oshiro Daikichi arrives at the scene without being called. No explanation is offered. He just shows up. This should remain unexplained through Season 1."
+        },
+        {
+          "id": "apx-inskk3",
+          "heading": "Kinosho Napping",
+          "body": "Kinosho Kochimiko is asleep somewhere in the background of every session where she is not the primary focus. She is always awake again before it matters. Her eyes flatten to pewter grey for a second whenever Neutralization actually triggers — the class calls this 'turning off.'"
+        },
+        {
+          "id": "apx-aakn2q",
+          "heading": "Toshida Head",
+          "body": "Toshida's speech bubble head gets stuck in, on, or through something structural at least once per tier — usually the dorm doorframe he's privately named Hiroshi. The scale escalates as his quirk control improves but his spatial awareness does not."
+        },
+        {
+          "id": "apx-zznh1t",
+          "heading": "Toragi And Yoshibara",
+          "body": "Toragi leaves Yoshibara small, useful, unexplained things — a pencil, a snack — and disappears before she can react. She's started leaving things back. Neither has said a word about it out loud. Let this thread surface once more before Season 1 ends."
+        },
+        {
+          "id": "apx-0ktntj",
+          "heading": "Faction Symbol Thread",
+          "body": "The Fracture jagged-line symbol appears in each Tier 1 arc (entrance exam wall, dorm leaflet, alley concrete). Everyone knows it's Fracture's mark — it's a public movement. What lands by the time Shard introduces herself in The Fracture Problem is that the class has seen it enough times to feel like it's been following them personally, not just decorating the city."
+        }
+      ],
+      "links": [
+        {
+          "id": "lnk-rq0m69",
+          "label": "Full villain, NPC & world database",
+          "href": "campaign-overview.html"
+        },
+        {
+          "id": "lnk-uw3r10",
+          "label": "Class 1-A roster & relationship tracker",
+          "href": "CLASS-1A/relationships.html"
+        },
+        {
+          "id": "lnk-21j9b2",
+          "label": "Session-by-session play log",
+          "href": "session-log.html"
+        }
+      ]
+    },
+    {
+      "id": "ashfall-hollow",
+      "title": "Ashfall Hollow",
+      "tagline": "Four provisional heroes, one dying town, and ground that won't stay still.",
+      "icon": "⛰",
+      "levelRange": "Levels 1-5",
+      "estimate": "8-10 sessions",
+      "tone": "A tight, character-forward campaign built for exactly four people instead of a full class — Ren Suzuki, Kazama Kenji, Chozen Tadachi, and Izuto Kutsu, on a Rural Hero Placement in a struggling mountain town still living in the shadow of a mining disaster. No faction war, no citywide conspiracy — just a small agency, a town with a long memory, and a very human, very sympathetic reason the ground keeps giving way. Quieter and sadder than a Sports-Festival season, and built to let all four of them carry the story personally rather than share it with sixteen classmates.",
+      "background": [
+        {
+          "id": "bg-dyodxd",
+          "heading": "Ashfall Hollow",
+          "body": "A mountain town of about six thousand people, three train changes and one bad access road from the nearest city, tucked into a valley where the Kessler Mining Company ran ore extraction for sixty years before the seam ran dry. The town kept the name after the Ashfall — the 2019 tunnel collapse and gas ignition that killed eleven miners and opened the first of the sinkholes that still, occasionally, swallow a piece of the town whole. Kessler Mining paid what a settlement required and closed its regional office within the year. Nobody in the Hollow has forgotten either fact.\n\nThe ground here is not reliable. Old mine workings honeycomb the bedrock under half the residential district, logged on maps nobody fully trusts and unlogged in places everyone assumes exist anyway. Insurance premiums are the highest in the prefecture. Property values are the lowest. People stay anyway, because it's where they're from, and because leaving costs money nobody has."
+        },
+        {
+          "id": "bg-47ppwi",
+          "heading": "Tidewell Point Agency",
+          "body": "The Hollow's only hero agency, run out of a converted hardware store on the town's single commercial street. Two licensed pros on staff: Agency head Renka Amagai (\"Groundskeeper\" — Quirk: Ballast, lets her anchor herself and one adjacent structure to bedrock for a short duration, functionally useless against a citywide threat and extremely useful against exactly the kind of thing that happens here) and her partner Tobio Sesshin (\"Aftercare\" — Quirk: Numb Touch, suppresses pain signals on contact, which makes him the most popular person in any triage line and the reason the agency's rescue completion rate looks better on paper than its response time does).\n\nTidewell Point has never had a provisional intern before this year. It was never going to be able to afford one — the Rural Placement stipend covers it, barely, and only because four came at once instead of one.\n\nThere is no other hero presence within forty minutes. When something happens in the Hollow, it is Amagai, Sesshin, and whoever else is standing there. This year, for the first time, that includes four provisional students."
+        },
+        {
+          "id": "bg-hd2apy",
+          "heading": "The Rural Hero Placement Program",
+          "body": "A three-year-old Hero Commission initiative responding to a blunt statistic: license-holding heroes cluster in cities, and half the country's small towns have functional coverage only because neighboring cities are close enough to help. The program places small teams of provisional-license students — never a full class, usually three to five — in underserved agencies for an extended field placement, credited as internship hours toward their provisional license upgrade.\n\nRen Suzuki, Kazama Kenji, Chozen Tadachi, and Izuto Kutsu are this year's Tidewell Point placement. They did not choose each other. The Commission's matching algorithm looked at quirk profiles, ran a compatibility pass against Tidewell Point's stated needs (\"structural/rescue-capable, self-sufficient, does not require close supervision\"), and produced four names. Amagai got the packet two weeks before they arrived and read it twice, unimpressed by all the parts that weren't the word \"self-sufficient.\"\n\nThis is not their class, their school, or their normal support structure. It is the four of them, two overworked pros, and a town that needed help before any of them showed up."
+        },
+        {
+          "id": "bg-aibtek",
+          "heading": "The Numbers Nobody's Checked",
+          "body": "Ground subsidence in the Hollow is real, documented, and — according to every geological survey on file — supposed to be slow. A sinkhole opens every year or two, usually small, usually in the same handful of known soft zones near the old mine workings. This is accounted for. It is priced into the insurance. It is, in the driest possible sense, normal.\n\nThis year there have been three incidents in the ten weeks since the placement began. All three are in the survey's \"soft zone\" list, which makes them technically unremarkable. All three also happened faster, and more completely, than the geology should produce without help. Nobody at Tidewell Point has had the time or staffing to run the comparison. Amagai has noticed the frequency and hasn't said anything out loud yet, mostly because saying it out loud means it's real."
+        }
+      ],
+      "chapters": [
+        {
+          "id": "ch-qspqr1",
+          "number": 1,
+          "title": "The Assignment",
+          "levels": "Levels 1-2",
+          "estimate": "3 sessions",
+          "intro": "A small, grounded opening. No factions, no conspiracies yet — just four provisional students, two exhausted pros, and a town whose relationship with disaster is close, personal, and unresolved. The first rescue should feel genuinely good to pull off. The unease comes in quietly, in a detail nobody's had time to check.",
+          "dmNote": "Play this tier almost entirely straight. The four of them are good at this, the agency needs them, and the town is grateful in a way U.A.'s campus never quite was — that's a real and earned feeling, let it land before anything complicates it. The sinkhole's clean edges are the only thread pulling forward; everything else is character work and competence porn.",
+          "sections": [
+            {
+              "id": "sec-4g8y6o",
+              "heading": "Orientation Day",
+              "tag": "First day · introductions",
+              "type": "general",
+              "readAloud": "The bus from the last train station lets you off outside a converted hardware store with a hand-painted sign reading TIDEWELL POINT AGENCY — EST. hanging slightly crooked above the door. The street behind you is one block long. It has a noodle shop, a shuttered bank branch, and a memorial plaque bolted to a boulder that you will learn not to ask about on day one.",
+              "body": "• Amagai meets you at the door, looks at all four of you for slightly too long, and says \"Four. Huh.\" before showing you the back room that is now your office, equipment locker, and — per the cot in the corner — occasional crash space.\n• Sesshin is warmer, immediately curious about all four quirks in a genuinely nerdy way, and asks Izuto detailed questions about Engine's fluid-replenishment math that Izuto is delighted to answer at length.\n• Amagai's actual onboarding speech is four sentences long: \"Nobody's coming to back you up. Call it in anyway, every time, even when you don't need it, so dispatch has a pattern. Don't be a hero. Be useful.\" She does not explain further.\n• Paperwork, gear checks, and a driving tour of the town's known soft zones — marked on a laminated map that is visibly older than the agency's coffee maker.\n• Local color: Ren's U.A. reputation means nothing here, which he finds bizarrely more unsettling than being recognized would be. Kazama is immediately liked by the noodle shop owner, who starts sending food to the agency unprompted within the week. Izuto reorganizes the equipment locker on day two without being asked and it takes Sesshin four days to notice, at which point he's mostly just impressed. Chozen has already produced a one-page contingency summary for \"agency loses power during active rescue\" that nobody requested and Amagai pins to the corkboard without comment, which Chozen correctly reads as the highest compliment she's capable of giving.",
+              "dmNote": "This section has no combat. Its job is to establish four things fast: the town is small and specific, the agency is two tired professionals doing more than two people should, the class hierarchy that mattered at U.A. means nothing here, and each PC gets one unforced character beat before anything goes wrong. Let players improvise their own version of \"the town notices them\" — Kazama's kindness and Izuto's competence tend to land immediately; Ren and Chozen take a little longer to be read correctly by people who don't know them yet.",
+              "aside": null
+            },
+            {
+              "id": "sec-dpkkaz",
+              "heading": "First Call: The Kessler Street Sinkhole",
+              "tag": "Opening rescue · 1 session",
+              "type": "encounter",
+              "readAloud": "The alarm comes in on your third day. Kessler Street — the one with the memorial boulder — has opened up outside the bank branch that's been closed for six years. Ground floor's gone into the hole; the second floor is folded down at an angle that shouldn't be structurally possible and currently is. There's a shopkeeper from next door who ran in to grab the cash box before anyone told her not to. She's on what's left of the second floor. It's still settling.",
+              "body": "• Amagai anchors the boulevard's remaining edge with Ballast and gets exactly one clear sentence out before she's fully committed to holding it: \"Get her, don't touch the middle, go.\"\n• The floor is actively unstable — treat it as difficult, hazardous terrain that can collapse further on a bad roll or a heavy hit. This is the first chance to show off: Kazama can plant himself as a physical brace point for the others to work off of; Izuto's Engine lets him cross the unstable middle fast enough that his weight barely registers before he's past it; Ren gets there fastest and has to actually slow down and think for once, because speed alone doesn't solve \"the floor gives way under her the second you grab her arm.\"\n• Chozen's Stress should start climbing here for real — this is live, worsening, physically demanding danger, not sparring. Let his bonuses kick in mid-rescue and have him notice it happening, matter-of-fact rather than dramatic.\n• Secondary collapse: partway through, a support somewhere below groans audibly. This is the moment to test whether the party works as a unit or four individuals — Kazama holding a beam, Izuto scouting the safest path, Ren making the actual carry, Chozen doing the unglamorous work of stabilizing rubble so the other three have somewhere to stand.\n• The shopkeeper is fine. Shaken, extremely apologetic, already asking if the cash box survived (it did not; she does not seem to actually care that much once she says it out loud).",
+              "dmNote": "This is the party's proof-of-concept encounter — first time working together, first time the town watches them do it. Nobody needs to almost die. What matters is that it's harder than an exam scenario: real weight, real consequences, no do-overs. Give each PC one clean mechanical spotlight moment per the beats above. End on a genuinely warm beat — Amagai's assessment afterward should be a single unimpressed sentence that is nonetheless the nicest thing she's said all week.",
+              "aside": {
+                "label": "Something Off",
+                "body": "DC 14 Investigation (or Intelligence/Nature check with a relevant background) during or after the rescue notices the sinkhole's edges are unusually clean — sheared rather than crumbled, like something cut a line rather than the ground simply giving way. Amagai clocks a player noticing this and says only, \"Yeah. Log it,\" and doesn't elaborate. She's noticed the same thing on the last two."
+              }
+            },
+            {
+              "id": "sec-gtcn3m",
+              "heading": "Small Town, Long Memory",
+              "tag": "NPC / worldbuilding scene",
+              "type": "npc",
+              "readAloud": "The noodle shop, evening, the day after the rescue. It's the kind of place where four strangers eating together get noticed, and get talked to.",
+              "body": "• Locals are grateful, and also unsentimental about it: more than one person mentions, without much heat, that heroes weren't around for the Ashfall and the mining company's lawyers were faster than any rescue team. This isn't hostility. It's just what's true here.\n• An older man — regulars call him Denbei, doesn't offer a last name — mentions he worked the seam for twenty-two years and lost his younger brother in the collapse. He says the settlement money \"bought exactly one new roof and a lot of nothing,\" states it as fact rather than a grievance, and changes the subject before anyone can turn it into a moment.\n• Someone mentions, half-joking, that the ground's been \"grumpier\" than usual this year — three incidents instead of the usual one every year or two — and the table generally agrees without treating it as significant.\n• This is the party's first unforced exposure to the town's relationship with the disaster: tired, specific, and not asking to be rescued from the memory of it. Nobody here is a villain and nobody here is asking the party to fix anything except the actual, physical, current problem.",
+              "dmNote": "Plant Denbei clearly enough that his name means something later, but do not signal him as important — he's one of a dozen people saying similar things tonight, not a spotlighted NPC yet. The goal of this scene is sympathy for the town's grievance in the abstract, well before the party has any reason to connect it to anything happening now.",
+              "aside": null
+            }
+          ],
+          "closing": {
+            "label": "Chapter Note — Frequency",
+            "body": "Three incidents in ten weeks against a historical rate of one every year or two is roughly a ten-times acceleration. Nobody has said this number out loud yet. Amagai will, eventually, once she trusts the party enough to say it in front of them instead of just frowning at the corkboard."
+          }
+        },
+        {
+          "id": "ch-i6z84i",
+          "number": 2,
+          "title": "Aftershocks",
+          "levels": "Levels 3-4",
+          "estimate": "3-4 sessions",
+          "intro": "The competence-porn rescue arc gets a second, harder layer: the accidents aren't accidents, the mining company is managing a liability problem instead of a safety one, and the evidence keeps pointing somewhere the party will recognize before the story says it outright. This tier is about the ground rules changing under a job the party thought they already understood.",
+          "dmNote": "Let the players get ahead of the reveal if they're paying attention — Denbei was introduced warmly in Chapter 1 specifically so that recognizing him here lands as dread, not a twist for its own sake. This tier should feel heavier than Chapter 1 without losing the grounded, procedural rescue-work tone; the danger is realer, not more theatrical.",
+          "sections": [
+            {
+              "id": "sec-ou1v8r",
+              "heading": "The Company Man",
+              "tag": "Tension scene / lead",
+              "type": "npc",
+              "readAloud": "A rental car with city plates parks outside the agency on a Tuesday. The man who gets out introduces himself as Sato from Kessler Mining's \"regional liaison office\" — a division that, as far as anyone in the Hollow knew, closed in 2019. He wants to talk about \"recent subsidence events\" and whether the agency's incident reports have been \"appropriately categorized.\"",
+              "body": "• Sato is polite, unhurried, and extremely interested in whether Tidewell Point's official reports use the word \"anomalous\" anywhere. They do not — Amagai's writing is dry to the point of self-defense, and she's noticed him noticing that.\n• He offers, almost as an aside, a modest \"community goodwill fund\" contribution to the agency's equipment budget — timed suspiciously close to this conversation. Amagai has not yet said no. She also hasn't cashed anything.\n• Pressed (DC 15 Persuasion or Insight to get past his script), Sato lets slip that Kessler Mining maintains a private structural monitoring contract on the old workings — meaning someone has better data on the tunnels than the town does, and has for years, and never shared it.\n• He leaves his card. He does not leave a straight answer to \"why does a closed regional office need to know if we're using the word anomalous.\"",
+              "dmNote": "Sato isn't the villain and shouldn't play like one — he's a company employee managing liability exposure, competent and a little bored by it. His usefulness is entirely as a lead: the mining company has data the party doesn't, and is actively managing the story rather than the ground. Let the party's read on him be \"slimy but probably not directly dangerous,\" which is correct.",
+              "aside": null
+            },
+            {
+              "id": "sec-4iafck",
+              "heading": "Under Miller's Ridge",
+              "tag": "Major rescue set piece · 2 sessions",
+              "type": "encounter",
+              "readAloud": "The call comes in at 6am: a maintenance crew doing routine work in the old Miller's Ridge access tunnel — the one Kessler Mining supposedly sealed in 2019 — didn't check in for their scheduled radio contact. Amagai's face when dispatch says \"Miller's Ridge\" is the first time any of you have seen her look actually rattled.",
+              "body": "• The tunnel wasn't fully sealed — a maintenance sub-contractor has apparently been quietly using it for storage access for years, unlogged, which is its own small scandal nobody has time for right now.\n• A partial collapse has trapped a four-person crew roughly 200 meters in, in a section with a compromised support beam and a slow gas seep that makes open flame and heavy percussive impacts actively dangerous.\n• This is the tier's core structural-collapse showcase and should run over multiple scenes: Izuto scouting the safest route through debris and gas pockets using Engine's speed and his own tactical read of the space; Kazama physically bracing a failing support beam long enough for extraction, at real cost to his daily Steel uses; Ren making repeated fast extraction runs, each one riskier as the tunnel destabilizes further; Chozen's Stress climbing hard and staying up as the situation refuses to resolve cleanly, giving him real escalating output right when the party needs it most.\n• Mid-rescue, someone (ideally Izuto, scouting ahead) can make a DC 16 Perception check and notice fresh charge-scoring on one section of support timber — small, deliberate, recent. Not old mine damage. This is the first hard evidence the collapses are being caused, not just accelerating naturally.\n• All four crew members survive if the party works the encounter as written. If the party is careless or unlucky, let one crew member be seriously hurt rather than killed — this campaign is grim at the edges, not cruel to its NPCs by default.",
+              "dmNote": "This is the tier's spotlight sequence — give it real time and let every PC's kit matter distinctly rather than resolving through one dominant strategy. Chozen should end this scene visibly wrung out but at genuine peak output; this is a good moment to remind the table that his escalation doesn't come free. Izuto finding the evidence personally (rather than it being handed to the party) matters for his arc — he's the one who insists on checking one more thing instead of calling it done, which is very in-character and worth spotlighting.",
+              "aside": {
+                "label": "Evidence",
+                "body": "The scored timber is deliberate demolition charge residue, old-fashioned and analog rather than quirk-based — someone wanted this to look natural and mostly succeeded. A DC 14 Investigation check on the char pattern gives a rough age estimate: roughly two weeks old, which lines up with incident #3, not today's collapse. Today's collapse looks, on first pass, actually natural. That inconsistency is the hook forward."
+              }
+            },
+            {
+              "id": "sec-on6buu",
+              "heading": "Evidence",
+              "tag": "Investigation scene",
+              "type": "general",
+              "readAloud": "Back at the agency, corkboard covered in incident dates, survey maps, and Chozen's increasingly detailed handwriting, the pattern starts to resolve if anyone sits down and actually looks for it.",
+              "body": "• Cross-referencing incident dates against the mining company's old employee records (which Amagai has, in a filing cabinet, because she's been here longer than the company's given her credit for) turns up a pattern: every incident site is within a hundred meters of where a named miner died in the original Ashfall.\n• Denbei's brother's name is on that list. So are two others. So, unnervingly, is a fourth location that hasn't had an incident yet — which becomes the obvious next move if the party is thinking ahead rather than reacting.\n• A DC 15 Streetwise or Insight check around town turns up that Denbei has been \"different\" the last year or so — more private, doing something with his evenings nobody's quite placed, seen out near Miller's Ridge more than a hobby explains.\n• The party does not need to \"solve\" this scene with a single roll — let it be a genuine table discussion about what the pattern means and who to talk to first. If they go straight to Denbei, that's correct and the campaign is built to support it.",
+              "dmNote": "This scene exists to let the players do the detective work rather than have it handed down, and to make the eventual reveal feel earned rather than sprung. If your table is moving slowly or stuck, Sesshin can nudge them — he's a genuinely good listener and has picked up more town gossip than he realizes is relevant.",
+              "aside": null
+            }
+          ],
+          "closing": {
+            "label": "Chapter Note — The Fourth Site",
+            "body": "The pattern points to one more location that hasn't had an incident yet: the sealed mouth of the original collapse shaft, up on the ridge above the old company offices. If the party doesn't get there first, Chapter 3 opens with the sequence beginning anyway, worse and further along."
+          }
+        },
+        {
+          "id": "ch-fe346t",
+          "number": 3,
+          "title": "Undermine",
+          "levels": "Level 5",
+          "estimate": "2-3 sessions",
+          "intro": "The finale trades scale for intimacy — one grieving, furious, precise man against everything the party has learned to be good at, on ground that was never stable to begin with. This is a campaign about infrastructure and negligence and the people left holding both, and the ending should feel earned rather than triumphant.",
+          "dmNote": "Resist the urge to make Denbei bigger, stranger, or more powerful than a person with an unregistered, narrow, patient Quirk and twenty years of motive. The horror here is scale, not power level — a genuinely dangerous encounter built from ordinary physics and one very tired man, exactly the kind of threat this specific party (structural, rescue-capable, self-sufficient) was matched to the Hollow to handle.",
+          "sections": [
+            {
+              "id": "sec-q7snnb",
+              "heading": "The Man Who Wouldn't Leave",
+              "tag": "Confrontation, no combat yet",
+              "type": "npc",
+              "readAloud": "The old shaft mouth on the ridge is caged off and rusted, and someone has clearly been coming here regularly — a worn path through the brush, a folding chair, a thermos. Denbei is here, not hiding, sitting with his back to the cage like he's been waiting.",
+              "body": "• Denbei doesn't run and doesn't lie once confronted with what the party's found. His Quirk — never registered, never used publicly in twenty years of mining work because a working man with a destabilization Quirk doesn't get hired twice — is Faultline: he can weaken stone and packed earth's cohesion at a distance, sense-and-destabilize rather than move it outright. He used it exactly the way the settlement lawyers used their paperwork: precisely, and where it would be believed as natural.\n• His case, delivered plainly rather than as a villain speech: Kessler Mining's private monitoring data — the data Sato all but confirmed exists — has apparently shown accelerating instability for years and been quietly filed as an internal liability number instead of a public safety issue. He can't prove that in court. He also has a Quirk built exactly for making the ground itself say what the paperwork won't.\n• He is careful to say, and clearly means, that he never intended anyone to actually get hurt — the timing and locations were chosen around maintenance schedules and known-empty structures. Miller's Ridge, with a live crew inside on unscheduled work, scared him too. That's true, and it's also exactly why an angry, careful man's plan was always going to eventually hurt someone.\n• Give the party a real choice point here: talk him down, try to arrest him outright, or let him make his case somewhere it might actually matter (the Commission, a journalist, Amagai directly). All three are legitimate table outcomes and the DM notes below cover branching from here.",
+              "dmNote": "Denbei should never feel evil. He should feel like someone the table likes, whose method they can't endorse, in a situation the actual system failed to resolve honestly. This is the emotional peak of the campaign — let it breathe. If the table tries to talk him down, that's a full scene, not a skip-to-combat. If he panics or feels cornered, that's what triggers Collapse Point, not villain monologuing.",
+              "aside": {
+                "label": "If The Party Talked Him Down",
+                "body": "Skip straight to Collapse Point's aftermath: Denbei surrenders, the shaft is unstable anyway from twenty years of accumulated damage he can no longer fully control even if he wanted to stop, and the party still has to get everyone off the ridge before it goes. The confrontation becomes a rescue instead of a fight — arguably more in-genre for this table's skill set."
+              }
+            },
+            {
+              "id": "sec-7oytjf",
+              "heading": "Collapse Point",
+              "tag": "Climax · 1-2 sessions",
+              "type": "encounter",
+              "readAloud": "Whatever brought this to a head — a panicked reaction, a refusal to stand down, or simply the ridge finally giving out on its own twenty-year clock — the ground under the old shaft mouth is failing in real time, and it is bigger than anything the party has handled so far.",
+              "body": "• This is not a fight against Denbei so much as a fight against the mountain, with Denbei as a variable inside it — his Quirk is actively making things worse even if he's trying to stop, because Faultline doesn't have a clean off switch once a fracture network is already running.\n• Structure the encounter as an escalating, multi-stage rescue-under-fire: the ridge access road is failing behind them (retreat route closing), the shaft mouth itself is venting unstable gas, and there may be one or two of Sato's mining-company \"private security\" contractors on-site (there to quietly monitor the site, now very out of their depth) who need extracting whether the party likes them or not.\n• Spotlight moment for Chozen: this is the scenario his contingency binder has no page for. Let his Stress hit genuine peak output here, and let the DM notes' growth arc pay off — he improvises without a plan for the first time, out loud, in front of the team.\n• Spotlight moment for Izuto: at some point his best read of the situation requires trusting someone else's judgment over his own — asking Kazama to hold a line Izuto can't personally verify is safe, or asking Ren to make a call Izuto isn't fast enough to make himself. Let him actually ask.\n• Spotlight moment for Ren: give him one beat where the joke doesn't land — where speed gets someone almost-but-not-quite in time, and the sarcasm runs out for a second before he does the actually brave thing anyway.\n• Spotlight moment for Kazama: if his scar has never come up, this is the natural place — a moment structurally identical to whatever it is he didn't act on before, except this time he does, immediately, without the hesitation the scar represents.\n• Denbei's fate depends on the table: he can go down trying to undo what he started (redemptive), get pulled out alongside everyone else and face what's coming (arrested, sympathetic), or — if things go worst — not make it out, in which case let his last act be trying to stabilize the section the party's still in rather than saving himself.",
+              "dmNote": "This encounter should feel like the hardest thing the party has done, mechanically and emotionally, and should resolve through teamwork rather than any single PC's solo brilliance. Use the terrain (failing road, venting gas, unstable ceiling) as an active participant in the fight, not just flavor text. However Denbei's personal fate resolves, the mining company's negligence should remain unambiguously true and unresolved — that's not a problem this encounter fixes.",
+              "aside": null
+            },
+            {
+              "id": "sec-96w75q",
+              "heading": "What the Ground Remembers",
+              "tag": "Epilogue",
+              "type": "general",
+              "readAloud": "However the ridge ends, the Hollow wakes up the next morning to a quieter version of the same town. Kessler Street's sinkhole is still a hole. The noodle shop is still open. Nobody's forgotten anything, and nothing about the mining company's old paperwork has changed just because four provisional heroes had a very bad night on a ridge above town.",
+              "body": "• Amagai's report on the incident will, characteristically, undersell it by several orders of magnitude. She'll also, in private, tell the party this is the first time in three years she's trusted anyone enough to write \"handled\" instead of \"contained.\"\n• Sato's monitoring data becomes a real lever if the party pursued it — enough for a formal Commission inquiry into Kessler Mining's liability practices, slow-moving and unglamorous, exactly the kind of institutional win this campaign's world actually offers instead of a clean villain-defeated ending.\n• Denbei's brother's name is still on the memorial boulder. So, eventually, is a small addition — the town's own choice, not the party's to make, about how to remember what he did and why.\n• The placement continues. There is, per the Commission's own numbers, no shortage of other small towns exactly like this one, and Tidewell Point's stipend just got renewed for another year.",
+              "dmNote": "Give the epilogue real space — this campaign earns a quiet ending, not a triumphant one. If you want a hook into a longer game afterward, the clean options are: (1) the Commission inquiry into Kessler Mining drags the party into testimony and a bigger institutional fight, (2) the Rural Placement Program reassigns the four of them together again next season, having noticed the match worked, or (3) simply end it here — this campaign was built to stand alone.",
+              "aside": null
+            }
+          ],
+          "closing": {
+            "label": "Villain Presence — Chapter 3",
+            "body": "Denbei is the entire villain presence of this campaign — there is no larger organization, no hidden mastermind, no sequel-hook faction waiting in the wings unless the DM wants one. That's deliberate: this campaign is about a specific, human-scale failure of a system that's supposed to protect people, seen through four provisional students who were never meant to be the ones who noticed it."
+          }
+        }
+      ],
+      "appendix": [
+        {
+          "id": "apx-ngsmbm",
+          "heading": "Chozen's Contingency Binder",
+          "body": "By Chapter 2 he's stopped pretending it's a notebook and started calling it what it is. It has tabs. Ren asks, without fail, whether \"the volcano plan\" is still in there. It is. Chozen has updated it twice."
+        },
+        {
+          "id": "apx-8kxxt5",
+          "heading": "Izuto's Toolkit",
+          "body": "The leg-maintenance ritual continues, and somewhere around Chapter 2 the others start quietly noticing when he's overdue for it — a full session without the telltale click of the wrench means something's wrong and he hasn't said so yet."
+        },
+        {
+          "id": "apx-5nco2u",
+          "heading": "Kazama's Scar",
+          "body": "Never explained unless the DM chooses to spend it — Collapse Point in Chapter 3 is the natural place, but it's just as valid to leave it as an open, unresolved detail the players never get a clean answer to. Either is in-genre."
+        },
+        {
+          "id": "apx-grlspd",
+          "heading": "Ren's Tally",
+          "body": "The running count of 'things that should have stopped me' continues from whatever number your table's Season 1 campaign ended it on, or starts fresh at zero if this is a standalone game. Miller's Ridge should add at least one entry. He will not explain the methodology if asked."
+        },
+        {
+          "id": "apx-kvppf0",
+          "heading": "Amagai's Corkboard",
+          "body": "Every piece of evidence, every laminated map, every one-page contingency summary Chozen produces unprompted ends up pinned here. By the campaign's end it is an genuinely useful investigation board that nobody consciously decided to build."
+        }
+      ],
+      "links": [
+        {
+          "id": "lnk-jlyisp",
+          "label": "Class 1-A roster & relationship tracker",
+          "href": "CLASS-1A/relationships.html"
+        },
+        {
+          "id": "lnk-gikp44",
+          "label": "Full character sheets — Ren, Kazama, Chozen & Izuto",
+          "href": "characters.html"
+        },
+        {
+          "id": "lnk-juo12p",
+          "label": "Session-by-session play log",
+          "href": "session-log.html"
+        }
+      ]
+    }
+  ]
+}

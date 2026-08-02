@@ -1,62 +1,61 @@
 {
-  "name": "Kinosho Kochimiko",
+  "name": "Smeet Nozoto",
   "is_pc": false,
   "gender": "Female",
-  "height": "5'4\"",
+  "height": "5'9\"",
   "body_type": "Athletic",
   "physiology": "Standard",
-  "quirk": "Neutralization",
-  "quirk_rarity": "Rare",
-  "quirk_type": "Emitter",
+  "quirk": "Quirkless",
+  "quirk_rarity": "N/A",
+  "quirk_type": "N/A",
   "appearance": {
-    "hair": "Pink. Usually slightly messy from the latest nap.",
-    "build": "Athletic but you wouldn't know it from her resting posture, which is 'recently collapsed on a surface.'",
-    "other": "Almost always has visible under-eye shadows. Carries a small blanket in her bag. This is not unusual or a surprise to anyone. When Neutralization activates, both eyes flatten to a dull pewter grey for a second or two before her normal color drains back in. Classmates call it turning off."
+    "hair": "Blonde.",
+    "build": "Athletic, deceptively strong for her frame.",
+    "other": "Freckled. Wears an old, several-sizes-too-small shirt she's had since she was little and won't explain why. Made it into a hero course without a Quirk at all — which is either the whole story or beside the point, depending on who you ask her."
   },
   "personality": {
-    "summary": "A strategic genius with extraordinary common sense who deploys both properties almost exclusively in service of finding the optimal napping location. When she does decide to engage with a problem, she solves it completely, accurately, and in about 45 seconds. Then she goes back to sleep. The class is both annoyed by and completely dependent on this.",
-    "in_class": "Apparently asleep. Answers questions correctly when called on without opening her eyes fully. The teachers have made peace with this.",
-    "in_combat": "Alert, quiet, and precise. Neutralization requires direct physical contact so she has to actually move, which she does when it matters. Very fast over short distances.",
-    "quirk_of_character": "She predicted the outcome of the capture-the-flag exercise in advance, told no one, and was completely correct. She did this to verify a hypothesis. The hypothesis was: no one would believe her. She was right."
+    "summary": "Guarded and quiet by default, especially around new people — years of being underestimated for having no Quirk taught her to let her results speak instead of her explaining herself first. Genuinely enjoys the small, ordinary things that come with finally being somewhere she's taken seriously.",
+    "in_class": "Alert, precise, says less than she knows. Answers correctly when called on and doesn't volunteer more than the question asked for.",
+    "in_combat": "Fast over short distances and technically excellent — makes up for having no Quirk with real, drilled physical technique rather than trying to compensate for it.",
+    "quirk_of_character": "Predicted the outcome of a training exercise in advance, told no one, and was completely correct. Did it purely to test whether anyone would believe her if she said it out loud. Nobody did. She didn't seem surprised."
   },
-  "backstory": "Comes from a family of early risers who have never quite understood her. She has been falling asleep in inconvenient places since she was old enough to sit up, and her parents stopped fighting it around the time she started solving problems faster asleep than the rest of them could awake.",
   "ability_scores": {
-    "note": "INT primary (Neutralization is a precise biological override — requires understanding of Quirk Factor mechanics and anatomical targeting). WIS secondary for strategic awareness.",
-    "STR": 8,
-    "DEX": 12,
-    "CON": 13,
-    "INT": 15,
-    "WIS": 14,
-    "CHA": 10,
-    "TECH": 13
+    "note": "DEX primary — with no Quirk to fall back on, her combat effectiveness is built entirely on trained physical technique. INT secondary for reading opponents and fights analytically.",
+    "STR": 12,
+    "DEX": 18,
+    "CON": 12,
+    "INT": 14,
+    "WIS": 11,
+    "CHA": 11,
+    "TECH": 9
   },
   "modifiers": {
-    "STR": -1,
-    "DEX": 1,
+    "STR": 1,
+    "DEX": 4,
     "CON": 1,
     "INT": 2,
-    "WIS": 2,
+    "WIS": 0,
     "CHA": 0,
-    "TECH": 1
+    "TECH": -1
   },
   "level": 1,
   "proficiency_bonus": 2,
-  "quirk_ability": "Intelligence",
-  "quirk_save_DC": 12,
-  "HP": 9,
-  "AC": 12,
+  "quirk_ability": "N/A",
+  "quirk_save_DC": null,
+  "HP": 31,
+  "AC": 14,
   "speed": "30 ft",
-  "suggested_class": "Combat Analyst",
-  "class_note": "Combat Analyst's read-the-field and reactive features suit a character whose primary contribution is disabling the enemy's greatest strength.",
+  "suggested_class": "Unarmed Style",
+  "class_note": "Quirkless — every advantage she has comes from trained technique rather than a Quirk. Unarmed Style's martial-arts-driven kit fits that directly.",
   "quirk_mechanics": {
-    "source": "Quirk Compendium — Neutralization",
-    "weakness": "Must use right arm for activation. If right arm is injured, restrained, or severed, the quirk cannot be used. 1-hour cooldown after each successful suppression — attempting earlier deals 2d10 true damage and stuns until end of next turn.",
+    "source": "N/A — Quirkless",
+    "weakness": "No Quirk means no Quirk save DC, no Quirk-based abilities, and no way to bail herself out of a situation her training didn't prepare her for. Everything she does in a fight has to be earned through positioning and technique.",
     "abilities": []
   },
   "dm_notes": {
-    "combat_role": "Counter-pick. Against any villain whose combat effectiveness depends on their quirk — Flashpoint, Undertow, Kuma — Kinosho is the answer, if she can get close enough to touch them. Her combat role is making other people's problems disappear. Then she goes to find a chair.",
-    "social_role": "The class's lazily accurate oracle. She is rarely wrong. She rarely tells people what she knows until asked. When asked, she tells them completely, without editorialising, and lets them deal with the information.",
-    "growth_arc": "Her disengagement is partly genuine (she's tired) and partly protective (if she cares less, losing matters less). A key moment is something going wrong that she could have prevented if she'd said something earlier. She doesn't punish herself about it — but she adjusts.",
-    "weakness_to_exploit": "Range. She has to touch someone. Against any villain with long-range attacks or who can keep distance, she's in genuine danger. Also: the cooldown means she cannot suppress two targets in rapid succession."
+    "combat_role": "Closes distance fast and looks for a clean technical opening — every advantage has to be earned through footwork and timing rather than a power she can lean on.",
+    "social_role": "Quietly reliable. Doesn't offer opinions unprompted, but when asked directly, gives a complete and accurate answer without editorializing.",
+    "growth_arc": "Being underestimated for years built real skill, but also a habit of not saying what she knows until asked. A key moment is something going wrong that she could have flagged earlier — she doesn't punish herself over it, but she adjusts.",
+    "weakness_to_exploit": "No Quirk to fall back on when the plan goes sideways. Against anything that neutralizes trained technique — difficult terrain, restraints, overwhelming numbers — she has fewer outs than her classmates."
   }
 }

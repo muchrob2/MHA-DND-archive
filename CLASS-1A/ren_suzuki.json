@@ -5,64 +5,92 @@
   "height": "5'11\"",
   "body_type": "Athletic",
   "physiology": "Standard",
-  "quirk": "Overclock",
-  "quirk_rarity": "Very Rare",
-  "quirk_type": "Emitter",
+  "quirk": "Beams From His Eyes",
+  "quirk_rarity": "Rare",
+  "quirk_type": "Transformation",
   "appearance": {
-    "hair": "Black, spiky. Looks like it was styled that way but wasn't — it just does that.",
-    "build": "Athletic and lean. Built for speed.",
-    "other": "When Overclock activates, fine electric-blue lines trace along his veins and skin for the duration. His eyes shift slightly — pupils dilate, focus sharpens. He moves differently — not faster from the outside in normal mode, but the anticipation and precision of his movement changes."
+    "hair": "Shaved head.",
+    "build": "Athletic.",
+    "other": "When Beams From His Eyes activates, the veins along his arms and neck pulse a yellow color while he's in control of it, and shift to white if he's fully engulfed — the same color shift shows in the beams themselves."
   },
   "personality": {
-    "summary": "Brave in a way that looks like recklessness and occasionally is. Sarcastic reflex over genuine nastiness — he deflects with jokes rather than sitting with weight. Underneath: he takes being a hero seriously and is quietly terrified of not being good enough for it, which he'd never say directly. He'd make a quip instead.",
-    "in_class": "Half-attentive. Does better than his attention level suggests he should. Has a quick answer for everything and occasionally the quick answer is right.",
-    "in_combat": "Aggressive entry, reads the situation mid-fight and adjusts. The bravery is real — he'll go first into something scary. The sarcasm continues during fights, which baffles enemies.",
-    "quirk_of_character": "He keeps a running count of things that should have stopped him but didn't. He refers to this as 'empirical evidence that worrying is pointless.' Chozen has pointed out that this is not what empirical means. Ren does not care."
+    "summary": "Extremely respectful, shaped by knowing what it feels like not to be accepted. Genuinely empathetic toward friends and even opponents, and quick to want to forgive and move forward rather than hold a grudge. Never expresses hatred or open negativity toward anyone. Kind and respectful underneath, but slow to actually show it unless someone else starts the conversation first.",
+    "in_class": "Quiet, mostly listening. Doesn't offer much unprompted, but pays closer attention than his stillness suggests.",
+    "in_combat": "Goes in early, reads the fight as it develops, adjusts on the fly. The bravery is real — he'll step into something scary first rather than ask someone else to.",
+    "quirk_of_character": "Keeps a private, running count of things that should have stopped him but didn't. He calls this 'evidence that worrying doesn't help.' He doesn't share the number. He doesn't need to."
   },
+  "backstory": "Born into a traditional family that raised him away from the city, away from technology, and firmly against hero culture — his father believed a world without Quirks would have no reason for evil to rise, and taught him to rely on skill and restraint over power. Ren grew up learning to fight with a blade instead, taught to spare an attacker where he could. That changed the day his father refused, again, to let him near anything to do with heroism, and something in Ren broke open: a beam of raw heat tore from his eyes, cut the house in two, and burned the rest of it down before he understood what had happened. His father saw exactly the thing he'd spent his life trying to avoid, and disowned him for it. Ren left with nothing but the sword his father had trained him on and the conviction that if he couldn't be accepted at home, he'd find people who could accept him somewhere else. U.A. was that somewhere else.",
   "ability_scores": {
-    "note": "DEX primary — Overclock is a speed and reflex amplification quirk, DEX governs both mechanics and combat output. TECH secondary for the biological monitoring Overclock requires (knowing when you're hitting your limits).",
-    "STR": 10,
-    "DEX": 15,
-    "CON": 13,
+    "note": "DEX primary — precise aim and split-second control keep Beams From His Eyes a weapon instead of a liability. CON secondary for the physical toll repeated full-power blasts take on his body.",
+    "STR": 14,
+    "DEX": 18,
+    "CON": 20,
     "INT": 13,
-    "WIS": 12,
-    "CHA": 8,
-    "TECH": 14
+    "WIS": 10,
+    "CHA": 10,
+    "TECH": 4
   },
   "modifiers": {
-    "STR": 0,
-    "DEX": 2,
-    "CON": 1,
+    "STR": 2,
+    "DEX": 4,
+    "CON": 5,
     "INT": 1,
-    "WIS": 1,
-    "CHA": -1,
-    "TECH": 2
+    "WIS": 0,
+    "CHA": 0,
+    "TECH": -3
   },
   "level": 1,
   "proficiency_bonus": 2,
   "quirk_ability": "Dexterity",
   "quirk_save_DC": 13,
-  "HP": 10,
-  "AC": 13,
+  "HP": 35,
+  "AC": 14,
   "speed": "30 ft",
-  "suggested_class": "Heroic Vanguard",
-  "class_note": "Heroic Vanguard → Speedster Style. Overclock's speed amplification and reaction enhancement are the Speedster's core gameplay loop.",
+  "suggested_class": "Weapon Specialist",
+  "class_note": "Weapon Specialist blends his katana training with Beams From His Eyes — close-range steel backed by a ranged option when the distance calls for it.",
   "quirk_mechanics": {
-    "source": "Quirk Compendium — Overclock",
-    "weakness": "Overclock's extreme brain and muscle stimulation burns through neural energy and oxygen. When it ends, Ren must succeed on a DC 15 CON save or gain a level of exhaustion; failing this more than once per long rest causes neural backlash (disadvantage on INT/WIS checks for 1 hour, -25 ft speed until exhaustion clears). If Overclock ends abruptly or runs past its safe duration, he takes 4d10 psychic damage and is stunned until the end of his next turn.",
-    "abilities": []
+    "source": "Quirk Compendium — Beams From His Eyes",
+    "weakness": "Firing burns through his own stamina fast. Extended or repeated full-power use forces a CON save or he takes self-inflicted damage from the strain. If he pushes past his safe output, the beam ends in an uncontrolled overload — he takes damage and is stunned until the end of his next turn.",
+    "abilities": [
+      {
+        "name": "Laser Beam",
+        "type": "Action",
+        "description": "As an action, fires a concentrated beam of searing energy from his eyes. Range 80 feet, 3d8 radiant damage on a hit (4d8 at 5th level, 5d8 at 10th, 6d8 at 15th, 7d8 at 20th). The beam pierces most defenses, ignoring half and three-quarters cover, and deals double damage to constructs, metal, or other inorganic materials. He can split the beam between two adjacent targets within 15 feet of each other, dividing the damage evenly. Three times per short rest, as a bonus action he can charge both eyes so the next Laser Beam that turn deals an extra 1d8 radiant damage and pushes the target back 20 feet."
+      },
+      {
+        "name": "Meganetic Blaster",
+        "type": "Action",
+        "description": "At 7th level, as a full-turn action he unleashes a massive discharge in a 10-foot-wide, 120-foot line. Each creature in the line makes a DEX save against his Quirk save DC, taking 11d6 radiant damage (half on a success). Ignores all cover except total, and melts or disintegrates most mundane metal, ice, and stone in its path."
+      },
+      {
+        "name": "Focused Precision",
+        "type": "Action",
+        "description": "At 10th level, as an action he can narrow his beam into a micro-laser and make a ranged attack against a target within 60 feet. On a hit: 5d10 radiant damage, and the target's AC is reduced by 2 (minimum 10) until the start of his next turn as armor or plating melts away."
+      }
+    ]
+  },
+  "additional_features": "Only eats traditional Japanese food — noodles, rice, and the like. Spends free time reading, since he only recently gained regular access to technology and still needs help from classmates to use most of it.",
+  "inventory": {
+    "items": [
+      {
+        "name": "Katana (Dokugan)",
+        "qty": 1,
+        "notes": "2d6 slashing, two-handed, heavy, finesse. A traditional wrap crafted by his own father, slightly chipped and worn from heavy use. Named Dokugan — 'One Eye.'"
+      }
+    ],
+    "currency": { "yen": 0, "ep": 0, "pp": 1, "cp": 0, "gp": 0, "sp": 0 }
   },
   "player_notes": {
-    "role_summary": "The class's speed-striker. Overclock makes you fast — your window is short, your burst is high, and the comedown is real if you push past your limit. Instant Eight is your big multi-strike play once you hit 4th level. Know your limits.",
-    "social_position": "Natural team frontman by accident rather than design — he goes in first, which people interpret as leadership. He finds this funny and slightly uncomfortable.",
-    "growth_hook": "His sarcasm is armour for the specific fear of not being enough. As the stakes escalate, moments where the joke doesn't land — or where he just can't make one — are the ones that matter.",
-    "suggested_background": "Street-level neighbourhood in Kurogane Wharf. Hero worship baked in, because he watched heroes work growing up."
+    "role_summary": "The class's ranged pressure piece. Laser Beam is your bread and butter; Meganetic Blaster is the big swing once you're higher level. Beams From His Eyes hits hard but burns your own stamina to do it — know your limits before you push past them.",
+    "social_position": "Natural team frontman by accident rather than design — he goes in first, which people read as leadership. He finds this funny and slightly uncomfortable.",
+    "growth_hook": "He's spent his whole life needing to prove he's not the thing his father saw in him. Moments where restraint isn't enough — where the fight actually calls for the full force of what he can do — are the ones that matter.",
+    "suggested_background": "Raised in an isolated, traditional household outside the city, taught to avoid relying on his Quirk at all until he no longer had a choice."
   },
   "dm_notes": {
-    "combat_role": "First-in speed-striker. He opens fights fast, creates pressure, and forces enemies to commit before the rest of the class arrives. The post-Overclock exhaustion risk means enemies who survive his Overclock window are in a better position — track this.",
-    "social_role": "The deflector. He keeps things light when they get heavy. The party relies on this; they also sometimes need someone to make them stop and take something seriously.",
-    "growth_arc": "First into every danger. At some point the danger wins a round. How he responds to that is his arc.",
-    "weakness_to_exploit": "Low STR and CHA — he's not a brawler and he's not a negotiator. The post-Overclock exhaustion risk is a real vulnerability in extended fights. Enemies will learn to outlast his Overclock window."
+    "combat_role": "Ranged pressure and zone control. Laser Beam keeps enemies from closing distance comfortably and punishes anyone who tries to hide behind cover made of anything metal or inorganic.",
+    "social_role": "Steady, not flashy. Reassures the team without needing to be the one holding it together — he doesn't see himself as the glue, but he never gives up on anyone either.",
+    "growth_arc": "Carries real fear of becoming what his father was afraid of. How he handles a moment where his quirk genuinely scares someone else is the throughline.",
+    "weakness_to_exploit": "Low TECH and CHA — he's not a negotiator and struggles with anything technical without help. The self-damage risk from overusing Laser Beam is a real vulnerability in extended fights; enemies who force him to keep firing can turn his own quirk against him."
   },
   "_file": "ren_suzuki.json",
   "_roster_id": 17

@@ -1,7 +1,7 @@
 {
   "class": "U.A. High — Class 1-A, Hero Course",
   "homeroom_teacher": "Oshiro Daikichi (Warden)",
-  "total_students": 21,
+  "total_students": 20,
   "note": "All PC entries marked with is_pc: true. All student files in this folder follow MHA5e rules (Official Handbook + Quirk Compendium).",
   "students": [
     {
@@ -84,15 +84,15 @@
     },
     {
       "id": 7,
-      "name": "Takazuki Hanori",
-      "quirk": "Invisibility",
+      "name": "Zaro Brando",
+      "quirk": "Warp Gate",
       "gender": "Female",
-      "height": "5'2\"",
-      "physiology": "Heteromorph",
-      "role": "Scout / Infiltrator",
-      "is_pc": false,
-      "personality_tag": "Loud personality; constantly fighting to be noticed; knows exactly when to be quiet",
-      "notable_trait": "Completely invisible body; must remove all clothing to use quirk effectively",
+      "height": "5'4\"",
+      "physiology": "Standard",
+      "role": "Mobility / Battlefield Control",
+      "is_pc": true,
+      "personality_tag": "Guarded and quiet in class, watching more than she says; a completely different person once a portal's open and a fight starts",
+      "notable_trait": "A shroud of deep purple fog drifts around her whenever her quirk is active; small held objects occasionally vanish into it and reappear elsewhere once a forgotten portal closes",
       "file": "takazuki_hanori.json"
     },
     {
@@ -149,15 +149,15 @@
     },
     {
       "id": 12,
-      "name": "Kinosho Kochimiko",
-      "quirk": "Neutralization",
+      "name": "Smeet Nozoto",
+      "quirk": "Quirkless",
       "gender": "Female",
-      "height": "5'4\"",
+      "height": "5'9\"",
       "physiology": "Standard",
-      "role": "Quirk Shutdown / Strategic Anchor",
+      "role": "Quirkless — Technique & Tactics",
       "is_pc": false,
-      "personality_tag": "Strategic genius with incredible common sense; uses both properties exclusively to find optimal nap locations",
-      "notable_trait": "Pink hair; perpetually tired; when she does decide to engage, she is correct about everything",
+      "personality_tag": "Guarded and quiet in class; makes up for having no Quirk with raw physical technique and sharp analysis",
+      "notable_trait": "Blonde, freckled; wears an old, several-sizes-too-small shirt she's had since childhood and won't explain why",
       "file": "kinosho_kochimiko.json"
     },
     {
@@ -175,15 +175,15 @@
     },
     {
       "id": 14,
-      "name": "Toshida Shogoro",
-      "quirk": "Comic",
+      "name": "Rakuka Rizo",
+      "quirk": "Dying Flight",
       "gender": "Male",
       "height": "5'9\"",
-      "physiology": "Heteromorph",
-      "role": "AoE Control / Battlefield Chaos",
+      "physiology": "Standard",
+      "role": "Aerial Striker / Rescue Specialist",
       "is_pc": false,
-      "personality_tag": "Dramatic and enthusiastic about everything",
-      "notable_trait": "Head is a large speech bubble; no hair; physically dramatic in all situations including minor ones",
+      "personality_tag": "Theatrical and warm; treats every rescue like the crowd's watching",
+      "notable_trait": "Short grey hair; a dangling earring with sentimental value; flies in, does the dramatic part, flies out",
       "file": "toshida_shogoro.json"
     },
     {
@@ -215,14 +215,14 @@
     {
       "id": 17,
       "name": "Ren Suzuki",
-      "quirk": "Overclock",
+      "quirk": "Beams From His Eyes",
       "gender": "Male",
       "height": "5'11\"",
       "physiology": "Standard",
-      "role": "Speed Striker / Rapid Response",
+      "role": "Ranged Striker / Pressure",
       "is_pc": true,
-      "personality_tag": "Brave and sarcastic; moves before he thinks and usually lands fine",
-      "notable_trait": "Black spiky hair; in combat, moves so fast it looks like he teleports",
+      "personality_tag": "Respectful and empathetic; slow to speak up unless someone starts the conversation first",
+      "notable_trait": "Shaved head; veins along his arms and neck pulse yellow when Beams From His Eyes activates, white when he's fully engulfed",
       "file": "ren_suzuki.json"
     },
     {
@@ -263,19 +263,6 @@
       "personality_tag": "Intelligent and self-reliant; prefers to figure things out independently",
       "notable_trait": "Black textured crew cut; engine protrusions on legs; needs juice to operate at full capacity",
       "file": "izuto_kutsu.json"
-    },
-    {
-      "id": 21,
-      "name": "Zaro Brando",
-      "quirk": "Warp Gate",
-      "gender": "Female",
-      "height": "5'3\"",
-      "physiology": "Standard",
-      "role": "Mobility / Battlefield Control",
-      "is_pc": true,
-      "personality_tag": "Flat, dry, unbothered; announces her presence about half a second after her fog already has",
-      "notable_trait": "A shroud of deep purple fog drifts around her whenever her quirk is active; small held objects occasionally vanish into it and reappear elsewhere once a forgotten portal closes",
-      "file": "zaro_brando.json"
     }
   ]
 }

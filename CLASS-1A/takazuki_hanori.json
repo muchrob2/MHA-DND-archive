@@ -1,61 +1,71 @@
 {
-  "name": "Takazuki Hanori",
-  "is_pc": false,
+  "name": "Zaro Brando",
+  "is_pc": true,
   "gender": "Female",
-  "height": "5'2\"",
+  "height": "5'4\"",
   "body_type": "Athletic",
-  "physiology": "Heteromorph",
-  "quirk": "Invisibility",
-  "quirk_rarity": "Common",
-  "quirk_type": "Mutant",
+  "physiology": "Standard",
+  "quirk": "Warp Gate",
+  "quirk_rarity": "Very Rare",
+  "quirk_type": "Emitter",
   "appearance": {
-    "hair": "N/A — she is completely invisible.",
-    "build": "Athletic, 5'2\" — she knows this because she's measured herself by other means. Others know this approximately.",
-    "other": "Permanently invisible body. To use her quirk effectively, she must remove all clothing. Clothing she's wearing is visible. She has developed very strong opinions about this particular limitation."
+    "hair": "Black, wolf cut, usually half-obscured by fog.",
+    "build": "Athletic, small enough to move well through tight spaces.",
+    "other": "Keeps herself shrouded in a deep purple fog she can call up at will — partly for the tactical concealment, partly because it means fewer people looking directly at her. Small objects she's holding occasionally vanish into the fog and turn up somewhere else once a portal she forgot about finally closes."
   },
   "personality": {
-    "summary": "Tries hard to be noticed. Loud, opinionated, and present — she is not going to be the person in the corner that no one knows is there. She knows exactly when to be quiet: in a dangerous situation, she becomes the silence itself. The switch between these modes is very clean.",
-    "in_class": "One of the most vocal students. Has a specific seat that everyone knows is hers and will vacate if somehow occupied. Taps the desk when thinking.",
-    "in_combat": "Precisely the opposite — nearly wordless, completely still except in motion. She's a different person in a fight.",
-    "quirk_of_character": "She has strong feelings about the concept of being seen. She hates the word 'invisible' used as a metaphor — it's just her appearance, it doesn't mean anything about her."
+    "summary": "Reads as cold and closed-off at first. Once someone actually gets past that, she's genuinely warm — just slow to let it show, and prone to over-correcting into forced confidence when she's nervous about being liked.",
+    "in_class": "One of the more vocal students once she's comfortable in a room. Has a specific seat that's unmistakably hers. Taps the desk when thinking.",
+    "in_combat": "The opposite of in class — quiet, still, economical. A different person entirely once a portal's open.",
+    "quirk_of_character": "Chooses a small group to try to befriend in any new environment, then spends a while quietly gathering information about them before actually making contact. By the time she says hello, she already knows more than she's letting on."
   },
+  "backstory": "Her father was tied to a crime syndicate that used its members' children — and their Quirks — as assets; she was marked young and used to help people disappear from scenes she had nothing to do with. Her mother was pushed out of the picture entirely. When her father was finally arrested, she ended up in foster care instead of the life that had been planned for her. She kept the reflexes. She kept the fog, too — partly habit, partly to avoid being recognized. U.A. was the first exit that looked like it led somewhere else.",
   "ability_scores": {
-    "note": "DEX primary (Invisibility is agility/speed-oriented; her combat style relies on positioning and striking unseen). WIS secondary for perceptive awareness.",
-    "STR": 8,
-    "DEX": 15,
-    "CON": 12,
+    "note": "DEX primary — Warp Gate is a precision, agility-oriented quirk; placing and stepping through portals cleanly under pressure rewards raw dexterity. WIS secondary for reading a room from a distance.",
+    "STR": 10,
+    "DEX": 20,
+    "CON": 11,
     "INT": 13,
-    "WIS": 14,
-    "CHA": 13,
-    "TECH": 10
+    "WIS": 10,
+    "CHA": 10,
+    "TECH": 12
   },
   "modifiers": {
-    "STR": -1,
-    "DEX": 2,
-    "CON": 1,
+    "STR": 0,
+    "DEX": 5,
+    "CON": 0,
     "INT": 1,
-    "WIS": 2,
-    "CHA": 1,
-    "TECH": 0
+    "WIS": 0,
+    "CHA": 0,
+    "TECH": 1
   },
   "level": 1,
   "proficiency_bonus": 2,
   "quirk_ability": "Dexterity",
   "quirk_save_DC": 12,
-  "HP": 9,
-  "AC": 13,
+  "HP": 30,
+  "AC": 15,
   "speed": "30 ft",
-  "suggested_class": "Street Scum or Heroic Vanguard → Speedster Style",
-  "class_note": "Her quirk is most powerful for infiltration and unseen strikes. Street Scum's stealth and mobility features enhance her natural advantages. Speedster Style also works for mobile unseen assault.",
+  "suggested_class": "Street Scum",
+  "class_note": "Warp Gate is built for infiltration and unseen strikes — Street Scum's stealth and mobility features play directly to that strength.",
   "quirk_mechanics": {
-    "source": "Quirk Compendium — Invisibility",
-    "weakness": "Invisibility does not extend to clothing or objects. Must remove all clothing to be fully unseen. Going fully naked exposes skin to environmental hazards. If wearing any visible clothing or equipment, she is considered seen.",
-    "abilities": []
+    "source": "Quirk Compendium — Warp Gate",
+    "weakness": "Opening a portal requires part of her real body to be present at the point of creation, which briefly exposes her to attack. Portals are coordinate-based — she needs a clear line of sight or precise knowledge of a location to open one there, so rescuing someone at an unknown location isn't possible. She cannot create portals in heavy wind.",
+    "abilities": [
+      { "name": "Portal Creation", "type": "Action", "description": "Creates a number of linked portals up to her proficiency bonus, each within 30 feet of her, each roughly 20 feet across, connecting to any location she can see or has precise coordinates for. Each portal lasts up to one minute or until dismissed. As a reaction, she can collapse a portal on a creature attempting to move through it — that creature makes a DEX save against her Quirk save DC, taking 3d10 damage and being pushed back 10 feet on a failure." },
+      { "name": "Fog Shroud", "type": "Bonus Action", "description": "Envelops herself in dark fog, becoming heavily obscured for one minute. While shrouded, she can create portals as a bonus action, and attacks against her while obscured have disadvantage." }
+    ]
+  },
+  "player_notes": {
+    "role_summary": "Mobility and battlefield control. You're not usually the one trading blows — you're deciding where the fight happens. Pre-place portals before a fight starts whenever you can; reacting mid-combat works but costs you the surprise the fog is built around.",
+    "social_position": "Not isolated, just guarded — people have learned to check corners before assuming a room's empty. Real, if understated, rapport with anyone who doesn't demand she perform warmth she isn't feeling yet.",
+    "growth_hook": "The gap between wanting to be seen and having spent years learning how not to be. Worth surfacing as the campaign goes on — not by changing what she is, but by the class showing, without a speech about it, that they always know she's there.",
+    "suggested_background": "Faction-Bound Initiate — grew up inside a syndicate that saw her Quirk as a tool before it saw her as a person. U.A. is the first place that's asked what she wants."
   },
   "dm_notes": {
-    "combat_role": "Scout and unseen striker. Advantage on all attacks (when unclothed) makes her hit rate exceptional. Her vulnerability is environmental damage when using the quirk fully — exposure to cold, heat, or rough terrain matters more for her than armoured classmates.",
-    "social_role": "Unexpectedly central in the dorms. She's the loudest invisible person anyone has met. People talk around her before they check if she's there. She has used this to win every dorm argument about the TV.",
-    "growth_arc": "The dissonance between wanting to be seen and having a quirk built on invisibility. Resolves not by changing the quirk but by the class demonstrating — without making a speech about it — that they always know she's there.",
-    "weakness_to_exploit": "Fully visible when clothed. Exposure when unclothed. Any enemy with truesight negates her primary combat advantage completely. Heat and cold are genuine physical threats."
+    "combat_role": "Battlefield architect. Her value is proportional to prep time — give her a scouting phase or a moment before initiative whenever the scene allows it, and let a well-placed portal pair genuinely swing an encounter.",
+    "social_role": "Class analyst by habit — gathers information about people from a distance before ever engaging directly, so that by the time she does, she's already prepared.",
+    "growth_arc": "Same dissonance as the quirk_of_character note: watching from a distance versus actually being known. Let a scene occasionally rattle her past the guarded exterior.",
+    "weakness_to_exploit": "Low STR — she is not built for melee. Enemies who deny her setup time by rushing the fight before she can place a portal pair take away most of what makes her dangerous. Coordinate-based portals also mean she can't rescue someone at a location she can't see or hasn't mapped."
   }
 }

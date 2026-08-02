@@ -1,0 +1,69 @@
+{
+  "name": "Zaro Brando",
+  "is_pc": true,
+  "gender": "Female",
+  "height": "5'3\"",
+  "body_type": "Slight",
+  "physiology": "Standard",
+  "quirk": "Warp Gate",
+  "quirk_rarity": "Rare",
+  "quirk_type": "Emitter",
+  "appearance": {
+    "hair": "Deep violet, usually half-obscured by the fog that trails her.",
+    "build": "Small and unhurried. Nothing about how she carries herself suggests what she can do with a room.",
+    "other": "A shroud of deep purple fog drifts loosely around her whenever Warp Gate is active — sometimes she's visibly inside it, sometimes it just precedes her into a room by half a second. Small objects she's holding occasionally vanish into the fog and turn up somewhere else once a portal she forgot about finally closes."
+  },
+  "personality": {
+    "summary": "Flat affect, dry delivery, permanently unbothered. She says exactly as much as a situation requires and not one word more. This reads as coldness to people who don't know her; it's closer to economy.",
+    "in_class": "Present but easy to lose track of — the fog helps with that, and so does she. Answers direct questions precisely. Volunteers nothing.",
+    "in_combat": "Thinks two moves ahead in space, not just in time — where the fight will be, not just where it is. Plants a portal early and often forgets to mention it exists until it matters.",
+    "quirk_of_character": "Introduces herself to a room a half-second after her fog already has. She's stopped apologising for it. 'I was here first,' she tells startled classmates, and it's usually true."
+  },
+  "ability_scores": {
+    "note": "INT primary — Warp Gate is a precision spatial quirk; placing and tracking multiple portals under pressure is a reasoning problem, not a reflex one. DEX secondary for stepping through cleanly under fire.",
+    "STR": 8,
+    "DEX": 13,
+    "CON": 11,
+    "INT": 15,
+    "WIS": 12,
+    "CHA": 10,
+    "TECH": 13
+  },
+  "modifiers": {
+    "STR": -1,
+    "DEX": 1,
+    "CON": 0,
+    "INT": 2,
+    "WIS": 1,
+    "CHA": 0,
+    "TECH": 1
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Intelligence",
+  "quirk_save_DC": 13,
+  "HP": 8,
+  "AC": 12,
+  "speed": "25 ft",
+  "suggested_class": "Quirk Savant",
+  "class_note": "Quirk Savant → expanded quirk use per rest suits Warp Gate directly: more portals held open at once, more chances to pre-place an exit before a fight even starts.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Warp Gate",
+    "weakness": "A portal pair must be placed before either can be used, and placing one requires Zaro to physically touch or clearly mark both points — she can't drop an exit somewhere she hasn't been or can't see. Portals are visible as faint violet shimmer to anyone who knows to look (DC 13 Perception), and a strong enough displacement of air or weather can disrupt the fog shroud she uses to stay unseen while setting one up.",
+    "abilities": []
+  },
+  "player_notes": {
+    "role_summary": "The class's mobility and battlefield-control piece. You're not the one trading blows — you're deciding where the fight happens. Pre-place portals before the fight starts if you can; reacting mid-combat is possible but costs you the element of surprise the fog is built around.",
+    "social_position": "Not isolated, just quiet by default — the class has learned to check corners before assuming a room is empty. She has a real, low-key rapport with people who don't demand she perform enthusiasm she doesn't have.",
+    "growth_hook": "Being first into a room and saying nothing about it is a habit, not a limitation — it's worth asking, over the campaign, what she'd say if someone actually waited for the answer.",
+    "suggested_background": "Grew up in a large, loud household and found that a portal and a closed door solve most of the same problems. Applied to U.A. mostly to see if anyone could actually keep track of her. So far, no."
+  },
+  "dm_notes": {
+    "combat_role": "Battlefield architect. Her value is proportional to prep time — give her a scouting phase or a moment before initiative rolls whenever the scene allows it, and let a well-placed portal pair genuinely swing an encounter.",
+    "social_role": "The one who's already in the room. Useful for information-gathering scenes; she overhears things by default.",
+    "growth_arc": "Being unbothered is armour too, just a quieter kind than Ren's jokes. Watch for the moment a scene actually rattles her, and let it show.",
+    "weakness_to_exploit": "Low STR and HP — she is not built to be caught in melee. Enemies who deny her setup time (rush the fight before she can place a portal pair) take away most of what makes her dangerous."
+  },
+  "_file": "zaro_brando.json",
+  "_roster_id": 21
+}

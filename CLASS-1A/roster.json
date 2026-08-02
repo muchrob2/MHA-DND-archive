@@ -1,7 +1,7 @@
 {
   "class": "U.A. High — Class 1-A, Hero Course",
   "homeroom_teacher": "Oshiro Daikichi (Warden)",
-  "total_students": 20,
+  "total_students": 21,
   "note": "All PC entries marked with is_pc: true. All student files in this folder follow MHA5e rules (Official Handbook + Quirk Compendium).",
   "students": [
     {
@@ -263,6 +263,19 @@
       "personality_tag": "Intelligent and self-reliant; prefers to figure things out independently",
       "notable_trait": "Black textured crew cut; engine protrusions on legs; needs juice to operate at full capacity",
       "file": "izuto_kutsu.json"
+    },
+    {
+      "id": 21,
+      "name": "Zaro Brando",
+      "quirk": "Warp Gate",
+      "gender": "Female",
+      "height": "5'3\"",
+      "physiology": "Standard",
+      "role": "Mobility / Battlefield Control",
+      "is_pc": true,
+      "personality_tag": "Flat, dry, unbothered; announces her presence about half a second after her fog already has",
+      "notable_trait": "A shroud of deep purple fog drifts around her whenever her quirk is active; small held objects occasionally vanish into it and reappear elsewhere once a forgotten portal closes",
+      "file": "zaro_brando.json"
     }
   ]
 }

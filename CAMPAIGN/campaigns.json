@@ -448,6 +448,274 @@
           "href": "session-log.html"
         }
       ]
+    },
+    {
+      "id": "first-term",
+      "title": "Class 1-A — First Term",
+      "tagline": "Same class, same campus, a leaner open built to run tonight.",
+      "icon": "🎓",
+      "levelRange": "Levels 1-6",
+      "estimate": "12-14 sessions",
+      "tone": "A ground-up premade cut of Class 1-A's first term at U.A. — same twenty-one students, same dorm, same city, told leaner and tighter so a table can pick it up and run it with almost no prep. Where Season 1 goes deep and ensemble across every named student, First Term keeps the cast in frame but keeps its foot on the plot: an exam, a proving ground, a first real villain encounter, and a climax that earns the jump to Level 6. Ruin exists here too, but only in outline — a placeholder threat sized to be dropped in, reskinned, or expanded later without unpicking anything upstream of it. Run this for a fresh table that wants the world without the full Season 1 runtime, or as a second, faster campaign for a table that's already played it once.",
+      "background": [
+        {
+          "id": "bg-y1t3tdq",
+          "heading": "Who This Is For",
+          "body": "This is a parallel open, not a sequel — it starts at the same entrance exam Season 1 does, with the same finalized Class 1-A roster, and tells a shorter, tighter version of a similar shape: exam, downtime, first villain contact, escalation. Use it when you want the Class 1-A cast and setting without committing to Season 1's full two-chapter runtime, or as a second table's campaign that won't collide with a Season 1 game already in progress at yours."
+        },
+        {
+          "id": "bg-0xr8e53",
+          "heading": "The Cast",
+          "body": "Five PCs: Ren Suzuki (Overclock — speed), Kazama Kenji (Steel — frontline tank), Chozen Tadachi (Stress — escalating striker), Izuto Kutsu (Engine — rapid striker), and Zaro Brando (Warp Gate — mobility and battlefield control). All five are finalized characters with full sheets in the character library. The other sixteen named students exist in the fiction exactly as written in the roster and should show up in scenes whether or not a player is behind them — Toshida's doorframe, Nakaya's electronics, Masahata's ranking chart, and Kinosho's naps are all fair game for texture in any downtime scene.\n\n• Toshida Shogoro's speech bubble head makes doorways a recurring hazard\n• Zaro Brando's protective fog swallows small held objects — they turn up elsewhere once a forgotten portal closes\n• Nakaya Emari has short-circuited several pieces of common room electronics and refuses to apologise\n• Masahata Shikoji maintains a printed personal ranking chart on the fridge that everyone else ignores\n• Kinosho Kochimiko has the best strategic mind in the class and uses it exclusively to find the optimal napping spot"
+        },
+        {
+          "id": "bg-nlsvzqa",
+          "heading": "On The Villains",
+          "body": "Ruin is the only faction in play here — Fracture is deliberately left out of First Term. Every Ruin scene in this module is written as a placeholder: enough to run tonight, not so much that reworking Ruin's specific members or motives later breaks anything upstream. Where a scene needs a named Ruin operative, it calls for a role (\"a Ruin Hardskin,\" \"Ruin's heavy\") rather than leaning on deep characterization — swap in whatever version of Ruin you're building next without rewriting the chapter around it."
+        },
+        {
+          "id": "bg-qiu7xfp",
+          "heading": "Running This Module",
+          "body": "Milestone leveling, not tracked XP. The class starts Level 1 and closes Level 6 — each chapter calls out its milestone at the end. This is written for a full-ensemble table in spirit (twenty-one named students exist in the fiction) but is mechanically sized for four to six seated players; scale NPC enemy counts and HP to your actual table, not to the fictional class size. If a table is smaller than five, let players double up on secondary students in scenes their own PC isn't central to rather than trimming the roster."
+        }
+      ],
+      "chapters": [
+        {
+          "id": "ch-6snxvjy",
+          "number": 1,
+          "title": "The Entrance Exam",
+          "levels": "Level 1",
+          "estimate": "2-3 sessions",
+          "intro": "This is how the class meets each other — before names, before dorm assignments, before anyone knows who's dangerous and who just looks it. The exam starts without warning and doesn't slow down to let anyone catch up. Keep it fast and keep it chaotic; the plot doesn't need subtlety here, it needs twenty-one strangers finding out what they're like under pressure.",
+          "dmNote": "Run the exam as a single long combat/skill-challenge scene, not a dungeon crawl. Every named student gets one clean, specific action during the exam — pick a handful of the beats below per session and let the rest happen in the background. The PCs should each get a spotlight moment; everyone else is color.",
+          "milestone": "Passing the exam and making it through the first night in the dorms completes First Term's opening milestone — Level 2.",
+          "sections": [
+            {
+              "id": "sec-p4fywht",
+              "heading": "Arrival",
+              "tag": "Opening scene",
+              "type": "general",
+              "readAloud": "The gates of U.A. don't look like much from the outside — that's on purpose. Inside, the campus is enormous, and every single person walking past you is about to be a stranger you live with for the next three years. Somewhere, a staff member with a clipboard is trying and failing to get twenty-one teenagers into a single orderly line.",
+              "body": "No pre-established groupings. Let players introduce their PCs to each other and to a few named NPCs organically in the crowd — this is the only calm scene before the exam starts. Zaro's fog announces her before she does; Toshida already has a doorframe incident by the time everyone's inside.",
+              "developments": "",
+              "treasure": "",
+              "dmNote": "",
+              "aside": null
+            },
+            {
+              "id": "sec-8u9pgj2",
+              "heading": "The Exam Begins",
+              "tag": "No warning, no countdown",
+              "type": "encounter",
+              "readAloud": "There's no signal. One second everyone's being herded into a staged city block, the next a wall comes down thirty feet away and something with too many legs is standing in the dust where it used to be. Somebody screams. It might be a recording.",
+              "body": "A simulated disaster scenario: collapsing structures, simple combat drones as villain stand-ins, mannequin \"civilians\" to rescue. Scale enemy count and HP to your table (base: HP = 12 + 3×level, AC 11, +3 to hit, 1d6 damage). No predetermined teams — students self-organize in real time.\n\nGive each PC one clean spotlight beat:\n• Ren is simply gone mid-sprint; nobody sees him move until he's already at the far wall.\n• Kazama hardens and takes a hit meant for a mannequin civilian, barely registering it.\n• Chozen's Stress spikes on its own in round one — he hasn't decided to fight anything yet and it doesn't ask permission.\n• Izuto's engine-assisted burst gets him across a gap nobody else can clear, and he immediately starts planning the next three moves.\n• Zaro's fog rolls into a collapsed section a half-second before she does, and a mannequin \"civilian\" that should be trapped is suddenly not.",
+              "developments": "The exam ends with a single large combat drone targeting the highest scorers so far — a forced cooperation beat. Whoever brings it down (or distracts it long enough for someone else to) sets the tone for how this class solves problems together.",
+              "treasure": "",
+              "dmNote": "This is not meant to be winnable solo. If a PC tries to solo the finale drone, let it go badly enough that help is clearly needed — not lethally, just humbling.",
+              "aside": {
+                "label": "Villain Thread — Ruin",
+                "body": "Nothing from Ruin touches the exam directly. If you want a single seed for later: a compact, unmarked drone was logged watching from the observation tier. Exam staff assumed it belonged to another department. It didn't."
+              }
+            },
+            {
+              "id": "sec-vcwpqlh",
+              "heading": "Twenty-One Strangers",
+              "tag": "Aftermath",
+              "type": "npc",
+              "readAloud": "",
+              "body": "Results post that evening. The class passes collectively — nobody failed alone, nobody carried the whole thing alone. This is the first time the group looks like a class instead of twenty-one separate applicants, and the first dorm night starts the low-grade chaos that's going to define the next few sessions: Toshida already testing which doorframe fights back, Nakaya already looking for something to short out, Masahata already asking someone for their exam score.",
+              "developments": "",
+              "treasure": "",
+              "dmNote": "Close the chapter here, not on the drone fight. The score-reveal-and-first-night scene is short but it's the actual milestone moment — let it breathe for five minutes before cutting to Chapter 2.",
+              "aside": null
+            }
+          ]
+        },
+        {
+          "id": "ch-7tiisg0",
+          "number": 2,
+          "title": "Twenty-One Strangers, One Dorm",
+          "levels": "Levels 2-3",
+          "estimate": "3 sessions",
+          "intro": "No villains this chapter — this is where the class becomes a class. Downtime beats build the ensemble the rest of the campaign runs on, and the chapter closes with a friendly, low-stakes 3v3 bracket at the training grounds: the first time everyone gets to see each other's quirks used on purpose instead of in a crisis.",
+          "dmNote": "Treat the first two sessions as a montage with a handful of scheduled bits (below) rather than a tightly scripted scene list. Let players drive which downtime beats get screen time. The 3v3 bracket in the third session is the chapter's actual set piece — give it a full session.",
+          "milestone": "Finishing the 3v3 bracket and settling into a real routine at Heights Alliance completes this chapter's milestone — Level 3.",
+          "sections": [
+            {
+              "id": "sec-n6so4qp",
+              "heading": "Move-In Week",
+              "tag": "Downtime",
+              "type": "general",
+              "readAloud": "",
+              "body": "Pure character chaos, no combat. Suggested beats to drop in wherever they fit:\n• The doorframe incident — Toshida's speech bubble catches on the same doorframe every single morning. He's named it and considers this an ongoing rivalry.\n• The charger incident — Nakaya \"helps\" with a dead phone charger and fuses the port shut at double voltage. She considers this a success.\n• Masahata prints a laminated ranking chart based on exam scores and posts it on the fridge unasked.\n• Zaro's fog swallows someone's snack mid-conversation. It reappears three rooms away an hour later.\n• Kinosho is found asleep in a stairwell. This becomes one of several known napping spots. Nobody has catalogued them all.",
+              "developments": "",
+              "treasure": "",
+              "dmNote": "Let PCs propose their own downtime beats too — this chapter exists to generate the small, specific texture the rest of the campaign will keep referencing.",
+              "aside": null
+            },
+            {
+              "id": "sec-qeoarwl",
+              "heading": "The Common Room",
+              "tag": "Social",
+              "type": "general",
+              "readAloud": "",
+              "body": "First real contact with Class 1-B happens here or nearby — shared cafeteria schedule, a hallway run-in, nothing hostile yet. Just the first time this class registers there's another one exactly like it a hallway away. Use this scene to let PCs form or deepen a relationship with an NPC classmate of their choice.",
+              "developments": "",
+              "treasure": "",
+              "dmNote": "",
+              "aside": null
+            },
+            {
+              "id": "sec-rfex20f",
+              "heading": "The 3v3 Proving Grounds",
+              "tag": "Friendly bracket · full session",
+              "type": "encounter",
+              "readAloud": "Oshiro doesn't explain the rules twice. Three-person teams, elimination by tag or a three-second hold, no lethal quirk use, and team assignments are calibrated for maximum discomfort, not balance. \"Figure it out,\" he says, and walks to the edge of the field.",
+              "body": "A single-elimination 3v3 bracket at the training grounds. Mixed teams of PCs and NPC classmates — deliberately split so PCs aren't all stacked on one team. NPC opponents use a simplified statline: HP = 15 + 3×level, AC 11 + DEX mod, +3 to hit, 1d6 + STR/DEX damage.\n\nLet each PC's matchup show off exactly what makes them dangerous:\n• Ren's team wins a round before the other side finishes announcing strategy.\n• Kazama eats a full combo meant for a teammate and barely notices.\n• Chozen's team wins ugly — his damage keeps accumulating round over round until nothing on the other team can answer it.\n• Izuto reads an opponent's movement pattern within two rounds and counters it exactly.\n• Zaro pre-places a portal before her round even starts and wins by simply not being where the other team expected.",
+              "developments": "This is friendly — no real stakes beyond bragging rights and Masahata's chart getting a new tab. Use the results to set a couple of running rivalries for later chapters rather than resolving anything permanently.",
+              "treasure": "Bragging rights, an extended curfew for the winning team, and the first real data point on how these five fight together as a group — worth remembering going into Chapter 3.",
+              "dmNote": "This is the last purely fun set piece before Ruin enters the picture. Let it be as light and celebratory as the table wants.",
+              "aside": null
+            }
+          ]
+        },
+        {
+          "id": "ch-0dms83f",
+          "number": 3,
+          "title": "First Contact",
+          "levels": "Levels 3-4",
+          "estimate": "3 sessions",
+          "intro": "The first field placement outside U.A.'s walls, and the first time Ruin stops being a name and becomes something the class has actually seen. Keep this chapter's villain content light and functional — it's a placeholder built to be swapped, expanded, or reskinned once Ruin's specifics get reworked, not a deep character study.",
+          "dmNote": "This chapter is intentionally the least \"finished\" part of the campaign on the villain side — that's by design. Treat every Ruin NPC here as a role, not a personality: a Grunt is a Grunt, a Hardskin is a Hardskin. Don't over-invest in giving them motive or backstory; that work is coming later in a separate rework pass.",
+          "milestone": "Surviving First Contact and reporting back to U.A. completes this chapter's milestone — Level 4.",
+          "sections": [
+            {
+              "id": "sec-ws82wcx",
+              "heading": "Field Placement",
+              "tag": "Low-stakes mission",
+              "type": "location",
+              "readAloud": "The agency is a real working office, not a training exercise, and it shows — nobody there has fully planned for five students showing up at once. Filing, crowd management at a small public event, basic patrol. This is what most hero work actually looks like.",
+              "body": "A day assisting a mid-tier local agency (reskin freely — no established agency name is load-bearing here). Mostly administrative and slightly boring on purpose: this is the calm before the chapter's actual encounter.",
+              "developments": "",
+              "treasure": "",
+              "dmNote": "",
+              "aside": null
+            },
+            {
+              "id": "sec-7wxvk3i",
+              "heading": "Ruin Shows Its Face",
+              "tag": "First villain encounter",
+              "type": "encounter",
+              "readAloud": "Two figures are leaning on a shopkeeper in a side street when the class turns the corner — nothing subtle about it, just two people making it very clear what happens if the shop doesn't pay up. One of them has skin like poured concrete. Neither of them has noticed the class yet.",
+              "body": "A Ruin Grunt and a Ruin Hardskin intimidating a shopkeeper. Simplified stats: Grunt — HP 15, AC 12, +3 to hit, 1d8 damage. Hardskin — HP 30, AC 15 (resistant to bludgeoning/piercing while braced), +4 to hit, 1d10 damage. This should feel winnable but real — the class's first fight against people who are actually trying to hurt someone, not a drone or a training partner.",
+              "developments": "However the fight resolves, at least one Ruin member escapes or is otherwise not fully accounted for — leave a loose thread rather than a clean, total win. That thread is what Chapter 4 pulls on.",
+              "treasure": "Recognition from the agency and, if the class thinks to ask, a single usable detail from a subdued Grunt: a location, a delivery schedule, a name overheard — pick whichever hook is most useful for launching Chapter 4.",
+              "dmNote": "Don't name-drop specific Ruin leadership here. Keep it exactly at street level — that's what makes the escalation in Chapter 4 land.",
+              "aside": {
+                "label": "Villain Thread — Ruin (placeholder)",
+                "body": "Fill this in once Ruin's rework is finalized. For now: the Hardskin is disproportionately afraid of being identified by name, which is the one detail worth keeping no matter how this faction ends up reworked."
+              }
+            },
+            {
+              "id": "sec-110byut",
+              "heading": "What They Didn't Say",
+              "tag": "Debrief",
+              "type": "dmnote",
+              "readAloud": "",
+              "body": "The agency's debrief is calmer than the fight was, and more unsettling for it — someone there has clearly been paying attention to more than this one street corner for a while, and isn't ready to say how much yet.",
+              "developments": "",
+              "treasure": "",
+              "dmNote": "This is a hook scene, not a reveal scene. Give the class enough to know Ruin is bigger than one street corner without answering how big. Save the actual answer for Chapter 4.",
+              "aside": null
+            }
+          ]
+        },
+        {
+          "id": "ch-e5ow1hd",
+          "number": 4,
+          "title": "Escalation",
+          "levels": "Levels 4-6",
+          "estimate": "4 sessions",
+          "intro": "The thread from Chapter 3 pulls tight. This is First Term's climax — a real confrontation with Ruin, sized as a set piece rather than a street fight, closing out the campaign with a win that costs something.",
+          "dmNote": "Build the finale around whatever hook the class actually pulled from Chapter 3. This chapter is written loosely on purpose so it can flex around your table's specific choices — the beats below are a scaffold, not a script.",
+          "milestone": "Closing out the confrontation with Ruin completes First Term — Level 6.",
+          "sections": [
+            {
+              "id": "sec-lz54y4f",
+              "heading": "The Warning Signs",
+              "tag": "Investigation",
+              "type": "general",
+              "readAloud": "",
+              "body": "The class follows up on whatever they pulled from the subdued Grunt in Chapter 3. Keep this brief — a session, not a full investigation arc. The goal is to arrive at a real location with real stakes, not to solve a mystery.",
+              "developments": "Whatever the class finds should point clearly at a single confrontation, not open five new threads. First Term is closing, not spawning a Season 2.",
+              "treasure": "",
+              "dmNote": "",
+              "aside": null
+            },
+            {
+              "id": "sec-uwbxa1k",
+              "heading": "Confrontation",
+              "tag": "Climax · full session",
+              "type": "encounter",
+              "readAloud": "Whatever this place was before, it isn't anymore. Ruin's people are already here, and for once they look surprised to see the class walk in.",
+              "body": "A larger set-piece fight against a Ruin cell — scale to 2-3 Grunts/Hardskins plus one tougher named enforcer as the chapter's boss (reskin freely: this is the placeholder slot for whichever Ruin leadership figure your rework settles on). Suggested boss statline: HP 60, AC 16, +5 to hit, 2d8+3 damage, one signature ability of your choosing.",
+              "developments": "The class wins the room, but let it cost something — a PC takes a real hit, a civilian asset from Chapter 4's investigation is put at risk, or the enforcer escapes rather than being captured. First Term should end with a win that doesn't feel entirely clean.",
+              "treasure": "Public recognition, a step up in standing with whichever agency the class has been working with, and confirmation that Ruin is bigger than anything they've fought so far — a clean seed for whatever campaign comes after this one.",
+              "dmNote": "This is the highest-stakes fight in the module. Make sure every PC gets a genuine spotlight moment before it resolves — Zaro cutting off an escape route with a pre-placed portal, Chozen's damage curve finally maxing out, Ren closing distance nobody thought was closable, Kazama tanking the hit that would have ended the fight badly, Izuto landing the read that turns the tide.",
+              "aside": {
+                "label": "Villain Thread — Ruin (placeholder)",
+                "body": "The named enforcer here is intentionally undeveloped — swap in whichever Ruin figure makes sense once the faction rework lands. What should carry forward regardless of who they are: they escape, or are captured but clearly not the top of the chain, leaving Ruin's actual leadership untouched."
+              }
+            },
+            {
+              "id": "sec-la098l2",
+              "heading": "First Term's End",
+              "tag": "Closing scene",
+              "type": "general",
+              "readAloud": "",
+              "body": "A quiet scene back at Heights Alliance. The ranking chart gets updated. Someone's already asleep in a stairwell. The class is intact, a little bruised, and the city is very slightly more complicated than it was in Chapter 1.",
+              "developments": "",
+              "treasure": "",
+              "dmNote": "Land this soft. The fight in the previous section was the climax — this scene is the exhale, not another beat of tension.",
+              "aside": null
+            }
+          ]
+        }
+      ],
+      "appendix": [
+        {
+          "id": "apx-lomdyqu",
+          "heading": "Minimal-Prep Checklist",
+          "body": "Before each session, you only need three things: which section(s) you're running, the enemy statlines for any encounter in it, and one hook from the previous session to open on. Everything else — NPC names, downtime color, Ruin specifics — can be reskinned or invented at the table without breaking anything downstream, by design."
+        },
+        {
+          "id": "apx-uxal3fj",
+          "heading": "Reskinning Ruin",
+          "body": "Every Ruin scene in this module works as written with generic roles (Grunt, Hardskin, \"the enforcer\"). Once your Ruin rework is ready, drop specific named members and motives directly into Chapters 3 and 4's asides — nothing else in the campaign needs to change to accommodate it."
+        },
+        {
+          "id": "apx-qye1p38",
+          "heading": "Running It Alongside Season 1",
+          "body": "First Term and Season 1 both open at the same entrance exam and use the same finalized roster, but they're written to run independently — different tables, different session logs. Don't treat one as canon for the other; let each table's version of the entrance exam and dorm chaos stand on its own."
+        }
+      ],
+      "links": [
+        {
+          "id": "lnk-mq00gfk",
+          "label": "Full character sheets — Ren, Kazama, Chozen, Izuto & Zaro",
+          "href": "characters.html"
+        },
+        {
+          "id": "lnk-71f4g90",
+          "label": "Class 1-A roster & relationship tracker",
+          "href": "CLASS-1A/relationships.html"
+        },
+        {
+          "id": "lnk-6hj8kfd",
+          "label": "Session-by-session play log",
+          "href": "session-log.html"
+        }
+      ]
     }
   ]
 }

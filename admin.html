@@ -111,7 +111,7 @@ function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&
 async function loadCharacterOptions() {
   const out = [];
   try {
-    const roster = await fetch('CLASS-1A/roster.json', {cache:'no-cache'}).then(r => r.json());
+    const roster = await fetch('CLASS-1A/roster.json').then(r => r.json());
     for (const s of (roster.students || [])) {
       if (s.file) out.push({ id: 'Student (1-A)::' + s.name, name: s.name });
     }

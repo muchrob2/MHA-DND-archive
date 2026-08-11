@@ -273,7 +273,7 @@
 
 <!-- Detail modal -->
 <div id="modal-overlay" onclick="if(event.target===this) closeModal()">
-  <div id="modal"></div>
+  <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1"></div>
 </div>
 
 <script>
@@ -333,11 +333,11 @@ async function loadCharacterDocs() {
 async function loadStaticCharacters() {
   // Fire every top-level fetch at once; only the per-student CLASS-1A files
   // genuinely depend on roster.json resolving first.
-  const rosterPromise = fetch('CLASS-1A/roster.json', {cache:'no-cache'}).then(r => r.json()).catch(() => null);
-  const class1bPromise = fetch('CAMPAIGN/class1b.json', {cache:'no-cache'}).then(r => r.json()).catch(() => null);
-  const teachersPromise = fetch('CAMPAIGN/teachers.json', {cache:'no-cache'}).then(r => r.json()).catch(() => null);
-  const villainsPromise = fetch('CAMPAIGN/villains.json', {cache:'no-cache'}).then(r => r.json()).catch(() => null);
-  const npcsPromise = fetch('CAMPAIGN/npcs.json', {cache:'no-cache'}).then(r => r.json()).catch(() => null);
+  const rosterPromise = fetch('CLASS-1A/roster.json').then(r => r.json()).catch(() => null);
+  const class1bPromise = fetch('CAMPAIGN/class1b.json').then(r => r.json()).catch(() => null);
+  const teachersPromise = fetch('CAMPAIGN/teachers.json').then(r => r.json()).catch(() => null);
+  const villainsPromise = fetch('CAMPAIGN/villains.json').then(r => r.json()).catch(() => null);
+  const npcsPromise = fetch('CAMPAIGN/npcs.json').then(r => r.json()).catch(() => null);
 
   const out = [];
 
@@ -345,7 +345,7 @@ async function loadStaticCharacters() {
   if (roster) {
     const students = (roster.students || []).filter(s => s.file);
     const class1aFiles = await Promise.all(students.map(s =>
-      fetch('CLASS-1A/' + s.file, {cache:'no-cache'}).then(r => r.json()).catch(() => null)
+      fetch('CLASS-1A/' + s.file).then(r => r.json()).catch(() => null)
     ));
     for (const char of class1aFiles) {
       if (char) { char._type = 'Student (1-A)'; out.push(char); }
@@ -642,7 +642,7 @@ function showDetail(idx) {
 
   document.getElementById('modal').innerHTML = `
     <span class="modal-close" onclick="closeModal()" role="button" tabindex="0" aria-label="Close">✕</span>
-    <h2>${escHtml(c.name)}</h2>
+    <h2 id="modal-title">${escHtml(c.name)}</h2>
     <div class="modal-sub">${escHtml(c._type||'')}${c.role ? ' — ' + escHtml(c.role) : ''}</div>
     <div class="detail-section"><div class="detail-label">Quirk</div><div class="detail-body">${escHtml(c.quirk||'—')}${(c.quirk_type||c.quirk_rarity) ? ` <span style="color:var(--text-dim);">(${[c.quirk_type,c.quirk_rarity].filter(Boolean).map(escHtml).join(' · ')})</span>` : ''}</div></div>
     ${quirkMechanicsHtml(c.quirk_mechanics)}
@@ -662,11 +662,29 @@ function showDetail(idx) {
     </div>
   `;
   document.getElementById('modal-overlay').classList.add('open');
+  focusModal();
+}
+
+let modalLastFocusedEl = null;
+// Called right after each modal template is injected + '.open' is toggled on,
+// so keyboard/screen-reader users land inside the dialog instead of it just
+// appearing silently, and so we can hand focus back on close.
+function focusModal() {
+  modalLastFocusedEl = document.activeElement;
+  const modal = document.getElementById('modal');
+  const focusable = modal.querySelector('input, textarea, select, button, [tabindex]');
+  (focusable || modal).focus({ preventScroll: true });
 }
 
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
+  if (modalLastFocusedEl && typeof modalLastFocusedEl.focus === 'function') modalLastFocusedEl.focus();
+  modalLastFocusedEl = null;
 }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('modal-overlay').classList.contains('open')) closeModal();
+});
 
 let abilityRowCount = 0;
 
@@ -836,7 +854,7 @@ function readCharacterForm() {
 function openCreateModal() {
   document.getElementById('modal').innerHTML = `
     <span class="modal-close" onclick="closeModal()" role="button" tabindex="0" aria-label="Close">✕</span>
-    <h2>New Character</h2>
+    <h2 id="modal-title">New Character</h2>
     <div class="modal-sub">Adds a new Class 1-A style character to the archive.</div>
     ${characterFormHtml(null, currentFolderId)}
     <div class="form-actions">
@@ -845,6 +863,7 @@ function openCreateModal() {
     </div>
   `;
   document.getElementById('modal-overlay').classList.add('open');
+  focusModal();
 }
 
 async function submitCreate() {
@@ -869,7 +888,7 @@ function openEditModal(idx) {
   const c = allChars[idx];
   document.getElementById('modal').innerHTML = `
     <span class="modal-close" onclick="closeModal()" role="button" tabindex="0" aria-label="Close">✕</span>
-    <h2>Edit ${escHtml(c.name)}</h2>
+    <h2 id="modal-title">Edit ${escHtml(c.name)}</h2>
     <div class="modal-sub">${isCustom(c) ? 'Custom character' : 'Edits are saved as an override on top of the bundled data.'}</div>
     ${characterFormHtml(c)}
     <div class="form-actions">
@@ -878,6 +897,7 @@ function openEditModal(idx) {
     </div>
   `;
   document.getElementById('modal-overlay').classList.add('open');
+  focusModal();
 }
 
 async function submitEdit(idx) {
@@ -937,7 +957,7 @@ function openCreateFolderModal() {
   selectedFolderColor = FOLDER_COLORS[0][0];
   document.getElementById('modal').innerHTML = `
     <span class="modal-close" onclick="closeModal()" role="button" tabindex="0" aria-label="Close">✕</span>
-    <h2>New Folder</h2>
+    <h2 id="modal-title">New Folder</h2>
     <div class="modal-sub">Organize characters into a named, colored folder.</div>
     <div class="form-row"><label>Folder Name</label><input class="form-input" id="nf-name" type="text" placeholder="e.g. Class 1-A, Villains, Story Arc NPCs"></div>
     <div class="form-row"><label>Colour</label><div class="color-swatch-row">${colorSwatchesHtml(selectedFolderColor)}</div></div>
@@ -947,6 +967,7 @@ function openCreateFolderModal() {
     </div>
   `;
   document.getElementById('modal-overlay').classList.add('open');
+  focusModal();
 }
 
 async function submitCreateFolder() {
@@ -971,7 +992,7 @@ function openEditFolderModal(id) {
   selectedFolderColor = folder.color || FOLDER_COLORS[0][0];
   document.getElementById('modal').innerHTML = `
     <span class="modal-close" onclick="closeModal()" role="button" tabindex="0" aria-label="Close">✕</span>
-    <h2>Edit Folder</h2>
+    <h2 id="modal-title">Edit Folder</h2>
     <div class="form-row"><label>Folder Name</label><input class="form-input" id="nf-name" type="text" value="${escHtml(folder.name)}"></div>
     <div class="form-row"><label>Colour</label><div class="color-swatch-row">${colorSwatchesHtml(selectedFolderColor)}</div></div>
     <div class="form-actions">
@@ -981,6 +1002,7 @@ function openEditFolderModal(id) {
     </div>
   `;
   document.getElementById('modal-overlay').classList.add('open');
+  focusModal();
 }
 
 async function submitEditFolder(id) {
@@ -1024,6 +1046,7 @@ function openAddToFolderModal() {
   if (!allFolders.some(f => f.id === currentFolderId)) return;
   renderAddToFolderModal('');
   document.getElementById('modal-overlay').classList.add('open');
+  focusModal();
 }
 
 function renderAddToFolderModal(query) {
@@ -1047,7 +1070,7 @@ function renderAddToFolderModal(query) {
 
   document.getElementById('modal').innerHTML = `
     <span class="modal-close" onclick="closeModal()" role="button" tabindex="0" aria-label="Close">✕</span>
-    <h2>Add to ${escHtml(folder.name)}</h2>
+    <h2 id="modal-title">Add to ${escHtml(folder.name)}</h2>
     <div class="modal-sub">Pick characters to move into this folder.</div>
     <input class="form-input" type="text" placeholder="Search characters…" value="${escHtml(query||'')}" oninput="renderAddToFolderModal(this.value)" style="margin-bottom:12px;">
     <div style="display:flex;flex-direction:column;max-height:340px;overflow-y:auto;">${rows}</div>

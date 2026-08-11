@@ -15,7 +15,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate campaign/character JSON
+        run: |
+          python3 -c "
+          import json, glob, sys
+          files = glob.glob('CAMPAIGN/*.json') + glob.glob('CLASS-1A/*.json')
+          bad = []
+          for f in files:
+              try:
+                  with open(f, encoding='utf-8') as fh:
+                      json.load(fh)
+              except Exception as e:
+                  bad.append(f'{f}: {e}')
+          if bad:
+              print('Malformed JSON:')
+              print('\n'.join(bad))
+              sys.exit(1)
+          print(f'{len(files)} JSON files OK')
+          "
+
   deploy:
+    needs: validate
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

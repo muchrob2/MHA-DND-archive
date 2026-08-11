@@ -461,12 +461,12 @@
         {
           "id": "bg-7lnii45",
           "heading": "Premise",
-          "body": "Twenty-one hopefuls make it into U.A.'s Hero Course. Five of them are played at your table; the rest are a live, reactive cast the DM runs alongside them. First Term covers one exam, one settling-in stretch, one friendly rivalry event, and one real fight — start to finish, self-contained, Level 1 to Level 6."
+          "body": "Twenty hopefuls make it into U.A.'s Hero Course. Five of them are played at your table; the rest are a live, reactive cast the DM runs alongside them. First Term covers one exam, one settling-in stretch, one friendly rivalry event, and one real fight — start to finish, self-contained, Level 1 to Level 6."
         },
         {
           "id": "bg-g0mr5yy",
           "heading": "Overview",
-          "body": "Chapter 1 — The Entrance Exam (Level 1, 2-3 sessions): a staged rescue exam is how this class of twenty-one meets each other for the first time.\nChapter 2 — Twenty-One Strangers, One Dorm (Levels 2-3, 3 sessions): move-in chaos and downtime, closing on a friendly 3v3 bracket at the training grounds.\nChapter 3 — First Contact (Levels 3-4, 3 sessions): a field placement puts the class in front of Ruin for the first time.\nChapter 4 — Escalation (Levels 4-6, 4 sessions): a set-piece confrontation with a Ruin cell closes the campaign out."
+          "body": "Chapter 1 — The Entrance Exam (Level 1, 2-3 sessions): a staged rescue exam is how this class of twenty meets each other for the first time.\nChapter 2 — Twenty Strangers, One Dorm (Levels 2-3, 3 sessions): move-in chaos and downtime, closing on a friendly 3v3 bracket at the training grounds.\nChapter 3 — First Contact (Levels 3-4, 3 sessions): a field placement puts the class in front of Ruin for the first time.\nChapter 4 — Escalation (Levels 4-6, 4 sessions): a set-piece confrontation with a Ruin cell closes the campaign out."
         },
         {
           "id": "bg-knwt7r0",
@@ -496,7 +496,7 @@
           "title": "The Entrance Exam",
           "levels": "Level 1",
           "estimate": "2-3 sessions",
-          "intro": "Twenty-one strangers, one exam, no time to plan. This is the first time any of them see what the others can actually do, and the exam doesn't pause for introductions. Two adults get real introductions this chapter — the exam proctor, who they'll likely never see again, and their new homeroom teacher, who they will.",
+          "intro": "Twenty strangers, one exam, no time to plan. This is the first time any of them see what the others can actually do, and the exam doesn't pause for introductions. Two adults get real introductions this chapter — the exam proctor, who they'll likely never see again, and their new homeroom teacher, who they will.",
           "dmNote": "Run the exam as one long, fast scene rather than a dungeon crawl. Give each PC a single clean spotlight beat during the chaos; everyone else is color. Voice the two named NPCs distinctly from the start — Kessho flat and administrative, Oshiro huge and economical with words — since the tonal contrast between them is doing some of the world-building here.",
           "milestone": "Clearing the exam and surviving the first night in the dorm completes First Term's opening milestone — Level 2.",
           "sections": [
@@ -536,13 +536,13 @@
               "tag": "Aftermath",
               "type": "npc",
               "readAloud": "Results go up that evening, posted as a group pass — nobody failed alone, and nobody carried it alone either. Before anyone's fully processed that, the door to the common room opens without a knock, and it takes a second for the room to register just how much of the doorway the person filling it takes up.",
-              "body": "First night in the dorm is short, loud, and a little shell-shocked; treat it as the first scene where this actually starts to feel like a class instead of twenty-one separate applicants. This is also where the class meets its homeroom teacher for the first time — give this its own few minutes, not a rushed aside.",
+              "body": "First night in the dorm is short, loud, and a little shell-shocked; treat it as the first scene where this actually starts to feel like a class instead of twenty separate applicants. This is also where the class meets its homeroom teacher for the first time — give this its own few minutes, not a rushed aside.",
               "developments": "",
               "treasure": "",
               "dmNote": "Close the chapter on this scene, not the drone fight. Give it a few minutes before cutting to Chapter 2.",
               "aside": {
                 "label": "First Meeting — Oshiro Daikichi (Homeroom Teacher)",
-                "body": "6'4\" and built like a wall. Cropped dark hair going grey at the temples. A suit that's visibly been repaired more than once, in ways that suggest the damage wasn't from sitting at a desk. He looks like he's seen everything twice and was unimpressed both times.\n\nHe doesn't introduce himself with any ceremony. He has a list, and he starts reading it — last names only, no exceptions, ever:\n\nOSHIRO: \"Suzuki.\"\nREN: \"...Here.\"\nOSHIRO: \"Good. Kutsu.\"\n\nHe works through all twenty-one names this way, flat and quick, never raising his voice, never needing to. When he's done, he closes the folder.\n\nOSHIRO: \"I'm Oshiro. Homeroom, and combat training. You start figuring out who you actually are tomorrow at seven. Get some sleep — today doesn't count as an excuse.\"\n\nHe leaves the same way he arrived: no fanfare, door closing behind him before anyone thinks to ask a follow-up question. Play him as gruff and economical with words throughout the campaign, not cold — he simply doesn't perform warmth, he demonstrates it, and this early he hasn't had a reason to yet."
+                "body": "6'4\" and built like a wall. Cropped dark hair going grey at the temples. A suit that's visibly been repaired more than once, in ways that suggest the damage wasn't from sitting at a desk. He looks like he's seen everything twice and was unimpressed both times.\n\nHe doesn't introduce himself with any ceremony. He has a list, and he starts reading it — last names only, no exceptions, ever:\n\nOSHIRO: \"Suzuki.\"\nREN: \"...Here.\"\nOSHIRO: \"Good. Kutsu.\"\n\nHe works through all twenty names this way, flat and quick, never raising his voice, never needing to. When he's done, he closes the folder.\n\nOSHIRO: \"I'm Oshiro. Homeroom, and combat training. You start figuring out who you actually are tomorrow at seven. Get some sleep — today doesn't count as an excuse.\"\n\nHe leaves the same way he arrived: no fanfare, door closing behind him before anyone thinks to ask a follow-up question. Play him as gruff and economical with words throughout the campaign, not cold — he simply doesn't perform warmth, he demonstrates it, and this early he hasn't had a reason to yet."
               }
             }
           ]
@@ -550,7 +550,7 @@
         {
           "id": "ch-oqmpcm0",
           "number": 2,
-          "title": "Twenty-One Strangers, One Dorm",
+          "title": "Twenty Strangers, One Dorm",
           "levels": "Levels 2-3",
           "estimate": "3 sessions",
           "intro": "No villains this chapter. This is where the class turns into a class — downtime scenes that build the ensemble the rest of the campaign runs on — closing with a friendly 3v3 rivalry event at the training grounds, run by a homeroom teacher the class is still getting the measure of.",
@@ -715,7 +715,7 @@
         {
           "id": "apx-8ul0o91",
           "heading": "Cast at a Glance",
-          "body": "PCs — Ren Suzuki (Beams From His Eyes, ranged striker), Kazama Kenji (Steel, frontline tank), Chozen Tadachi (Stress, escalating striker), Izuto Kutsu (Engine, rapid striker), Zaro Brando (Warp Gate, mobility/control).\n\nFrequently-featured classmates — Nakaya Emari (Element/Lightning, giggly and a menace to common-room electronics), Masahata Shikoji (Water Gun, arrogant, keeps informal rankings of everyone), Aikawa Sakume (Iron Claws, loud, first to volunteer for anything), Samitsu Hinsei (Dupli-Arms, quiet tank, unreadable at cards).\n\nFull sheets for all twenty-one students are in the character library — this list is just what you need at the table without alt-tabbing.\n\nAdults — Kessho Naoto (exam proctor, brisk and administrative, one-scene appearance in Chapter 1), Oshiro Daikichi (homeroom teacher, hero name Warden, Aftershock quirk; huge, gruff, calls everyone by last name, never raises his voice), Ohta Renji (hero name Palisade, Bastion quirk; runs the Chapter 3-4 field placement, warm but sharper than he lets on)."
+          "body": "PCs — Ren Suzuki (Beams From His Eyes, ranged striker), Kazama Kenji (Steel, frontline tank), Chozen Tadachi (Stress, escalating striker), Izuto Kutsu (Engine, rapid striker), Zaro Brando (Warp Gate, mobility/control).\n\nFrequently-featured classmates — Nakaya Emari (Element/Lightning, giggly and a menace to common-room electronics), Masahata Shikoji (Water Gun, arrogant, keeps informal rankings of everyone), Aikawa Sakume (Iron Claws, loud, first to volunteer for anything), Samitsu Hinsei (Dupli-Arms, quiet tank, unreadable at cards).\n\nFull sheets for all twenty students are in the character library — this list is just what you need at the table without alt-tabbing.\n\nAdults — Kessho Naoto (exam proctor, brisk and administrative, one-scene appearance in Chapter 1), Oshiro Daikichi (homeroom teacher, hero name Warden, Aftershock quirk; huge, gruff, calls everyone by last name, never raises his voice), Ohta Renji (hero name Palisade, Bastion quirk; runs the Chapter 3-4 field placement, warm but sharper than he lets on)."
         },
         {
           "id": "apx-lvebu21",

@@ -162,6 +162,9 @@ function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&
 function uid() { return 'sl_' + Math.random().toString(36).slice(2, 8); }
 
 const FS_DOC = db.collection('mha-dnd').doc('session-log');
+// Last session-log doc this client knows was on the server — diffed against
+// on save so concurrent edits to different sessions don't clobber each other.
+let _lastSyncedLog = null;
 
 document.addEventListener('auth-state-changed', (e) => {
   canWrite = e.detail.role === 'admin' || e.detail.role === 'editor';
@@ -175,18 +178,21 @@ async function init() {
     const snap = await FS_DOC.get();
     data = snap.exists ? snap.data() : { sessions: [] };
     if (!Array.isArray(data.sessions)) data.sessions = [];
+    _lastSyncedLog = data;
   } catch {
     document.getElementById('load-error-banner').style.display = '';
     data = { sessions: [] };
   }
   render();
+  startLogLiveSync();
 }
 
 async function saveAll() {
   const notice = document.getElementById('saved-notice');
   try {
     await fbAuthReady;
-    await FS_DOC.set(data);
+    const merged = await fsMergeSave(FS_DOC, data, _lastSyncedLog, [{ path: 'sessions', idKey: 'id' }]);
+    _lastSyncedLog = merged;
     notice.textContent = 'Saved ✓';
     notice.classList.add('show');
     setTimeout(() => notice.classList.remove('show'), 2000);
@@ -196,6 +202,34 @@ async function saveAll() {
     setTimeout(() => notice.classList.remove('show'), 3000);
   }
 }
+
+// Live feed: reflect other people's changes without a manual refresh. Deferred
+// while a session card is open for editing so a remote update can't blow away
+// in-progress, unsaved text in a field.
+let _pendingRemoteLog = null;
+function isLogEditing() { return editingId !== null || draftNew; }
+function applyRemoteLog(remote) {
+  data = remote;
+  if (!Array.isArray(data.sessions)) data.sessions = [];
+  _lastSyncedLog = remote;
+  render();
+}
+async function startLogLiveSync() {
+  await fbAuthReady;
+  FS_DOC.onSnapshot(snap => {
+    if (!snap.exists) return;
+    const remote = snap.data();
+    if (isLogEditing()) { _pendingRemoteLog = remote; return; }
+    applyRemoteLog(remote);
+  });
+}
+setInterval(() => {
+  if (_pendingRemoteLog && !isLogEditing()) {
+    const remote = _pendingRemoteLog;
+    _pendingRemoteLog = null;
+    applyRemoteLog(remote);
+  }
+}, 800);
 
 function formatDate(d) {
   if (!d) return '';

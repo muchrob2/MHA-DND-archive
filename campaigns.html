@@ -262,6 +262,9 @@ let currentCampaignId = null;
 let editMode = false;
 let openEditId = null;
 let canWriteCampaigns = false;
+// Last campaigns doc this client knows was on the server — diffed against on
+// save so concurrent edits to different campaigns don't clobber each other.
+let _lastSyncedCampaigns = null;
 
 async function loadCampaigns() {
   try {
@@ -280,7 +283,8 @@ async function saveCampaigns() {
   const notice = document.getElementById('saved-notice');
   try {
     await fbAuthReady;
-    await FS_CAMPAIGNS_DOC.set(campaignsData);
+    const merged = await fsMergeSave(FS_CAMPAIGNS_DOC, campaignsData, _lastSyncedCampaigns, [{ path: 'campaigns', idKey: 'id' }]);
+    _lastSyncedCampaigns = merged;
     notice.textContent = 'Saved ✓';
     notice.classList.remove('err');
     notice.classList.add('show');
@@ -292,6 +296,35 @@ async function saveCampaigns() {
     setTimeout(() => notice.classList.remove('show'), 3000);
   }
 }
+
+// Live feed: reflect other people's changes without a manual refresh. Deferred
+// while an edit form is open so a remote update can't blow away in-progress,
+// unsaved text in a field.
+let _pendingRemoteCampaigns = null;
+function isCampaignsEditing() { return openEditId !== null; }
+function applyRemoteCampaigns(data) {
+  campaignsData = data;
+  campaignsData.campaigns = campaignsData.campaigns || [];
+  _lastSyncedCampaigns = data;
+  render();
+}
+async function startCampaignsLiveSync() {
+  await fbAuthReady;
+  FS_CAMPAIGNS_DOC.onSnapshot(snap => {
+    if (!snap.exists) return;
+    const data = snap.data();
+    if (!Array.isArray(data.campaigns)) return;
+    if (isCampaignsEditing()) { _pendingRemoteCampaigns = data; return; }
+    applyRemoteCampaigns(data);
+  });
+}
+setInterval(() => {
+  if (_pendingRemoteCampaigns && !isCampaignsEditing()) {
+    const data = _pendingRemoteCampaigns;
+    _pendingRemoteCampaigns = null;
+    applyRemoteCampaigns(data);
+  }
+}, 800);
 
 document.addEventListener('auth-state-changed', (e) => {
   canWriteCampaigns = e.detail.role === 'admin' || e.detail.role === 'editor';
@@ -895,9 +928,11 @@ function renderLinksSection(c) {
 async function init() {
   campaignsData = await loadCampaigns();
   campaignsData.campaigns = campaignsData.campaigns || [];
+  _lastSyncedCampaigns = campaignsData;
   document.getElementById('loading').style.display = 'none';
   currentCampaignId = parseHash();
   render();
+  startCampaignsLiveSync();
 }
 init();
 </script>

@@ -2026,7 +2026,8 @@ async function saveAllScripts() {
   const notice = document.getElementById('scripts-saved-notice');
   try {
     await fbAuthReady;
-    await FS_SCRIPTS_DOC.set(scriptsData);
+    const merged = await fsMergeSave(FS_SCRIPTS_DOC, scriptsData, _lastSyncedScripts, [{ path: 'categories', idKey: 'id' }]);
+    _lastSyncedScripts = merged;
     notice.textContent = 'Saved ✓';
     notice.classList.add('show');
     setTimeout(() => notice.classList.remove('show'), 2000);
@@ -2036,6 +2037,41 @@ async function saveAllScripts() {
     setTimeout(() => notice.classList.remove('show'), 3000);
   }
 }
+
+// Live feed: reflect other people's script changes without a manual refresh.
+// Deferred while manage mode is on so a remote update can't blow away
+// in-progress, unsaved edits to a script's fields.
+let _lastSyncedScripts = null;
+let _pendingRemoteScripts = null;
+function isScriptsEditing() { return scriptsManageMode; }
+function applyRemoteScripts(remote) {
+  scriptsData = remote;
+  _lastSyncedScripts = remote;
+  const body = document.getElementById('body-sec-scripts');
+  if (body) {
+    renderScripts(scriptsData, body);
+    const totalScripts = (scriptsData.categories||[]).reduce((a,c)=>a+(c.scripts?.length||0),0);
+    const meta = document.getElementById('scripts-meta');
+    if (meta) meta.textContent = (scriptsData.categories?.length||0)+' categories · '+totalScripts+' scripts';
+  }
+}
+async function startScriptsLiveSync() {
+  await fbAuthReady;
+  FS_SCRIPTS_DOC.onSnapshot(snap => {
+    if (!snap.exists) return;
+    const remote = snap.data();
+    if (!remote.categories) return;
+    if (isScriptsEditing()) { _pendingRemoteScripts = remote; return; }
+    applyRemoteScripts(remote);
+  });
+}
+setInterval(() => {
+  if (_pendingRemoteScripts && !isScriptsEditing()) {
+    const remote = _pendingRemoteScripts;
+    _pendingRemoteScripts = null;
+    applyRemoteScripts(remote);
+  }
+}, 800);
 
 function toggleScriptEditMode() {
   scriptsManageMode = !scriptsManageMode;
@@ -2129,10 +2165,12 @@ async function init() {
   if (scriptsSec && scriptsBody && scriptsResult && !scriptsResult.error) {
     try {
       scriptsData = scriptsResult;
+      _lastSyncedScripts = scriptsData;
       renderScripts(scriptsData, scriptsBody);
       const totalScripts = (scriptsData.categories||[]).reduce((a,c)=>a+(c.scripts?.length||0),0);
       document.getElementById('scripts-meta').textContent = (scriptsData.categories?.length||0)+' categories · '+totalScripts+' scripts';
       scriptsSec.style.display = '';
+      startScriptsLiveSync();
     } catch(e) {
       console.error('Render error scripts', e);
       scriptsBody.innerHTML = `<div style="color:var(--hero-red);font-size:12px;padding:8px;">Failed to render DM Scripts: ${e.message}</div>`;

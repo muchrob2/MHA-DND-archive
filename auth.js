@@ -31,6 +31,77 @@
     return false;
   };
 
+  // Merge-save for shared documents edited by multiple people at once.
+  //
+  // A plain `docRef.set(localCopy)` overwrites the whole document, so if two
+  // people edit different items concurrently, whoever saves last silently
+  // erases the other's change. This instead reads the *current* server
+  // document inside a transaction and, for each array field named in
+  // `idArrays`, only substitutes in the items this client actually changed
+  // since `lastSyncedDoc` (its own edits) — everything else (including
+  // concurrent edits from other clients) is taken from the fresh server read.
+  // Non-array top-level fields fall back to local-wins, since those are
+  // typically single-actor state (e.g. "current turn index").
+  //
+  // idArrays: [{ path: 'combatants', idKey: 'id' }, ...]
+  window.fsMergeSave = async function (docRef, localDoc, lastSyncedDoc, idArrays) {
+    idArrays = idArrays || [];
+    await window.fbAuthReady;
+    const arrayPaths = new Set(idArrays.map((a) => a.path));
+
+    return db.runTransaction(async (tx) => {
+      const snap = await tx.get(docRef);
+      const server = snap.exists ? snap.data() : {};
+      const result = Object.assign({}, server);
+
+      for (const key of Object.keys(localDoc)) {
+        if (!arrayPaths.has(key)) result[key] = localDoc[key];
+      }
+
+      for (const { path, idKey } of idArrays) {
+        const serverArr = Array.isArray(server[path]) ? server[path] : [];
+        const localArr = Array.isArray(localDoc[path]) ? localDoc[path] : [];
+        const lastArr = Array.isArray(lastSyncedDoc && lastSyncedDoc[path]) ? lastSyncedDoc[path] : [];
+
+        const lastById = new Map(lastArr.map((item) => [item[idKey], item]));
+        const localById = new Map(localArr.map((item) => [item[idKey], item]));
+
+        const merged = [];
+        const seen = new Set();
+
+        for (const item of serverArr) {
+          const id = item[idKey];
+          seen.add(id);
+          const hadLocally = localById.has(id);
+          const wasSyncedBefore = lastById.has(id);
+          if (!hadLocally) {
+            if (wasSyncedBefore) continue; // this client deleted it locally
+            merged.push(item); // added by someone else — keep it
+            continue;
+          }
+          const localItem = localById.get(id);
+          const lastItem = lastById.get(id);
+          const changedLocally = JSON.stringify(localItem) !== JSON.stringify(lastItem);
+          merged.push(changedLocally ? localItem : item);
+        }
+
+        for (const item of localArr) {
+          const id = item[idKey];
+          // Only truly new items (never synced before) get added here. An
+          // item missing from the server but present in lastArr means
+          // someone else deleted it remotely -- don't resurrect it just
+          // because this client's local copy happens to be stale.
+          if (!seen.has(id) && !lastById.has(id)) merged.push(item);
+        }
+
+        result[path] = merged;
+      }
+
+      tx.set(docRef, result);
+      return result;
+    });
+  };
+
   function injectStyles() {
     const css = `
       #auth-widget { display: flex; align-items: center; gap: 8px; }

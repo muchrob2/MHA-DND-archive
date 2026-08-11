@@ -600,7 +600,7 @@ const TEAM_COLORS = [
   { name: 'Lime',   bg: '#65A30D', light: 'rgba(101,163,13,0.10)' },
 ];
 
-let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], board: { strokes: [], terrain: {} } };
+let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], boardStrokes: [], boardTerrain: [] };
 let _encId = 0;
 function encId() { return ++_encId; }
 
@@ -618,7 +618,15 @@ function encSave() {
   clearTimeout(encSaveTimer);
   encSaveTimer = setTimeout(async () => {
     try {
-      const merged = await fsMergeSave(FS_ENCOUNTER_DOC, encounter, _lastSyncedEncounter, [{ path: 'combatants', idKey: 'id' }]);
+      // boardStrokes/boardTerrain are merged per-item (like combatants) rather
+      // than overwritten whole, so a player nudging a token on their board
+      // tab can't clobber terrain/drawings the DM painted a moment earlier
+      // with their own (possibly stale) local copy of that field.
+      const merged = await fsMergeSave(FS_ENCOUNTER_DOC, encounter, _lastSyncedEncounter, [
+        { path: 'combatants', idKey: 'id' },
+        { path: 'boardStrokes', idKey: 'id' },
+        { path: 'boardTerrain', idKey: 'id' },
+      ]);
       _lastSyncedEncounter = merged;
     } catch {}
   }, 600);
@@ -630,7 +638,8 @@ async function encLoad() {
     if (snap.exists) {
       encounter = snap.data();
       encounter.attackLog = encounter.attackLog || [];
-      encounter.board = encounter.board || { strokes: [], terrain: {} };
+      encounter.boardStrokes = encounter.boardStrokes || [];
+      encounter.boardTerrain = encounter.boardTerrain || [];
       _lastSyncedEncounter = encounter;
       return;
     }
@@ -640,7 +649,8 @@ async function encLoad() {
     if (raw) encounter = JSON.parse(raw);
   } catch {}
   encounter.attackLog = encounter.attackLog || [];
-  encounter.board = encounter.board || { strokes: [], terrain: {} };
+  encounter.boardStrokes = encounter.boardStrokes || [];
+  encounter.boardTerrain = encounter.boardTerrain || [];
 }
 
 // Live feed: push board/encounter updates to every open tab in real time.
@@ -652,10 +662,16 @@ function isEncEditing() {
   if (tag !== 'INPUT' && tag !== 'TEXTAREA') return false;
   return !!document.activeElement.closest('#enc-list, #board-overlay, #turn-modal-overlay');
 }
+// True mid-stroke or mid-terrain-drag. Without this, a remote snapshot that
+// lands between mousedown and mouseup would wholesale-replace `encounter`
+// (and therefore the in-progress, not-yet-saved boardStrokes/boardTerrain
+// edit) with server data from before the gesture started.
+function isBoardDrawing() { return !!(boardState.drawingStroke || _boardPainting); }
 function applyRemoteEncounter(data) {
   encounter = data;
   encounter.attackLog = encounter.attackLog || [];
-  encounter.board = encounter.board || { strokes: [], terrain: {} };
+  encounter.boardStrokes = encounter.boardStrokes || [];
+  encounter.boardTerrain = encounter.boardTerrain || [];
   _lastSyncedEncounter = data;
   renderEncounter();
   renderAttackLog();
@@ -669,12 +685,12 @@ async function startEncLiveSync() {
     const data = snap.data();
     // Defer while a local drag/edit/turn-modal-view is in progress so the remote
     // update doesn't yank the token, input, or displayed combatant mid-gesture.
-    if (boardState.dragging || boardPan || isEncEditing() || isTurnModalOpen()) { _pendingRemoteEncounter = data; return; }
+    if (boardState.dragging || boardPan || isEncEditing() || isTurnModalOpen() || isBoardDrawing()) { _pendingRemoteEncounter = data; return; }
     applyRemoteEncounter(data);
   });
 }
 setInterval(() => {
-  if (_pendingRemoteEncounter && !boardState.dragging && !boardPan && !isEncEditing() && !isTurnModalOpen()) {
+  if (_pendingRemoteEncounter && !boardState.dragging && !boardPan && !isEncEditing() && !isTurnModalOpen() && !isBoardDrawing()) {
     const data = _pendingRemoteEncounter;
     _pendingRemoteEncounter = null;
     applyRemoteEncounter(data);
@@ -759,7 +775,7 @@ function encPrevTurn() {
 
 function encReset() {
   if (!confirm('Reset encounter? This will clear all combatants and round count.')) return;
-  encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], board: encounter.board || { strokes: [], terrain: {} } };
+  encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], boardStrokes: encounter.boardStrokes || [], boardTerrain: encounter.boardTerrain || [] };
   encSave(); document.getElementById('enc-round-num').textContent = 1; renderEncounter(); renderAttackLog();
 }
 
@@ -1565,10 +1581,10 @@ function boardSetTool(tool) {
 }
 
 function boardClearArt() {
-  const b = encounter.board || { strokes: [], terrain: {} };
-  if (!(b.strokes || []).length && !Object.keys(b.terrain || {}).length) return;
+  if (!(encounter.boardStrokes || []).length && !(encounter.boardTerrain || []).length) return;
   if (!confirm('Clear all drawings and terrain markings from the board?')) return;
-  encounter.board = { strokes: [], terrain: {} };
+  encounter.boardStrokes = [];
+  encounter.boardTerrain = [];
   encSave();
   renderBoardCanvas();
 }
@@ -1582,33 +1598,52 @@ function boardCanvasPoint(e) {
   return { x, y, col: Math.floor(x), row: Math.floor(y) };
 }
 
+// Terrain cells and drawing strokes are stored as flat, id-keyed arrays
+// (like combatants) rather than nested inside a plain object, so encSave's
+// per-item merge can apply — otherwise a plain top-level "board" field is
+// local-wins-whole-field, and any client that saves for an unrelated reason
+// (a player nudging a token) would stomp the DM's terrain with its own
+// possibly-stale local copy.
 function boardPaintTerrainAt(p, type) {
   if (p.col < 0 || p.col >= BOARD_COLS || p.row < 0 || p.row >= BOARD_ROWS) return;
-  encounter.board = encounter.board || { strokes: [], terrain: {} };
-  const key = p.col + ',' + p.row;
-  if (encounter.board.terrain[key] === type) return;
-  encounter.board.terrain[key] = type;
+  encounter.boardTerrain = encounter.boardTerrain || [];
+  const id = p.col + ',' + p.row;
+  const existing = encounter.boardTerrain.find(t => t.id === id);
+  if (existing) {
+    if (existing.type === type) return;
+    existing.type = type;
+  } else {
+    encounter.boardTerrain.push({ id, type });
+  }
   encSave();
 }
 
 function boardEraseAt(p) {
-  encounter.board = encounter.board || { strokes: [], terrain: {} };
-  const key = p.col + ',' + p.row;
+  encounter.boardTerrain = encounter.boardTerrain || [];
+  encounter.boardStrokes = encounter.boardStrokes || [];
+  const cellId = p.col + ',' + p.row;
   const ERASE_RADIUS = 0.5; // cell units
   let changed = false;
-  if (encounter.board.terrain[key]) { delete encounter.board.terrain[key]; changed = true; }
-  const before = JSON.stringify(encounter.board.strokes);
-  encounter.board.strokes = (encounter.board.strokes || [])
-    .map(s => ({ color: s.color, width: s.width, points: s.points.filter(pt => Math.hypot(pt.x - p.x, pt.y - p.y) > ERASE_RADIUS) }))
-    .filter(s => s.points.length > 1);
-  if (JSON.stringify(encounter.board.strokes) !== before) changed = true;
+
+  const beforeTerrainLen = encounter.boardTerrain.length;
+  encounter.boardTerrain = encounter.boardTerrain.filter(t => t.id !== cellId);
+  if (encounter.boardTerrain.length !== beforeTerrainLen) changed = true;
+
+  const nextStrokes = [];
+  for (const s of encounter.boardStrokes) {
+    const points = s.points.filter(pt => Math.hypot(pt.x - p.x, pt.y - p.y) > ERASE_RADIUS);
+    if (points.length !== s.points.length) changed = true;
+    if (points.length > 1) nextStrokes.push({ id: s.id, color: s.color, width: s.width, points });
+  }
+  encounter.boardStrokes = nextStrokes;
+
   if (changed) encSave();
 }
 
 function boardDrawStart(e) {
   const p = boardCanvasPoint(e);
   if (boardState.tool === 'pen') {
-    boardState.drawingStroke = { color: boardState.penColor, width: 3, points: [{ x: p.x, y: p.y }] };
+    boardState.drawingStroke = { id: 'stroke-' + encId(), color: boardState.penColor, width: 3, points: [{ x: p.x, y: p.y }] };
   } else if (boardState.tool === 'eraser') {
     _boardPainting = true;
     boardEraseAt(p);
@@ -1638,8 +1673,8 @@ function boardDrawMove(e) {
 function boardDrawEnd() {
   if (boardState.tool === 'pen' && boardState.drawingStroke) {
     if (boardState.drawingStroke.points.length > 1) {
-      encounter.board = encounter.board || { strokes: [], terrain: {} };
-      encounter.board.strokes.push(boardState.drawingStroke);
+      encounter.boardStrokes = encounter.boardStrokes || [];
+      encounter.boardStrokes.push(boardState.drawingStroke);
       encSave();
     }
     boardState.drawingStroke = null;
@@ -1864,13 +1899,12 @@ function boardGetBgLayer(width, height, SZ, isDark, showLabels) {
 
 // Terrain markers: sparse, so drawn live each frame rather than cached.
 function renderBoardTerrain(ctx, SZ) {
-  const terrain = encounter.board && encounter.board.terrain;
-  if (!terrain) return;
+  const terrain = encounter.boardTerrain || [];
   const showLabel = SZ >= 14;
-  for (const key in terrain) {
-    const style = TERRAIN_STYLES[terrain[key]];
+  for (const t of terrain) {
+    const style = TERRAIN_STYLES[t.type];
     if (!style) continue;
-    const parts = key.split(',');
+    const parts = t.id.split(',');
     const c = +parts[0], r = +parts[1];
     ctx.fillStyle = style.fill;
     ctx.fillRect(c * SZ, r * SZ, SZ, SZ);
@@ -1887,7 +1921,7 @@ function renderBoardTerrain(ctx, SZ) {
 
 // Freehand drawings, stored in cell-fraction units so they stay put across zoom levels.
 function renderBoardStrokes(ctx, SZ) {
-  const strokes = (encounter.board && encounter.board.strokes) || [];
+  const strokes = encounter.boardStrokes || [];
   const all = boardState.drawingStroke ? strokes.concat([boardState.drawingStroke]) : strokes;
   for (const s of all) {
     if (!s.points || s.points.length < 2) continue;

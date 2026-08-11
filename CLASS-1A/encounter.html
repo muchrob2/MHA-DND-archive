@@ -238,6 +238,22 @@
   #board-distance-label { font-size: 13px; font-weight: 700; color: var(--gold,#E8A020); background: rgba(232,160,32,0.12); padding: 3px 12px; border-radius: 20px; border: 1px solid rgba(232,160,32,0.25); min-width: 140px; text-align: center; transition: opacity 0.2s; }
   #board-close-btn { width: 28px; height: 28px; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--text-dim); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   #board-close-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  #board-draw-bar {
+    flex-shrink: 0; display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-bottom: 1px solid var(--border);
+    background: var(--surface2); flex-wrap: wrap;
+  }
+  #board-draw-label { font-size: 9px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 2px; }
+  .board-tool-btn {
+    padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--surface); color: var(--text-muted); font-size: 11px; font-weight: 700;
+    cursor: pointer; white-space: nowrap; transition: border-color 0.1s, color 0.1s, background 0.1s;
+  }
+  .board-tool-btn:hover { border-color: var(--border-strong); color: var(--text); }
+  .board-tool-btn.active { border-color: var(--purple); background: var(--purple-light); color: var(--purple-text); }
+  .board-tool-btn.eraser.active { border-color: var(--red); background: var(--red-light); color: var(--red-text); }
+  #board-pen-color { width: 26px; height: 26px; padding: 0; border: 1px solid var(--border); border-radius: 6px; background: none; cursor: pointer; flex-shrink: 0; }
+  .board-draw-sep { width: 1px; height: 18px; background: var(--border); margin: 0 2px; flex-shrink: 0; }
   #board-body { flex: 1; display: flex; gap: 0; overflow: hidden; }
   #board-tray {
     width: 160px; flex-shrink: 0; border-right: 1px solid var(--border);
@@ -318,6 +334,8 @@
     #board-header { flex-wrap: wrap; padding: 8px 10px; gap: 8px; }
     #board-title { flex-basis: 100%; }
     #board-distance-label { min-width: 0; flex: 1; }
+    #board-draw-bar { padding: 6px 8px; gap: 5px; }
+    .board-tool-btn { padding: 6px 9px; }
     #board-body { flex-direction: column; }
     #board-tray {
       width: 100%; height: 30vh; flex-shrink: 0; border-right: none; border-bottom: 1px solid var(--border);
@@ -502,6 +520,20 @@
             <button id="board-close-btn" onclick="closeBoardMode()" title="Close">✕</button>
           </div>
         </div>
+        <div id="board-draw-bar">
+          <span id="board-draw-label">Tools:</span>
+          <button class="board-tool-btn active" data-tool="move" onclick="boardSetTool('move')" title="Move &amp; select tokens">✥ Move</button>
+          <button class="board-tool-btn" data-tool="pen" onclick="boardSetTool('pen')" title="Freehand draw">✏ Pen</button>
+          <input id="board-pen-color" type="color" value="#E8A020" title="Pen color" oninput="boardState.penColor=this.value">
+          <div class="board-draw-sep"></div>
+          <button class="board-tool-btn" data-tool="wall" onclick="boardSetTool('wall')" title="Mark a wall">▦ Wall</button>
+          <button class="board-tool-btn" data-tool="difficult" onclick="boardSetTool('difficult')" title="Mark difficult terrain">≋ Difficult</button>
+          <button class="board-tool-btn" data-tool="hazard" onclick="boardSetTool('hazard')" title="Mark a hazard">⚠ Hazard</button>
+          <button class="board-tool-btn" data-tool="water" onclick="boardSetTool('water')" title="Mark water">〰 Water</button>
+          <button class="board-tool-btn" data-tool="cover" onclick="boardSetTool('cover')" title="Mark cover">⛊ Cover</button>
+          <button class="board-tool-btn eraser" data-tool="eraser" onclick="boardSetTool('eraser')" title="Erase drawings &amp; terrain">⌫ Erase</button>
+          <button class="enc-btn danger" style="margin-left:auto;" onclick="boardClearArt()" title="Clear all drawings and terrain markings">Clear Art</button>
+        </div>
         <div id="board-body">
           <div id="board-tray">
             <div id="board-tray-title">UNPLACED</div>
@@ -512,7 +544,7 @@
           </div>
         </div>
         <div id="board-footer">
-          <span id="board-hint">Click a unit in the tray, then click a grid square to place it. Click placed tokens to select and measure distance.</span>
+          <span id="board-hint">Click a unit in the tray, then click a grid square to place it. Drag placed tokens to move them.</span>
           <button class="enc-btn danger" onclick="boardClearPositions()" title="Remove all units from grid">Clear Grid</button>
         </div>
       </div>
@@ -568,7 +600,7 @@ const TEAM_COLORS = [
   { name: 'Lime',   bg: '#65A30D', light: 'rgba(101,163,13,0.10)' },
 ];
 
-let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [] };
+let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], board: { strokes: [], terrain: {} } };
 let _encId = 0;
 function encId() { return ++_encId; }
 
@@ -598,6 +630,7 @@ async function encLoad() {
     if (snap.exists) {
       encounter = snap.data();
       encounter.attackLog = encounter.attackLog || [];
+      encounter.board = encounter.board || { strokes: [], terrain: {} };
       _lastSyncedEncounter = encounter;
       return;
     }
@@ -607,6 +640,7 @@ async function encLoad() {
     if (raw) encounter = JSON.parse(raw);
   } catch {}
   encounter.attackLog = encounter.attackLog || [];
+  encounter.board = encounter.board || { strokes: [], terrain: {} };
 }
 
 // Live feed: push board/encounter updates to every open tab in real time.
@@ -621,6 +655,7 @@ function isEncEditing() {
 function applyRemoteEncounter(data) {
   encounter = data;
   encounter.attackLog = encounter.attackLog || [];
+  encounter.board = encounter.board || { strokes: [], terrain: {} };
   _lastSyncedEncounter = data;
   renderEncounter();
   renderAttackLog();
@@ -724,7 +759,7 @@ function encPrevTurn() {
 
 function encReset() {
   if (!confirm('Reset encounter? This will clear all combatants and round count.')) return;
-  encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [] };
+  encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], board: encounter.board || { strokes: [], terrain: {} } };
   encSave(); document.getElementById('enc-round-num').textContent = 1; renderEncounter(); renderAttackLog();
 }
 
@@ -1493,10 +1528,125 @@ const BOARD_COLS = 100;
 const BOARD_ROWS = 100;
 const CELL_BASE = 16; // base px per square at zoom 1.0
 let boardZoom = 0.5;  // start zoomed out to fit the full grid
-let boardState = { pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false };
+let boardState = { pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false, tool: 'move', penColor: '#E8A020', drawingStroke: null };
 let boardHoverInfo = null; // { combatant, col, row }
 let boardPan = null;        // { startX, startY, scrollLeft, scrollTop } while panning
 let _boardWasPanning = false;
+let _boardPainting = false; // mid-drag while painting terrain/erasing
+
+// Terrain marker styles: fill colour + a small glyph drawn at cell centre.
+const TERRAIN_STYLES = {
+  wall:      { fill: 'rgba(148,152,164,0.55)', label: '▦' },
+  difficult: { fill: 'rgba(168,120,46,0.38)',  label: '≋' },
+  hazard:    { fill: 'rgba(239,68,68,0.38)',   label: '⚠' },
+  water:     { fill: 'rgba(37,99,235,0.34)',   label: '〰' },
+  cover:     { fill: 'rgba(34,197,94,0.34)',   label: '⛊' },
+};
+
+const BOARD_TOOL_HINTS = {
+  move: 'Click a unit in the tray, then click a grid square to place it. Drag placed tokens to move them.',
+  pen: 'Click and drag on the grid to draw.',
+  wall: 'Click or drag across squares to mark walls.',
+  difficult: 'Click or drag across squares to mark difficult terrain.',
+  hazard: 'Click or drag across squares to mark a hazard.',
+  water: 'Click or drag across squares to mark water.',
+  cover: 'Click or drag across squares to mark cover.',
+  eraser: 'Click drawings or terrain to erase them.',
+};
+
+function boardSetTool(tool) {
+  boardState.tool = tool;
+  boardState.pendingId = null;
+  boardState.selectedIds = [];
+  document.querySelectorAll('.board-tool-btn').forEach(b => b.classList.toggle('active', b.dataset.tool === tool));
+  const hint = document.getElementById('board-hint');
+  if (hint) hint.textContent = BOARD_TOOL_HINTS[tool] || BOARD_TOOL_HINTS.move;
+  renderBoardCanvas();
+}
+
+function boardClearArt() {
+  const b = encounter.board || { strokes: [], terrain: {} };
+  if (!(b.strokes || []).length && !Object.keys(b.terrain || {}).length) return;
+  if (!confirm('Clear all drawings and terrain markings from the board?')) return;
+  encounter.board = { strokes: [], terrain: {} };
+  encSave();
+  renderBoardCanvas();
+}
+
+function boardCanvasPoint(e) {
+  const canvas = document.getElementById('board-canvas');
+  const rect = canvas.getBoundingClientRect();
+  const SZ = boardCell();
+  const x = (e.clientX - rect.left) * (canvas.width / rect.width) / SZ;
+  const y = (e.clientY - rect.top) * (canvas.height / rect.height) / SZ;
+  return { x, y, col: Math.floor(x), row: Math.floor(y) };
+}
+
+function boardPaintTerrainAt(p, type) {
+  if (p.col < 0 || p.col >= BOARD_COLS || p.row < 0 || p.row >= BOARD_ROWS) return;
+  encounter.board = encounter.board || { strokes: [], terrain: {} };
+  const key = p.col + ',' + p.row;
+  if (encounter.board.terrain[key] === type) return;
+  encounter.board.terrain[key] = type;
+  encSave();
+}
+
+function boardEraseAt(p) {
+  encounter.board = encounter.board || { strokes: [], terrain: {} };
+  const key = p.col + ',' + p.row;
+  const ERASE_RADIUS = 0.5; // cell units
+  let changed = false;
+  if (encounter.board.terrain[key]) { delete encounter.board.terrain[key]; changed = true; }
+  const before = JSON.stringify(encounter.board.strokes);
+  encounter.board.strokes = (encounter.board.strokes || [])
+    .map(s => ({ color: s.color, width: s.width, points: s.points.filter(pt => Math.hypot(pt.x - p.x, pt.y - p.y) > ERASE_RADIUS) }))
+    .filter(s => s.points.length > 1);
+  if (JSON.stringify(encounter.board.strokes) !== before) changed = true;
+  if (changed) encSave();
+}
+
+function boardDrawStart(e) {
+  const p = boardCanvasPoint(e);
+  if (boardState.tool === 'pen') {
+    boardState.drawingStroke = { color: boardState.penColor, width: 3, points: [{ x: p.x, y: p.y }] };
+  } else if (boardState.tool === 'eraser') {
+    _boardPainting = true;
+    boardEraseAt(p);
+  } else {
+    _boardPainting = true;
+    boardPaintTerrainAt(p, boardState.tool);
+  }
+  boardRequestRender();
+}
+
+function boardDrawMove(e) {
+  const p = boardCanvasPoint(e);
+  if (boardState.tool === 'pen') {
+    if (!boardState.drawingStroke) return;
+    boardState.drawingStroke.points.push({ x: p.x, y: p.y });
+    boardRequestRender();
+  } else if (boardState.tool === 'eraser') {
+    if (!_boardPainting) return;
+    boardEraseAt(p);
+    boardRequestRender();
+  } else if (_boardPainting) {
+    boardPaintTerrainAt(p, boardState.tool);
+    boardRequestRender();
+  }
+}
+
+function boardDrawEnd() {
+  if (boardState.tool === 'pen' && boardState.drawingStroke) {
+    if (boardState.drawingStroke.points.length > 1) {
+      encounter.board = encounter.board || { strokes: [], terrain: {} };
+      encounter.board.strokes.push(boardState.drawingStroke);
+      encSave();
+    }
+    boardState.drawingStroke = null;
+  }
+  _boardPainting = false;
+  renderBoardCanvas();
+}
 
 const BOARD_IS_TOUCH = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 function boardCell() {
@@ -1582,8 +1732,9 @@ function openBoardMode() {
 }
 function closeBoardMode() {
   document.getElementById('board-overlay').classList.remove('open');
-  boardState = { pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false };
+  boardState = { pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false, tool: 'move', penColor: boardState.penColor, drawingStroke: null };
   boardHoverInfo = null;
+  document.querySelectorAll('.board-tool-btn').forEach(b => b.classList.toggle('active', b.dataset.tool === 'move'));
   const inp = document.getElementById('board-range-input');
   if (inp) inp.value = '';
 }
@@ -1711,6 +1862,47 @@ function boardGetBgLayer(width, height, SZ, isDark, showLabels) {
   return _boardBgCache.canvas;
 }
 
+// Terrain markers: sparse, so drawn live each frame rather than cached.
+function renderBoardTerrain(ctx, SZ) {
+  const terrain = encounter.board && encounter.board.terrain;
+  if (!terrain) return;
+  const showLabel = SZ >= 14;
+  for (const key in terrain) {
+    const style = TERRAIN_STYLES[terrain[key]];
+    if (!style) continue;
+    const parts = key.split(',');
+    const c = +parts[0], r = +parts[1];
+    ctx.fillStyle = style.fill;
+    ctx.fillRect(c * SZ, r * SZ, SZ, SZ);
+    if (showLabel) {
+      ctx.save();
+      ctx.font = `${Math.max(8, Math.min(16, SZ * 0.5))}px sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.fillText(style.label, c * SZ + SZ / 2, r * SZ + SZ / 2);
+      ctx.restore();
+    }
+  }
+}
+
+// Freehand drawings, stored in cell-fraction units so they stay put across zoom levels.
+function renderBoardStrokes(ctx, SZ) {
+  const strokes = (encounter.board && encounter.board.strokes) || [];
+  const all = boardState.drawingStroke ? strokes.concat([boardState.drawingStroke]) : strokes;
+  for (const s of all) {
+    if (!s.points || s.points.length < 2) continue;
+    ctx.save();
+    ctx.strokeStyle = s.color || '#E8A020';
+    ctx.lineWidth = Math.max(1, (s.width || 3) * (SZ / CELL_BASE));
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(s.points[0].x * SZ, s.points[0].y * SZ);
+    for (let i = 1; i < s.points.length; i++) ctx.lineTo(s.points[i].x * SZ, s.points[i].y * SZ);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
 function renderBoardCanvas() {
   const canvas = boardInitCanvas();
   const ctx = canvas.getContext('2d');
@@ -1719,6 +1911,8 @@ function renderBoardCanvas() {
   const showLabels = SZ >= 10;
 
   ctx.drawImage(boardGetBgLayer(canvas.width, canvas.height, SZ, isDark, showLabels), 0, 0);
+  renderBoardTerrain(ctx, SZ);
+  renderBoardStrokes(ctx, SZ);
 
   // Range overlay
   if (boardState.rangeFt > 0 && boardState.selectedIds.length >= 1) {
@@ -1965,6 +2159,12 @@ function boardCanvasCell(e) {
 }
 
 function boardHandleMouseDown(e) {
+  if (boardState.tool !== 'move') {
+    if (e.button !== 0) return;
+    boardDrawStart(e);
+    e.preventDefault();
+    return;
+  }
   // Middle-click OR left-click on empty space → pan
   if (e.button === 1) {
     const wrap = document.getElementById('board-grid-wrap');
@@ -1991,6 +2191,10 @@ function boardHandleMouseDown(e) {
 
 function boardHandleMouseMove(e) {
   const canvas = document.getElementById('board-canvas');
+  if (boardState.tool !== 'move') {
+    boardDrawMove(e);
+    return;
+  }
   if (boardPan) {
     const wrap = document.getElementById('board-grid-wrap');
     wrap.scrollLeft = boardPan.scrollLeft - (e.clientX - boardPan.startX);
@@ -2020,6 +2224,10 @@ function boardHandleMouseMove(e) {
 }
 
 function boardHandleMouseUp(e) {
+  if (boardState.tool !== 'move') {
+    boardDrawEnd(e);
+    return;
+  }
   if (boardPan) {
     const moved = Math.abs(e.clientX - boardPan.startX) + Math.abs(e.clientY - boardPan.startY) > 4;
     boardPan = null;
@@ -2045,6 +2253,7 @@ function boardHandleMouseUp(e) {
 }
 
 function boardHandleCanvasClick(e) {
+  if (boardState.tool !== 'move') return;
   if (_boardWasPanning) { _boardWasPanning = false; return; }
   if (boardState._wasDragging) { boardState._wasDragging = false; return; }
   const { col, row } = boardCanvasCell(e);
@@ -2063,7 +2272,7 @@ function boardHandleCanvasClick(e) {
     if (c) { c.boardX = col; c.boardY = row; }
     boardState.pendingId = null;
     encSave();
-    document.getElementById('board-hint').textContent = 'Click a unit in the tray, then click a grid square to place it. Click placed tokens to select and measure distance.';
+    document.getElementById('board-hint').textContent = BOARD_TOOL_HINTS.move;
     renderBoard();
     return;
   }
@@ -2100,6 +2309,7 @@ function boardHandleCanvasClick(e) {
 
 function boardHandleCanvasRightClick(e) {
   e.preventDefault();
+  if (boardState.tool !== 'move') return;
   const { col, row } = boardCanvasCell(e);
   const hit = encounter.combatants.find(c => c.boardX === col && c.boardY === row);
   if (hit) {
@@ -2157,7 +2367,7 @@ function boardHandleTouchStart(e) {
   e.preventDefault();
   const t = e.touches[0];
   const { col, row } = boardCanvasCell(boardPointFromTouch(t));
-  const hit = boardHitTest(col, row);
+  const hit = boardState.tool === 'move' ? boardHitTest(col, row) : null;
   if (hit) {
     _boardLongPressStart = { x: t.clientX, y: t.clientY, id: hit.id };
     _boardLongPressTimer = setTimeout(() => {

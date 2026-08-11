@@ -603,9 +603,17 @@ let encSaveTimer = null;
 // someone else changed" so concurrent edits to different combatants don't
 // clobber each other.
 let _lastSyncedEncounter = null;
+// True from the moment a change is made until the debounced save actually
+// lands. The drag/drawing/editing guards below only cover the gesture itself
+// (mousedown..mouseup, focus..blur) — without this, a remote snapshot
+// arriving during the 600ms debounce window would wholesale-replace
+// `encounter` with server data that predates the change, reverting it before
+// it's ever saved.
+let _encSavePending = false;
 
 function encSave() {
   localStorage.setItem('mha_encounter_v1', JSON.stringify(encounter));
+  _encSavePending = true;
   clearTimeout(encSaveTimer);
   encSaveTimer = setTimeout(async () => {
     try {
@@ -619,7 +627,9 @@ function encSave() {
         { path: 'boardTerrain', idKey: 'id' },
       ]);
       _lastSyncedEncounter = merged;
-    } catch {}
+    } catch {} finally {
+      _encSavePending = false;
+    }
   }, 600);
 }
 async function encLoad() {
@@ -675,14 +685,16 @@ async function startEncLiveSync() {
   FS_ENCOUNTER_DOC.onSnapshot(snap => {
     if (!snap.exists) return;
     const data = snap.data();
-    // Defer while a local drag/edit/turn-modal-view is in progress so the remote
-    // update doesn't yank the token, input, or displayed combatant mid-gesture.
-    if (boardState.dragging || boardPan || isEncEditing() || isTurnModalOpen() || isBoardDrawing()) { _pendingRemoteEncounter = data; return; }
+    // Defer while a local drag/edit/turn-modal-view is in progress — or a
+    // change made moments ago is still debouncing/saving — so the remote
+    // update doesn't yank the token, input, or displayed combatant mid-gesture
+    // or revert an edit before it's had a chance to persist.
+    if (boardState.dragging || boardPan || isEncEditing() || isTurnModalOpen() || isBoardDrawing() || _encSavePending) { _pendingRemoteEncounter = data; return; }
     applyRemoteEncounter(data);
   });
 }
 setInterval(() => {
-  if (_pendingRemoteEncounter && !boardState.dragging && !boardPan && !isEncEditing() && !isTurnModalOpen() && !isBoardDrawing()) {
+  if (_pendingRemoteEncounter && !boardState.dragging && !boardPan && !isEncEditing() && !isTurnModalOpen() && !isBoardDrawing() && !_encSavePending) {
     const data = _pendingRemoteEncounter;
     _pendingRemoteEncounter = null;
     applyRemoteEncounter(data);

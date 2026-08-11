@@ -232,6 +232,11 @@ let canWriteCampaigns = false;
 // Last campaigns doc this client knows was on the server — diffed against on
 // save so concurrent edits to different campaigns don't clobber each other.
 let _lastSyncedCampaigns = null;
+// True from the moment a save is kicked off until it actually lands (or
+// fails). openEditId already flips back to null before this resolves (the
+// edit form closes immediately), so isCampaignsEditing() alone isn't enough
+// to keep a live snapshot from applying mid-save — this closes that window.
+let _campaignSaveInFlight = false;
 
 async function loadCampaigns() {
   try {
@@ -248,6 +253,7 @@ async function loadCampaigns() {
 
 async function saveCampaigns() {
   const notice = document.getElementById('saved-notice');
+  _campaignSaveInFlight = true;
   try {
     await fbAuthReady;
     const merged = await fsMergeSave(FS_CAMPAIGNS_DOC, campaignsData, _lastSyncedCampaigns, [{ path: 'campaigns', idKey: 'id' }]);
@@ -261,6 +267,8 @@ async function saveCampaigns() {
     notice.classList.add('err');
     notice.classList.add('show');
     setTimeout(() => notice.classList.remove('show'), 3000);
+  } finally {
+    _campaignSaveInFlight = false;
   }
 }
 
@@ -268,7 +276,7 @@ async function saveCampaigns() {
 // while an edit form is open so a remote update can't blow away in-progress,
 // unsaved text in a field.
 let _pendingRemoteCampaigns = null;
-function isCampaignsEditing() { return openEditId !== null; }
+function isCampaignsEditing() { return openEditId !== null || _campaignSaveInFlight; }
 function applyRemoteCampaigns(data) {
   campaignsData = data;
   campaignsData.campaigns = campaignsData.campaigns || [];

@@ -908,7 +908,11 @@ async function submitEdit(idx) {
   try {
     await fbAuthReady;
     if (isCustom(c)) {
-      await FS_CHARACTERS.doc(c._id).set(Object.assign({}, fields, { _type: 'Custom' }));
+      // merge:true, not a bare .set() — a bare set replaces the whole
+      // document, so if someone else's edit landed on this character since
+      // this modal was opened, saving here would silently erase it instead
+      // of just overwriting the fields this form actually touched.
+      await FS_CHARACTERS.doc(c._id).set(Object.assign({}, fields, { _type: 'Custom' }), { merge: true });
     } else {
       await FS_CHARACTERS.doc(c._staticId).set({ fields }, { merge: true });
     }

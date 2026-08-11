@@ -492,13 +492,47 @@ function buildBundle() {
   return { version: 1, exported_at: new Date().toISOString(), relationships: rels, characters };
 }
 
+// Attacks and inventory items are edited live by whoever has this character
+// open, so two people saving around the same time is routine, not an edge
+// case — one player adds an attack, the DM tweaks that PC's HP a moment
+// later, both from a snapshot that predates the other's change. Firestore's
+// own merge:true only merges *object* fields recursively; an array field
+// (abilities, inventory items) is always replaced wholesale, so whichever
+// save lands second would silently erase whatever the other person added to
+// that array. genId()/ensureCharIds() give every item a stable id so
+// fsMergeSave can merge those arrays by item instead of overwriting them —
+// same mechanism the battle board already uses for combatants/strokes.
+// Migration note: existing (pre-fix) attacks/items have no id yet. If two
+// clients both load the same un-migrated character before either of them
+// saves, each backfills that item with a *different* generated id, and the
+// next merge sees two distinct items instead of one edited one — a visible,
+// harmless duplicate card, not data loss. It's a one-time, self-resolving
+// window: the first save of any kind persists real ids to Firestore, and
+// every client after that loads the already-migrated ids instead of
+// generating its own.
+function genId(prefix) {
+  return prefix + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+function ensureCharIds(c) {
+  const abilities = c.quirk_mechanics?.abilities;
+  if (Array.isArray(abilities)) for (const a of abilities) if (!a.id) a.id = genId('atk');
+  const items = c.inventory?.items;
+  if (Array.isArray(items)) for (const it of items) if (!it.id) it.id = genId('item');
+}
+
 const FS_REL_DOC = db.collection(FS_COLLECTION).doc(FS_DOC);
+let _lastSyncedRel = null;
 
 async function saveToFirestore() {
   await fbAuthReady;
-  // merge:true so a tab with a stale/partial local copy can't wipe out
-  // characters or relationships it doesn't currently know about.
-  await FS_REL_DOC.set(buildBundle(), { merge: true });
+  for (const c of CHARACTERS) ensureCharIds(c);
+  const idArrays = [];
+  for (const c of CHARACTERS) {
+    if (!c._file) continue;
+    idArrays.push({ path: ['characters', c._file, 'quirk_mechanics', 'abilities'], idKey: 'id' });
+    idArrays.push({ path: ['characters', c._file, 'inventory', 'items'], idKey: 'id' });
+  }
+  _lastSyncedRel = await fsMergeSave(FS_REL_DOC, buildBundle(), _lastSyncedRel, idArrays);
 }
 
 async function loadFromFirestore() {
@@ -524,8 +558,10 @@ function applyRemoteRelBundle(data) {
       const f = c._file, rid = c._roster_id, sec = c._section;
       Object.assign(c, data.characters[c._file]);
       c._file = f; c._roster_id = rid; c._section = sec;
+      ensureCharIds(c); // backfill in case this remote copy predates the id fix
     }
   }
+  _lastSyncedRel = data; // keeps saveToFirestore's 3-way merge comparing against what's actually on the server
   if (selected) renderProfile();
   renderRelationships();
   refreshSidebar();
@@ -850,7 +886,7 @@ function onAttackEdit(i, field, value) {
 }
 
 function onAttackAdd() {
-  selected.quirk_mechanics.abilities.push({ name: '', type: '', description: '' });
+  selected.quirk_mechanics.abilities.push({ id: genId('atk'), name: '', type: '', description: '' });
   scheduleCharSave(selected);
   renderAttacksTab(selected);
 }
@@ -937,7 +973,7 @@ function onItemEdit(i, field, value) {
 }
 
 function onItemAdd() {
-  selected.inventory.items.push({ name: '', qty: 1, notes: '' });
+  selected.inventory.items.push({ id: genId('item'), name: '', qty: 1, notes: '' });
   scheduleCharSave(selected);
   renderInventoryTab(selected);
 }
@@ -1188,6 +1224,9 @@ function renderDiceHistory() {
     CHARACTERS = charResults.filter(Boolean);
     setSaveStatus('saved', 'Firestore unreachable — loaded local');
   }
+
+  for (const c of CHARACTERS) ensureCharIds(c);
+  if (fsBundle) _lastSyncedRel = fsBundle; // baseline for saveToFirestore's 3-way merge
 
   CHARACTERS.sort((a, b) => {
     const si = SECTION_ORDER.indexOf(a._section) - SECTION_ORDER.indexOf(b._section);

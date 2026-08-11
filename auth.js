@@ -43,28 +43,65 @@
   // `idArrays`, only substitutes in the items this client actually changed
   // since `lastSyncedDoc` (its own edits) — everything else (including
   // concurrent edits from other clients) is taken from the fresh server read.
-  // Non-array top-level fields fall back to local-wins, since those are
-  // typically single-actor state (e.g. "current turn index").
   //
-  // idArrays: [{ path: 'combatants', idKey: 'id' }, ...]
+  // Everything outside idArrays gets a recursive object merge (matching what
+  // Firestore's own `set(data, {merge: true})` does): nested plain objects
+  // merge key-by-key instead of one wholesale replace, so a field this
+  // client doesn't know about (added by someone else, or nested a level
+  // deeper than it happens to be editing) survives. Only true leaf values —
+  // arrays not named in idArrays, and primitives — are local-wins, since
+  // those are typically single-actor state (e.g. "current turn index").
+  // Array fields NOT named in idArrays are therefore still last-write-wins
+  // wholesale, same as before — name every array a client might race on.
+  //
+  // idArrays: [{ path: 'combatants', idKey: 'id' }, { path: ['a', 'b', 'c'], idKey: 'id' }, ...]
+  // `path` is a single key (string) or, to reach an array nested inside
+  // plain objects/maps, an array of segments — e.g. per-character
+  // sub-documents keyed by filename: ['characters', c._file, 'abilities'].
+  // Segments must be an array, not a dotted string, because map keys here
+  // (filenames) themselves contain literal dots ("ren_suzuki.json").
+  function isPlainObject(v) {
+    return v !== null && typeof v === 'object' && !Array.isArray(v);
+  }
+  function getAtPath(obj, path) {
+    const keys = Array.isArray(path) ? path : [path];
+    return keys.reduce((o, k) => (o == null ? undefined : o[k]), obj);
+  }
+  function setAtPath(obj, path, value) {
+    const keys = Array.isArray(path) ? path : [path];
+    let cur = obj;
+    for (let i = 0; i < keys.length - 1; i++) {
+      if (!isPlainObject(cur[keys[i]])) cur[keys[i]] = {};
+      cur = cur[keys[i]];
+    }
+    cur[keys[keys.length - 1]] = value;
+  }
+  function deepMergeLocalOverServer(server, local) {
+    const result = Object.assign({}, server);
+    for (const key of Object.keys(local)) {
+      result[key] = (isPlainObject(local[key]) && isPlainObject(result[key]))
+        ? deepMergeLocalOverServer(result[key], local[key])
+        : local[key];
+    }
+    return result;
+  }
+
   window.fsMergeSave = async function (docRef, localDoc, lastSyncedDoc, idArrays) {
     idArrays = idArrays || [];
     await window.fbAuthReady;
-    const arrayPaths = new Set(idArrays.map((a) => a.path));
 
     return db.runTransaction(async (tx) => {
       const snap = await tx.get(docRef);
       const server = snap.exists ? snap.data() : {};
-      const result = Object.assign({}, server);
-
-      for (const key of Object.keys(localDoc)) {
-        if (!arrayPaths.has(key)) result[key] = localDoc[key];
-      }
+      const result = deepMergeLocalOverServer(server, localDoc);
 
       for (const { path, idKey } of idArrays) {
-        const serverArr = Array.isArray(server[path]) ? server[path] : [];
-        const localArr = Array.isArray(localDoc[path]) ? localDoc[path] : [];
-        const lastArr = Array.isArray(lastSyncedDoc && lastSyncedDoc[path]) ? lastSyncedDoc[path] : [];
+        const serverArrRaw = getAtPath(server, path);
+        const localArrRaw = getAtPath(localDoc, path);
+        const lastArrRaw = getAtPath(lastSyncedDoc, path);
+        const serverArr = Array.isArray(serverArrRaw) ? serverArrRaw : [];
+        const localArr = Array.isArray(localArrRaw) ? localArrRaw : [];
+        const lastArr = Array.isArray(lastArrRaw) ? lastArrRaw : [];
 
         const lastById = new Map(lastArr.map((item) => [item[idKey], item]));
         const localById = new Map(localArr.map((item) => [item[idKey], item]));
@@ -97,7 +134,7 @@
           if (!seen.has(id) && !lastById.has(id)) merged.push(item);
         }
 
-        result[path] = merged;
+        setAtPath(result, path, merged);
       }
 
       tx.set(docRef, result);

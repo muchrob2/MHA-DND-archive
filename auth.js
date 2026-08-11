@@ -23,6 +23,9 @@
   window.fbAuthReady = new Promise((res) => { resolveReady = res; });
 
   let currentState = EMPTY_STATE;
+  window.isAdmin = function () {
+    return currentState.role === 'admin';
+  };
   window.canEdit = function (characterId) {
     if (currentState.role === 'admin') return true;
     if (characterId != null && currentState.role === 'editor') {

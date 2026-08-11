@@ -30,7 +30,12 @@ service cloud.firestore {
 
     match /mha-dnd/{doc} {
       allow read: if true;
-      allow write: if isAdmin() || isEditor();
+      // encounter-state is the shared battle board — an 'editor' role only
+      // grants edit rights to a player's own character sheet (see
+      // isEditorFor above), so it must NOT double as board-write access.
+      // Every other mha-dnd doc (campaigns, dm-scripts, session-log, etc.)
+      // keeps the existing admin-or-editor policy.
+      allow write: if isAdmin() || (isEditor() && doc != 'encounter-state');
     }
   }
 }

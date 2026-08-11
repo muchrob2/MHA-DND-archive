@@ -1,8 +1,19 @@
 /* Shared tactical-board engine for the MHA D&D archive.
    Used by both encounter.html (DM — full read/write, drawing tools) and
-   board.html (players — move/measure only; the same code paths just never
-   get reached there since nothing in board.html's DOM ever calls
-   boardSetTool() away from 'move').
+   board.html (players — pan/zoom/measure only; the same code paths just
+   never get reached there since nothing in board.html's DOM ever calls
+   boardSetTool() away from 'move', and boardCanEdit gates the rest — see
+   below).
+
+   boardCanEdit (module-level, default true) gates every *mutation*: placing
+   a token, dragging one, right-click/long-press removal. Pan, zoom, and the
+   local-only distance/range selection always work regardless. encounter.html
+   never touches this flag, so the DM keeps full read/write unconditionally.
+   board.html sets it to false until an admin check resolves (fail-closed),
+   then flips it based on window.isAdmin() from auth.js. A touch that lands
+   on a token while boardCanEdit is false falls through to panning instead
+   of starting a drag, which is also what fixes that gesture being
+   ambiguous on mobile for read-only viewers.
 
    Previously this ~800-line engine was pasted into both pages verbatim.
    That worked but meant every fix (like the boardTerrain/boardStrokes save
@@ -42,6 +53,14 @@ const BOARD_ROWS = 100;
 const CELL_BASE = 16; // base px per square at zoom 1.0
 let boardZoom = 0.5;  // start zoomed out to fit the full grid
 let boardState = { pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false, tool: 'move', penColor: '#E8A020', drawingStroke: null };
+// Gates every board *mutation* (placing/moving/removing tokens, drawing).
+// Pan, zoom, and the local-only distance/range selection always work
+// regardless of this flag. Defaults true so encounter.html (DM — full
+// read/write, never touches this flag) is unaffected; board.html (players)
+// sets it to false until an admin check resolves. See boardHitTest callers
+// below for how this also fixes touch-near-a-token being misread as a drag
+// instead of a pan when editing is off.
+let boardCanEdit = true;
 let boardHoverInfo = null; // { combatant, col, row }
 let boardPan = null;        // { startX, startY, scrollLeft, scrollTop } while panning
 let _boardWasPanning = false;
@@ -277,6 +296,7 @@ function boardClearRange() {
 }
 
 function boardClearPositions() {
+  if (!boardCanEdit) return;
   if (!encounter.combatants.some(c => c.boardX != null)) return;
   if (!confirm('Remove all units from the grid?')) return;
   encounter.combatants.forEach(c => { c.boardX = null; c.boardY = null; });
@@ -327,8 +347,9 @@ function renderBoardTray() {
     const isDead = c.hp === 0;
     const color = boardTokenColor(c);
     const isPending = boardState.pendingId === c.id;
-    return `<div class="board-tray-item${isDead ? ' is-dead' : ''}${isPending ? ' selected' : ''}"
-      onclick="boardSelectTrayItem(${c.id})" title="${c.name} — HP: ${c.hp}/${c.maxHp}">
+    const title = boardCanEdit ? `${c.name} — HP: ${c.hp}/${c.maxHp}` : `${c.name} — the DM places tokens`;
+    return `<div class="board-tray-item${isDead ? ' is-dead' : ''}${isPending ? ' selected' : ''}${boardCanEdit ? '' : ' read-only'}"
+      ${boardCanEdit ? `onclick="boardSelectTrayItem(${c.id})"` : ''} title="${title}">
       <div class="board-tray-token" style="background:${color};color:#fff;">${boardInitials(c.name)}</div>
       <div class="board-tray-name">${c.name}</div>
     </div>`;
@@ -695,6 +716,7 @@ function renderBoardDistance() {
 }
 
 function boardSelectTrayItem(id) {
+  if (!boardCanEdit) return;
   boardState.pendingId = boardState.pendingId === id ? null : id;
   boardState.selectedIds = [];
   document.getElementById('board-hint').textContent = boardState.pendingId !== null
@@ -731,11 +753,12 @@ function boardHandleMouseDown(e) {
   const { col, row } = boardCanvasCell(e);
   if (col < 0 || col >= BOARD_COLS || row < 0 || row >= BOARD_ROWS) return;
   const hit = boardHitTest(col, row);
-  if (hit) {
+  if (hit && boardCanEdit) {
     boardState.dragging = { id: hit.id, originX: col, originY: row, curCol: col, curRow: row };
     document.getElementById('board-canvas').style.cursor = 'grabbing';
   } else {
-    // Left-click drag on empty space pans the view
+    // Left-click/touch drag on empty space — or on a token when this viewer
+    // can't edit — pans the view instead of trying to move anything.
     const wrap = document.getElementById('board-grid-wrap');
     boardPan = { startX: e.clientX, startY: e.clientY, scrollLeft: wrap.scrollLeft, scrollTop: wrap.scrollTop };
     document.getElementById('board-canvas').style.cursor = 'grabbing';
@@ -818,7 +841,7 @@ function boardHandleCanvasClick(e) {
   // tolerance since that's just picking which token you meant to tap.
   const exactHit = encounter.combatants.find(c => c.boardX === col && c.boardY === row);
 
-  if (boardState.pendingId !== null) {
+  if (boardCanEdit && boardState.pendingId !== null) {
     // Placing a tray item
     if (exactHit && exactHit.id !== boardState.pendingId) return; // occupied
     const c = encounter.combatants.find(x => x.id === boardState.pendingId);
@@ -845,7 +868,7 @@ function boardHandleCanvasClick(e) {
   }
 
   // Click on empty cell while a placed token is selected (move it)
-  if (boardState.selectedIds.length === 1) {
+  if (boardCanEdit && boardState.selectedIds.length === 1) {
     const c = encounter.combatants.find(x => x.id === boardState.selectedIds[0]);
     if (c && c.boardX != null) {
       c.boardX = col; c.boardY = row;
@@ -862,7 +885,7 @@ function boardHandleCanvasClick(e) {
 
 function boardHandleCanvasRightClick(e) {
   e.preventDefault();
-  if (boardState.tool !== 'move') return;
+  if (boardState.tool !== 'move' || !boardCanEdit) return;
   const { col, row } = boardCanvasCell(e);
   const hit = encounter.combatants.find(c => c.boardX === col && c.boardY === row);
   if (hit) {
@@ -874,9 +897,10 @@ function boardHandleCanvasRightClick(e) {
 }
 
 // ── Touch support (mobile board mode) ───────────────────────
-let _boardPinch = null; // { dist, zoom }
+let _boardPinch = null; // { dist, zoom, midX, midY, scrollLeft, scrollTop }
 function boardPointFromTouch(t) { return { clientX: t.clientX, clientY: t.clientY, button: 0, preventDefault(){} }; }
 function boardTouchDistance(t1, t2) { return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY); }
+function boardTouchMidpoint(t1, t2) { return { x: (t1.clientX + t2.clientX) / 2, y: (t1.clientY + t2.clientY) / 2 }; }
 
 // A fingertip is much less precise than a mouse cursor, so a touch aimed at a
 // small token easily lands on the cell next to it. Fall back to the nearest
@@ -913,14 +937,23 @@ function boardHandleTouchStart(e) {
     boardCancelLongPress();
     boardState.dragging = null;
     boardPan = null;
-    _boardPinch = { dist: boardTouchDistance(e.touches[0], e.touches[1]), zoom: boardZoom };
+    // Two fingers is always "move the camera" (pan + pinch-zoom together),
+    // regardless of what's underneath them — a dedicated gesture so panning
+    // never gets misread as trying to drag a token, which one finger alone
+    // is ambiguous about when it lands near/on a piece.
+    const wrap = document.getElementById('board-grid-wrap');
+    const mid = boardTouchMidpoint(e.touches[0], e.touches[1]);
+    _boardPinch = {
+      dist: boardTouchDistance(e.touches[0], e.touches[1]), zoom: boardZoom,
+      midX: mid.x, midY: mid.y, scrollLeft: wrap.scrollLeft, scrollTop: wrap.scrollTop,
+    };
     return;
   }
   if (e.touches.length !== 1) return;
   e.preventDefault();
   const t = e.touches[0];
   const { col, row } = boardCanvasCell(boardPointFromTouch(t));
-  const hit = boardState.tool === 'move' ? boardHitTest(col, row) : null;
+  const hit = boardState.tool === 'move' && boardCanEdit ? boardHitTest(col, row) : null;
   if (hit) {
     _boardLongPressStart = { x: t.clientX, y: t.clientY, id: hit.id };
     _boardLongPressTimer = setTimeout(() => {
@@ -947,6 +980,10 @@ function boardHandleTouchMove(e) {
     const dist = boardTouchDistance(e.touches[0], e.touches[1]);
     boardZoom = Math.max(0.25, Math.min(3, +(_boardPinch.zoom * (dist / _boardPinch.dist)).toFixed(4)));
     updateZoomLabel();
+    const mid = boardTouchMidpoint(e.touches[0], e.touches[1]);
+    const wrap = document.getElementById('board-grid-wrap');
+    wrap.scrollLeft = _boardPinch.scrollLeft - (mid.x - _boardPinch.midX);
+    wrap.scrollTop  = _boardPinch.scrollTop  - (mid.y - _boardPinch.midY);
     boardRequestRender();
     return;
   }

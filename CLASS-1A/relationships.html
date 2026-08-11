@@ -13,7 +13,7 @@
     --bg: #0C1017; --surface: #111923; --surface2: #18222E;
     --border: rgba(255,255,255,0.07); --border-strong: rgba(255,255,255,0.14);
     --text: #E8EDF3; --text-muted: #8A9BB0; --text-dim: #3E5068;
-    --purple: #E8A020; --purple-light: rgba(232,160,32,0.13); --purple-text: #F5C842;
+    --accent: #E8A020; --accent-light: rgba(232,160,32,0.13); --accent-text: #F5C842;
     --teal: #0EA572; --teal-light: rgba(14,165,114,0.13); --teal-text: #5FDBAA;
     --red: #EF4444; --red-light: rgba(239,68,68,0.13); --red-text: #FCA5A5;
     --amber: #F59E0B; --amber-light: rgba(245,158,11,0.13); --amber-text: #FDE68A;
@@ -28,21 +28,21 @@
   #sidebar { background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
   #sidebar-header {
     padding: 14px 16px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0;
-    border-top: 3px solid var(--purple);
+    border-top: 3px solid var(--accent);
     background: linear-gradient(180deg, rgba(232,160,32,0.07) 0%, transparent 100%);
   }
-  #sidebar-header h1 { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--purple-text); }
+  #sidebar-header h1 { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-text); }
   #sidebar-header p { font-size: 10px; color: var(--text-dim); margin-top: 2px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; }
   #search { margin: 8px 12px; padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); color: var(--text); font-size: 12px; width: calc(100% - 24px); outline: none; }
-  #search:focus { border-color: var(--purple); }
+  #search:focus { border-color: var(--accent); }
   #char-list { overflow-y: auto; flex: 1; }
   .section-label { padding: 6px 16px 2px; font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.07em; text-transform: uppercase; }
   .char-item { display: flex; align-items: center; gap: 10px; padding: 8px 14px; cursor: pointer; border-left: 2px solid transparent; transition: background 0.1s; }
   .char-item:hover { background: var(--surface2); }
-  .char-item.active { background: var(--purple-light); border-left-color: var(--purple); }
-  .char-item.active .char-name { color: var(--purple-text); }
+  .char-item.active { background: var(--accent-light); border-left-color: var(--accent); }
+  .char-item.active .char-name { color: var(--accent-text); }
   .char-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
-  .av-pc { background: var(--purple-light); color: var(--purple-text); }
+  .av-pc { background: var(--accent-light); color: var(--accent-text); }
   .av-npc { background: var(--teal-light); color: var(--teal-text); }
   .char-info .char-name { font-size: 13px; font-weight: 500; }
   .char-info .char-quirk { font-size: 12px; color: var(--text-muted); }
@@ -58,17 +58,17 @@
     background: var(--surface2); color: var(--text-dim); cursor: pointer; font-family: inherit;
     transition: background 0.1s, color 0.1s, border-color 0.1s; }
   .sf-pill:hover { color: var(--text-muted); border-color: var(--border-strong); }
-  .sf-pill.sf-active { background: var(--purple-light); color: var(--purple-text); border-color: rgba(232,160,32,0.4); }
+  .sf-pill.sf-active { background: var(--accent-light); color: var(--accent-text); border-color: rgba(232,160,32,0.4); }
 
   /* ── Main nav ─────────────────────────────────────────── */
   #main { display: flex; flex-direction: column; overflow: hidden; }
   #main-nav { display: flex; align-items: center; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
   #back-to-dash { display: flex; align-items: center; gap: 5px; padding: 10px 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-dim); text-decoration: none; border-right: 1px solid var(--border); white-space: nowrap; text-transform: uppercase; }
-  #back-to-dash:hover { color: var(--purple); background: var(--purple-light); }
+  #back-to-dash:hover { color: var(--accent); background: var(--accent-light); }
   .nav-right { display: flex; align-items: center; gap: 8px; padding: 0 16px; margin-left: auto; flex-shrink: 0; }
   .nav-btn { padding: 10px 20px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; border: none; background: none; color: var(--text-dim); border-bottom: 2px solid transparent; transition: color 0.1s; }
   .nav-btn:hover { color: var(--text-muted); }
-  .nav-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
+  .nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
   .main-view { display: none; flex: 1; overflow: hidden; flex-direction: column; }
   .main-view.active { display: flex; }
 
@@ -80,44 +80,44 @@
   #profile-name { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
   .name-input { width: 100%; font: inherit; color: var(--text); background: transparent; border: 1px solid transparent; border-radius: 4px; outline: none; padding: 1px 4px; margin: -1px -4px; }
   .name-input:hover { border-color: var(--border); }
-  .name-input:focus { border-color: var(--purple); color: var(--purple-text); }
+  .name-input:focus { border-color: var(--accent); color: var(--accent-text); }
   #profile-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; letter-spacing: 0.05em; font-weight: 600; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
   #profile-sub .sub-sep { opacity: 0.6; }
   .sub-input, .sub-select { font: inherit; text-transform: uppercase; letter-spacing: inherit; color: var(--text-dim); background: transparent; border: 1px solid transparent; border-radius: 4px; outline: none; padding: 1px 3px; }
   .sub-input:hover, .sub-select:hover { border-color: var(--border); }
-  .sub-input:focus, .sub-select:focus { border-color: var(--purple); color: var(--purple-text); }
+  .sub-input:focus, .sub-select:focus { border-color: var(--accent); color: var(--accent-text); }
   .sub-input-quirk { width: 90px; }
   .sub-input-narrow { width: 54px; }
   .sub-select { cursor: pointer; }
   .sub-select option { background: var(--surface2); color: var(--text); text-transform: none; }
   #tags-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; align-items: center; }
   .tag { font-size: 10px; padding: 2px 7px; border-radius: 3px; border: 1px solid var(--border); color: var(--text-dim); background: var(--surface2); letter-spacing: 0.04em; font-weight: 600; text-transform: uppercase; }
-  .tag-pc { background: var(--purple-light); color: var(--purple-text); border-color: rgba(232,160,32,0.3); }
+  .tag-pc { background: var(--accent-light); color: var(--accent-text); border-color: rgba(232,160,32,0.3); }
   .edit-wrap { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--text-muted); background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; }
   .edit-wrap label { white-space: nowrap; font-weight: 600; letter-spacing: 0.03em; }
   .stat-input { width: 38px; padding: 1px 2px; border: none; background: transparent; color: var(--text); font-size: 11px; font-weight: 700; outline: none; text-align: center; }
-  .stat-input:focus { color: var(--purple); }
+  .stat-input:focus { color: var(--accent); }
   .class-input { width: 130px; padding: 1px 2px; border: none; background: transparent; color: var(--text); font-size: 11px; font-weight: 700; outline: none; }
-  .class-input:focus { color: var(--purple); }
+  .class-input:focus { color: var(--accent); }
   .stat-chip { font-size: 11px; font-weight: 700; padding: 2px 7px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text-muted); white-space: nowrap; }
   .profile-action-btn { font-size: 11px; font-weight: 700; padding: 2px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface2); color: var(--text-muted); cursor: pointer; transition: background 0.1s, color 0.1s; white-space: nowrap; }
-  .profile-action-btn:hover { background: var(--purple-light); color: var(--purple-text); border-color: var(--purple); }
+  .profile-action-btn:hover { background: var(--accent-light); color: var(--accent-text); border-color: var(--accent); }
   #scores-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
   .score-block { display: flex; flex-direction: column; align-items: center; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 8px; min-width: 46px; }
   .score-label { font-size: 9px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
   .score-val-input { width: 36px; font-size: 16px; font-weight: 800; color: var(--text); text-align: center; border: none; background: transparent; outline: none; padding: 0; }
-  .score-val-input:focus { color: var(--purple); }
+  .score-val-input:focus { color: var(--accent); }
   .score-mod { font-size: 10px; color: var(--text-muted); font-weight: 600; }
   #profile-tabs { display: flex; border-top: 1px solid var(--border); overflow-x: auto; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   #profile-tabs::-webkit-scrollbar { display: none; }
   .tab-btn { padding: 8px 16px; font-size: 12px; cursor: pointer; border: none; background: none; color: var(--text-dim); border-bottom: 2px solid transparent; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; }
-  .tab-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
   #tab-content { padding: 12px 20px; font-size: 14px; color: var(--text-muted); line-height: 1.6; max-height: 160px; overflow-y: auto; background: var(--surface); border-bottom: 1px solid var(--border); }
   #tab-content.tab-quirk { max-height: 320px; }
   #tab-content.tab-attacks { max-height: 400px; }
   #tab-content.tab-inventory { max-height: 400px; }
   .tab-editable { width: 100%; min-height: 90px; font-size: 13px; line-height: 1.6; padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); color: var(--text); resize: vertical; outline: none; font-family: inherit; }
-  .tab-editable:focus { border-color: var(--purple); background: var(--surface); }
+  .tab-editable:focus { border-color: var(--accent); background: var(--surface); }
   .quirk-header { margin-bottom: 8px; }
   .quirk-name { font-size: 14px; font-weight: 600; color: var(--text); }
   .quirk-meta { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
@@ -127,24 +127,24 @@
   .ability-card.locked { opacity: 0.42; border-style: dashed; background: none; }
   .ability-card.locked .ability-name { color: var(--text-muted); }
   .ability-name { font-size: 12px; font-weight: 600; color: var(--text); }
-  .ability-type { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; background: var(--purple-light); color: var(--purple-text); font-weight: 500; margin-left: 6px; vertical-align: middle; }
+  .ability-type { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; background: var(--accent-light); color: var(--accent-text); font-weight: 500; margin-left: 6px; vertical-align: middle; }
   .ability-desc { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
   .lock-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; padding: 1px 7px; border-radius: 3px; background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); margin-left: 6px; vertical-align: middle; }
   .upgrade-note { font-size: 11px; color: var(--teal); margin-top: 5px; padding-top: 5px; border-top: 1px solid var(--border); font-style: italic; }
   .player-note { background: var(--amber-light); border-left: 3px solid var(--amber); border-radius: 0 var(--radius) var(--radius) 0; padding: 6px 10px; margin-top: 8px; font-size: 12px; color: var(--text-muted); }
   .player-note strong { color: var(--text); }
   .ability-card-editable { display: flex; flex-direction: column; gap: 6px; border-color: var(--border); }
-  .ability-card-editable:focus-within { border-color: var(--purple); }
+  .ability-card-editable:focus-within { border-color: var(--accent); }
   .ability-edit-row { display: flex; align-items: center; gap: 6px; }
   .ability-input { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: 12px; color: var(--text); font-family: inherit; width: 100%; resize: vertical; transition: border-color 0.15s; }
-  .ability-input:focus { outline: none; border-color: var(--purple); }
+  .ability-input:focus { outline: none; border-color: var(--accent); }
   .ability-input-name { flex: 1; font-weight: 600; }
   .ability-input-type { font-size: 11px; color: var(--text-muted); }
   .ability-input-desc { min-height: 44px; }
   .ability-delete-btn { flex-shrink: 0; color: var(--red-text); }
   .ability-delete-btn:hover { background: var(--red-light); border-color: var(--red); }
   .add-attack-btn { width: 100%; padding: 9px; border: 1px dashed var(--border); border-radius: var(--radius); background: none; color: var(--text-dim); font-size: 12px; cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s; }
-  .add-attack-btn:hover { background: var(--surface2); color: var(--purple-text); border-color: var(--purple); }
+  .add-attack-btn:hover { background: var(--surface2); color: var(--accent-text); border-color: var(--accent); }
 
   /* ── Inventory ────────────────────────────────────────── */
   .inv-currency-panel { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 12px; background: var(--surface2); }
@@ -153,7 +153,7 @@
   .inv-currency-block { display: flex; flex-direction: column; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 6px; min-width: 68px; }
   .inv-currency-block label { font-size: 9px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; }
   .inv-currency-input { width: 64px; font-size: 15px; font-weight: 700; color: var(--text); text-align: center; border: none; background: transparent; outline: none; padding: 0; font-family: inherit; }
-  .inv-currency-input:focus { color: var(--purple); }
+  .inv-currency-input:focus { color: var(--accent); }
   .inv-currency-input:disabled { color: var(--text-muted); }
   .inv-currency-total { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
   .inv-currency-total strong { color: var(--teal-text); }
@@ -180,34 +180,34 @@
   .rel-char-quirk { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
   .rel-controls { display: flex; flex-direction: column; gap: 4px; }
   .slider-wrap { display: flex; align-items: center; gap: 8px; }
-  .rel-slider { flex: 1; accent-color: var(--purple); cursor: pointer; touch-action: pan-y; }
+  .rel-slider { flex: 1; accent-color: var(--accent); cursor: pointer; touch-action: pan-y; }
   .rel-score { font-size: 14px; font-weight: 600; text-align: center; padding-top: 2px; min-width: 32px; }
   .score-neg { color: var(--red); }
   .score-zero { color: var(--text-dim); }
-  .score-pos { color: var(--purple); }
+  .score-pos { color: var(--accent); }
   .rel-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); padding: 0 1px; }
   .rel-note { font-size: 12px; padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); color: var(--text); width: 100%; resize: none; outline: none; font-family: inherit; min-height: 28px; }
-  .rel-note:focus { border-color: var(--purple); background: var(--surface); }
+  .rel-note:focus { border-color: var(--accent); background: var(--surface); }
 
   /* ── Dice view ────────────────────────────────────────── */
   #view-dice { padding: 24px; overflow-y: auto; gap: 20px; }
   .dice-section-title { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.10em; text-transform: uppercase; margin-bottom: 10px; }
   .dice-tray { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
   .die-btn { width: 68px; height: 68px; border: 1px solid var(--border-strong); border-radius: var(--radius-lg); background: var(--surface); color: var(--text-muted); font-size: 13px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: border-color 0.12s, background 0.12s, box-shadow 0.12s; }
-  .die-btn:hover { border-color: var(--purple); background: var(--purple-light); color: var(--purple-text); box-shadow: 0 0 12px var(--gold-glow); }
-  .die-btn.selected { border-color: var(--purple); background: var(--purple-light); color: var(--purple-text); box-shadow: 0 0 16px var(--gold-glow); }
+  .die-btn:hover { border-color: var(--accent); background: var(--accent-light); color: var(--accent-text); box-shadow: 0 0 12px var(--gold-glow); }
+  .die-btn.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent-text); box-shadow: 0 0 16px var(--gold-glow); }
   .die-btn .die-face { font-size: 22px; }
   .dice-controls { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
   .counter-group { display: flex; align-items: center; gap: 8px; }
   .counter-label { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; }
   .counter-btn { width: 28px; height: 28px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface2); color: var(--text); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
-  .counter-btn:hover { background: var(--surface); border-color: var(--purple); }
+  .counter-btn:hover { background: var(--surface); border-color: var(--accent); }
   .counter-val { font-size: 15px; font-weight: 700; min-width: 28px; text-align: center; }
-  .roll-btn { padding: 10px 28px; background: var(--purple); color: #0C1017; border: none; border-radius: var(--radius); font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: opacity 0.1s, box-shadow 0.1s; box-shadow: 0 0 16px var(--gold-glow); }
+  .roll-btn { padding: 10px 28px; background: var(--accent); color: #0C1017; border: none; border-radius: var(--radius); font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: opacity 0.1s, box-shadow 0.1s; box-shadow: 0 0 16px var(--gold-glow); }
   .roll-btn:hover { opacity: 0.9; box-shadow: 0 0 24px rgba(232,160,32,0.3); }
   .adv-btn { padding: 4px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface2); color: var(--text-muted); font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.1s, color 0.1s, border-color 0.1s; }
-  .adv-btn:hover { border-color: var(--purple); color: var(--purple-text); background: var(--purple-light); }
-  .adv-btn.active { background: var(--purple-light); color: var(--purple-text); border-color: var(--purple); box-shadow: 0 0 8px var(--gold-glow); }
+  .adv-btn:hover { border-color: var(--accent); color: var(--accent-text); background: var(--accent-light); }
+  .adv-btn.active { background: var(--accent-light); color: var(--accent-text); border-color: var(--accent); box-shadow: 0 0 8px var(--gold-glow); }
   .dice-result { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 20px; min-height: 88px; display: flex; align-items: center; gap: 20px; }
   .result-number { font-size: 56px; font-weight: 800; color: var(--text); line-height: 1; min-width: 80px; letter-spacing: -0.02em; }
   .result-number.crit { color: var(--green); text-shadow: 0 0 20px rgba(34,197,94,0.4); }
@@ -219,7 +219,7 @@
   .fumble-label { font-size: 12px; font-weight: 700; color: var(--red); margin-top: 4px; letter-spacing: 0.06em; text-transform: uppercase; }
   .dice-history { display: flex; flex-direction: column; gap: 4px; }
   .history-row { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); font-size: 12px; }
-  .history-die { font-size: 10px; font-weight: 700; color: var(--purple-text); background: var(--purple-light); padding: 1px 6px; border-radius: 3px; letter-spacing: 0.04em; }
+  .history-die { font-size: 10px; font-weight: 700; color: var(--accent-text); background: var(--accent-light); padding: 1px 6px; border-radius: 3px; letter-spacing: 0.04em; }
   .history-total { font-size: 14px; font-weight: 800; color: var(--text); min-width: 32px; }
   .history-breakdown { color: var(--text-muted); flex: 1; }
   .history-crit { color: var(--green); font-weight: 700; }
@@ -265,7 +265,7 @@
       text-transform: uppercase; font-family: inherit;
       transition: border-color 0.1s, color 0.1s, background 0.1s;
     }
-    .sidebar-mobile-btn:hover { border-color: var(--purple); color: var(--purple-text); background: var(--purple-light); }
+    .sidebar-mobile-btn:hover { border-color: var(--accent); color: var(--accent-text); background: var(--accent-light); }
 
     /* Main nav: hide dashboard link, show back-to-list button */
     #back-to-dash { display: none; }
@@ -276,7 +276,7 @@
       white-space: nowrap; text-transform: uppercase; letter-spacing: 0.04em;
       font-family: inherit; flex-shrink: 0;
     }
-    #mobile-back-btn:hover { color: var(--purple-text); background: var(--purple-light); }
+    #mobile-back-btn:hover { color: var(--accent-text); background: var(--accent-light); }
     #main-nav { overflow-x: auto; scrollbar-width: none; }
     #main-nav::-webkit-scrollbar { display: none; }
     .nav-btn { padding: 10px 14px; white-space: nowrap; flex-shrink: 0; }
@@ -393,7 +393,7 @@
           <div id="rel-legend">
             <div class="leg"><div class="leg-dot" style="background:var(--red)"></div>Hostile</div>
             <div class="leg"><div class="leg-dot" style="background:var(--text-dim)"></div>Neutral</div>
-            <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Positive</div>
+            <div class="leg"><div class="leg-dot" style="background:var(--accent)"></div>Positive</div>
           </div>
           <button id="rel-toggle-btn" class="enc-btn" onclick="toggleRelCollapse()" title="Show/hide classmates" style="margin-left:10px;">▾</button>
         </div>
@@ -702,7 +702,7 @@ function renderProfile() {
   const c = selected;
   const avEl = document.getElementById('profile-avatar');
   avEl.textContent = initials(c.name);
-  const SEC_COLORS = { 'class-1a': c.is_pc ? ['var(--purple-light)','var(--purple-text)'] : ['var(--teal-light)','var(--teal-text)'], 'class-1b': ['var(--amber-light)','var(--amber-text)'], teachers: ['var(--green-light)','var(--green-text)'], villains: ['var(--red-light)','var(--red-text)'], supporting: ['rgba(99,102,241,0.13)','#a5b4fc'] };
+  const SEC_COLORS = { 'class-1a': c.is_pc ? ['var(--accent-light)','var(--accent-text)'] : ['var(--teal-light)','var(--teal-text)'], 'class-1b': ['var(--amber-light)','var(--amber-text)'], teachers: ['var(--green-light)','var(--green-text)'], villains: ['var(--red-light)','var(--red-text)'], supporting: ['rgba(99,102,241,0.13)','#a5b4fc'] };
   const [avBg, avColor] = SEC_COLORS[c._section || 'class-1a'] || SEC_COLORS['class-1a'];
   avEl.style.background = avBg; avEl.style.color = avColor;
   document.getElementById('profile-name').innerHTML =
@@ -817,7 +817,7 @@ function renderAttacksTab(c) {
     <div class="ability-card ability-card-editable">
       <div class="ability-edit-row">
         <input class="ability-input ability-input-name" placeholder="Attack name" value="${escHtml(a.name||'')}" oninput="onAttackEdit(${i},'name',this.value)">
-        <button class="icon-btn ability-delete-btn" title="Delete attack" onclick="onAttackDelete(${i})">✕</button>
+        <button class="icon-btn ability-delete-btn" title="Delete attack" aria-label="Delete attack" onclick="onAttackDelete(${i})">✕</button>
       </div>
       <input class="ability-input ability-input-type" placeholder="Type (e.g. Action; costs 2 Heat Points)" value="${escHtml(a.type||'')}" oninput="onAttackEdit(${i},'type',this.value)">
       <textarea class="ability-input ability-input-desc" rows="2" placeholder="Description" oninput="onAttackEdit(${i},'description',this.value)">${escHtml(a.description||'')}</textarea>
@@ -892,7 +892,7 @@ function renderInventoryTab(c) {
       <div class="ability-edit-row">
         <input class="ability-input ability-input-name" placeholder="Item name" value="${escHtml(it.name||'')}" oninput="onItemEdit(${i},'name',this.value)">
         <input class="ability-input inv-item-qty" type="number" min="0" placeholder="Qty" value="${it.qty ?? 1}" oninput="onItemEdit(${i},'qty',this.value)" title="Quantity">
-        <button class="icon-btn ability-delete-btn" title="Delete item" onclick="onItemDelete(${i})">✕</button>
+        <button class="icon-btn ability-delete-btn" title="Delete item" aria-label="Delete item" onclick="onItemDelete(${i})">✕</button>
       </div>
       <textarea class="ability-input ability-input-desc" rows="2" placeholder="Notes (e.g. weight, effect, where it came from)" oninput="onItemEdit(${i},'notes',this.value)">${escHtml(it.notes||'')}</textarea>
     </div>`;

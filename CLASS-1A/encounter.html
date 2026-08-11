@@ -13,7 +13,7 @@
     --bg: #0C1017; --surface: #111923; --surface2: #18222E;
     --border: rgba(255,255,255,0.07); --border-strong: rgba(255,255,255,0.14);
     --text: #E8EDF3; --text-muted: #8A9BB0; --text-dim: #3E5068;
-    --purple: #E8A020; --purple-light: rgba(232,160,32,0.13); --purple-text: #F5C842;
+    --accent: #E8A020; --accent-light: rgba(232,160,32,0.13); --accent-text: #F5C842;
     --teal: #0EA572; --teal-light: rgba(14,165,114,0.13); --teal-text: #5FDBAA;
     --red: #EF4444; --red-light: rgba(239,68,68,0.13); --red-text: #FCA5A5;
     --amber: #F59E0B; --amber-light: rgba(245,158,11,0.13); --amber-text: #FDE68A;
@@ -36,7 +36,7 @@
     font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-dim);
     text-decoration: none; border-right: 1px solid var(--border); white-space: nowrap; text-transform: uppercase;
   }
-  #back-to-dash:hover { color: var(--purple); background: var(--purple-light); }
+  #back-to-dash:hover { color: var(--accent); background: var(--accent-light); }
   .nav-title { padding: 0 16px; font-size: 13px; font-weight: 800; color: var(--text); letter-spacing: 0.02em; }
   .nav-right { display: flex; align-items: center; gap: 8px; padding: 0 16px; margin-left: auto; flex-shrink: 0; }
 
@@ -46,26 +46,26 @@
   #view-encounter { overflow: hidden; }
   #enc-header { display: flex; align-items: center; gap: 10px; padding: 10px 20px; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; flex-wrap: wrap; }
   .enc-round { font-size: 12px; font-weight: 800; color: var(--text); letter-spacing: 0.06em; text-transform: uppercase; }
-  .enc-round span { color: var(--purple); }
+  .enc-round span { color: var(--accent); }
   .enc-btn { padding: 5px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface2); color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; transition: border-color 0.1s, color 0.1s; }
   .enc-btn:hover { border-color: var(--border-strong); color: var(--text); }
-  .enc-btn.primary { background: var(--purple); color: #0C1017; border-color: transparent; font-weight: 800; box-shadow: 0 0 12px var(--gold-glow); }
+  .enc-btn.primary { background: var(--accent); color: #0C1017; border-color: transparent; font-weight: 800; box-shadow: 0 0 12px var(--gold-glow); }
   .enc-btn.primary:hover { opacity: 0.9; }
   .enc-btn.danger { color: var(--red); border-color: rgba(239,68,68,0.3); }
   #enc-add-bar { display: flex; gap: 8px; padding: 10px 20px; border-bottom: 1px solid var(--border); background: var(--bg); flex-shrink: 0; flex-wrap: wrap; align-items: center; }
   #enc-add-bar select, #enc-add-bar input { padding: 5px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: 12px; outline: none; }
-  #enc-add-bar select:focus, #enc-add-bar input:focus { border-color: var(--purple); }
+  #enc-add-bar select:focus, #enc-add-bar input:focus { border-color: var(--accent); }
   #enc-add-bar input[type=number] { width: 60px; }
   #enc-add-bar input[type=text] { width: 110px; }
   .add-sep { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
   #enc-list { flex: 1; overflow-y: auto; padding: 12px 20px; display: flex; flex-direction: column; gap: 6px; }
   .enc-row { display: grid; grid-template-columns: 52px 1fr 1fr 52px; gap: 10px; align-items: center; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); border-left: 3px solid transparent; transition: border-color 0.15s; }
-  .enc-row.current-turn { border-left-color: var(--purple); background: var(--purple-light); box-shadow: 0 0 16px var(--gold-glow); }
+  .enc-row.current-turn { border-left-color: var(--accent); background: var(--accent-light); box-shadow: 0 0 16px var(--gold-glow); }
   .enc-row.is-dead { opacity: 0.35; }
   .enc-init { display: flex; flex-direction: column; align-items: center; }
   .enc-init label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
   .enc-init input { width: 40px; text-align: center; font-size: 16px; font-weight: 700; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); padding: 3px; outline: none; }
-  .enc-init input:focus { border-color: var(--purple); }
+  .enc-init input:focus { border-color: var(--accent); }
   .enc-name-col { display: flex; flex-direction: column; gap: 4px; }
   .enc-name { font-size: 13px; font-weight: 600; color: var(--text); }
   .enc-name-sub { font-size: 11px; color: var(--text-muted); }
@@ -81,12 +81,12 @@
   .hp-adj-btn.heal { color: var(--green); }
   .hp-adj-btn.dmg { color: var(--red); }
   .hp-display { font-size: 12px; font-weight: 600; color: var(--text); min-width: 52px; text-align: center; cursor: pointer; }
-  .hp-display:hover { color: var(--purple); }
+  .hp-display:hover { color: var(--accent); }
   .hp-input-wrap { display: flex; align-items: center; gap: 2px; }
-  .hp-current-input { width: 36px; text-align: center; font-size: 12px; font-weight: 600; border: 1px solid var(--purple); border-radius: 4px; background: var(--surface); color: var(--text); padding: 2px; outline: none; }
+  .hp-current-input { width: 36px; text-align: center; font-size: 12px; font-weight: 600; border: 1px solid var(--accent); border-radius: 4px; background: var(--surface); color: var(--text); padding: 2px; outline: none; }
   .hp-apply { display: flex; gap: 4px; }
   .hp-apply input { width: 50px; padding: 3px 6px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: 12px; text-align: center; outline: none; }
-  .hp-apply input:focus { border-color: var(--purple); }
+  .hp-apply input:focus { border-color: var(--accent); }
   .enc-ac { display: flex; flex-direction: column; align-items: center; }
   .enc-ac label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
   .enc-ac span { font-size: 16px; font-weight: 700; }
@@ -107,7 +107,7 @@
   .cond-dur-btn:hover { opacity: 1; }
   .enc-notes-row { grid-column: 1 / -1; padding: 4px 14px 6px; }
   .enc-notes-inp { width: 100%; padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); color: var(--text); font-size: 11px; outline: none; font-family: inherit; box-sizing: border-box; }
-  .enc-notes-inp:focus { border-color: var(--purple); }
+  .enc-notes-inp:focus { border-color: var(--accent); }
   .tm-action-chip { padding: 4px 10px; border-radius: 6px; border: 1px solid var(--chip-color, var(--border)); background: transparent; color: var(--chip-color, var(--text-muted)); font-size: 11px; font-weight: 600; cursor: pointer; transition: background 0.1s, opacity 0.1s; }
   .tm-action-chip:hover { opacity: 0.8; }
   .tm-action-chip.used { background: color-mix(in srgb, var(--chip-color) 15%, transparent); opacity: 0.45; text-decoration: line-through; }
@@ -157,7 +157,7 @@
     border-bottom: 1px solid var(--border); gap: 10px; flex-shrink: 0;
     background: linear-gradient(90deg, rgba(232,160,32,0.08) 0%, transparent 100%);
   }
-  #turn-modal-round { font-size: 10px; font-weight: 800; color: var(--purple); letter-spacing: 0.10em; text-transform: uppercase; }
+  #turn-modal-round { font-size: 10px; font-weight: 800; color: var(--accent); letter-spacing: 0.10em; text-transform: uppercase; }
   #turn-modal-close { margin-left: auto; width: 26px; height: 26px; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--text-dim); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   #turn-modal-close:hover { color: var(--text); border-color: var(--border-strong); }
   #turn-modal-body { padding: 18px 18px 0; }
@@ -174,7 +174,7 @@
   .tm-conditions { display: flex; flex-wrap: wrap; gap: 4px; min-height: 20px; margin-bottom: 12px; }
   #tm-attack-zone { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
   .tm-attack-title { font-size: 9px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 10px; }
-  #tm-roll-btn { padding: 8px 20px; background: var(--purple); color: #0C1017; border: none; border-radius: 7px; font-size: 12px; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: opacity 0.1s, box-shadow 0.1s; box-shadow: 0 0 12px var(--gold-glow); }
+  #tm-roll-btn { padding: 8px 20px; background: var(--accent); color: #0C1017; border: none; border-radius: 7px; font-size: 12px; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: opacity 0.1s, box-shadow 0.1s; box-shadow: 0 0 12px var(--gold-glow); }
   #tm-roll-btn:hover { opacity: 0.9; box-shadow: 0 0 20px rgba(232,160,32,0.3); }
   #tm-roll-result { margin-top: 10px; font-size: 13px; min-height: 20px; }
   .tm-result-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -185,7 +185,7 @@
     border-top: 1px solid var(--border); flex-shrink: 0; background: var(--surface2);
   }
   #tm-dead-badge { font-size: 10px; color: var(--red-text); background: var(--red-light); padding: 2px 8px; border-radius: 4px; font-weight: 700; letter-spacing: 0.05em; display: none; }
-  #tm-next-btn { margin-left: auto; padding: 9px 22px; background: var(--purple); color: #0C1017; border: none; border-radius: 8px; font-size: 13px; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: opacity 0.1s, box-shadow 0.1s; box-shadow: 0 0 14px var(--gold-glow); }
+  #tm-next-btn { margin-left: auto; padding: 9px 22px; background: var(--accent); color: #0C1017; border: none; border-radius: 8px; font-size: 13px; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: opacity 0.1s, box-shadow 0.1s; box-shadow: 0 0 14px var(--gold-glow); }
   #tm-next-btn:hover { opacity: 0.9; }
   #tm-skip-dead { font-size: 11px; display: flex; align-items: center; gap: 5px; color: var(--text-dim); cursor: pointer; user-select: none; }
 
@@ -194,12 +194,12 @@
   .tm-zone-title { font-size: 9px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 8px; }
   .tm-dice-tray { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
   .tm-die { width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text-dim); font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 0.1s, background 0.1s, color 0.1s; }
-  .tm-die:hover { border-color: var(--purple); color: var(--purple-text); background: var(--purple-light); }
-  .tm-die.selected { border-color: var(--purple); background: var(--purple-light); color: var(--purple-text); box-shadow: 0 0 8px var(--gold-glow); }
+  .tm-die:hover { border-color: var(--accent); color: var(--accent-text); background: var(--accent-light); }
+  .tm-die.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent-text); box-shadow: 0 0 8px var(--gold-glow); }
   .tm-roll-row { display: flex; gap: 6px; align-items: center; }
   .tm-mod-input { width: 52px; padding: 5px 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); font-size: 12px; text-align: center; outline: none; }
-  .tm-mod-input:focus { border-color: var(--purple); }
-  .tm-go-btn { padding: 5px 14px; background: var(--purple); color: #0C1017; border: none; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; cursor: pointer; }
+  .tm-mod-input:focus { border-color: var(--accent); }
+  .tm-go-btn { padding: 5px 14px; background: var(--accent); color: #0C1017; border: none; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; cursor: pointer; }
   .tm-go-btn:hover { opacity: 0.9; }
   .tm-go-btn:disabled { opacity: 0.3; cursor: default; }
   #tm-quick-result { font-size: 13px; color: var(--text-dim); margin-left: 6px; font-weight: 600; }
@@ -207,7 +207,7 @@
   .tm-quick-fumble { color: var(--red-text); font-weight: 800; }
   .tm-hp-editor { display: flex; gap: 6px; align-items: center; }
   .tm-hp-inp { width: 64px; padding: 5px 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); font-size: 13px; text-align: center; outline: none; font-weight: 700; }
-  .tm-hp-inp:focus { border-color: var(--purple); }
+  .tm-hp-inp:focus { border-color: var(--accent); }
   .tm-dmg-btn { padding: 5px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; background: var(--surface); }
   .tm-dmg-btn.dmg { color: var(--red-text); border-color: rgba(239,68,68,0.4); }
   .tm-dmg-btn.dmg:hover { background: var(--red-light); }
@@ -234,7 +234,7 @@
     border-bottom: 1px solid var(--border); gap: 12px; flex-shrink: 0;
     background: linear-gradient(90deg, rgba(139,71,212,0.08) 0%, transparent 100%);
   }
-  #board-title { font-size: 13px; font-weight: 800; color: var(--purple); letter-spacing: 0.08em; text-transform: uppercase; }
+  #board-title { font-size: 13px; font-weight: 800; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
   #board-distance-label { font-size: 13px; font-weight: 700; color: var(--gold,#E8A020); background: rgba(232,160,32,0.12); padding: 3px 12px; border-radius: 20px; border: 1px solid rgba(232,160,32,0.25); min-width: 140px; text-align: center; transition: opacity 0.2s; }
   #board-close-btn { width: 28px; height: 28px; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--text-dim); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   #board-close-btn:hover { color: var(--text); border-color: var(--border-strong); }
@@ -250,7 +250,7 @@
     cursor: pointer; white-space: nowrap; transition: border-color 0.1s, color 0.1s, background 0.1s;
   }
   .board-tool-btn:hover { border-color: var(--border-strong); color: var(--text); }
-  .board-tool-btn.active { border-color: var(--purple); background: var(--purple-light); color: var(--purple-text); }
+  .board-tool-btn.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent-text); }
   .board-tool-btn.eraser.active { border-color: var(--red); background: var(--red-light); color: var(--red-text); }
   #board-pen-color { width: 26px; height: 26px; padding: 0; border: 1px solid var(--border); border-radius: 6px; background: none; cursor: pointer; flex-shrink: 0; }
   .board-draw-sep { width: 1px; height: 18px; background: var(--border); margin: 0 2px; flex-shrink: 0; }
@@ -267,8 +267,8 @@
     background: var(--surface); transition: border-color 0.1s, background 0.1s;
     user-select: none;
   }
-  .board-tray-item:hover { border-color: var(--purple); background: var(--purple-light); }
-  .board-tray-item.selected { border-color: var(--purple); background: var(--purple-light); box-shadow: 0 0 8px var(--gold-glow); }
+  .board-tray-item:hover { border-color: var(--accent); background: var(--accent-light); }
+  .board-tray-item.selected { border-color: var(--accent); background: var(--accent-light); box-shadow: 0 0 8px var(--gold-glow); }
   .board-tray-item.is-dead { opacity: 0.4; }
   .board-tray-token { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
   .board-tray-name { font-size: 11px; font-weight: 600; color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
@@ -409,10 +409,10 @@
 
     <!-- ── Turn Modal ── -->
     <div id="turn-modal-overlay" onclick="if(event.target===this)closeTurnModal()">
-      <div id="turn-modal">
+      <div id="turn-modal" role="dialog" aria-modal="true" aria-label="Turn actions" tabindex="-1">
         <div id="turn-modal-header">
           <span id="turn-modal-round">Round 1 · Turn 1 of 0</span>
-          <button id="turn-modal-close" onclick="closeTurnModal()" title="Close">✕</button>
+          <button id="turn-modal-close" onclick="closeTurnModal()" title="Close" aria-label="Close">✕</button>
         </div>
         <div id="turn-modal-body">
           <div class="tm-combatant-header">
@@ -491,7 +491,7 @@
         </div>
         <div id="turn-modal-footer">
           <label class="tm-skip-dead">
-            <input type="checkbox" id="tm-skip-dead-chk" checked style="accent-color:var(--purple)">
+            <input type="checkbox" id="tm-skip-dead-chk" checked style="accent-color:var(--accent)">
             Skip dead
           </label>
           <span id="tm-dead-badge">☠ Downed</span>
@@ -502,23 +502,23 @@
 
     <!-- ── Board Mode Overlay ── -->
     <div id="board-overlay" onclick="if(event.target===this)closeBoardMode()">
-      <div id="board-modal">
+      <div id="board-modal" role="dialog" aria-modal="true" aria-labelledby="board-title" tabindex="-1">
         <div id="board-header">
           <span id="board-title">⊞ Board Mode</span>
           <span id="board-distance-label"></span>
           <div id="board-range-wrap" title="Show attack range around selected unit">
             <span id="board-range-icon">◎</span>
             <input id="board-range-input" type="number" min="5" max="300" step="5" placeholder="Range (ft)">
-            <button id="board-range-clear" onclick="boardClearRange()" title="Clear range">✕</button>
+            <button id="board-range-clear" onclick="boardClearRange()" title="Clear range" aria-label="Clear range">✕</button>
           </div>
           <div id="board-zoom-wrap">
-            <button class="board-zoom-btn" onclick="boardZoomOut()" title="Zoom out">−</button>
+            <button class="board-zoom-btn" onclick="boardZoomOut()" title="Zoom out" aria-label="Zoom out">−</button>
             <span id="board-zoom-label">50%</span>
-            <button class="board-zoom-btn" onclick="boardZoomIn()" title="Zoom in">+</button>
+            <button class="board-zoom-btn" onclick="boardZoomIn()" title="Zoom in" aria-label="Zoom in">+</button>
             <button class="board-zoom-btn" onclick="boardFitZoom()" title="Fit grid to window">Fit</button>
           </div>
           <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-            <button id="board-close-btn" onclick="closeBoardMode()" title="Close">✕</button>
+            <button id="board-close-btn" onclick="closeBoardMode()" title="Close" aria-label="Close">✕</button>
           </div>
         </div>
         <div id="board-draw-bar">
@@ -923,7 +923,7 @@ function renderEncHpRow(id) {
     <div class="hp-controls">
       <input id="enc-dmg-inp-${c.id}" type="number" min="1" placeholder="dmg" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
         onkeydown="if(event.key==='Enter')encApplyDmg(${c.id})">
-      <button class="hp-adj-btn dmg" onclick="encApplyDmg(${c.id})" title="Apply damage">−</button>
+      <button class="hp-adj-btn dmg" onclick="encApplyDmg(${c.id})" title="Apply damage" aria-label="Apply damage">−</button>
       <span class="hp-display" onclick="this.style.display='none';document.getElementById('enc-hp-edit-${c.id}').style.display='flex'">
         ${c.hp}/${c.maxHp}
       </span>
@@ -931,7 +931,7 @@ function renderEncHpRow(id) {
         <input class="hp-current-input" type="number" value="${c.hp}" min="0" max="${c.maxHp}"
           onblur="encSetHpDirect(${c.id},this.value)" onkeydown="if(event.key==='Enter')encSetHpDirect(${c.id},this.value)">
       </span>
-      <button class="hp-adj-btn heal" onclick="encApplyHeal(${c.id})" title="Apply healing">+</button>
+      <button class="hp-adj-btn heal" onclick="encApplyHeal(${c.id})" title="Apply healing" aria-label="Apply healing">+</button>
       <input id="enc-heal-inp-${c.id}" type="number" min="1" placeholder="heal" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
         onkeydown="if(event.key==='Enter')encApplyHeal(${c.id})">
     </div>
@@ -944,10 +944,10 @@ function renderEncHpRow(id) {
 
 function teamDotHtml(c) {
   if (c.team === null || c.team === undefined) {
-    return `<span class="team-dot" onclick="encCycleTeam(${c.id})" title="No team — click to assign"></span>`;
+    return `<span class="team-dot" onclick="encCycleTeam(${c.id})" title="No team — click to assign" role="button" tabindex="0" aria-label="No team — click to assign"></span>`;
   }
   const t = TEAM_COLORS[c.team];
-  return `<span class="team-dot assigned" onclick="encCycleTeam(${c.id})" title="${t.name} team — click to change" style="background:${t.bg}"></span>`;
+  return `<span class="team-dot assigned" onclick="encCycleTeam(${c.id})" title="${t.name} team — click to change" style="background:${t.bg}" role="button" tabindex="0" aria-label="${t.name} team — click to change"></span>`;
 }
 
 function renderEncounter() {
@@ -964,8 +964,8 @@ function renderEncounter() {
     const barColor = pct > 50 ? 'var(--green)' : pct > 25 ? 'var(--amber)' : 'var(--red)';
     const typeLabel = c.isPC ? 'PC' : c.quirk || 'NPC';
     const team = (c.team !== null && c.team !== undefined) ? TEAM_COLORS[c.team] : null;
-    const borderColor = team ? team.bg : isCurrent ? 'var(--purple)' : 'transparent';
-    const rowBg = isCurrent ? (team ? team.light : 'var(--purple-light)') : (team ? team.light : '');
+    const borderColor = team ? team.bg : isCurrent ? 'var(--accent)' : 'transparent';
+    const rowBg = isCurrent ? (team ? team.light : 'var(--accent-light)') : (team ? team.light : '');
     return `<div class="enc-row${isDead?' is-dead':''}" id="enc-row-${c.id}" style="border-left-color:${borderColor};${rowBg?'background:'+rowBg+';':''}grid-template-columns:52px 1fr 1fr 52px;display:grid;flex-direction:unset;">
       <div class="enc-init">
         <label>Init</label>
@@ -983,7 +983,7 @@ function renderEncounter() {
         <div class="hp-controls">
           <input id="enc-dmg-inp-${c.id}" type="number" min="1" placeholder="dmg" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
             onkeydown="if(event.key==='Enter')encApplyDmg(${c.id})">
-          <button class="hp-adj-btn dmg" onclick="encApplyDmg(${c.id})" title="Apply damage">−</button>
+          <button class="hp-adj-btn dmg" onclick="encApplyDmg(${c.id})" title="Apply damage" aria-label="Apply damage">−</button>
           <span class="hp-display" onclick="this.style.display='none';document.getElementById('enc-hp-edit-${c.id}').style.display='flex'">
             ${c.hp}/${c.maxHp}
           </span>
@@ -991,7 +991,7 @@ function renderEncounter() {
             <input class="hp-current-input" type="number" value="${c.hp}" min="0" max="${c.maxHp}"
               onblur="encSetHpDirect(${c.id},this.value)" onkeydown="if(event.key==='Enter')encSetHpDirect(${c.id},this.value)">
           </span>
-          <button class="hp-adj-btn heal" onclick="encApplyHeal(${c.id})" title="Apply healing">+</button>
+          <button class="hp-adj-btn heal" onclick="encApplyHeal(${c.id})" title="Apply healing" aria-label="Apply healing">+</button>
           <input id="enc-heal-inp-${c.id}" type="number" min="1" placeholder="heal" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
             onkeydown="if(event.key==='Enter')encApplyHeal(${c.id})">
         </div>
@@ -1006,7 +1006,7 @@ function renderEncounter() {
         <button class="icon-btn" onclick="encRandomAttack(${c.id})" title="Random attack against an enemy">⚔</button>
         <button class="icon-btn" onclick="encToggleCond(${c.id})" title="Conditions">⚡</button>
         <button class="icon-btn${c.notes?'  note-active':''}" onclick="encToggleNotes(${c.id})" title="Combat note">📝</button>
-        <button class="icon-btn remove" onclick="encRemove(${c.id})" title="Remove">✕</button>
+        <button class="icon-btn remove" onclick="encRemove(${c.id})" title="Remove" aria-label="Remove">✕</button>
       </div>
     </div>`;
   }).join('');
@@ -1128,7 +1128,7 @@ function encAddEnemy() {
 (async () => {
   const [rosterRes, enemiesRes] = await Promise.all([
     fetch('roster.json'),
-    fetch('../CAMPAIGN/enemies.json', {cache:'no-cache'}),
+    fetch('../CAMPAIGN/enemies.json'),
   ]);
   const roster = await rosterRes.json();
   try { const ed = await enemiesRes.json(); ENEMIES = ed.enemies || []; } catch {}
@@ -1173,17 +1173,22 @@ function encAddEnemy() {
 let modalAttackResult = null;
 let tmSelectedDie = null;
 
+let turnModalLastFocusedEl = null;
 function openTurnModal() {
   if (!encounter.combatants.length) return;
   modalAttackResult = null;
   tmSelectedDie = null;
+  turnModalLastFocusedEl = document.activeElement;
   document.getElementById('turn-modal-overlay').classList.add('open');
   updateTurnModal();
+  document.getElementById('turn-modal').focus({ preventScroll: true });
 }
 
 function closeTurnModal() {
   document.getElementById('turn-modal-overlay').classList.remove('open');
   modalAttackResult = null;
+  if (turnModalLastFocusedEl && typeof turnModalLastFocusedEl.focus === 'function') turnModalLastFocusedEl.focus();
+  turnModalLastFocusedEl = null;
 }
 
 function modalNextTurn() {
@@ -1229,8 +1234,8 @@ function updateTurnModal() {
 
   // Avatar
   const avatarEl = document.getElementById('tm-avatar');
-  const avatarColor = team ? team.bg : 'var(--purple)';
-  const avatarBg = team ? team.light : 'var(--purple-light)';
+  const avatarColor = team ? team.bg : 'var(--accent)';
+  const avatarBg = team ? team.light : 'var(--accent-light)';
   avatarEl.style.cssText = `background:${avatarBg};color:${avatarColor};`;
   avatarEl.textContent = c.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
 
@@ -1458,7 +1463,7 @@ function tmApplyHpToTarget(mode) {
 
 /* ── Action Economy (C1) ──────────────────────────────── */
 const TM_ACTIONS = [
-  { key: 'action',   label: 'Action',       color: 'var(--purple)' },
+  { key: 'action',   label: 'Action',       color: 'var(--accent)' },
   { key: 'bonus',    label: 'Bonus Action', color: 'var(--teal)'   },
   { key: 'reaction', label: 'Reaction',     color: 'var(--amber)'  },
   { key: 'movement', label: 'Movement',     color: 'var(--green)'  },
@@ -1537,9 +1542,12 @@ function tmRollDeathSave() {
 // Battle Board (CLASS-1A/board.html) instead of hand-kept-in-sync copies.
 // Only these two functions are specific to this page's modal chrome.
 
+let boardModalLastFocusedEl = null;
 function openBoardMode() {
+  boardModalLastFocusedEl = document.activeElement;
   document.getElementById('board-overlay').classList.add('open');
   requestAnimationFrame(() => { boardFitZoom(); renderBoard(); });
+  document.getElementById('board-modal').focus({ preventScroll: true });
 }
 function closeBoardMode() {
   document.getElementById('board-overlay').classList.remove('open');
@@ -1548,7 +1556,21 @@ function closeBoardMode() {
   document.querySelectorAll('.board-tool-btn').forEach(b => b.classList.toggle('active', b.dataset.tool === 'move'));
   const inp = document.getElementById('board-range-input');
   if (inp) inp.value = '';
+  if (boardModalLastFocusedEl && typeof boardModalLastFocusedEl.focus === 'function') boardModalLastFocusedEl.focus();
+  boardModalLastFocusedEl = null;
 }
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role="button"][tabindex]')) {
+      e.preventDefault();
+      e.target.click();
+    }
+    return;
+  }
+  if (document.getElementById('board-overlay').classList.contains('open')) closeBoardMode();
+  else if (document.getElementById('turn-modal-overlay').classList.contains('open')) closeTurnModal();
+});
 
 </script>
 </body>

@@ -13,7 +13,7 @@
     --bg: #0C1017; --surface: #111923; --surface2: #18222E;
     --border: rgba(255,255,255,0.07); --border-strong: rgba(255,255,255,0.14);
     --text: #E8EDF3; --text-muted: #8A9BB0; --text-dim: #3E5068;
-    --purple: #E8A020; --purple-light: rgba(232,160,32,0.13); --purple-text: #F5C842;
+    --accent: #E8A020; --accent-light: rgba(232,160,32,0.13); --accent-text: #F5C842;
     --teal: #0EA572; --teal-light: rgba(14,165,114,0.13); --teal-text: #5FDBAA;
     --red: #EF4444; --red-light: rgba(239,68,68,0.13); --red-text: #FCA5A5;
     --radius: 8px; --radius-lg: 12px;
@@ -34,7 +34,7 @@
     font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-dim);
     text-decoration: none; border-right: 1px solid var(--border); white-space: nowrap; text-transform: uppercase;
   }
-  #back-to-dash:hover { color: var(--purple); background: var(--purple-light); }
+  #back-to-dash:hover { color: var(--accent); background: var(--accent-light); }
   .nav-title { padding: 0 16px; font-size: 13px; font-weight: 800; color: var(--text); letter-spacing: 0.02em; }
   .nav-right { display: flex; align-items: center; gap: 8px; padding: 0 16px; margin-left: auto; flex-shrink: 0; }
 
@@ -63,8 +63,8 @@
     background: var(--surface); transition: border-color 0.1s, background 0.1s;
     user-select: none;
   }
-  .board-tray-item:hover { border-color: var(--purple); background: var(--purple-light); }
-  .board-tray-item.selected { border-color: var(--purple); background: var(--purple-light); box-shadow: 0 0 8px var(--gold-glow); }
+  .board-tray-item:hover { border-color: var(--accent); background: var(--accent-light); }
+  .board-tray-item.selected { border-color: var(--accent); background: var(--accent-light); box-shadow: 0 0 8px var(--gold-glow); }
   .board-tray-item.is-dead { opacity: 0.4; }
   .board-tray-token { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
   .board-tray-name { font-size: 11px; font-weight: 600; color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
@@ -152,12 +152,12 @@
       <div id="board-range-wrap" title="Show attack range around selected unit">
         <span id="board-range-icon">◎</span>
         <input id="board-range-input" type="number" min="5" max="300" step="5" placeholder="Range (ft)">
-        <button id="board-range-clear" onclick="boardClearRange()" title="Clear range">✕</button>
+        <button id="board-range-clear" onclick="boardClearRange()" title="Clear range" aria-label="Clear range">✕</button>
       </div>
       <div id="board-zoom-wrap">
-        <button class="board-zoom-btn" onclick="boardZoomOut()" title="Zoom out">−</button>
+        <button class="board-zoom-btn" onclick="boardZoomOut()" title="Zoom out" aria-label="Zoom out">−</button>
         <span id="board-zoom-label">50%</span>
-        <button class="board-zoom-btn" onclick="boardZoomIn()" title="Zoom in">+</button>
+        <button class="board-zoom-btn" onclick="boardZoomIn()" title="Zoom in" aria-label="Zoom in">+</button>
         <button class="board-zoom-btn" onclick="boardFitZoom()" title="Fit grid to window">Fit</button>
       </div>
       <div id="board-legend">

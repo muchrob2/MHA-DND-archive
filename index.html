@@ -373,6 +373,11 @@
 </div>
 
 <script>
+  // Note: this is a UI convenience, not access control. It only decides which
+  // nav links/labels render on this device so DM-only spoilers aren't visible
+  // on a shared screen — it does not gate reads or writes. Actual permissions
+  // are enforced server-side by Firestore rules (see firestore.rules:
+  // isAdmin()/isEditorFor()), independent of this PIN.
   const DM_PIN = '6560';
   let pinEntry = '';
 

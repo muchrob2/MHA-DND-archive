@@ -140,6 +140,16 @@
   }
   .header-label { font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 1px; }
   header h1 { font-size: 17px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+  .last-updated {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; color: var(--text-dim); margin-top: 3px;
+  }
+  .last-updated-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0;
+    box-shadow: 0 0 6px rgba(14,165,114,0.6);
+  }
+  .last-updated.stale .last-updated-dot { background: var(--text-dim); box-shadow: none; }
+  .last-updated.hidden { display: none; }
   .switch-role-btn {
     margin-left: auto; font-size: 11px; color: var(--text-dim); background: none;
     border: 1px solid var(--border); border-radius: 6px; padding: 5px 10px;
@@ -275,6 +285,10 @@
     <div>
       <div class="header-label" id="header-label">U.A. High School</div>
       <h1>My Hero Academia D&amp;D</h1>
+      <div class="last-updated hidden" id="last-updated" title="">
+        <span class="last-updated-dot"></span>
+        <span id="last-updated-text">Checking for updates…</span>
+      </div>
     </div>
     <button class="switch-role-btn" onclick="switchRole()">Switch role</button>
   </div>
@@ -445,6 +459,60 @@
 
   const saved = sessionStorage.getItem('mha-role');
   if (saved) applyRole(saved);
+
+  // ── "Last updated" indicator ──
+  // Shows when the site content was last pushed, sourced from the latest
+  // commit on main via the GitHub API. Cached in localStorage for 10 minutes
+  // so repeat visits/reloads don't hammer the (unauthenticated, rate-limited)
+  // API — a stale cache is shown immediately while a fresh check happens
+  // behind it, so the indicator never blocks or blanks on reload.
+  const LAST_UPDATED_CACHE_KEY = 'mha_last_updated_cache';
+  const LAST_UPDATED_TTL_MS = 10 * 60 * 1000;
+  const LAST_UPDATED_API = 'https://api.github.com/repos/muchrob2/MHA-DND-archive/commits/main';
+
+  function formatTimeAgo(iso) {
+    const then = new Date(iso).getTime();
+    const diffSec = Math.max(0, Math.round((Date.now() - then) / 1000));
+    if (diffSec < 60) return 'Updated just now';
+    const diffMin = Math.round(diffSec / 60);
+    if (diffMin < 60) return `Updated ${diffMin}m ago`;
+    const diffHr = Math.round(diffMin / 60);
+    if (diffHr < 24) return `Updated ${diffHr}h ago`;
+    const diffDay = Math.round(diffHr / 24);
+    if (diffDay < 14) return `Updated ${diffDay}d ago`;
+    return 'Updated ' + new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  }
+
+  function renderLastUpdated(iso, isStale) {
+    const el = document.getElementById('last-updated');
+    const textEl = document.getElementById('last-updated-text');
+    textEl.textContent = formatTimeAgo(iso);
+    el.title = 'Last commit: ' + new Date(iso).toLocaleString();
+    el.classList.toggle('stale', !!isStale);
+    el.classList.remove('hidden');
+  }
+
+  async function refreshLastUpdated() {
+    let cached = null;
+    try { cached = JSON.parse(localStorage.getItem(LAST_UPDATED_CACHE_KEY) || 'null'); } catch {}
+    if (cached && cached.date) {
+      renderLastUpdated(cached.date, false);
+      if (Date.now() - cached.fetchedAt < LAST_UPDATED_TTL_MS) return; // still fresh enough, skip the fetch
+    }
+    try {
+      const res = await fetch(LAST_UPDATED_API, { headers: { Accept: 'application/vnd.github+json' } });
+      if (!res.ok) throw new Error('bad status');
+      const data = await res.json();
+      const iso = data.commit?.committer?.date || data.commit?.author?.date;
+      if (!iso) throw new Error('no date in response');
+      localStorage.setItem(LAST_UPDATED_CACHE_KEY, JSON.stringify({ date: iso, fetchedAt: Date.now() }));
+      renderLastUpdated(iso, false);
+    } catch {
+      if (cached && cached.date) renderLastUpdated(cached.date, true); // show what we have, marked stale
+      // else: leave the indicator hidden rather than show something wrong
+    }
+  }
+  refreshLastUpdated();
 </script>
 </body>
 </html>

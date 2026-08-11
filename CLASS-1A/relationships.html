@@ -229,9 +229,16 @@
   #save-bar { display: flex; align-items: center; gap: 8px; padding: 6px 20px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
   #save-bar span { font-size: 10px; color: var(--text-dim); font-weight: 600; letter-spacing: 0.04em; }
   #save-status { margin-left: auto; font-size: 10px; color: var(--text-dim); transition: color 0.3s; font-weight: 700; letter-spacing: 0.04em; }
+  #save-status.dirty { color: var(--amber); }
   #save-status.saving { color: var(--amber); }
   #save-status.saved { color: var(--teal); }
   #save-status.error { color: var(--red); }
+  #rel-save-btn {
+    padding: 3px 12px; font-size: 11px; font-weight: 700; border-radius: 5px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface2); color: var(--text-dim);
+  }
+  #rel-save-btn.dirty { border-color: var(--amber); color: var(--amber); background: rgba(232,160,32,0.12); }
+  #rel-save-btn:disabled { cursor: default; opacity: 0.6; }
 
   /* ── Mobile ──────────────────────────────────────────── */
   @media (max-width: 640px) {
@@ -446,10 +453,11 @@
     </div>
 
     <div id="save-bar">
-      <span>Syncs via Firestore</span>
+      <span>Manual save — edits aren't sent until you click Save</span>
       <div style="display:flex;gap:6px;margin-left:auto;align-items:center;">
         <button onclick="exportData()" style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Download a local backup">↓ Export</button>
         <label style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Restore from a backup file">↑ Import<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
+        <button id="rel-save-btn" onclick="manualSaveRelationships()" disabled title="No unsaved changes">💾 Save</button>
         <span id="save-status"></span>
       </div>
     </div>
@@ -463,7 +471,6 @@ let CHARACTERS = [];
 let selected = null;
 let activeTab = 'personality';
 let rels = {};
-let fsSaveTimer = null;
 let currentView = 'character';
 
 const SECTION_ORDER  = ['class-1a'];
@@ -522,13 +529,18 @@ function ensureCharIds(c) {
 
 const FS_REL_DOC = db.collection(FS_COLLECTION).doc(FS_DOC);
 let _lastSyncedRel = null;
-// True from the moment a change is scheduled to save until it actually lands.
-// isProfileEditing() only covers while a field has focus — a field edit
-// commits on blur, well before the 600ms debounce fires, so without this a
-// remote snapshot landing in that gap would wholesale-overwrite the character
-// (via Object.assign in applyRemoteRelBundle) and revert the edit before it
-// was ever saved.
+// True only while a manual save triggered by the Save button is actually in
+// flight (not while edits are merely pending) — kept separate from _relDirty
+// so isProfileEditing() can tell "unsaved" apart from "actively writing".
 let _relSavePending = false;
+// True from the moment any field is edited until the Save button is clicked
+// and the save lands. Saves here are manual, not auto — see scheduleFirestoreSave
+// below — so this flag has to cover the whole "I have edits you don't know
+// about yet" window, however long the user takes to hit Save, not just a
+// brief debounce. Without it, a remote snapshot arriving while edits are
+// sitting unsaved would wholesale-overwrite the character (via Object.assign
+// in applyRemoteRelBundle) and silently revert them.
+let _relDirty = false;
 
 async function saveToFirestore() {
   await fbAuthReady;
@@ -554,7 +566,7 @@ async function loadFromFirestore() {
 // local copy never goes stale and clobbers them on its own next save.
 let _pendingRemoteRelBundle = null;
 function isProfileEditing() {
-  if (_relSavePending) return true;
+  if (_relSavePending || _relDirty) return true;
   const tag = document.activeElement?.tagName;
   if (tag !== 'INPUT' && tag !== 'TEXTAREA') return false;
   return !!document.activeElement.closest('#profile, #view-relationships');
@@ -591,19 +603,44 @@ setInterval(() => {
   }
 }, 1500);
 
+// Called by every field/score edit. Saving here is manual (the Save button
+// in #save-bar), not automatic — this just marks the doc dirty and lets the
+// user decide when to actually write it, instead of a timer racing a
+// background sync that could revert the edit before it's sent (see the
+// _relDirty comment above).
 function scheduleFirestoreSave() {
-  clearTimeout(fsSaveTimer);
-  setSaveStatus('saving', 'Saving…');
-  _relSavePending = true;
-  fsSaveTimer = setTimeout(async () => {
-    try {
-      await saveToFirestore();
-      setSaveStatus('saved', 'Saved ' + new Date().toLocaleTimeString());
-    } catch (e) { setSaveStatus('error', e.message); } finally {
-      _relSavePending = false;
-    }
-  }, 600);
+  _relDirty = true;
+  setSaveStatus('dirty', 'Unsaved changes');
+  const btn = document.getElementById('rel-save-btn');
+  if (btn) { btn.disabled = false; btn.classList.add('dirty'); btn.title = 'Save unsaved changes'; }
 }
+
+async function manualSaveRelationships() {
+  if (!_relDirty || _relSavePending) return;
+  const btn = document.getElementById('rel-save-btn');
+  _relSavePending = true;
+  setSaveStatus('saving', 'Saving…');
+  if (btn) btn.disabled = true;
+  try {
+    await saveToFirestore();
+    _relDirty = false;
+    setSaveStatus('saved', 'Saved ' + new Date().toLocaleTimeString());
+    if (btn) { btn.classList.remove('dirty'); btn.title = 'No unsaved changes'; }
+  } catch (e) {
+    setSaveStatus('error', e.message);
+    if (btn) btn.disabled = false; // let them retry
+  } finally {
+    _relSavePending = false;
+  }
+}
+
+// Warn before leaving the tab with unsaved edits sitting in memory — there's
+// no auto-save left to fall back on now that saving is manual.
+window.addEventListener('beforeunload', (e) => {
+  if (!_relDirty) return;
+  e.preventDefault();
+  e.returnValue = '';
+});
 
 /* ── View switching ───────────────────────────────────── */
 function setView(view) {

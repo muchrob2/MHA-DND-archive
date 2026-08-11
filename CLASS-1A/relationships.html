@@ -522,6 +522,13 @@ function ensureCharIds(c) {
 
 const FS_REL_DOC = db.collection(FS_COLLECTION).doc(FS_DOC);
 let _lastSyncedRel = null;
+// True from the moment a change is scheduled to save until it actually lands.
+// isProfileEditing() only covers while a field has focus — a field edit
+// commits on blur, well before the 600ms debounce fires, so without this a
+// remote snapshot landing in that gap would wholesale-overwrite the character
+// (via Object.assign in applyRemoteRelBundle) and revert the edit before it
+// was ever saved.
+let _relSavePending = false;
 
 async function saveToFirestore() {
   await fbAuthReady;
@@ -547,6 +554,7 @@ async function loadFromFirestore() {
 // local copy never goes stale and clobbers them on its own next save.
 let _pendingRemoteRelBundle = null;
 function isProfileEditing() {
+  if (_relSavePending) return true;
   const tag = document.activeElement?.tagName;
   if (tag !== 'INPUT' && tag !== 'TEXTAREA') return false;
   return !!document.activeElement.closest('#profile, #view-relationships');
@@ -586,11 +594,14 @@ setInterval(() => {
 function scheduleFirestoreSave() {
   clearTimeout(fsSaveTimer);
   setSaveStatus('saving', 'Saving…');
+  _relSavePending = true;
   fsSaveTimer = setTimeout(async () => {
     try {
       await saveToFirestore();
       setSaveStatus('saved', 'Saved ' + new Date().toLocaleTimeString());
-    } catch (e) { setSaveStatus('error', e.message); }
+    } catch (e) { setSaveStatus('error', e.message); } finally {
+      _relSavePending = false;
+    }
   }, 600);
 }
 

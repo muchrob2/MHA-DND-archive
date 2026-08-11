@@ -165,6 +165,11 @@ const FS_DOC = db.collection('mha-dnd').doc('session-log');
 // Last session-log doc this client knows was on the server — diffed against
 // on save so concurrent edits to different sessions don't clobber each other.
 let _lastSyncedLog = null;
+// True from the moment a save is kicked off until it lands (or fails).
+// editingId/draftNew already reset to "not editing" before this resolves
+// (the form closes immediately), so isLogEditing() alone leaves a window
+// where a live snapshot could apply mid-save and revert the just-made edit.
+let _logSaveInFlight = false;
 
 document.addEventListener('auth-state-changed', (e) => {
   canWrite = e.detail.role === 'admin' || e.detail.role === 'editor';
@@ -189,6 +194,7 @@ async function init() {
 
 async function saveAll() {
   const notice = document.getElementById('saved-notice');
+  _logSaveInFlight = true;
   try {
     await fbAuthReady;
     const merged = await fsMergeSave(FS_DOC, data, _lastSyncedLog, [{ path: 'sessions', idKey: 'id' }]);
@@ -200,6 +206,8 @@ async function saveAll() {
     notice.textContent = 'Save failed — changes not persisted';
     notice.classList.add('show');
     setTimeout(() => notice.classList.remove('show'), 3000);
+  } finally {
+    _logSaveInFlight = false;
   }
 }
 
@@ -207,7 +215,7 @@ async function saveAll() {
 // while a session card is open for editing so a remote update can't blow away
 // in-progress, unsaved text in a field.
 let _pendingRemoteLog = null;
-function isLogEditing() { return editingId !== null || draftNew; }
+function isLogEditing() { return editingId !== null || draftNew || _logSaveInFlight; }
 function applyRemoteLog(remote) {
   data = remote;
   if (!Array.isArray(data.sessions)) data.sessions = [];

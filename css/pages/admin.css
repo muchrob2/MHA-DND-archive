@@ -1,0 +1,105 @@
+/* ============================================================
+   pages/admin.css — user role / character-edit-permission table.
+   The only page in the repo with a real <table>.
+
+   admin.js injects .char-picker, .row-saved and .save-row-btn,
+   and toggles .show on the per-row saved notice.
+   ============================================================ */
+
+#content { max-width: 900px; margin: 0 auto; padding: 24px; }
+
+#gate-message {
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ── table ── */
+#table-wrap { overflow-x: auto; border-radius: var(--radius); }
+
+table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+th, td {
+  padding: 11px 13px;
+  text-align: left;
+  vertical-align: top;
+  font-size: var(--fs-sm);
+  border-bottom: 1px solid var(--border);
+}
+th {
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--surface2);
+}
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--surface2); }
+
+#users-empty { padding: 24px 12px; text-align: center; font-size: var(--fs-sm); color: var(--text-dim); }
+
+/* ── controls ── */
+/* .char-picker also matches the shared .field rule in
+   components.css; these are the container-specific bits */
+select {
+  width: auto;
+  padding: 6px 9px;
+  font-size: var(--fs-xs);
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+select:focus { border-color: var(--accent); }
+
+.char-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 140px;
+  margin-top: 6px;
+  overflow-y: auto;
+}
+.char-picker label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  color: var(--text-muted);
+  /* the shared .edit-label rule uppercases labels; these are
+     checkbox rows, not field labels */
+  margin-bottom: 0;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.char-picker input { width: auto; }
+
+/* the green save affordance — same role as .nav-btn.save-btn
+   and .action-btn.primary elsewhere */
+.save-row-btn {
+  margin-top: 6px;
+  padding: 6px 12px;
+  color: var(--teal-text);
+  background: var(--teal-light);
+  border-color: color-mix(in srgb, var(--teal) 40%, transparent);
+}
+.save-row-btn:hover {
+  color: var(--ink);
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+@media (max-width: 640px) {
+  #content { padding: 16px; }
+}

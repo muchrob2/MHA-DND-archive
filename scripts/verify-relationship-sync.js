@@ -172,6 +172,55 @@ refreshSidebar = function () { renderCount++; };
   check('server snapshot still applies', rels['1:2'].note === 'from the server');
 })();
 
+// ── Scenario E: attacks/items are addressed by id, not array position ───────
+// fsMergeSave rebuilds these arrays in server order and appends new local items
+// at the end, so the order after a save or remote merge need not match the order
+// the DOM was rendered from. Handlers baked with a render-time index would then
+// write into whichever item now occupies that slot — the edit lands on the wrong
+// attack, and the one being edited appears to revert on the next render.
+(function () {
+  CHARACTERS = [{ _file: 'a.json', _roster_id: 1, _section: 'class-1a', name: 'A',
+                  quirk_mechanics: { abilities: [
+                    { id: 'atk-1', name: 'Punch', type: '', description: '' },
+                    { id: 'atk-2', name: 'Kick',  type: '', description: '' }] },
+                  inventory: { items: [
+                    { id: 'item-1', name: 'Rope', qty: 1, notes: '' },
+                    { id: 'item-2', name: 'Torch', qty: 1, notes: '' }] } }];
+  selected = CHARACTERS[0];
+  _dirtyCharFiles = new Map();
+
+  // The DOM was rendered while Kick sat at index 1. A merge now reorders the
+  // array (server order), putting Kick at index 0.
+  selected.quirk_mechanics.abilities.reverse();
+
+  onAttackEdit('atk-2', 'name', 'Roundhouse');
+  const kick  = selected.quirk_mechanics.abilities.find(a => a.id === 'atk-2');
+  const punch = selected.quirk_mechanics.abilities.find(a => a.id === 'atk-1');
+  check('attack edit follows the id after a reorder', kick.name === 'Roundhouse');
+  check('attack edit does not touch the neighbour', punch.name === 'Punch');
+  check('editing an attack marks the character dirty', _dirtyCharFiles.has('a.json'));
+
+  // Same for inventory.
+  selected.inventory.items.reverse();
+  onItemEdit('item-2', 'name', 'Lantern');
+  check('item edit follows the id after a reorder',
+        selected.inventory.items.find(i => i.id === 'item-2').name === 'Lantern');
+  check('item edit does not touch the neighbour',
+        selected.inventory.items.find(i => i.id === 'item-1').name === 'Rope');
+
+  // Deleting by id must remove the right row, whatever the order.
+  onAttackDelete('atk-1');
+  const left = selected.quirk_mechanics.abilities;
+  check('attack delete removes the right entry',
+        left.length === 1 && left[0].id === 'atk-2');
+
+  // Unknown ids (a row deleted by someone else mid-edit) must no-op, not throw.
+  onAttackEdit('atk-gone', 'name', 'ghost');
+  onAttackDelete('atk-gone');
+  onItemEdit('item-gone', 'name', 'ghost');
+  check('unknown id is a safe no-op', selected.quirk_mechanics.abilities.length === 1);
+})();
+
 // ── Scenario C: dirty state drives the Save button and unload warning ───────
 (function () {
   _dirtyRelKeys = new Map(); _dirtyCharFiles = new Map(); _relSavePending = false;

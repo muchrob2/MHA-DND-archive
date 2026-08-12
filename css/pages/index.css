@@ -225,14 +225,38 @@ header h1 {
   text-transform: uppercase;
 }
 
+.header-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
 .last-updated {
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-top: 3px;
   font-size: var(--fs-2xs);
   color: var(--text-dim);
 }
+
+/* Build version, stamped by CI on every deploy. Reads as a stencilled
+   unit marking rather than a UI chip. */
+.version-badge {
+  padding: 2px 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .04em;
+  color: var(--accent-text);
+  background: var(--accent-light);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+  cursor: default;
+}
+.version-badge.hidden { display: none; }
 .last-updated.hidden { display: none; }
 .last-updated-dot {
   flex-shrink: 0;

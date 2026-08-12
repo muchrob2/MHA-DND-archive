@@ -33,12 +33,12 @@ function readFile(p) {
 if (!fs) ObjC.import('Foundation');
 
 const repoRoot = path ? path.join(__dirname, '..') : '.';
-const pagePath = path ? path.join(repoRoot, 'CLASS-1A', 'relationships.html')
-                      : 'CLASS-1A/relationships.html';
-const html = readFile(pagePath);
-const blocks = html.match(/<script>([\s\S]*?)<\/script>/g);
-if (!blocks || !blocks.length) throw new Error('No <script> block found in relationships.html');
-const appSrc = blocks[blocks.length - 1].replace(/^<script>/, '').replace(/<\/script>$/, '');
+const pagePath = path ? path.join(repoRoot, 'CLASS-1A', 'relationships.js')
+                      : 'CLASS-1A/relationships.js';
+// Read the page logic straight from its own file. This used to regex the last
+// <script> block out of relationships.html, which broke whenever the page's
+// markup shifted; extracting the JS removed the need for that entirely.
+const appSrc = readFile(pagePath);
 
 // ── Browser / Firebase stubs ────────────────────────────────────────────────
 function mkEl(id) {
@@ -65,8 +65,12 @@ var setInterval = function () { return 0; };
 var setTimeout = function () { return 0; };
 var fetch = function () { return new Promise(function () {}); }; // never settles: the page's init IIFE just suspends
 var fbAuthReady = new Promise(function () {});
-var db = { collection() { return { doc() { return { get() { return new Promise(function () {}); },
-                                                    onSnapshot() {} }; } }; } };
+// relationships.js opens with `const db = firebase.firestore()`, exactly as the
+// browser runs it, so the harness stubs the SDK entry point rather than the
+// handle. Scenarios reach the stub through _dbStub.
+var _dbStub = { collection() { return { doc() { return { get() { return new Promise(function () {}); },
+                                                        onSnapshot() {} }; } }; } };
+var firebase = { firestore: function () { return _dbStub; } };
 var fsMergeSave = function (ref, local) { return Promise.resolve(local); };
 var navigator = { clipboard: { writeText() { return Promise.resolve(); } } };
 var confirm = function () { return true; };

@@ -97,20 +97,20 @@ const results = [];
   results.push(['top-level string path (backward compat)', ok]);
 })();
 
-// ── Apply-remote path (CLASS-1A/relationships.html) ─────────────────────────
+// ── Apply-remote path (CLASS-1A/relationships.js) ───────────────────────────
 // fsMergeSave above guards the *write* path. The bug where a user's typing got
 // silently reverted lived on the *apply* path — an incoming live snapshot
 // overwriting local state — which had no coverage at all, which is why three
 // separate fixes to fsMergeSave never made the symptom go away. These extract
 // the two pure helpers from relationships.html and pin that behaviour down.
-const relPath = (path ? path.join(repoRoot, 'CLASS-1A', 'relationships.html') : 'CLASS-1A/relationships.html');
+const relPath = (path ? path.join(repoRoot, 'CLASS-1A', 'relationships.js') : 'CLASS-1A/relationships.js');
 const relSrc = readFile(relPath);
 const relHelpers = {};
 for (const name of ['mergeRemoteRels', 'nextSyncBaseline']) {
-  // Top-level (unindented) functions in the page's script block, so these end
-  // at a column-0 brace — unlike auth.js's 2-space-indented helpers above.
+  // Top-level (unindented) functions, so these end at a column-0 brace —
+  // unlike auth.js's 2-space-indented helpers above.
   const m = relSrc.match(new RegExp('function ' + name + '\\([\\s\\S]*?\\n\\}'));
-  if (!m) throw new Error('Could not find ' + name + '() in relationships.html — has the live-sync code changed shape?');
+  if (!m) throw new Error('Could not find ' + name + '() in relationships.js — has the live-sync code changed shape?');
   eval(m[0]);
   relHelpers[name] = eval(name);
 }

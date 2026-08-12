@@ -146,7 +146,7 @@
     background: var(--surface); border: 1px solid var(--border);
     border-left: 4px solid var(--tier-color, var(--border-strong));
     border-radius: var(--radius-lg); padding: 20px 22px; margin-bottom: 22px;
-    scroll-margin-top: 56px;
+    scroll-margin-top: var(--nav-h);
   }
   .tier-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
   .tier-badge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 5px; }
@@ -451,6 +451,7 @@
     #bm-drawer { width: 210px; }
   }
 </style>
+<link rel="stylesheet" href="css/auth-widget.css">
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>

@@ -1,0 +1,134 @@
+/* ============================================================
+   auth-widget.css — styling for the sign-in widget that auth.js
+   builds at runtime (#auth-widget, #auth-overlay, #auth-modal).
+
+   WHY THIS IS ITS OWN FILE
+   These rules used to be injected from auth.js at runtime via
+   injectStyles(). That has been removed, but auth.js is loaded
+   by eight pages and only some of them have been migrated to
+   the shared stylesheet set — so the rules cannot simply live
+   in components.css without leaving the rest unstyled.
+   A standalone file links cleanly from all eight regardless of
+   migration state.
+
+   The var() fallbacks are deliberate and are carried over
+   verbatim from the original injected block. Pages not yet
+   migrated define their own --surface / --surface2 / --gold in
+   an inline <style>, and the CLASS-1A pages define --accent but
+   no --gold; the fallback chain covers every combination:
+
+     migrated page   -> new token values from css/tokens.css
+     dashboard page  -> its own inline --gold / --surface2
+     CLASS-1A page   -> --accent, falling back to the literal
+     light doc page  -> its own inline !important overrides win
+                        (campaigns.html, campaign-overview.html)
+
+   Load order note: on unmigrated pages this is linked AFTER the
+   inline <style> block, reproducing the original cascade
+   position of the runtime-injected stylesheet.
+   ============================================================ */
+
+#auth-widget { display: flex; align-items: center; gap: 8px; }
+
+#auth-status {
+  font-size: 12px;
+  color: var(--text-muted, #8A9BB0);
+}
+
+#auth-signin-btn,
+#auth-signout-btn,
+#auth-admin-link {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm, 6px);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border-strong, rgba(255,255,255,0.14));
+  background: var(--surface2, #18222E);
+  color: var(--text-muted, #8A9BB0);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color .12s, border-color .12s, background .12s;
+}
+#auth-signin-btn:hover,
+#auth-signout-btn:hover,
+#auth-admin-link:hover {
+  color: var(--text, #E8EDF3);
+  border-color: var(--accent, var(--gold, #E8A020));
+}
+
+#auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-auth, 1000);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+}
+#auth-overlay.open { display: flex; }
+
+#auth-modal {
+  width: 320px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--surface, #111923);
+  border: 1px solid var(--border-strong, rgba(255,255,255,0.14));
+  border-radius: var(--radius-lg, 12px);
+}
+#auth-modal h3 { font-size: 15px; margin-bottom: 4px; }
+
+#auth-modal input {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm, 8px);
+  font-size: 13px;
+  outline: none;
+  color: var(--text, #E8EDF3);
+  background: var(--surface2, #18222E);
+  border: 1px solid var(--border-strong, rgba(255,255,255,0.14));
+}
+#auth-modal input:focus { border-color: var(--accent, var(--gold, #E8A020)); }
+
+#auth-modal .auth-row { display: flex; gap: 8px; }
+
+#auth-modal button {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm, 8px);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text, #E8EDF3);
+  background: var(--surface2, #18222E);
+  border: 1px solid var(--border-strong, rgba(255,255,255,0.14));
+}
+#auth-modal button.primary {
+  background: var(--teal-light, rgba(14,165,114,0.18));
+  border-color: var(--teal, rgba(14,165,114,0.4));
+  color: var(--teal-text, #5FDBAA);
+}
+
+#auth-modal-error {
+  min-height: 14px;
+  font-size: 12px;
+  color: var(--red-text, #FCA5A5);
+}
+
+#auth-modal-close {
+  align-self: flex-end;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--text-muted, #8A9BB0);
+}
+
+#auth-signin-btn:focus-visible,
+#auth-signout-btn:focus-visible,
+#auth-admin-link:focus-visible,
+#auth-modal-close:focus-visible,
+#auth-modal input:focus-visible,
+#auth-modal button:focus-visible {
+  outline: 2px solid var(--accent, var(--gold, #E8A020));
+  outline-offset: 2px;
+}

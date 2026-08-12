@@ -1,0 +1,529 @@
+/* ============================================================
+   components.css — one implementation per UI primitive.
+
+   ── HOW THE ALIAS TABLE WORKS ───────────────────────────────
+   ~999 class="" strings live inside JS template literals across
+   11 .js files. Renaming any of them in JS would be the single
+   easiest way to break this site, so nothing is renamed. Every
+   legacy class is instead grouped as a SELECTOR ALIAS onto the
+   new canonical rule:
+
+       .btn,
+       .action-btn, .enc-btn, .mini-btn { ...one definition... }
+
+   New markup uses .btn; existing JS keeps emitting .enc-btn and
+   renders identically. Consolidation with zero JS edits.
+
+   ── ONE DELIBERATE OMISSION ─────────────────────────────────
+   The .panel rule sets surface properties only — background,
+   border, radius, padding — and never `display`. Several of its
+   aliases are layout-bearing (.enc-row is a grid, .char-card and
+   .session-card are flex), so declaring display here would
+   silently flatten them.
+
+   Page stylesheets load AFTER this file and may override freely.
+   ============================================================ */
+
+/* ════════════════════════════════════════════════════════════
+   NAV — was 5 implementations across 2 ID schemes; three of
+   them (admin / characters / session-log) were byte-identical.
+   ════════════════════════════════════════════════════════════ */
+
+.appnav,
+#topnav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: stretch;
+  height: var(--nav-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+/* the gold underline that reads as a comic panel edge */
+.appnav::after,
+#topnav::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg,
+    var(--accent) 0%, var(--accent) 18%,
+    rgba(255,194,32,.25) 46%, transparent 100%);
+}
+
+.appnav__back,
+#back-btn,
+#back-to-dash {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 16px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  transition: color var(--dur-fast), background var(--dur-fast);
+}
+.appnav__back:hover,
+#back-btn:hover,
+#back-to-dash:hover { color: var(--accent-text); background: var(--accent-light); }
+
+.appnav__title,
+.nav-title {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  padding: 0 16px;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ⚠ auth.js:334 mounts the sign-in widget into `.nav-right`,
+   falling back to document.body. This class must exist in every
+   page's nav or the widget lands loose at the end of the page. */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.nav-btn {
+  padding: 5px 11px;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  transition: color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast);
+}
+.nav-btn:hover { color: var(--text); border-color: var(--border-strong); }
+.nav-btn.active {
+  color: var(--ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.nav-btn.save-btn {
+  color: var(--teal-text);
+  background: var(--teal-light);
+  border-color: color-mix(in srgb, var(--teal) 40%, transparent);
+}
+
+/* ════════════════════════════════════════════════════════════
+   BUTTON — was 6 independent vocabularies. The "green save
+   button" alone had four different spellings.
+   ════════════════════════════════════════════════════════════ */
+
+.btn,
+.action-btn,
+.enc-btn,
+.mini-btn,
+.save-row-btn,
+.home-btn,
+.profile-action-btn,
+.add-attack-btn,
+.add-ability-btn,
+.add-block-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 15px;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border-strong);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--dur-fast), border-color var(--dur-fast),
+              color var(--dur-fast), transform var(--dur-fast);
+}
+.btn:hover,
+.action-btn:hover,
+.enc-btn:hover,
+.mini-btn:hover,
+.save-row-btn:hover,
+.home-btn:hover,
+.profile-action-btn:hover,
+.add-attack-btn:hover,
+.add-ability-btn:hover,
+.add-block-btn:hover { background: var(--surface3); border-color: var(--accent); }
+
+.btn:active,
+.action-btn:active,
+.enc-btn:active,
+.mini-btn:active { transform: translateY(1px); }
+
+.btn:disabled,
+.action-btn:disabled,
+.enc-btn:disabled,
+.mini-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+/* primary — the hero call to action */
+.btn--primary,
+.action-btn.primary,
+.enc-btn.primary,
+.mini-btn.primary {
+  color: var(--ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.btn--primary:hover,
+.action-btn.primary:hover,
+.enc-btn.primary:hover,
+.mini-btn.primary:hover {
+  background: var(--accent-text);
+  border-color: var(--accent-text);
+}
+
+/* danger */
+.btn--danger,
+.action-btn.danger,
+.enc-btn.danger,
+.mini-btn.danger,
+.ability-delete-btn,
+.card-delete-btn {
+  color: var(--red-text);
+  background: var(--red-light);
+  border-color: color-mix(in srgb, var(--red) 40%, transparent);
+}
+.btn--danger:hover,
+.action-btn.danger:hover,
+.enc-btn.danger:hover,
+.mini-btn.danger:hover,
+.ability-delete-btn:hover,
+.card-delete-btn:hover { color: var(--ink); background: var(--red); border-color: var(--red); }
+
+/* ghost */
+.btn--ghost,
+.mini-btn.ghost,
+.collapse-btn,
+.toggle-btn,
+.sub-toggle,
+.section-toggle {
+  color: var(--text-muted);
+  background: transparent;
+  border-color: transparent;
+}
+.btn--ghost:hover,
+.mini-btn.ghost:hover,
+.collapse-btn:hover,
+.toggle-btn:hover,
+.sub-toggle:hover,
+.section-toggle:hover { color: var(--accent-text); background: var(--accent-light); }
+
+/* small square icon button */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid transparent;
+  transition: color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast);
+}
+.icon-btn:hover { color: var(--text); background: var(--surface2); border-color: var(--border); }
+
+/* ════════════════════════════════════════════════════════════
+   PANEL — was 9 card components repeating the same recipe
+   (surface + 1px border + radius + 16-20px padding) under 15
+   different names. Surface properties only; no `display`.
+   ════════════════════════════════════════════════════════════ */
+
+.panel,
+.card,
+.char-card,
+.folder-tile,
+.session-card,
+.camp-card,
+.person-card,
+.tier-block,
+.arc-card,
+.match-card,
+.script-card,
+.ability-card,
+.form-card,
+.summary-stat,
+.world-section,
+.board-tray-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--dur), transform var(--dur-fast);
+}
+
+.panel:hover,
+.char-card:hover,
+.folder-tile:hover,
+.camp-card:hover,
+.script-card:hover { border-color: var(--border-strong); }
+
+/* ════════════════════════════════════════════════════════════
+   CHIP — was 8 parallel badge/pill systems, plus nine different
+   names for "small toggleable pill".
+   ════════════════════════════════════════════════════════════ */
+
+.chip,
+.badge,
+.tag,
+.tag-chip,
+.filter-chip,
+.filter-opt,
+.filter-pill,
+.sf-pill,
+.module-chip,
+.cond-pill,
+.cond-option,
+.tm-action-chip,
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  transition: color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast);
+}
+
+/* selected / toggled — JS toggles .active and .selected */
+.chip.active, .chip.selected,
+.filter-chip.active,
+.filter-opt.active,
+.filter-pill.active,
+.sf-pill.sf-active,
+.cond-option.active,
+.tm-action-chip.used {
+  color: var(--ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* tone variants — names come straight from campaign-overview.js
+   (CAT_TAG at :1153) and characters.js (badgeClass at :210) */
+.chip--gold,  .tag-gold,    .badge.custom      { color: var(--accent-text); background: var(--accent-light); border-color: color-mix(in srgb, var(--accent) 34%, transparent); }
+.chip--red,   .tag-red,     .badge.villain     { color: var(--red-text);    background: var(--red-light);    border-color: color-mix(in srgb, var(--red) 34%, transparent); }
+.chip--teal,  .tag-teal,    .badge.student-1a  { color: var(--teal-text);   background: var(--teal-light);   border-color: color-mix(in srgb, var(--teal) 34%, transparent); }
+.chip--green, .tag-green,   .badge.pc          { color: var(--green-text);  background: var(--green-light);  border-color: color-mix(in srgb, var(--green) 34%, transparent); }
+.chip--amber, .tag-amber,   .badge.supporting  { color: var(--amber-text);  background: var(--amber-light);  border-color: color-mix(in srgb, var(--amber) 34%, transparent); }
+.chip--blue,  .tag-primary, .tag-purple, .badge.student-1b { color: var(--primary-text); background: var(--primary-light); border-color: color-mix(in srgb, var(--primary) 34%, transparent); }
+.chip--purple, .badge.teacher { color: var(--purple-text); background: var(--purple-light); border-color: color-mix(in srgb, var(--purple) 34%, transparent); }
+
+/* ════════════════════════════════════════════════════════════
+   FORM — was 4 naming schemes; .edit-input alone was defined
+   three times with three different focus treatments.
+   ════════════════════════════════════════════════════════════ */
+
+.field,
+.form-input, .form-textarea, .form-select,
+.edit-input, .edit-textarea, .edit-select,
+.ability-input, .stat-input, .class-input,
+.name-input, .sub-input, .sub-select,
+.score-val-input, .char-picker, .icon-input,
+.inv-currency-input, .rel-note {
+  width: 100%;
+  padding: 8px 11px;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  outline: none;
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+}
+.field:focus,
+.form-input:focus, .form-textarea:focus, .form-select:focus,
+.edit-input:focus, .edit-textarea:focus, .edit-select:focus,
+.ability-input:focus, .stat-input:focus, .class-input:focus,
+.name-input:focus, .sub-input:focus, .sub-select:focus,
+.score-val-input:focus, .char-picker:focus, .icon-input:focus,
+.inv-currency-input:focus, .rel-note:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+.field::placeholder, .form-input::placeholder, .edit-input::placeholder { color: var(--text-dim); }
+
+.form-textarea, .edit-textarea { min-height: 90px; resize: vertical; line-height: 1.6; }
+
+.edit-label, .form-row > label, .filter-group-label, .detail-label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.edit-hint { margin-top: 4px; font-size: var(--fs-2xs); color: var(--text-dim); }
+.form-row { margin-bottom: 13px; }
+.form-actions, .mini-row { display: flex; gap: 8px; margin-top: 16px; }
+
+/* ════════════════════════════════════════════════════════════
+   MODAL — was 4 implementations on 4 unrelated z-index tiers
+   (100 / 110 / 200 / 1000) with 4 different overlay alphas.
+   Now one scale from tokens.css.
+   ════════════════════════════════════════════════════════════ */
+
+/* #auth-overlay / #auth-modal are deliberately NOT aliased here.
+   css/auth-widget.css is their single owner, because it also has to
+   serve pages that never load this file. Listing them in both would
+   make the auth chrome depend on <link> order. */
+.overlay,
+#modal-overlay,
+#turn-modal-overlay,
+#board-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(2,3,6,.72);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+.overlay.open,
+#modal-overlay.open,
+#turn-modal-overlay.open,
+#board-overlay.open { display: flex; }
+
+.dialog,
+#modal,
+#turn-modal,
+#board-modal {
+  position: relative;
+  z-index: var(--z-dialog);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ════════════════════════════════════════════════════════════
+   EMPTY STATE — every page rolled its own with gratuitously
+   different padding values.
+   ════════════════════════════════════════════════════════════ */
+
+.empty,
+#empty-state,
+.empty-note,
+.enc-empty,
+.inv-empty,
+#users-empty,
+.arc-no-results,
+.filter-no-results,
+#bm-empty {
+  padding: 56px 32px;
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  grid-column: 1 / -1;
+}
+.es-icon { display: block; margin-bottom: 12px; font-size: 34px; opacity: .55; }
+
+#loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 0;
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+}
+
+/* ════════════════════════════════════════════════════════════
+   TOAST — was 4 implementations. .nav-saved / .row-saved /
+   .copy-flash all fade on a `.show` class toggled by JS after a
+   setTimeout, so the transition must survive.
+   ════════════════════════════════════════════════════════════ */
+
+.toast,
+.nav-saved,
+.row-saved {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--teal-text);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--dur-slow);
+}
+.toast.show, .nav-saved.show, .row-saved.show { opacity: 1; }
+.nav-saved.err, .toast.err { color: var(--red-text); }
+.row-saved { margin-left: 8px; }
+
+.copy-flash {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: var(--z-toast);
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur);
+}
+.copy-flash.show { opacity: 1; }
+
+/* ════════════════════════════════════════════════════════════
+   COLLAPSE — five idioms in campaign-overview.html alone, with
+   .open / .active / .collapsed used inconsistently. The state
+   classes are all JS-toggled, so all of them stay live.
+   ════════════════════════════════════════════════════════════ */
+
+.collapsible,
+.toggle-list,
+.sub-body,
+.section-body,
+.world-section-body { display: none; }
+
+.collapsible.open,
+.toggle-list.open,
+.sub-body.open,
+.section-body.open,
+.world-section-body.open { display: block; }
+
+.world-chevron,
+.section-toggle::before { transition: transform var(--dur); }
+.world-chevron.open { transform: rotate(90deg); }
+
+/* Auth widget styling lives in css/auth-widget.css — it must load on
+   pages that have not yet been migrated to this stylesheet set, so it
+   cannot live here. */

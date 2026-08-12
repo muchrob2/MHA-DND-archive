@@ -1,0 +1,287 @@
+/* ============================================================
+   manga.css — the anime/hero visual language.
+
+   Loads after components.css on the dark tool pages. Everything
+   here is decorative: remove this one <link> and the site still
+   works, just plainer.
+
+   ── TWO MECHANICAL NOTES ────────────────────────────────────
+   1. Hard shadows use filter: drop-shadow(), never box-shadow.
+      clip-path clips box-shadow away entirely, so a notched
+      panel with box-shadow renders flat with no warning.
+      drop-shadow() follows the clipped silhouette instead.
+
+   2. `filter` on an element makes it a containing block for
+      fixed-position descendants. Panel treatments are therefore
+      applied to leaf cards only — never to anything that wraps
+      a modal, overlay or sticky bar.
+
+   ── PERFORMANCE CARVE-OUT ───────────────────────────────────
+   board.html and encounter.html repaint a canvas continuously
+   during pan / zoom / drag. Nothing in this file may be applied
+   to #board-grid-wrap, #board-canvas or any of their ancestors:
+   a halftone layer or animated pseudo-element there lands
+   directly on drag framerate. Those pages get the nav and tray
+   treatment only.
+   ============================================================ */
+
+/* ════════════════════════════════════════════════════════════
+   KEYFRAMES — the repo previously had none at all.
+   All gated by the prefers-reduced-motion block in base.css.
+   ════════════════════════════════════════════════════════════ */
+
+@keyframes mg-burst {
+  0%   { transform: scale(.4) rotate(-12deg); opacity: 0; }
+  55%  { transform: scale(1.15) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg);    opacity: 1; }
+}
+@keyframes mg-ring {
+  0%   { transform: scale(.5); opacity: .85; }
+  100% { transform: scale(2.1); opacity: 0; }
+}
+@keyframes mg-shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-5px) rotate(-1.5deg); }
+  35% { transform: translateX(4px)  rotate(1.5deg); }
+  55% { transform: translateX(-3px) rotate(-1deg); }
+  75% { transform: translateX(2px)  rotate(.5deg); }
+}
+@keyframes mg-panel-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes mg-pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--gold-glow); }
+  50%      { box-shadow: 0 0 0 7px transparent; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   HALFTONE / SCREENTONE
+   A masked dot field. The mask is what stops it reading as
+   wallpaper — it fades out across the panel like printed
+   shading rather than tiling flatly.
+   ════════════════════════════════════════════════════════════ */
+
+.mg-halftone { position: relative; }
+.mg-halftone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image: radial-gradient(circle, var(--gold-glow) 1.1px, transparent 1.2px);
+  background-size: 6px 6px;
+  -webkit-mask-image: linear-gradient(160deg, #000 0%, transparent 58%);
+  mask-image: linear-gradient(160deg, #000 0%, transparent 58%);
+  opacity: .5;
+}
+
+/* ════════════════════════════════════════════════════════════
+   ANGULAR PANEL — the cut corner that reads as a comic frame
+   ════════════════════════════════════════════════════════════ */
+
+.mg-panel,
+.card-hero,
+.char-card,
+.folder-tile,
+.session-card,
+.camp-card {
+  position: relative;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--notch)),
+    calc(100% - var(--notch)) 100%,
+    0 100%
+  );
+  filter: drop-shadow(var(--shadow-hard));
+  transition: filter var(--dur) var(--ease-out),
+              transform var(--dur) var(--ease-out),
+              border-color var(--dur);
+}
+.mg-panel:hover,
+.card-hero:hover,
+.char-card:hover,
+.folder-tile:hover,
+.camp-card:hover {
+  transform: translate(-2px, -2px);
+  filter: drop-shadow(var(--shadow-hard-lift));
+}
+
+/* ════════════════════════════════════════════════════════════
+   SPEED LINES — diagonal streaks that sweep across on hover
+   ════════════════════════════════════════════════════════════ */
+
+.mg-speed,
+.card-hero,
+.char-card { overflow: hidden; }
+
+.mg-speed::before,
+.card-hero::before,
+.char-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: repeating-linear-gradient(
+    115deg,
+    transparent 0 5px,
+    rgba(255,255,255,.085) 5px 6px
+  );
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, transparent 72%);
+  mask-image: linear-gradient(90deg, #000 0%, transparent 72%);
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform var(--dur-slow) var(--ease-out),
+              opacity var(--dur-slow) var(--ease-out);
+}
+.mg-speed:hover::before,
+.card-hero:hover::before,
+.char-card:hover::before { transform: translateX(0); opacity: 1; }
+
+/* keep real content above the streak layer */
+.card-hero > *, .char-card > * { position: relative; z-index: 1; }
+
+/* ════════════════════════════════════════════════════════════
+   HEADINGS — Anton over a skewed accent slab
+   ════════════════════════════════════════════════════════════ */
+
+.mg-heading,
+.section-label,
+.grid-section-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 0 12px;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  letter-spacing: .015em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.mg-heading::before,
+.section-label::before,
+.grid-section-label::before {
+  content: '';
+  flex-shrink: 0;
+  width: 7px;
+  height: 1.05em;
+  background: var(--accent);
+  transform: skewX(-12deg);
+}
+.mg-heading:first-child,
+.section-label:first-child { margin-top: 0; }
+
+/* hazard-stripe divider */
+.mg-rule {
+  height: 6px;
+  border: none;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--accent) 0 8px,
+    var(--ink) 8px 16px
+  );
+  opacity: .85;
+}
+
+/* ════════════════════════════════════════════════════════════
+   IMPACT BURST — the dice-roller set piece.
+   relationships.js already applies .crit / .fumble to
+   .result-number (:880, :895), so this needs no JS change.
+   ════════════════════════════════════════════════════════════ */
+
+.result-number { position: relative; font-family: var(--font-display); }
+
+.result-number.crit {
+  color: var(--accent);
+  animation: mg-burst var(--dur-slow) var(--ease-impact) both;
+}
+/* starburst behind the number */
+.result-number.crit::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 2.6em; height: 2.6em;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  background: conic-gradient(
+    var(--gold-glow) 0deg 10deg, transparent 10deg 30deg,
+    var(--gold-glow) 30deg 40deg, transparent 40deg 60deg,
+    var(--gold-glow) 60deg 70deg, transparent 70deg 90deg,
+    var(--gold-glow) 90deg 100deg, transparent 100deg 120deg,
+    var(--gold-glow) 120deg 130deg, transparent 130deg 150deg,
+    var(--gold-glow) 150deg 160deg, transparent 160deg 180deg,
+    var(--gold-glow) 180deg 190deg, transparent 190deg 210deg,
+    var(--gold-glow) 210deg 220deg, transparent 220deg 240deg,
+    var(--gold-glow) 240deg 250deg, transparent 250deg 270deg,
+    var(--gold-glow) 270deg 280deg, transparent 280deg 300deg,
+    var(--gold-glow) 300deg 310deg, transparent 310deg 330deg,
+    var(--gold-glow) 330deg 340deg, transparent 340deg 360deg
+  );
+  animation: mg-burst var(--dur-slow) var(--ease-impact) both;
+}
+/* expanding shock ring */
+.result-number.crit::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 1.6em; height: 1.6em;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  border: 3px solid var(--accent);
+  border-radius: 50%;
+  animation: mg-ring 620ms var(--ease-out) both;
+}
+
+.result-number.fumble {
+  color: var(--red);
+  animation: mg-shake 420ms var(--ease-out) both;
+}
+
+.crit-label, .fumble-label {
+  display: inline-block;
+  font-family: var(--font-display);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  transform: skewX(-8deg);
+}
+.crit-label  { color: var(--accent); }
+.fumble-label { color: var(--red); }
+
+/* ════════════════════════════════════════════════════════════
+   NUMERIC INSTRUMENTATION
+   Mono + tabular figures so values don't jitter as they tick.
+   ════════════════════════════════════════════════════════════ */
+
+.enc-init input,
+.hp-display, .hp-current-input,
+.tm-stat-val, .tm-hp-inp,
+.score-val-input, .score-mod,
+.xp-value,
+.result-number, .history-total,
+.summary-stat-value,
+#board-zoom-label, #board-distance-label {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ════════════════════════════════════════════════════════════
+   ENTRANCE — staggered, and cheap (opacity + transform only)
+   ════════════════════════════════════════════════════════════ */
+
+.mg-stagger > * {
+  animation: mg-panel-in var(--dur) var(--ease-out) both;
+}
+.mg-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.mg-stagger > *:nth-child(2) { animation-delay: 40ms; }
+.mg-stagger > *:nth-child(3) { animation-delay: 80ms; }
+.mg-stagger > *:nth-child(4) { animation-delay: 120ms; }
+.mg-stagger > *:nth-child(5) { animation-delay: 160ms; }
+.mg-stagger > *:nth-child(6) { animation-delay: 200ms; }
+.mg-stagger > *:nth-child(n+7) { animation-delay: 240ms; }
+
+/* current turn in the initiative tracker earns a heartbeat */
+.enc-row.current-turn { animation: mg-pulse-glow 2.4s ease-in-out infinite; }

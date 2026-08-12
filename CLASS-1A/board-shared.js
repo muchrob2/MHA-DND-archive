@@ -406,6 +406,42 @@ function boardBuildBgLayer(width, height, SZ, isDark, showLabels) {
   return bg;
 }
 
+// Which palette the grid paints itself in.
+//
+// This used to sniff the theme by string-matching the first character of
+// the --bg custom property:
+//     getComputedStyle(document.body).getPropertyValue('--bg').startsWith('#0')
+// which silently rendered the board unreadable the moment --bg changed to a
+// hex not beginning with 0, or to rgb()/hsl()/oklch()/color-mix(). The theme
+// now states its intent explicitly via the --board-scheme token (see
+// css/tokens.css), so any future palette change is safe.
+function boardIsDarkScheme() {
+  const scheme = getComputedStyle(document.body)
+    .getPropertyValue('--board-scheme').trim().toLowerCase();
+  if (scheme === 'light') return false;
+  if (scheme === 'dark') return true;
+  // Token missing entirely (page not yet migrated) — fall back to the OS.
+  return !window.matchMedia('(prefers-color-scheme: light)').matches;
+}
+
+// The bg-layer cache key includes isDark, so flipping the scheme invalidates
+// it on its own. What was missing was anything to trigger a repaint at all:
+// the board never reacted to an OS theme change until the next unrelated
+// render. This wires that up.
+if (window.matchMedia) {
+  const _boardSchemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  const _onBoardSchemeChange = function () {
+    if (typeof renderBoardCanvas === 'function' && document.getElementById('board-canvas')) {
+      renderBoardCanvas();
+    }
+  };
+  if (_boardSchemeQuery.addEventListener) {
+    _boardSchemeQuery.addEventListener('change', _onBoardSchemeChange);
+  } else if (_boardSchemeQuery.addListener) {
+    _boardSchemeQuery.addListener(_onBoardSchemeChange);   // Safari < 14
+  }
+}
+
 function boardGetBgLayer(width, height, SZ, isDark, showLabels) {
   const key = [width, height, SZ, isDark, showLabels].join('|');
   if (_boardBgCache.key !== key) {
@@ -482,7 +518,7 @@ function renderBoardCanvas() {
   const canvas = boardInitCanvas();
   const ctx = canvas.getContext('2d');
   const SZ = boardCell();
-  const isDark = getComputedStyle(document.body).getPropertyValue('--bg').trim().startsWith('#0');
+  const isDark = boardIsDarkScheme();
   const showLabels = SZ >= 10;
 
   ctx.drawImage(boardGetBgLayer(canvas.width, canvas.height, SZ, isDark, showLabels), 0, 0);

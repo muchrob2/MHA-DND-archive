@@ -182,48 +182,13 @@
     });
   };
 
-  function injectStyles() {
-    const css = `
-      #auth-widget { display: flex; align-items: center; gap: 8px; }
-      #auth-status { font-size: 12px; color: var(--text-muted, #8A9BB0); }
-      #auth-signin-btn, #auth-signout-btn, #auth-admin-link {
-        padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
-        border: 1px solid var(--border-strong, rgba(255,255,255,0.14));
-        background: var(--surface2, #18222E); color: var(--text-muted, #8A9BB0);
-        text-decoration: none; white-space: nowrap;
-      }
-      #auth-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000;
-        display: none; align-items: center; justify-content: center;
-      }
-      #auth-overlay.open { display: flex; }
-      #auth-modal {
-        background: var(--surface, #111923); border: 1px solid var(--border-strong, rgba(255,255,255,0.14));
-        border-radius: 12px; padding: 24px; width: 320px; display: flex; flex-direction: column; gap: 10px;
-      }
-      #auth-modal h3 { font-size: 15px; margin-bottom: 4px; }
-      #auth-modal input {
-        background: var(--surface2, #18222E); border: 1px solid var(--border-strong, rgba(255,255,255,0.14));
-        border-radius: 8px; color: var(--text, #E8EDF3); font-size: 13px; padding: 8px 10px; outline: none;
-      }
-      #auth-modal .auth-row { display: flex; gap: 8px; }
-      #auth-modal button {
-        padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
-        border: 1px solid var(--border-strong, rgba(255,255,255,0.14)); background: var(--surface2, #18222E);
-        color: var(--text, #E8EDF3); flex: 1;
-      }
-      #auth-modal button.primary { background: rgba(14,165,114,0.18); border-color: rgba(14,165,114,0.4); color: var(--teal-text, #5FDBAA); }
-      #auth-modal-error { font-size: 12px; color: var(--red-text, #FCA5A5); min-height: 14px; }
-      #auth-modal-close { align-self: flex-end; cursor: pointer; color: var(--text-muted, #8A9BB0); font-size: 12px; }
-      #auth-signin-btn:focus-visible, #auth-signout-btn:focus-visible, #auth-admin-link:focus-visible,
-      #auth-modal-close:focus-visible, #auth-modal input:focus-visible, #auth-modal button:focus-visible {
-        outline: 2px solid var(--gold, #E8A020); outline-offset: 2px;
-      }
-    `;
-    const style = document.createElement('style');
-    style.textContent = css;
-    document.head.appendChild(style);
-  }
+  // The auth widget's CSS used to be injected from here at runtime as an
+  // 11th stylesheet. It hardcoded dark-theme fallbacks — var(--surface,
+  // #111923) and friends — which rendered wrong on the light parchment
+  // pages, so campaigns.html and campaign-overview.html each carried an
+  // identical copy-pasted !important block to correct it. All of it now
+  // lives in css/components.css under the token system, and both override
+  // blocks are gone. The widget still mounts into `.nav-right`.
 
   function buildWidget() {
     const widget = document.createElement('div');
@@ -330,7 +295,6 @@
   }
 
   function mountWidget() {
-    injectStyles();
     const target = document.querySelector('.nav-right') || document.body;
     const widget = buildWidget();
     target.insertBefore(widget, target.firstChild);

@@ -1,0 +1,359 @@
+/* ============================================================
+   pages/index.css — the hub: role gate, DM PIN pad, link cards.
+   Loads after tokens / base / components / manga.
+
+   index.js drives visibility entirely through .hidden / .visible
+   and toggles .filled / .error on the PIN dots and .stale on the
+   freshness indicator. Those five classes are load-bearing.
+   ============================================================ */
+
+/* ════════════════════════════════════════════════════════════
+   ROLE GATE
+   ════════════════════════════════════════════════════════════ */
+
+#role-screen {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: var(--bg);
+  /* faint hero rays behind the gate */
+  background-image:
+    repeating-conic-gradient(from 0deg at 50% 42%,
+      rgba(255,194,32,.05) 0deg 4deg, transparent 4deg 14deg);
+}
+#role-screen.hidden { display: none; }
+
+.role-badge {
+  margin-bottom: 14px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--accent);
+  padding: 4px 12px;
+  transform: skewX(-10deg);
+}
+
+.role-title {
+  margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-size: clamp(var(--fs-2xl), 8vw, var(--fs-4xl));
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0 var(--ink);
+}
+
+.role-sub {
+  margin-bottom: 40px;
+  max-width: 320px;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.role-buttons { display: flex; gap: 14px; width: 100%; max-width: 400px; }
+
+.role-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--notch)),
+                     calc(100% - var(--notch)) 100%, 0 100%);
+  filter: drop-shadow(var(--shadow-hard));
+  transition: filter var(--dur) var(--ease-out),
+              transform var(--dur) var(--ease-out),
+              background var(--dur), border-color var(--dur);
+}
+.role-btn:hover { transform: translate(-2px, -2px); filter: drop-shadow(var(--shadow-hard-lift)); }
+
+.role-btn-icon  { font-size: 34px; line-height: 1; }
+.role-btn-label {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+.role-btn-desc  { font-size: var(--fs-2xs); line-height: 1.45; text-align: center; color: var(--text-muted); }
+
+.role-btn.player { border-color: color-mix(in srgb, var(--teal) 42%, transparent); }
+.role-btn.player:hover { border-color: var(--teal); background: var(--teal-light); }
+.role-btn.player .role-btn-label { color: var(--teal-text); }
+
+.role-btn.dm { border-color: color-mix(in srgb, var(--accent) 42%, transparent); }
+.role-btn.dm:hover { border-color: var(--accent); background: var(--accent-light); }
+.role-btn.dm .role-btn-label { color: var(--accent-text); }
+
+/* ════════════════════════════════════════════════════════════
+   DM PIN PAD
+   ════════════════════════════════════════════════════════════ */
+
+#pin-screen {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: var(--bg);
+}
+#pin-screen.visible { display: flex; }
+
+.pin-title {
+  margin-bottom: 6px;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  text-transform: uppercase;
+}
+.pin-sub { margin-bottom: 26px; font-size: var(--fs-sm); color: var(--text-muted); }
+.pin-error-msg { margin-bottom: 14px; min-height: 18px; font-size: var(--fs-xs); color: var(--red-text); }
+
+.pin-dots { display: flex; gap: 12px; margin-bottom: 28px; }
+.pin-dot {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border-strong);
+  background: transparent;
+  transform: rotate(45deg);          /* diamonds, not circles */
+  transition: background var(--dur-fast), border-color var(--dur-fast), transform var(--dur-fast);
+}
+.pin-dot.filled { background: var(--accent); border-color: var(--accent); transform: rotate(45deg) scale(1.1); }
+.pin-dot.error  { background: var(--red);    border-color: var(--red); }
+
+.pin-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 270px;
+}
+.pin-key {
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  text-align: center;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: background var(--dur-fast), border-color var(--dur-fast), transform 80ms;
+}
+.pin-key:hover  { background: var(--surface2); border-color: var(--accent); }
+.pin-key:active { transform: scale(.94); }
+.pin-key.wide { grid-column: span 2; }
+.pin-key.del  { color: var(--text-muted); }
+
+.pin-back-btn {
+  margin-top: 20px;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  transition: color var(--dur-fast);
+}
+.pin-back-btn:hover { color: var(--text-muted); }
+
+/* ════════════════════════════════════════════════════════════
+   APP SHELL
+   ════════════════════════════════════════════════════════════ */
+
+#app { display: none; }
+#app.visible { display: block; }
+
+header {
+  position: relative;
+  padding: 0 32px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+header::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 3px;
+  background: repeating-linear-gradient(45deg,
+    var(--accent) 0 8px, var(--ink) 8px 16px);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 16px 0;
+}
+
+.header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+  background: var(--accent-light);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+}
+
+.header-label {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+header h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.last-updated {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 3px;
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+}
+.last-updated.hidden { display: none; }
+.last-updated-dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--teal) 60%, transparent);
+}
+.last-updated.stale .last-updated-dot { background: var(--text-dim); box-shadow: none; }
+
+.switch-role-btn {
+  margin-left: auto;
+  padding: 6px 11px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: color var(--dur-fast), border-color var(--dur-fast);
+}
+.switch-role-btn:hover { color: var(--accent-text); border-color: var(--accent); }
+
+main { max-width: 780px; margin: 0 auto; padding: 28px 32px 64px; }
+
+/* ════════════════════════════════════════════════════════════
+   LINK CARDS
+   .card-hero picks up the notch, hard shadow and speed lines
+   from manga.css; this adds only its internal layout.
+   ════════════════════════════════════════════════════════════ */
+
+.card-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+  padding: 20px 22px;
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(120deg, var(--surface) 0%, rgba(255,194,32,.05) 100%);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  border-radius: var(--radius-lg);
+}
+.card-hero:hover { border-color: var(--accent); }
+
+.card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  font-size: 23px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+}
+.card-body  { flex: 1; min-width: 0; }
+.card-title {
+  margin-bottom: 3px;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  letter-spacing: .01em;
+  text-transform: uppercase;
+}
+.card-desc  { font-size: var(--fs-xs); line-height: 1.5; color: var(--text-muted); }
+.card-arrow {
+  flex-shrink: 0;
+  font-size: var(--fs-xl);
+  color: var(--text-dim);
+  transition: transform var(--dur) var(--ease-out), color var(--dur);
+}
+.card-hero:hover .card-arrow { color: var(--accent); transform: translateX(5px); }
+
+/* ── smaller rulebook tiles ── */
+.card-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 9px;
+  margin-bottom: 10px;
+}
+.card-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 15px 16px;
+  text-decoration: none;
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color var(--dur), transform var(--dur-fast);
+}
+.card-sm:hover { transform: translateY(-2px); }
+.card-sm-icon  { font-size: 19px; }
+.card-sm-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.card-sm-desc  { font-size: var(--fs-2xs); line-height: 1.4; color: var(--text-dim); }
+
+.accent-gold .card-sm-title { color: var(--accent-text); }
+.accent-teal .card-sm-title { color: var(--teal-text); }
+.accent-red  .card-sm-title { color: var(--red-text); }
+.accent-gold:hover { border-color: var(--accent); }
+.accent-teal:hover { border-color: var(--teal); }
+.accent-red:hover  { border-color: var(--red); }
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  header { padding: 0 16px; }
+  main   { padding: 20px 16px 48px; }
+  .card-row { grid-template-columns: 1fr 1fr; }
+  .role-buttons { flex-direction: column; }
+}
+@media (max-width: 400px) {
+  .card-row { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,265 @@
+/* ============================================================
+   tokens.css — the single source of truth for design tokens.
+
+   TWO READING SURFACES:
+     :root        the dark "manga hero" theme used by every tool page
+     .theme-doc   the light parchment surface for the adventure-module
+                  reader (campaigns.html, campaign-overview.html)
+
+   ── CRITICAL CONTRACT ──────────────────────────────────────
+   JavaScript template literals across the 11 .js files hardcode
+   these custom-property NAMES inside style="" strings. Renaming
+   any of them silently breaks colour at runtime with no error.
+   Names that MUST keep resolving on every page:
+
+     --bg --surface --surface2 --border --border-strong
+     --text --text-muted --text-dim
+     --accent --accent-light --accent-text
+     --gold --gold-light --gold-text
+     --red --red-light --red-text --hero-red
+     --green --green-light --green-text
+     --amber --amber-light --amber-text
+     --teal --teal-light --teal-text
+     --primary --primary-light --primary-text
+     --radius --radius-lg
+     --v-surface --v-border --v-crimson
+
+   Historically the dashboard pages called the accent --gold and
+   the CLASS-1A pages called the identical hex --accent. Rather
+   than rename either (999 class/style references in JS), BOTH
+   now alias one source colour. Nothing in JS had to change.
+
+   Properties JS WRITES, which CSS must keep consuming:
+     --tier-color   campaign-overview.js:560
+     --pill-color   campaign-overview.js:550
+     --chip-color   encounter.js:961
+     --folder-accent characters.js:253
+   ============================================================ */
+
+:root {
+  /* ── raw palette ───────────────────────────────────────── */
+  --ink:          #05060A;   /* comic outline + hard drop shadow */
+  --hero-gold:    #FFC220;   /* was #E8A020 — brighter, more saturated */
+  --hero-crimson: #FF2E4D;
+  --hero-blue:    #2F6BFF;
+  --hero-teal:    #12D296;
+  --hero-amber:   #FFA023;
+  --hero-green:   #3DDC64;
+  --hero-purple:  #A855F7;
+
+  /* ── surfaces ──────────────────────────────────────────── */
+  /* NOTE: --bg deliberately keeps a leading 0 in its hex.
+     board-shared.js used to detect dark mode via
+     `--bg`.startsWith('#0'). That sniffing is now replaced by
+     --board-scheme below, but the leading zero costs nothing
+     and removes a whole class of silent regression. */
+  --bg:            #08090D;
+  --surface:       #12141C;
+  --surface2:      #1B1E29;
+  --surface3:      #252A38;
+  --border:        rgba(255,255,255,.09);
+  --border-strong: rgba(255,255,255,.18);
+
+  /* ── text ──────────────────────────────────────────────── */
+  --text:       #F2F5FA;
+  --text-muted: #93A3B8;
+  --text-dim:   #56687F;
+  --text-on-accent: var(--ink);
+
+  /* ── accent aliases (see contract above) ───────────────── */
+  --accent:       var(--hero-gold);
+  --accent-light: rgba(255,194,32,.14);
+  --accent-text:  #FFD75E;
+  --gold:         var(--hero-gold);
+  --gold-light:   var(--accent-light);
+  --gold-text:    var(--accent-text);
+  --gold-glow:    rgba(255,194,32,.28);
+
+  /* ── semantic colours ──────────────────────────────────── */
+  --red:         var(--hero-crimson);
+  --red-light:   rgba(255,46,77,.14);
+  --red-text:    #FF8A9C;
+  --hero-red:    var(--hero-crimson);
+
+  --green:       var(--hero-green);
+  --green-light: rgba(61,220,100,.14);
+  --green-text:  #8CF0AC;
+
+  --amber:       var(--hero-amber);
+  --amber-light: rgba(255,160,35,.14);
+  --amber-text:  #FFCB80;
+
+  --teal:        var(--hero-teal);
+  --teal-light:  rgba(18,210,150,.14);
+  --teal-text:   #6FEEC4;
+
+  --primary:       var(--hero-blue);
+  --primary-light: rgba(47,107,255,.16);
+  --primary-text:  #96B6FF;
+
+  --purple:       var(--hero-purple);
+  --purple-light: rgba(168,85,247,.14);
+  --purple-text:  #D8B4FE;
+
+  /* villain scope (campaign-overview) */
+  --v-bg:      #060608;
+  --v-surface: #101014;
+  --v-border:  rgba(255,255,255,.11);
+  --v-crimson: #FF3355;
+  --v-purple:  #B45CFF;
+
+  /* "UNAFFILIATED" solo-villain treatment — a deliberate near-black
+     redacted-dossier break. Was ~12 hardcoded hexes inline in
+     campaign-overview.js:909-949, which would have gone
+     black-on-black the moment the palette moved. */
+  --v-solo-bg:            #0A0A0A;
+  --v-solo-surface:       #0D0D0D;
+  --v-solo-chip:          #111111;
+  --v-solo-border:        #1A1A1A;
+  --v-solo-border-strong: #222222;
+  --v-solo-text:          #CCCCCC;
+  --v-solo-muted:         #888888;
+  --v-solo-body:          #777777;
+  --v-solo-dim:           #555555;
+  --v-solo-faint:         #444444;
+
+  /* ── geometry ──────────────────────────────────────────── */
+  /* unified: dashboard pages were 10/14, CLASS-1A pages 8/12 */
+  --radius:    10px;
+  --radius-lg: 14px;
+  --radius-sm: 6px;
+  /* unified: was 48px / 44px / undefined depending on page.
+     campaign-overview.js derives its scroll-spy offset from
+     this, so it must stay a plain px value. */
+  --nav-h: 52px;
+  --notch: 14px;             /* angular panel corner cut */
+
+  /* ── depth ─────────────────────────────────────────────── */
+  /* hard offset comic shadow. Applied with filter:drop-shadow()
+     not box-shadow — clip-path clips box-shadow away entirely. */
+  --shadow-hard:      5px 5px 0 var(--ink);
+  --shadow-hard-lift: 7px 7px 0 var(--ink);
+  --shadow-soft:      0 4px 24px rgba(0,0,0,.5);
+
+  /* ── z-index scale ─────────────────────────────────────── */
+  /* replaces the ad-hoc 100 / 110 / 200 / 1000 tiers */
+  --z-nav:     100;
+  --z-overlay: 200;
+  --z-dialog:  210;
+  --z-auth:    300;
+  --z-toast:   400;
+
+  /* ── motion ────────────────────────────────────────────── */
+  --dur-fast: 120ms;
+  --dur:      200ms;
+  --dur-slow: 380ms;
+  --ease-out:    cubic-bezier(.2,.8,.3,1);
+  --ease-impact: cubic-bezier(.34,1.56,.64,1);   /* overshoot */
+
+  /* ── typography ────────────────────────────────────────── */
+  --font-display: Anton, "Arial Narrow", Impact, sans-serif;
+  --font-ui:      Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-book:    "EB Garamond", Georgia, "Times New Roman", serif;
+
+  /* 1.25 scale; display sizes go fluid via clamp() in base.css */
+  --fs-2xs: 11px;
+  --fs-xs:  12px;
+  --fs-sm:  13px;
+  --fs-md:  14px;   /* base — unchanged, so no layout shifts */
+  --fs-lg:  17px;
+  --fs-xl:  21px;
+  --fs-2xl: 27px;
+  --fs-3xl: 34px;
+  --fs-4xl: 44px;
+
+  /* ── canvas theme signal ───────────────────────────────── */
+  /* board-shared.js reads this to pick its grid palette.
+     Replaces hex-sniffing of --bg. Values: dark | light */
+  --board-scheme: dark;
+}
+
+/* ============================================================
+   PARCHMENT — the adventure-module reading surface.
+   Applied via class="theme-doc" on <body>.
+
+   Same token NAMES, re-pointed at warm paper. Long-form prose
+   reads better on light, so this stays a deliberate second
+   surface rather than being unified into the dark theme.
+   ============================================================ */
+.theme-doc {
+  --ink: #2A1F14;
+
+  --bg:            #EFE6D6;
+  --surface:       #FBF6EC;
+  --surface2:      #F3EADA;
+  --surface3:      #E7DAC3;
+  --border:        rgba(92,64,32,.20);
+  --border-strong: rgba(92,64,32,.36);
+
+  --text:       #241B10;
+  --text-muted: #5E5140;
+  --text-dim:   #8A7C68;
+  --text-on-accent: #FBF6EC;
+
+  --accent:       #A8761A;
+  --accent-light: #F6E9CC;
+  --accent-text:  #6B4708;
+  --gold:         var(--accent);
+  --gold-light:   var(--accent-light);
+  --gold-text:    var(--accent-text);
+  --gold-glow:    rgba(168,118,26,.22);
+
+  --red:         #B62030;
+  --red-light:   #F8E3E3;
+  --red-text:    #7E1120;
+  --hero-red:    var(--red);
+
+  --green:       #3F7D22;
+  --green-light: #E6F2DC;
+  --green-text:  #2A5415;
+
+  --amber:       #A96C10;
+  --amber-light: #FAEDD4;
+  --amber-text:  #6F4405;
+
+  --teal:        #15806A;
+  --teal-light:  #DDF0E9;
+  --teal-text:   #0A4A3D;
+
+  --primary:       #1D3461;
+  --primary-light: #E3EAF6;
+  --primary-text:  #16294D;
+
+  --purple:       #6B3FA0;
+  --purple-light: #EEE6F7;
+  --purple-text:  #4A2670;
+
+  /* the villain section stays dark even on parchment — it is a
+     deliberate tonal break, and JS references these directly */
+  --v-bg:      #17141A;
+  --v-surface: #221D28;
+  --v-border:  rgba(255,255,255,.14);
+  --v-crimson: #E8455F;
+  --v-purple:  #A66BE0;
+
+  /* still a dark redacted dossier on parchment — the tonal break is
+     the point — but warmed so it sits on paper rather than punching
+     a hole in it */
+  --v-solo-bg:            #17151A;
+  --v-solo-surface:       #1E1B22;
+  --v-solo-chip:          #262230;
+  --v-solo-border:        #2B2731;
+  --v-solo-border-strong: #3A3542;
+  --v-solo-text:          #E0DCE4;
+  --v-solo-muted:         #A79FAE;
+  --v-solo-body:          #948C9C;
+  --v-solo-dim:           #7A7183;
+  --v-solo-faint:         #635B6B;
+
+  --shadow-hard:      4px 4px 0 rgba(92,64,32,.28);
+  --shadow-hard-lift: 6px 6px 0 rgba(92,64,32,.32);
+  --shadow-soft:      0 4px 20px rgba(92,64,32,.16);
+
+  --board-scheme: light;
+}

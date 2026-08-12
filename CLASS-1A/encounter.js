@@ -439,7 +439,11 @@ function renderEncounter() {
     const team = (c.team !== null && c.team !== undefined) ? TEAM_COLORS[c.team] : null;
     const borderColor = team ? team.bg : isCurrent ? 'var(--accent)' : 'transparent';
     const rowBg = isCurrent ? (team ? team.light : 'var(--accent-light)') : (team ? team.light : '');
-    return `<div class="enc-row${isDead?' is-dead':''}" id="enc-row-${c.id}" style="border-left-color:${borderColor};${rowBg?'background:'+rowBg+';':''}grid-template-columns:52px 1fr 1fr 52px;display:grid;flex-direction:unset;">
+    // Only per-row colour belongs inline. The grid itself lives in CSS —
+    // duplicating `display:grid; grid-template-columns:...` here pinned the
+    // desktop layout at inline specificity and overrode the mobile
+    // breakpoint, so rows never reflowed on narrow screens.
+    return `<div class="enc-row${isDead?' is-dead':''}" id="enc-row-${c.id}" style="border-left-color:${borderColor};${rowBg?'background:'+rowBg+';':''}">
       <div class="enc-init">
         <label>Init</label>
         <input type="number" value="${c.initiative}" onchange="encSetInit(${c.id},this.value)">

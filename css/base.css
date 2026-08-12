@@ -1,0 +1,164 @@
+/* ============================================================
+   base.css — @font-face, reset, typography, focus, motion.
+   Loads after tokens.css, before components.css.
+   ============================================================ */
+
+/* ── Self-hosted fonts ───────────────────────────────────────
+   Self-hosted rather than Google Fonts CDN: the GitHub Pages
+   workflow uploads the repo root wholesale (path: '.'), so these
+   ship automatically; local dev via `python3 server.py` or
+   `python3 -m http.server` keeps working with no network; and
+   there is no render-blocking third-party request.
+   Latin subset only. ~184KB total for all five faces.
+   ─────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'Anton';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/anton-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('fonts/inter-var.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('fonts/jetbrains-mono-var.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('fonts/eb-garamond-var.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: italic;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('fonts/eb-garamond-italic-var.woff2') format('woff2');
+}
+
+/* ── Reset ───────────────────────────────────────────────────
+   Matches the reset every page already carried inline.
+
+   ⚠ Deliberately does NOT set a width on media elements.
+   A `canvas { max-width: 100% }` rule would silently break the
+   tactical board: board-shared.js computes scroll, pan and
+   pinch-zoom in CANVAS-pixel units (:272-273, :777-778,
+   :985-986), so CSS-scaling the canvas desyncs fit/centre/pan
+   while hit-testing keeps working — a confusing silent failure.
+   ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--fs-md);
+  line-height: 1.5;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img, svg, video { max-width: 100%; height: auto; }
+/* canvas intentionally omitted from the rule above — see note */
+
+/* Defeats UA form-control fonts. Previously ~12 button classes
+   were missing `font-family: inherit` (.enc-btn, .action-btn,
+   .mini-btn, .nav-btn, .icon-btn, .die-btn, .roll-btn,
+   .filter-chip, .board-tool-btn, .save-row-btn, #tm-roll-btn
+   and the auth buttons) and rendered in the UA font on
+   non-Apple platforms. One rule fixes all of them. */
+button, input, select, textarea { font: inherit; color: inherit; }
+button { background: none; border: none; cursor: pointer; }
+
+a { color: inherit; }
+
+/* ── Typography ─────────────────────────────────────────── */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 400;           /* Anton ships a single weight */
+  letter-spacing: .005em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+h1 { font-size: clamp(var(--fs-2xl), 4.5vw, var(--fs-4xl)); }
+h2 { font-size: clamp(var(--fs-xl), 3.2vw, var(--fs-3xl)); }
+h3 { font-size: var(--fs-xl); }
+h4 { font-size: var(--fs-lg); }
+
+/* Numeric instrumentation — HP, initiative, dice, stat blocks.
+   Tabular figures stop values jittering as they tick. */
+.num, .mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* The uppercase micro-label recipe that was repeated ~40 times
+   across the old inline blocks with drifting values
+   (9-11px, weight 600-700, tracking .03-.14em). */
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ── Focus ───────────────────────────────────────────────────
+   board.html, encounter.html and relationships.html previously
+   had ZERO :focus-visible rules — and they are the three most
+   keyboard-driven pages (tactical grid, initiative tracker,
+   dice roller). This global rule covers all of them.
+   ─────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+::selection { background: var(--accent); color: var(--ink); }
+
+/* ── Scrollbars ─────────────────────────────────────────── */
+* { scrollbar-color: var(--surface3) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--surface3);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background-color: var(--border-strong); }
+
+/* ── Reduced motion ──────────────────────────────────────────
+   The repo previously had no prefers-reduced-motion handling at
+   all. Everything the redesign adds is gated here.
+   ─────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

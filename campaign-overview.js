@@ -322,11 +322,19 @@ function restoreBmState() {
 function initScrollSpy() {
   const sections = ['arc','world','villains','npcs','scripts'];
   const anchors  = document.querySelectorAll('.anchor-btn');
+  // Derived from the same token that sets the sticky nav's height and every
+  // scroll-margin-top on the page. This was a hardcoded 60 while the CSS used
+  // 56px and --nav-h was 44px or 48px depending on the page — four numbers
+  // for one measurement, so the active-section highlight drifted out of sync.
+  const navH = parseInt(
+    getComputedStyle(document.documentElement).getPropertyValue('--nav-h'), 10
+  ) || 52;
+  const threshold = navH + 8;
   function update() {
     let active = null;
     for (const s of sections) {
       const el = document.getElementById('sec-'+s);
-      if (el && el.getBoundingClientRect().top <= 60) active = s;
+      if (el && el.getBoundingClientRect().top <= threshold) active = s;
     }
     anchors.forEach(a => a.classList.toggle('active', a.getAttribute('href')==='#sec-'+(active||'arc')));
   }
@@ -508,7 +516,7 @@ function renderNamedCharacterRef(rawName, nameLookup, renderedChars) {
   }
   renderedChars.add(cleanName);
   const cardHtml = entry.type === 'teacher' ? buildTeacherCard(entry.data) : buildClass1BCard(entry.data);
-  return `<div id="${escHtml(anchorId)}" style="scroll-margin-top:60px;">${cardHtml}</div>`;
+  return `<div id="${escHtml(anchorId)}" style="scroll-margin-top:var(--nav-h);">${cardHtml}</div>`;
 }
 
 /* ─── Story Arcs (unified: arcs + session detail + cast) ─── */
@@ -631,7 +639,7 @@ function renderArcsUnified(sources, el) {
         for (const teacher of (teachers?.teachers||[])) {
           const anchorId = charAnchorId(teacher.name);
           renderedChars.add(teacher.name);
-          tierHtml += `<div id="${escHtml(anchorId)}" style="scroll-margin-top:60px;">${buildTeacherCard(teacher)}</div>`;
+          tierHtml += `<div id="${escHtml(anchorId)}" style="scroll-margin-top:var(--nav-h);">${buildTeacherCard(teacher)}</div>`;
         }
         const students = class1aRoster?.students || [];
         const pcs = students.filter(s => s.is_pc);
@@ -639,7 +647,7 @@ function renderArcsUnified(sources, el) {
         for (const s of [...pcs, ...npcStudents]) {
           const anchorId = charAnchorId(s.name);
           renderedChars.add(s.name);
-          tierHtml += `<div id="${escHtml(anchorId)}" style="scroll-margin-top:60px;">${buildClass1ACard(s, class1aCharMap)}</div>`;
+          tierHtml += `<div id="${escHtml(anchorId)}" style="scroll-margin-top:var(--nav-h);">${buildClass1ACard(s, class1aCharMap)}</div>`;
         }
         tierHtml += '</div>';
       }
@@ -659,7 +667,7 @@ function renderArcsUnified(sources, el) {
         for (const s of (class1b?.students||[])) {
           const anchorId = charAnchorId(s.name);
           renderedChars.add(s.name);
-          tierHtml += `<div id="${escHtml(anchorId)}" style="scroll-margin-top:60px;">${buildClass1BCard(s)}</div>`;
+          tierHtml += `<div id="${escHtml(anchorId)}" style="scroll-margin-top:var(--nav-h);">${buildClass1BCard(s)}</div>`;
         }
         tierHtml += '</div>';
       }
@@ -838,7 +846,7 @@ function renderVillainCard(v, accentColor, factionId) {
   const tags = [qt, rarity, factionId||'', 'villain'].filter(Boolean).join(' ');
   const searchText = [v.name, v.alias, v.quirk, v.role, v.personality].filter(Boolean).join(' ').toLowerCase();
   const vCharId = 'villain-'+(v.name||'').replace(/\s+/g,'-').toLowerCase();
-  return `<div class="person-card" id="${escHtml(vCharId)}" style="scroll-margin-top:60px;border-left:4px solid ${accentColor||'var(--v-border)'};background:var(--v-surface);border-color:var(--v-border);" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(vCharId)}" data-char-name="${escHtml(v.name||'')}">
+  return `<div class="person-card" id="${escHtml(vCharId)}" style="scroll-margin-top:var(--nav-h);border-left:4px solid ${accentColor||'var(--v-border)'};background:var(--v-surface);border-color:var(--v-border);" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(vCharId)}" data-char-name="${escHtml(v.name||'')}">
     ${makeDeleteBtn(vCharId, v.name||'', 'body-sec-villains')}
     <div class="person-avatar" style="${avStyle}">${initials(v.name)}</div>
     <div>
@@ -906,13 +914,13 @@ function renderVillains(data, el) {
 
   // Solo villains — rendered first with distinct black styling
   if (data.solo?.length) {
-    html += `<div style="margin-bottom:28px;padding:16px;background:#0a0a0a;border:1px solid #222;border-radius:var(--radius-lg);">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #222;">
-        <span style="width:10px;height:10px;border-radius:50%;background:#111;border:1px solid #555;flex-shrink:0;display:inline-block;"></span>
-        <span style="font-size:17px;font-weight:700;color:#888;letter-spacing:0.04em;">UNAFFILIATED</span>
-        <span style="margin-left:auto;font-size:10px;font-weight:600;color:#444;letter-spacing:0.1em;text-transform:uppercase;">No faction · No classification</span>
+    html += `<div style="margin-bottom:28px;padding:16px;background:var(--v-solo-bg);border:1px solid var(--v-solo-border-strong);border-radius:var(--radius-lg);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--v-solo-border-strong);">
+        <span style="width:10px;height:10px;border-radius:50%;background:var(--v-solo-chip);border:1px solid var(--v-solo-dim);flex-shrink:0;display:inline-block;"></span>
+        <span style="font-size:17px;font-weight:700;color:var(--v-solo-muted);letter-spacing:0.04em;">UNAFFILIATED</span>
+        <span style="margin-left:auto;font-size:10px;font-weight:600;color:var(--v-solo-faint);letter-spacing:0.1em;text-transform:uppercase;">No faction · No classification</span>
       </div>
-      <div style="font-size:12px;color:#444;line-height:1.6;margin-bottom:12px;">These individuals operate outside known faction structures. Commission records are incomplete, contradictory, or classified above standard access.</div>
+      <div style="font-size:12px;color:var(--v-solo-faint);line-height:1.6;margin-bottom:12px;">These individuals operate outside known faction structures. Commission records are incomplete, contradictory, or classified above standard access.</div>
     </div>`;
     for (const v of data.solo) {
       const dId = 'vd'+uid();
@@ -925,28 +933,28 @@ function renderVillains(data, el) {
       const rarity = (v.quirk_rarity||'').toLowerCase().replace(/\s+/g,'-');
       const tags = [qt, rarity, 'solo', 'villain'].filter(Boolean).join(' ');
       const searchText = [v.name, v.alias, v.quirk, v.role].filter(Boolean).join(' ').toLowerCase();
-      html += `<div class="person-card" id="${escHtml(vCharId)}" style="scroll-margin-top:60px;background:#0d0d0d;border-color:#1a1a1a;border-left:4px solid #111;" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(vCharId)}" data-char-name="${escHtml(v.name||'')}">
+      html += `<div class="person-card" id="${escHtml(vCharId)}" style="scroll-margin-top:var(--nav-h);background:var(--v-solo-surface);border-color:var(--v-solo-border);border-left:4px solid var(--v-solo-chip);" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(vCharId)}" data-char-name="${escHtml(v.name||'')}">
         ${makeDeleteBtn(vCharId, v.name||'', 'body-sec-villains')}
-        <div class="person-avatar" style="background:#111;color:#555;font-size:16px;">?</div>
+        <div class="person-avatar" style="background:var(--v-solo-chip);color:var(--v-solo-dim);font-size:16px;">?</div>
         <div>
-          <div class="person-name" style="color:#ccc;">${escHtml(v.name)}</div>
-          <div class="person-alias" style="color:#444;">${escHtml(v.role||'')}</div>
+          <div class="person-name" style="color:var(--v-solo-text);">${escHtml(v.name)}</div>
+          <div class="person-alias" style="color:var(--v-solo-faint);">${escHtml(v.role||'')}</div>
           <div class="person-tags">
-            <span class="tag" style="background:#111;color:#555;border:1px solid #222;">${escHtml(v.quirk||'')}</span>
-            <span class="tag" style="background:#111;color:#444;border:1px solid #1a1a1a;">${escHtml(v.quirk_rarity||'')}</span>
+            <span class="tag" style="background:var(--v-solo-chip);color:var(--v-solo-dim);border:1px solid var(--v-solo-border-strong);">${escHtml(v.quirk||'')}</span>
+            <span class="tag" style="background:var(--v-solo-chip);color:var(--v-solo-faint);border:1px solid var(--v-solo-border);">${escHtml(v.quirk_rarity||'')}</span>
           </div>
-          <div class="person-section" style="border-top-color:#1a1a1a;"><div class="person-section-label" style="color:#444;">Quirk</div><div class="person-section-body" style="color:#777;">${escHtml(v.quirk_summary||'')}</div></div>
-          <div class="person-section" style="border-top-color:#1a1a1a;"><div class="person-section-label" style="color:#444;">Appearance</div><div class="person-section-body" style="color:#777;">${escHtml(v.appearance||'')}</div></div>
-          <div class="person-section" style="border-top-color:#1a1a1a;"><div class="person-section-label" style="color:#444;">Personality</div><div class="person-section-body" style="color:#777;">${escHtml(v.personality||'')}</div></div>
-          <div class="person-section" style="border-top-color:#1a1a1a;"><div class="person-section-label" style="color:#444;">Combat style</div><div class="person-section-body" style="color:#777;">${escHtml(v.combat_style||'')}</div></div>
-          <span class="collapse-btn" style="color:#555;" onclick="toggleCollapse('${dId}',this)">▶ Stat block, appearances &amp; DM notes</span>
+          <div class="person-section" style="border-top-color:var(--v-solo-border);"><div class="person-section-label" style="color:var(--v-solo-faint);">Quirk</div><div class="person-section-body" style="color:var(--v-solo-body);">${escHtml(v.quirk_summary||'')}</div></div>
+          <div class="person-section" style="border-top-color:var(--v-solo-border);"><div class="person-section-label" style="color:var(--v-solo-faint);">Appearance</div><div class="person-section-body" style="color:var(--v-solo-body);">${escHtml(v.appearance||'')}</div></div>
+          <div class="person-section" style="border-top-color:var(--v-solo-border);"><div class="person-section-label" style="color:var(--v-solo-faint);">Personality</div><div class="person-section-body" style="color:var(--v-solo-body);">${escHtml(v.personality||'')}</div></div>
+          <div class="person-section" style="border-top-color:var(--v-solo-border);"><div class="person-section-label" style="color:var(--v-solo-faint);">Combat style</div><div class="person-section-body" style="color:var(--v-solo-body);">${escHtml(v.combat_style||'')}</div></div>
+          <span class="collapse-btn" style="color:var(--v-solo-dim);" onclick="toggleCollapse('${dId}',this)">▶ Stat block, appearances &amp; DM notes</span>
           <div class="collapsible" id="${dId}">
-            ${Object.keys(sb).length?`<div class="person-section" style="border-top-color:#1a1a1a;"><div class="person-section-label" style="color:#444;">Stat block — Lv ${sb.level??'?'} · HP ${sb.HP??'?'} · AC ${sb.AC??'?'}</div>
-              <div class="stat-grid">${STATS.map(k=>sb[k]!=null?`<div class="stat-chip" style="background:#111;border-color:#222;"><span class="stat-chip-label" style="color:#444;">${k}</span><span class="stat-chip-val" style="color:#888;">${sb[k]}</span></div>`:'').join('')}</div>
-              ${sb.special_abilities?.length?`<ul style="margin-top:10px;padding-left:16px;">${sb.special_abilities.map(a=>`<li style="font-size:12px;color:#555;margin-bottom:6px;line-height:1.5;">${escHtml(a)}</li>`).join('')}</ul>`:''}
+            ${Object.keys(sb).length?`<div class="person-section" style="border-top-color:var(--v-solo-border);"><div class="person-section-label" style="color:var(--v-solo-faint);">Stat block — Lv ${sb.level??'?'} · HP ${sb.HP??'?'} · AC ${sb.AC??'?'}</div>
+              <div class="stat-grid">${STATS.map(k=>sb[k]!=null?`<div class="stat-chip" style="background:var(--v-solo-chip);border-color:var(--v-solo-border-strong);"><span class="stat-chip-label" style="color:var(--v-solo-faint);">${k}</span><span class="stat-chip-val" style="color:var(--v-solo-muted);">${sb[k]}</span></div>`:'').join('')}</div>
+              ${sb.special_abilities?.length?`<ul style="margin-top:10px;padding-left:16px;">${sb.special_abilities.map(a=>`<li style="font-size:12px;color:var(--v-solo-dim);margin-bottom:6px;line-height:1.5;">${escHtml(a)}</li>`).join('')}</ul>`:''}
             </div>`:''}
-            ${Object.keys(ca).length?`<div class="person-section" style="border-top-color:#1a1a1a;"><div class="person-section-label" style="color:#444;">Campaign appearances</div>${Object.entries(ca).map(([k,v2])=>`<div style="margin-bottom:8px;"><div style="font-size:10px;font-weight:600;color:#444;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;">${escHtml(k.replace(/_/g,' '))}</div><div style="font-size:12px;color:#555;line-height:1.5;">${escHtml(v2)}</div></div>`).join('')}</div>`:''}
-            ${Object.keys(dmn).length?`<div class="dm-note" style="background:#0a0a0a;border-color:#1a1a1a;"><strong style="color:#666;">DM notes</strong><br>${Object.entries(dmn).map(([k,v2])=>`<strong style="color:#555;">${escHtml(k.replace(/_/g,' '))}:</strong> <span style="color:#555;">${escHtml(String(v2))}</span>`).join('<br>')}</div>`:''}
+            ${Object.keys(ca).length?`<div class="person-section" style="border-top-color:var(--v-solo-border);"><div class="person-section-label" style="color:var(--v-solo-faint);">Campaign appearances</div>${Object.entries(ca).map(([k,v2])=>`<div style="margin-bottom:8px;"><div style="font-size:10px;font-weight:600;color:var(--v-solo-faint);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;">${escHtml(k.replace(/_/g,' '))}</div><div style="font-size:12px;color:var(--v-solo-dim);line-height:1.5;">${escHtml(v2)}</div></div>`).join('')}</div>`:''}
+            ${Object.keys(dmn).length?`<div class="dm-note" style="background:var(--v-solo-bg);border-color:var(--v-solo-border);"><strong style="color:var(--v-solo-muted);">DM notes</strong><br>${Object.entries(dmn).map(([k,v2])=>`<strong style="color:var(--v-solo-dim);">${escHtml(k.replace(/_/g,' '))}:</strong> <span style="color:var(--v-solo-dim);">${escHtml(String(v2))}</span>`).join('<br>')}</div>`:''}
           </div>
         </div>
       </div>`;
@@ -1176,7 +1184,7 @@ function renderNPCs(data, el) {
       const tagClass = CAT_TAG[cat] || 'tag-primary';
       const avStyle = `background:${accentColor}22;color:${accentColor};`;
 
-      html += `<div class="person-card" id="npc-${escHtml(c.id)}" style="scroll-margin-top:60px;" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(c.id)}" data-char-name="${escHtml(c.name)}">
+      html += `<div class="person-card" id="npc-${escHtml(c.id)}" style="scroll-margin-top:var(--nav-h);" data-tags="${escHtml(tags)}" data-search="${escHtml(searchText)}" data-char-id="${escHtml(c.id)}" data-char-name="${escHtml(c.name)}">
         ${makeDeleteBtn(c.id, c.name, 'body-sec-npcs')}
         <div class="person-avatar" style="${avStyle}">${initials(c.name)}</div>
         <div>
@@ -1262,7 +1270,7 @@ function renderScripts(data, el) {
   </div>`;
 
   for (const cat of (data.categories||[])) {
-    html += `<div class="sub-label" id="script-cat-${escHtml(cat.id)}" style="scroll-margin-top:60px;">${escHtml(cat.icon||'')} ${escHtml(cat.label)}</div>`;
+    html += `<div class="sub-label" id="script-cat-${escHtml(cat.id)}" style="scroll-margin-top:var(--nav-h);">${escHtml(cat.icon||'')} ${escHtml(cat.label)}</div>`;
     for (const sc of (cat.scripts||[])) html += buildScriptCard(sc);
   }
   el.innerHTML = html;

@@ -10,6 +10,7 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
+    --board-scheme: dark;   /* read by board-shared.js to pick the grid palette */
     --bg: #0C1017; --surface: #111923; --surface2: #18222E;
     --border: rgba(255,255,255,0.07); --border-strong: rgba(255,255,255,0.14);
     --text: #E8EDF3; --text-muted: #8A9BB0; --text-dim: #3E5068;
@@ -130,6 +131,7 @@
     #board-range-clear { width: 22px; height: 22px; font-size: 14px; }
   }
 </style>
+<link rel="stylesheet" href="../css/auth-widget.css">
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>

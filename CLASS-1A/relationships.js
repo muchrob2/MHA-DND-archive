@@ -413,7 +413,22 @@ function selectChar(id) {
   renderProfile();
   renderRelationships();
   setView('character');
-  if (window.innerWidth <= 640) document.getElementById('app').classList.add('mobile-main');
+  // Matches the same query the stylesheet uses for the mobile pane slide,
+  // rather than re-deriving it from innerWidth — innerWidth includes the
+  // scrollbar, so the two could disagree by a few px right at the boundary.
+  if (isMobileLayout()) document.getElementById('app').classList.add('mobile-main');
+}
+
+// Single source of truth for "are we in the stacked mobile layout", kept in
+// step with the `@media (max-width: 640px)` block in relationships.html.
+// Falls back to innerWidth where matchMedia is unavailable — notably the
+// scripts/verify-relationship-sync.js harness, whose window stub provides
+// only addEventListener and innerWidth.
+function isMobileLayout() {
+  if (typeof window.matchMedia === 'function') {
+    return window.matchMedia('(max-width: 640px)').matches;
+  }
+  return window.innerWidth <= 640;
 }
 
 function mobileBack() {

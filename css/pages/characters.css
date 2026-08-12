@@ -1,0 +1,269 @@
+/* ============================================================
+   pages/characters.css — character browser: folders, filters,
+   search, and the detail/create modal.
+
+   Nav, buttons, badges, chips, form fields, the modal shell and
+   the empty state all come from components.css. The notch, hard
+   shadow and speed lines on .char-card / .folder-tile come from
+   manga.css. Only what's genuinely page-specific lives here.
+
+   characters.js contracts honoured below:
+     :253  writes --folder-accent on .folder-tile (consumed here)
+     :687  reads el.parentElement.querySelectorAll('.color-swatch')
+           — swatches must stay direct siblings
+     :210  badgeClass() emits .student-1a/-1b/teacher/villain/
+           supporting/custom — styled in components.css
+   ============================================================ */
+
+/* ════════════════════════════════════════════════════════════
+   TOOLBAR
+   ════════════════════════════════════════════════════════════ */
+
+#toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 24px 0;
+}
+
+#search-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 14px;
+  font-size: var(--fs-sm);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+}
+#search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+#search-input::placeholder { color: var(--text-dim); }
+
+/* .filter-chip inherits the pill shape from components.css;
+   in the toolbar it needs a slightly larger hit area */
+.filter-chip { padding: 8px 14px; font-size: var(--fs-xs); }
+
+#filter-panel {
+  display: none;
+  flex-wrap: wrap;
+  gap: 16px;
+  max-width: 1100px;
+  margin: 12px auto 0;
+  padding: 0 24px;
+}
+#filter-panel.open { display: flex; }
+
+.filter-group {
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.filter-options { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ════════════════════════════════════════════════════════════
+   BREADCRUMB
+   ════════════════════════════════════════════════════════════ */
+
+#breadcrumb {
+  display: none;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 1100px;
+  margin: 12px auto 0;
+  padding: 0 24px;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+#breadcrumb.open { display: flex; }
+.breadcrumb-link { cursor: pointer; transition: color var(--dur-fast); }
+.breadcrumb-link:hover { color: var(--accent-text); }
+.breadcrumb-sep { color: var(--text-dim); }
+.breadcrumb-current {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.breadcrumb-spacer { flex: 1; }
+
+/* ════════════════════════════════════════════════════════════
+   GRID
+   ════════════════════════════════════════════════════════════ */
+
+#grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 24px 80px;
+}
+
+/* manga.css styles .grid-section-label as a display heading;
+   inside the grid it also has to span every column */
+.grid-section-label { grid-column: 1 / -1; margin: 10px 0 -2px; }
+
+.char-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  cursor: pointer;
+}
+.char-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.char-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  line-height: 1.1;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+}
+.char-quirk { margin-top: 2px; font-size: var(--fs-xs); color: var(--text-muted); }
+.char-meta  { display: flex; flex-wrap: wrap; gap: 6px; font-size: var(--fs-2xs); color: var(--text-dim); }
+
+/* ════════════════════════════════════════════════════════════
+   FOLDER TILES
+   --folder-accent is written inline by characters.js:253
+   ════════════════════════════════════════════════════════════ */
+
+.folder-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  cursor: pointer;
+  border-left: 3px solid var(--folder-accent, var(--accent));
+}
+.folder-tile-icon  { font-size: 21px; }
+.folder-tile-name  {
+  padding-right: 38px;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  letter-spacing: .01em;
+  text-transform: uppercase;
+}
+.folder-tile-count { font-size: var(--fs-2xs); color: var(--text-dim); }
+.folder-tile-actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+.folder-tile-actions span { cursor: pointer; font-size: var(--fs-xs); color: var(--text-dim); transition: color var(--dur-fast); }
+.folder-tile-actions span:hover { color: var(--text); }
+
+.folder-badge { padding: 2px 8px; border-radius: 999px; font-size: var(--fs-2xs); font-weight: 600; }
+
+/* ════════════════════════════════════════════════════════════
+   MODAL — shell comes from components.css
+   ════════════════════════════════════════════════════════════ */
+
+#modal { width: 100%; max-width: 560px; padding: 28px; }
+#modal h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  text-transform: uppercase;
+}
+.modal-sub { margin-bottom: 18px; font-size: var(--fs-xs); color: var(--text-muted); }
+.modal-close {
+  float: right;
+  font-size: var(--fs-xl);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: color var(--dur-fast);
+}
+.modal-close:hover { color: var(--text); }
+
+.detail-section { margin-bottom: 14px; }
+.detail-body    { font-size: var(--fs-sm); line-height: 1.65; white-space: pre-wrap; }
+
+/* ════════════════════════════════════════════════════════════
+   FORMS — field styling comes from components.css
+   ════════════════════════════════════════════════════════════ */
+
+.form-fieldset {
+  padding: 14px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.form-fieldset-label {
+  margin-bottom: 10px;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.ability-row {
+  position: relative;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.ability-row .form-row { margin-bottom: 8px; }
+.ability-row .form-row:last-child { margin-bottom: 0; }
+.ability-remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  padding: 0;
+}
+.ability-remove-btn:hover { color: var(--red-text); background: none; }
+.add-ability-btn { margin-top: 4px; }
+
+.checkbox-row { display: flex; align-items: center; gap: 8px; }
+.checkbox-row input { width: auto; }
+
+/* swatches must remain direct siblings — characters.js:687 */
+.color-swatch-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform var(--dur-fast), border-color var(--dur-fast);
+}
+.color-swatch:hover { transform: scale(1.12); }
+.color-swatch.selected { border-color: var(--text); transform: scale(1.12); }
+
+.picker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding: 8px 10px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  #toolbar, #grid, #filter-panel, #breadcrumb {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  #grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+}

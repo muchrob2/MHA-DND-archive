@@ -6,175 +6,21 @@
 <meta name="description" content="Campaign profile library for the MHA D&D archive — every campaign laid out like a published adventure module, with chapters, subheadings, and DM notes.">
 <meta name="theme-color" content="#f7f6f4">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/theme-doc.css">
 <title>Campaigns — MHA D&D</title>
-<style>
-  /* ── Sticky nav (page-specific additions; base tokens/nav come from theme-doc.css) ── */
-  .crumb-bar { display: flex; align-items: center; gap: 8px; flex: 1; padding: 0 16px; overflow-x: auto; white-space: nowrap; }
-  .crumb-link { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); text-decoration: none; }
-  .crumb-link:hover { color: #fff; }
-  .crumb-sep { color: rgba(255,255,255,0.4); margin: 0 2px; }
-  #crumb-campaign { font-size: 13px; color: rgba(255,255,255,0.6); }
-  .nav-saved.err { color: #FCA5A5; }
-  #topnav #auth-widget #auth-status, #topnav #auth-widget #auth-signin-btn, #topnav #auth-widget #auth-signout-btn, #topnav #auth-widget #auth-admin-link {
-    color: rgba(255,255,255,0.75) !important; border-color: rgba(255,255,255,0.22) !important; background: rgba(255,255,255,0.08) !important;
-  }
-  #topnav #auth-widget #auth-signin-btn:hover, #topnav #auth-widget #auth-signout-btn:hover, #topnav #auth-widget #auth-admin-link:hover { color: #fff !important; background: rgba(255,255,255,0.16) !important; }
-
-  /* ── Main ── */
-  #main { max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; }
-  .page-heading { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 4px; }
-  .page-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; max-width: 62ch; }
-
-  /* ── Library grid ── */
-  .camp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
-  .camp-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; cursor: pointer; transition: border-color 0.15s, transform 0.1s, box-shadow 0.15s; position: relative; display: flex; flex-direction: column; }
-  .camp-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(29,52,97,0.12); }
-  .camp-card-icon { font-size: 26px; margin-bottom: 8px; }
-  .camp-card-title { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
-  .camp-card-tagline { font-size: 12px; color: var(--text-muted); font-style: italic; line-height: 1.4; }
-  .camp-card-meta { font-size: 11px; color: var(--text-dim); margin-top: 10px; }
-  .camp-card-actions { margin-top: 10px; }
-  .camp-card-new { align-items: center; justify-content: center; border: 2px dashed var(--border-strong); color: var(--text-dim); font-weight: 700; font-size: 13px; min-height: 110px; background: transparent; }
-  .camp-card-new:hover { border-color: var(--primary); color: var(--primary-text); }
-  .camp-card-formwrap { grid-column: 1 / -1; }
-  .empty-note { color: var(--text-dim); font-size: 13px; padding: 20px 0; grid-column: 1/-1; }
-
-  /* ── Buttons / mini controls ── */
-  .mini-btn { font-size: 11px; font-weight: 600; color: var(--primary-text); cursor: pointer; background: var(--primary-light); border: none; border-radius: 20px; padding: 3px 10px; display: inline-flex; align-items: center; gap: 4px; }
-  .mini-btn:hover { background: color-mix(in srgb, var(--primary-light) 60%, var(--primary) 12%); }
-  .mini-btn.danger { color: var(--hero-red-text); background: var(--hero-red-light); }
-  .mini-btn.danger:hover { background: color-mix(in srgb, var(--hero-red-light) 60%, var(--hero-red) 14%); }
-  .mini-btn.ghost { background: var(--surface2); color: var(--text-muted); }
-  .mini-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-  .edit-only { display: none; }
-  .editing .edit-only { display: inline-flex; }
-
-  /* ── Forms ── */
-  .form-card { background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 16px 18px; margin: 10px 0; }
-  .edit-label { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 4px; margin-top: 10px; }
-  .edit-label:first-child { margin-top: 0; }
-  .edit-input, .edit-select { width: 100%; background: var(--surface2); border: 1px solid var(--border-strong); border-radius: var(--radius); color: var(--text); font-size: 13px; padding: 8px 10px; outline: none; font-family: inherit; transition: border-color 0.15s; }
-  .edit-input:focus, .edit-select:focus, .edit-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
-  .edit-textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border-strong); border-radius: var(--radius); color: var(--text); font-size: 13px; padding: 10px; outline: none; font-family: inherit; line-height: 1.6; min-height: 80px; resize: vertical; }
-  .edit-hint { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
-  .form-actions { display: flex; gap: 8px; margin-top: 14px; }
-  .form-actions .mini-btn { font-size: 12px; padding: 6px 14px; }
-  .icon-input { width: 56px !important; text-align: center; font-size: 18px !important; flex-shrink: 0; }
-  .row-2 { display: flex; gap: 10px; }
-  .row-2 > div { flex: 1; }
-
-  /* ══════════════════════════════════════════════
-     MODULE / BOOK THEME — intentionally fixed parchment
-     colours regardless of app light/dark mode, so a
-     campaign always reads like a printed adventure module.
-     ══════════════════════════════════════════════ */
-  .module {
-    --mod-bg: #f2e9d8; --mod-bg2: #e9dec4; --mod-bg3: #ddcfab;
-    --mod-border: rgba(92,42,20,0.25); --mod-ink: #2c2115; --mod-ink-muted: #5c5340;
-    --mod-heading: #7a2020; --mod-rule: #a9812f;
-    /* Pin every shared token to its light-mode value so forms/buttons inside
-       the module stay legible on parchment even when the app chrome is dark. */
-    --surface2: var(--mod-bg3); --border: var(--mod-border); --border-strong: var(--mod-border);
-    --text: var(--mod-ink); --text-muted: var(--mod-ink-muted); --text-dim: var(--mod-ink-muted);
-    --primary-light: #E6ECF5; --primary-text: #1D3461;
-    --gold-light: #FEF6DB; --gold-text: #7A5A05;
-    --hero-red-light: #FAEAEA; --hero-red-text: #8B1220;
-    background: var(--mod-bg); color: var(--mod-ink);
-    border-radius: var(--radius-lg); box-shadow: 0 3px 22px rgba(0,0,0,0.16);
-    padding: 30px 34px 44px; font-family: Georgia, "Times New Roman", serif;
-  }
-  .module h1, .module h2, .module h3, .module .section-heading-text { font-family: Georgia, "Times New Roman", serif; }
-  .module-back { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 12px; color: var(--text-dim); text-decoration: none; display: inline-block; margin-bottom: 14px; }
-  .module-back:hover { color: var(--primary-text); }
-
-  .module-banner { border-bottom: 3px double var(--mod-rule); padding-bottom: 18px; margin-bottom: 20px; }
-  .module-icon { font-size: 34px; }
-  .module-title { font-size: 32px; font-weight: 800; letter-spacing: -0.01em; color: var(--mod-heading); margin: 4px 0 2px; }
-  .module-tagline { font-style: italic; color: var(--mod-ink-muted); font-size: 15px; margin-bottom: 10px; }
-  .module-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-  .module-chip { font-size: 11px; font-weight: 700; color: var(--mod-heading); background: rgba(122,32,32,0.08); border: 1px solid var(--mod-border); border-radius: 20px; padding: 3px 11px; }
-  .module-tone { line-height: 1.75; font-size: 14.5px; }
-
-  .module-toc { background: var(--mod-bg2); border: 1px solid var(--mod-border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 24px; }
-  .module-toc-title { font-weight: 700; color: var(--mod-heading); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-  .module-toc a { display: block; font-size: 13.5px; color: var(--mod-ink); text-decoration: none; padding: 3px 0; }
-  .module-toc a:hover { color: var(--mod-heading); text-decoration: underline; }
-  .module-toc .toc-sub { color: var(--mod-ink-muted); font-size: 12px; margin-left: 4px; }
-
-  .module-h2 { font-size: 19px; font-weight: 800; color: var(--mod-heading); border-bottom: 1px solid var(--mod-border); padding-bottom: 5px; margin: 26px 0 12px; letter-spacing: -0.005em; }
-  .module-h2:first-of-type { margin-top: 0; }
-
-  .prose-item { margin-bottom: 18px; }
-  .prose-item-heading { font-size: 15px; font-weight: 700; color: var(--mod-heading); margin-bottom: 5px; text-decoration: underline; text-decoration-color: var(--mod-border); text-underline-offset: 3px; }
-  .prose p { margin-bottom: 9px; line-height: 1.75; font-size: 14px; }
-  .prose ul { margin: 6px 0 10px 20px; }
-  .prose li { margin-bottom: 5px; line-height: 1.65; font-size: 14px; }
-  .dropcap p:first-of-type::first-letter { float: left; font-size: 44px; line-height: 0.8; padding: 4px 6px 0 0; font-weight: 800; color: var(--mod-heading); }
-
-  .chapter-block { margin-top: 40px; padding-top: 22px; border-top: 4px double var(--mod-rule); }
-  .chapter-block:first-of-type { margin-top: 30px; }
-  .chapter-kicker { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mod-ink-muted); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-  .chapter-title { font-size: 26px; font-weight: 800; color: var(--mod-heading); margin: 2px 0 4px; }
-  .chapter-meta { font-size: 12px; color: var(--mod-ink-muted); font-style: italic; margin-bottom: 12px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-  .chapter-intro { font-size: 14.5px; line-height: 1.75; margin-bottom: 12px; }
-
-  .callout { border-radius: 0 var(--radius) var(--radius) 0; padding: 11px 15px; margin: 12px 0; font-size: 13.5px; line-height: 1.65; }
-  .callout-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 5px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; align-items: center; gap: 5px; }
-  .callout-readaloud { background: var(--mod-bg3); border-left: 3px solid var(--mod-heading); font-style: italic; }
-  .callout-readaloud .callout-label { color: var(--mod-heading); font-style: normal; }
-  .callout-dm { background: rgba(184,134,11,0.10); border-left: 3px solid var(--gold); }
-  .callout-dm .callout-label { color: var(--gold-text); }
-  .callout-aside { background: rgba(122,32,32,0.08); border-left: 3px solid var(--mod-heading); }
-  .callout-aside .callout-label { color: var(--mod-heading); }
-  .callout-developments { background: var(--mod-bg3); border-left: 3px solid var(--mod-ink-muted); }
-  .callout-developments .callout-label { color: var(--mod-ink-muted); }
-  .callout-treasure { background: rgba(29,158,117,0.10); border-left: 3px solid var(--teal); }
-  .callout-treasure .callout-label { color: var(--teal-text); }
-  .callout-closing { background: var(--mod-bg2); border: 1px solid var(--mod-border); border-left: 4px solid var(--mod-heading); margin-top: 22px; }
-  .callout-milestone { background: rgba(184,134,11,0.14); border: 1px solid var(--gold); text-align: center; margin-top: 14px; }
-  .callout-milestone .callout-label { justify-content: center; color: var(--gold-text); }
-  .callout-milestone p { margin-bottom: 0; font-weight: 700; }
-
-  .section-block { margin-top: 20px; }
-  .section-heading-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid var(--mod-border); padding-bottom: 4px; margin-bottom: 8px; }
-  .section-heading-text { font-size: 16.5px; font-weight: 800; color: var(--mod-heading); }
-  .section-tag { font-size: 11px; color: var(--mod-ink-muted); font-style: italic; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-  .section-controls { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-
-  .module-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-  .module-link-card { display: flex; align-items: center; gap: 8px; background: var(--mod-bg2); border: 1px solid var(--mod-border); border-radius: var(--radius); padding: 8px 14px; font-size: 12.5px; color: var(--mod-heading); text-decoration: none; font-weight: 600; }
-  .module-link-card:hover { background: var(--mod-bg3); }
-
-  .add-block-btn { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--mod-heading); background: rgba(122,32,32,0.08); border: 1px dashed var(--mod-border); border-radius: 20px; padding: 6px 14px; cursor: pointer; margin-top: 14px; }
-  .add-block-btn:hover { background: rgba(122,32,32,0.14); }
-
-  .module .form-card { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--mod-bg2); border-color: var(--mod-border); }
-
-  @media (max-width: 640px) {
-    #main { padding: 16px 12px 60px; }
-    .module { padding: 20px 16px 30px; }
-    .module-title { font-size: 24px; }
-    .chapter-title { font-size: 21px; }
-    .camp-grid { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 420px) {
-    .camp-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ── Keyboard focus ── */
-  .camp-card:focus-visible, .mini-btn:focus-visible, .add-block-btn:focus-visible,
-  .crumb-link:focus-visible, .module-toc a:focus-visible, .nav-btn:focus-visible {
-    outline: 2px solid var(--primary); outline-offset: 2px;
-  }
-</style>
+<link rel="preload" href="css/fonts/eb-garamond-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/theme-doc.css">
+<link rel="stylesheet" href="css/pages/campaigns.css">
 <link rel="stylesheet" href="css/auth-widget.css">
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 <script src="auth.js"></script>
 </head>
-<body>
+<body class="theme-doc">
 
 <nav id="topnav">
   <a id="back-btn" href="index.html">← Dashboard</a>

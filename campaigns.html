@@ -287,11 +287,17 @@ async function startCampaignsLiveSync() {
   await fbAuthReady;
   FS_CAMPAIGNS_DOC.onSnapshot(snap => {
     if (!snap.exists) return;
+    // A cached snapshot is this tab's own stale copy, not news from the server.
+    // When Firestore's streaming channel is blocked (Safari tracking
+    // protection, content blockers, proxies) the write transport keeps working
+    // while the listener replays cache — so a save commits and is then visibly
+    // "undone" by data older than the write. See relationships.html.
+    if (snap.metadata?.fromCache) return;
     const data = snap.data();
     if (!Array.isArray(data.campaigns)) return;
     if (isCampaignsEditing()) { _pendingRemoteCampaigns = data; return; }
     applyRemoteCampaigns(data);
-  });
+  }, err => console.error('[campaigns] live sync stopped:', err));
 }
 setInterval(() => {
   if (_pendingRemoteCampaigns && !isCampaignsEditing()) {

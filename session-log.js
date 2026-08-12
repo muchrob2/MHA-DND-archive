@@ -38,7 +38,7 @@ async function init() {
     const snap = await FS_DOC.get();
     data = snap.exists ? snap.data() : { sessions: [] };
     if (!Array.isArray(data.sessions)) data.sessions = [];
-    _lastSyncedLog = data;
+    _lastSyncedLog = fsCloneDoc(data); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
   } catch {
     document.getElementById('load-error-banner').style.display = '';
     data = { sessions: [] };
@@ -74,7 +74,7 @@ function isLogEditing() { return editingId !== null || draftNew || _logSaveInFli
 function applyRemoteLog(remote) {
   data = remote;
   if (!Array.isArray(data.sessions)) data.sessions = [];
-  _lastSyncedLog = remote;
+  _lastSyncedLog = fsCloneDoc(remote); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
   render();
 }
 async function startLogLiveSync() {

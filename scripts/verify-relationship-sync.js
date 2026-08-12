@@ -71,7 +71,10 @@ var fbAuthReady = new Promise(function () {});
 var _dbStub = { collection() { return { doc() { return { get() { return new Promise(function () {}); },
                                                         onSnapshot() {} }; } }; } };
 var firebase = { firestore: function () { return _dbStub; } };
-var fsMergeSave = function (ref, local) { return Promise.resolve(local); };
+// Both mirror auth.js's contract: a baseline is always a detached copy of the
+// document, never a live reference into page state (see cloneDoc there).
+var fsCloneDoc = function (doc) { return doc == null ? doc : JSON.parse(JSON.stringify(doc)); };
+var fsMergeSave = function (ref, local) { return Promise.resolve(fsCloneDoc(local)); };
 var navigator = { clipboard: { writeText() { return Promise.resolve(); } } };
 var confirm = function () { return true; };
 var location = { reload() {} };

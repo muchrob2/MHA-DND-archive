@@ -85,7 +85,7 @@ function isCampaignsEditing() { return openEditId !== null || _campaignSaveInFli
 function applyRemoteCampaigns(data) {
   campaignsData = data;
   campaignsData.campaigns = campaignsData.campaigns || [];
-  _lastSyncedCampaigns = data;
+  _lastSyncedCampaigns = fsCloneDoc(data); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
   render();
 }
 async function startCampaignsLiveSync() {
@@ -714,7 +714,7 @@ function renderLinksSection(c) {
 async function init() {
   campaignsData = await loadCampaigns();
   campaignsData.campaigns = campaignsData.campaigns || [];
-  _lastSyncedCampaigns = campaignsData;
+  _lastSyncedCampaigns = fsCloneDoc(campaignsData); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
   document.getElementById('loading').style.display = 'none';
   currentCampaignId = parseHash();
   render();

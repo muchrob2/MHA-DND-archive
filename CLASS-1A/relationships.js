@@ -564,25 +564,7 @@ function renderAttacksTab(c) {
   c.quirk_mechanics = c.quirk_mechanics || {};
   const abilities = c.quirk_mechanics.abilities = c.quirk_mechanics.abilities || [];
 
-  const cards = abilities.map((a, i) => {
-    if (canWrite) {
-      return `
-    <div class="ability-card ability-card-editable">
-      <div class="ability-edit-row">
-        <input class="ability-input ability-input-name" placeholder="Attack name" value="${escHtml(a.name||'')}" oninput="onAttackEdit('${escHtml(a.id)}','name',this.value)">
-        <button class="icon-btn ability-delete-btn" title="Delete attack" aria-label="Delete attack" onclick="onAttackDelete('${escHtml(a.id)}')">✕</button>
-      </div>
-      <input class="ability-input ability-input-type" placeholder="Type (e.g. Action; costs 2 Heat Points)" value="${escHtml(a.type||'')}" oninput="onAttackEdit('${escHtml(a.id)}','type',this.value)">
-      <textarea class="ability-input ability-input-desc" rows="2" placeholder="Description" oninput="onAttackEdit('${escHtml(a.id)}','description',this.value)">${escHtml(a.description||'')}</textarea>
-    </div>`;
-    }
-    return `
-    <div class="ability-card">
-      <div class="ability-name">${escHtml(a.name||'')}${a.type ? `<span class="ability-type">${escHtml(a.type)}</span>` : ''}</div>
-      ${a.damage ? `<div class="ability-desc"><strong>Damage:</strong> ${escHtml(a.damage)}</div>` : ''}
-      ${a.description ? `<div class="ability-desc">${escHtml(a.description)}</div>` : ''}
-    </div>`;
-  });
+  const cards = abilities.map((a) => canWrite ? attackEditHtml(a) : attackReadHtml(a));
 
   if (!abilities.length) {
     cards.push(`<div class="ability-card locked"><div class="ability-name">No attacks recorded</div></div>`);
@@ -590,9 +572,125 @@ function renderAttacksTab(c) {
 
   if (canWrite) {
     cards.push(`<button class="add-attack-btn" onclick="onAttackAdd()">+ Add attack</button>`);
+    cards.push(attackDatalists());
   }
 
   tabContent.innerHTML = cards.join('');
+}
+
+/* ── Attack cards ──────────────────────────────────────────
+   Every structured field below is optional and additive. Older
+   attacks carry all of this inside `description` as prose, and are
+   left exactly as written — an attack with no range/damage renders
+   the same way it always did, just without the chip row.
+
+   `type` stays a free-text input rather than becoming a <select>:
+   real entries look like "Action; costs 2 Heat Points", which a
+   fixed option list would silently discard. The datalist offers the
+   common values without constraining what can be typed.
+   ───────────────────────────────────────────────────────────── */
+
+const ATTACK_COSTS = ['Action', 'Bonus Action', 'Reaction', 'Free Action', 'Full-turn Action', 'Passive'];
+const DAMAGE_TYPES = ['bludgeoning','piercing','slashing','fire','cold','lightning','thunder',
+                      'acid','poison','radiant','necrotic','force','psychic'];
+const SAVE_ABILITIES = ['STR','DEX','CON','INT','WIS','CHA','TECH'];
+
+function attackDatalists() {
+  // Emitted once per render, shared by every card on the page.
+  return `
+    <datalist id="dl-attack-cost">${ATTACK_COSTS.map(v => `<option value="${v}">`).join('')}</datalist>
+    <datalist id="dl-damage-type">${DAMAGE_TYPES.map(v => `<option value="${v}">`).join('')}</datalist>`;
+}
+
+function attackEditHtml(a) {
+  const id = escHtml(a.id);
+  const hitMode = a.hitMode || (a.saveAbility ? 'save' : a.attackBonus ? 'attack' : '');
+  const f = (field, val) => `oninput="onAttackEdit('${id}','${field}',this.value)"` + ` value="${escHtml(val || '')}"`;
+  return `
+    <div class="ability-card ability-card-editable">
+      <div class="ability-edit-row">
+        <input class="ability-input ability-input-name" placeholder="Attack name" ${f('name', a.name)}>
+        <button class="icon-btn ability-delete-btn" title="Delete attack" aria-label="Delete attack" onclick="onAttackDelete('${id}')">✕</button>
+      </div>
+
+      <div class="atk-grid">
+        <label class="atk-field">
+          <span>Cost</span>
+          <input class="ability-input" list="dl-attack-cost" placeholder="Action" ${f('type', a.type)}>
+        </label>
+        <label class="atk-field">
+          <span>Range</span>
+          <input class="ability-input" placeholder="80 ft / Melee" ${f('range', a.range)}>
+        </label>
+        <label class="atk-field">
+          <span>Damage</span>
+          <input class="ability-input atk-dice" placeholder="3d8" ${f('damage', a.damage)}>
+        </label>
+        <label class="atk-field">
+          <span>Damage type</span>
+          <input class="ability-input" list="dl-damage-type" placeholder="radiant" ${f('damageType', a.damageType)}>
+        </label>
+      </div>
+
+      <div class="atk-grid atk-grid-hit">
+        <label class="atk-field">
+          <span>Resolves as</span>
+          <select class="ability-input" onchange="onAttackEdit('${id}','hitMode',this.value)">
+            <option value=""       ${hitMode === ''       ? 'selected' : ''}>— none —</option>
+            <option value="attack" ${hitMode === 'attack' ? 'selected' : ''}>Attack roll</option>
+            <option value="save"   ${hitMode === 'save'   ? 'selected' : ''}>Saving throw</option>
+          </select>
+        </label>
+        ${hitMode === 'attack' ? `
+        <label class="atk-field">
+          <span>To hit</span>
+          <input class="ability-input atk-dice" placeholder="+5" ${f('attackBonus', a.attackBonus)}>
+        </label>` : ''}
+        ${hitMode === 'save' ? `
+        <label class="atk-field">
+          <span>Save</span>
+          <select class="ability-input" onchange="onAttackEdit('${id}','saveAbility',this.value)">
+            <option value="">—</option>
+            ${SAVE_ABILITIES.map(s => `<option value="${s}" ${a.saveAbility === s ? 'selected' : ''}>${s}</option>`).join('')}
+          </select>
+        </label>
+        <label class="atk-field">
+          <span>DC</span>
+          <input class="ability-input atk-dice" placeholder="15" ${f('saveDC', a.saveDC)}>
+        </label>` : ''}
+      </div>
+
+      <textarea class="ability-input ability-input-desc" rows="2" placeholder="Description — anything the fields above don't cover" oninput="onAttackEdit('${id}','description',this.value)">${escHtml(a.description||'')}</textarea>
+    </div>`;
+}
+
+function attackReadHtml(a) {
+  const id = escHtml(a.id);
+  const chips = [];
+  if (a.range)  chips.push(`<span class="atk-chip">▸ ${escHtml(a.range)}</span>`);
+  if (a.damage) chips.push(`<span class="atk-chip atk-chip-dmg">▸ ${escHtml(a.damage)}${a.damageType ? ' ' + escHtml(a.damageType) : ''}</span>`);
+  if (a.hitMode === 'attack' && a.attackBonus) chips.push(`<span class="atk-chip">▸ ${escHtml(a.attackBonus)} to hit</span>`);
+  if (a.hitMode === 'save' && (a.saveAbility || a.saveDC)) {
+    chips.push(`<span class="atk-chip">▸ ${escHtml(a.saveAbility || '')} save${a.saveDC ? ' DC ' + escHtml(a.saveDC) : ''}</span>`);
+  }
+
+  // Roll buttons appear only where there is something valid to roll, so an
+  // attack that only carries prose looks exactly as it did before.
+  const rolls = [];
+  if (a.hitMode === 'attack' && a.attackBonus && parseAttackBonus(a.attackBonus) !== null) {
+    rolls.push(`<button class="atk-roll" onclick="rollAttackToHit('${id}')" title="Roll d20 to hit">⬡ To hit</button>`);
+  }
+  if (a.damage && parseDiceExpr(a.damage)) {
+    rolls.push(`<button class="atk-roll atk-roll-dmg" onclick="rollAttackDamage('${id}')" title="Roll damage">⬡ ${escHtml(a.damage)}</button>`);
+  }
+
+  return `
+    <div class="ability-card">
+      <div class="ability-name">${escHtml(a.name||'')}${a.type ? `<span class="ability-type">${escHtml(a.type)}</span>` : ''}</div>
+      ${chips.length ? `<div class="atk-chips">${chips.join('')}</div>` : ''}
+      ${a.description ? `<div class="ability-desc">${escHtml(a.description)}</div>` : ''}
+      ${rolls.length ? `<div class="atk-rolls">${rolls.join('')}</div>` : ''}
+    </div>`;
 }
 
 // Attacks and inventory items are addressed by their stable id, never by array
@@ -613,6 +711,68 @@ function onAttackEdit(id, field, value) {
   if (!ability) return;
   ability[field] = value;
   scheduleCharSave(selected);
+  // Changing how an attack resolves swaps which inputs are relevant, so the
+  // card has to be rebuilt. Safe to re-render here and nowhere else in this
+  // handler: hitMode is driven by a <select>'s change event, which fires on
+  // commit rather than per keystroke, so no caret is lost.
+  if (field === 'hitMode') renderAttacksTab(selected);
+}
+
+/* ── Rolling an attack ─────────────────────────────────────
+   These reuse the page's existing dice pipeline rather than
+   duplicating it: the same history list, the same result panel,
+   and the same tumble animation the manual roller uses.
+   ───────────────────────────────────────────────────────────── */
+
+// "3d8", "2d6+3", "1d10 - 1" -> {count, sides, mod}, or null if unparseable.
+// Deliberately strict: anything it cannot read gets no Roll button at all,
+// rather than a button that silently rolls something wrong.
+function parseDiceExpr(raw) {
+  const m = String(raw || '').replace(/\s+/g, '').match(/^(\d{1,3})d(\d{1,3})([+-]\d{1,3})?$/i);
+  if (!m) return null;
+  const count = parseInt(m[1], 10), sides = parseInt(m[2], 10);
+  if (count < 1 || count > 100 || sides < 2) return null;
+  return { count, sides, mod: m[3] ? parseInt(m[3], 10) : 0 };
+}
+
+// "+5", "5", "-1" -> number, or null.
+function parseAttackBonus(raw) {
+  const m = String(raw || '').replace(/\s+/g, '').match(/^([+-]?\d{1,3})$/);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+// Rolls a parsed expression through the shared result/history path.
+// `label` is what shows in the history row, so an attack roll reads as
+// "Laser Beam — damage" rather than an anonymous "1d8".
+function rollParsed({ count, sides, mod }, label) {
+  const rolls = Array.from({ length: count }, () => Math.floor(Math.random() * sides) + 1);
+  const total = rolls.reduce((a, b) => a + b, 0) + mod;
+  const isCrit   = sides === 20 && count === 1 && rolls[0] === 20;
+  const isFumble = sides === 20 && count === 1 && rolls[0] === 1;
+  const entry = { label, rolls, mod, total, isCrit, isFumble };
+  diceHistory.unshift(entry);
+  if (diceHistory.length > 12) diceHistory.pop();
+  renderDiceResult(entry);
+  renderDiceHistory();
+  return entry;
+}
+
+function rollAttackToHit(id) {
+  const a = findAbility(id);
+  if (!a) return;
+  const bonus = parseAttackBonus(a.attackBonus);
+  if (bonus === null) return;
+  setView('dice');
+  rollParsed({ count: 1, sides: 20, mod: bonus }, `${a.name || 'Attack'} — to hit`);
+}
+
+function rollAttackDamage(id) {
+  const a = findAbility(id);
+  if (!a) return;
+  const expr = parseDiceExpr(a.damage);
+  if (!expr) return;
+  setView('dice');
+  rollParsed(expr, `${a.name || 'Attack'} — damage`);
 }
 
 function onAttackAdd() {
@@ -868,25 +1028,15 @@ function rollExpr() {
   const inp = document.getElementById('dice-expr-inp');
   const raw = (inp?.value || '').trim();
   if (!raw) return;
-  const m = raw.replace(/\s+/g,'').match(/^(\d+)d(\d+)([+-]\d+)?$/i);
-  if (!m) {
+  // Shares parseDiceExpr with the attack Roll buttons, so the two cannot
+  // drift on what counts as a valid expression.
+  const expr = parseDiceExpr(raw);
+  if (!expr) {
     document.getElementById('dice-result').innerHTML = `<div style="color:var(--red-text);font-size:13px;">Invalid expression — try "2d6+3"</div>`;
     return;
   }
-  const count = Math.min(parseInt(m[1]), 100);
-  const sides = parseInt(m[2]);
-  const mod = m[3] ? parseInt(m[3]) : 0;
-  if (count < 1 || sides < 2) return;
-  const rolls = Array.from({ length: count }, () => Math.floor(Math.random() * sides) + 1);
-  const total = rolls.reduce((a, b) => a + b, 0) + mod;
-  const isCrit = sides === 20 && count === 1 && rolls[0] === 20;
-  const isFumble = sides === 20 && count === 1 && rolls[0] === 1;
-  const label = `${count}d${sides}${mod>0?'+'+mod:mod<0?mod:''}`;
-  const entry = { label, rolls, mod, total, isCrit, isFumble };
-  diceHistory.unshift(entry);
-  if (diceHistory.length > 12) diceHistory.pop();
-  renderDiceResult(entry);
-  renderDiceHistory();
+  const { count, sides, mod } = expr;
+  rollParsed(expr, `${count}d${sides}${mod > 0 ? '+' + mod : mod < 0 ? mod : ''}`);
   inp.value = '';
 }
 

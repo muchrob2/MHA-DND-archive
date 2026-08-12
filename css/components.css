@@ -376,7 +376,10 @@
 
 .form-textarea, .edit-textarea { min-height: 90px; resize: vertical; line-height: 1.6; }
 
-.edit-label, .form-row > label, .filter-group-label, .detail-label {
+/* .form-row-quad nests its labels one level deeper, so the child
+   combinator above would miss them */
+.edit-label, .form-row > label, .form-row-quad label,
+.filter-group-label, .detail-label {
   display: block;
   margin-bottom: 5px;
   font-size: var(--fs-2xs);
@@ -527,3 +530,95 @@
 /* Auth widget styling lives in css/auth-widget.css — it must load on
    pages that have not yet been migrated to this stylesheet set, so it
    cannot live here. */
+
+/* ════════════════════════════════════════════════════════════
+   ATTACK STATBLOCK
+   Shared by the two ability editors — the Attacks tab in
+   CLASS-1A/relationships.html and the character dialog in
+   characters.html — so the same attack reads the same way in
+   both places.
+   ════════════════════════════════════════════════════════════ */
+
+/* read view: the at-a-glance stat row */
+.atk-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0 4px;
+}
+.atk-chip {
+  padding: 2px 9px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+.atk-chip-dmg {
+  color: var(--red-text);
+  background: var(--red-light);
+  border-color: color-mix(in srgb, var(--red) 34%, transparent);
+}
+
+/* read view: roll buttons */
+.atk-rolls { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.atk-roll {
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .03em;
+  white-space: nowrap;
+  color: var(--accent-text);
+  background: var(--accent-light);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  transition: background var(--dur-fast), color var(--dur-fast),
+              border-color var(--dur-fast), transform var(--dur-fast);
+}
+.atk-roll:hover  { color: var(--ink); background: var(--accent); border-color: var(--accent); }
+.atk-roll:active { transform: translateY(1px); }
+.atk-roll-dmg {
+  color: var(--red-text);
+  background: var(--red-light);
+  border-color: color-mix(in srgb, var(--red) 40%, transparent);
+}
+.atk-roll-dmg:hover { color: var(--ink); background: var(--red); border-color: var(--red); }
+
+/* edit view: the field grid.
+   auto-fit rather than a fixed column count so the same markup
+   collapses to one column on a phone without a media query. */
+.atk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(116px, 1fr));
+  gap: 8px;
+}
+.atk-grid + .atk-grid { margin-top: 8px; }
+.atk-grid-hit { grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); }
+
+.atk-field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.atk-field > span {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.atk-field .ability-input { width: 100%; }
+/* dice-notation and numeric fields get figures that line up */
+.atk-dice {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* the four-up row inside the characters.html dialog */
+.form-row-quad {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(116px, 1fr));
+  gap: 10px;
+}
+.form-row-quad > div { min-width: 0; }

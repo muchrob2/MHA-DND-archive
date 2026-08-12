@@ -339,9 +339,18 @@ function openFolder(id) {
 
 function quirkMechanicsHtml(mech) {
   if (!mech) return '';
-  const abilities = (mech.abilities || []).map(a =>
-    `<div style="margin-top:8px;"><strong>${escHtml(a.name)}</strong>${a.type ? ` <span style="color:var(--text-dim);">(${escHtml(a.type)})</span>` : ''}<div>${escHtml(a.description||'')}</div></div>`
-  ).join('');
+  const abilities = (mech.abilities || []).map(a => {
+    // Optional structured fields, shown as a chip row above the prose. An
+    // ability carrying only a description renders exactly as it always did.
+    const chips = [];
+    if (a.range)  chips.push(escHtml(a.range));
+    if (a.damage) chips.push(escHtml(a.damage) + (a.damageType ? ' ' + escHtml(a.damageType) : ''));
+    if (a.attackBonus) chips.push(escHtml(a.attackBonus) + ' to hit');
+    if (a.saveAbility || a.saveDC) chips.push(`${escHtml(a.saveAbility||'')} save${a.saveDC ? ' DC ' + escHtml(a.saveDC) : ''}`);
+    return `<div style="margin-top:8px;"><strong>${escHtml(a.name)}</strong>${a.type ? ` <span style="color:var(--text-dim);">(${escHtml(a.type)})</span>` : ''}`
+      + (chips.length ? `<div class="atk-chips">${chips.map(c => `<span class="atk-chip">▸ ${c}</span>`).join('')}</div>` : '')
+      + `<div>${escHtml(a.description||'')}</div></div>`;
+  }).join('');
   return `<div class="detail-section">
     <div class="detail-label">Quirk Mechanics${mech.source ? ` — ${escHtml(mech.source)}` : ''}</div>
     <div class="detail-body">
@@ -475,6 +484,7 @@ function characterFormHtml(c, defaultFolderId) {
       <div id="nc-abilities-list">
         ${abilities.map(a => abilityRowHtml(a)).join('')}
       </div>
+      <datalist id="dl-nc-damage-type">${['bludgeoning','piercing','slashing','fire','cold','lightning','thunder','acid','poison','radiant','necrotic','force','psychic'].map(v => `<option value="${v}">`).join('')}</datalist>
       <button type="button" class="action-btn add-ability-btn" onclick="addAbilityRow()">+ Add Ability</button>
     </div>
 
@@ -509,13 +519,28 @@ function characterFormHtml(c, defaultFolderId) {
   `;
 }
 
+// Keyed by the row's DOM counter, this holds the ability object each row was
+// built from. readCharacterForm() spreads it back so fields this form does not
+// render -- the stable `id` above all -- survive a save. Without it, editing a
+// character here stripped every id, and the next save from the Class 1-A
+// toolkit regenerated fresh ones, which is exactly the duplicate-item hazard
+// described in CLASS-1A/relationships.js (see genId / ensureCharIds).
+const abilityRowSource = new Map();
+
 function abilityRowHtml(a) {
   a = a || {};
   const id = abilityRowCount++;
+  abilityRowSource.set(String(id), a);
   return `<div class="ability-row" data-ability-id="${id}">
     <button type="button" class="ability-remove-btn" onclick="removeAbilityRow(${id})">✕</button>
     <div class="form-row"><label>Ability Name</label><input class="form-input" id="nc-ability-name-${id}" type="text" placeholder="e.g. Iron Claws" value="${escHtml(a.name||'')}"></div>
     <div class="form-row"><label>Type</label><input class="form-input" id="nc-ability-type-${id}" type="text" placeholder="e.g. Action, Bonus Action, Passive" value="${escHtml(a.type||'')}"></div>
+    <div class="form-row form-row-quad">
+      <div><label>Range</label><input class="form-input" id="nc-ability-range-${id}" type="text" placeholder="80 ft / Melee" value="${escHtml(a.range||'')}"></div>
+      <div><label>Damage</label><input class="form-input" id="nc-ability-dmg-${id}" type="text" placeholder="3d8" value="${escHtml(a.damage||'')}"></div>
+      <div><label>Dmg type</label><input class="form-input" id="nc-ability-dmgtype-${id}" type="text" list="dl-nc-damage-type" placeholder="radiant" value="${escHtml(a.damageType||'')}"></div>
+      <div><label>To hit / DC</label><input class="form-input" id="nc-ability-hit-${id}" type="text" placeholder="+5" value="${escHtml(a.attackBonus||'')}"></div>
+    </div>
     <div class="form-row"><label>Description</label><textarea class="form-textarea" id="nc-ability-desc-${id}" placeholder="What it does mechanically">${escHtml(a.description||'')}</textarea></div>
   </div>`;
 }
@@ -532,11 +557,28 @@ function readCharacterForm() {
   const abilityRows = [...document.querySelectorAll('#nc-abilities-list .ability-row')];
   const abilities = abilityRows.map(row => {
     const id = row.dataset.abilityId;
-    return {
-      name: document.getElementById(`nc-ability-name-${id}`).value.trim(),
-      type: document.getElementById(`nc-ability-type-${id}`).value.trim(),
-      description: document.getElementById(`nc-ability-desc-${id}`).value.trim(),
+    const val = (part) => (document.getElementById(`nc-ability-${part}-${id}`)?.value || '').trim();
+    // Spread the original first so anything this form does not render --
+    // notably the stable `id` used to merge these arrays across clients --
+    // is carried through rather than dropped on save.
+    const original = abilityRowSource.get(String(id)) || {};
+    const merged = {
+      ...original,
+      name: val('name'),
+      type: val('type'),
+      range: val('range'),
+      damage: val('dmg'),
+      damageType: val('dmgtype'),
+      attackBonus: val('hit'),
+      description: val('desc'),
     };
+    // Drop empty optional fields so untouched abilities don't gain a wall of
+    // empty strings the moment someone opens this dialog.
+    for (const k of ['range','damage','damageType','attackBonus','type']) {
+      if (!merged[k]) delete merged[k];
+    }
+    if (merged.attackBonus && !merged.hitMode) merged.hitMode = 'attack';
+    return merged;
   }).filter(a => a.name || a.description);
 
   const weakness = document.getElementById('nc-weakness').value.trim();

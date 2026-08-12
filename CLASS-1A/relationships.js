@@ -181,7 +181,9 @@ function applyRemoteRelBundle(data) {
     c._file = f; c._roster_id = rid; c._section = sec;
     ensureCharIds(c); // backfill in case this remote copy predates the id fix
   }
-  _lastSyncedRel = nextSyncBaseline(data, _lastSyncedRel, _dirtyCharFiles.keys());
+  // Cloned because the Object.assign above hands `data`'s sub-objects to the
+  // live characters — an uncloned baseline would alias them from here on.
+  _lastSyncedRel = fsCloneDoc(nextSyncBaseline(data, _lastSyncedRel, _dirtyCharFiles.keys()));
   renderSynced();
 }
 
@@ -946,7 +948,13 @@ function renderDiceHistory() {
   }
 
   for (const c of CHARACTERS) ensureCharIds(c);
-  if (fsBundle) _lastSyncedRel = fsBundle; // baseline for saveToFirestore's 3-way merge
+  // Baseline for saveToFirestore's 3-way merge — a *copy*, never fsBundle
+  // itself. The Object.assign above is a shallow copy, so every character's
+  // quirk_mechanics/inventory (and the attack and item objects inside them)
+  // are shared with fsBundle. Keeping fsBundle as the baseline would mean
+  // editing an attack also edits the baseline, and fsMergeSave would read that
+  // as "nothing changed here" and write the server's old copy back over it.
+  if (fsBundle) _lastSyncedRel = fsCloneDoc(fsBundle);
 
   CHARACTERS.sort((a, b) => {
     const si = SECTION_ORDER.indexOf(a._section) - SECTION_ORDER.indexOf(b._section);

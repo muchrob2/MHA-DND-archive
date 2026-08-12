@@ -101,6 +101,27 @@
     return result;
   }
 
+  // `lastSyncedDoc` is the 3-way baseline: "what this client last knew the
+  // server to hold". The merge tells an edit apart from an untouched item by
+  // comparing the local item against its baseline copy — so the baseline must
+  // be a *detached* snapshot. Storing the page's own live state as the
+  // baseline (`_lastSynced = data`, or anything shallow-copied out of it)
+  // aliases the two: editing an attack mutates the baseline in lockstep, the
+  // comparison below always reads "unchanged", and the server's older copy is
+  // written back over the edit. Adding an item is worse — it shows up in the
+  // baseline too, so the "only truly new items" rule drops it and the new item
+  // vanishes on save. Callers must clone with fsCloneDoc() whenever they set a
+  // baseline from live state; the value fsMergeSave *returns* is already a
+  // detached copy, safe to keep as the next baseline directly.
+  //
+  // These documents are plain JSON (no Dates, no Firestore Timestamps), so a
+  // JSON round-trip is a sufficient clone — and it drops undefined-valued keys
+  // exactly the way the JSON.stringify comparison below does.
+  function cloneDoc(doc) {
+    return doc == null ? doc : JSON.parse(JSON.stringify(doc));
+  }
+  window.fsCloneDoc = cloneDoc;
+
   window.fsMergeSave = async function (docRef, localDoc, lastSyncedDoc, idArrays) {
     idArrays = idArrays || [];
     await window.fbAuthReady;
@@ -153,7 +174,11 @@
       }
 
       tx.set(docRef, result);
-      return result;
+      // `result` still holds references to the caller's live objects (the
+      // idArrays loop pushes local items straight in). Hand back a detached
+      // copy so callers can store it as their next baseline without aliasing
+      // their own state — see cloneDoc above.
+      return cloneDoc(result);
     });
   };
 

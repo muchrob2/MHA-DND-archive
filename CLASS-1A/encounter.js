@@ -96,7 +96,7 @@ async function encLoad() {
       encounter.attackLog = encounter.attackLog || [];
       encounter.boardStrokes = encounter.boardStrokes || [];
       encounter.boardTerrain = encounter.boardTerrain || [];
-      _lastSyncedEncounter = encounter;
+      _lastSyncedEncounter = fsCloneDoc(encounter); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
       return;
     }
   } catch {}
@@ -128,7 +128,7 @@ function applyRemoteEncounter(data) {
   encounter.attackLog = encounter.attackLog || [];
   encounter.boardStrokes = encounter.boardStrokes || [];
   encounter.boardTerrain = encounter.boardTerrain || [];
-  _lastSyncedEncounter = data;
+  _lastSyncedEncounter = fsCloneDoc(data); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
   boardBumpArtVersion(); // invalidate the cached terrain/drawing layer — `encounter` was just replaced wholesale
   renderEncounter();
   renderAttackLog();

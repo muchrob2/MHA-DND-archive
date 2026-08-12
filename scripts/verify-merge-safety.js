@@ -29,7 +29,7 @@ const authPath = (path ? path.join(repoRoot, 'auth.js') : 'auth.js');
 const authSrc = readFile(authPath);
 
 const helpers = {};
-for (const name of ['isPlainObject', 'getAtPath', 'setAtPath', 'deepMergeLocalOverServer']) {
+for (const name of ['isPlainObject', 'getAtPath', 'setAtPath', 'deepMergeLocalOverServer', 'cloneDoc']) {
   const m = authSrc.match(new RegExp('function ' + name + '\\([\\s\\S]*?\\n  \\}'));
   if (!m) throw new Error('Could not find ' + name + '() in auth.js — has fsMergeSave changed shape?');
   eval(m[0]);
@@ -160,6 +160,61 @@ for (const name of ['mergeRemoteRels', 'nextSyncBaseline']) {
   const baseline = relHelpers.nextSyncBaseline(incoming, null, new Set(['new.json']));
   const ok = !('new.json' in baseline.characters);
   results.push(['sync baseline omits an unseen dirty character', ok]);
+})();
+
+// ── Baseline aliasing (the "edit an attack, hit Save, it reverts" bug) ──────
+// Scenarios 1-2 above deep-copy their inputs, so they never exercised the way
+// the *page* builds its baseline: relationships.js shallow-copies each
+// character out of the loaded bundle and then kept that same bundle as
+// _lastSyncedRel. Local and baseline were one object graph, so editing an
+// attack edited the baseline too, mergeCompute's changedLocally test read
+// "unchanged", and the server's older copy was written back over the edit.
+// These two build the baseline exactly the way the page does — sharing
+// sub-objects with the live copy unless cloneDoc() detaches it.
+const abilitiesPath = [{ path: ['characters', 'a.json', 'quirk_mechanics', 'abilities'], idKey: 'id' }];
+
+// Mirrors relationships.js's init: the client receives its own copy of the
+// server document, shallow-copies each character out of it (so sub-objects
+// stay shared with the received bundle), and takes a *cloned* baseline.
+// `server` stays a separate object graph throughout, as it really is.
+function loadLikeThePage(server) {
+  const bundle = JSON.parse(JSON.stringify(server)); // what Firestore handed this client
+  const live = Object.assign({}, bundle.characters['a.json']);
+  return { local: { characters: { 'a.json': live } }, baseline: helpers.cloneDoc(bundle), live };
+}
+function serverWithOneAttack() {
+  return { characters: { 'a.json': { quirk_mechanics: { abilities: [{ id: 'ab1', name: 'Punch' }] } } } };
+}
+
+// Scenario 7: an edit to an existing attack must reach the server, not be
+// reverted to the server's copy.
+(function editedAttackSurvivesSaveScenario() {
+  const server = serverWithOneAttack();
+  const { local, baseline, live } = loadLikeThePage(server);
+  live.quirk_mechanics.abilities[0].name = 'Super Punch';
+  const saved = mergeCompute(server, local, baseline, abilitiesPath);
+  const ok = saved.characters['a.json'].quirk_mechanics.abilities[0].name === 'Super Punch';
+  results.push(['edited attack survives its own save', ok]);
+})();
+
+// Scenario 8: a newly added attack must not be swallowed by the "only truly
+// new items get added" rule because it also appeared in an aliased baseline.
+(function addedAttackSurvivesSaveScenario() {
+  const server = serverWithOneAttack();
+  const { local, baseline, live } = loadLikeThePage(server);
+  live.quirk_mechanics.abilities.push({ id: 'ab2', name: 'Kick' });
+  const saved = mergeCompute(server, local, baseline, abilitiesPath);
+  const names = saved.characters['a.json'].quirk_mechanics.abilities.map(a => a.name).sort().join(',');
+  results.push(['newly added attack survives its own save', names === 'Kick,Punch']);
+})();
+
+// Scenario 9: fsMergeSave's return value is what every caller stores as its
+// next baseline, so it must not alias the local doc it was built from —
+// otherwise the *second* edit-then-save on a page hits scenario 7's bug again.
+(function returnedBaselineIsDetachedScenario() {
+  const src = readFile(authPath);
+  const returnsClone = /tx\.set\(docRef, result\);[\s\S]*?return cloneDoc\(result\);/.test(src);
+  results.push(['fsMergeSave returns a detached baseline', returnsClone]);
 })();
 
 let allPass = true;

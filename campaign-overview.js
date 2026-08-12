@@ -1435,7 +1435,7 @@ let _pendingRemoteScripts = null;
 function isScriptsEditing() { return scriptsManageMode; }
 function applyRemoteScripts(remote) {
   scriptsData = remote;
-  _lastSyncedScripts = remote;
+  _lastSyncedScripts = fsCloneDoc(remote); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
   const body = document.getElementById('body-sec-scripts');
   if (body) {
     renderScripts(scriptsData, body);
@@ -1560,7 +1560,7 @@ async function init() {
   if (scriptsSec && scriptsBody && scriptsResult && !scriptsResult.error) {
     try {
       scriptsData = scriptsResult;
-      _lastSyncedScripts = scriptsData;
+      _lastSyncedScripts = fsCloneDoc(scriptsData); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
       renderScripts(scriptsData, scriptsBody);
       const totalScripts = (scriptsData.categories||[]).reduce((a,c)=>a+(c.scripts?.length||0),0);
       document.getElementById('scripts-meta').textContent = (scriptsData.categories?.length||0)+' categories · '+totalScripts+' scripts';

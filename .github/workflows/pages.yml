@@ -40,6 +40,9 @@ jobs:
       - name: Verify Firestore merge-save safety
         run: node scripts/verify-merge-safety.js
 
+      - name: Verify relationship live-sync safety
+        run: node scripts/verify-relationship-sync.js
+
   deploy:
     needs: validate
     environment:

@@ -4,133 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Battle board — move your token on the tactical grid, measure range and see DM-marked terrain.">
-<meta name="theme-color" content="#0C1017">
+<meta name="theme-color" content="#08090D">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <title>Battle Board — MHA D&amp;D</title>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --board-scheme: dark;   /* read by board-shared.js to pick the grid palette */
-    --bg: #0C1017; --surface: #111923; --surface2: #18222E;
-    --border: rgba(255,255,255,0.07); --border-strong: rgba(255,255,255,0.14);
-    --text: #E8EDF3; --text-muted: #8A9BB0; --text-dim: #3E5068;
-    --accent: #E8A020; --accent-light: rgba(232,160,32,0.13); --accent-text: #F5C842;
-    --teal: #0EA572; --teal-light: rgba(14,165,114,0.13); --teal-text: #5FDBAA;
-    --red: #EF4444; --red-light: rgba(239,68,68,0.13); --red-text: #FCA5A5;
-    --radius: 8px; --radius-lg: 12px;
-    --gold-glow: rgba(232,160,32,0.15);
-    --nav-h: 48px;
-  }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; height: 100vh; overflow: hidden; }
-  #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-
-  /* ── Top nav ──────────────────────────────────────────── */
-  #topnav {
-    flex-shrink: 0; height: var(--nav-h);
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    display: flex; align-items: center;
-  }
-  #back-to-dash {
-    display: flex; align-items: center; gap: 5px; padding: 0 16px; height: 100%;
-    font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-dim);
-    text-decoration: none; border-right: 1px solid var(--border); white-space: nowrap; text-transform: uppercase;
-  }
-  #back-to-dash:hover { color: var(--accent); background: var(--accent-light); }
-  .nav-title { padding: 0 16px; font-size: 13px; font-weight: 800; color: var(--text); letter-spacing: 0.02em; }
-  .nav-right { display: flex; align-items: center; gap: 8px; padding: 0 16px; margin-left: auto; flex-shrink: 0; }
-
-  .enc-btn { padding: 5px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface2); color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; transition: border-color 0.1s, color 0.1s; }
-  .enc-btn:hover { border-color: var(--border-strong); color: var(--text); }
-  .enc-btn.danger { color: var(--red); border-color: rgba(239,68,68,0.3); }
-
-  /* ── Board (full-page, not a modal) ──────────────────── */
-  #board-page { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-  #board-header {
-    display: flex; align-items: center; padding: 10px 16px;
-    border-bottom: 1px solid var(--border); gap: 12px; flex-shrink: 0; flex-wrap: wrap;
-    background: linear-gradient(90deg, rgba(139,71,212,0.08) 0%, transparent 100%);
-  }
-  #board-distance-label { font-size: 13px; font-weight: 700; color: var(--gold,#E8A020); background: rgba(232,160,32,0.12); padding: 3px 12px; border-radius: 20px; border: 1px solid rgba(232,160,32,0.25); min-width: 140px; text-align: center; transition: opacity 0.2s; }
-  #board-body { flex: 1; display: flex; gap: 0; overflow: hidden; }
-  #board-tray {
-    width: 160px; flex-shrink: 0; border-right: 1px solid var(--border);
-    background: var(--bg); display: flex; flex-direction: column; overflow: hidden;
-  }
-  #board-tray-title { font-size: 9px; font-weight: 800; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 12px 6px; }
-  #board-tray-list { flex: 1; overflow-y: auto; padding: 4px 8px 8px; display: flex; flex-direction: column; gap: 5px; }
-  .board-tray-item {
-    display: flex; align-items: center; gap: 7px; padding: 6px 8px;
-    border-radius: 8px; cursor: pointer; border: 1px solid var(--border);
-    background: var(--surface); transition: border-color 0.1s, background 0.1s;
-    user-select: none;
-  }
-  .board-tray-item:hover { border-color: var(--accent); background: var(--accent-light); }
-  .board-tray-item.selected { border-color: var(--accent); background: var(--accent-light); box-shadow: 0 0 8px var(--gold-glow); }
-  .board-tray-item.is-dead { opacity: 0.4; }
-  .board-tray-item.read-only { cursor: default; opacity: 0.7; }
-  .board-tray-item.read-only:hover { border-color: var(--border); background: var(--surface); }
-  .board-tray-token { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
-  .board-tray-name { font-size: 11px; font-weight: 600; color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-  #board-grid-wrap { flex: 1; overflow: auto; display: flex; align-items: flex-start; justify-content: flex-start; padding: 16px; background: var(--bg); cursor: crosshair; }
-  #board-canvas { display: block; image-rendering: pixelated; touch-action: none; }
-  #board-footer { flex-shrink: 0; padding: 8px 18px; border-top: 1px solid var(--border); background: var(--surface2); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-  #board-hint { font-size: 11px; color: var(--text-dim); flex: 1; min-width: 160px; }
-  #board-footer .enc-btn.danger { flex-shrink: 0; }
-  #board-range-wrap {
-    display: flex; align-items: center; gap: 5px;
-    background: rgba(14,158,133,0.1); border: 1px solid rgba(14,158,133,0.3);
-    border-radius: 20px; padding: 3px 10px 3px 8px;
-  }
-  #board-range-icon { font-size: 14px; color: var(--teal,#0EA572); line-height: 1; }
-  #board-range-input {
-    width: 80px; background: transparent; border: none; outline: none;
-    color: var(--teal-text,#5FDBAA); font-size: 12px; font-weight: 700;
-    font-family: inherit;
-  }
-  #board-range-input::placeholder { color: rgba(95,219,170,0.4); font-weight: 400; }
-  #board-range-clear {
-    width: 16px; height: 16px; border: none; background: none;
-    color: rgba(95,219,170,0.5); font-size: 11px; cursor: pointer;
-    display: none; padding: 0; line-height: 1;
-  }
-  #board-range-clear:hover { color: var(--teal-text,#5FDBAA); }
-  #board-range-input:not(:placeholder-shown) ~ #board-range-clear { display: block; }
-  #board-zoom-wrap {
-    display: flex; align-items: center; gap: 4px;
-    background: var(--surface2); border: 1px solid var(--border-strong);
-    border-radius: 20px; padding: 2px 8px;
-  }
-  .board-zoom-btn {
-    width: 22px; height: 22px; border: none; background: none;
-    color: var(--text-muted); font-size: 16px; font-weight: 700;
-    cursor: pointer; line-height: 1; padding: 0; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .board-zoom-btn:hover { color: var(--text); background: var(--surface); }
-  #board-zoom-label { font-size: 11px; font-weight: 700; color: var(--text-muted); min-width: 34px; text-align: center; }
-  #board-legend { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 10px; color: var(--text-dim); }
-  .legend-swatch { display: inline-flex; align-items: center; gap: 4px; }
-  .legend-chip { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
-
-  /* ── Mobile ──────────────────────────────────────────── */
-  @media (max-width: 640px) {
-    body { height: 100dvh; }
-    #board-header { padding: 8px 10px; gap: 8px; }
-    #board-distance-label { min-width: 0; flex: 1; }
-    #board-legend { display: none; }
-    #board-body { flex-direction: column; }
-    #board-tray {
-      width: 100%; height: 26vh; flex-shrink: 0; border-right: none; border-bottom: 1px solid var(--border);
-    }
-    #board-tray-list { flex-direction: row; flex-wrap: wrap; overflow-y: auto; }
-    .board-tray-item { flex-direction: column; text-align: center; padding: 6px; }
-    .board-tray-token { width: 36px; height: 36px; font-size: 13px; }
-    .board-tray-name { max-width: 60px; }
-    #board-grid-wrap { padding: 8px; }
-    .board-zoom-btn { width: 32px; height: 32px; font-size: 18px; }
-    #board-range-clear { width: 22px; height: 22px; font-size: 14px; }
-  }
-</style>
+<link rel="preload" href="../css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/manga.css">
+<link rel="stylesheet" href="../css/board.css">
+<link rel="stylesheet" href="../css/pages/board.css">
 <link rel="stylesheet" href="../css/auth-widget.css">
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>

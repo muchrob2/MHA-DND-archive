@@ -277,8 +277,14 @@ function boardFitZoom() {
   const wrap = document.getElementById('board-grid-wrap');
   const bbox = boardComputeBBox();
   if (wrap) {
-    const availW = wrap.clientWidth  - 32;
-    const availH = wrap.clientHeight - 32;
+    // Measure the wrapper's actual padding rather than assuming 16px a side.
+    // This was hardcoded as `- 32`, which silently mis-fit on mobile, where
+    // css/board.css drops #board-grid-wrap to 8px of padding.
+    const cs = getComputedStyle(wrap);
+    const padX = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight)  || 0);
+    const padY = (parseFloat(cs.paddingTop)  || 0) + (parseFloat(cs.paddingBottom) || 0);
+    const availW = wrap.clientWidth  - padX;
+    const availH = wrap.clientHeight - padY;
     const cols = bbox.maxC - bbox.minC + 1, rows = bbox.maxR - bbox.minR + 1;
     const fit = Math.min(availW / (cols * CELL_BASE), availH / (rows * CELL_BASE));
     boardZoom = Math.max(Math.min(+fit.toFixed(4), 3), 0.25);

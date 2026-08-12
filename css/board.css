@@ -1,0 +1,236 @@
+/* ============================================================
+   board.css — the tactical grid component.
+
+   Shared verbatim by CLASS-1A/board.html (full-page) and
+   CLASS-1A/encounter.html (inside a modal). These ~60 lines were
+   previously copy-pasted between the two files; board-shared.js
+   was already the precedent for sharing between them.
+
+   ╔══════════════════════════════════════════════════════════╗
+   ║  LOAD-BEARING, NOT DECORATIVE                            ║
+   ║                                                          ║
+   ║  #board-canvas needs display:block and touch-action:none ║
+   ║  — the touch handlers register {passive:false} and call  ║
+   ║  preventDefault(); without it mobile drag/pinch fights    ║
+   ║  browser scroll.                                          ║
+   ║                                                          ║
+   ║  The canvas must NEVER get a percentage or max-width      ║
+   ║  size. board-shared.js computes scroll, pan and pinch in  ║
+   ║  CANVAS-pixel units (:272-273, :777-778, :985-986), so    ║
+   ║  CSS-scaling it desyncs fit/centre/pan while hit-testing  ║
+   ║  keeps working — a silent, very confusing failure. This   ║
+   ║  is why css/base.css excludes canvas from its media       ║
+   ║  reset.                                                   ║
+   ║                                                          ║
+   ║  #board-grid-wrap must stay flex:1 + overflow:auto inside ║
+   ║  a bounded flex column, or clientHeight collapses to 0    ║
+   ║  and boardFitZoom produces a garbage zoom.                ║
+   ║                                                          ║
+   ║  NOTHING from manga.css may be applied here or to any     ║
+   ║  ancestor. A halftone layer, backdrop-filter or animated  ║
+   ║  pseudo-element over the canvas lands directly on drag    ║
+   ║  framerate. The manga treatment on these two pages is     ║
+   ║  limited to nav, tray and chrome.                         ║
+   ╚══════════════════════════════════════════════════════════╝
+   ============================================================ */
+
+#board-body { flex: 1; display: flex; gap: 0; overflow: hidden; }
+
+/* ── token tray ── */
+#board-tray {
+  width: 160px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+}
+#board-tray-title {
+  padding: 10px 12px 6px;
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+#board-tray-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px 8px 8px;
+  overflow-y: auto;
+}
+
+/* surface comes from the .panel alias in components.css */
+.board-tray-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+}
+.board-tray-item:hover    { border-color: var(--accent); background: var(--accent-light); }
+.board-tray-item.selected { border-color: var(--accent); background: var(--accent-light); box-shadow: 0 0 8px var(--gold-glow); }
+.board-tray-item.is-dead  { opacity: .4; }
+
+.board-tray-token {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+}
+.board-tray-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+}
+
+/* ── the grid itself ── */
+#board-grid-wrap {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow: auto;
+  padding: 16px;              /* boardFitZoom reads this back — see board-shared.js */
+  background: var(--bg);
+  cursor: crosshair;
+}
+#board-canvas {
+  display: block;
+  image-rendering: pixelated;
+  touch-action: none;
+}
+
+/* ── footer controls ── */
+#board-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 8px 18px;
+  background: var(--surface2);
+  border-top: 1px solid var(--border);
+}
+#board-hint { flex: 1; min-width: 160px; font-size: var(--fs-2xs); color: var(--text-dim); }
+#board-footer .enc-btn.danger { flex-shrink: 0; }
+
+#board-distance-label {
+  min-width: 140px;
+  padding: 3px 12px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-text);
+  background: var(--accent-light);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: 20px;
+  transition: opacity var(--dur);
+}
+
+#board-range-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px 3px 8px;
+  background: var(--teal-light);
+  border: 1px solid color-mix(in srgb, var(--teal) 34%, transparent);
+  border-radius: 20px;
+}
+#board-range-icon { font-size: var(--fs-lg); line-height: 1; color: var(--teal); }
+#board-range-input {
+  width: 80px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--teal-text);
+}
+#board-range-input::placeholder { color: color-mix(in srgb, var(--teal-text) 45%, transparent); font-weight: 400; }
+#board-range-clear {
+  display: none;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  line-height: 1;
+  font-size: var(--fs-2xs);
+  color: color-mix(in srgb, var(--teal-text) 55%, transparent);
+  background: none;
+  border: none;
+}
+#board-range-clear:hover { color: var(--teal-text); }
+#board-range-input:not(:placeholder-shown) ~ #board-range-clear { display: block; }
+
+#board-zoom-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border-strong);
+  border-radius: 20px;
+}
+.board-zoom-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  line-height: 1;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-radius: 50%;
+}
+.board-zoom-btn:hover { color: var(--text); background: var(--surface); }
+#board-zoom-label {
+  min-width: 34px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+/* ── mobile ── */
+@media (max-width: 640px) {
+  #board-body { flex-direction: column; }
+  #board-tray {
+    width: 100%;
+    height: 26vh;
+    flex-shrink: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  #board-tray-list { flex-direction: row; flex-wrap: wrap; overflow-y: auto; }
+  .board-tray-item { flex-direction: column; text-align: center; padding: 6px; }
+  .board-tray-token { width: 36px; height: 36px; font-size: var(--fs-sm); }
+  .board-tray-name { max-width: 60px; }
+  /* boardFitZoom measures this padding at runtime, so the two stay in step */
+  #board-grid-wrap { padding: 8px; }
+  .board-zoom-btn { width: 32px; height: 32px; font-size: var(--fs-xl); }
+  #board-range-clear { width: 22px; height: 22px; font-size: var(--fs-sm); }
+  #board-distance-label { min-width: 0; flex: 1; }
+}

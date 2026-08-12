@@ -1,51 +1,178 @@
-/* Shared theme for the "document" family of pages — campaigns.html and
-   campaign-overview.html. These are the light, prefers-color-scheme-aware
-   reference pages (as opposed to the dark, fixed-palette tool pages like
-   index.html/characters.html/CLASS-1A/*.html, which are a deliberately
-   different visual family and are not unified with this one).
+/* ============================================================
+   theme-doc.css — chrome for the two "document" pages,
+   campaigns.html and campaign-overview.html.
 
-   This file holds only what was verified byte-for-byte identical between
-   the two pages: base design tokens, the dark-mode override, and the
-   sticky-nav component set. Each page still defines its own additional
-   :root custom properties on top of this (extra accent colors, per-page
-   layout rules) inline — CSS lets multiple :root blocks coexist, so this
-   just supplies the shared base.
-*/
+   These are the long-form reading pages, and they stay a
+   deliberately separate reading surface from the dark tool
+   pages: prose is easier to read on light, and a campaign
+   should look like a printed adventure module rather than a
+   dashboard. The token scope lives in css/tokens.css under
+   .theme-doc, which both pages carry on <body>.
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+   What is shared here is the navy chrome. The parchment module
+   component itself is in css/pages/campaigns.css, since only
+   campaigns.html renders one.
 
-:root {
-  --bg: #f7f6f4; --surface: #ffffff; --surface2: #f1f0ee;
-  --border: rgba(0,0,0,0.10); --border-strong: rgba(0,0,0,0.18);
-  --text: #1a1a1a; --text-muted: #5f5e5a; --text-dim: #9a9890;
-  --primary: #1D3461; --primary-light: #E6ECF5; --primary-text: #1D3461;
-  --gold: #B8860B; --gold-light: #FEF6DB; --gold-text: #7A5A05;
-  --hero-red: #CC2936; --hero-red-light: #FAEAEA; --hero-red-text: #8B1220;
-  --teal: #1D9E75; --teal-light: #E1F5EE; --teal-text: #085041;
-  --radius: 8px; --radius-lg: 12px; --nav-h: 44px;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #161614; --surface: #1f1f1d; --surface2: #282826;
-    --border: rgba(255,255,255,0.09); --border-strong: rgba(255,255,255,0.16);
-    --text: #e8e7e4; --text-muted: #a8a7a3; --text-dim: #6a6965;
-    --primary-light: #0D1929; --primary-text: #7BAFD4;
-    --gold-light: #1f1500; --gold-text: #E6B84A;
-    --hero-red-light: #2a0a0e; --hero-red-text: #F4737A;
-    --teal-light: #04342C; --teal-text: #9FE1CB;
-  }
+   This file previously held only what was verified byte-for-byte
+   identical between the two pages. Now that both consume the
+   shared component set, it holds the navy nav overrides that
+   components.css cannot express generically.
+   ============================================================ */
+
+/* ── Aged paper ground ───────────────────────────────────────
+   Two very low-contrast tints plus a fine fibre texture, so the
+   page reads as stock rather than flat #fff. Fixed attachment
+   keeps it from swimming while scrolling long chapters.
+   ─────────────────────────────────────────────────────────── */
+body.theme-doc {
+  font-family: var(--font-ui);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 12% 8%,  rgba(168,118,26,.055), transparent 55%),
+    radial-gradient(ellipse at 88% 92%, rgba(122,32,32,.045), transparent 55%);
+  background-attachment: fixed;
 }
 
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+/* ════════════════════════════════════════════════════════════
+   NAVY NAV — overrides the dark-surface nav in components.css
+   ════════════════════════════════════════════════════════════ */
 
-/* ── Sticky nav ── */
-#topnav { position: sticky; top: 0; z-index: 100; display: flex; align-items: stretch; background: var(--primary); height: var(--nav-h); box-shadow: 0 2px 8px rgba(29,52,97,0.3); }
-#back-btn { display: flex; align-items: center; gap: 6px; padding: 0 16px; font-size: 13px; color: rgba(255,255,255,0.65); text-decoration: none; border-right: 1px solid rgba(255,255,255,0.12); white-space: nowrap; flex-shrink: 0; }
-#back-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
-#loading { display: flex; align-items: center; justify-content: center; padding: 80px 0; color: var(--text-dim); font-size: 13px; }
-.nav-right { display: flex; align-items: center; gap: 8px; padding: 0 16px; flex-shrink: 0; }
-.nav-btn { padding: 5px 11px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid rgba(255,255,255,0.22); background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75); transition: background 0.1s, color 0.1s, border-color 0.1s; white-space: nowrap; }
-.nav-btn:hover { color: #fff; background: rgba(255,255,255,0.16); }
-.nav-btn.active { background: rgba(232,160,32,0.3); color: #fff; border-color: rgba(232,160,32,0.55); }
-.nav-saved { font-size: 11px; color: #fff; opacity: 0; transition: opacity 0.4s; white-space: nowrap; }
-.nav-saved.show { opacity: 1; }
+.theme-doc #topnav {
+  background: var(--primary);
+  border-bottom: none;
+  box-shadow: 0 2px 10px rgba(29,52,97,.32);
+}
+/* the hub's gold underline would fight the navy bar */
+.theme-doc #topnav::after {
+  background: linear-gradient(90deg, var(--gold) 0%, rgba(184,134,11,.35) 42%, transparent 100%);
+  height: 2px;
+}
+
+.theme-doc #back-btn {
+  color: rgba(255,255,255,.68);
+  border-right: 1px solid rgba(255,255,255,.14);
+}
+.theme-doc #back-btn:hover { color: #fff; background: rgba(255,255,255,.09); }
+
+.theme-doc .nav-title { color: #fff; }
+
+.theme-doc .nav-btn {
+  color: rgba(255,255,255,.78);
+  background: rgba(255,255,255,.09);
+  border-color: rgba(255,255,255,.22);
+}
+.theme-doc .nav-btn:hover  { color: #fff; background: rgba(255,255,255,.17); }
+.theme-doc .nav-btn.active { color: var(--ink); background: var(--gold); border-color: var(--gold); }
+.theme-doc .nav-btn.save-btn {
+  color: #fff;
+  background: rgba(29,158,117,.34);
+  border-color: rgba(29,158,117,.55);
+}
+
+.theme-doc .nav-saved     { color: #fff; }
+.theme-doc .nav-saved.err { color: #FFC4C4; }
+
+/* The auth widget sits inside the navy bar rather than on the page
+   surface, so it needs the same translucent-white treatment. This
+   replaces the identical !important block that campaigns.html and
+   campaign-overview.html each used to carry inline. */
+.theme-doc #topnav #auth-status,
+.theme-doc #topnav #auth-signin-btn,
+.theme-doc #topnav #auth-signout-btn,
+.theme-doc #topnav #auth-admin-link {
+  color: rgba(255,255,255,.78);
+  background: rgba(255,255,255,.09);
+  border-color: rgba(255,255,255,.22);
+}
+.theme-doc #topnav #auth-signin-btn:hover,
+.theme-doc #topnav #auth-signout-btn:hover,
+.theme-doc #topnav #auth-admin-link:hover { color: #fff; background: rgba(255,255,255,.17); }
+
+/* ── breadcrumb bar (campaigns.html) ── */
+.crumb-bar {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 8px;
+  padding: 0 16px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.crumb-link {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: rgba(255,255,255,.85);
+  text-decoration: none;
+}
+.crumb-link:hover { color: #fff; }
+.crumb-sep { margin: 0 2px; color: rgba(255,255,255,.4); }
+#crumb-campaign { font-size: var(--fs-sm); color: rgba(255,255,255,.6); }
+
+/* ── anchor bar (campaign-overview.html) ── */
+.anchor-bar {
+  display: flex;
+  flex: 1;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.anchor-bar::-webkit-scrollbar { display: none; }
+.anchor-btn {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  padding: 0 16px;
+  white-space: nowrap;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: rgba(255,255,255,.62);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color var(--dur-fast), background var(--dur-fast);
+}
+.anchor-btn .anchor-icon { font-size: var(--fs-xs); opacity: .85; }
+.anchor-btn:hover  { color: rgba(255,255,255,.95); background: rgba(255,255,255,.07); }
+.anchor-btn.active { color: #fff; background: rgba(255,255,255,.11); border-bottom-color: var(--gold); }
+
+/* ════════════════════════════════════════════════════════════
+   SHARED PROSE PRIMITIVES
+   ════════════════════════════════════════════════════════════ */
+
+/* Headings on the document pages use the book serif, not the
+   manga display face — these pages do not load manga.css. */
+.theme-doc h1,
+.theme-doc h2,
+.theme-doc h3,
+.theme-doc h4 {
+  font-family: var(--font-book);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.2;
+}
+
+/* components.css uppercases the chip family, which reads well on the
+   tool pages but fights the book voice here — a quirk tagged
+   "Emitter" should not shout. Labels and kickers keep their caps;
+   only the content-bearing pills revert. */
+.theme-doc .chip,
+.theme-doc .tag,
+.theme-doc .tag-chip,
+.theme-doc .module-chip,
+.theme-doc .filter-pill,
+.theme-doc .tier-badge {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* decorative rule, used between major sections */
+.doc-rule {
+  height: 0;
+  margin: 26px 0;
+  border: none;
+  border-top: 3px double var(--accent);
+  opacity: .55;
+}
+
+.theme-doc :focus-visible { outline-color: var(--primary); }

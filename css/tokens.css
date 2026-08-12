@@ -79,7 +79,12 @@
   --red:         var(--hero-crimson);
   --red-light:   rgba(255,46,77,.14);
   --red-text:    #FF8A9C;
-  --hero-red:    var(--hero-crimson);
+  /* the document pages spell this family --hero-red-*; the tool pages
+     spell it --red-*. Both resolve to one colour rather than either
+     being renamed, since JS references both. */
+  --hero-red:       var(--hero-crimson);
+  --hero-red-light: var(--red-light);
+  --hero-red-text:  var(--red-text);
 
   --green:       var(--hero-green);
   --green-light: rgba(61,220,100,.14);
@@ -213,7 +218,9 @@
   --red:         #B62030;
   --red-light:   #F8E3E3;
   --red-text:    #7E1120;
-  --hero-red:    var(--red);
+  --hero-red:       var(--red);
+  --hero-red-light: var(--red-light);
+  --hero-red-text:  var(--red-text);
 
   --green:       #3F7D22;
   --green-light: #E6F2DC;
@@ -262,4 +269,41 @@
   --shadow-soft:      0 4px 20px rgba(92,64,32,.16);
 
   --board-scheme: light;
+}
+
+/* The document pages were prefers-color-scheme aware before this refactor.
+   Their CHROME still is — only the tokens below flip. The parchment reading
+   surface itself (.module in css/pages/campaigns.css) deliberately pins its
+   own colours and stays paper in both, because that is the whole point of
+   it: a campaign should always read like a printed adventure module. */
+@media (prefers-color-scheme: dark) {
+  .theme-doc {
+    --bg:            #14120F;
+    --surface:       #1D1A16;
+    --surface2:      #262219;
+    --surface3:      #322D22;
+    --border:        rgba(255,255,255,.10);
+    --border-strong: rgba(255,255,255,.20);
+
+    --text:       #EDE7DC;
+    --text-muted: #ABA394;
+    --text-dim:   #7A7263;
+
+    --accent-light: #241A05;
+    --accent-text:  #E8B94A;
+    --gold-light:   var(--accent-light);
+    --gold-text:    var(--accent-text);
+
+    --red-light:   #2C0D10;  --red-text:   #F3868F;
+    --green-light: #12240A;  --green-text: #A8D485;
+    --amber-light: #2A1B05;  --amber-text: #F0C070;
+    --teal-light:  #05271F;  --teal-text:  #86D8BE;
+
+    --primary-light: #0F1B2E;
+    --primary-text:  #8FB2E0;
+    --purple-light:  #1E1329;
+    --purple-text:   #C2A0E4;
+
+    --board-scheme: dark;
+  }
 }

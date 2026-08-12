@@ -50,9 +50,13 @@
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+/* Animates opacity, not box-shadow. A repeating box-shadow animation
+   repaints on every frame for as long as it runs, and this one runs
+   forever on the encounter page — including while it sits behind the
+   board modal, competing with canvas drag. Opacity composites. */
 @keyframes mg-pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 var(--gold-glow); }
-  50%      { box-shadow: 0 0 0 7px transparent; }
+  0%, 100% { opacity: .25; }
+  50%      { opacity: .75; }
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -283,5 +287,16 @@
 .mg-stagger > *:nth-child(6) { animation-delay: 200ms; }
 .mg-stagger > *:nth-child(n+7) { animation-delay: 240ms; }
 
-/* current turn in the initiative tracker earns a heartbeat */
-.enc-row.current-turn { animation: mg-pulse-glow 2.4s ease-in-out infinite; }
+/* Current turn in the initiative tracker earns a heartbeat — carried by a
+   pseudo-element so only its opacity animates, leaving the row itself
+   (and the canvas that may be composited above it) untouched. */
+.enc-row.current-turn { position: relative; }
+.enc-row.current-turn::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  border: 2px solid var(--accent);
+  border-radius: inherit;
+  animation: mg-pulse-glow 2.4s ease-in-out infinite;
+}

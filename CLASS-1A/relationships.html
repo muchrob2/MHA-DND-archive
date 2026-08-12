@@ -530,17 +530,28 @@ function ensureCharIds(c) {
 const FS_REL_DOC = db.collection(FS_COLLECTION).doc(FS_DOC);
 let _lastSyncedRel = null;
 // True only while a manual save triggered by the Save button is actually in
-// flight (not while edits are merely pending) — kept separate from _relDirty
-// so isProfileEditing() can tell "unsaved" apart from "actively writing".
+// flight (not while edits are merely pending).
 let _relSavePending = false;
-// True from the moment any field is edited until the Save button is clicked
-// and the save lands. Saves here are manual, not auto — see scheduleFirestoreSave
-// below — so this flag has to cover the whole "I have edits you don't know
-// about yet" window, however long the user takes to hit Save, not just a
-// brief debounce. Without it, a remote snapshot arriving while edits are
-// sitting unsaved would wholesale-overwrite the character (via Object.assign
-// in applyRemoteRelBundle) and silently revert them.
-let _relDirty = false;
+
+// What has unsaved local edits, tracked per field rather than as one global
+// "dirty" boolean. Saving here is manual (the Save button), so this window is
+// unbounded — it lasts however long the user takes to click Save. A single
+// boolean couldn't express "this one note is unsaved, everything else is safe
+// to sync", so any incoming snapshot had to be either applied wholesale
+// (reverting the edit) or blocked wholesale (going stale). Tracking per field
+// lets applyRemoteRelBundle take remote data for everything *except* the exact
+// fields the user is still working on.
+//
+// Each entry maps to a monotonic edit sequence number rather than being a bare
+// set member. That matters: if you edit the same note twice — once before
+// clicking Save and once while the save is still in flight — a set has no way
+// to tell those apart, so clearing the key on completion would mark the second,
+// never-written edit clean. The sequence number lets manualSaveRelationships
+// clear only entries that haven't been touched since it captured them.
+let _editSeq = 0;
+let _dirtyRelKeys   = new Map();  // "fromId:toId" -> edit seq
+let _dirtyCharFiles = new Map();  // c._file       -> edit seq
+function isDirty() { return _dirtyRelKeys.size > 0 || _dirtyCharFiles.size > 0; }
 
 async function saveToFirestore() {
   await fbAuthReady;
@@ -564,80 +575,179 @@ async function loadFromFirestore() {
 
 // Live feed: pull in other tabs' character/relationship saves so this tab's
 // local copy never goes stale and clobbers them on its own next save.
-let _pendingRemoteRelBundle = null;
-function isProfileEditing() {
-  if (_relSavePending || _relDirty) return true;
-  const tag = document.activeElement?.tagName;
-  if (tag !== 'INPUT' && tag !== 'TEXTAREA') return false;
-  return !!document.activeElement.closest('#profile, #view-relationships');
+//
+// Incoming snapshots used to be parked in a "pending" variable while the user
+// was editing, then applied once that guard cleared. That was the bug: the
+// parked bundle was never invalidated when a local save superseded it, so
+// clicking Save (which cleared the guard) applied a bundle that predated the
+// save and reverted the edit. There is no parking any more — the merge below
+// is safe to run at any time because it never overwrites a field listed in
+// _dirtyRelKeys/_dirtyCharFiles, so a snapshot can be applied the moment it
+// arrives. Only the *render* is deferred, and only to protect the caret.
+let _pendingRender = false;
+
+// Re-rendering replaces innerHTML, which destroys the caret and any half-typed
+// text in the field being edited. This gates rendering only, never the data
+// merge. (The old version tested for '#view-relationships', an id that exists
+// nowhere in this repo — so for the relationship notes, which live in
+// #rel-section, this check silently always returned false.)
+function isFieldFocused() {
+  const el = document.activeElement;
+  const tag = el?.tagName;
+  if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') return false;
+  return !!el.closest('#profile, #rel-section');
 }
-function applyRemoteRelBundle(data) {
-  rels = data.relationships || {};
-  for (const c of CHARACTERS) {
-    if (c._file && data.characters?.[c._file]) {
-      const f = c._file, rid = c._roster_id, sec = c._section;
-      Object.assign(c, data.characters[c._file]);
-      c._file = f; c._roster_id = rid; c._section = sec;
-      ensureCharIds(c); // backfill in case this remote copy predates the id fix
-    }
+
+// Remote wins for every key except the ones holding unsaved local edits.
+// `dirtyKeys` is any iterable of key strings (callers pass a Map's .keys()).
+// Kept as a pure top-level function so scripts/verify-merge-safety.js can
+// extract and test it: this apply-remote path is where the "my typing gets
+// undone" bug lived, and it previously had no test coverage at all.
+function mergeRemoteRels(localRels, incomingRels, dirtyKeys) {
+  const merged = Object.assign({}, incomingRels);
+  for (const k of dirtyKeys) {
+    if (Object.prototype.hasOwnProperty.call(localRels, k)) merged[k] = localRels[k];
   }
-  _lastSyncedRel = data; // keeps saveToFirestore's 3-way merge comparing against what's actually on the server
-  if (selected) renderProfile();
+  return merged;
+}
+
+// _lastSyncedRel is fsMergeSave's 3-way baseline — "what this client has seen
+// on the server". It must only advance for characters we actually applied. If
+// it claimed we'd seen a remote-added ability that our (skipped, still dirty)
+// local copy lacks, the next merge would read that absence as "this client
+// deleted it" and drop another player's attack. `dirtyCharFiles` is any
+// iterable of filenames. Pure + top-level so scripts/verify-merge-safety.js
+// can test that edge case.
+function nextSyncBaseline(data, prevBaseline, dirtyCharFiles) {
+  const characters = Object.assign({}, data.characters);
+  for (const f of dirtyCharFiles) {
+    const prev = prevBaseline?.characters?.[f];
+    if (prev === undefined) delete characters[f];
+    else characters[f] = prev;
+  }
+  return Object.assign({}, data, { characters });
+}
+
+function applyRemoteRelBundle(data) {
+  rels = mergeRemoteRels(rels, data.relationships || {}, _dirtyRelKeys.keys());
+
+  for (const c of CHARACTERS) {
+    if (!c._file || !data.characters?.[c._file]) continue;
+    if (_dirtyCharFiles.has(c._file)) continue; // unsaved local edits — leave it alone
+    const f = c._file, rid = c._roster_id, sec = c._section;
+    Object.assign(c, data.characters[c._file]);
+    c._file = f; c._roster_id = rid; c._section = sec;
+    ensureCharIds(c); // backfill in case this remote copy predates the id fix
+  }
+  _lastSyncedRel = nextSyncBaseline(data, _lastSyncedRel, _dirtyCharFiles.keys());
+  renderSynced();
+}
+
+function renderSynced() {
+  if (isFieldFocused()) { _pendingRender = true; return; }
+  _pendingRender = false;
+  if (!selected) return;
+  renderProfile();
   renderRelationships();
   refreshSidebar();
 }
+
+// Split out of the listener so scripts/verify-relationship-sync.js can drive
+// it directly, without needing a live Firestore connection.
+function handleRelSnapshot(snap) {
+  if (!snap.exists) return;
+  // A cached snapshot is this tab's own stale copy, not news from the server,
+  // and must never be applied as if it were. When Firestore's streaming
+  // channel is blocked (Safari tracking protection, content blockers, some
+  // proxies) the write transport keeps working while the listener goes offline
+  // and replays cache — so a save would commit successfully and then be
+  // visibly "undone" by data older than the write. Wait for a server-confirmed
+  // snapshot instead.
+  if (snap.metadata?.fromCache) return;
+  const data = snap.data();
+  if (data.version !== 1 || !data.characters) return;
+  applyRemoteRelBundle(data);
+}
+
 async function startRelLiveSync() {
   await fbAuthReady;
-  FS_REL_DOC.onSnapshot(snap => {
-    if (!snap.exists) return;
-    const data = snap.data();
-    if (data.version !== 1 || !data.characters) return;
-    if (isProfileEditing()) { _pendingRemoteRelBundle = data; return; }
-    applyRemoteRelBundle(data);
+  FS_REL_DOC.onSnapshot(handleRelSnapshot, err => {
+    // Previously swallowed, which made a dead listener indistinguishable from
+    // a working one. Say so: edits still save, they just won't stream in.
+    console.error('[relationships] live sync stopped:', err);
+    if (!isDirty()) setSaveStatus('error', 'Live sync offline — saving still works');
   });
 }
-setInterval(() => {
-  if (_pendingRemoteRelBundle && !isProfileEditing()) {
-    applyRemoteRelBundle(_pendingRemoteRelBundle);
-    _pendingRemoteRelBundle = null;
-  }
-}, 1500);
 
-// Called by every field/score edit. Saving here is manual (the Save button
-// in #save-bar), not automatic — this just marks the doc dirty and lets the
-// user decide when to actually write it, instead of a timer racing a
-// background sync that could revert the edit before it's sent (see the
-// _relDirty comment above).
-function scheduleFirestoreSave() {
-  _relDirty = true;
-  setSaveStatus('dirty', 'Unsaved changes');
+// Flush a render that was deferred while the user was typing. focusout catches
+// the common case immediately; the interval is the backstop for focus moving
+// somewhere without a focusout we hear about (e.g. the window losing focus).
+document.addEventListener('focusout', () => {
+  setTimeout(() => { if (_pendingRender) renderSynced(); }, 0);
+});
+setInterval(() => { if (_pendingRender) renderSynced(); }, 1500);
+
+// Called by every field/score edit. Saving here is manual (the Save button in
+// #save-bar), not automatic — these just record *what* changed and let the user
+// decide when to write it, instead of a timer racing a background sync that
+// could revert the edit before it's sent.
+function markRelDirty(key)   { _dirtyRelKeys.set(key, ++_editSeq); onDirtyChanged(); }
+function markCharDirty(file) { if (!file) return; _dirtyCharFiles.set(file, ++_editSeq); onDirtyChanged(); }
+function onDirtyChanged() { setSaveStatus('dirty', 'Unsaved changes'); refreshSaveBar(); }
+
+// Button state only — deliberately does not touch the status text, so it can be
+// called after a failed save without wiping the error message off the bar.
+function refreshSaveBar() {
   const btn = document.getElementById('rel-save-btn');
-  if (btn) { btn.disabled = false; btn.classList.add('dirty'); btn.title = 'Save unsaved changes'; }
+  if (!btn || _relSavePending) return;
+  const dirty = isDirty();
+  btn.disabled = !dirty;
+  btn.classList.toggle('dirty', dirty);
+  btn.title = dirty ? 'Save unsaved changes' : 'No unsaved changes';
 }
 
 async function manualSaveRelationships() {
-  if (!_relDirty || _relSavePending) return;
+  if (!isDirty() || _relSavePending) return;
   const btn = document.getElementById('rel-save-btn');
+  // Capture exactly what this save is flushing, before the await. Anything
+  // typed during the round-trip must stay dirty: buildBundle() snapshots the
+  // data when the save *starts*, so later keystrokes aren't in this write.
+  // Clearing the whole dirty set on completion (what the previous version did)
+  // marked those edits clean without ever writing them — losing both the data
+  // and the protection that keeps an incoming snapshot from overwriting them.
+  //
+  // Deliberate asymmetry: an edit landing between this capture and
+  // buildBundle() is written *and* stays dirty, so it simply saves twice.
+  // That's harmless. The reverse — clean but unwritten — is data loss.
+  const sentRelKeys   = new Map(_dirtyRelKeys);
+  const sentCharFiles = new Map(_dirtyCharFiles);
   _relSavePending = true;
   setSaveStatus('saving', 'Saving…');
   if (btn) btn.disabled = true;
   try {
     await saveToFirestore();
-    _relDirty = false;
-    setSaveStatus('saved', 'Saved ' + new Date().toLocaleTimeString());
-    if (btn) { btn.classList.remove('dirty'); btn.title = 'No unsaved changes'; }
-  } catch (e) {
-    setSaveStatus('error', e.message);
-    if (btn) btn.disabled = false; // let them retry
-  } finally {
+    // Clear only what hasn't been re-edited since the capture above; a bumped
+    // sequence number means this field changed after the bundle was built and
+    // is therefore still unsaved.
+    for (const [k, seq] of sentRelKeys)   if (_dirtyRelKeys.get(k)   === seq) _dirtyRelKeys.delete(k);
+    for (const [f, seq] of sentCharFiles) if (_dirtyCharFiles.get(f) === seq) _dirtyCharFiles.delete(f);
     _relSavePending = false;
+    // Edits that arrived mid-flight are legitimately still unsaved — say so
+    // rather than flashing "Saved" over them.
+    if (isDirty()) setSaveStatus('dirty', 'Unsaved changes');
+    else setSaveStatus('saved', 'Saved ' + new Date().toLocaleTimeString());
+    refreshSaveBar();
+  } catch (e) {
+    _relSavePending = false;
+    setSaveStatus('error', e.message);
+    refreshSaveBar(); // still dirty — let them retry
   }
 }
 
 // Warn before leaving the tab with unsaved edits sitting in memory — there's
 // no auto-save left to fall back on now that saving is manual.
 window.addEventListener('beforeunload', (e) => {
-  if (!_relDirty) return;
+  if (!isDirty()) return;
   e.preventDefault();
   e.returnValue = '';
 });
@@ -661,13 +771,13 @@ function setRelScore(fromId, toId, score) {
   rels[k] = rels[k] || { score: 0, note: '' };
   rels[k].score = Math.max(-10, Math.min(10, parseInt(score) || 0));
   updateScoreDisplay(fromId, toId, score);
-  scheduleFirestoreSave();
+  markRelDirty(k);
 }
 function setRelNote(fromId, toId, note) {
   const k = relKey(fromId, toId);
   rels[k] = rels[k] || { score: 0, note: '' };
   rels[k].note = note;
-  scheduleFirestoreSave();
+  markRelDirty(k);
 }
 function updateScoreDisplay(fromId, toId, score) {
   const el = document.getElementById('score-'+fromId+'-'+toId);
@@ -678,7 +788,7 @@ function updateScoreDisplay(fromId, toId, score) {
 }
 
 /* ── Character persistence ────────────────────────────── */
-function scheduleCharSave(c) { scheduleFirestoreSave(); }
+function scheduleCharSave(c) { markCharDirty(c?._file); }
 
 function onStatChange(field, value, isFloat) {
   const c = selected;

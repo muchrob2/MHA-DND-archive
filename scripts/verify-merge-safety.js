@@ -97,6 +97,71 @@ const results = [];
   results.push(['top-level string path (backward compat)', ok]);
 })();
 
+// ── Apply-remote path (CLASS-1A/relationships.html) ─────────────────────────
+// fsMergeSave above guards the *write* path. The bug where a user's typing got
+// silently reverted lived on the *apply* path — an incoming live snapshot
+// overwriting local state — which had no coverage at all, which is why three
+// separate fixes to fsMergeSave never made the symptom go away. These extract
+// the two pure helpers from relationships.html and pin that behaviour down.
+const relPath = (path ? path.join(repoRoot, 'CLASS-1A', 'relationships.html') : 'CLASS-1A/relationships.html');
+const relSrc = readFile(relPath);
+const relHelpers = {};
+for (const name of ['mergeRemoteRels', 'nextSyncBaseline']) {
+  // Top-level (unindented) functions in the page's script block, so these end
+  // at a column-0 brace — unlike auth.js's 2-space-indented helpers above.
+  const m = relSrc.match(new RegExp('function ' + name + '\\([\\s\\S]*?\\n\\}'));
+  if (!m) throw new Error('Could not find ' + name + '() in relationships.html — has the live-sync code changed shape?');
+  eval(m[0]);
+  relHelpers[name] = eval(name);
+}
+
+// Scenario 3: a live snapshot must not overwrite a note the user is still
+// typing, while everything else on it still syncs through. This is the exact
+// "what I just typed gets instantly undone" report.
+(function dirtyRelKeyScenario() {
+  const local = { '1:2': { score: 3, note: 'typed but not saved yet' }, '1:3': { score: 0, note: 'old' } };
+  const incoming = { '1:2': { score: 3, note: '' }, '1:3': { score: 5, note: 'someone else edited this' } };
+  const merged = relHelpers.mergeRemoteRels(local, incoming, new Set(['1:2']));
+  const ok = merged['1:2'].note === 'typed but not saved yet'
+          && merged['1:3'].note === 'someone else edited this';
+  results.push(['dirty rel key survives an incoming snapshot', ok]);
+})();
+
+// Scenario 4: a relationship another client created, that this client has
+// never seen, must appear rather than being dropped by the merge.
+(function remoteAddedRelScenario() {
+  const local = { '1:2': { score: 1, note: 'mine' } };
+  const incoming = { '1:2': { score: 1, note: 'mine' }, '4:5': { score: -2, note: 'theirs' } };
+  const merged = relHelpers.mergeRemoteRels(local, incoming, new Set(['1:2']));
+  const ok = merged['4:5'] && merged['4:5'].note === 'theirs' && merged['1:2'].note === 'mine';
+  results.push(['remote-added rel key is preserved', ok]);
+})();
+
+// Scenario 5: the 3-way baseline must NOT advance for a character we skipped
+// because it had unsaved local edits. If it did, fsMergeSave would next see an
+// ability present in the baseline but absent locally, read that as "this client
+// deleted it", and drop another player's newly added attack.
+(function baselineSkipsDirtyCharScenario() {
+  const prev = { characters: { 'a.json': { HP: 10, quirk_mechanics: { abilities: [{ id: 'ab1' }] } } } };
+  const incoming = { characters: {
+    'a.json': { HP: 10, quirk_mechanics: { abilities: [{ id: 'ab1' }, { id: 'ab2' }] } }, // dirty locally — skipped
+    'b.json': { HP: 22 }                                                                  // clean — applied
+  } };
+  const baseline = relHelpers.nextSyncBaseline(incoming, prev, new Set(['a.json']));
+  const ok = baseline.characters['a.json'].quirk_mechanics.abilities.length === 1  // held at prev
+          && baseline.characters['b.json'].HP === 22;                              // advanced
+  results.push(['sync baseline holds back for a dirty character', ok]);
+})();
+
+// Scenario 6: a dirty character with no previous baseline entry must be absent
+// from the new baseline, not carried in from the snapshot we didn't apply.
+(function baselineDropsUnseenDirtyCharScenario() {
+  const incoming = { characters: { 'new.json': { HP: 5 } } };
+  const baseline = relHelpers.nextSyncBaseline(incoming, null, new Set(['new.json']));
+  const ok = !('new.json' in baseline.characters);
+  results.push(['sync baseline omits an unseen dirty character', ok]);
+})();
+
 let allPass = true;
 for (const [name, ok] of results) {
   console.log((ok ? 'PASS' : 'FAIL') + ' — ' + name);

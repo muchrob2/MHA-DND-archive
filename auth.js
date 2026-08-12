@@ -16,6 +16,21 @@
   const auth = firebase.auth();
   const db = firebase.firestore();
 
+  // Firestore's default read transport is a streaming channel, which Safari's
+  // tracking protection, content blockers and some proxies refuse — it fails
+  // with "Fetch API cannot load ... due to access control checks" while the
+  // *write* transport keeps working. That combination is nastier than being
+  // fully offline: saves land on the server, but onSnapshot goes on serving
+  // stale cached data, which pages then apply over the user's live edits.
+  // Auto-detect falls back to long polling when the stream can't be
+  // established. Must run before the first read/write; wrapped because
+  // settings() throws if Firestore has already been used.
+  try {
+    db.settings({ experimentalAutoDetectLongPolling: true, merge: true });
+  } catch (e) {
+    console.warn('[auth] Firestore long-polling auto-detect not applied:', e.message);
+  }
+
   window.fbDb = db;
 
   const EMPTY_STATE = { user: null, role: null, editableCharacterIds: [] };

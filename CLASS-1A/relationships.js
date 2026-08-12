@@ -552,11 +552,11 @@ function renderAttacksTab(c) {
       return `
     <div class="ability-card ability-card-editable">
       <div class="ability-edit-row">
-        <input class="ability-input ability-input-name" placeholder="Attack name" value="${escHtml(a.name||'')}" oninput="onAttackEdit(${i},'name',this.value)">
-        <button class="icon-btn ability-delete-btn" title="Delete attack" aria-label="Delete attack" onclick="onAttackDelete(${i})">✕</button>
+        <input class="ability-input ability-input-name" placeholder="Attack name" value="${escHtml(a.name||'')}" oninput="onAttackEdit('${escHtml(a.id)}','name',this.value)">
+        <button class="icon-btn ability-delete-btn" title="Delete attack" aria-label="Delete attack" onclick="onAttackDelete('${escHtml(a.id)}')">✕</button>
       </div>
-      <input class="ability-input ability-input-type" placeholder="Type (e.g. Action; costs 2 Heat Points)" value="${escHtml(a.type||'')}" oninput="onAttackEdit(${i},'type',this.value)">
-      <textarea class="ability-input ability-input-desc" rows="2" placeholder="Description" oninput="onAttackEdit(${i},'description',this.value)">${escHtml(a.description||'')}</textarea>
+      <input class="ability-input ability-input-type" placeholder="Type (e.g. Action; costs 2 Heat Points)" value="${escHtml(a.type||'')}" oninput="onAttackEdit('${escHtml(a.id)}','type',this.value)">
+      <textarea class="ability-input ability-input-desc" rows="2" placeholder="Description" oninput="onAttackEdit('${escHtml(a.id)}','description',this.value)">${escHtml(a.description||'')}</textarea>
     </div>`;
     }
     return `
@@ -578,10 +578,23 @@ function renderAttacksTab(c) {
   tabContent.innerHTML = cards.join('');
 }
 
-function onAttackEdit(i, field, value) {
-  const abilities = selected.quirk_mechanics.abilities;
-  if (!abilities[i]) return;
-  abilities[i][field] = value;
+// Attacks and inventory items are addressed by their stable id, never by array
+// position. fsMergeSave rebuilds these arrays in *server* order and appends
+// genuinely-new local items at the end, so the order after any save or remote
+// merge need not match the order the DOM was rendered from. Handlers baked with
+// a render-time index therefore write into whichever item happens to occupy
+// that slot afterwards — so an edit lands on the wrong attack and the one you
+// were editing appears to revert on the next render. The ids already exist for
+// exactly this reason: they are what fsMergeSave merges on (see genId /
+// ensureCharIds).
+function findAbility(id) {
+  return (selected.quirk_mechanics?.abilities || []).find(a => a.id === id);
+}
+
+function onAttackEdit(id, field, value) {
+  const ability = findAbility(id);
+  if (!ability) return;
+  ability[field] = value;
   scheduleCharSave(selected);
 }
 
@@ -591,8 +604,11 @@ function onAttackAdd() {
   renderAttacksTab(selected);
 }
 
-function onAttackDelete(i) {
-  selected.quirk_mechanics.abilities.splice(i, 1);
+function onAttackDelete(id) {
+  const abilities = selected.quirk_mechanics.abilities;
+  const idx = abilities.findIndex(a => a.id === id);
+  if (idx === -1) return;
+  abilities.splice(idx, 1);
   scheduleCharSave(selected);
   renderAttacksTab(selected);
 }
@@ -626,11 +642,11 @@ function renderInventoryTab(c) {
       return `
     <div class="ability-card ability-card-editable">
       <div class="ability-edit-row">
-        <input class="ability-input ability-input-name" placeholder="Item name" value="${escHtml(it.name||'')}" oninput="onItemEdit(${i},'name',this.value)">
-        <input class="ability-input inv-item-qty" type="number" min="0" placeholder="Qty" value="${it.qty ?? 1}" oninput="onItemEdit(${i},'qty',this.value)" title="Quantity">
-        <button class="icon-btn ability-delete-btn" title="Delete item" aria-label="Delete item" onclick="onItemDelete(${i})">✕</button>
+        <input class="ability-input ability-input-name" placeholder="Item name" value="${escHtml(it.name||'')}" oninput="onItemEdit('${escHtml(it.id)}','name',this.value)">
+        <input class="ability-input inv-item-qty" type="number" min="0" placeholder="Qty" value="${it.qty ?? 1}" oninput="onItemEdit('${escHtml(it.id)}','qty',this.value)" title="Quantity">
+        <button class="icon-btn ability-delete-btn" title="Delete item" aria-label="Delete item" onclick="onItemDelete('${escHtml(it.id)}')">✕</button>
       </div>
-      <textarea class="ability-input ability-input-desc" rows="2" placeholder="Notes (e.g. weight, effect, where it came from)" oninput="onItemEdit(${i},'notes',this.value)">${escHtml(it.notes||'')}</textarea>
+      <textarea class="ability-input ability-input-desc" rows="2" placeholder="Notes (e.g. weight, effect, where it came from)" oninput="onItemEdit('${escHtml(it.id)}','notes',this.value)">${escHtml(it.notes||'')}</textarea>
     </div>`;
     }
     return `
@@ -665,10 +681,11 @@ function onCurrencyChange(key, value) {
   renderInventoryTab(selected);
 }
 
-function onItemEdit(i, field, value) {
-  const items = selected.inventory.items;
-  if (!items[i]) return;
-  items[i][field] = field === 'qty' ? Math.max(0, parseInt(value) || 0) : value;
+// Addressed by id, not index — same reasoning as onAttackEdit above.
+function onItemEdit(id, field, value) {
+  const item = (selected.inventory?.items || []).find(it => it.id === id);
+  if (!item) return;
+  item[field] = field === 'qty' ? Math.max(0, parseInt(value) || 0) : value;
   scheduleCharSave(selected);
 }
 
@@ -678,8 +695,11 @@ function onItemAdd() {
   renderInventoryTab(selected);
 }
 
-function onItemDelete(i) {
-  selected.inventory.items.splice(i, 1);
+function onItemDelete(id) {
+  const items = selected.inventory.items;
+  const idx = items.findIndex(it => it.id === id);
+  if (idx === -1) return;
+  items.splice(idx, 1);
   scheduleCharSave(selected);
   renderInventoryTab(selected);
 }

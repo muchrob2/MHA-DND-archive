@@ -234,3 +234,77 @@
   #board-range-clear { width: 22px; height: 22px; font-size: var(--fs-sm); }
   #board-distance-label { min-width: 0; flex: 1; }
 }
+
+/* ════════════════════════════════════════════════════════════
+   TACTICAL HUD TREATMENT
+   Added after the initial migration. Everything below sits on
+   the tray, header and footer — all SIBLINGS of
+   #board-grid-wrap, never ancestors of it — so none of it can
+   cost anything during a canvas pan, zoom or drag.
+   ════════════════════════════════════════════════════════════ */
+
+#board-tray-title {
+  position: relative;
+  padding-left: 22px;
+}
+/* blinking status light, the one piece of ambient motion here */
+#board-tray-title::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -1px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 7px var(--teal);
+  animation: mg-pulse-glow 2.6s ease-in-out infinite;
+}
+
+.board-tray-item {
+  position: relative;
+  overflow: hidden;
+}
+/* selected token gets a skewed slab marker, matching the roster */
+.board-tray-item.selected::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 4px; bottom: 4px;
+  width: 3px;
+  background: var(--accent);
+  transform: skewY(-8deg);
+}
+.board-tray-token {
+  box-shadow: 0 0 0 2px rgba(5,6,10,.55), inset 0 0 0 1px rgba(255,255,255,.28);
+  transition: transform var(--dur) var(--ease-out);
+}
+.board-tray-item:hover .board-tray-token   { transform: scale(1.1); }
+.board-tray-item.selected .board-tray-token { box-shadow: 0 0 0 2px rgba(5,6,10,.55), 0 0 12px var(--gold-glow); }
+
+/* distance readout as an instrument, with corner brackets */
+#board-distance-label {
+  position: relative;
+  border-radius: 0;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+}
+#board-distance-label::before,
+#board-distance-label::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-color: var(--accent);
+  border-style: solid;
+}
+#board-distance-label::before { left: -1px;  top: -1px;    border-width: 2px 0 0 2px; }
+#board-distance-label::after  { right: -1px; bottom: -1px; border-width: 0 2px 2px 0; }
+
+/* the footer reads as an instrument rail */
+#board-footer {
+  background:
+    linear-gradient(90deg, var(--accent-light) 0%, transparent 38%),
+    var(--surface2);
+  border-top: 2px solid var(--border-strong);
+}
+#board-zoom-wrap, #board-range-wrap { border-radius: 3px; }

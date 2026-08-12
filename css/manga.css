@@ -244,6 +244,23 @@
   animation: mg-shake 420ms var(--ease-out) both;
 }
 
+/* mid-tumble: the number is still churning, so it reads as motion-blurred
+   and unresolved. relationships.js removes this on the landing frame. */
+.result-number.tumbling {
+  color: var(--text-dim);
+  filter: blur(.6px);
+  transform: scale(.94);
+  transition: none;
+}
+
+/* the CRITICAL / FUMBLE badge lands with the number, not before it */
+.result-badge-slot {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-impact);
+}
+.result-badge-slot.show { opacity: 1; transform: translateY(0); }
+
 .crit-label, .fumble-label {
   display: inline-block;
   font-family: var(--font-display);

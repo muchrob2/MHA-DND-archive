@@ -670,14 +670,27 @@ function renderBoardCanvas() {
     else if (isDead) ctx.globalAlpha = 0.35;
 
     if (isSelected) {
+      // Glow is applied only to selected tokens — usually one, occasionally
+      // two. shadowBlur is the expensive part of a canvas fill, so it is
+      // deliberately not used for the token body below, which runs for every
+      // combatant on every frame of a drag.
+      ctx.save();
+      ctx.shadowColor = 'rgba(255,194,32,0.85)';
+      ctx.shadowBlur = Math.max(6, SZ / 2);
       ctx.beginPath(); ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(232,160,32,0.35)'; ctx.fill();
-      ctx.strokeStyle = 'rgba(232,160,32,0.9)'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = 'rgba(255,194,32,0.30)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,194,32,0.95)';
+      ctx.lineWidth = 2; ctx.stroke();
+      ctx.restore();
     }
 
+    // Dark rim under the body reads as a comic ink outline and lifts the
+    // token off the grid. A stroke costs far less than a shadow here.
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.fillStyle = color; ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.strokeStyle = 'rgba(5,6,10,0.55)'; ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, r - 1, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 1; ctx.stroke();
 
     const hpPct = c.maxHp > 0 ? c.hp / c.maxHp : 0;
     ctx.beginPath();

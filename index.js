@@ -158,3 +158,37 @@
     }
   }
   refreshLastUpdated();
+
+  // ── Build version badge ──
+  // version.json is rewritten by the Pages workflow on every deploy (see
+  // .github/workflows/pages.yml), so this moves forward on its own without
+  // anyone editing it. The copy committed to the repo is a fallback so the
+  // badge still renders under `python3 server.py` locally.
+  //
+  // Deliberately NOT cached in localStorage, unlike the last-updated
+  // indicator above: that one is rate-limited by the GitHub API, whereas
+  // this is a small same-origin file, and caching it is exactly how you end
+  // up showing a stale version right after shipping. `cache: 'no-cache'`
+  // revalidates rather than trusting the browser's copy, which matters on
+  // Pages where the CDN will happily serve an old one.
+  async function refreshVersion() {
+    const el = document.getElementById('version-badge');
+    if (!el) return;
+    try {
+      const res = await fetch('version.json', { cache: 'no-cache' });
+      if (!res.ok) throw new Error('bad status');
+      const v = await res.json();
+      if (!v || !v.version) throw new Error('no version field');
+      el.textContent = 'v' + v.version;
+      const built = v.built ? new Date(v.built) : null;
+      el.title = [
+        'Version ' + v.version,
+        v.commit ? 'commit ' + v.commit : null,
+        built && !isNaN(built) ? 'built ' + built.toLocaleString() : null,
+      ].filter(Boolean).join(' · ');
+      el.classList.remove('hidden');
+    } catch {
+      // leave the badge hidden rather than render a wrong or empty version
+    }
+  }
+  refreshVersion();

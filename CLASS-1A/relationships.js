@@ -906,13 +906,60 @@ function renderDiceResult(e) {
   } else {
     rollStr = escHtml(e.rolls.join(', ') + modStr);
   }
+  // The crit/fumble class is applied AFTER the tumble settles rather than in
+  // this markup, so the impact burst in css/manga.css fires on the landing
+  // frame instead of playing against a number that is still changing.
   document.getElementById('dice-result').innerHTML = `
-    <div class="result-number ${numClass}">${e.total}</div>
+    <div class="result-number" data-final="${e.total}">${e.total}</div>
     <div class="result-detail">
       <div class="result-label">${e.label}</div>
       <div class="result-breakdown">${rollStr}</div>
-      ${badge}
+      <div class="result-badge-slot">${badge}</div>
     </div>`;
+  tumbleToResult(document.querySelector('#dice-result .result-number'), e.total, numClass);
+}
+
+// Spins the total through plausible values before landing on the real one.
+// Purely cosmetic: the number is already decided before this runs, so the
+// result never depends on the animation completing.
+//
+// Degrades to an instant result if requestAnimationFrame is unavailable (the
+// scripts/verify-relationship-sync.js harness) or the reader has asked for
+// reduced motion — in both cases the final value and class are applied
+// immediately, which is exactly what the old code did.
+function tumbleToResult(el, finalTotal, numClass) {
+  if (!el) return;
+  const settle = () => {
+    el.textContent = finalTotal;
+    if (numClass) el.classList.add(numClass);
+    const slot = document.querySelector('#dice-result .result-badge-slot');
+    if (slot) slot.classList.add('show');
+  };
+
+  const reduced = typeof window.matchMedia === 'function' &&
+                  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced || typeof requestAnimationFrame !== 'function') { settle(); return; }
+
+  const DURATION = 460;
+  const start = (typeof performance === 'object' && performance.now)
+    ? performance.now() : Date.now();
+  const spread = Math.max(4, Math.abs(finalTotal));
+  el.classList.add('tumbling');
+
+  const step = (now) => {
+    const t = Math.min(1, (now - start) / DURATION);
+    if (t < 1) {
+      // ease out: samples get slower and cluster nearer the real value
+      const jitter = Math.round((1 - t * t) * spread);
+      const guess = finalTotal + (Math.floor(Math.random() * (jitter * 2 + 1)) - jitter);
+      el.textContent = guess;
+      requestAnimationFrame(step);
+    } else {
+      el.classList.remove('tumbling');
+      settle();
+    }
+  };
+  requestAnimationFrame(step);
 }
 
 function renderDiceHistory() {

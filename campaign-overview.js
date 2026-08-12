@@ -1319,6 +1319,20 @@ function findScriptById(id) {
 function applyScriptEditMode(id) {
   document.getElementById('script-read-'+id).style.display = 'none';
   document.getElementById('script-edit-'+id).style.display = '';
+  // Move focus into the editor we just opened.
+  //
+  // Without this, focus stays on whatever held it before the click, because the
+  // "Edit" control is a plain <span class="toggle-btn"> with no tabindex, and
+  // Safari does not move focus when a non-focusable element is clicked. The
+  // stale holder is typically the section header (tabindex="0", role="button")
+  // or #scripts-edit-toggle-btn -- and both act on Space/Enter. So the next
+  // keystroke activates that instead of typing into the field: the header runs
+  // toggleSection('sec-scripts') and collapses the whole section, or the nav
+  // button re-runs toggleScriptEditMode() and calls applyScriptReadMode() on
+  // every open card. Either way the edit box vanishes as you start typing.
+  //
+  // Matches toggleAddScriptForm(), which already focuses its first field.
+  document.getElementById('ed-title-'+id)?.focus();
 }
 function applyScriptReadMode(id) {
   flushScriptEdits(id);

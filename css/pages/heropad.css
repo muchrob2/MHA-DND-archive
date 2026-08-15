@@ -1228,64 +1228,6 @@
   color: var(--red-text);
 }
 
-/* ── Rivals ─────────────────────────────────────────────────── */
-.rv-card {
-  position: relative;
-  padding: 12px;
-  margin-bottom: 8px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: var(--surface);
-}
-.rv-card.mine {
-  border-color: var(--pad-accent);
-  background: color-mix(in srgb, var(--pad-accent) 10%, var(--surface));
-}
-.rv-flag {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--pad-accent);
-  margin-bottom: 5px;
-}
-.rv-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-.rv-name { font-size: var(--fs-md); font-weight: 700; }
-.rv-quirk { font-size: var(--fs-2xs); color: var(--text-dim); }
-.rv-vs {
-  margin-top: 5px;
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  color: var(--amber-text);
-}
-.rv-vs span {
-  font-size: 9px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  margin-right: 4px;
-}
-.rv-text {
-  margin-top: 7px;
-  font-size: var(--fs-xs);
-  line-height: 1.6;
-  color: var(--text-muted);
-}
-.rv-fest {
-  margin-top: 7px;
-  font-size: var(--fs-2xs);
-  line-height: 1.55;
-  color: var(--text-dim);
-}
-.rv-fest em {
-  font-style: normal;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-right: 5px;
-}
-
 /* ── Notes ──────────────────────────────────────────────────── */
 .nt-body {
   width: 100%;

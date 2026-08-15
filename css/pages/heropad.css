@@ -12,10 +12,28 @@
      --ico          set per icon tile from the APPS registry.
    ============================================================ */
 
+/* ⚠ LOAD-BEARING — do not fold these into the rules below.
+   #pad-app and #pad-setup are shown and hidden by toggling the `hidden`
+   attribute from heropad.js, and both set `display` in their own rules
+   further down. An author `display` declaration beats the UA stylesheet's
+   `[hidden] { display: none }`, so without these guards a "hidden" overlay
+   stays laid out over the whole device at opacity 0 — invisible, but still
+   swallowing every tap meant for the app icons underneath it.
+   verify-heropad.js fails if a hideable element loses its guard. */
+#pad-app[hidden],
+#pad-setup[hidden] { display: none; }
+
+/* The page is a full-height column: nav, owner bar, phone, footer. The phone
+   takes whatever vertical space is left over and derives its width from that,
+   so it fits a laptop window and a tall monitor without either overflowing or
+   leaving the device stranded at the top of the page. */
 #content {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - var(--nav-h));
   max-width: 760px;
   margin: 0 auto;
-  padding: 20px 24px 48px;
+  padding: 20px 24px 24px;
 }
 
 /* ── Owner bar ───────────────────────────────────────────────
@@ -71,6 +89,8 @@
 
 /* ── The device ─────────────────────────────────────────────── */
 #pad-stage {
+  flex: 1;
+  min-height: 0;   /* lets the stage shrink instead of forcing the page taller */
   display: flex;
   justify-content: center;
 }
@@ -78,13 +98,19 @@
 #pad-device {
   --pad-accent: var(--accent);
   position: relative;
-  width: min(390px, 100%);
-  /* A fixed aspect ratio would either overflow short laptops or leave a
-     stubby phone on tall ones. Height tracks the viewport and the width
-     stays phone-shaped, which keeps the icon grid at a believable size
-     on every screen. */
-  height: min(812px, calc(100dvh - var(--nav-h) - 190px));
-  min-height: 560px;
+  /* Sized by the space actually available rather than by subtracting a
+     guessed allowance from the viewport. Height fills the stage; the aspect
+     ratio derives the width; max-width takes over on narrow screens and the
+     ratio shortens the height to match. An earlier version used a fixed
+     min-height, which defeated the whole point — on a short laptop window
+     the device stayed taller than the space it had and pushed the page into
+     scrolling. */
+  height: 100%;
+  max-height: 812px;
+  min-height: 380px;
+  aspect-ratio: 390 / 812;
+  width: auto;
+  max-width: 100%;
   border-radius: 44px;
   border: 1px solid var(--border-strong);
   overflow: hidden;
@@ -934,10 +960,15 @@
     flex-basis: 100%;
   }
 
+  /* Full-bleed on a phone: the aspect ratio is dropped so the device fills
+     whatever the screen actually is, rather than letterboxing a 390×812
+     rectangle inside a screen that is already roughly that shape. */
   #pad-device {
     width: 100%;
-    height: calc(100dvh - var(--nav-h) - 150px);
-    min-height: 460px;
+    height: 100%;
+    max-height: none;
+    min-height: 420px;
+    aspect-ratio: auto;
     border-radius: 28px;
     box-shadow: 0 0 0 1px var(--border-strong), 0 16px 34px rgba(0,0,0,.5);
   }

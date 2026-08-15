@@ -37,22 +37,30 @@
   align-items: center;
   gap: 9px;
 }
-.owner-who label {
+.owner-label {
   font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
-#pad-owner {
-  padding: 6px 10px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+#pad-owner-name {
   font-size: var(--fs-sm);
-  font-weight: 600;
-  cursor: pointer;
+  font-weight: 700;
 }
+#pad-switch-btn {
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast);
+}
+#pad-switch-btn:hover { color: var(--text); background: var(--surface3); border-color: var(--border-strong); }
 #pad-sync-note {
   flex: 1;
   min-width: 200px;
@@ -392,6 +400,217 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 16px 16px 28px;
+}
+
+/* ── First-run setup ─────────────────────────────────────────
+   Sits above the open-app layer: until the pad knows whose it is,
+   nothing behind it is meaningful. */
+#pad-setup {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 26px 20px;
+  overflow-y: auto;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease-out);
+}
+#pad-setup.open { opacity: 1; }
+
+#pad-setup-inner { width: 100%; }
+.setup-kicker {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--pad-accent);
+}
+.setup-title {
+  margin-top: 6px;
+  font-size: var(--fs-2xl);
+}
+.setup-sub {
+  margin: 7px 0 18px;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+#setup-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.setup-pick {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 11px 13px;
+  text-align: left;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: border-color var(--dur-fast), transform var(--dur-fast), background var(--dur-fast);
+}
+.setup-pick:hover {
+  border-color: var(--pad-accent);
+  background: var(--surface2);
+  transform: translateX(2px);
+}
+.setup-pick.sel { border-color: var(--pad-accent); box-shadow: inset 3px 0 0 var(--pad-accent); }
+.setup-pick-name { font-size: var(--fs-md); font-weight: 700; }
+.setup-pick-quirk { font-size: var(--fs-xs); color: var(--text-dim); }
+
+#setup-all-btn,
+#setup-cancel-btn {
+  width: 100%;
+  padding: 9px;
+  margin-top: 6px;
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border-strong);
+  background: none;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color var(--dur-fast), border-color var(--dur-fast);
+}
+#setup-all-btn:hover,
+#setup-cancel-btn:hover { color: var(--text); border-color: var(--pad-accent); }
+#setup-cancel-btn { border-style: solid; }
+
+/* ── Bank ───────────────────────────────────────────────────── */
+.bk-balance {
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(150deg, color-mix(in srgb, var(--pad-accent) 16%, transparent), transparent 62%),
+    var(--surface);
+}
+.bk-balance-label {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.bk-balance-value {
+  margin-top: 3px;
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.bk-coins {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 11px;
+}
+.bk-coin {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.bk-coin em { font-style: normal; margin-left: 3px; color: var(--text-dim); }
+.bk-coin-empty { font-size: var(--fs-xs); color: var(--text-dim); }
+.bk-flow {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.bk-flow-in { color: var(--green-text); }
+.bk-flow-out { color: var(--red-text); }
+
+.bk-tabs {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+.bk-tab {
+  padding: 5px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast);
+}
+.bk-tab:hover { color: var(--text); }
+.bk-tab.sel {
+  color: var(--text);
+  background: color-mix(in srgb, var(--pad-accent) 20%, var(--surface2));
+  border-color: var(--pad-accent);
+}
+
+.bk-day {
+  margin: 14px 0 4px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.bk-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 2px;
+  border-bottom: 1px solid var(--border);
+}
+.bk-row:last-child { border-bottom: none; }
+.bk-ico {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  font-size: 14px;
+}
+.bk-body { flex: 1; min-width: 0; }
+.bk-label {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bk-time { font-size: var(--fs-2xs); color: var(--text-dim); }
+.bk-amount {
+  flex-shrink: 0;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+.bk-amount.pos { color: var(--green-text); }
+.bk-amount.neg { color: var(--red-text); }
+.bk-empty {
+  padding: 10px 0;
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--text-dim);
 }
 
 /* ── Customise ──────────────────────────────────────────────── */

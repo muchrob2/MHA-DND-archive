@@ -30,12 +30,13 @@
 
 <div id="content">
 
-  <!-- Whose pad is on screen. Defaults to the signed-in player's own
-       character when auth knows one (see heropad.js:pickDefaultOwner). -->
+  <!-- Whose pad is on screen. Asked once on the setup screen inside the
+       device, then remembered — see heropad.js:pickDefaultOwner. -->
   <div id="pad-owner-bar">
     <div class="owner-who">
-      <label for="pad-owner">Heropad of</label>
-      <select id="pad-owner" onchange="onOwnerChange(this.value)" aria-label="Whose Heropad to show"></select>
+      <span class="owner-label">Heropad of</span>
+      <span id="pad-owner-name">—</span>
+      <button type="button" id="pad-switch-btn" onclick="openSetup()">Switch</button>
     </div>
     <div id="pad-sync-note" role="status">Loading…</div>
   </div>
@@ -66,6 +67,20 @@
 
         <div id="pad-dock" role="list"></div>
         <div id="pad-homebar" aria-hidden="true"></div>
+      </div>
+
+      <!-- First-run setup. Shown only when nothing yet identifies the
+           player — a remembered choice, or an account with edit rights to
+           exactly one character, both skip it entirely. -->
+      <div id="pad-setup" hidden role="dialog" aria-modal="true" aria-labelledby="pad-setup-title">
+        <div id="pad-setup-inner">
+          <div class="setup-kicker">U.A. High School</div>
+          <h2 id="pad-setup-title" class="setup-title">Whose pad is this?</h2>
+          <p class="setup-sub">Pick your character. This pad will remember you.</p>
+          <div id="setup-list" role="list"></div>
+          <button type="button" id="setup-all-btn" onclick="toggleSetupAll()">Show the rest of Class 1-A</button>
+          <button type="button" id="setup-cancel-btn" onclick="closeSetup()" hidden>Cancel</button>
+        </div>
       </div>
 
       <!-- An open app. Lives inside the device so it slides up over the

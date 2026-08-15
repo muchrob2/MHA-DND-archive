@@ -146,6 +146,13 @@ const APPS = [
     render: renderCustomiseApp,
   },
   {
+    id: 'bank',
+    name: 'Bank',
+    icon: '🏦',
+    accent: '#12D296',
+    render: renderBankApp,
+  },
+  {
     id: 'masaranking',
     name: 'Masaranking',
     icon: '🧲',
@@ -643,6 +650,185 @@ async function loadRanking() {
   rerenderRankingIfOpen();
 }
 
+/* ══ App: Bank ══════════════════════════════════════════════════════
+   The statement behind the shop. Two shared documents feed it:
+
+     mha-dnd/relationships-bundle  the purse itself (the same document the
+                                   shop spends from and the toolkit's
+                                   Inventory tab renders)
+     mha-dnd/ledger                what moved, and why
+
+   The ledger is append-only and written by shop.js (purchases) and
+   admin.js (DM grants), each inside the same Firestore transaction that
+   moves the money — so a line on this statement cannot exist without the
+   matching change to the purse, or vice versa. The ENTRY SHAPE is
+   documented at the top of shop.js; verify-ledger.js fails if the three
+   files drift apart.
+
+   Read-only by design. A bank app that let you edit your own balance
+   would not be a bank app.
+   ═══════════════════════════════════════════════════════════════════ */
+const FS_LEDGER_DOC = db.collection('mha-dnd').doc('ledger');
+const FS_BUNDLE_DOC = db.collection('mha-dnd').doc('relationships-bundle');
+
+// Kept in step with shop.js and CLASS-1A/relationships.js — a drifted key
+// would show a denomination the rest of the site never fills in.
+const CURRENCY_KEYS = ['yen', 'pp', 'gp', 'ep', 'sp', 'cp'];
+const CURRENCY_TO_YEN = { yen: 1, cp: 10, sp: 100, ep: 500, gp: 1000, pp: 10000 };
+const CURRENCY_SHORT = { yen: '¥', pp: 'pp', gp: 'gp', ep: 'ep', sp: 'sp', cp: 'cp' };
+
+let ledger = null;        // [{...}] once loaded, null while fetching
+let bundle = null;        // the shared character bundle, for the balance
+let bankFilter = 'all';   // all | in | out
+
+function yenStr(n) { return '¥' + Number(n || 0).toLocaleString(); }
+
+function walletTotalYen(currency) {
+  return CURRENCY_KEYS.reduce((sum, k) => sum + (currency?.[k] || 0) * CURRENCY_TO_YEN[k], 0);
+}
+
+function ownerPurse() {
+  const character = bundle && bundle.characters && bundle.characters[activeFile];
+  return (character && character.inventory && character.inventory.currency) || null;
+}
+
+function ownerEntries() {
+  if (!ledger) return [];
+  // Newest first — a statement is read from the top.
+  return ledger.filter(e => e && e.file === activeFile).slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
+}
+
+function entryMatchesFilter(entry) {
+  if (bankFilter === 'all') return true;
+  // "In" and "out" are about money. A granted medkit is neither, so it shows
+  // only under All rather than being silently filed as income.
+  if (!entry.yen) return false;
+  return bankFilter === 'in' ? entry.yen > 0 : entry.yen < 0;
+}
+
+function setBankFilter(next) {
+  bankFilter = next;
+  if (openAppId === 'bank') $('pad-app-body').innerHTML = renderBankApp();
+}
+
+function bankDayLabel(ts) {
+  const d = new Date(ts || 0);
+  const today = new Date();
+  const yesterday = new Date(today.getTime() - 86400000);
+  const sameDay = (a, b) => a.toDateString() === b.toDateString();
+  if (sameDay(d, today)) return 'Today';
+  if (sameDay(d, yesterday)) return 'Yesterday';
+  return d.toLocaleDateString([], { day: 'numeric', month: 'long' });
+}
+
+const BANK_ICONS = {
+  purchase: '🛒', currency: '💴', item: '📦', parts: '⚙', points: '⭐', pool: '🔋',
+};
+
+function renderBankApp() {
+  const purse = ownerPurse();
+  const all = ownerEntries();
+  const shown = all.filter(entryMatchesFilter);
+
+  const breakdown = purse
+    ? CURRENCY_KEYS.filter(k => purse[k]).map(k =>
+        `<span class="bk-coin">${purse[k].toLocaleString()}<em>${CURRENCY_SHORT[k]}</em></span>`).join('')
+    : '';
+
+  // Only money counts toward the totals; item and points entries carry yen 0.
+  const moneyIn = all.reduce((s, e) => s + (e.yen > 0 ? e.yen : 0), 0);
+  const moneyOut = all.reduce((s, e) => s + (e.yen < 0 ? -e.yen : 0), 0);
+
+  const balanceCard = `
+    <section class="bk-balance">
+      <div class="bk-balance-label">Balance</div>
+      <div class="bk-balance-value">${purse ? yenStr(walletTotalYen(purse)) : '—'}</div>
+      <div class="bk-coins">${breakdown || '<span class="bk-coin-empty">Empty purse</span>'}</div>
+      <div class="bk-flow">
+        <span class="bk-flow-in">▲ ${yenStr(moneyIn)} in</span>
+        <span class="bk-flow-out">▼ ${yenStr(moneyOut)} out</span>
+      </div>
+    </section>`;
+
+  if (!purse && !all.length) {
+    return balanceCard + `<p class="bk-empty">This character has no sheet in the shared bundle yet.
+      Open the Class 1-A toolkit and save once, and the account opens.</p>`;
+  }
+
+  const tabs = [['all', 'All'], ['in', 'In'], ['out', 'Out']].map(([id, label]) =>
+    `<button type="button" class="bk-tab${bankFilter === id ? ' sel' : ''}"
+             onclick="setBankFilter('${id}')">${label}</button>`).join('');
+
+  let rows = '';
+  if (!shown.length) {
+    rows = all.length
+      ? '<p class="bk-empty">Nothing under this filter.</p>'
+      : `<p class="bk-empty">No transactions yet. Anything bought in the Shop —
+         or granted by the DM — lands here from now on.</p>`;
+  } else {
+    let lastDay = null;
+    for (const e of shown) {
+      const day = bankDayLabel(e.ts);
+      if (day !== lastDay) { rows += `<div class="bk-day">${escHtml(day)}</div>`; lastDay = day; }
+      const isMoney = !!e.yen;
+      const sign = e.yen > 0 || (!isMoney && e.amount > 0) ? 'pos' : e.yen < 0 ? 'neg' : '';
+      const figure = isMoney
+        ? (e.yen > 0 ? '+' : '−') + yenStr(Math.abs(e.yen))
+        : (e.amount > 0 ? '+' : '') + e.amount;
+      // A grant made in platinum is worth ¥20,000, but "2pp" is what actually
+      // changed hands — show both rather than silently converting it away.
+      const native = isMoney && e.unit && e.unit !== 'yen'
+        ? ` · ${Math.abs(e.amount)}${CURRENCY_SHORT[e.unit] || e.unit}`
+        : '';
+      rows += `<div class="bk-row">
+        <span class="bk-ico">${BANK_ICONS[e.kind] || '•'}</span>
+        <span class="bk-body">
+          <span class="bk-label">${escHtml(e.label || e.kind)}</span>
+          <span class="bk-time">${new Date(e.ts || 0).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}${escHtml(native)}</span>
+        </span>
+        <span class="bk-amount ${sign}">${escHtml(figure)}</span>
+      </div>`;
+    }
+  }
+
+  return balanceCard + `<div class="bk-tabs">${tabs}</div><div class="bk-list">${rows}</div>`;
+}
+
+function rerenderBankIfOpen() {
+  if (openAppId === 'bank') $('pad-app-body').innerHTML = renderBankApp();
+}
+
+async function loadBank() {
+  try {
+    await fbAuthReady;
+    const [ledgerSnap, bundleSnap] = await Promise.all([FS_LEDGER_DOC.get(), FS_BUNDLE_DOC.get()]);
+    ledger = ledgerSnap.exists && Array.isArray(ledgerSnap.data().entries) ? ledgerSnap.data().entries : [];
+    bundle = bundleSnap.exists ? bundleSnap.data() : null;
+  } catch {
+    // Offline or blocked — an empty statement is better than a stuck spinner.
+    ledger = ledger || [];
+  }
+  rerenderBankIfOpen();
+}
+
+function startBankLiveSync() {
+  // Nothing on this page writes either document, so unlike the pads and the
+  // ranking chart there is no in-flight local edit for a snapshot to trample
+  // — every update can be applied as it arrives. Cached replays are still
+  // skipped: they are this tab's own stale copy, not news.
+  FS_LEDGER_DOC.onSnapshot(snap => {
+    if (!snap.exists || (snap.metadata && snap.metadata.fromCache)) return;
+    ledger = Array.isArray(snap.data().entries) ? snap.data().entries : [];
+    rerenderBankIfOpen();
+  }, err => console.error('[heropad] ledger sync stopped:', err));
+
+  FS_BUNDLE_DOC.onSnapshot(snap => {
+    if (!snap.exists || (snap.metadata && snap.metadata.fromCache)) return;
+    bundle = snap.data();
+    rerenderBankIfOpen();
+  }, err => console.error('[heropad] purse sync stopped:', err));
+}
+
 /* ══ App: Contacts ══════════════════════════════════════════════════
    The class list straight off CLASS-1A/roster.json. See the note on the
    APPS entry — this is the worked example of the app API.
@@ -763,29 +949,79 @@ function setSyncNote(text) {
   $('pad-sync-note').textContent = text;
 }
 
-/* ══ Owner selection ════════════════════════════════════════════════ */
+/* ══ Owner selection ════════════════════════════════════════════════
+   A player is asked who they are exactly once, on a setup screen inside
+   the device, and the answer is remembered on this device from then on.
+   It was a dropdown above the phone before, which meant re-picking your
+   own character on every single visit — the pad is meant to be personal
+   kit, and being handed a class list every time you pick it up is the
+   opposite of that.
 
-function renderOwnerOptions() {
+   The screen is skipped entirely when something already identifies the
+   player: a remembered choice, or an account with edit rights to exactly
+   one character. It is only ever shown when the answer is genuinely
+   unknown, or when someone taps Switch.
+   ═══════════════════════════════════════════════════════════════════ */
+let setupShowAll = false;
+
+function renderSetup() {
   const pcs = ROSTER.filter(s => s.is_pc);
   const rest = ROSTER.filter(s => !s.is_pc);
-  const opt = s => `<option value="${escHtml(s.file)}"${s.file === activeFile ? ' selected' : ''}>${escHtml(s.name)}</option>`;
-  $('pad-owner').innerHTML =
-    (pcs.length ? `<optgroup label="Player characters">${pcs.map(opt).join('')}</optgroup>` : '') +
-    (rest.length ? `<optgroup label="Class 1-A">${rest.map(opt).join('')}</optgroup>` : '');
+  const shown = setupShowAll ? pcs.concat(rest) : pcs;
+
+  $('setup-list').innerHTML = shown.map(s => `
+    <button type="button" role="listitem" class="setup-pick${s.file === activeFile ? ' sel' : ''}"
+            onclick="chooseOwner('${escHtml(s.file)}')">
+      <span class="setup-pick-name">${escHtml(s.name)}</span>
+      <span class="setup-pick-quirk">${escHtml(s.quirk || '')}</span>
+    </button>`).join('') || '<p class="bk-empty">The class roster could not be loaded.</p>';
+
+  const allBtn = $('setup-all-btn');
+  allBtn.textContent = setupShowAll ? 'Just the player characters' : 'Show the rest of Class 1-A';
+  allBtn.hidden = !rest.length;
+  // Cancel only makes sense once a pad is already open behind the screen.
+  $('setup-cancel-btn').hidden = !activeFile;
 }
 
-function onOwnerChange(file) {
+function openSetup() {
+  closeApp();
+  renderSetup();
+  $('pad-setup').hidden = false;
+  requestAnimationFrame(() => $('pad-setup').classList.add('open'));
+}
+
+function closeSetup() {
+  const el = $('pad-setup');
+  el.classList.remove('open');
+  setTimeout(() => { if (!el.classList.contains('open')) el.hidden = true; }, 240);
+}
+
+function toggleSetupAll() {
+  setupShowAll = !setupShowAll;
+  renderSetup();
+}
+
+// No need to repaint the Bank or the ranking chart for the new owner here:
+// openSetup() closes whatever app was open before this screen appears, so a
+// pick always lands back on the home screen. Switching character out from
+// under an open statement would silently swap the numbers being read anyway.
+function chooseOwner(file) {
   activeFile = file;
   try { localStorage.setItem(LS_ACTIVE, file); } catch {}
-  closeApp();
+  closeSetup();
+  renderOwnerName();
   renderOwnerLine();
   loadPad(file);
   startPadLiveSync(file);
 }
 
-// Whose pad to open on arrival: the character this account can edit (so a
-// player lands on their own pad without touching the picker), else whatever
-// this device looked at last, else the first player character.
+function renderOwnerName() {
+  const s = ownerStudent();
+  $('pad-owner-name').textContent = s ? s.name : 'Not set';
+}
+
+// Whose pad to open on arrival, or null when nothing identifies the player
+// and the setup screen should ask.
 //
 // The canEdit() path deliberately skips admins. canEdit returns true for an
 // admin on every id (auth.js:45), so for the DM it would resolve to "the
@@ -793,12 +1029,10 @@ function onOwnerChange(file) {
 // pad they were actually last looking at.
 function pickDefaultOwner() {
   const remembered = (() => { try { return localStorage.getItem(LS_ACTIVE); } catch { return null; } })();
+  if (remembered && ROSTER.some(s => s.file === remembered)) return remembered;
   const isDm = !!(window.isAdmin && window.isAdmin());
   const mine = (!isDm && window.canEdit) ? ROSTER.find(s => window.canEdit(s.id)) : null;
-  if (mine) return mine.file;
-  if (remembered && ROSTER.some(s => s.file === remembered)) return remembered;
-  const firstPc = ROSTER.find(s => s.is_pc);
-  return firstPc ? firstPc.file : (ROSTER[0] ? ROSTER[0].file : null);
+  return mine ? mine.file : null;
 }
 
 /* ══ Boot ═══════════════════════════════════════════════════════════ */
@@ -843,18 +1077,23 @@ document.addEventListener('auth-state-changed', e => {
   renderHome();
 
   await fbAuthReady;
+
+  // Class-wide, not per-pad, so these load once and stay subscribed for the
+  // life of the page rather than being re-fetched on every owner switch.
+  // Started before the owner is known so the apps are warm either way.
+  await Promise.all([loadRanking(), loadBank()]);
+  startRankLiveSync();
+  startBankLiveSync();
+
   activeFile = pickDefaultOwner();
   if (!activeFile) {
-    setSyncNote('No characters found in the roster.');
+    if (!ROSTER.length) { setSyncNote('No characters found in the roster.'); return; }
+    renderOwnerName();
+    openSetup();   // first visit on this device — ask once, then never again
     return;
   }
-  renderOwnerOptions();
+  renderOwnerName();
   renderOwnerLine();
   await loadPad(activeFile);
   startPadLiveSync(activeFile);
-
-  // Class-wide, not per-pad, so it is loaded once and stays subscribed for
-  // the life of the page rather than being re-fetched on every owner switch.
-  await loadRanking();
-  startRankLiveSync();
 })();

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Shop for the MHA D&D campaign — every priced item in the handbook, bought with a character's Yen.">
+<meta name="theme-color" content="#08090D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Shop — MHA D&D</title>
+<link rel="preload" href="css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/manga.css">
+<link rel="stylesheet" href="css/pages/shop.css">
+<link rel="stylesheet" href="css/auth-widget.css">
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+</head>
+<body>
+
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">Shop</span>
+  <div class="nav-right"></div>
+</nav>
+
+<div id="content">
+
+  <!-- Whose money is being spent, and how much of it is left -->
+  <div id="wallet-bar">
+    <div class="wallet-who">
+      <label for="wallet-char">Shopping as</label>
+      <select id="wallet-char" onchange="onCharChange(this.value)"></select>
+    </div>
+    <div class="wallet-purse">
+      <span class="wallet-label">Purse</span>
+      <span id="wallet-total" title="Total value of every denomination, at the handbook conversion">—</span>
+      <span id="wallet-breakdown"></span>
+    </div>
+    <div id="wallet-note"></div>
+  </div>
+
+  <div id="shop-controls">
+    <input id="shop-search" type="search" placeholder="Search the catalogue…" aria-label="Search items"
+           oninput="onSearch(this.value)">
+    <div id="shop-cats"></div>
+  </div>
+
+  <div id="shop-count"></div>
+  <div id="shop-grid"></div>
+  <div id="shop-empty" style="display:none;">Nothing matches that search.</div>
+
+  <div id="receipt-wrap" style="display:none;">
+    <div class="receipt-title">Bought this session</div>
+    <ul id="receipt-log"></ul>
+  </div>
+</div>
+
+<!-- Buy confirmation -->
+<div id="buy-overlay">
+  <div id="buy-modal" role="dialog" aria-modal="true" aria-labelledby="buy-modal-title">
+    <div id="buy-modal-close" role="button" tabindex="0" aria-label="Close">✕</div>
+    <h3 id="buy-modal-title">Buy</h3>
+    <div id="buy-item-line"></div>
+
+    <div class="buy-field">
+      <label for="buy-char">Add to</label>
+      <select id="buy-char" onchange="refreshBuyMath()"></select>
+    </div>
+    <div class="buy-row">
+      <div class="buy-field">
+        <label for="buy-qty">Quantity</label>
+        <input id="buy-qty" type="number" min="1" value="1" oninput="refreshBuyMath()">
+      </div>
+      <div class="buy-field">
+        <label for="buy-price">Unit price (¥)</label>
+        <input id="buy-price" type="number" min="0" step="100" oninput="refreshBuyMath()">
+      </div>
+    </div>
+
+    <div id="buy-math"></div>
+    <div id="buy-error" role="alert"></div>
+    <div class="buy-actions">
+      <button id="buy-confirm" type="button" class="primary" onclick="confirmPurchase()">Confirm purchase</button>
+      <button type="button" onclick="closeBuy()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="shop.js"></script>
+</body>
+</html>

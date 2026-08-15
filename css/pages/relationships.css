@@ -505,6 +505,42 @@ body { height: 100vh; overflow: hidden; }
 .inv-item-qty { flex-shrink: 0; width: 52px !important; text-align: center; }
 .inv-empty { font-size: var(--fs-xs); font-style: italic; color: var(--text-dim); }
 
+/* crafting parts & point pools — same block chrome as currency, with a
+   sub-heading per group and a capacity readout under the point counters */
+.inv-part-group + .inv-part-group { margin-top: 8px; }
+.inv-part-group-label {
+  margin-bottom: 5px;
+  font-size: var(--fs-2xs);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.inv-point-block { min-width: 82px; }
+.inv-point-max {
+  font-size: var(--fs-2xs);
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+}
+/* a value above the handbook's cap is legal to type (the DM may be mid-edit)
+   but must not look like it is fine */
+.inv-point-block.over-cap { border-color: var(--red); }
+.inv-point-block.over-cap .inv-currency-input,
+.inv-point-block.over-cap .inv-point-max { color: var(--red-text); }
+
+.inv-pool-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.inv-pool-name { flex: 1; min-width: 0; }
+.inv-pool-num { flex-shrink: 0; width: 56px !important; text-align: center; }
+.inv-pool-sep { font-size: var(--fs-xs); color: var(--text-dim); }
+.inv-pool-row-read {
+  padding: 5px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.inv-pool-name-read { flex: 1; font-size: var(--fs-xs); color: var(--text); }
+.inv-pool-val-read { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--teal-text); }
+.inv-add-pool { margin-top: 2px; }
+
 /* ════════════════════════════════════════════════════════════
    RELATIONSHIPS
    ════════════════════════════════════════════════════════════ */

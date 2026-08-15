@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Heropad — the in-world phone every Class 1-A student carries. A home screen of apps each player can make their own.">
+<meta name="theme-color" content="#08090D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Heropad — MHA D&D</title>
+<link rel="preload" href="css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/manga.css">
+<link rel="stylesheet" href="css/pages/heropad.css">
+<link rel="stylesheet" href="css/auth-widget.css">
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+</head>
+<body>
+
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">Heropad</span>
+  <div class="nav-right"></div>
+</nav>
+
+<div id="content">
+
+  <!-- Whose pad is on screen. Defaults to the signed-in player's own
+       character when auth knows one (see heropad.js:pickDefaultOwner). -->
+  <div id="pad-owner-bar">
+    <div class="owner-who">
+      <label for="pad-owner">Heropad of</label>
+      <select id="pad-owner" onchange="onOwnerChange(this.value)" aria-label="Whose Heropad to show"></select>
+    </div>
+    <div id="pad-sync-note" role="status">Loading…</div>
+  </div>
+
+  <div id="pad-stage">
+    <div id="pad-device">
+      <div id="pad-wallpaper"></div>
+      <div id="pad-scrim" aria-hidden="true"></div>
+      <div id="pad-notch" aria-hidden="true"></div>
+
+      <div id="pad-screen">
+        <div id="pad-statusbar">
+          <span id="pad-clock">--:--</span>
+          <span class="pad-status-right">
+            <span id="pad-carrier">U.A. NET</span>
+            <span class="pad-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span class="pad-batt" aria-hidden="true"><b></b></span>
+          </span>
+        </div>
+
+        <div id="pad-headline">
+          <div id="pad-day">—</div>
+          <div id="pad-date">—</div>
+          <div id="pad-owner-line">—</div>
+        </div>
+
+        <div id="pad-grid" role="list"></div>
+
+        <div id="pad-dock" role="list"></div>
+        <div id="pad-homebar" aria-hidden="true"></div>
+      </div>
+
+      <!-- An open app. Lives inside the device so it slides up over the
+           home screen the way a phone app does, rather than being a
+           page-level modal. -->
+      <div id="pad-app" hidden role="dialog" aria-modal="true" aria-labelledby="pad-app-title">
+        <div id="pad-app-bar">
+          <span id="pad-app-icon" aria-hidden="true"></span>
+          <span id="pad-app-title">App</span>
+          <button type="button" id="pad-app-close" onclick="closeApp()" aria-label="Close app">✕</button>
+        </div>
+        <div id="pad-app-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <p id="pad-foot">
+    The Heropad is in-world kit — what your character carries in their pocket.
+    Every student's pad remembers its own look.
+  </p>
+</div>
+
+<script src="heropad.js"></script>
+</body>
+</html>

@@ -208,6 +208,10 @@ function renderWallet() {
     ? ''
     : 'Browsing only — sign in as a player or the DM to buy.';
   noteEl.className = canBuy ? '' : 'wallet-warn';
+
+  // The purse just moved (or a different character was selected), which is
+  // exactly when what they can afford changes.
+  applyAffordability();
 }
 
 /* ── Catalogue rendering ───────────────────────────────────── */
@@ -215,12 +219,14 @@ function renderCategories() {
   const el = document.getElementById('shop-cats');
   const counts = {};
   for (const it of CATALOG.items) counts[it.category] = (counts[it.category] || 0) + 1;
-  const chips = [`<button type="button" class="cat-chip${activeCategory === 'all' ? ' active' : ''}"
-      onclick="onCategory('all')">All <span>${CATALOG.items.length}</span></button>`];
+  const chip = (id, label, icon, n) => `<button type="button"
+      class="cat-chip${activeCategory === id ? ' active' : ''}" onclick="onCategory('${escHtml(id)}')"
+      >${icon ? `<span class="cat-ico">${icon}</span>` : ''}<span>${escHtml(label)}</span><span class="cat-n">${n}</span></button>`;
+
+  const chips = [chip('all', 'Everything', '✦', CATALOG.items.length)];
   for (const c of CATALOG.categories) {
     if (!counts[c.id]) continue;
-    chips.push(`<button type="button" class="cat-chip${activeCategory === c.id ? ' active' : ''}"
-      onclick="onCategory('${escHtml(c.id)}')">${escHtml(c.label)} <span>${counts[c.id]}</span></button>`);
+    chips.push(chip(c.id, c.label, CATEGORY_ICONS[c.id] || '', counts[c.id]));
   }
   el.innerHTML = chips.join('');
 }
@@ -241,6 +247,15 @@ function searchHaystack(it) {
     .filter(Boolean).join(' ').toLowerCase();
 }
 
+// Purely decorative — the category rail reads much faster with a glyph than
+// with thirteen similarly-shaped words. Kept in the page rather than in
+// shop-catalog.json: the catalogue is game data, this is presentation.
+const CATEGORY_ICONS = {
+  firearms: '🔫', melee: '⚔', explosives: '💥', parts: '⚙',
+  'suits-pro': '🦸', 'suits-student': '🎓', gear: '🧰', provisions: '🍱',
+  licenses: '📋', medical: '🏥', training: '🥋', media: '📺', underworld: '🕶',
+};
+
 function cardHtml(it) {
   const chips = [
     it.damage ? `<span class="shop-chip shop-chip-dmg">${escHtml(it.damage)}</span>` : '',
@@ -251,22 +266,25 @@ function cardHtml(it) {
     it.unit ? `<span class="shop-chip">${escHtml(it.unit)}</span>` : '',
   ].filter(Boolean).join('');
 
+  // The inner <span> counters the price slab's skew so the digits stay
+  // upright inside a slanted tag.
   return `
-    <div class="shop-card" data-id="${escHtml(it.id)}">
-      <div class="shop-card-head">
-        <span class="shop-name">${escHtml(it.name)}</span>
-        <span class="shop-price">${escHtml(priceLabel(it))}</span>
+    <article class="shop-card${it.price === 0 ? ' is-free' : ''}"
+             data-id="${escHtml(it.id)}" data-cat="${escHtml(it.category)}">
+      <div class="shop-card-top">
+        <h3 class="shop-name">${escHtml(it.name)}</h3>
+        <div class="shop-price"><span>${escHtml(priceLabel(it))}</span></div>
       </div>
       ${it.properties ? `<div class="shop-props">${escHtml(it.properties)}</div>` : ''}
       ${chips ? `<div class="shop-chips">${chips}</div>` : ''}
-      ${it.effect ? `<div class="shop-effect">${escHtml(it.effect)}</div>` : ''}
+      ${it.effect ? `<p class="shop-effect">${escHtml(it.effect)}</p>` : ''}
       <div class="shop-card-foot">
         <span class="shop-kind shop-kind-${escHtml(it.kind)}">${
           it.kind === 'part' ? 'crafting part' : it.kind === 'service' ? 'service' : 'inventory item'}</span>
         <button type="button" class="shop-buy" ${canBuy ? '' : 'disabled'}
-          onclick="openBuy('${escHtml(it.id)}')">${canBuy ? 'Buy' : 'Sign in to buy'}</button>
+          onclick="openBuy('${escHtml(it.id)}')">${canBuy ? 'Buy' : 'Sign in'}</button>
       </div>
-    </div>`;
+    </article>`;
 }
 
 /* The whole catalogue is built into the DOM exactly once, and searching or
@@ -282,6 +300,7 @@ function renderGrid() {
   const grid = document.getElementById('shop-grid');
   grid.innerHTML = CATALOG.items.map(cardHtml).join('');
   applyFilter();
+  applyAffordability();
 }
 
 function applyFilter() {
@@ -295,6 +314,27 @@ function applyFilter() {
   document.getElementById('shop-empty').style.display = shown.length ? 'none' : '';
   document.getElementById('shop-count').textContent =
     shown.length ? `${shown.length} item${shown.length === 1 ? '' : 's'}` : '';
+}
+
+// Marks what the selected character cannot currently afford. Advisory only —
+// the card stays readable and its button still opens the dialog, which
+// explains the shortfall in Yen rather than just refusing.
+//
+// Kept out of applyFilter deliberately: affordability changes when the
+// character or their purse changes, not on every keystroke, so pairing it
+// with the search path would do this work for nothing on each character typed.
+function applyAffordability() {
+  const inv = currentInventory(activeCharFile);
+  const purse = inv ? walletTotalYen(inv.currency) : 0;
+  const priceById = new Map(CATALOG.items.map(i => [i.id, i.price]));
+  const cards = document.getElementById('shop-grid').querySelectorAll('.shop-card');
+  for (let i = 0; i < cards.length; i++) {
+    const price = priceById.get(cards[i].dataset.id);
+    // No sheet loaded yet means "unknown", not "broke" — don't grey the whole
+    // catalogue out while the bundle is still in flight.
+    const locked = inv != null && price != null && price > purse;
+    cards[i].classList.toggle('is-locked', locked);
+  }
 }
 
 function onCategory(id) { activeCategory = id; renderCategories(); applyFilter(); }

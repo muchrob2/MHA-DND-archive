@@ -1,0 +1,302 @@
+/* ============================================================
+   pages/shop.css — the handbook catalogue and the buy dialog.
+
+   shop.js injects .shop-card, .cat-chip and the modal contents;
+   the modal chrome mirrors the auth widget's overlay pattern in
+   components.css so the two dialogs feel like one system.
+   ============================================================ */
+
+#content { max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+/* ── wallet bar ── */
+#wallet-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.wallet-who { flex: 1; min-width: 220px; }
+.wallet-who label,
+.wallet-label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+#wallet-char {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+#wallet-char:focus { border-color: var(--accent); }
+
+.wallet-purse { text-align: right; }
+#wallet-total {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--teal-text);
+}
+#wallet-breakdown {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+}
+#wallet-note { flex-basis: 100%; font-size: var(--fs-2xs); }
+#wallet-note.wallet-warn { color: var(--gold-text); }
+
+/* ── controls ── */
+#shop-controls { margin-bottom: 14px; }
+#shop-search {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+}
+#shop-search:focus { border-color: var(--accent); }
+
+#shop-cats { display: flex; flex-wrap: wrap; gap: 6px; }
+.cat-chip {
+  padding: 5px 11px;
+  font-size: var(--fs-2xs);
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.cat-chip span { opacity: .55; }
+.cat-chip:hover { color: var(--accent-text); border-color: var(--accent); }
+.cat-chip.active {
+  color: var(--ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.cat-chip.active span { opacity: .7; }
+
+#shop-count {
+  margin: 14px 0 8px;
+  font-size: var(--fs-2xs);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ── catalogue grid ── */
+#shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+  gap: 12px;
+}
+#shop-empty { padding: 40px 12px; text-align: center; font-size: var(--fs-sm); color: var(--text-dim); }
+
+.shop-card {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 13px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.shop-card:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+.shop-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.shop-name { font-weight: 700; font-size: var(--fs-sm); color: var(--text); }
+.shop-price {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--accent-text);
+}
+.shop-props { font-size: var(--fs-2xs); color: var(--text-muted); }
+.shop-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.shop-chip {
+  padding: 2px 7px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-muted);
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+}
+.shop-chip-dmg { color: var(--red-text); }
+.shop-effect { font-size: var(--fs-2xs); line-height: 1.5; color: var(--text-muted); }
+
+.shop-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.shop-kind {
+  font-size: 10px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.shop-kind-part { color: var(--teal-text); }
+.shop-buy {
+  padding: 5px 14px;
+  font-size: var(--fs-2xs);
+  color: var(--teal-text);
+  background: var(--teal-light);
+  border: 1px solid color-mix(in srgb, var(--teal) 40%, transparent);
+  border-radius: var(--radius-sm);
+}
+.shop-buy:hover:not(:disabled) { color: var(--ink); background: var(--teal); border-color: var(--teal); }
+.shop-buy:disabled { color: var(--text-dim); background: none; border-color: var(--border); cursor: not-allowed; }
+
+/* ── receipt ── */
+#receipt-wrap { margin-top: 28px; }
+.receipt-title {
+  margin-bottom: 8px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+#receipt-log { margin: 0; padding-left: 18px; }
+#receipt-log li {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+/* ── buy dialog ── */
+#buy-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, .62);
+}
+#buy-overlay.open { display: flex; }
+#buy-modal {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+#buy-modal h3 {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 400;
+  letter-spacing: .03em;
+  color: var(--text);
+}
+#buy-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  cursor: pointer;
+}
+#buy-modal-close:hover { color: var(--text); }
+#buy-item-line { margin-bottom: 14px; font-size: var(--fs-2xs); color: var(--text-muted); }
+
+.buy-row { display: flex; gap: 10px; }
+.buy-row .buy-field { flex: 1; }
+.buy-field { margin-bottom: 11px; }
+.buy-field label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--fs-2xs);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.buy-field select,
+.buy-field input {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: var(--fs-xs);
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+.buy-field select:focus,
+.buy-field input:focus { border-color: var(--accent); }
+/* a fixed handbook price is shown but not up for debate */
+.buy-field input.locked { color: var(--text-muted); cursor: not-allowed; }
+
+#buy-math {
+  padding: 10px 12px;
+  margin: 4px 0 10px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+}
+.buy-math-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  line-height: 1.9;
+  color: var(--text-muted);
+}
+.buy-math-row.buy-ok strong { color: var(--teal-text); }
+.buy-warn, .buy-math-row.buy-warn { color: var(--red-text); }
+.buy-math-row.buy-warn strong { color: var(--red-text); }
+#buy-error { min-height: 1em; margin-bottom: 8px; font-size: var(--fs-2xs); color: var(--red-text); }
+
+.buy-actions { display: flex; gap: 8px; }
+.buy-actions button {
+  flex: 1;
+  padding: 9px;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.buy-actions button.primary {
+  color: var(--teal-text);
+  background: var(--teal-light);
+  border-color: color-mix(in srgb, var(--teal) 40%, transparent);
+}
+.buy-actions button.primary:hover:not(:disabled) { color: var(--ink); background: var(--teal); border-color: var(--teal); }
+.buy-actions button:disabled { opacity: .45; cursor: not-allowed; }
+
+@media (max-width: 640px) {
+  #content { padding: 16px; }
+  #shop-grid { grid-template-columns: 1fr; }
+  .wallet-purse { text-align: left; }
+}

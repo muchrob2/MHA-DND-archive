@@ -33,9 +33,17 @@ service cloud.firestore {
       // encounter-state is the shared battle board — an 'editor' role only
       // grants edit rights to a player's own character sheet (see
       // isEditorFor above), so it must NOT double as board-write access.
-      // Every other mha-dnd doc (campaigns, dm-scripts, session-log, etc.)
-      // keeps the existing admin-or-editor policy.
-      allow write: if isAdmin() || (isEditor() && doc != 'encounter-state');
+      //
+      // masaranking is the class ranking chart on the Heropad. It is the DM's
+      // to keep, and the whole joke is that the people on it can't touch it —
+      // so it is admin-only for the same reason. Hiding the controls in the
+      // UI would not be enough: every player holds an 'editor' role, and the
+      // rule below is the only thing standing between them and a console.
+      //
+      // Every other mha-dnd doc (campaigns, dm-scripts, session-log, and the
+      // per-player heropad-* pads) keeps the existing admin-or-editor policy.
+      allow write: if isAdmin()
+        || (isEditor() && doc != 'encounter-state' && doc != 'masaranking');
     }
   }
 }

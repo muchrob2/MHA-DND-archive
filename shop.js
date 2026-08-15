@@ -16,6 +16,50 @@
 const db = firebase.firestore();
 const FS_BUNDLE_DOC = db.collection('mha-dnd').doc('relationships-bundle');
 
+/* ── The ledger ─────────────────────────────────────────────────────
+   Every movement of money is appended to mha-dnd/ledger, which is what
+   the Heropad's Bank app reads. Before this existed the only record of a
+   purchase was the receipt list further down this file — DOM only, gone
+   on reload — so a player could see their purse had shrunk and had no way
+   to find out what they'd bought.
+
+   One entry per basket line rather than one per checkout: a statement
+   that says "¥14,200" and nothing else is not a statement.
+
+   ENTRY SHAPE — kept in step with admin.js (the other writer) and
+   heropad.js (the reader). verify-ledger.js fails if the three drift.
+
+     id      unique string
+     ts      Date.now() at the time of the movement
+     file    roster filename the entry belongs to
+     kind    purchase | currency | item | parts | points | pool
+     label   human text, e.g. "2 × Combat Knife"
+     unit    denomination key for money entries, else null
+     amount  signed; money in `unit`, or a quantity for the rest
+     yen     signed yen-equivalent for money entries, 0 for the rest
+   ─────────────────────────────────────────────────────────────────── */
+const FS_LEDGER_DOC = db.collection('mha-dnd').doc('ledger');
+
+// A Firestore document caps at 1MB and entries are ~150 bytes, so this is
+// nowhere near the limit — it exists so a campaign that runs for years
+// doesn't grow a document that has to be downloaded in full on every read.
+const MAX_LEDGER_ENTRIES = 400;
+
+function ledgerEntry(file, kind, label, unit, amount, yenValue) {
+  return { id: genId('led'), ts: Date.now(), file, kind, label, unit, amount, yen: yenValue };
+}
+
+// Takes the transaction's own read of the ledger and returns the document to
+// write back. Oldest entries fall off the front once the cap is reached.
+function appendToLedger(snap, additions) {
+  const data = (snap && snap.exists && snap.data()) || {};
+  const existing = Array.isArray(data.entries) ? data.entries : [];
+  const merged = existing.concat(additions);
+  return Object.assign({}, data, {
+    entries: merged.length > MAX_LEDGER_ENTRIES ? merged.slice(merged.length - MAX_LEDGER_ENTRIES) : merged,
+  });
+}
+
 // Kept in step with CLASS-1A/relationships.js. verify-inventory-grants.js
 // asserts the three files still agree, since a drifted key would spend or
 // credit a counter that the Inventory tab never renders.
@@ -617,8 +661,15 @@ async function checkout() {
     // Read, check and deduct all inside one transaction. Checking against
     // the page's cached purse instead would let two open tabs each see the
     // same balance and both spend it.
+    //
+    // The ledger is written in the SAME transaction as the purse, so the two
+    // can never disagree: either the money moves and the statement records
+    // it, or neither happens. A follow-up write would leave a window where a
+    // purchase went through and the player's statement never mentioned it.
+    // Firestore requires every read before any write, hence both gets first.
     await db.runTransaction(async (tx) => {
       const snap = await tx.get(FS_BUNDLE_DOC);
+      const ledgerSnap = await tx.get(FS_LEDGER_DOC);
       if (!snap.exists) throw new Error('No character bundle found — open the Class 1-A toolkit and save once first.');
       const data = snap.data();
       const characters = data.characters || {};
@@ -631,7 +682,13 @@ async function checkout() {
         throw new Error('Not enough money — the purse holds ' +
           yen(walletTotalYen(character.inventory.currency)) + '.');
       }
+
+      const additions = lines.map(l => ledgerEntry(
+        file, 'purchase', `${l.qty} × ${l.entry.name}`, 'yen', -lineCost(l), -lineCost(l)
+      ));
+
       tx.set(FS_BUNDLE_DOC, Object.assign({}, data, { characters }));
+      tx.set(FS_LEDGER_DOC, appendToLedger(ledgerSnap, additions));
     });
 
     const who = (ROSTER.find(s => s.file === file) || {}).name || file;

@@ -184,6 +184,58 @@ const shopTests = `
   check('a free student suit is not shown as ¥0', priceLabel({ price: 0 }) === 'School-issued');
 })();
 
+// ── Filtering ──────────────────────────────────────────────────────────────
+// visibleItems() is the single source of truth for both what the grid shows
+// and what the count claims — applyFilter derives the visibility toggle AND
+// the "N items" label from this one list, so the two cannot drift apart.
+(function () {
+  CATALOG = {
+    categories: [{ id: 'melee', label: 'Melee' }, { id: 'gear', label: 'Gear' }],
+    items: [
+      { id: 'a', name: 'Katana', category: 'melee', kind: 'item', price: 1, damage: '2d6 slashing' },
+      { id: 'b', name: 'Combat Knife', category: 'melee', kind: 'item', price: 1, properties: 'Light, Finesse' },
+      { id: 'c', name: 'Hero Medkit', category: 'gear', kind: 'item', price: 1, effect: 'Stabilize a downed ally' },
+    ],
+  };
+
+  activeCategory = 'all'; searchTerm = '';
+  check('no filter shows everything', visibleItems().length === 3);
+
+  activeCategory = 'melee';
+  check('a category filter narrows the list', visibleItems().length === 2);
+
+  activeCategory = 'all'; searchTerm = 'katana';
+  check('search matches on name', visibleItems().length === 1);
+
+  searchTerm = 'KATANA';
+  check('search is case-insensitive', visibleItems().length === 1);
+
+  searchTerm = '  katana  ';
+  check('search ignores surrounding whitespace', visibleItems().length === 1);
+
+  searchTerm = 'finesse';
+  check('search reaches properties', visibleItems()[0].id === 'b');
+
+  searchTerm = 'downed';
+  check('search reaches the effect text', visibleItems()[0].id === 'c');
+
+  searchTerm = 'slashing';
+  check('search reaches the damage line', visibleItems()[0].id === 'a');
+
+  // Category and query compose rather than one overriding the other.
+  activeCategory = 'gear'; searchTerm = 'katana';
+  check('category and search are combined, not either/or', visibleItems().length === 0);
+
+  activeCategory = 'all'; searchTerm = 'nothing here matches';
+  check('an unmatched query yields nothing', visibleItems().length === 0);
+
+  // Every card carries a data-id, which is how applyFilter maps a rendered
+  // card back to its catalogue entry. No id, no filtering.
+  searchTerm = '';
+  check('each rendered card is tagged with its id',
+        CATALOG.items.every(it => cardHtml(it).indexOf('data-id="' + it.id + '"') !== -1));
+})();
+
 shared.shopCurrencyKeys = CURRENCY_KEYS.slice();
 `;
 

@@ -119,6 +119,10 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
 }
+/* Filtering hides cards rather than rebuilding the grid (see applyFilter in
+   shop.js). `display:flex` above outranks the browser's default [hidden]
+   rule, so hiding has to be stated explicitly or filtering does nothing. */
+.shop-card[hidden] { display: none; }
 .shop-card:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
 .shop-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 .shop-name { font-weight: 700; font-size: var(--fs-sm); color: var(--text); }

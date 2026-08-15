@@ -172,9 +172,20 @@ function currentInventory(file) {
   return BUNDLE?.characters?.[file]?.inventory || null;
 }
 
+// Remembers the last options markup written into the character picker. The
+// bundle listener fires on every edit anyone makes to any character, and
+// re-assigning a <select>'s innerHTML closes it mid-choice and drops the
+// highlighted option — so the picker is only rewritten when it would
+// actually differ.
+let _lastCharOptions = '';
+
 function renderWallet() {
   const sel = document.getElementById('wallet-char');
-  sel.innerHTML = charOptionsHtml(activeCharFile);
+  const optionsHtml = charOptionsHtml(activeCharFile);
+  if (optionsHtml !== _lastCharOptions) {
+    sel.innerHTML = optionsHtml;
+    _lastCharOptions = optionsHtml;
+  }
 
   const inv = currentInventory(activeCharFile);
   const totalEl = document.getElementById('wallet-total');
@@ -214,39 +225,34 @@ function renderCategories() {
   el.innerHTML = chips.join('');
 }
 
+// Pure, so the filter rules can be tested without a DOM, and so the count and
+// the visibility toggle below can never disagree about what is showing.
 function visibleItems() {
   const q = searchTerm.trim().toLowerCase();
   return CATALOG.items.filter(it => {
     if (activeCategory !== 'all' && it.category !== activeCategory) return false;
     if (!q) return true;
-    return [it.name, it.effect, it.properties, it.damage, it.stats]
-      .filter(Boolean).join(' ').toLowerCase().includes(q);
+    return searchHaystack(it).includes(q);
   });
 }
 
-function renderGrid() {
-  const items = visibleItems();
-  const grid = document.getElementById('shop-grid');
-  const empty = document.getElementById('shop-empty');
-  const count = document.getElementById('shop-count');
+function searchHaystack(it) {
+  return [it.name, it.effect, it.properties, it.damage, it.stats]
+    .filter(Boolean).join(' ').toLowerCase();
+}
 
-  empty.style.display = items.length ? 'none' : '';
-  count.textContent = items.length
-    ? `${items.length} item${items.length === 1 ? '' : 's'}`
-    : '';
+function cardHtml(it) {
+  const chips = [
+    it.damage ? `<span class="shop-chip shop-chip-dmg">${escHtml(it.damage)}</span>` : '',
+    it.range ? `<span class="shop-chip">${escHtml(it.range)}</span>` : '',
+    it.ammo ? `<span class="shop-chip">${escHtml(it.ammo)}</span>` : '',
+    it.stats ? `<span class="shop-chip">${escHtml(it.stats)}</span>` : '',
+    it.turnaround ? `<span class="shop-chip">⏱ ${escHtml(it.turnaround)}</span>` : '',
+    it.unit ? `<span class="shop-chip">${escHtml(it.unit)}</span>` : '',
+  ].filter(Boolean).join('');
 
-  grid.innerHTML = items.map(it => {
-    const chips = [
-      it.damage ? `<span class="shop-chip shop-chip-dmg">${escHtml(it.damage)}</span>` : '',
-      it.range ? `<span class="shop-chip">${escHtml(it.range)}</span>` : '',
-      it.ammo ? `<span class="shop-chip">${escHtml(it.ammo)}</span>` : '',
-      it.stats ? `<span class="shop-chip">${escHtml(it.stats)}</span>` : '',
-      it.turnaround ? `<span class="shop-chip">⏱ ${escHtml(it.turnaround)}</span>` : '',
-      it.unit ? `<span class="shop-chip">${escHtml(it.unit)}</span>` : '',
-    ].filter(Boolean).join('');
-
-    return `
-    <div class="shop-card">
+  return `
+    <div class="shop-card" data-id="${escHtml(it.id)}">
       <div class="shop-card-head">
         <span class="shop-name">${escHtml(it.name)}</span>
         <span class="shop-price">${escHtml(priceLabel(it))}</span>
@@ -261,11 +267,38 @@ function renderGrid() {
           onclick="openBuy('${escHtml(it.id)}')">${canBuy ? 'Buy' : 'Sign in to buy'}</button>
       </div>
     </div>`;
-  }).join('');
 }
 
-function onCategory(id) { activeCategory = id; renderCategories(); renderGrid(); }
-function onSearch(v) { searchTerm = v; renderGrid(); }
+/* The whole catalogue is built into the DOM exactly once, and searching or
+   switching category only flips each card's `hidden` flag.
+
+   The obvious implementation — rebuild innerHTML from the filtered list on
+   every keystroke — re-parses ~50 KB of markup and re-lays-out 84 cards for
+   each character typed, and throws away scroll position while doing it.
+   Toggling a boolean on 84 existing nodes costs a fraction of that and keeps
+   the page still under the cursor. At this catalogue size neither approach is
+   slow, but only one of them stays that way as entries are added. */
+function renderGrid() {
+  const grid = document.getElementById('shop-grid');
+  grid.innerHTML = CATALOG.items.map(cardHtml).join('');
+  applyFilter();
+}
+
+function applyFilter() {
+  const shown = visibleItems();
+  const shownIds = new Set(shown.map(i => i.id));
+  const grid = document.getElementById('shop-grid');
+  const cards = grid.querySelectorAll('.shop-card');
+  for (let i = 0; i < cards.length; i++) {
+    cards[i].hidden = !shownIds.has(cards[i].dataset.id);
+  }
+  document.getElementById('shop-empty').style.display = shown.length ? 'none' : '';
+  document.getElementById('shop-count').textContent =
+    shown.length ? `${shown.length} item${shown.length === 1 ? '' : 's'}` : '';
+}
+
+function onCategory(id) { activeCategory = id; renderCategories(); applyFilter(); }
+function onSearch(v) { searchTerm = v; applyFilter(); }
 function onCharChange(file) { activeCharFile = file; renderWallet(); }
 
 /* ── Buy dialog ────────────────────────────────────────────── */

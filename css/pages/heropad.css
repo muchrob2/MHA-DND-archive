@@ -21,6 +21,8 @@
    swallowing every tap meant for the app icons underneath it.
    verify-heropad.js fails if a hideable element loses its guard. */
 #pad-app[hidden],
+#pad-lock[hidden],
+#pad-widget[hidden],
 #pad-setup[hidden] { display: none; }
 
 /* The page is a full-height column: nav, owner bar, phone, footer. The phone
@@ -168,6 +170,7 @@
   height: 100%;
   padding: 14px 18px 16px;
   color: #fff;
+  transition: transform var(--dur-slow) var(--ease-out);
 }
 
 /* ── Status bar ─────────────────────────────────────────────── */
@@ -244,6 +247,15 @@
   border-radius: 1px;
   background: currentColor;
 }
+#pad-lock-btn {
+  padding: 0 2px;
+  font-size: 12px;
+  line-height: 1;
+  color: currentColor;
+  opacity: .6;
+  transition: opacity var(--dur-fast);
+}
+#pad-lock-btn:hover { opacity: 1; }
 
 /* ── Headline widget ────────────────────────────────────────── */
 #pad-headline {
@@ -282,6 +294,214 @@
   color: rgba(255,255,255,.72);
 }
 
+/* ── Animated wallpapers ─────────────────────────────────────
+   Applied as pad-anim-<name> by applyPad() from the preset's `anim`
+   field. base.css kills every animation under prefers-reduced-motion,
+   so these degrade to a still frame rather than needing a second set
+   of presets. Each animates only background-position or opacity —
+   both compositor-friendly, so a phone doesn't cook its battery
+   rendering a wallpaper. */
+#pad-wallpaper.pad-anim-aurora {
+  background-size: 180% 180%, 200% 200%, 190% 190%, 100% 100%;
+  animation: padAurora 24s ease-in-out infinite alternate;
+}
+@keyframes padAurora {
+  0%   { background-position: 0% 30%, 100% 0%, 40% 100%, 0 0; }
+  50%  { background-position: 60% 0%, 20% 60%, 90% 70%, 0 0; }
+  100% { background-position: 100% 70%, 0% 100%, 10% 30%, 0 0; }
+}
+
+#pad-wallpaper.pad-anim-ember {
+  background-size: 160% 160%, 180% 180%, 100% 100%;
+  animation: padEmber 14s ease-in-out infinite alternate;
+}
+@keyframes padEmber {
+  from { background-position: 50% 100%, 20% 90%, 0 0; }
+  to   { background-position: 50% 78%, 70% 100%, 0 0; }
+}
+
+#pad-wallpaper.pad-anim-scan {
+  animation: padScan 7s linear infinite;
+}
+@keyframes padScan {
+  from { background-position: 0 0, 50% 40%, 0 0; }
+  to   { background-position: 0 5px, 50% 40%, 0 0; }
+}
+
+/* ── Lock screen ─────────────────────────────────────────────
+   Sits above the app layer and below setup: an app is closed before
+   the pad locks, and choosing a character is the one thing that
+   should still work over the top of it. */
+#pad-lock {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  padding: 52px 20px 22px;
+  color: #fff;
+  cursor: pointer;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,.15) 34%, rgba(0,0,0,.72) 100%);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease-out);
+}
+#pad-lock.open { opacity: 1; }
+/* The home screen sits back slightly while locked and settles forward as
+   the lock lifts — the whole trick of an unlock animation, in two rules.
+   Driven by a class on the device rather than a sibling combinator:
+   #pad-lock comes *after* #pad-screen in the DOM, so `~` cannot reach it. */
+#pad-device.locked #pad-screen { transform: scale(.96); }
+
+#lock-top { flex-shrink: 0; text-align: center; }
+#lock-time {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 17vw, 76px);
+  line-height: .92;
+  letter-spacing: .01em;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 3px 18px rgba(0,0,0,.55);
+}
+#lock-date {
+  margin-top: 4px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  opacity: .86;
+  text-shadow: 0 1px 6px rgba(0,0,0,.6);
+}
+
+#lock-notifs {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 0;
+  overflow: hidden;
+}
+.lock-notif {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.16);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: lockNotifIn var(--dur-slow) var(--ease-out) backwards;
+}
+.lock-notif:nth-child(2) { animation-delay: 70ms; }
+.lock-notif:nth-child(3) { animation-delay: 140ms; }
+@keyframes lockNotifIn {
+  from { opacity: 0; transform: translateY(10px) scale(.97); }
+  to   { opacity: 1; transform: none; }
+}
+.lock-notif-ico {
+  display: grid;
+  place-items: center;
+  width: 30px; height: 30px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: rgba(0,0,0,.3);
+  font-size: 14px;
+}
+.lock-notif-body { flex: 1; min-width: 0; }
+.lock-notif-app {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  opacity: .7;
+}
+.lock-notif-title {
+  display: block;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lock-notif-meta {
+  flex-shrink: 0;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+#lock-foot { flex-shrink: 0; text-align: center; }
+#lock-owner {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--pad-accent);
+  text-shadow: 0 1px 8px rgba(0,0,0,.6);
+}
+#lock-hint {
+  margin-top: 8px;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  opacity: .7;
+}
+.lock-arrow {
+  display: inline-block;
+  margin-right: 4px;
+  animation: lockBob 1.9s ease-in-out infinite;
+}
+@keyframes lockBob {
+  0%, 100% { transform: translateY(0); opacity: .55; }
+  50%      { transform: translateY(-3px); opacity: 1; }
+}
+
+/* ── Home widget ────────────────────────────────────────────── */
+#pad-widget {
+  flex-shrink: 0;
+  display: block;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 13px 15px;
+  text-align: left;
+  border-radius: 20px;
+  background: rgba(255,255,255,.11);
+  border: 1px solid rgba(255,255,255,.14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #fff;
+  transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast);
+}
+#pad-widget:hover { background: rgba(255,255,255,.16); transform: translateY(-2px); }
+#pad-widget:active { transform: scale(.98); }
+.widget-label {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  opacity: .72;
+}
+.widget-value {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.widget-sub {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--fs-2xs);
+  opacity: .72;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ── App icons ──────────────────────────────────────────────── */
 #pad-grid {
   flex: 1;
@@ -304,6 +524,7 @@
 }
 .pad-app-ico {
   --ico: var(--pad-accent);
+  position: relative;
   display: grid;
   place-items: center;
   width: 58px;
@@ -311,22 +532,64 @@
   border-radius: 17px;
   font-size: 27px;
   line-height: 1;
+  overflow: visible;
   background:
     linear-gradient(158deg,
       color-mix(in srgb, var(--ico) 92%, #fff),
       color-mix(in srgb, var(--ico) 48%, #000));
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.34),
-    0 6px 16px rgba(0,0,0,.42);
+    inset 0 1px 0 rgba(255,255,255,.42),
+    inset 0 -8px 16px rgba(0,0,0,.22),
+    0 6px 16px rgba(0,0,0,.42),
+    0 0 0 .5px rgba(0,0,0,.35);
   transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast);
 }
-.pad-app-btn:hover .pad-app-ico {
-  transform: translateY(-2px) scale(1.04);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.34),
-    0 10px 22px rgba(0,0,0,.5);
+/* A soft gloss across the top third — what stops a flat gradient square
+   from reading as a coloured div. */
+.pad-app-ico::after {
+  content: '';
+  position: absolute;
+  inset: 1px 1px auto;
+  height: 46%;
+  border-radius: 16px 16px 40% 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,.28), transparent);
+  pointer-events: none;
 }
-.pad-app-btn:active .pad-app-ico { transform: scale(.94); }
+.pad-app-btn:hover .pad-app-ico {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.42),
+    inset 0 -8px 16px rgba(0,0,0,.22),
+    0 12px 26px rgba(0,0,0,.52),
+    0 0 0 .5px rgba(0,0,0,.35),
+    0 0 22px color-mix(in srgb, var(--ico) 45%, transparent);
+}
+.pad-app-btn:active .pad-app-ico { transform: scale(.92); }
+
+.pad-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--hero-crimson);
+  border: 2px solid #0B0C11;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  animation: badgePop var(--dur) var(--ease-impact) backwards;
+}
+@keyframes badgePop {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
 .pad-app-name {
   max-width: 100%;
   overflow: hidden;
@@ -879,6 +1142,296 @@
   color: var(--text-dim);
 }
 .mr-foot:empty { margin-top: 0; }
+
+/* ── Quirks ─────────────────────────────────────────────────── */
+.qk-search { width: 100%; margin-bottom: 12px; }
+.qk-card {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  margin-bottom: 7px;
+  overflow: hidden;
+  transition: border-color var(--dur-fast);
+}
+.qk-card.open { border-color: var(--pad-accent); }
+.qk-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+}
+.qk-head-body { flex: 1; min-width: 0; }
+.qk-quirk {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+.qk-who {
+  display: block;
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+}
+.qk-caret { flex-shrink: 0; color: var(--text-dim); font-size: var(--fs-xs); }
+.qk-detail {
+  padding: 0 12px 12px;
+  animation: qkOpen var(--dur) var(--ease-out);
+}
+@keyframes qkOpen {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+.qk-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; }
+.qk-chip {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pad-accent) 16%, var(--surface2));
+  border: 1px solid var(--border);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.qk-stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+.qk-stat strong { color: var(--text); font-variant-numeric: tabular-nums; }
+.qk-text {
+  margin-top: 9px;
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.qk-weak {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--red-light);
+  border-left: 3px solid var(--red);
+  font-size: var(--fs-xs);
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+.qk-weak em {
+  display: block;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-size: 9px;
+  color: var(--red-text);
+}
+
+/* ── Rivals ─────────────────────────────────────────────────── */
+.rv-card {
+  position: relative;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.rv-card.mine {
+  border-color: var(--pad-accent);
+  background: color-mix(in srgb, var(--pad-accent) 10%, var(--surface));
+}
+.rv-flag {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--pad-accent);
+  margin-bottom: 5px;
+}
+.rv-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.rv-name { font-size: var(--fs-md); font-weight: 700; }
+.rv-quirk { font-size: var(--fs-2xs); color: var(--text-dim); }
+.rv-vs {
+  margin-top: 5px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--amber-text);
+}
+.rv-vs span {
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-right: 4px;
+}
+.rv-text {
+  margin-top: 7px;
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.rv-fest {
+  margin-top: 7px;
+  font-size: var(--fs-2xs);
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+.rv-fest em {
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-right: 5px;
+}
+
+/* ── Notes ──────────────────────────────────────────────────── */
+.nt-body {
+  width: 100%;
+  min-height: 260px;
+  padding: 12px 13px;
+  resize: vertical;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: var(--fs-sm);
+  line-height: 1.65;
+  outline: none;
+}
+.nt-body:focus { border-color: var(--pad-accent); }
+.nt-foot {
+  margin-top: 7px;
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+}
+
+/* ── Dice ───────────────────────────────────────────────────── */
+.dc-dice {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.dc-die {
+  padding: 10px 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast), transform var(--dur-fast);
+}
+.dc-die:hover { color: var(--text); transform: translateY(-1px); }
+.dc-die.sel {
+  color: var(--ink);
+  background: var(--pad-accent);
+  border-color: var(--pad-accent);
+}
+
+.dc-controls { display: flex; gap: 8px; margin-top: 12px; }
+.dc-step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 9px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.dc-step-label {
+  flex: 1;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.dc-step button {
+  width: 22px; height: 22px;
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  line-height: 1;
+}
+.dc-step button:hover { color: var(--text); background: var(--surface3); }
+.dc-step-val {
+  min-width: 26px;
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.dc-roll {
+  width: 100%;
+  margin-top: 12px;
+  padding: 13px;
+  border-radius: var(--radius);
+  background: var(--pad-accent);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  transition: transform var(--dur-fast) var(--ease-out), filter var(--dur-fast);
+}
+.dc-roll:hover { filter: brightness(1.08); }
+.dc-roll:active { transform: scale(.97); }
+
+.dc-result {
+  margin-top: 14px;
+  padding: 18px 14px;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.dc-result.empty { font-size: var(--fs-xs); color: var(--text-dim); padding: 26px 14px; }
+.dc-total {
+  font-family: var(--font-display);
+  font-size: 46px;
+  line-height: 1;
+  color: var(--pad-accent);
+  font-variant-numeric: tabular-nums;
+  animation: dcRoll var(--dur-slow) var(--ease-impact);
+}
+@keyframes dcRoll {
+  from { transform: scale(.6) rotate(-8deg); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+.dc-breakdown {
+  margin-top: 6px;
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+.dc-history-label {
+  margin: 14px 0 6px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.dc-history { display: flex; flex-wrap: wrap; gap: 5px; }
+.dc-chip {
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.dc-chip em {
+  font-style: normal;
+  margin-right: 5px;
+  color: var(--text-dim);
+}
 
 /* ── Contacts ───────────────────────────────────────────────── */
 .ct-list { list-style: none; }

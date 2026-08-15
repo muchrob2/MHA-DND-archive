@@ -96,7 +96,10 @@ check('the ranking doc id matches the one named in the rules',
   /doc\('masaranking'\)/.test(js));
 
 /* ── Wallpapers ─────────────────────────────────────────────────── */
-const wpIds = [...js.matchAll(/\{ id: '([a-z0-9-]+)', name: '[^']*',\n\s*css:/g)].map(m => m[1]);
+// Entries may carry an optional `anim:` between the name and the css, so the
+// match has to tolerate anything up to the css field rather than assuming the
+// two sit on consecutive lines.
+const wpIds = [...js.matchAll(/\{ id: '([a-z0-9-]+)', name: '[^']*',[^}]*?css:/g)].map(m => m[1]);
 check('wallpaper presets exist', wpIds.length > 0);
 check('every wallpaper id is unique', new Set(wpIds).size === wpIds.length);
 

@@ -30,7 +30,25 @@ let canBuy = false;         // admin or editor; everyone else browses
 let activeCategory = 'all';
 let searchTerm = '';
 let activeCharFile = null;
-let buyingItem = null;
+
+/* ── Basket ────────────────────────────────────────────────
+   Stored as [{ id, qty, unitPrice }] — catalogue ids and numbers only,
+   never whole entries. The catalogue is the source of truth for names,
+   stats and prices; a basket holding its own copy would quietly serve a
+   stale one after the catalogue is edited.
+
+   Deliberately client-side and NOT in Firestore. A basket is one person's
+   unfinished intent, not shared campaign state: syncing it would put two
+   players in the same trolley, and a half-built list is exactly the sort
+   of thing that should evaporate rather than sync. It survives a reload
+   via localStorage and nothing more.
+
+   One basket, not one per character. Switching who is paying re-costs the
+   same list against a different purse, which is what a DM kitting out
+   several students actually wants.
+   ───────────────────────────────────────────────────────────── */
+const BASKET_KEY = 'mha-shop-basket';
+let basket = [];
 
 function escHtml(s) {
   return String(s == null ? '' : s)
@@ -98,8 +116,8 @@ function spendFromWallet(currency, cost) {
   return owed <= 0;
 }
 
-/* ── Applying a purchase ───────────────────────────────────
-   What a purchase *does* depends on the entry's `kind`:
+/* ── Applying a basket ─────────────────────────────────────
+   What a line *does* depends on its entry's `kind`:
      item    — appends an inventory row (with a stable id, so the toolkit's
                merge layer treats it as an addition rather than replacing
                the whole array)
@@ -107,12 +125,21 @@ function spendFromWallet(currency, cost) {
                parts are quantities on the Inventory tab, not rows
      service — deducts money only. A hospital stay is not a thing you carry,
                and adding "Hospital Stay ×3" to a backpack reads as a bug.
-   ───────────────────────────────────────────────────────────── */
-function applyPurchase(inventory, entry, qty, unitPrice) {
-  const cost = unitPrice * qty;
-  inventory.currency = inventory.currency || { yen: 0, cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 };
-  if (!spendFromWallet(inventory.currency, cost)) return { ok: false, cost };
 
+   A basket checks out as ONE all-or-nothing spend rather than as a series
+   of individual purchases. Spending per line would let a basket half
+   succeed — the first few items delivered, the rest refused when the money
+   ran out — which is both surprising and annoying to unpick by hand. It
+   also makes the affordability question match what the drawer shows the
+   buyer: one total against one purse.
+   ───────────────────────────────────────────────────────────── */
+function lineCost(line) { return line.unitPrice * line.qty; }
+
+function basketTotal(lines) {
+  return (lines || []).reduce((sum, l) => sum + lineCost(l), 0);
+}
+
+function applyLineEffect(inventory, entry, qty) {
   if (entry.kind === 'part') {
     inventory.parts = inventory.parts || {};
     inventory.parts[entry.partKey] = (inventory.parts[entry.partKey] || 0) + qty;
@@ -125,7 +152,24 @@ function applyPurchase(inventory, entry, qty, unitPrice) {
       notes: itemNotes(entry),
     });
   }
-  return { ok: true, cost };
+  // services: money only, handled by the single spend below
+}
+
+// `lines` is [{ entry, qty, unitPrice }]. Mutates `inventory`; on failure it
+// mutates nothing, so a refused checkout leaves the sheet exactly as it was.
+function applyBasket(inventory, lines) {
+  const total = basketTotal(lines);
+  inventory.currency = inventory.currency || { yen: 0, cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 };
+  if (!spendFromWallet(inventory.currency, total)) return { ok: false, total };
+  for (const line of lines) applyLineEffect(inventory, line.entry, line.qty);
+  return { ok: true, total };
+}
+
+// Single-line convenience, kept so a one-off purchase has an obvious call
+// and so the basket path and the single path can never diverge.
+function applyPurchase(inventory, entry, qty, unitPrice) {
+  const res = applyBasket(inventory, [{ entry, qty, unitPrice }]);
+  return { ok: res.ok, cost: res.total };
 }
 
 // The line written into the inventory row's notes. Everything the handbook
@@ -282,7 +326,7 @@ function cardHtml(it) {
         <span class="shop-kind shop-kind-${escHtml(it.kind)}">${
           it.kind === 'part' ? 'crafting part' : it.kind === 'service' ? 'service' : 'inventory item'}</span>
         <button type="button" class="shop-buy" ${canBuy ? '' : 'disabled'}
-          onclick="openBuy('${escHtml(it.id)}')">${canBuy ? 'Buy' : 'Sign in'}</button>
+          onclick="basketAdd('${escHtml(it.id)}')">${canBuy ? '+ Add' : 'Sign in'}</button>
       </div>
     </article>`;
 }
@@ -301,6 +345,7 @@ function renderGrid() {
   grid.innerHTML = CATALOG.items.map(cardHtml).join('');
   applyFilter();
   applyAffordability();
+  applyBasketBadges();
 }
 
 function applyFilter() {
@@ -341,82 +386,232 @@ function onCategory(id) { activeCategory = id; renderCategories(); applyFilter()
 function onSearch(v) { searchTerm = v; applyFilter(); }
 function onCharChange(file) { activeCharFile = file; renderWallet(); }
 
-/* ── Buy dialog ────────────────────────────────────────────── */
-function openBuy(itemId) {
+/* ── Basket state ──────────────────────────────────────────── */
+function entryById(id) { return CATALOG.items.find(i => i.id === id) || null; }
+
+// Whether the handbook leaves this one's price open. Fixed prices are not up
+// for debate; ranged ("¥10,000–40,000") and open-ended ("¥250,000+") ones are
+// the DM's call, so those stay editable rather than silently charging the
+// bottom of the range.
+function isNegotiable(entry) { return !!(entry && (entry.priceMax || entry.priceOpen)); }
+
+function saveBasket() {
+  try { localStorage.setItem(BASKET_KEY, JSON.stringify(basket)); } catch {}
+}
+
+function loadBasket() {
+  let raw = null;
+  try { raw = localStorage.getItem(BASKET_KEY); } catch {}
+  if (!raw) return;
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return;
+    // Drop anything whose catalogue entry has since disappeared, and clamp
+    // the numbers: this came from storage a user can edit by hand.
+    basket = parsed
+      .filter(l => l && entryById(l.id))
+      .map(l => ({
+        id: l.id,
+        qty: Math.max(1, Math.min(999, parseInt(l.qty, 10) || 1)),
+        unitPrice: Math.max(0, parseInt(l.unitPrice, 10) || entryById(l.id).price),
+      }));
+  } catch {}
+}
+
+// Resolves stored lines against the live catalogue: [{ entry, qty, unitPrice }]
+function basketLines() {
+  return basket.map(l => ({ entry: entryById(l.id), qty: l.qty, unitPrice: l.unitPrice }))
+               .filter(l => l.entry);
+}
+function basketCount() { return basket.reduce((n, l) => n + l.qty, 0); }
+
+function basketAdd(id) {
   if (!canBuy) return;
-  buyingItem = CATALOG.items.find(i => i.id === itemId);
-  if (!buyingItem) return;
-
-  document.getElementById('buy-modal-title').textContent = 'Buy ' + buyingItem.name;
-  document.getElementById('buy-item-line').innerHTML = [
-    buyingItem.damage, buyingItem.stats, buyingItem.properties,
-  ].filter(Boolean).join(' · ') || escHtml(buyingItem.effect || '');
-
-  document.getElementById('buy-char').innerHTML = charOptionsHtml(activeCharFile);
-  document.getElementById('buy-qty').value = 1;
-
-  const priceInput = document.getElementById('buy-price');
-  priceInput.value = buyingItem.price;
-  // A fixed price is shown but locked; the handbook's ranged and open-ended
-  // prices ("¥10,000–40,000", "¥250,000+") are the DM's call, so those stay
-  // editable rather than silently charging the bottom of the range.
-  const negotiable = !!(buyingItem.priceMax || buyingItem.priceOpen);
-  priceInput.readOnly = !negotiable;
-  priceInput.classList.toggle('locked', !negotiable);
-
-  document.getElementById('buy-error').textContent = '';
-  document.getElementById('buy-overlay').classList.add('open');
-  refreshBuyMath();
+  const entry = entryById(id);
+  if (!entry) return;
+  const line = basket.find(l => l.id === id);
+  if (line) line.qty = Math.min(999, line.qty + 1);
+  else basket.push({ id, qty: 1, unitPrice: entry.price });
+  saveBasket();
+  renderBasket();
+  applyBasketBadges();
+  flashBasketTab();
 }
 
-function closeBuy() {
-  document.getElementById('buy-overlay').classList.remove('open');
-  buyingItem = null;
+function basketSetQty(id, value) {
+  const qty = Math.max(0, Math.min(999, parseInt(value, 10) || 0));
+  const idx = basket.findIndex(l => l.id === id);
+  if (idx === -1) return;
+  if (qty === 0) basket.splice(idx, 1);
+  else basket[idx].qty = qty;
+  saveBasket();
+  renderBasket();
+  applyBasketBadges();
 }
 
-function readBuyForm() {
-  const qty = Math.max(1, parseInt(document.getElementById('buy-qty').value, 10) || 1);
-  const unit = Math.max(0, parseInt(document.getElementById('buy-price').value, 10) || 0);
-  const file = document.getElementById('buy-char').value;
-  return { qty, unit, file, cost: qty * unit };
+function basketStep(id, delta) {
+  const line = basket.find(l => l.id === id);
+  if (line) basketSetQty(id, line.qty + delta);
 }
 
-// Live "can they afford it" readout. Advisory only — the authoritative check
-// runs inside the transaction against server state, because this page's copy
-// of the purse can be seconds old and two tabs must not both spend it.
-function refreshBuyMath() {
-  if (!buyingItem) return;
-  const { qty, unit, file, cost } = readBuyForm();
+function basketSetPrice(id, value) {
+  const line = basket.find(l => l.id === id);
+  if (!line) return;
+  line.unitPrice = Math.max(0, parseInt(value, 10) || 0);
+  saveBasket();
+  renderBasketTotals();   // not a full re-render: the caret is in this field
+}
+
+function basketRemove(id) {
+  basket = basket.filter(l => l.id !== id);
+  saveBasket();
+  renderBasket();
+  applyBasketBadges();
+}
+
+function basketClear() {
+  if (basket.length && !confirm('Empty the basket?')) return;
+  basket = [];
+  saveBasket();
+  renderBasket();
+  applyBasketBadges();
+}
+
+/* ── Basket rendering ──────────────────────────────────────── */
+function openBasket()  { document.getElementById('basket-overlay').classList.add('open'); renderBasket(); }
+function closeBasket() { document.getElementById('basket-overlay').classList.remove('open'); }
+
+function flashBasketTab() {
+  const tab = document.getElementById('basket-tab');
+  if (!tab) return;
+  tab.classList.remove('bump');
+  // reading offsetWidth restarts the animation rather than letting a second
+  // add within its duration do nothing
+  void tab.offsetWidth;
+  tab.classList.add('bump');
+}
+
+function renderBasketTab() {
+  const tab = document.getElementById('basket-tab');
+  const n = basketCount();
+  tab.hidden = !canBuy;
+  document.getElementById('basket-tab-count').textContent = n;
+  document.getElementById('basket-tab-total').textContent = yen(basketTotal(basketLines()));
+  tab.classList.toggle('empty', n === 0);
+}
+
+function renderBasket() {
+  renderBasketTab();
+  const listEl = document.getElementById('basket-list');
+  const lines = basketLines();
+
+  if (!lines.length) {
+    listEl.innerHTML = `<div class="basket-empty">Nothing in the basket yet.<br>Add something from the catalogue.</div>`;
+  } else {
+    listEl.innerHTML = lines.map(l => {
+      const negotiable = isNegotiable(l.entry);
+      return `
+      <div class="basket-line" data-cat="${escHtml(l.entry.category)}">
+        <div class="basket-line-main">
+          <span class="basket-line-name">${escHtml(l.entry.name)}</span>
+          <button type="button" class="basket-x" title="Remove" aria-label="Remove ${escHtml(l.entry.name)}"
+            onclick="basketRemove('${escHtml(l.entry.id)}')">✕</button>
+        </div>
+        <div class="basket-line-controls">
+          <div class="basket-stepper">
+            <button type="button" onclick="basketStep('${escHtml(l.entry.id)}',-1)" aria-label="One fewer">−</button>
+            <input type="number" min="0" max="999" value="${l.qty}"
+              onchange="basketSetQty('${escHtml(l.entry.id)}',this.value)" aria-label="Quantity">
+            <button type="button" onclick="basketStep('${escHtml(l.entry.id)}',1)" aria-label="One more">+</button>
+          </div>
+          <label class="basket-price">
+            <span>¥</span>
+            <input type="number" min="0" step="100" value="${l.unitPrice}" ${negotiable ? '' : 'readonly'}
+              class="${negotiable ? '' : 'locked'}"
+              title="${negotiable ? 'Handbook gives a range — set the price' : 'Fixed handbook price'}"
+              oninput="basketSetPrice('${escHtml(l.entry.id)}',this.value)" aria-label="Unit price">
+          </label>
+          <span class="basket-line-total">${yen(lineCost(l))}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('basket-char').innerHTML = charOptionsHtml(activeCharFile);
+  renderBasketTotals();
+}
+
+// Split out so editing a price does not rebuild the list under the caret.
+function renderBasketTotals() {
+  const lines = basketLines();
+  const total = basketTotal(lines);
+  const file = document.getElementById('basket-char').value || activeCharFile;
   const inv = currentInventory(file);
   const have = inv ? walletTotalYen(inv.currency) : 0;
-  const after = have - cost;
-  const el = document.getElementById('buy-math');
-  const confirmBtn = document.getElementById('buy-confirm');
+  const after = have - total;
+  const short = after < 0;
 
-  if (!inv) {
-    el.innerHTML = `<span class="buy-warn">That character has no sheet in the shared bundle yet — open the Class 1-A toolkit and save once first.</span>`;
-    confirmBtn.disabled = true;
+  const mathEl = document.getElementById('basket-math');
+  const btn = document.getElementById('basket-checkout');
+
+  // Line totals track a price edit without a full re-render.
+  const els = document.querySelectorAll('.basket-line-total');
+  for (let i = 0; i < els.length && i < lines.length; i++) {
+    els[i].textContent = yen(lineCost(lines[i]));
+  }
+
+  if (!lines.length) {
+    mathEl.innerHTML = '';
+    btn.disabled = true;
+    btn.textContent = 'Checkout';
     return;
   }
-  const short = after < 0;
-  el.innerHTML = `
-    <div class="buy-math-row"><span>${qty} × ${yen(unit)}</span><strong>${yen(cost)}</strong></div>
+  if (!inv) {
+    mathEl.innerHTML = `<div class="buy-math-row buy-warn"><span>That character has no sheet in the shared bundle yet — open the Class 1-A toolkit and save once first.</span></div>`;
+    btn.disabled = true;
+    return;
+  }
+
+  mathEl.innerHTML = `
+    <div class="buy-math-row"><span>${basketCount()} item${basketCount() === 1 ? '' : 's'}</span><strong>${yen(total)}</strong></div>
     <div class="buy-math-row"><span>Purse</span><span>${yen(have)}</span></div>
     <div class="buy-math-row ${short ? 'buy-warn' : 'buy-ok'}">
-      <span>${short ? 'Short by' : 'After purchase'}</span>
-      <strong>${yen(Math.abs(after))}</strong>
+      <span>${short ? 'Short by' : 'Left after'}</span><strong>${yen(Math.abs(after))}</strong>
     </div>`;
-  confirmBtn.disabled = short;
+  btn.disabled = short;
+  btn.textContent = short ? 'Not enough money' : 'Checkout';
 }
 
-async function confirmPurchase() {
-  if (!buyingItem) return;
-  const entry = buyingItem;
-  const { qty, unit, file, cost } = readBuyForm();
-  const errEl = document.getElementById('buy-error');
-  const confirmBtn = document.getElementById('buy-confirm');
+function onBasketCharChange(file) {
+  // Keep the two character pickers in step; the drawer's is just a second
+  // view of the same choice.
+  activeCharFile = file;
+  renderWallet();
+  renderBasketTotals();
+}
+
+// Reflects basket membership back onto the catalogue cards, so you can see
+// what is already in the trolley without opening it.
+function applyBasketBadges() {
+  const inBasket = new Map(basket.map(l => [l.id, l.qty]));
+  const cards = document.getElementById('shop-grid').querySelectorAll('.shop-card');
+  for (let i = 0; i < cards.length; i++) {
+    const qty = inBasket.get(cards[i].dataset.id);
+    cards[i].classList.toggle('in-basket', qty != null);
+    const btn = cards[i].querySelector('.shop-buy');
+    if (btn && canBuy) btn.textContent = qty != null ? `In basket · ${qty}` : '+ Add';
+  }
+}
+
+/* ── Checkout ──────────────────────────────────────────────── */
+async function checkout() {
+  const lines = basketLines();
+  if (!lines.length) return;
+  const file = document.getElementById('basket-char').value || activeCharFile;
+  const errEl = document.getElementById('basket-error');
+  const btn = document.getElementById('basket-checkout');
   errEl.textContent = '';
-  confirmBtn.disabled = true;
+  btn.disabled = true;
 
   try {
     // Read, check and deduct all inside one transaction. Checking against
@@ -431,7 +626,7 @@ async function confirmPurchase() {
       if (!character) throw new Error('That character has no sheet in the shared bundle yet.');
 
       character.inventory = character.inventory || {};
-      const result = applyPurchase(character.inventory, entry, qty, unit);
+      const result = applyBasket(character.inventory, lines);
       if (!result.ok) {
         throw new Error('Not enough money — the purse holds ' +
           yen(walletTotalYen(character.inventory.currency)) + '.');
@@ -440,14 +635,24 @@ async function confirmPurchase() {
     });
 
     const who = (ROSTER.find(s => s.file === file) || {}).name || file;
-    logReceipt(`${qty} × ${entry.name} → ${who} (${yen(cost)})`);
-    closeBuy();
+    const total = basketTotal(lines);
+    for (const l of lines) logReceipt(`${l.qty} × ${l.entry.name} → ${who} (${yen(lineCost(l))})`);
+    logReceipt(`— checkout total ${yen(total)} —`);
+
+    // Only cleared once the write has committed. Clearing optimistically
+    // would lose the list on any failure, and a rebuilt basket is far more
+    // irritating than a second click.
+    basket = [];
+    saveBasket();
+    renderBasket();
+    applyBasketBadges();
+    closeBasket();
     await refreshBundle();
   } catch (e) {
     errEl.textContent = e.message;
   } finally {
-    confirmBtn.disabled = false;
-    refreshBuyMath();
+    btn.disabled = false;
+    renderBasketTotals();
   }
 }
 
@@ -478,6 +683,7 @@ document.addEventListener('auth-state-changed', (e) => {
   canBuy = e.detail.role === 'admin' || e.detail.role === 'editor';
   renderWallet();
   renderGrid();
+  renderBasket();
 });
 
 (async () => {
@@ -489,8 +695,10 @@ document.addEventListener('auth-state-changed', (e) => {
   ROSTER = (roster?.students || []).filter(s => s.file);
   activeCharFile = (sortedCharacters()[0] || {}).file || null;
 
+  loadBasket();   // after CATALOG, which loadBasket validates ids against
   renderCategories();
   renderGrid();
+  renderBasket();
 
   await fbAuthReady;
   await refreshBundle();
@@ -501,20 +709,21 @@ document.addEventListener('auth-state-changed', (e) => {
     if (!snap.exists || snap.metadata?.fromCache) return;
     BUNDLE = snap.data();
     renderWallet();
-    if (buyingItem) refreshBuyMath();
+    renderBasketTotals();   // the purse moved; the checkout maths must follow
   }, err => console.error('[shop] live sync stopped:', err));
 })();
 
-/* ── Modal chrome ──────────────────────────────────────────── */
+/* ── Drawer chrome ─────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-  const overlay = document.getElementById('buy-overlay');
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeBuy(); });
-  const closeBtn = document.getElementById('buy-modal-close');
-  closeBtn.addEventListener('click', closeBuy);
+  const overlay = document.getElementById('basket-overlay');
+  // Clicking the scrim closes; clicking inside the drawer must not.
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeBasket(); });
+  const closeBtn = document.getElementById('basket-close');
+  closeBtn.addEventListener('click', closeBasket);
   closeBtn.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); closeBuy(); }
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); closeBasket(); }
   });
 });
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && document.getElementById('buy-overlay')?.classList.contains('open')) closeBuy();
+  if (e.key === 'Escape' && document.getElementById('basket-overlay')?.classList.contains('open')) closeBasket();
 });

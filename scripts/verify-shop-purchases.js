@@ -176,6 +176,82 @@ const shopTests = `
   check('a service adds nothing to the backpack', inv3.items.length === 0);
 })();
 
+// ── Basket checkout: one all-or-nothing spend ─────────────────────────────
+// Spending per line would let a basket half succeed — the first items
+// delivered, the rest refused when the money ran out — which is both
+// surprising and miserable to unpick by hand.
+(function () {
+  const katana  = { id: 'katana', name: 'Katana', kind: 'item', price: 85000, damage: '2d6 slashing' };
+  const medkit  = { id: 'medkit', name: 'Hero Medkit', kind: 'item', price: 7500 };
+  const proPart = { id: 'part-pro', name: 'Pro Part', kind: 'part', partKey: 'pro', price: 5000 };
+  const stay    = { id: 'stay', name: 'Hospital Stay', kind: 'service', price: 6000 };
+
+  check('an empty basket totals zero', basketTotal([]) === 0);
+  check('a basket totals every line', basketTotal([
+    { entry: katana, qty: 1, unitPrice: 85000 },
+    { entry: medkit, qty: 2, unitPrice: 7500 },
+  ]) === 100000);
+
+  // Mixed basket, affordable: every kind lands in the right place, once.
+  const inv = { currency: { yen: 200000 } };
+  const res = applyBasket(inv, [
+    { entry: katana,  qty: 1, unitPrice: 85000 },
+    { entry: medkit,  qty: 2, unitPrice: 7500 },
+    { entry: proPart, qty: 6, unitPrice: 5000 },
+    { entry: stay,    qty: 1, unitPrice: 6000 },
+  ]);
+  check('a mixed basket checks out', res.ok === true);
+  check('the basket total is charged once', res.total === 136000 && inv.currency.yen === 64000);
+  check('item lines become inventory rows', inv.items.length === 2);
+  check('each item row keeps its own quantity',
+        inv.items.find(i => i.name === 'Hero Medkit').qty === 2);
+  check('part lines become counters, not rows', inv.parts.pro === 6);
+  check('service lines add nothing to the backpack',
+        !inv.items.some(i => i.name === 'Hospital Stay'));
+
+  // Unaffordable: nothing at all may happen.
+  const poor = { currency: { yen: 10000 }, items: [{ id: 'item-1', name: 'Rope' }] };
+  const before = JSON.stringify(poor);
+  const failed = applyBasket(poor, [
+    { entry: medkit, qty: 1, unitPrice: 7500 },   // affordable on its own
+    { entry: katana, qty: 1, unitPrice: 85000 },  // pushes it over
+  ]);
+  check('an unaffordable basket is refused', failed.ok === false);
+  check('a refused basket delivers nothing', JSON.stringify(poor) === before);
+  check('a refused basket spends nothing', poor.currency.yen === 10000);
+
+  // The refusal is about the TOTAL, not any single line: two individually
+  // affordable lines that together exceed the purse must still be refused.
+  const tight = { currency: { yen: 12000 } };
+  check('affordability is judged on the basket total',
+        applyBasket(tight, [
+          { entry: medkit, qty: 1, unitPrice: 7500 },
+          { entry: medkit, qty: 1, unitPrice: 7500 },
+        ]).ok === false);
+  check('the tight purse is untouched', tight.currency.yen === 12000);
+
+  // A basket paying with mixed coin still conserves value exactly.
+  const coins = { currency: { yen: 0, pp: 1, gp: 0, ep: 0, sp: 0, cp: 0 } };
+  const start = walletTotalYen(coins.currency);
+  applyBasket(coins, [{ entry: medkit, qty: 1, unitPrice: 7500 }]);
+  check('a basket paid in coin conserves value',
+        walletTotalYen(coins.currency) === start - 7500);
+
+  // An edited unit price (the handbook's ranged entries) is what gets charged.
+  const negotiated = { currency: { yen: 50000 } };
+  applyBasket(negotiated, [{ entry: { id: 'pr', name: 'PR Campaign', kind: 'service', price: 30000 },
+                             qty: 1, unitPrice: 45000 }]);
+  check('the edited unit price is charged, not the catalogue floor',
+        negotiated.currency.yen === 5000);
+
+  // The single-item helper must stay a thin wrapper over the basket path, so
+  // the two can never drift apart.
+  const one = { currency: { yen: 20000 } };
+  const w = applyPurchase(one, medkit, 2, 7500);
+  check('applyPurchase still works via the basket path',
+        w.ok === true && w.cost === 15000 && one.currency.yen === 5000);
+})();
+
 // ── Price labels for the handbook's ranged and open-ended entries ─────────
 (function () {
   check('a fixed price renders plainly', priceLabel({ price: 18000 }) === '¥18,000');

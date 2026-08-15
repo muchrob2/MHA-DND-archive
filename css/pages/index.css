@@ -189,40 +189,63 @@ header::after {
     var(--accent) 0 8px, var(--ink) 8px 16px);
 }
 
+/* faint hero rays behind the masthead, echoing the role gate */
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-conic-gradient(from 0deg at 22% 120%,
+      rgba(255,194,32,.06) 0deg 4deg, transparent 4deg 15deg);
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, transparent 70%);
+  mask-image: linear-gradient(90deg, #000 0%, transparent 70%);
+}
+
 .header-inner {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 14px;
-  max-width: 780px;
+  gap: 16px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 16px 0;
+  padding: 22px 0;
 }
+.header-text { min-width: 0; }
 
 .header-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  font-size: 22px;
+  width: 54px;
+  height: 54px;
+  font-size: 27px;
   background: var(--accent-light);
   border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
 }
 
 .header-label {
   font-size: var(--fs-2xs);
   font-weight: 700;
-  letter-spacing: .16em;
+  letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--accent);
 }
 header h1 {
   font-family: var(--font-display);
-  font-size: var(--fs-xl);
-  line-height: 1.15;
+  font-size: clamp(var(--fs-xl), 4.2vw, var(--fs-3xl));
+  line-height: 1.02;
+  letter-spacing: .012em;
   text-transform: uppercase;
+  /* the ink offset that makes Anton read as printed cover type */
+  text-shadow: 2px 2px 0 var(--ink);
+}
+header h1 em {
+  font-style: normal;
+  color: var(--accent);
+  -webkit-text-stroke: 1px var(--ink);
 }
 
 .header-meta {
@@ -282,7 +305,47 @@ header h1 {
 }
 .switch-role-btn:hover { color: var(--accent-text); border-color: var(--accent); }
 
-main { max-width: 780px; margin: 0 auto; padding: 28px 32px 64px; }
+main { max-width: 1120px; margin: 0 auto; padding: 30px 32px 72px; }
+
+.hub-section + .hub-section { margin-top: 8px; }
+
+/* the "DM only" marker sitting inside the section heading */
+.dm-flag {
+  padding: 3px 8px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--red-text);
+  background: var(--red-light);
+  border: 1px solid color-mix(in srgb, var(--red) 34%, transparent);
+  border-radius: 999px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   TILE GRID
+   The hub used to be one 780px column of eight near-identical
+   gold rows: no hierarchy, and most of a desktop screen unused.
+   Now it is a real grid, each destination carrying its own
+   colour so the eye can learn where things are by position and
+   hue rather than by reading every title.
+   ════════════════════════════════════════════════════════════ */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
+  gap: 12px;
+}
+
+/* Per-destination accent, consumed by the icon, title, spine, hover
+   border and arrow. --tile is the single knob each card sets. */
+.card-hero[data-accent="gold"]    { --tile: var(--hero-gold); }
+.card-hero[data-accent="purple"]  { --tile: var(--hero-purple); }
+.card-hero[data-accent="teal"]    { --tile: var(--hero-teal); }
+.card-hero[data-accent="crimson"] { --tile: var(--hero-crimson); }
+.card-hero[data-accent="green"]   { --tile: var(--hero-green); }
+.card-hero[data-accent="blue"]    { --tile: var(--hero-blue); }
+.card-hero[data-accent="amber"]   { --tile: var(--hero-amber); }
 
 /* ════════════════════════════════════════════════════════════
    LINK CARDS
@@ -291,38 +354,69 @@ main { max-width: 780px; margin: 0 auto; padding: 28px 32px 64px; }
    ════════════════════════════════════════════════════════════ */
 
 .card-hero {
+  --tile: var(--accent);
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 10px;
-  padding: 20px 22px;
+  gap: 15px;
+  padding: 18px 20px;
   text-decoration: none;
   color: inherit;
-  background: linear-gradient(120deg, var(--surface) 0%, rgba(255,194,32,.05) 100%);
-  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
-  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(125deg,
+      color-mix(in srgb, var(--tile) 9%, var(--surface)) 0%,
+      var(--surface) 68%);
+  border: 1px solid var(--border);
+  /* the colour spine that identifies the destination at a glance */
+  border-left: 3px solid var(--tile);
+  border-radius: var(--radius);
 }
-.card-hero:hover { border-color: var(--accent); }
+.card-hero:hover { border-color: color-mix(in srgb, var(--tile) 60%, var(--border)); }
+
+/* The primary way in. Spans the row and carries more presence than
+   the tiles beside it, so the hub has an obvious first move. */
+.card-hero.featured {
+  grid-column: 1 / -1;
+  gap: 20px;
+  padding: 24px 26px;
+  background:
+    linear-gradient(125deg,
+      color-mix(in srgb, var(--tile) 16%, var(--surface)) 0%,
+      var(--surface) 62%);
+  border-left-width: 5px;
+}
+.card-hero.featured .card-icon { width: 60px; height: 60px; font-size: 30px; }
+.card-hero.featured .card-title { font-size: var(--fs-2xl); }
+.card-hero.featured .card-desc  { font-size: var(--fs-sm); }
 
 .card-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 46px;
-  height: 46px;
-  font-size: 23px;
-  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+  width: 48px;
+  height: 48px;
+  font-size: 24px;
+  background: color-mix(in srgb, var(--tile) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tile) 38%, transparent);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 11px), calc(100% - 11px) 100%, 0 100%);
+  transition: background var(--dur), border-color var(--dur);
 }
+.card-hero:hover .card-icon {
+  background: color-mix(in srgb, var(--tile) 26%, transparent);
+  border-color: var(--tile);
+}
+
 .card-body  { flex: 1; min-width: 0; }
 .card-title {
-  margin-bottom: 3px;
+  margin-bottom: 4px;
   font-family: var(--font-display);
   font-size: var(--fs-lg);
-  letter-spacing: .01em;
+  letter-spacing: .015em;
   text-transform: uppercase;
+  color: var(--text);
+  transition: color var(--dur);
 }
+.card-hero:hover .card-title { color: color-mix(in srgb, var(--tile) 72%, var(--text)); }
 .card-desc  { font-size: var(--fs-xs); line-height: 1.5; color: var(--text-muted); }
 .card-arrow {
   flex-shrink: 0;
@@ -330,7 +424,7 @@ main { max-width: 780px; margin: 0 auto; padding: 28px 32px 64px; }
   color: var(--text-dim);
   transition: transform var(--dur) var(--ease-out), color var(--dur);
 }
-.card-hero:hover .card-arrow { color: var(--accent); transform: translateX(5px); }
+.card-hero:hover .card-arrow { color: var(--tile); transform: translateX(5px); }
 
 /* ── smaller rulebook tiles ── */
 .card-row {
@@ -372,12 +466,64 @@ main { max-width: 780px; margin: 0 auto; padding: 28px 32px 64px; }
    RESPONSIVE
    ════════════════════════════════════════════════════════════ */
 
+/* Two columns is the natural fit for a tablet; below that the grid's
+   own minmax() drops to one without help. */
+@media (max-width: 900px) {
+  .header-inner { padding: 18px 0; }
+}
+
 @media (max-width: 640px) {
-  header { padding: 0 16px; }
-  main   { padding: 20px 16px 48px; }
+  header { padding: 0 15px; }
+  main   { padding: 18px 15px 52px; }
+  .header-inner { gap: 12px; padding: 15px 0; }
+  .header-icon { width: 42px; height: 42px; font-size: 21px; }
+
+  /* The switch-role control drops under the title rather than
+     squeezing it — on a phone the title is what matters. */
+  .header-inner { flex-wrap: wrap; }
+  .switch-role-btn { order: 3; width: 100%; margin-left: 0; text-align: center; }
+
+  .tile-grid { gap: 9px; }
+
+  /* Compact cards: the arrow is dead weight at this width, and the
+     description earns more from two clean lines than from four cramped
+     ones. Tap target stays well above the 44px minimum. */
+  .card-hero { gap: 13px; padding: 14px 15px; }
+  .card-icon { width: 42px; height: 42px; font-size: 21px; }
+  .card-title { font-size: var(--fs-md); }
+  .card-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card-arrow { display: none; }
+
+  .card-hero.featured { gap: 15px; padding: 18px 17px; }
+  .card-hero.featured .card-icon { width: 50px; height: 50px; font-size: 25px; }
+  .card-hero.featured .card-title { font-size: var(--fs-xl); }
+  .card-hero.featured .card-desc { font-size: var(--fs-xs); -webkit-line-clamp: 3; line-clamp: 3; }
+
   .card-row { grid-template-columns: 1fr 1fr; }
   .role-buttons { flex-direction: column; }
+
+  /* Roomier keys for thumbs, and the pad centred in the viewport. */
+  .pin-pad { max-width: 300px; gap: 11px; }
+  .pin-key { padding: 19px; }
 }
+
 @media (max-width: 400px) {
   .card-row { grid-template-columns: 1fr; }
+  .role-btn { padding: 20px 14px; }
+  .role-btn-icon { font-size: 28px; }
+}
+
+/* Coarse pointers get the hover treatments removed entirely — on a
+   touchscreen they latch after a tap and leave a card looking stuck. */
+@media (hover: none) {
+  .card-hero:hover { transform: none; filter: drop-shadow(var(--shadow-hard)); }
+  .card-hero:hover .card-arrow { transform: none; }
+  .card-hero:active { transform: translate(-1px, -1px); }
+  .role-btn:hover { transform: none; filter: drop-shadow(var(--shadow-hard)); }
 }

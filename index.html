@@ -71,9 +71,9 @@
 <header>
   <div class="header-inner">
     <div class="header-icon">⚡</div>
-    <div>
+    <div class="header-text">
       <div class="header-label" id="header-label">U.A. High School</div>
-      <h1>My Hero Academia D&amp;D</h1>
+      <h1>My Hero Academia <em>D&amp;D</em></h1>
       <div class="header-meta">
         <div class="last-updated hidden" id="last-updated" title="">
           <span class="last-updated-dot"></span>
@@ -87,88 +87,99 @@
 </header>
 
 <main>
-  <p class="section-label">Class 1-A</p>
-  <a class="card-hero" href="CLASS-1A/relationships.html">
-    <div class="card-icon" style="background:var(--gold-light);">🎓</div>
-    <div class="card-body">
-      <div class="card-title">Class 1-A Toolkit</div>
-      <div class="card-desc">Character profiles, stats, quirk mechanics, relationship tracker &amp; dice roller</div>
+  <section class="hub-section">
+    <p class="section-label">Class 1-A</p>
+    <div class="tile-grid">
+      <a class="card-hero featured" data-accent="gold" href="CLASS-1A/relationships.html">
+        <div class="card-icon">🎓</div>
+        <div class="card-body">
+          <div class="card-title">Class 1-A Toolkit</div>
+          <div class="card-desc">Character profiles, stats, quirk mechanics, relationship tracker &amp; dice roller</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      <a class="card-hero" data-accent="purple" href="CLASS-1A/board.html">
+        <div class="card-icon">⊞</div>
+        <div class="card-body">
+          <div class="card-title">Battle Board</div>
+          <div class="card-desc">Move your token on the tactical grid, measure range &amp; distance, and see terrain the DM has marked</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      <a class="card-hero" data-accent="teal" href="shop.html">
+        <div class="card-icon">🛒</div>
+        <div class="card-body">
+          <div class="card-title">Shop</div>
+          <div class="card-desc">Every priced item in the handbook — weapons, gear, suits, parts &amp; services, bought with a character's Yen</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
     </div>
-    <div class="card-arrow">→</div>
-  </a>
-  <a class="card-hero" href="CLASS-1A/board.html">
-    <div class="card-icon" style="background:rgba(139,71,212,0.15);">⊞</div>
-    <div class="card-body">
-      <div class="card-title">Battle Board</div>
-      <div class="card-desc">Move your token on the tactical grid, measure range &amp; distance, and see terrain the DM has marked</div>
-    </div>
-    <div class="card-arrow">→</div>
-  </a>
-  <a class="card-hero" href="shop.html">
-    <div class="card-icon" style="background:rgba(14,165,114,0.15);">🛒</div>
-    <div class="card-body">
-      <div class="card-title">Shop</div>
-      <div class="card-desc">Every priced item in the handbook — weapons, gear, suits, crafting parts &amp; services. Spend a character's Yen straight into their inventory</div>
-    </div>
-    <div class="card-arrow">→</div>
-  </a>
+  </section>
+
   <div id="dm-only">
-    <p class="section-label">Campaign</p>
-    <a class="card-hero" href="CLASS-1A/encounter.html">
-      <div class="card-icon" style="background:var(--gold-light);">⚔</div>
-      <div class="card-body">
-        <div class="card-title">Encounter Manager</div>
-        <div class="card-desc">Initiative tracker, turn mode &amp; tactical board for running combat — DM only</div>
+    <section class="hub-section">
+      <p class="section-label">Campaign <span class="dm-flag">DM only</span></p>
+      <div class="tile-grid">
+        <a class="card-hero" data-accent="crimson" href="CLASS-1A/encounter.html">
+          <div class="card-icon">⚔</div>
+          <div class="card-body">
+            <div class="card-title">Encounter Manager</div>
+            <div class="card-desc">Initiative tracker, turn mode &amp; tactical board for running combat</div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
+        <a class="card-hero" data-accent="green" href="characters.html">
+          <div class="card-icon">🗂</div>
+          <div class="card-body">
+            <div class="card-title">Characters</div>
+            <div class="card-desc">Browse every character — students, teachers &amp; villains — with search, filters &amp; a creator</div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
+        <a class="card-hero" data-accent="blue" href="campaign-overview.html">
+          <div class="card-icon">🗺</div>
+          <div class="card-body">
+            <div class="card-title">Campaign Overview</div>
+            <div class="card-desc">Story arcs, session notes, world reference, teachers, villains &amp; DM scripts</div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
+        <a class="card-hero" data-accent="gold" href="campaigns.html">
+          <div class="card-icon">📚</div>
+          <div class="card-body">
+            <div class="card-title">Campaigns</div>
+            <div class="card-desc">Every campaign laid out like a published adventure module — chapters, read-aloud text &amp; DM notes</div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
+        <a class="card-hero" data-accent="amber" href="session-log.html">
+          <div class="card-icon">📓</div>
+          <div class="card-body">
+            <div class="card-title">Session Log</div>
+            <div class="card-desc">What actually happened at the table — recaps, XP awarded &amp; loot gained</div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
       </div>
-      <div class="card-arrow">→</div>
-    </a>
-    <a class="card-hero" href="characters.html">
-      <div class="card-icon" style="background:rgba(14,165,114,0.15);">🗂</div>
-      <div class="card-body">
-        <div class="card-title">Characters</div>
-        <div class="card-desc">Browse every character — students, teachers &amp; villains — with search, filters &amp; a character creator</div>
-      </div>
-      <div class="card-arrow">→</div>
-    </a>
-    <a class="card-hero" href="campaign-overview.html">
-      <div class="card-icon" style="background:rgba(29,52,97,0.25);">🗺</div>
-      <div class="card-body">
-        <div class="card-title">Campaign Overview</div>
-        <div class="card-desc">Story arcs, session notes, world reference, teachers, villains, Class 1-A/1-B &amp; DM scripts — the complete campaign reference</div>
-      </div>
-      <div class="card-arrow">→</div>
-    </a>
-    <a class="card-hero" href="campaigns.html">
-      <div class="card-icon" style="background:var(--gold-light);">📚</div>
-      <div class="card-body">
-        <div class="card-title">Campaigns</div>
-        <div class="card-desc">Every campaign profile laid out like a published adventure module — chapters, subheadings, read-aloud text &amp; DM notes. Create new campaigns of your own</div>
-      </div>
-      <div class="card-arrow">→</div>
-    </a>
-    <a class="card-hero" href="session-log.html">
-      <div class="card-icon" style="background:rgba(14,165,114,0.15);">📓</div>
-      <div class="card-body">
-        <div class="card-title">Session Log</div>
-        <div class="card-desc">Record what actually happened at the table — recaps, XP awarded &amp; loot gained, session by session</div>
-      </div>
-      <div class="card-arrow">→</div>
-    </a>
+    </section>
   </div>
 
-  <p class="section-label">Rulebooks</p>
-  <div class="card-row">
-    <a class="card-sm accent-gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Offical%20Handbook%20-%20The%20Homebrewery.pdf" target="_blank" rel="noopener noreferrer">
-      <span class="card-sm-icon">📖</span>
-      <span class="card-sm-title">Official Handbook</span>
-      <span class="card-sm-desc">MHA5e core rules — PDF</span>
-    </a>
-    <a class="card-sm accent-gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf" target="_blank" rel="noopener noreferrer">
-      <span class="card-sm-icon">⚡</span>
-      <span class="card-sm-title">Quirk Compendium</span>
-      <span class="card-sm-desc">Full quirk mechanics — PDF</span>
-    </a>
-  </div>
+  <section class="hub-section">
+    <p class="section-label">Rulebooks</p>
+    <div class="card-row">
+      <a class="card-sm accent-gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Offical%20Handbook%20-%20The%20Homebrewery.pdf" target="_blank" rel="noopener noreferrer">
+        <span class="card-sm-icon">📖</span>
+        <span class="card-sm-title">Official Handbook</span>
+        <span class="card-sm-desc">MHA5e core rules — PDF</span>
+      </a>
+      <a class="card-sm accent-gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf" target="_blank" rel="noopener noreferrer">
+        <span class="card-sm-icon">⚡</span>
+        <span class="card-sm-title">Quirk Compendium</span>
+        <span class="card-sm-desc">Full quirk mechanics — PDF</span>
+      </a>
+    </div>
+  </section>
 </main>
 </div>
 

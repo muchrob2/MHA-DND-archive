@@ -73,6 +73,28 @@ for (const name of renderNames) {
 // Customise is the one app the dashboard tile and the page copy promise.
 check('the Customise app is registered', appIds.includes('customise'));
 
+/* ── Masaranking is admin-only, and that is a RULES fact ────────── */
+// The buttons being hidden is cosmetic. Every player holds an 'editor' role,
+// which can write most mha-dnd docs, so the only thing actually stopping a
+// player from rewriting the class ranking is the name of the doc appearing
+// in firestore.rules. If these two ever disagree, the chart is world-writable
+// and nothing on the page would look any different.
+check('the Masaranking app is registered', appIds.includes('masaranking'));
+const rules = read('firestore.rules');
+check('firestore.rules excludes masaranking from editor writes',
+  /doc != 'masaranking'/.test(rules),
+  "editors could rewrite the chart — add doc != 'masaranking' to the mha-dnd write rule");
+check('the page gates the ranking controls on admin, not merely on sign-in',
+  /canRank = e\.detail\.role === 'admin'/.test(js));
+check('every ranking mutation checks canRank first',
+  ['moveRank', 'setRankNote', 'resetRanking', 'scheduleRankSave'].every(fn => {
+    const body = js.match(new RegExp(`function ${fn}\\([^)]*\\) \\{[\\s\\S]{0,120}`));
+    return body && /if \(!canRank/.test(body[0]);
+  }),
+  'a mutation that skips the check would fail at the rules layer with an unexplained error');
+check('the ranking doc id matches the one named in the rules',
+  /doc\('masaranking'\)/.test(js));
+
 /* ── Wallpapers ─────────────────────────────────────────────────── */
 const wpIds = [...js.matchAll(/\{ id: '([a-z0-9-]+)', name: '[^']*',\n\s*css:/g)].map(m => m[1]);
 check('wallpaper presets exist', wpIds.length > 0);

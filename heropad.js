@@ -146,6 +146,13 @@ const APPS = [
     render: renderCustomiseApp,
   },
   {
+    id: 'masaranking',
+    name: 'Masaranking',
+    icon: '🧲',
+    accent: '#FF2E4D',
+    render: renderMasarankingApp,
+  },
+  {
     // Contacts is deliberately small: it exists to prove the app API above
     // with a real, data-driven app rather than a placeholder, and it reads
     // CLASS-1A/roster.json, which is already on disk. Delete the entry to
@@ -450,6 +457,192 @@ function resetPad() {
   if (openAppId === 'customise') $('pad-app-body').innerHTML = renderCustomiseApp();
 }
 
+/* ══ App: Masaranking ═══════════════════════════════════════════════
+   Masahata's ranking chart off the common room fridge (CAMPAIGN/arc.json,
+   recurring_elements.ranking_chart), which persists across arcs and which
+   several members of Class 1-A care about far more than they admit.
+
+   Unlike a pad, this is ONE list shared by the whole class: a single
+   Firestore doc at mha-dnd/masaranking, live to every open Heropad. The DM
+   keeps it and nobody else can touch it — that is enforced in
+   firestore.rules, not here. Hiding the buttons would be theatre: every
+   player holds an 'editor' role, which can write most mha-dnd docs, so the
+   doc is named in the rules alongside encounter-state as admin-only.
+
+   Stored as an ordered array of { file, note }. Order IS the ranking —
+   there is no rank number in the data, so a reorder can't leave two people
+   holding the same rank or a gap where someone was removed.
+   ═══════════════════════════════════════════════════════════════════ */
+const FS_RANK_DOC = db.collection('mha-dnd').doc('masaranking');
+
+let ranking = null;      // [{ file, note }] in rank order, or null until loaded
+let rankUnsub = null;
+let canRank = false;     // admin only — see the rules note above
+let _rankSaveTimer = null;
+let _rankSaveInFlight = false;
+
+// The stored order and the roster drift apart the moment a student is added
+// or removed. Reconcile rather than trusting either: keep the ranked order
+// for everyone still in the class, drop anyone who left, and put new arrivals
+// at the bottom — which is also exactly where Masahata would file them.
+function reconcileRanking(stored) {
+  const byFile = new Map(ROSTER.map(s => [s.file, s]));
+  const seen = new Set();
+  const out = [];
+  for (const entry of (Array.isArray(stored) ? stored : [])) {
+    if (!entry || !byFile.has(entry.file) || seen.has(entry.file)) continue;
+    seen.add(entry.file);
+    out.push({ file: entry.file, note: typeof entry.note === 'string' ? entry.note : '' });
+  }
+  for (const s of ROSTER) {
+    if (!seen.has(s.file)) out.push({ file: s.file, note: '' });
+  }
+  return out;
+}
+
+function renderMasarankingApp() {
+  if (!ranking) return '<p class="ct-empty">Fetching the chart…</p>';
+  if (!ranking.length) return '<p class="ct-empty">Nobody on the chart yet.</p>';
+
+  const byFile = new Map(ROSTER.map(s => [s.file, s]));
+  const rows = ranking.map((entry, i) => {
+    const s = byFile.get(entry.file);
+    if (!s) return '';
+    const isOwner = entry.file === activeFile;
+    const medal = i < 3 ? ` mr-top mr-top${i + 1}` : '';
+    const controls = canRank ? `
+      <span class="mr-moves">
+        <button type="button" class="mr-move" id="mr-up-${escHtml(entry.file)}"
+                onclick="moveRank('${escHtml(entry.file)}',-1)" ${i === 0 ? 'disabled' : ''}
+                aria-label="Move ${escHtml(s.name)} up">▲</button>
+        <button type="button" class="mr-move" id="mr-dn-${escHtml(entry.file)}"
+                onclick="moveRank('${escHtml(entry.file)}',1)" ${i === ranking.length - 1 ? 'disabled' : ''}
+                aria-label="Move ${escHtml(s.name)} down">▼</button>
+      </span>` : '';
+    const note = canRank
+      ? `<input type="text" class="mr-note-inp" maxlength="60" placeholder="Masahata's note…"
+                value="${escHtml(entry.note)}" aria-label="Note for ${escHtml(s.name)}"
+                oninput="setRankNote('${escHtml(entry.file)}', this.value)">`
+      : (entry.note ? `<span class="mr-note">${escHtml(entry.note)}</span>` : '');
+
+    return `<li class="mr-row${isOwner ? ' me' : ''}${medal}">
+      <span class="mr-rank">${i + 1}</span>
+      <span class="mr-body">
+        <span class="mr-name">${escHtml(s.name)}${isOwner ? '<em>you</em>' : ''}</span>
+        <span class="mr-quirk">${escHtml(s.quirk || '')}</span>
+        ${note}
+      </span>
+      ${controls}
+    </li>`;
+  }).join('');
+
+  return `
+    <p class="cz-lead mr-lead">The chart on the common room fridge. Masahata keeps it.
+      ${canRank ? 'Yours to rearrange — everyone sees it change.' : 'Arguing with it will not move you up it.'}</p>
+    <ol class="mr-list">${rows}</ol>
+    ${canRank ? `<div class="cz-row mr-admin">
+      <button type="button" class="cz-btn danger" onclick="resetRanking()">Reset to roster order</button>
+    </div>` : ''}
+    <p class="mr-foot" id="mr-foot"></p>`;
+}
+
+function rerenderRankingIfOpen(focusId) {
+  if (openAppId !== 'masaranking') return;
+  $('pad-app-body').innerHTML = renderMasarankingApp();
+  // The row moved out from under the pointer, so the button that was just
+  // clicked is a different element now. Put focus back on its replacement or
+  // a keyboard user loses their place on every nudge.
+  if (focusId) {
+    const btn = document.getElementById(focusId);
+    if (btn && !btn.disabled) btn.focus();
+  }
+}
+
+function moveRank(file, delta) {
+  if (!canRank || !ranking) return;
+  const i = ranking.findIndex(e => e.file === file);
+  const j = i + delta;
+  if (i < 0 || j < 0 || j >= ranking.length) return;
+  const [entry] = ranking.splice(i, 1);
+  ranking.splice(j, 0, entry);
+  scheduleRankSave();
+  rerenderRankingIfOpen((delta < 0 ? 'mr-up-' : 'mr-dn-') + file);
+}
+
+// Deliberately does NOT re-render: that would drop the caret mid-sentence.
+function setRankNote(file, value) {
+  if (!canRank || !ranking) return;
+  const entry = ranking.find(e => e.file === file);
+  if (!entry) return;
+  entry.note = value;
+  scheduleRankSave();
+}
+
+function resetRanking() {
+  if (!canRank) return;
+  ranking = ROSTER.map(s => ({ file: s.file, note: '' }));
+  scheduleRankSave();
+  rerenderRankingIfOpen();
+}
+
+function rankFoot(text) {
+  const el = $('mr-foot');
+  if (el) el.textContent = text || '';
+}
+
+function scheduleRankSave() {
+  if (!canRank) return;
+  clearTimeout(_rankSaveTimer);
+  // Cleared as it fires — see the same note on schedulePadSave. A spent timer
+  // id is truthy, and startRankLiveSync reads it as "unsaved edit on screen".
+  _rankSaveTimer = setTimeout(() => { _rankSaveTimer = null; pushRanking(); }, 500);
+  rankFoot('Saving…');
+}
+
+async function pushRanking() {
+  _rankSaveInFlight = true;
+  try {
+    await fbAuthReady;
+    // Whole-document set, like a pad: the DM is the only writer this doc will
+    // ever have, so there is no concurrent edit for a merge to protect.
+    await FS_RANK_DOC.set({ entries: ranking, updatedAt: Date.now() });
+    rankFoot('Saved — the whole class sees this.');
+  } catch (e) {
+    rankFoot('Could not save: ' + (e.code || e.message));
+  } finally {
+    _rankSaveInFlight = false;
+  }
+}
+
+function startRankLiveSync() {
+  if (rankUnsub) { rankUnsub(); rankUnsub = null; }
+  rankUnsub = FS_RANK_DOC.onSnapshot(snap => {
+    // Cached replays are this tab's own stale copy, not news — same trap the
+    // board and the pads guard against.
+    if (snap.metadata && snap.metadata.fromCache) return;
+    // Don't let the server's older copy land on top of a nudge that hasn't
+    // been written yet.
+    if (_rankSaveInFlight || _rankSaveTimer) return;
+    const next = reconcileRanking(snap.exists ? snap.data().entries : []);
+    if (JSON.stringify(next) === JSON.stringify(ranking)) return;
+    ranking = next;
+    rerenderRankingIfOpen();
+  }, err => console.error('[heropad] ranking sync stopped:', err));
+}
+
+async function loadRanking() {
+  try {
+    await fbAuthReady;
+    const snap = await FS_RANK_DOC.get();
+    ranking = reconcileRanking(snap.exists ? snap.data().entries : []);
+  } catch {
+    // Offline, or the doc has never been written. Roster order is a truthful
+    // starting chart rather than an empty app.
+    ranking = reconcileRanking([]);
+  }
+  rerenderRankingIfOpen();
+}
+
 /* ══ App: Contacts ══════════════════════════════════════════════════
    The class list straight off CLASS-1A/roster.json. See the note on the
    APPS entry — this is the worked example of the app API.
@@ -616,6 +809,14 @@ function pickDefaultOwner() {
 document.addEventListener('auth-state-changed', e => {
   const was = canSync;
   canSync = e.detail.role === 'admin' || e.detail.role === 'editor';
+
+  // The ranking chart is the DM's alone (firestore.rules), so the editing
+  // controls appear for admins and nobody else. Re-render if the app is
+  // already open, since sign-in can land after it was opened.
+  const wasRank = canRank;
+  canRank = e.detail.role === 'admin';
+  if (wasRank !== canRank) rerenderRankingIfOpen();
+
   if (!canSync) {
     setSyncNote(e.detail.user
       ? 'Saved on this device. Ask the DM for edit access to sync your pad everywhere.'
@@ -651,4 +852,9 @@ document.addEventListener('auth-state-changed', e => {
   renderOwnerLine();
   await loadPad(activeFile);
   startPadLiveSync(activeFile);
+
+  // Class-wide, not per-pad, so it is loaded once and stays subscribed for
+  // the life of the page rather than being re-fetched on every owner switch.
+  await loadRanking();
+  startRankLiveSync();
 })();

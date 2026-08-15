@@ -524,6 +524,117 @@
 .cz-msg:empty { margin-top: 0; }
 .cz-msg.err { color: var(--red-text); }
 
+/* ── Masaranking ─────────────────────────────────────────────
+   A chart stuck to a fridge, not a corporate dashboard: the rank
+   number is the loud part, and the top three get a colour rather
+   than a trophy. */
+.mr-lead { margin-bottom: 14px; }
+
+.mr-list {
+  list-style: none;
+  counter-reset: none;
+}
+.mr-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 9px 8px;
+  border-radius: var(--radius-sm);
+  border-bottom: 1px solid var(--border);
+}
+.mr-row:last-child { border-bottom: none; }
+.mr-row.me { background: color-mix(in srgb, var(--pad-accent) 12%, transparent); }
+
+.mr-rank {
+  --mr-c: var(--text-dim);
+  flex-shrink: 0;
+  width: 26px;
+  padding-top: 1px;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  line-height: 1;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--mr-c);
+}
+.mr-top1 .mr-rank { --mr-c: var(--gold); }
+.mr-top2 .mr-rank { --mr-c: var(--text-muted); }
+.mr-top3 .mr-rank { --mr-c: var(--amber-text); }
+
+.mr-body {
+  flex: 1;
+  min-width: 0;
+}
+.mr-name {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+.mr-name em {
+  font-style: normal;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--pad-accent);
+}
+.mr-quirk {
+  display: block;
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mr-note {
+  display: block;
+  margin-top: 3px;
+  font-size: var(--fs-xs);
+  font-style: italic;
+  color: var(--text-muted);
+}
+.mr-note-inp {
+  width: 100%;
+  margin-top: 5px;
+  padding: 4px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-xs);
+  outline: none;
+}
+.mr-note-inp:focus { border-color: var(--pad-accent); }
+
+.mr-moves {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.mr-move {
+  width: 28px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-size: 10px;
+  line-height: 1;
+  transition: color var(--dur-fast), background var(--dur-fast);
+}
+.mr-move:hover:not(:disabled) { color: var(--text); background: var(--surface3); }
+.mr-move:disabled { opacity: .28; cursor: default; }
+
+.mr-admin { margin-top: 16px; }
+.mr-foot {
+  margin-top: 10px;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+}
+.mr-foot:empty { margin-top: 0; }
+
 /* ── Contacts ───────────────────────────────────────────────── */
 .ct-list { list-style: none; }
 .ct-row {

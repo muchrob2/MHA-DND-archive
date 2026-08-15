@@ -63,7 +63,14 @@ const MAX_PAD_BYTES = 700000;
    its id) and means presets can never 404. A player's own photo is stored
    as a downscaled data URI instead — see the `image` wallpaper type.
    ─────────────────────────────────────────────────────────────────── */
+// `anim` names a keyframe class in heropad.css (pad-anim-<name>). Motion is
+// disabled wholesale by base.css under prefers-reduced-motion, so an animated
+// wallpaper degrades to its first frame rather than needing a second variant.
 const WALLPAPERS = [
+  { id: 'aurora', name: 'Aurora', anim: 'aurora',
+    css: 'radial-gradient(60% 45% at 20% 20%, rgba(18,210,150,.55), transparent 60%), radial-gradient(55% 45% at 80% 30%, rgba(47,107,255,.55), transparent 60%), radial-gradient(60% 50% at 50% 90%, rgba(168,85,247,.5), transparent 62%), linear-gradient(180deg, #0A1020 0%, #06070E 100%)' },
+  { id: 'ember', name: 'Ember', anim: 'ember',
+    css: 'radial-gradient(70% 50% at 50% 108%, rgba(255,46,77,.6), transparent 62%), radial-gradient(50% 40% at 30% 90%, rgba(255,160,35,.45), transparent 60%), linear-gradient(180deg, #140609 0%, #08070A 100%)' },
   { id: 'ua-dawn', name: 'U.A. Dawn',
     css: 'radial-gradient(95% 62% at 50% -8%, rgba(255,194,32,.55), transparent 70%), linear-gradient(180deg, #241903 0%, #0D0F16 58%, #08090D 100%)' },
   { id: 'plus-ultra', name: 'Plus Ultra',
@@ -80,6 +87,8 @@ const WALLPAPERS = [
     css: 'repeating-linear-gradient(135deg, rgba(255,160,35,.16) 0 15px, transparent 15px 30px), linear-gradient(180deg, #241804 0%, #0B0B0F 100%)' },
   { id: 'carbon', name: 'Carbon',
     css: 'repeating-linear-gradient(0deg, rgba(255,255,255,.045) 0 1px, transparent 1px 8px), repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 1px, transparent 1px 8px), linear-gradient(180deg, #1B1E29 0%, #08090D 100%)' },
+  { id: 'scanline', name: 'Scanline', anim: 'scan',
+    css: 'repeating-linear-gradient(0deg, rgba(18,210,150,.10) 0 2px, transparent 2px 5px), radial-gradient(80% 60% at 50% 40%, rgba(18,210,150,.22), transparent 70%), linear-gradient(180deg, #061410 0%, #05080A 100%)' },
 ];
 
 const ACCENTS = [
@@ -95,9 +104,10 @@ const ACCENTS = [
 
 function defaultPad() {
   return {
-    wallpaper: { type: 'preset', id: 'ua-dawn' },
+    wallpaper: { type: 'preset', id: 'aurora' },
     accent: '#FFC220',
     carrier: 'U.A. NET',
+    notes: '',
   };
 }
 
@@ -151,6 +161,21 @@ const APPS = [
     icon: '🏦',
     accent: '#12D296',
     render: renderBankApp,
+    // Money that moved in the last day. Null once it goes quiet, so the
+    // badge means "something happened" rather than "this app exists".
+    badge: () => {
+      const since = Date.now() - 86400000;
+      const n = ownerEntries().filter(e => (e.ts || 0) > since).length;
+      return n || null;
+    },
+  },
+  {
+    id: 'quirks',
+    name: 'Quirks',
+    icon: '📖',
+    accent: '#A855F7',
+    render: renderQuirksApp,
+    onOpen: loadQuirks,
   },
   {
     id: 'masaranking',
@@ -158,6 +183,34 @@ const APPS = [
     icon: '🧲',
     accent: '#FF2E4D',
     render: renderMasarankingApp,
+    badge: () => {
+      if (!ranking) return null;
+      const i = ranking.findIndex(r => r.file === activeFile);
+      return i >= 0 ? '#' + (i + 1) : null;
+    },
+  },
+  {
+    id: 'rivals',
+    name: 'Rivals',
+    icon: '⚔',
+    accent: '#FFA023',
+    render: renderRivalsApp,
+    onOpen: loadRivals,
+  },
+  {
+    id: 'notes',
+    name: 'Notes',
+    icon: '📝',
+    accent: '#FFC220',
+    render: renderNotesApp,
+    onOpen: focusNotes,
+  },
+  {
+    id: 'dice',
+    name: 'Dice',
+    icon: '🎲',
+    accent: '#F2F5FA',
+    render: renderDiceApp,
   },
   {
     // Contacts is deliberately small: it exists to prove the app API above
@@ -186,6 +239,10 @@ function applyPad() {
   const wall = $('pad-wallpaper');
   const w = pad.wallpaper || defaultPad().wallpaper;
 
+  // Animation classes are cleared first: a preset swap must not leave the
+  // previous wallpaper's keyframes running under the new one.
+  wall.className = '';
+
   if (w.type === 'image' && w.src) {
     wall.style.backgroundImage = cssUrl(w.src);
     wall.style.backgroundSize = 'cover';
@@ -200,6 +257,7 @@ function applyPad() {
     wall.style.backgroundSize = '';
     wall.style.backgroundPosition = '';
     wall.style.backgroundRepeat = '';
+    if (preset.anim) wall.className = 'pad-anim-' + preset.anim;
   }
 
   device.style.setProperty('--pad-accent', pad.accent || '#FFC220');
@@ -208,9 +266,13 @@ function applyPad() {
 
 function renderClock() {
   const now = new Date();
-  $('pad-clock').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  $('pad-clock').textContent = time;
   $('pad-day').textContent = now.toLocaleDateString([], { weekday: 'long' });
   $('pad-date').textContent = now.toLocaleDateString([], { day: 'numeric', month: 'long' });
+  // Only the time is refreshed while locked — rebuilding the whole lock
+  // screen every 20 seconds would make the notification stack flicker.
+  if (locked) $('lock-time').textContent = time;
 }
 
 function renderOwnerLine() {
@@ -220,10 +282,23 @@ function renderOwnerLine() {
     : 'No pad selected';
 }
 
+/* ── Badges ─────────────────────────────────────────────────────────
+   A number on an icon is the cheapest way to make a home screen feel
+   live, and the only honest source for one is data the pad already has.
+   An app whose badge() returns null (or that has none) shows nothing —
+   a permanent badge is just decoration that trains you to ignore badges.
+   ─────────────────────────────────────────────────────────────────── */
+function appBadge(app) {
+  if (!app.badge) return null;
+  try { return app.badge(); } catch { return null; }
+}
+
 function iconHtml(app) {
+  const badge = appBadge(app);
   return `<button type="button" role="listitem" class="pad-app-btn" onclick="openApp('${app.id}')"
-            aria-label="Open ${escHtml(app.name)}">
-            <span class="pad-app-ico" style="--ico:${escHtml(app.accent)}">${escHtml(app.icon)}</span>
+            aria-label="Open ${escHtml(app.name)}${badge ? ', ' + escHtml(String(badge)) + ' new' : ''}">
+            <span class="pad-app-ico" style="--ico:${escHtml(app.accent)}">${escHtml(app.icon)}${
+              badge ? `<i class="pad-badge">${escHtml(String(badge))}</i>` : ''}</span>
             <span class="pad-app-name">${escHtml(app.name)}</span>
           </button>`;
 }
@@ -232,7 +307,105 @@ function renderHome() {
   const docked = new Set(DOCK);
   $('pad-grid').innerHTML = APPS.filter(a => !docked.has(a.id)).map(iconHtml).join('');
   $('pad-dock').innerHTML = DOCK.map(id => appById(id)).filter(Boolean).map(iconHtml).join('');
+  renderWidget();
 }
+
+// The home-screen balance widget. Hidden rather than shown empty when the
+// character has no purse in the shared bundle — a widget reading "—" is
+// worse than no widget.
+function renderWidget() {
+  const el = $('pad-widget');
+  const purse = ownerPurse();
+  if (!purse) { el.hidden = true; return; }
+  el.hidden = false;
+  $('widget-balance').textContent = yenStr(walletTotalYen(purse));
+  const recent = ownerEntries()[0];
+  $('widget-sub').textContent = recent
+    ? `Last: ${recent.label}`
+    : 'No transactions yet';
+}
+
+/* ── Lock screen ────────────────────────────────────────────────────
+   The pad opens locked, so picking it up feels like picking up a phone
+   rather than loading a web page. One tap anywhere unlocks it.
+
+   Notifications are derived, never stored: the most recent money
+   movements and the owner's current place on the fridge chart. Both come
+   from documents the pad is already subscribed to, so the lock screen
+   costs no extra reads and updates itself.
+   ─────────────────────────────────────────────────────────────────── */
+let locked = false;
+
+function lockNotifications() {
+  const out = [];
+  for (const e of ownerEntries().slice(0, 2)) {
+    out.push({
+      icon: BANK_ICONS[e.kind] || '•',
+      app: 'Bank',
+      title: e.label || e.kind,
+      meta: e.yen ? (e.yen > 0 ? '+' : '−') + yenStr(Math.abs(e.yen)) : '',
+      ts: e.ts,
+    });
+  }
+  if (ranking) {
+    const i = ranking.findIndex(r => r.file === activeFile);
+    if (i >= 0) {
+      out.push({
+        icon: '🧲', app: 'Masaranking',
+        title: `You are #${i + 1} on the fridge`,
+        meta: ranking[i].note || '',
+        ts: null,
+      });
+    }
+  }
+  return out.slice(0, 3);
+}
+
+function renderLock() {
+  const now = new Date();
+  $('lock-time').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  $('lock-date').textContent = now.toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'long' });
+  const s = ownerStudent();
+  $('lock-owner').textContent = s ? s.name : '';
+
+  const notifs = lockNotifications();
+  $('lock-notifs').innerHTML = notifs.map(n => `
+    <div class="lock-notif">
+      <span class="lock-notif-ico">${escHtml(n.icon)}</span>
+      <span class="lock-notif-body">
+        <span class="lock-notif-app">${escHtml(n.app)}${
+          n.ts ? ' · ' + new Date(n.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</span>
+        <span class="lock-notif-title">${escHtml(n.title)}</span>
+      </span>
+      ${n.meta ? `<span class="lock-notif-meta">${escHtml(n.meta)}</span>` : ''}
+    </div>`).join('');
+}
+
+function lockPad() {
+  closeApp();
+  locked = true;
+  renderLock();
+  const el = $('pad-lock');
+  el.hidden = false;
+  $('pad-device').classList.add('locked');
+  requestAnimationFrame(() => el.classList.add('open'));
+}
+
+function unlockPad() {
+  if (!locked) return;
+  locked = false;
+  const el = $('pad-lock');
+  el.classList.remove('open');
+  $('pad-device').classList.remove('locked');
+  // Repaint the home screen on the way out: badges and the widget may have
+  // moved while the pad sat locked.
+  renderHome();
+  setTimeout(() => { if (!locked) el.hidden = true; }, 320);
+}
+
+document.addEventListener('keydown', e => {
+  if (locked && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); unlockPad(); }
+});
 
 /* ── Opening and closing apps ───────────────────────────────────── */
 function openApp(id) {
@@ -554,6 +727,9 @@ function renderMasarankingApp() {
 }
 
 function rerenderRankingIfOpen(focusId) {
+  // The rank badge on the home screen and the lock screen's "you are #N"
+  // notification both move when the chart does, whether or not it is open.
+  if (locked) renderLock(); else if (!openAppId) renderHome();
   if (openAppId !== 'masaranking') return;
   $('pad-app-body').innerHTML = renderMasarankingApp();
   // The row moved out from under the pointer, so the button that was just
@@ -794,8 +970,11 @@ function renderBankApp() {
   return balanceCard + `<div class="bk-tabs">${tabs}</div><div class="bk-list">${rows}</div>`;
 }
 
+// A ledger or purse change moves three things at once: the open statement,
+// the home screen's badge and widget, and the lock screen's notifications.
 function rerenderBankIfOpen() {
   if (openAppId === 'bank') $('pad-app-body').innerHTML = renderBankApp();
+  if (locked) renderLock(); else renderHome();
 }
 
 async function loadBank() {
@@ -827,6 +1006,255 @@ function startBankLiveSync() {
     bundle = snap.data();
     rerenderBankIfOpen();
   }, err => console.error('[heropad] purse sync stopped:', err));
+}
+
+/* ══ App: Quirks ════════════════════════════════════════════════════
+   The class's quirks, searchable. Everything here is already on disk in
+   the per-character files — quirk type, rarity, save DC, the compendium
+   source and the weakness — but the only way to read it was to open the
+   toolkit and click through twenty classmates one at a time.
+
+   dm_notes is deliberately never touched. The character files carry it,
+   and this is a player-facing app.
+   ═══════════════════════════════════════════════════════════════════ */
+let quirks = null;         // [{name, quirk, ...}] once loaded
+// The in-flight fetch, not a boolean. A second caller has to be able to await
+// the first one's work: opening the app fires this via onOpen, and anything
+// else that wants the data would otherwise get an immediate return and find
+// `quirks` still null.
+let quirksPromise = null;
+let quirkQuery = '';
+let openQuirk = null;
+
+function loadQuirks() {
+  if (quirks) return Promise.resolve();
+  if (quirksPromise) return quirksPromise;
+  quirksPromise = (async () => {
+    try {
+      const loaded = await Promise.all(ROSTER.map(s =>
+        fetch('CLASS-1A/' + s.file).then(r => r.json())
+          .then(c => ({
+            file: s.file,
+            name: c.name || s.name,
+            quirk: c.quirk || s.quirk || '',
+            type: c.quirk_type || '',
+            rarity: c.quirk_rarity || '',
+            saveDC: c.quirk_save_DC || null,
+            ability: c.quirk_ability || '',
+            summary: (c.quirk_mechanics && c.quirk_mechanics.source) || '',
+            weakness: (c.quirk_mechanics && c.quirk_mechanics.weakness) || '',
+            physiology: c.physiology || s.physiology || '',
+          }))
+          .catch(() => null)
+      ));
+      quirks = loaded.filter(Boolean);
+    } catch {
+      quirks = [];
+    }
+    if (openAppId === 'quirks') $('pad-app-body').innerHTML = renderQuirksApp();
+  })();
+  return quirksPromise;
+}
+
+function setQuirkQuery(v) {
+  quirkQuery = v.toLowerCase();
+  // Only the list is replaced — re-rendering the whole app would drop the
+  // caret out of the search box on every keystroke.
+  const list = $('qk-list');
+  if (list) list.innerHTML = quirkListHtml();
+}
+
+function toggleQuirk(file) {
+  openQuirk = openQuirk === file ? null : file;
+  const list = $('qk-list');
+  if (list) list.innerHTML = quirkListHtml();
+}
+
+function quirkListHtml() {
+  if (!quirks) return '<p class="bk-empty">Reading the class files…</p>';
+  const q = quirkQuery.trim();
+  const hits = quirks.filter(k => !q ||
+    (k.name + ' ' + k.quirk + ' ' + k.type + ' ' + k.rarity + ' ' + k.summary).toLowerCase().includes(q));
+  if (!hits.length) return '<p class="bk-empty">Nothing matches that.</p>';
+
+  return hits.map(k => {
+    const open = openQuirk === k.file;
+    const chips = [k.type, k.rarity, k.physiology].filter(Boolean)
+      .map(c => `<span class="qk-chip">${escHtml(c)}</span>`).join('');
+    return `<div class="qk-card${open ? ' open' : ''}">
+      <button type="button" class="qk-head" onclick="toggleQuirk('${escHtml(k.file)}')"
+              aria-expanded="${open}">
+        <span class="qk-head-body">
+          <span class="qk-quirk">${escHtml(k.quirk)}</span>
+          <span class="qk-who">${escHtml(k.name)}</span>
+        </span>
+        <span class="qk-caret">${open ? '▾' : '▸'}</span>
+      </button>
+      ${open ? `<div class="qk-detail">
+        <div class="qk-chips">${chips}</div>
+        ${k.saveDC ? `<div class="qk-stat"><span>Save DC</span><strong>${escHtml(String(k.saveDC))}</strong></div>` : ''}
+        ${k.ability ? `<div class="qk-stat"><span>Ability</span><strong>${escHtml(k.ability)}</strong></div>` : ''}
+        ${k.summary ? `<p class="qk-text">${escHtml(k.summary)}</p>` : ''}
+        ${k.weakness ? `<p class="qk-weak"><em>Weakness</em> ${escHtml(k.weakness)}</p>` : ''}
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function renderQuirksApp() {
+  return `
+    <input type="search" id="qk-search" class="cz-input qk-search" placeholder="Search quirks, types, names…"
+           value="${escHtml(quirkQuery)}" oninput="setQuirkQuery(this.value)" aria-label="Search quirks">
+    <div id="qk-list">${quirkListHtml()}</div>`;
+}
+
+/* ══ App: Rivals ════════════════════════════════════════════════════
+   Class 1-B, and who each of them has decided they are measured against.
+   CAMPAIGN/class1b.json pairs all twenty with a 1-A counterpart and
+   describes the dynamic; the owner's own rival is pulled to the top.
+
+   dm_notes and stat_block are never read — this is the players' view.
+   ═══════════════════════════════════════════════════════════════════ */
+let rivals = null;
+let rivalsPromise = null;   // in-flight fetch — see the note on quirksPromise
+
+function loadRivals() {
+  if (rivals) return Promise.resolve();
+  if (rivalsPromise) return rivalsPromise;
+  rivalsPromise = (async () => {
+    try {
+      const data = await fetch('CAMPAIGN/class1b.json').then(r => r.json());
+      // Only the player-facing fields are copied across. dm_notes and
+      // stat_block stay in the file where they belong.
+      rivals = (data.students || []).map(s => ({
+        name: s.name, quirk: s.quirk, summary: s.quirk_summary || '',
+        rival: s.rival_in_1a || '', dynamic: s.rivalry_dynamic || '',
+        festival: s.sports_festival_role || '',
+      }));
+    } catch {
+      rivals = [];
+    }
+    if (openAppId === 'rivals') $('pad-app-body').innerHTML = renderRivalsApp();
+  })();
+  return rivalsPromise;
+}
+
+function rivalCardHtml(r, mine) {
+  return `<div class="rv-card${mine ? ' mine' : ''}">
+    ${mine ? '<div class="rv-flag">Your rival</div>' : ''}
+    <div class="rv-top">
+      <span class="rv-name">${escHtml(r.name)}</span>
+      <span class="rv-quirk">${escHtml(r.quirk)}</span>
+    </div>
+    ${r.rival ? `<div class="rv-vs"><span>vs</span> ${escHtml(r.rival)}</div>` : ''}
+    ${r.dynamic ? `<p class="rv-text">${escHtml(r.dynamic)}</p>` : ''}
+    ${r.festival ? `<p class="rv-fest"><em>Sports Festival</em> ${escHtml(r.festival)}</p>` : ''}
+  </div>`;
+}
+
+function renderRivalsApp() {
+  if (!rivals) return '<p class="bk-empty">Reading the 1-B file…</p>';
+  if (!rivals.length) return '<p class="bk-empty">Class 1-B could not be loaded.</p>';
+  const me = ownerStudent();
+  const mine = me ? rivals.filter(r => r.rival === me.name) : [];
+  const rest = rivals.filter(r => !mine.includes(r));
+  return `<p class="cz-lead">Class 1-B — the class that almost made it into 1-A, and has not let it go.</p>
+    ${mine.map(r => rivalCardHtml(r, true)).join('')}
+    ${rest.map(r => rivalCardHtml(r, false)).join('')}`;
+}
+
+/* ══ App: Notes ═════════════════════════════════════════════════════
+   A private notepad per character, stored in that character's pad
+   document — so it syncs with everything else on the pad and needs no
+   new plumbing. Signed-out players still get one; it just stays on the
+   device, same as their wallpaper.
+   ═══════════════════════════════════════════════════════════════════ */
+function renderNotesApp() {
+  return `
+    <p class="cz-lead">Leads, suspicions, who owes you money. Saves as you type.</p>
+    <textarea id="nt-body" class="nt-body" placeholder="Write anything…"
+              oninput="setNotes(this.value)" aria-label="Your notes">${escHtml(pad.notes || '')}</textarea>
+    <div class="nt-foot" id="nt-foot"></div>`;
+}
+
+function focusNotes() {
+  const el = $('nt-body');
+  if (el && el.focus) el.focus();
+}
+
+function setNotes(value) {
+  pad.notes = value;
+  schedulePadSave();
+  const foot = $('nt-foot');
+  if (foot) {
+    const words = value.trim() ? value.trim().split(/\s+/).length : 0;
+    foot.textContent = words ? `${words} word${words === 1 ? '' : 's'} · saved` : '';
+  }
+}
+
+/* ══ App: Dice ══════════════════════════════════════════════════════
+   A roller on the phone, because the phone is what is already in their
+   hand. Deliberately its own thing rather than a link to the toolkit's
+   roller: history is per-session and lives nowhere.
+   ═══════════════════════════════════════════════════════════════════ */
+const DICE_FACES = [4, 6, 8, 10, 12, 20, 100];
+let diceSides = 20;
+let diceCount = 1;
+let diceMod = 0;
+let diceHistory = [];
+let diceLast = null;
+
+function renderDiceApp() {
+  const faces = DICE_FACES.map(n =>
+    `<button type="button" class="dc-die${n === diceSides ? ' sel' : ''}"
+             onclick="setDie(${n})">d${n}</button>`).join('');
+
+  const result = diceLast
+    ? `<div class="dc-result">
+         <div class="dc-total">${diceLast.total}</div>
+         <div class="dc-breakdown">${escHtml(diceLast.detail)}</div>
+       </div>`
+    : '<div class="dc-result empty">Pick a die and roll</div>';
+
+  return `
+    <div class="dc-dice">${faces}</div>
+    <div class="dc-controls">
+      <div class="dc-step">
+        <span class="dc-step-label">Dice</span>
+        <button type="button" onclick="adjustDice(-1)" aria-label="One fewer die">−</button>
+        <span class="dc-step-val" id="dc-count">${diceCount}</span>
+        <button type="button" onclick="adjustDice(1)" aria-label="One more die">+</button>
+      </div>
+      <div class="dc-step">
+        <span class="dc-step-label">Modifier</span>
+        <button type="button" onclick="adjustMod(-1)" aria-label="Lower the modifier">−</button>
+        <span class="dc-step-val" id="dc-mod">${diceMod >= 0 ? '+' : ''}${diceMod}</span>
+        <button type="button" onclick="adjustMod(1)" aria-label="Raise the modifier">+</button>
+      </div>
+    </div>
+    <button type="button" class="dc-roll" onclick="rollDice()">Roll ${diceCount}d${diceSides}${
+      diceMod ? (diceMod > 0 ? '+' : '') + diceMod : ''}</button>
+    ${result}
+    ${diceHistory.length ? `<p class="dc-history-label">Recent</p>
+      <div class="dc-history">${diceHistory.map(h =>
+        `<span class="dc-chip"><em>${escHtml(h.label)}</em>${h.total}</span>`).join('')}</div>` : ''}`;
+}
+
+function setDie(n) { diceSides = n; $('pad-app-body').innerHTML = renderDiceApp(); }
+function adjustDice(d) { diceCount = Math.min(12, Math.max(1, diceCount + d)); $('pad-app-body').innerHTML = renderDiceApp(); }
+function adjustMod(d) { diceMod = Math.min(50, Math.max(-50, diceMod + d)); $('pad-app-body').innerHTML = renderDiceApp(); }
+
+function rollDice() {
+  const rolls = [];
+  for (let i = 0; i < diceCount; i++) rolls.push(1 + Math.floor(Math.random() * diceSides));
+  const sum = rolls.reduce((a, b) => a + b, 0);
+  const label = `${diceCount}d${diceSides}${diceMod ? (diceMod > 0 ? '+' : '') + diceMod : ''}`;
+  diceLast = {
+    total: sum + diceMod,
+    detail: rolls.join(' + ') + (diceMod ? ` ${diceMod > 0 ? '+' : '−'} ${Math.abs(diceMod)}` : ''),
+  };
+  diceHistory = [{ label, total: sum + diceMod }].concat(diceHistory).slice(0, 8);
+  $('pad-app-body').innerHTML = renderDiceApp();
 }
 
 /* ══ App: Contacts ══════════════════════════════════════════════════
@@ -1013,6 +1441,7 @@ function chooseOwner(file) {
   renderOwnerLine();
   loadPad(file);
   startPadLiveSync(file);
+  renderHome();   // badges and the widget are per-character
 }
 
 function renderOwnerName() {
@@ -1096,4 +1525,6 @@ document.addEventListener('auth-state-changed', e => {
   renderOwnerLine();
   await loadPad(activeFile);
   startPadLiveSync(activeFile);
+  renderHome();   // badges and the widget, now that the owner and data are known
+  lockPad();      // the pad opens locked, like a phone does
 })();

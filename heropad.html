@@ -54,6 +54,7 @@
             <span id="pad-carrier">U.A. NET</span>
             <span class="pad-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
             <span class="pad-batt" aria-hidden="true"><b></b></span>
+            <button type="button" id="pad-lock-btn" onclick="lockPad()" aria-label="Lock the Heropad">⏻</button>
           </span>
         </div>
 
@@ -63,10 +64,32 @@
           <div id="pad-owner-line">—</div>
         </div>
 
+        <!-- Balance widget. Hidden until the Bank has something to say. -->
+        <button type="button" id="pad-widget" onclick="openApp('bank')" hidden>
+          <span class="widget-label">Balance</span>
+          <span class="widget-value" id="widget-balance">—</span>
+          <span class="widget-sub" id="widget-sub"></span>
+        </button>
+
         <div id="pad-grid" role="list"></div>
 
         <div id="pad-dock" role="list"></div>
         <div id="pad-homebar" aria-hidden="true"></div>
+      </div>
+
+      <!-- Lock screen. What the pad opens on, so picking it up feels like
+           picking up a phone rather than loading a web page. -->
+      <div id="pad-lock" hidden onclick="unlockPad()" role="button" tabindex="0"
+           aria-label="Unlock the Heropad">
+        <div id="lock-top">
+          <div id="lock-time">--:--</div>
+          <div id="lock-date">—</div>
+        </div>
+        <div id="lock-notifs"></div>
+        <div id="lock-foot">
+          <div id="lock-owner">—</div>
+          <div id="lock-hint"><span class="lock-arrow">⌃</span> Tap to unlock</div>
+        </div>
       </div>
 
       <!-- First-run setup. Shown only when nothing yet identifies the

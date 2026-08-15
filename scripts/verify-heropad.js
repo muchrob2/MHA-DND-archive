@@ -96,7 +96,10 @@ check('the ranking doc id matches the one named in the rules',
   /doc\('masaranking'\)/.test(js));
 
 /* ── Wallpapers ─────────────────────────────────────────────────── */
-const wpIds = [...js.matchAll(/\{ id: '([a-z0-9-]+)', name: '[^']*',\n\s*css:/g)].map(m => m[1]);
+// Entries may carry an optional `anim:` between the name and the css, so the
+// match has to tolerate anything up to the css field rather than assuming the
+// two sit on consecutive lines.
+const wpIds = [...js.matchAll(/\{ id: '([a-z0-9-]+)', name: '[^']*',[^}]*?css:/g)].map(m => m[1]);
 check('wallpaper presets exist', wpIds.length > 0);
 check('every wallpaper id is unique', new Set(wpIds).size === wpIds.length);
 
@@ -147,6 +150,41 @@ const htmlIds = new Set([...html.matchAll(/id="([a-zA-Z0-9-]+)"/g)].map(m => m[1
 const missing = [...usedIds].filter(id => !htmlIds.has(id) && !jsCreatedIds.has(id));
 check('every element the script reads exists in the markup', missing.length === 0,
   'missing from heropad.html: ' + missing.join(', '));
+
+/* ── Hidden really means hidden ─────────────────────────────────── */
+// The bug this exists for: #pad-setup is shown and hidden by toggling the
+// `hidden` attribute, and its rule sets `display: flex`. An author `display`
+// declaration outranks the UA stylesheet's `[hidden] { display: none }`, so
+// the "hidden" setup screen stayed laid out across the whole device at
+// opacity 0 — invisible, and swallowing every tap aimed at the app icons
+// beneath it. Tapping an app silently switched character instead of opening.
+//
+// Any element the markup ships as `hidden` and the CSS gives a `display` to
+// needs an explicit `[hidden]` guard. Nothing about this is visible to a
+// stub-DOM test, and nothing about it looks wrong in either file alone.
+const hideableIds = [...html.matchAll(/<[^>]*\bid="([a-zA-Z0-9-]+)"[^>]*\bhidden\b[^>]*>/g)].map(m => m[1]);
+check('the markup ships hideable elements', hideableIds.length > 0);
+for (const id of hideableIds) {
+  const rule = css.match(new RegExp(`#${id}\\s*\\{([^}]*)\\}`));
+  if (!rule || !/(^|[\s;])display\s*:/.test(rule[1])) continue;   // no display set — the UA rule works
+  check(`#${id} is actually hidden when [hidden] is set`,
+    new RegExp(`#${id}\\[hidden\\]`).test(css),
+    'its rule sets display, which overrides [hidden] — an invisible overlay will still eat clicks');
+}
+
+/* ── The device fits the space it is given ──────────────────────── */
+// A fixed min-height taller than the viewport is how the phone ended up
+// overflowing short laptop windows: the device kept its size and the page
+// scrolled instead.
+const deviceRule = (css.match(/#pad-device\s*\{([^}]*)\}/) || [])[1] || '';
+check('#pad-device derives its size from the space available',
+  /height:\s*100%/.test(deviceRule) && /aspect-ratio/.test(deviceRule),
+  'height/aspect-ratio sizing keeps it inside the stage on any viewport');
+const minH = (deviceRule.match(/min-height:\s*(\d+)px/) || [])[1];
+check('its floor is small enough not to overflow a short window',
+  !minH || Number(minH) <= 420, `min-height: ${minH}px`);
+check('#pad-stage can shrink', /#pad-stage\s*\{[^}]*min-height:\s*0/.test(css),
+  'without min-height:0 a flex child refuses to shrink below its content');
 
 /* ── CSS covers what gets rendered ──────────────────────────────── */
 // The device is one styled object; these are the pieces the illusion needs.

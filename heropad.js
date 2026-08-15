@@ -190,14 +190,6 @@ const APPS = [
     },
   },
   {
-    id: 'rivals',
-    name: 'Rivals',
-    icon: '⚔',
-    accent: '#FFA023',
-    render: renderRivalsApp,
-    onOpen: loadRivals,
-  },
-  {
     id: 'notes',
     name: 'Notes',
     icon: '📝',
@@ -1106,61 +1098,6 @@ function renderQuirksApp() {
     <input type="search" id="qk-search" class="cz-input qk-search" placeholder="Search quirks, types, names…"
            value="${escHtml(quirkQuery)}" oninput="setQuirkQuery(this.value)" aria-label="Search quirks">
     <div id="qk-list">${quirkListHtml()}</div>`;
-}
-
-/* ══ App: Rivals ════════════════════════════════════════════════════
-   Class 1-B, and who each of them has decided they are measured against.
-   CAMPAIGN/class1b.json pairs all twenty with a 1-A counterpart and
-   describes the dynamic; the owner's own rival is pulled to the top.
-
-   dm_notes and stat_block are never read — this is the players' view.
-   ═══════════════════════════════════════════════════════════════════ */
-let rivals = null;
-let rivalsPromise = null;   // in-flight fetch — see the note on quirksPromise
-
-function loadRivals() {
-  if (rivals) return Promise.resolve();
-  if (rivalsPromise) return rivalsPromise;
-  rivalsPromise = (async () => {
-    try {
-      const data = await fetch('CAMPAIGN/class1b.json').then(r => r.json());
-      // Only the player-facing fields are copied across. dm_notes and
-      // stat_block stay in the file where they belong.
-      rivals = (data.students || []).map(s => ({
-        name: s.name, quirk: s.quirk, summary: s.quirk_summary || '',
-        rival: s.rival_in_1a || '', dynamic: s.rivalry_dynamic || '',
-        festival: s.sports_festival_role || '',
-      }));
-    } catch {
-      rivals = [];
-    }
-    if (openAppId === 'rivals') $('pad-app-body').innerHTML = renderRivalsApp();
-  })();
-  return rivalsPromise;
-}
-
-function rivalCardHtml(r, mine) {
-  return `<div class="rv-card${mine ? ' mine' : ''}">
-    ${mine ? '<div class="rv-flag">Your rival</div>' : ''}
-    <div class="rv-top">
-      <span class="rv-name">${escHtml(r.name)}</span>
-      <span class="rv-quirk">${escHtml(r.quirk)}</span>
-    </div>
-    ${r.rival ? `<div class="rv-vs"><span>vs</span> ${escHtml(r.rival)}</div>` : ''}
-    ${r.dynamic ? `<p class="rv-text">${escHtml(r.dynamic)}</p>` : ''}
-    ${r.festival ? `<p class="rv-fest"><em>Sports Festival</em> ${escHtml(r.festival)}</p>` : ''}
-  </div>`;
-}
-
-function renderRivalsApp() {
-  if (!rivals) return '<p class="bk-empty">Reading the 1-B file…</p>';
-  if (!rivals.length) return '<p class="bk-empty">Class 1-B could not be loaded.</p>';
-  const me = ownerStudent();
-  const mine = me ? rivals.filter(r => r.rival === me.name) : [];
-  const rest = rivals.filter(r => !mine.includes(r));
-  return `<p class="cz-lead">Class 1-B — the class that almost made it into 1-A, and has not let it go.</p>
-    ${mine.map(r => rivalCardHtml(r, true)).join('')}
-    ${rest.map(r => rivalCardHtml(r, false)).join('')}`;
 }
 
 /* ══ App: Notes ═════════════════════════════════════════════════════

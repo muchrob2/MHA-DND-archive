@@ -30,6 +30,16 @@
 
 <div id="content">
 
+  <header id="shop-hero">
+    <div class="hero-kicker">U.A. Requisitions</div>
+    <h1 class="hero-title">Hero <em>Supply</em></h1>
+    <p class="hero-sub">
+      Every piece of kit the handbook puts a price on — armament, support gear,
+      suits, crafting stock and the paperwork that keeps you licensed. Pick whose
+      account it comes out of, and it lands in their inventory.
+    </p>
+  </header>
+
   <!-- Whose money is being spent, and how much of it is left -->
   <div id="wallet-bar">
     <div class="wallet-who">
@@ -60,35 +70,36 @@
   </div>
 </div>
 
-<!-- Buy confirmation -->
-<div id="buy-overlay">
-  <div id="buy-modal" role="dialog" aria-modal="true" aria-labelledby="buy-modal-title">
-    <div id="buy-modal-close" role="button" tabindex="0" aria-label="Close">✕</div>
-    <h3 id="buy-modal-title">Buy</h3>
-    <div id="buy-item-line"></div>
+<!-- Floating basket tab -->
+<button type="button" id="basket-tab" class="empty" hidden onclick="openBasket()" aria-label="Open basket">
+  <span class="basket-tab-ico">🧺</span>
+  <span class="basket-tab-meta">
+    <span id="basket-tab-count">0</span>
+    <span id="basket-tab-total">¥0</span>
+  </span>
+</button>
 
-    <div class="buy-field">
-      <label for="buy-char">Add to</label>
-      <select id="buy-char" onchange="refreshBuyMath()"></select>
-    </div>
-    <div class="buy-row">
-      <div class="buy-field">
-        <label for="buy-qty">Quantity</label>
-        <input id="buy-qty" type="number" min="1" value="1" oninput="refreshBuyMath()">
-      </div>
-      <div class="buy-field">
-        <label for="buy-price">Unit price (¥)</label>
-        <input id="buy-price" type="number" min="0" step="100" oninput="refreshBuyMath()">
-      </div>
-    </div>
+<!-- Basket / checkout -->
+<div id="basket-overlay">
+  <aside id="basket-drawer" role="dialog" aria-modal="true" aria-labelledby="basket-title">
+    <div id="basket-close" role="button" tabindex="0" aria-label="Close basket">✕</div>
+    <h2 id="basket-title">Basket</h2>
 
-    <div id="buy-math"></div>
-    <div id="buy-error" role="alert"></div>
-    <div class="buy-actions">
-      <button id="buy-confirm" type="button" class="primary" onclick="confirmPurchase()">Confirm purchase</button>
-      <button type="button" onclick="closeBuy()">Cancel</button>
+    <div id="basket-list"></div>
+
+    <div id="basket-foot">
+      <div class="buy-field">
+        <label for="basket-char">Charge to</label>
+        <select id="basket-char" onchange="onBasketCharChange(this.value)"></select>
+      </div>
+      <div id="basket-math"></div>
+      <div id="basket-error" role="alert"></div>
+      <div class="buy-actions">
+        <button id="basket-checkout" type="button" class="primary" onclick="checkout()">Checkout</button>
+        <button type="button" onclick="basketClear()">Empty</button>
+      </div>
     </div>
-  </div>
+  </aside>
 </div>
 
 <script src="shop.js"></script>

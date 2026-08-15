@@ -89,7 +89,8 @@
 .char-card,
 .folder-tile,
 .session-card,
-.camp-card {
+.camp-card,
+.shop-card {
   position: relative;
   clip-path: polygon(
     0 0,
@@ -107,7 +108,8 @@
 .card-hero:hover,
 .char-card:hover,
 .folder-tile:hover,
-.camp-card:hover {
+.camp-card:hover,
+.shop-card:hover {
   transform: translate(-2px, -2px);
   filter: drop-shadow(var(--shadow-hard-lift));
 }
@@ -118,11 +120,13 @@
 
 .mg-speed,
 .card-hero,
-.char-card { overflow: hidden; }
+.char-card,
+.shop-card { overflow: hidden; }
 
 .mg-speed::before,
 .card-hero::before,
-.char-card::before {
+.char-card::before,
+.shop-card::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -142,10 +146,11 @@
 }
 .mg-speed:hover::before,
 .card-hero:hover::before,
-.char-card:hover::before { transform: translateX(0); opacity: 1; }
+.char-card:hover::before,
+.shop-card:hover::before { transform: translateX(0); opacity: 1; }
 
 /* keep real content above the streak layer */
-.card-hero > *, .char-card > * { position: relative; z-index: 1; }
+.card-hero > *, .char-card > *, .shop-card > * { position: relative; z-index: 1; }
 
 /* ════════════════════════════════════════════════════════════
    HEADINGS — Anton over a skewed accent slab

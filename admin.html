@@ -32,6 +32,7 @@
 <div id="content">
   <div id="gate-message" style="display:none;">Checking access…</div>
   <div id="admin-body" style="display:none;">
+    <h2 class="admin-section-title">User roles</h2>
     <div id="table-wrap">
       <table id="users-table">
         <thead>
@@ -41,6 +42,54 @@
       </table>
     </div>
     <div id="users-empty" style="display:none;">No users yet.</div>
+
+    <h2 class="admin-section-title">Grant currency, parts, points &amp; items</h2>
+    <p class="admin-section-note">
+      Hands out anything on the Class 1-A toolkit's Inventory tab. Writes straight
+      into the shared character bundle, so recipients see it on their next sync
+      without reloading.
+    </p>
+
+    <div id="grant-panel">
+      <div class="grant-col">
+        <div class="grant-label">Recipients</div>
+        <div class="grant-quick">
+          <button type="button" class="grant-chip" onclick="selectRecipients('pc')">Players only</button>
+          <button type="button" class="grant-chip" onclick="selectRecipients('all')">Everyone</button>
+          <button type="button" class="grant-chip" onclick="selectRecipients('none')">Clear</button>
+        </div>
+        <div class="char-picker grant-picker" id="grant-recipients"></div>
+      </div>
+
+      <div class="grant-col">
+        <div class="grant-label">What to grant</div>
+        <div class="grant-field">
+          <label for="grant-kind">Type</label>
+          <select id="grant-kind" onchange="renderGrantTarget()">
+            <option value="currency">Currency</option>
+            <option value="parts">Crafting part</option>
+            <option value="points">Point / resource</option>
+            <option value="pool">Named pool</option>
+            <option value="item">Item</option>
+          </select>
+        </div>
+        <div id="grant-target"></div>
+        <div class="grant-field" id="grant-mode-field">
+          <label for="grant-mode">Mode</label>
+          <select id="grant-mode">
+            <option value="add">Add to current total</option>
+            <option value="set">Set to exact value</option>
+          </select>
+        </div>
+        <button type="button" id="grant-apply-btn" class="save-row-btn" onclick="applyGrant()">Grant</button>
+        <div id="grant-status" role="status"></div>
+      </div>
+    </div>
+
+    <div id="grant-log-wrap" style="display:none;">
+      <div class="grant-label">This session</div>
+      <ul id="grant-log"></ul>
+    </div>
   </div>
 </div>
 

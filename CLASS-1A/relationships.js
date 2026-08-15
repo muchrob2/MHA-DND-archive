@@ -67,6 +67,8 @@ function ensureCharIds(c) {
   if (Array.isArray(abilities)) for (const a of abilities) if (!a.id) a.id = genId('atk');
   const items = c.inventory?.items;
   if (Array.isArray(items)) for (const it of items) if (!it.id) it.id = genId('item');
+  const pools = c.inventory?.pools;
+  if (Array.isArray(pools)) for (const p of pools) if (!p.id) p.id = genId('pool');
 }
 
 const FS_REL_DOC = db.collection(FS_COLLECTION).doc(FS_DOC);
@@ -103,6 +105,7 @@ async function saveToFirestore() {
     if (!c._file) continue;
     idArrays.push({ path: ['characters', c._file, 'quirk_mechanics', 'abilities'], idKey: 'id' });
     idArrays.push({ path: ['characters', c._file, 'inventory', 'items'], idKey: 'id' });
+    idArrays.push({ path: ['characters', c._file, 'inventory', 'pools'], idKey: 'id' });
   }
   _lastSyncedRel = await fsMergeSave(FS_REL_DOC, buildBundle(), _lastSyncedRel, idArrays);
 }
@@ -170,12 +173,56 @@ function nextSyncBaseline(data, prevBaseline, dirtyCharFiles) {
   return Object.assign({}, data, { characters });
 }
 
+/* The inventory counters a DM grants in bulk from admin.js. Unlike attacks,
+   items and pools — which are id-keyed arrays that fsMergeSave merges
+   element-by-element — these are plain numbers nested in objects, and
+   deepMergeLocalOverServer resolves plain values local-wins. That is the
+   right default for single-actor state, but it makes a grant losable: if a
+   player has ANY unsaved edit on their sheet, the character is dirty, the
+   incoming grant is skipped by the loop below, and their next save writes
+   the pre-grant number straight back over it. The DM sees "granted ✓" and
+   the money quietly disappears.
+
+   mergeGrantCounters closes that by doing for these counters what
+   fsMergeSave does for arrays: a 3-way compare against the last-synced
+   baseline. A counter the player has not personally touched since that
+   baseline is not really "their edit" just because some other field on the
+   same sheet is dirty, so it takes the remote value; a counter they *have*
+   touched stays local. Only a genuine conflict — player and DM both editing
+   the same counter inside the same unsaved window — falls back to
+   last-writer-wins, which is the same rule the rest of the sheet follows. */
+const GRANT_COUNTER_GROUPS = ['currency', 'parts', 'points'];
+
+function mergeGrantCounters(local, remote, baseline) {
+  const remoteInv = remote?.inventory;
+  if (!remoteInv) return;
+  local.inventory = local.inventory || {};
+  for (const group of GRANT_COUNTER_GROUPS) {
+    const remoteGroup = remoteInv[group];
+    if (!remoteGroup) continue;
+    const baseGroup = baseline?.inventory?.[group] || {};
+    const localGroup = local.inventory[group] = local.inventory[group] || {};
+    for (const key of Object.keys(remoteGroup)) {
+      // Absent and 0 are the same thing for a counter, so both sides are
+      // normalised before comparing — otherwise a never-initialised key
+      // reads as an edit and permanently rejects every grant to it.
+      const untouchedLocally = (localGroup[key] || 0) === (baseGroup[key] || 0);
+      if (untouchedLocally) localGroup[key] = remoteGroup[key];
+    }
+  }
+}
+
 function applyRemoteRelBundle(data) {
   rels = mergeRemoteRels(rels, data.relationships || {}, _dirtyRelKeys.keys());
 
   for (const c of CHARACTERS) {
     if (!c._file || !data.characters?.[c._file]) continue;
-    if (_dirtyCharFiles.has(c._file)) continue; // unsaved local edits — leave it alone
+    if (_dirtyCharFiles.has(c._file)) {
+      // Unsaved local edits — the sheet is left alone, except for granted
+      // counters the player has not themselves touched (see above).
+      mergeGrantCounters(c, data.characters[c._file], _lastSyncedRel?.characters?.[c._file]);
+      continue;
+    }
     const f = c._file, rid = c._roster_id, sec = c._section;
     Object.assign(c, data.characters[c._file]);
     c._file = f; c._roster_id = rid; c._section = sec;
@@ -792,10 +839,75 @@ function onAttackDelete(id) {
 
 /* ── Inventory ─────────────────────────────────────────
    Currency denominations & Yen (¥) conversion rates are from
-   the MHA D&D Official Handbook, Chapter 4: Equipment. */
+   the MHA D&D Official Handbook, Chapter 4: Equipment.
+
+   Alongside coin, the handbook runs several parallel economies that a
+   character accumulates and spends between sessions, and which the DM
+   hands out as mission rewards. They are tracked here rather than as
+   free-text items because they are counters the DM grants in bulk (see
+   the grant panel in admin.js), and because several have hard caps that
+   only mean something if the number is a number:
+
+     · Crafting parts (Ch. 4) — the two part economies that gate suit and
+       support-item construction. Deliberately kept as six separate
+       counters, not three: a Pro Suit needs "6 Pro Parts" while an
+       Advanced Tool needs "4 Advanced Parts", and though both cost
+       ¥5,000 the handbook never lets one substitute for the other.
+     · Points (Ch. 5 & 6) — Plus Ultra, Free Time Points, Awakening
+       Points, and the two per-long-rest pools whose size is derived
+       from the proficiency bonus.
+
+   Specialization pools (Fury/Speed/Protective Points) and quirk-specific
+   ones (Hot/Cold Points) are NOT in the fixed list: only one of the 13
+   specializations grants any given pool, so showing all of them to all
+   20 characters would be noise. They live in `pools` instead — free-form
+   named counters, with the handbook's own pool names offered as a
+   datalist so the common ones are still one click away.
+   ───────────────────────────────────────────────────────────── */
 const CURRENCY_KEYS = ['yen','pp','gp','ep','sp','cp'];
 const CURRENCY_LABELS = { yen: '¥ Yen', pp: 'PP', gp: 'GP', ep: 'EP', sp: 'SP', cp: 'CP' };
 const CURRENCY_TO_YEN = { yen: 1, cp: 10, sp: 100, ep: 500, gp: 1000, pp: 10000 };
+
+// Ch. 4 — "Gather Your Suit Parts" and "Gather Your Parts" (support items).
+const PART_DEFS = [
+  { key: 'basic',     label: 'Basic',     group: 'Suit parts',    yen: 2000,  hint: 'DIY 3 · Starter 5' },
+  { key: 'pro',       label: 'Pro',       group: 'Suit parts',    yen: 5000,  hint: 'Pro 6 · Elite 8 · Prototype 10' },
+  { key: 'advMod',    label: 'Adv. Mod',  group: 'Suit parts',    yen: 10000, hint: 'Prototype suit 5' },
+  { key: 'basicTech', label: 'Basic Tech',group: 'Support parts', yen: 2000,  hint: 'Basic Gadget 2 · Enhanced Gear 4' },
+  { key: 'advanced',  label: 'Advanced',  group: 'Support parts', yen: 5000,  hint: 'Advanced Tool 4 · Elite 6 · Prototype 8' },
+  { key: 'uniqueMod', label: 'Unique Mod',group: 'Support parts', yen: 10000, hint: 'Boss drops · black market' },
+];
+const PART_KEYS = PART_DEFS.map(p => p.key);
+
+// `max` is a function of the character (or null for uncapped) so the two
+// per-long-rest pools track the proficiency bonus as the character levels,
+// instead of freezing whatever the number was when it was first written.
+const POINT_DEFS = [
+  { key: 'plusUltra',     label: 'Plus Ultra',       max: () => 1,           note: 'Ch. 6 — only one may be held at a time' },
+  { key: 'ftp',           label: 'Free Time',        max: null,              note: 'Ch. 5 — 1 (D-rank) to 5 (S-rank) per mission' },
+  { key: 'awakening',     label: 'Awakening',        max: () => 3,           note: 'Ch. 6 — 3 forces a Quirk Awakening' },
+  { key: 'tacticalSurge', label: 'Tactical Surge',   max: c => 1 + profOf(c),note: 'Ch. 3 — 1 + proficiency, regained on a long rest' },
+  { key: 'impactFrame',   label: 'Impact Frame',     max: c => profOf(c),    note: 'Ch. 6 — proficiency bonus, per long rest' },
+];
+const POINT_KEYS = POINT_DEFS.map(p => p.key);
+
+// Handbook pool names offered by the custom-pool datalist. Each comes from
+// exactly one specialization (or one quirk), which is why none of them are
+// in POINT_DEFS above.
+const POOL_SUGGESTIONS = [
+  'Fury Points', 'Speed Points', 'Protective Points',
+  'Hot Points', 'Cold Points', 'Quirk Charges', 'Charges', 'Smash %',
+];
+
+// The character sheets carry an explicit proficiency_bonus, but it is not
+// guaranteed to be in step with `level` (it is hand-entered, and some
+// entries predate the level field). Prefer it when present, otherwise
+// derive it the 5e way.
+function profOf(c) {
+  const stored = parseInt(c?.proficiency_bonus, 10);
+  if (!isNaN(stored) && stored > 0) return stored;
+  return Math.floor(((parseInt(c?.level, 10) || 1) - 1) / 4) + 2;
+}
 
 function renderInventoryTab(c) {
   const tabContent = document.getElementById('tab-content');
@@ -803,6 +915,9 @@ function renderInventoryTab(c) {
   tabContent.classList.add('tab-inventory');
   c.inventory = c.inventory || {};
   const currency = c.inventory.currency = c.inventory.currency || { yen: 0, cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 };
+  const parts  = c.inventory.parts  = c.inventory.parts  || {};
+  const points = c.inventory.points = c.inventory.points || {};
+  const pools  = c.inventory.pools  = c.inventory.pools  || [];
   const items = c.inventory.items = c.inventory.items || [];
 
   const totalYen = CURRENCY_KEYS.reduce((sum, k) => sum + (currency[k]||0) * CURRENCY_TO_YEN[k], 0);
@@ -812,6 +927,49 @@ function renderInventoryTab(c) {
       <label>${CURRENCY_LABELS[k]}</label>
       <input class="inv-currency-input" type="number" min="0" value="${currency[k]||0}"
         ${canWrite ? `onchange="onCurrencyChange('${k}',this.value)"` : 'disabled'} title="${CURRENCY_LABELS[k]}">
+    </div>`).join('');
+
+  const partsYen = PART_DEFS.reduce((sum, p) => sum + (parts[p.key]||0) * p.yen, 0);
+  const partGroups = ['Suit parts', 'Support parts'].map(group => `
+    <div class="inv-part-group">
+      <div class="inv-part-group-label">${group}</div>
+      <div class="inv-currency-row">
+        ${PART_DEFS.filter(p => p.group === group).map(p => `
+        <div class="inv-currency-block" title="¥${p.yen.toLocaleString()} each — ${p.hint}">
+          <label>${p.label}</label>
+          <input class="inv-currency-input" type="number" min="0" value="${parts[p.key]||0}"
+            ${canWrite ? `onchange="onPartChange('${p.key}',this.value)"` : 'disabled'}>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  const pointBlocks = POINT_DEFS.map(p => {
+    const max = p.max ? p.max(c) : null;
+    const val = points[p.key] || 0;
+    const over = max !== null && val > max;
+    return `
+    <div class="inv-currency-block inv-point-block${over ? ' over-cap' : ''}" title="${escHtml(p.note)}">
+      <label>${p.label}</label>
+      <input class="inv-currency-input" type="number" min="0" value="${val}"
+        ${canWrite ? `onchange="onPointChange('${p.key}',this.value)"` : 'disabled'}>
+      <span class="inv-point-max">${max !== null ? 'of ' + max : '—'}</span>
+    </div>`;
+  }).join('');
+
+  const poolCards = pools.map(p => canWrite ? `
+    <div class="inv-pool-row">
+      <input class="ability-input inv-pool-name" placeholder="Pool name" list="dl-pool-name"
+        value="${escHtml(p.name||'')}" oninput="onPoolEdit('${escHtml(p.id)}','name',this.value)">
+      <input class="ability-input inv-pool-num" type="number" min="0" title="Current"
+        value="${p.value ?? 0}" oninput="onPoolEdit('${escHtml(p.id)}','value',this.value)">
+      <span class="inv-pool-sep">/</span>
+      <input class="ability-input inv-pool-num" type="number" min="0" placeholder="max" title="Maximum (optional)"
+        value="${p.max ?? ''}" oninput="onPoolEdit('${escHtml(p.id)}','max',this.value)">
+      <button class="icon-btn ability-delete-btn" title="Delete pool" aria-label="Delete pool" onclick="onPoolDelete('${escHtml(p.id)}')">✕</button>
+    </div>` : `
+    <div class="inv-pool-row inv-pool-row-read">
+      <span class="inv-pool-name-read">${escHtml(p.name||'')}</span>
+      <span class="inv-pool-val-read">${p.value ?? 0}${p.max ? ' / ' + p.max : ''}</span>
     </div>`).join('');
 
   const itemCards = items.map((it, i) => {
@@ -846,6 +1004,26 @@ function renderInventoryTab(c) {
       <div class="inv-currency-row">${currencyBlocks}</div>
       <div class="inv-currency-total">Total value: <strong>¥${totalYen.toLocaleString()}</strong> <span title="1cp=¥10 · 1sp=¥100 · 1ep=¥500 · 1gp=¥1,000 · 1pp=¥10,000">(handbook conversion)</span></div>
     </div>
+
+    <div class="inv-currency-panel">
+      <div class="inv-currency-title">Crafting parts</div>
+      ${partGroups}
+      <div class="inv-currency-total">Stock value: <strong>¥${partsYen.toLocaleString()}</strong> <span title="Basic ¥2,000 · Pro/Advanced ¥5,000 · Mods ¥10,000">(handbook prices)</span></div>
+    </div>
+
+    <div class="inv-currency-panel">
+      <div class="inv-currency-title">Points &amp; resources</div>
+      <div class="inv-currency-row">${pointBlocks}</div>
+      ${pools.length || canWrite ? `
+      <div class="inv-part-group">
+        <div class="inv-part-group-label">Specialization &amp; quirk pools</div>
+        ${poolCards || '<div class="inv-empty">None tracked.</div>'}
+        ${canWrite ? `
+        <button class="add-attack-btn inv-add-pool" onclick="onPoolAdd()">+ Add pool</button>
+        <datalist id="dl-pool-name">${POOL_SUGGESTIONS.map(v => `<option value="${v}">`).join('')}</datalist>` : ''}
+      </div>` : ''}
+    </div>
+
     <div class="inv-items-title">Items</div>
     ${itemCards.join('')}
   `;
@@ -854,6 +1032,51 @@ function renderInventoryTab(c) {
 function onCurrencyChange(key, value) {
   const num = Math.max(0, parseInt(value) || 0);
   selected.inventory.currency[key] = num;
+  scheduleCharSave(selected);
+  renderInventoryTab(selected);
+}
+
+function onPartChange(key, value) {
+  selected.inventory.parts = selected.inventory.parts || {};
+  selected.inventory.parts[key] = Math.max(0, parseInt(value) || 0);
+  scheduleCharSave(selected);
+  renderInventoryTab(selected);
+}
+
+function onPointChange(key, value) {
+  selected.inventory.points = selected.inventory.points || {};
+  selected.inventory.points[key] = Math.max(0, parseInt(value) || 0);
+  scheduleCharSave(selected);
+  // Re-rendered so the over-cap highlight updates. Safe here (and not in
+  // onPoolEdit below) because these are onchange, which fires on commit
+  // rather than per keystroke, so there is no caret to lose.
+  renderInventoryTab(selected);
+}
+
+/* Custom pools are an id-keyed array for the same reason attacks and items
+   are: fsMergeSave merges them by id, and handlers must address them by id
+   rather than by render-time index. See the note above findAbility. */
+function onPoolEdit(id, field, value) {
+  const pool = (selected.inventory?.pools || []).find(p => p.id === id);
+  if (!pool) return;
+  if (field === 'name') pool.name = value;
+  else if (field === 'max') pool.max = value === '' ? null : Math.max(0, parseInt(value) || 0);
+  else pool.value = Math.max(0, parseInt(value) || 0);
+  scheduleCharSave(selected);
+}
+
+function onPoolAdd() {
+  selected.inventory.pools = selected.inventory.pools || [];
+  selected.inventory.pools.push({ id: genId('pool'), name: '', value: 0, max: null });
+  scheduleCharSave(selected);
+  renderInventoryTab(selected);
+}
+
+function onPoolDelete(id) {
+  const pools = selected.inventory?.pools || [];
+  const idx = pools.findIndex(p => p.id === id);
+  if (idx === -1) return;
+  pools.splice(idx, 1);
   scheduleCharSave(selected);
   renderInventoryTab(selected);
 }

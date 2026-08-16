@@ -179,10 +179,10 @@ const APPS = [
     render: renderBankApp,
     // Money that moved in the last day. Null once it goes quiet, so the
     // badge means "something happened" rather than "this app exists".
+    onOpen: markBankRead,
     badge: () => {
-      const since = Date.now() - 86400000;
-      const n = ownerEntries().filter(e => (e.ts || 0) > since).length;
-      return n || null;
+      const n = unreadBankCount();
+      return n ? (n > 99 ? '99+' : n) : null;
     },
   },
   {
@@ -377,7 +377,8 @@ let locked = false;
 
 function lockNotifications() {
   const out = [];
-  for (const e of ownerEntries().slice(0, 2)) {
+  const since = bankLastReadAt();
+  for (const e of ownerEntries().filter(e => (e.ts || 0) > since).slice(0, 2)) {
     out.push({
       icon: BANK_ICONS[e.kind] || '•',
       app: 'Bank',
@@ -902,6 +903,44 @@ const CURRENCY_SHORT = { yen: '¥', pp: 'pp', gp: 'gp', ep: 'ep', sp: 'sp', cp: 
 // the Bank itself only ever reads.
 
 
+
+/* ── What counts as unread ──────────────────────────────────────────
+   The badge used to count anything from the last 24 hours, which meant
+   opening the Bank did nothing to it — the number sat there until the
+   transactions aged out on their own. A notification you cannot dismiss
+   by reading it trains people to ignore the badge.
+
+   Read state is per-device, like the one Messages keeps: a "seen at"
+   timestamp shared between all twenty students would mean the DM opening
+   the Bank cleared everyone's.
+
+   First visit stores "now" rather than 0, so a player who has never
+   opened the app is not greeted by a badge counting the entire campaign's
+   ledger. ─────────────────────────────────────────────────────────── */
+function bankReadKey() { return 'mha-heropad-bankread-' + activeFile; }
+
+function bankLastReadAt() {
+  try {
+    const stored = Number(localStorage.getItem(bankReadKey()));
+    if (stored) return stored;
+    const now = Date.now();
+    localStorage.setItem(bankReadKey(), String(now));
+    return now;
+  } catch { return Date.now(); }
+}
+
+function markBankRead() {
+  try { localStorage.setItem(bankReadKey(), String(Date.now())); } catch {}
+  // The badge and the lock screen both read this, so repaint whichever is
+  // on screen — otherwise the number lingers until something else moves.
+  if (locked) renderLock(); else renderHome();
+}
+
+function unreadBankCount() {
+  if (!ledger || !activeFile) return 0;
+  const since = bankLastReadAt();
+  return ownerEntries().filter(e => (e.ts || 0) > since).length;
+}
 
 let ledger = null;        // [{...}] once loaded, null while fetching
 let bundle = null;        // the shared character bundle, for the balance

@@ -33,6 +33,19 @@
 
   window.fbDb = db;
 
+  /* Callable Cloud Functions. Money moves server-side (see functions/index.js
+     and the inventories rule in firestore.rules), so every page that spends
+     or grants goes through here rather than writing Firestore directly.
+     Pages that never touch money can skip the functions SDK entirely; this
+     throws a readable error rather than a null dereference if one forgets. */
+  window.fbCall = async function (name, data) {
+    if (!firebase.functions) {
+      throw new Error('This page did not load firebase-functions-compat.js — see auth.js:fbCall');
+    }
+    const res = await firebase.functions().httpsCallable(name)(data || {});
+    return res.data;
+  };
+
   const EMPTY_STATE = { user: null, role: null, editableCharacterIds: [] };
   let resolveReady;
   window.fbAuthReady = new Promise((res) => { resolveReady = res; });

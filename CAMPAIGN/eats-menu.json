@@ -1,0 +1,75 @@
+{
+  "note": "Menu for the Heropad's Eats app. Prices are enforced server-side by functions/index.js; this file is the single source both sides read.",
+  "items": [
+    {
+      "id": "ramen",
+      "name": "Tonkotsu ramen",
+      "icon": "🍜",
+      "desc": "The one by the station. Always a queue.",
+      "price": 900
+    },
+    {
+      "id": "katsu",
+      "name": "Katsu curry",
+      "icon": "🍛",
+      "desc": "Enormous. Regret is part of the portion.",
+      "price": 850
+    },
+    {
+      "id": "onigiri",
+      "name": "Onigiri, two",
+      "icon": "🍙",
+      "desc": "Tuna mayo and salmon. Convenience store.",
+      "price": 260
+    },
+    {
+      "id": "gyudon",
+      "name": "Gyudon",
+      "icon": "🥩",
+      "desc": "Beef bowl. Fast, cheap, correct.",
+      "price": 600
+    },
+    {
+      "id": "yakisoba",
+      "name": "Yakisoba bread",
+      "icon": "🥖",
+      "desc": "Carbohydrate on carbohydrate. Cafeteria classic.",
+      "price": 220
+    },
+    {
+      "id": "takoyaki",
+      "name": "Takoyaki, six",
+      "icon": "🐙",
+      "desc": "Molten. Wait longer than you think.",
+      "price": 480
+    },
+    {
+      "id": "sushi",
+      "name": "Sushi set",
+      "icon": "🍣",
+      "desc": "For when the mission paid out.",
+      "price": 2400
+    },
+    {
+      "id": "parfait",
+      "name": "Strawberry parfait",
+      "icon": "🍨",
+      "desc": "Structurally unsound. Worth it.",
+      "price": 780
+    },
+    {
+      "id": "coffee",
+      "name": "Canned coffee",
+      "icon": "☕",
+      "desc": "From the machine outside the dorms.",
+      "price": 130
+    },
+    {
+      "id": "family",
+      "name": "Family bucket, shared",
+      "icon": "🍗",
+      "desc": "Feeds the common room. Briefly.",
+      "price": 3600
+    }
+  ]
+}

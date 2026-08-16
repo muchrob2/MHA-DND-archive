@@ -28,6 +28,9 @@ const read = p => fs.readFileSync(path.join(repoRoot, p), 'utf8');
 const shopSrc = read('shop.js');
 const adminSrc = read('admin.js');
 const padSrc = read('heropad.js');
+// The ledger has exactly one writer now: the Cloud Functions. Clients ask
+// for a spend or a grant and read the result back.
+const fnSrc = read('functions/index.js');
 
 let failed = 0;
 function check(label, ok, detail) {
@@ -36,20 +39,24 @@ function check(label, ok, detail) {
 }
 
 /* ── One document, one name ─────────────────────────────────────── */
-for (const [name, src] of [['shop.js', shopSrc], ['admin.js', adminSrc], ['heropad.js', padSrc]]) {
-  check(`${name} addresses mha-dnd/ledger`, /doc\('ledger'\)/.test(src));
-}
+check('functions/index.js addresses mha-dnd/ledger', /doc\('ledger'\)/.test(fnSrc));
+check('heropad.js reads mha-dnd/ledger', /doc\('ledger'\)/.test(padSrc));
 
 /* ── The entry shape ────────────────────────────────────────────── */
-// Both writers build entries through an identically-shaped ledgerEntry().
+// One writer builds every entry, so the shape is pinned in one place and
+// read back in another.
 const FIELDS = ['id', 'ts', 'file', 'kind', 'label', 'unit', 'amount', 'yen'];
-for (const [name, src] of [['shop.js', shopSrc], ['admin.js', adminSrc]]) {
-  const fn = src.match(/function ledgerEntry\([^)]*\)\s*\{[\s\S]*?\n\}/);
-  check(`${name} defines ledgerEntry()`, !!fn);
-  if (!fn) continue;
+const entryFn = fnSrc.match(/function ledgerEntry\([^)]*\)\s*\{[\s\S]*?\n\}/);
+check('functions/index.js defines ledgerEntry()', !!entryFn);
+if (entryFn) {
   for (const field of FIELDS) {
-    check(`${name} ledgerEntry sets "${field}"`, new RegExp(`\\b${field}\\b`).test(fn[0]));
+    check(`ledgerEntry sets "${field}"`, new RegExp(`\\b${field}\\b`).test(entryFn[0]));
   }
+}
+for (const [name, src] of [['shop.js', shopSrc], ['admin.js', adminSrc], ['heropad.js', padSrc]]) {
+  check(`${name} no longer builds ledger entries itself`,
+    !/function ledgerEntry\(|function appendToLedger\(/.test(src),
+    'a second implementation is a second truth about what a transaction was');
 }
 
 // The reader must not reference a field the writers never set. Scoped to the
@@ -71,38 +78,18 @@ if (bankFns.every(Boolean)) {
 }
 
 /* ── Atomicity: the money and its record commit together ────────── */
-// This is the check that matters most. If a ledger write ever moves outside
-// the transaction that moves the money, the statement stops being evidence.
-function transactionBody(src, marker) {
-  const start = src.indexOf(marker);
-  if (start < 0) return null;
-  const open = src.indexOf('runTransaction', start);
-  if (open < 0) return null;
-  // Crude but sufficient: from runTransaction to the end of that statement.
-  const end = src.indexOf('\n    });', open);
-  return end < 0 ? null : src.slice(open, end);
-}
-const checkoutTx = transactionBody(shopSrc, 'async function checkout(');
-check('shop.js checkout runs a transaction', !!checkoutTx);
-check('shop.js writes the ledger inside the purse transaction',
-  !!checkoutTx && /tx\.set\(FS_LEDGER_DOC/.test(checkoutTx),
-  'a ledger write outside the transaction can leave a purchase with no statement line');
-check('shop.js reads the ledger before writing it (Firestore rule)',
-  !!checkoutTx && checkoutTx.indexOf('tx.get(FS_LEDGER_DOC') < checkoutTx.indexOf('tx.set(FS_BUNDLE_DOC'),
-  'every read must precede every write in a Firestore transaction');
-
-const grantTx = transactionBody(adminSrc, 'async function applyGrant(');
-check('admin.js grant runs a transaction', !!grantTx);
-check('admin.js writes the ledger inside the grant transaction',
-  !!grantTx && /tx\.set\(FS_LEDGER_DOC/.test(grantTx));
-check('admin.js reads the ledger before writing it (Firestore rule)',
-  !!grantTx && grantTx.indexOf('tx.get(FS_LEDGER_DOC') < grantTx.indexOf('tx.set(FS_BUNDLE_DOC'));
-
-// A grant with mode "set" moves the counter to a value, so the amount typed
-// into the form is not the delta. The ledger must record what actually moved.
-check('admin.js records the real delta, not the amount typed in',
-  /const before = grantCounterValue\(/.test(adminSrc) && /const after = grantCounterValue\(/.test(adminSrc),
-  'a "set" grant would otherwise log the target value as though it were the change');
+// Unchanged as a requirement, moved as an implementation. If a ledger write
+// ever leaves the transaction that moves the purse, the statement stops
+// being evidence.
+const spendFn = (fnSrc.match(/exports\.spend = onCall\([\s\S]*?\n\}\);/) || [])[0] || '';
+check('spend() runs a transaction', /runTransaction/.test(spendFn));
+check('spend() writes the purse and the ledger together',
+  /tx\.set\(inventoryDoc/.test(spendFn) && /tx\.set\(LEDGER_DOC/.test(spendFn));
+check('grantInventory() does the same',
+  /exports\.grantInventory[\s\S]*?tx\.set\(inventoryDoc[\s\S]*?tx\.set\(LEDGER_DOC/.test(fnSrc));
+check('the clients ask rather than write',
+  /fbCall\('spend'/.test(shopSrc) && /fbCall\('spend'/.test(padSrc)
+  && /fbCall\('grantInventory'/.test(adminSrc));
 
 /* ── Currency table agreement ───────────────────────────────────── */
 function currencyTable(src) {
@@ -117,14 +104,14 @@ function currencyTable(src) {
 }
 const tables = {
   'shop.js': currencyTable(shopSrc),
-  'admin.js': currencyTable(adminSrc),
   'heropad.js': currencyTable(padSrc),
+  'functions/index.js': currencyTable(fnSrc),
 };
 for (const [name, t] of Object.entries(tables)) {
   check(`${name} declares CURRENCY_TO_YEN`, !!t && Object.keys(t).length > 0);
 }
 if (tables['shop.js']) {
-  for (const name of ['admin.js', 'heropad.js']) {
+  for (const name of ['heropad.js', 'functions/index.js']) {
     check(`${name} agrees with shop.js on every conversion rate`,
       JSON.stringify(tables[name]) === JSON.stringify(tables['shop.js']),
       JSON.stringify(tables[name]));
@@ -134,8 +121,8 @@ if (tables['shop.js']) {
 /* ── The append helper actually caps ────────────────────────────── */
 // Executed, not just matched: an off-by-one here grows a document until
 // writes start failing, months after anyone touched this code.
-const helperSrc = shopSrc.match(/const MAX_LEDGER_ENTRIES = \d+;[\s\S]*?function appendToLedger[\s\S]*?\n\}/);
-check('shop.js exposes MAX_LEDGER_ENTRIES + appendToLedger', !!helperSrc);
+const helperSrc = fnSrc.match(/const MAX_LEDGER_ENTRIES = \d+;[\s\S]*?function appendToLedger[\s\S]*?\n\}/);
+check('functions/index.js exposes MAX_LEDGER_ENTRIES + appendToLedger', !!helperSrc);
 if (helperSrc) {
   const scope = {};
   new Function('scope', helperSrc[0] + '\nscope.MAX = MAX_LEDGER_ENTRIES; scope.append = appendToLedger;')(scope);
@@ -159,29 +146,19 @@ if (helperSrc) {
   check('unrelated fields on the document survive an append', other.somethingElse === 42);
 }
 
-/* ── Where the pad is allowed to write ──────────────────────────── */
-// The pad gained a writer when the Eats app shipped: ordering food spends
-// from the purse and records it, exactly as the Shop does. So "the pad never
-// writes" is no longer the invariant — this is:
-//
-//   the Bank *reads*, and the only pad code that writes does so inside a
-//   transaction that moves the purse and the ledger together.
-//
-// A ledger write anywhere else in the pad, or one outside a transaction,
-// would let a statement line exist without the money having moved.
-for (const doc of ['FS_LEDGER_DOC', 'FS_BUNDLE_DOC']) {
-  check(`heropad.js never writes ${doc} outside a transaction`,
-    !new RegExp(`${doc}\\.set\\(`).test(padSrc),
-    'a bare .set() bypasses the read-check-write the money depends on');
+/* ── No client writes money any more ────────────────────────────── */
+// This is what the Cloud Functions bought. Before, the invariant was "the
+// pad writes money only inside a transaction"; now the pad cannot write it
+// at all, and neither can the shop or the admin page. firestore.rules
+// refuses them, and verify-functions.js checks the rules still say so.
+for (const [name, src] of [['shop.js', shopSrc], ['admin.js', adminSrc], ['heropad.js', padSrc]]) {
+  check(`${name} never writes the ledger`,
+    !/FS_LEDGER_DOC\.set|tx\.set\(FS_LEDGER_DOC/.test(src));
+  check(`${name} never writes an inventory`,
+    !/collection\('inventories'\)[\s\S]{0,80}\.set\(/.test(src));
 }
-const padWrites = [...padSrc.matchAll(/tx\.set\(FS_(LEDGER|BUNDLE)_DOC/g)].length;
-check('the pad has exactly one place that moves money', padWrites === 2,
-  `${padWrites} transactional writes found; expected 2 (purse + ledger, in orderFood)`);
-
-// The Bank's own rendering path must stay a reader.
-const bankSection = padSrc.slice(padSrc.indexOf('App: Bank'), padSrc.indexOf('App: Quirks'));
-check('nothing in the Bank app writes', !/tx\.set|\.set\(/.test(bankSection),
-  'a bank app that can edit your balance is not a bank app');
+check('the Bank app is still a reader',
+  !/tx\.set|\.set\(/.test(padSrc.slice(padSrc.indexOf('App: Bank'), padSrc.indexOf('App: Quirks'))));
 
 console.log(failed ? `>>> ${failed} check(s) failed` : '>>> ledger OK');
 process.exit(failed ? 1 : 0);

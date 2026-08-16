@@ -16,6 +16,13 @@
 const db = firebase.firestore();
 const FS_BUNDLE_DOC = db.collection('mha-dnd').doc('relationships-bundle');
 
+/* Inventories live in their own collection so firestore.rules can refuse a
+   write that would make a purse worth more than it already was. The bundle
+   is still where sheets live, so both are read: one for who someone is, one
+   for what they have. */
+const FS_INVENTORIES = db.collection('inventories');
+let INVENTORIES = {};
+
 /* ── The ledger ─────────────────────────────────────────────────────
    Every movement of money is appended to mha-dnd/ledger, which is what
    the Heropad's Bank app reads. Before this existed the only record of a
@@ -249,14 +256,17 @@ function sortedCharacters() {
 
 function charOptionsHtml(selectedFile) {
   return sortedCharacters().map(s => {
-    const inv = BUNDLE?.characters?.[s.file]?.inventory;
+    const inv = currentInventory(s.file);
     const purse = inv ? ' — ' + yen(walletTotalYen(inv.currency)) : '';
     return `<option value="${escHtml(s.file)}" ${s.file === selectedFile ? 'selected' : ''}>${
       escHtml(s.name)}${s.is_pc ? ' (PC)' : ''}${purse}</option>`;
   }).join('');
 }
 
+// The purse, from the collection the rules protect — falling back to the
+// bundle's old copy for any character the migration has not moved yet.
 function currentInventory(file) {
+  if (INVENTORIES[file]) return INVENTORIES[file];
   return BUNDLE?.characters?.[file]?.inventory || null;
 }
 
@@ -668,26 +678,28 @@ async function checkout() {
     // purchase went through and the player's statement never mentioned it.
     // Firestore requires every read before any write, hence both gets first.
     await db.runTransaction(async (tx) => {
-      const snap = await tx.get(FS_BUNDLE_DOC);
+      const invRef = FS_INVENTORIES.doc(file);
+      const invSnap = await tx.get(invRef);
       const ledgerSnap = await tx.get(FS_LEDGER_DOC);
-      if (!snap.exists) throw new Error('No character bundle found — open the Class 1-A toolkit and save once first.');
-      const data = snap.data();
-      const characters = data.characters || {};
-      const character = characters[file];
-      if (!character) throw new Error('That character has no sheet in the shared bundle yet.');
+      if (!invSnap.exists) {
+        throw new Error('This character has no inventory yet — the DM needs to run the migration on the admin page.');
+      }
+      const inventory = invSnap.data() || {};
 
-      character.inventory = character.inventory || {};
-      const result = applyBasket(character.inventory, lines);
+      const result = applyBasket(inventory, lines);
       if (!result.ok) {
         throw new Error('Not enough money — the purse holds ' +
-          yen(walletTotalYen(character.inventory.currency)) + '.');
+          yen(walletTotalYen(inventory.currency)) + '.');
       }
 
       const additions = lines.map(l => ledgerEntry(
         file, 'purchase', `${l.qty} × ${l.entry.name}`, 'yen', -lineCost(l), -lineCost(l)
       ));
 
-      tx.set(FS_BUNDLE_DOC, Object.assign({}, data, { characters }));
+      // The purse can only ever go down here, which is exactly what the
+      // rule on inventories/{characterFile} enforces. A write that tried to
+      // add money would be refused by the database, not by this page.
+      tx.set(invRef, inventory);
       tx.set(FS_LEDGER_DOC, appendToLedger(ledgerSnap, additions));
     });
 
@@ -725,8 +737,11 @@ function logReceipt(text) {
 /* ── Data loading ──────────────────────────────────────────── */
 async function refreshBundle() {
   try {
-    const snap = await FS_BUNDLE_DOC.get();
-    BUNDLE = snap.exists ? snap.data() : null;
+    const [bundleSnap, invSnap] = await Promise.all([FS_BUNDLE_DOC.get(), FS_INVENTORIES.get()]);
+    BUNDLE = bundleSnap.exists ? bundleSnap.data() : null;
+    const next = {};
+    invSnap.forEach(doc => { next[doc.id] = doc.data(); });
+    INVENTORIES = next;
   } catch {
     BUNDLE = null;
   }
@@ -766,8 +781,16 @@ document.addEventListener('auth-state-changed', (e) => {
     if (!snap.exists || snap.metadata?.fromCache) return;
     BUNDLE = snap.data();
     renderWallet();
-    renderBasketTotals();   // the purse moved; the checkout maths must follow
   }, err => console.error('[shop] live sync stopped:', err));
+
+  FS_INVENTORIES.onSnapshot((snap) => {
+    if (snap.metadata?.fromCache) return;
+    const next = {};
+    snap.forEach(doc => { next[doc.id] = doc.data(); });
+    INVENTORIES = next;
+    renderWallet();
+    renderBasketTotals();   // the purse moved; the checkout maths must follow
+  }, err => console.error('[shop] inventory sync stopped:', err));
 })();
 
 /* ── Drawer chrome ─────────────────────────────────────────── */

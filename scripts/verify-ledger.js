@@ -87,16 +87,21 @@ check('shop.js checkout runs a transaction', !!checkoutTx);
 check('shop.js writes the ledger inside the purse transaction',
   !!checkoutTx && /tx\.set\(FS_LEDGER_DOC/.test(checkoutTx),
   'a ledger write outside the transaction can leave a purchase with no statement line');
-check('shop.js reads the ledger before writing it (Firestore rule)',
-  !!checkoutTx && checkoutTx.indexOf('tx.get(FS_LEDGER_DOC') < checkoutTx.indexOf('tx.set(FS_BUNDLE_DOC'),
+check('shop.js reads the ledger before writing anything (Firestore rule)',
+  !!checkoutTx && checkoutTx.indexOf('tx.get(FS_LEDGER_DOC') < checkoutTx.indexOf('tx.set('),
   'every read must precede every write in a Firestore transaction');
+check('shop.js writes the inventory document, not the bundle',
+  !!checkoutTx && /tx\.set\(invRef/.test(checkoutTx) && !/tx\.set\(FS_BUNDLE_DOC/.test(checkoutTx),
+  'purses live in inventories/{characterFile} now, where the rules can protect them');
 
-const grantTx = transactionBody(adminSrc, 'async function applyGrant(');
-check('admin.js grant runs a transaction', !!grantTx);
-check('admin.js writes the ledger inside the grant transaction',
-  !!grantTx && /tx\.set\(FS_LEDGER_DOC/.test(grantTx));
-check('admin.js reads the ledger before writing it (Firestore rule)',
-  !!grantTx && grantTx.indexOf('tx.get(FS_LEDGER_DOC') < grantTx.indexOf('tx.set(FS_BUNDLE_DOC'));
+const grantFn = (adminSrc.match(/async function applyGrant\([\s\S]*?\n\}/) || [])[0] || '';
+check('admin.js grants inside a transaction', /runTransaction/.test(grantFn));
+check('admin.js grants per recipient', /for \(const file of files\)/.test(grantFn),
+  'separate documents now — one failure must not take the rest of the grant with it');
+check('admin.js reads both documents before writing either',
+  grantFn.indexOf('tx.get(FS_LEDGER_DOC') < grantFn.indexOf('tx.set('));
+check('admin.js writes the inventory and the ledger together',
+  /tx\.set\(invRef/.test(grantFn) && /tx\.set\(FS_LEDGER_DOC/.test(grantFn));
 
 // A grant with mode "set" moves the counter to a value, so the amount typed
 // into the form is not the delta. The ledger must record what actually moved.
@@ -174,9 +179,11 @@ for (const doc of ['FS_LEDGER_DOC', 'FS_BUNDLE_DOC']) {
     !new RegExp(`${doc}\\.set\\(`).test(padSrc),
     'a bare .set() bypasses the read-check-write the money depends on');
 }
-const padWrites = [...padSrc.matchAll(/tx\.set\(FS_(LEDGER|BUNDLE)_DOC/g)].length;
+const padWrites = [...padSrc.matchAll(/tx\.set\(invRef|tx\.set\(FS_LEDGER_DOC/g)].length;
 check('the pad has exactly one place that moves money', padWrites === 2,
   `${padWrites} transactional writes found; expected 2 (purse + ledger, in orderFood)`);
+check('the pad never writes the character bundle',
+  !/tx\.set\(FS_BUNDLE_DOC|FS_BUNDLE_DOC\.set\(/.test(padSrc));
 
 // The Bank's own rendering path must stay a reader.
 const bankSection = padSrc.slice(padSrc.indexOf('App: Bank'), padSrc.indexOf('App: Quirks'));

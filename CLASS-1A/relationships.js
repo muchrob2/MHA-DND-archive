@@ -43,18 +43,50 @@ let canWrite = false;
    cannot tell them apart. Locking it properly means moving purchases behind
    a Cloud Function. What this does do is stop the inventory being editable
    by accident or on a whim, which is the actual problem at a table. */
+/* Nobody edits inventory here any more, DM included.
+   Inventories moved into their own collection so firestore.rules could
+   refuse a write that increases a purse. Editing them from this tab would
+   mean a second write path with its own bugs, and — worse — one that
+   changes someone's money without leaving a line on the Bank statement.
+   Every change now goes through the admin page's grant panel, which
+   writes the inventory and its ledger entry in one transaction.
+
+   The tab still shows everything; it is a view of the collection. */
 let canEditInventory = false;
 
 document.addEventListener('auth-state-changed', (e) => {
   canWrite = e.detail.role === 'admin' || e.detail.role === 'editor';
-  canEditInventory = e.detail.role === 'admin';
   if (selected) showTab(activeTab);
 });
 
 function buildBundle() {
   const characters = {};
-  for (const c of CHARACTERS) { if (c._file) characters[c._file] = c; }
+  for (const c of CHARACTERS) {
+    if (!c._file) continue;
+    // Inventory is dropped from every save. It lives in its own collection
+    // now, and carrying a stale copy along in a sheet save is how a purchase
+    // made thirty seconds ago would quietly come back.
+    const { inventory, ...rest } = c;
+    characters[c._file] = rest;
+  }
   return { version: 1, exported_at: new Date().toISOString(), relationships: rels, characters };
+}
+
+// Inventories are fetched separately and hung onto the character objects, so
+// the Inventory tab and its totals keep working unchanged. Nothing writes
+// them back from this page.
+async function loadInventories() {
+  try {
+    const snap = await db.collection('inventories').get();
+    const byFile = {};
+    snap.forEach(doc => { byFile[doc.id] = doc.data(); });
+    for (const c of CHARACTERS) {
+      if (c._file && byFile[c._file]) c.inventory = byFile[c._file];
+    }
+  } catch {
+    // Falls back to whatever the bundle still holds, which during the
+    // migration is exactly right.
+  }
 }
 
 // Attacks and inventory items are edited live by whoever has this character
@@ -1015,11 +1047,12 @@ function renderInventoryTab(c) {
   }
 
   tabContent.innerHTML = `
-    ${canEditInventory ? '' : `
     <div class="inv-locked-note">
-      Your inventory is kept by the DM. Money and gear arrive by being earned,
-      granted, or bought — spend it in the <a href="../shop.html">Shop</a>.
-    </div>`}
+      This is a view. Money and gear arrive by being earned, granted from the
+      admin page, or bought in the <a href="../shop.html">Shop</a> — and every
+      change lands on the Bank statement. The database itself refuses any
+      write that would make a purse worth more, so nobody can top themselves up.
+    </div>
     <div class="inv-currency-panel">
       <div class="inv-currency-title">Currency</div>
       <div class="inv-currency-row">${currencyBlocks}</div>
@@ -1428,6 +1461,7 @@ function renderDiceHistory() {
     return a._roster_id - b._roster_id;
   });
   selected = CHARACTERS[0];
+  await loadInventories();
   if (fsBundle) startRelLiveSync();
   renderSidebar();
   renderProfile();

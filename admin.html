@@ -93,6 +93,19 @@
   </div>
 </div>
 
+<section class="panel" id="migrate-panel">
+  <h2>Inventories</h2>
+  <p class="panel-note">
+    Inventories live in their own collection so the rules can refuse any write
+    that would make a purse worth more than it already was. Players can spend;
+    only you can add. Run this once to move them out of the character bundle —
+    it never overwrites an inventory that already exists, so running it again
+    is harmless.
+  </p>
+  <button id="migrate-btn" class="add-block-btn" onclick="migrateInventories()">Move inventories</button>
+  <div id="migrate-status" class="row-saved show"></div>
+</section>
+
 <script src="admin.js"></script>
 </body>
 </html>

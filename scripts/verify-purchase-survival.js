@@ -243,13 +243,11 @@ shared.run = async function () {
   // pick one. Purses are not in this document any more, and only the server
   // writes them, so there is nothing left to race.
   boot(200000);
+  // Inventory editing is admin-only now (canEditInventory in relationships.js),
+  // so the person hand-editing a purse is the DM, not the player — and even
+  // their edit never reaches this document, because purses do not live here.
   canEditInventory = true;
   onCurrencyChange('yen', 199000);
-  // Inventory editing is admin-only now (canEditInventory in relationships.js),
-  // so the person hand-editing a purse mid-purchase is the DM, not the player.
-  onCurrencyChange('yen', 199000);            // DM hand-edits the purse
-  buyOnServer(${JSON.stringify(KATANA)}, 1, 85000);
-  handleRelSnapshot({ exists: true, metadata: { fromCache: false }, data: () => fsCloneDoc(SERVER) });
   await manualSaveRelationships();
   check('a hand-edited purse never reaches the shared bundle',
         serverYen() !== 199000);

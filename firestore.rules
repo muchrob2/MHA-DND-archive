@@ -21,6 +21,26 @@ service cloud.firestore {
       allow write: if isAdmin() || isEditorFor(id);
     }
 
+    // ── Inventories: readable by all, writable by nobody ──────────────
+    // This is the whole point of the Cloud Functions. Money and gear live
+    // here, apart from the player-writable character bundle, and NO client
+    // may write them — not a player, not the DM, not a console.
+    //
+    // `allow write: if false` is not a placeholder. The Admin SDK inside a
+    // Cloud Function bypasses rules entirely, so the functions still write
+    // freely; everyone else is refused by the database itself rather than
+    // by a check in a page they control.
+    //
+    // Rules alone could never have done this job while inventory sat inside
+    // the bundle: a purchase and a hand-edit are the same shape of write to
+    // the same document, and the rules language has no loops to walk twenty
+    // characters checking that only the caller's purse moved, and only
+    // downwards. Moving the data is what made the rule expressible.
+    match /inventories/{characterFile} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     match /users/{uid} {
       allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
       allow create: if request.auth != null && request.auth.uid == uid
@@ -40,10 +60,16 @@ service cloud.firestore {
       // UI would not be enough: every player holds an 'editor' role, and the
       // rule below is the only thing standing between them and a console.
       //
+      // The ledger is the record of every movement of money. It is only
+      // trustworthy if nothing but the Cloud Functions can write it — a
+      // client that can forge a statement line can hide a theft, and the
+      // Bank app exists to be believed. Functions bypass rules, so they
+      // still write it; every client is refused.
+      //
       // Every other mha-dnd doc (campaigns, dm-scripts, session-log, and the
       // per-player heropad-* pads) keeps the existing admin-or-editor policy.
-      allow write: if isAdmin()
-        || (isEditor() && doc != 'encounter-state' && doc != 'masaranking');
+      allow write: if doc != 'ledger'
+        && (isAdmin() || (isEditor() && doc != 'encounter-state' && doc != 'masaranking'));
     }
   }
 }

@@ -117,18 +117,12 @@ const GRANT_POINTS = [
 const MISSION_FTP = [['1','D-rank — 1 FTP'],['2','C-rank — 2 FTP'],['3','B-rank — 3 FTP'],
                      ['4','A-rank — 4 FTP'],['5','S-rank — 5 FTP']];
 
-/* ── The ledger ─────────────────────────────────────────────────────
-   Grants are the other half of a character's statement — the shop
-   records what they spent, this records what you gave them. Both append
-   to mha-dnd/ledger, which the Heropad's Bank app reads.
-
-   The ENTRY SHAPE is documented in full at the top of shop.js and must
-   stay identical in all three files; verify-ledger.js fails if they
-   drift. CURRENCY_TO_YEN is likewise kept in step with shop.js — it is
-   what lets a grant of gold show up as a yen figure on the statement.
+/* ── Grants ─────────────────────────────────────────────────────────
+   Grants move money, so they happen server-side like every other spend.
+   This page sends the DM's intent to the grantInventory Cloud Function,
+   which checks the caller really is an admin, applies it, and writes the
+   matching ledger entry in the same transaction.
    ─────────────────────────────────────────────────────────────────── */
-const FS_LEDGER_DOC = db.collection('mha-dnd').doc('ledger');
-const MAX_LEDGER_ENTRIES = 400;
 const CURRENCY_TO_YEN = { yen: 1, cp: 10, sp: 100, ep: 500, gp: 1000, pp: 10000 };
 
 let rosterStudents = [];
@@ -137,18 +131,7 @@ function genId(prefix) {
   return prefix + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
-function ledgerEntry(file, kind, label, unit, amount, yenValue) {
-  return { id: genId('led'), ts: Date.now(), file, kind, label, unit, amount, yen: yenValue };
-}
 
-function appendToLedger(snap, additions) {
-  const data = (snap && snap.exists && snap.data()) || {};
-  const existing = Array.isArray(data.entries) ? data.entries : [];
-  const merged = existing.concat(additions);
-  return Object.assign({}, data, {
-    entries: merged.length > MAX_LEDGER_ENTRIES ? merged.slice(merged.length - MAX_LEDGER_ENTRIES) : merged,
-  });
-}
 
 // The counter a grant is about to move, read before and after so the ledger
 // records the actual delta rather than the number typed into the form. They
@@ -348,39 +331,15 @@ async function applyGrant() {
   btn.disabled = true;
   setGrantStatus('Granting…', '');
   try {
-    const missing = await db.runTransaction(async (tx) => {
-      const snap = await tx.get(FS_BUNDLE_DOC);
-      // Both reads before either write — Firestore requires it, and it keeps
-      // the grant and its ledger entries in one atomic commit.
-      const ledgerSnap = await tx.get(FS_LEDGER_DOC);
-      if (!snap.exists) throw new Error('No character bundle found — open the Class 1-A toolkit and save once first.');
-      const data = snap.data();
-      const characters = data.characters || {};
-      const absent = [];
-      const additions = [];
-      const summary = grantSummary(spec);
-      for (const file of files) {
-        // Only characters already in the bundle are touched. Creating a stub
-        // here would produce a nameless character that the toolkit renders as
-        // an empty row, so an un-synced sheet is reported instead.
-        if (!characters[file]) { absent.push(file); continue; }
-        const inv = characters[file].inventory = characters[file].inventory || {};
-        const before = grantCounterValue(inv, spec);
-        applyGrantToInventory(inv, spec);
-        const after = grantCounterValue(inv, spec);
-        // Items have no counter; everything else records what actually moved.
-        const delta = before === null ? Math.max(1, spec.amount) : after - before;
-        additions.push(ledgerEntry(
-          file, spec.kind, summary,
-          spec.kind === 'currency' ? spec.key : null,
-          delta,
-          spec.kind === 'currency' ? delta * (CURRENCY_TO_YEN[spec.key] || 0) : 0
-        ));
-      }
-      tx.set(FS_BUNDLE_DOC, Object.assign({}, data, { characters }));
-      tx.set(FS_LEDGER_DOC, appendToLedger(ledgerSnap, additions));
-      return absent;
+    // Grants move money, so they move server-side like every other spend.
+    // inventories/{file} refuses client writes outright (firestore.rules);
+    // the function checks this account is really an admin, applies the
+    // grant, and writes the ledger entry in the same transaction.
+    const res = await fbCall('grantInventory', {
+      files,
+      spec: Object.assign({}, spec, { summary: grantSummary(spec) }),
     });
+    const missing = res.missing || [];
 
     const nameOf = f => (rosterStudents.find(s => s.file === f) || {}).name || f;
     const granted = files.length - missing.length;

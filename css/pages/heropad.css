@@ -804,7 +804,10 @@
 #pad-setup {
   position: absolute;
   inset: 0;
-  z-index: 5;
+  /* Above the lock screen (6), not below it. Switching character is the one
+     thing that must work while a pad is locked — otherwise a passkey you do
+     not know is a dead end, and the only way out is clearing site data. */
+  z-index: 8;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -126,6 +126,44 @@ let pads = {};              // every pad this device knows, keyed by roster file
 let activeFile = null;      // which one is on screen
 let pad = defaultPad();     // the active pad (always a member of `pads`)
 let canSync = false;        // signed in with write access to mha-dnd docs
+
+/* ── Whose pads this account may open ───────────────────────────────
+   The DM assigns characters on the admin page, and those assignments are
+   what decide which pads appear in the switcher.
+
+   ⚠ The stored format is not what you would guess. admin.js writes the
+   checkbox values from loadCharacterOptions, which are strings shaped
+   like "Student (1-A)::Ren Suzuki" — not roster ids. heropad.js used to
+   ask canEdit(student.id) with the numeric id, which never matched
+   anything, so "open my own pad automatically" silently never worked.
+
+   Both forms are accepted below rather than migrating everyone's user
+   document: a wrong guess here locks a player out of their own pad, and
+   tolerating both costs one extra comparison. */
+let myRole = null;
+let myCharacterKeys = [];
+
+function padKeyFor(student) { return 'Student (1-A)::' + student.name; }
+
+function mayUsePad(student) {
+  if (myRole === 'admin') return true;
+  // Signed out or not yet approved: there is no identity to enforce
+  // against, and hiding every pad would make the page useless to someone
+  // the DM has not got to yet. Restriction starts once an account has
+  // assignments.
+  if (!myCharacterKeys.length) return true;
+  return myCharacterKeys.includes(padKeyFor(student)) || myCharacterKeys.includes(student.id);
+}
+
+function allowedStudents() {
+  return ROSTER.filter(mayUsePad);
+}
+
+// True when the account is genuinely restricted, so the UI can say so
+// rather than looking like the roster failed to load.
+function padAccessRestricted() {
+  return myRole !== 'admin' && myCharacterKeys.length > 0;
+}
 let openAppId = null;
 let padUnsub = null;        // live-sync listener for the active pad
 
@@ -2385,9 +2423,19 @@ function setSyncNote(text) {
 let setupShowAll = false;
 
 function renderSetup() {
-  const pcs = ROSTER.filter(s => s.is_pc);
-  const rest = ROSTER.filter(s => !s.is_pc);
-  const shown = setupShowAll ? pcs.concat(rest) : pcs;
+  const allowed = allowedStudents();
+  const pcs = allowed.filter(s => s.is_pc);
+  const rest = allowed.filter(s => !s.is_pc);
+  // With only one pad available there is nothing to expand to.
+  const shown = (setupShowAll || !pcs.length) ? pcs.concat(rest) : pcs;
+
+  if (!shown.length) {
+    $('setup-list').innerHTML =
+      '<p class="bk-empty">No pads are assigned to your account yet. Ask the DM to assign you a character.</p>';
+    $('setup-all-btn').hidden = true;
+    $('setup-cancel-btn').hidden = !activeFile;
+    return;
+  }
 
   $('setup-list').innerHTML = shown.map(s => `
     <button type="button" role="listitem" class="setup-pick${s.file === activeFile ? ' sel' : ''}"
@@ -2398,7 +2446,16 @@ function renderSetup() {
 
   const allBtn = $('setup-all-btn');
   allBtn.textContent = setupShowAll ? 'Just the player characters' : 'Show the rest of Class 1-A';
-  allBtn.hidden = !rest.length;
+  allBtn.hidden = !rest.length || !pcs.length;
+
+  const sub = $('pad-setup-sub');
+  if (sub) {
+    sub.textContent = padAccessRestricted()
+      ? (allowed.length === 1
+          ? 'This is your pad.'
+          : 'These are yours. Ask the DM if you need another.')
+      : 'Pick your character. This pad will remember you.';
+  }
   // Cancel only makes sense once a pad is already open behind the screen.
   $('setup-cancel-btn').hidden = !activeFile;
 }
@@ -2444,18 +2501,29 @@ function renderOwnerName() {
 }
 
 // Whose pad to open on arrival, or null when nothing identifies the player
-// and the setup screen should ask.
-//
-// The canEdit() path deliberately skips admins. canEdit returns true for an
-// admin on every id (auth.js:45), so for the DM it would resolve to "the
-// first student in the roster" every single time and quietly override the
-// pad they were actually last looking at.
+// and the setup screen should ask. Only pads this account may open count.
 function pickDefaultOwner() {
+  const allowed = allowedStudents();
   const remembered = (() => { try { return localStorage.getItem(LS_ACTIVE); } catch { return null; } })();
-  if (remembered && ROSTER.some(s => s.file === remembered)) return remembered;
-  const isDm = !!(window.isAdmin && window.isAdmin());
-  const mine = (!isDm && window.canEdit) ? ROSTER.find(s => window.canEdit(s.id)) : null;
-  return mine ? mine.file : null;
+  if (remembered && allowed.some(s => s.file === remembered)) return remembered;
+  // Exactly one pad to their name: open it rather than asking a question
+  // that has one answer.
+  if (padAccessRestricted() && allowed.length === 1) return allowed[0].file;
+  return null;
+}
+
+// Called when permissions arrive or change. A pad this account may not open
+// must not stay on screen — including one remembered from a previous visit,
+// or from before the DM changed the assignments.
+function enforcePadAccess() {
+  if (!ROSTER.length || !activeFile) return;
+  const student = ROSTER.find(s => s.file === activeFile);
+  if (student && mayUsePad(student)) return;
+  activeFile = null;
+  try { localStorage.removeItem(LS_ACTIVE); } catch {}
+  renderOwnerName();
+  renderOwnerLine();
+  openSetup();
 }
 
 /* ══ Boot ═══════════════════════════════════════════════════════════ */
@@ -2466,6 +2534,10 @@ function pickDefaultOwner() {
 document.addEventListener('auth-state-changed', e => {
   const was = canSync;
   canSync = e.detail.role === 'admin' || e.detail.role === 'editor';
+  myRole = e.detail.role || null;
+  myCharacterKeys = e.detail.editableCharacterIds || [];
+  enforcePadAccess();
+  if (!$('pad-setup').hidden) renderSetup();
 
   // The ranking chart is the DM's alone (firestore.rules), so the editing
   // controls appear for admins and nobody else. Re-render if the app is

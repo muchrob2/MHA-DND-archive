@@ -104,23 +104,20 @@ if (shop && pad) {
     plat.pp === 0 && plat.yen === 9500, JSON.stringify(plat));
 }
 
-/* ── Ordering food is a request, not a write ────────────────────── */
-// The Eats app used to spend from the purse itself. It cannot any more —
-// inventories/{file} refuses every client write — so what this checks is
-// that the client asks the server and sends no price of its own. The
-// server-side half is covered in verify-functions.js.
+/* ── The order writes the same ledger shape as the shop ─────────── */
 const orderFn = padSrc.match(/async function orderFood\([\s\S]*?\n\}/);
 check('heropad.js defines orderFood()', !!orderFn);
 if (orderFn) {
   const body = orderFn[0];
-  check('an order calls the spend function', /fbCall\('spend'/.test(body));
-  check('it sends an id and a quantity, never a price',
-    /lines: \[\{ id, qty: 1 \}\]/.test(body) && !/\bprice\s*:/.test(body),
-    'a client-supplied price is a suggestion the server would be wrong to take');
-  check('it names itself as the eats source', /source: 'eats'/.test(body));
-  check('it never writes the purse directly',
-    !/tx\.set|runTransaction/.test(body));
-  check('a failed order is reported to the player', /eatsStatus =/.test(body));
+  check('an order runs inside a transaction', /runTransaction/.test(body));
+  check('it reads both documents before writing either',
+    body.indexOf('tx.get(FS_LEDGER_DOC') < body.indexOf('tx.set(FS_BUNDLE_DOC'),
+    'Firestore requires every read to precede every write');
+  check('it writes the purse and the ledger together',
+    /tx\.set\(FS_BUNDLE_DOC/.test(body) && /tx\.set\(FS_LEDGER_DOC/.test(body),
+    'an order without a statement line is exactly what the ledger exists to prevent');
+  check('it builds its entry with the shared ledgerEntry()', /ledgerEntry\(/.test(body));
+  check('it refuses when the purse cannot cover it', /Not enough money/.test(body));
 }
 
 /* ── Shared documents nothing else should be writing ────────────── */

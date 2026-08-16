@@ -965,10 +965,6 @@ async function loadRanking() {
    ═══════════════════════════════════════════════════════════════════ */
 const FS_LEDGER_DOC = db.collection('mha-dnd').doc('ledger');
 const FS_BUNDLE_DOC = db.collection('mha-dnd').doc('relationships-bundle');
-// Inventories live apart from the bundle now, in a collection no client may
-// write — see firestore.rules and functions/index.js.
-const FS_INVENTORIES = db.collection('inventories');
-let inventories = {};
 
 // Kept in step with shop.js and CLASS-1A/relationships.js — a drifted key
 // would show a denomination the rest of the site never fills in.
@@ -980,8 +976,20 @@ const CURRENCY_SHORT = { yen: '¥', pp: 'pp', gp: 'gp', ep: 'ep', sp: 'sp', cp: 
 // must stay identical in all three files that touch it; verify-ledger.js
 // fails if they drift. These two are the writer half, used by the Eats app —
 // the Bank itself only ever reads.
+const MAX_LEDGER_ENTRIES = 400;
 
+function ledgerEntry(file, kind, label, unit, amount, yenValue) {
+  return { id: genId('led'), ts: Date.now(), file, kind, label, unit, amount, yen: yenValue };
+}
 
+function appendToLedger(snap, additions) {
+  const data = (snap && snap.exists && snap.data()) || {};
+  const existing = Array.isArray(data.entries) ? data.entries : [];
+  const merged = existing.concat(additions);
+  return Object.assign({}, data, {
+    entries: merged.length > MAX_LEDGER_ENTRIES ? merged.slice(merged.length - MAX_LEDGER_ENTRIES) : merged,
+  });
+}
 
 /* ── What counts as unread ──────────────────────────────────────────
    The badge used to count anything from the last 24 hours, which meant
@@ -1032,9 +1040,6 @@ function walletTotalYen(currency) {
 }
 
 function ownerPurse() {
-  const own = inventories[activeFile];
-  if (own && own.currency) return own.currency;
-  // Falls back to the bundle for anyone the migration has not moved yet.
   const character = bundle && bundle.characters && bundle.characters[activeFile];
   return (character && character.inventory && character.inventory.currency) || null;
 }
@@ -1151,14 +1156,9 @@ function rerenderBankIfOpen() {
 async function loadBank() {
   try {
     await fbAuthReady;
-    const [ledgerSnap, bundleSnap, invSnap] = await Promise.all([
-      FS_LEDGER_DOC.get(), FS_BUNDLE_DOC.get(), FS_INVENTORIES.get(),
-    ]);
+    const [ledgerSnap, bundleSnap] = await Promise.all([FS_LEDGER_DOC.get(), FS_BUNDLE_DOC.get()]);
     ledger = ledgerSnap.exists && Array.isArray(ledgerSnap.data().entries) ? ledgerSnap.data().entries : [];
     bundle = bundleSnap.exists ? bundleSnap.data() : null;
-    const next = {};
-    invSnap.forEach(doc => { next[doc.id] = doc.data(); });
-    inventories = next;
   } catch {
     // Offline or blocked — an empty statement is better than a stuck spinner.
     ledger = ledger || [];
@@ -1182,17 +1182,6 @@ function startBankLiveSync() {
     bundle = snap.data();
     rerenderBankIfOpen();
   }, err => console.error('[heropad] purse sync stopped:', err));
-
-  // The purse itself. A spend lands here rather than in the bundle now, so
-  // this is what keeps the Bank, the widget and the Eats prices honest.
-  FS_INVENTORIES.onSnapshot(snap => {
-    if (snap.metadata && snap.metadata.fromCache) return;
-    const next = {};
-    snap.forEach(doc => { next[doc.id] = doc.data(); });
-    inventories = next;
-    rerenderBankIfOpen();
-    if (openAppId === 'eats') $('pad-app-body').innerHTML = renderEatsApp();
-  }, err => console.error('[heropad] inventory sync stopped:', err));
 }
 
 /* ══ App: Quirks ════════════════════════════════════════════════════
@@ -1878,19 +1867,18 @@ function removeTally(id) {
    verify-eats.js runs both copies against the same cases and fails if
    they ever disagree.
    ═══════════════════════════════════════════════════════════════════ */
-// Loaded from CAMPAIGN/eats-menu.json — the same file the Cloud Function
-// prices orders from, so what is shown and what is charged cannot drift.
-let EATS_MENU = [];
-
-async function loadEatsMenu() {
-  try {
-    const data = await fetch('CAMPAIGN/eats-menu.json', { cache: 'no-cache' }).then(r => r.json());
-    EATS_MENU = Array.isArray(data.items) ? data.items : [];
-  } catch {
-    EATS_MENU = [];
-  }
-  if (openAppId === 'eats') $('pad-app-body').innerHTML = renderEatsApp();
-}
+const EATS_MENU = [
+  { id: 'ramen',    name: 'Tonkotsu ramen',       price: 900,  icon: '🍜', desc: 'The one by the station. Always a queue.' },
+  { id: 'katsu',    name: 'Katsu curry',          price: 850,  icon: '🍛', desc: 'Enormous. Regret is part of the portion.' },
+  { id: 'onigiri',  name: 'Onigiri, two',         price: 260,  icon: '🍙', desc: 'Tuna mayo and salmon. Convenience store.' },
+  { id: 'gyudon',   name: 'Gyudon',               price: 600,  icon: '🥩', desc: 'Beef bowl. Fast, cheap, correct.' },
+  { id: 'yakisoba', name: 'Yakisoba bread',       price: 220,  icon: '🥖', desc: 'Carbohydrate on carbohydrate. Cafeteria classic.' },
+  { id: 'takoyaki', name: 'Takoyaki, six',        price: 480,  icon: '🐙', desc: 'Molten. Wait longer than you think.' },
+  { id: 'sushi',    name: 'Sushi set',            price: 2400, icon: '🍣', desc: 'For when the mission paid out.' },
+  { id: 'parfait',  name: 'Strawberry parfait',   price: 780,  icon: '🍨', desc: 'Structurally unsound. Worth it.' },
+  { id: 'coffee',   name: 'Canned coffee',        price: 130,  icon: '☕', desc: 'From the machine outside the dorms.' },
+  { id: 'family',   name: 'Family bucket, shared', price: 3600, icon: '🍗', desc: 'Feeds the common room. Briefly.' },
+];
 
 const EATS_LABEL = 'Eats';   // ledger entries are prefixed with this
 let eatsStatus = '';
@@ -1970,15 +1958,31 @@ async function orderFood(id) {
   $('pad-app-body').innerHTML = renderEatsApp();
 
   try {
-    // The pad cannot spend. It names the item; the Cloud Function looks up
-    // the price, checks this is your character, moves the money and writes
-    // the ledger. inventories/{file} refuses every client write, so there is
-    // no faster path from here even for someone reading this comment in
-    // devtools.
-    await fbCall('spend', { characterFile: activeFile, source: 'eats', lines: [{ id, qty: 1 }] });
+    await fbAuthReady;
+    // Same shape as the Shop's checkout: purse and ledger move inside one
+    // transaction, so an order cannot exist without its statement line.
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(FS_BUNDLE_DOC);
+      const ledgerSnap = await tx.get(FS_LEDGER_DOC);
+      if (!snap.exists) throw new Error('No character bundle — open the toolkit and save once first.');
+      const data = snap.data();
+      const characters = data.characters || {};
+      const character = characters[activeFile];
+      if (!character) throw new Error('This character has no sheet in the shared bundle yet.');
+      character.inventory = character.inventory || {};
+      character.inventory.currency = character.inventory.currency || {};
+      if (!spendFromWallet(character.inventory.currency, item.price)) {
+        throw new Error('Not enough money — the purse holds ' +
+          yenStr(walletTotalYen(character.inventory.currency)) + '.');
+      }
+      const entry = ledgerEntry(activeFile, 'purchase',
+        `${EATS_LABEL} · ${item.name}`, 'yen', -item.price, -item.price);
+      tx.set(FS_BUNDLE_DOC, Object.assign({}, data, { characters }));
+      tx.set(FS_LEDGER_DOC, appendToLedger(ledgerSnap, [entry]));
+    });
     eatsStatus = `${item.name} ordered. It is on its way.`;
   } catch (e) {
-    eatsStatus = (e && e.message) || 'That order did not go through.';
+    eatsStatus = e.message || 'That order did not go through.';
   }
   $('pad-app-body').innerHTML = renderEatsApp();
 }
@@ -2440,7 +2444,7 @@ document.addEventListener('auth-state-changed', e => {
   // Class-wide, not per-pad, so these load once and stay subscribed for the
   // life of the page rather than being re-fetched on every owner switch.
   // Started before the owner is known so the apps are warm either way.
-  await Promise.all([loadRanking(), loadBank(), loadMessages(), loadBoard(), loadEatsMenu()]);
+  await Promise.all([loadRanking(), loadBank(), loadMessages(), loadBoard()]);
   startRankLiveSync();
   startBankLiveSync();
   startMessageLiveSync();

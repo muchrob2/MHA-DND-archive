@@ -245,6 +245,11 @@ shared.run = async function () {
   boot(200000);
   canEditInventory = true;
   onCurrencyChange('yen', 199000);
+  // Inventory editing is admin-only now (canEditInventory in relationships.js),
+  // so the person hand-editing a purse mid-purchase is the DM, not the player.
+  onCurrencyChange('yen', 199000);            // DM hand-edits the purse
+  buyOnServer(${JSON.stringify(KATANA)}, 1, 85000);
+  handleRelSnapshot({ exists: true, metadata: { fromCache: false }, data: () => fsCloneDoc(SERVER) });
   await manualSaveRelationships();
   check('a hand-edited purse never reaches the shared bundle',
         serverYen() !== 199000);
@@ -253,7 +258,10 @@ shared.run = async function () {
 };
 `;
 
-eval(toolkitSrc + '\n;' + scenarios);
+// Inventory handlers refuse unless the actor is an admin; these scenarios
+// exercise the merge, not the permission, so run them as the DM. The gate
+// itself is covered in verify-relationship-sync.js.
+eval(toolkitSrc + '\n;canEditInventory = true;\n' + scenarios);
 
 shared.run().then(() => {
   let allPass = true;

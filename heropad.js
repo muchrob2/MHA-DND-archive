@@ -1414,6 +1414,10 @@ const MAX_MESSAGES = 500;
 
 let messages = null;        // [{id, ts, from, to, text}]
 let msgThread = null;       // roster file of whoever's thread is open
+// Shown inside the app. Routing failures to #pad-sync-note put them in the
+// owner bar OUTSIDE the device, where a phone user never sees them — the app
+// simply appeared to do nothing.
+let msgStatus = '';
 let _msgSyncedBaseline = null;
 let _msgSaveInFlight = false;
 
@@ -1481,10 +1485,12 @@ function renderThread() {
     <button type="button" class="msg-back" onclick="closeThread()">← All chats</button>
     <div class="msg-who">${escHtml(who ? who.name : 'Unknown')}</div>
     <div class="msg-list" id="msg-list">${body}</div>
+    ${msgStatus ? `<p class="et-status">${escHtml(msgStatus)}</p>` : ''}
     <form class="msg-form" onsubmit="sendMessage(event)">
       <input type="text" id="msg-input" class="cz-input" maxlength="300" autocomplete="off"
-             placeholder="Message…" aria-label="Your message">
-      <button type="submit" class="msg-send" aria-label="Send">➤</button>
+             placeholder="${canSync ? 'Message…' : 'Sign in to send messages'}"
+             aria-label="Your message" ${canSync ? '' : 'disabled'}>
+      <button type="submit" class="msg-send" aria-label="Send" ${canSync ? '' : 'disabled'}>➤</button>
     </form>`;
 }
 
@@ -1513,7 +1519,12 @@ async function sendMessage(ev) {
   const input = $('msg-input');
   const text = input ? input.value.trim() : '';
   if (!text || !msgThread || !activeFile) return;
-  if (!canSync) { setSyncNote('Sign in to send messages — this device can only read them.'); return; }
+  if (!canSync) {
+    msgStatus = 'Sign in to send messages — this device can only read them.';
+    $('pad-app-body').innerHTML = renderMessagesApp();
+    return;
+  }
+  msgStatus = '';
 
   const entry = { id: genId('msg'), ts: Date.now(), from: activeFile, to: msgThread, text };
   messages = (messages || []).concat([entry]);
@@ -1533,7 +1544,8 @@ async function sendMessage(ev) {
     _msgSyncedBaseline = merged;
     messages = Array.isArray(merged.messages) ? merged.messages : messages;
   } catch (e) {
-    setSyncNote('Message not sent: ' + (e.code || e.message));
+    msgStatus = 'Message not sent: ' + (e.code || e.message);
+    $('pad-app-body').innerHTML = renderMessagesApp();
   } finally {
     _msgSaveInFlight = false;
   }
@@ -1766,12 +1778,15 @@ let boardWidth = 4;
 let _boardBaseline = null;
 let _boardSaveInFlight = false;
 let _boardDrawing = null;
+let boardStatus = '';   // shown in the app, for the same reason as msgStatus
 
 function renderBoardApp() {
   const swatches = BOARD_COLOURS.map(c =>
     `<button type="button" class="bd-swatch${c === boardColour ? ' sel' : ''}" style="--sw:${c}"
              onclick="setBoardColour('${c}')" aria-label="Draw in ${c}"></button>`).join('');
   return `
+    ${boardStatus ? `<p class="et-status">${escHtml(boardStatus)}</p>` : ''}
+    ${!canSync ? '<p class="et-note">Signed out — you can see the board, but not draw on it.</p>' : ''}
     <div class="bd-tools">
       <div class="bd-swatches">${swatches}</div>
       <div class="bd-sizes">
@@ -1849,7 +1864,12 @@ function mountBoard() {
   };
 
   cv.addEventListener('pointerdown', (ev) => {
-    if (!canSync) { setSyncNote('Sign in to draw on the shared board.'); return; }
+    if (!canSync) {
+      boardStatus = 'Sign in to draw on the shared board.';
+      $('pad-app-body').innerHTML = renderBoardApp();
+      mountBoard();
+      return;
+    }
     ev.preventDefault();
     if (cv.setPointerCapture) cv.setPointerCapture(ev.pointerId);
     const [x, y] = toBoard(ev);
@@ -1875,9 +1895,17 @@ function mountBoard() {
     if (stroke.pts.length >= 4) commitStroke(stroke);
     else drawBoard();
   };
+  // ⚠ Deliberately NOT bound to pointerleave. Calling setPointerCapture in
+  // pointerdown transfers the pointer to this element, and the browser fires
+  // pointerleave as part of that transfer — so a leave-ends-the-stroke
+  // handler kills every touch stroke the moment it begins, and the stroke is
+  // then thrown away for having fewer than two points. Nothing draws at all
+  // on a phone, while a mouse works fine because it never leaves the canvas
+  // mid-drag. Capture already guarantees pointerup arrives here even if the
+  // finger travels outside the element, which is what pointerleave was
+  // wrongly standing in for.
   cv.addEventListener('pointerup', finish);
   cv.addEventListener('pointercancel', finish);
-  cv.addEventListener('pointerleave', finish);
 
   drawBoard();
 }
@@ -1899,7 +1927,8 @@ async function pushBoard() {
     boardStrokes = Array.isArray(merged.strokes) ? merged.strokes : boardStrokes;
     drawBoard();
   } catch (e) {
-    setSyncNote('The board did not save: ' + (e.code || e.message));
+    boardStatus = 'The board did not save: ' + (e.code || e.message);
+    if (openAppId === 'board') { $('pad-app-body').innerHTML = renderBoardApp(); mountBoard(); }
   } finally {
     _boardSaveInFlight = false;
   }

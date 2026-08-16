@@ -35,8 +35,24 @@ const FS_DOC        = 'relationships-bundle';
 
 let canWrite = false;
 
+/* Inventory is the DM's to move, not the players'.
+   canWrite covers a player editing their own sheet — personality, attacks,
+   relationships, all the things the sheet is for. Inventory is different:
+   money, crafting parts, points and items arrive by being earned, granted
+   from the admin page, or bought in the Shop. A player typing themselves
+   10,000 yen skips all three.
+
+   ⚠ This is a UI control, not a security boundary. firestore.rules still
+   lets an editor write this document, because a purchase and a hand-edit
+   are the same shape of write from the same client, and the rules language
+   cannot tell them apart. Locking it properly means moving purchases behind
+   a Cloud Function. What this does do is stop the inventory being editable
+   by accident or on a whim, which is the actual problem at a table. */
+let canEditInventory = false;
+
 document.addEventListener('auth-state-changed', (e) => {
   canWrite = e.detail.role === 'admin' || e.detail.role === 'editor';
+  canEditInventory = e.detail.role === 'admin';
   if (selected) showTab(activeTab);
 });
 
@@ -957,7 +973,7 @@ function renderInventoryTab(c) {
     <div class="inv-currency-block">
       <label>${CURRENCY_LABELS[k]}</label>
       <input class="inv-currency-input" type="number" min="0" value="${currency[k]||0}"
-        ${canWrite ? `onchange="onCurrencyChange('${k}',this.value)"` : 'disabled'} title="${CURRENCY_LABELS[k]}">
+        ${canEditInventory ? `onchange="onCurrencyChange('${k}',this.value)"` : 'disabled'} title="${CURRENCY_LABELS[k]}">
     </div>`).join('');
 
   const partsYen = PART_DEFS.reduce((sum, p) => sum + (parts[p.key]||0) * p.yen, 0);
@@ -969,7 +985,7 @@ function renderInventoryTab(c) {
         <div class="inv-currency-block" title="¥${p.yen.toLocaleString()} each — ${p.hint}">
           <label>${p.label}</label>
           <input class="inv-currency-input" type="number" min="0" value="${parts[p.key]||0}"
-            ${canWrite ? `onchange="onPartChange('${p.key}',this.value)"` : 'disabled'}>
+            ${canEditInventory ? `onchange="onPartChange('${p.key}',this.value)"` : 'disabled'}>
         </div>`).join('')}
       </div>
     </div>`).join('');
@@ -982,12 +998,12 @@ function renderInventoryTab(c) {
     <div class="inv-currency-block inv-point-block${over ? ' over-cap' : ''}" title="${escHtml(p.note)}">
       <label>${p.label}</label>
       <input class="inv-currency-input" type="number" min="0" value="${val}"
-        ${canWrite ? `onchange="onPointChange('${p.key}',this.value)"` : 'disabled'}>
+        ${canEditInventory ? `onchange="onPointChange('${p.key}',this.value)"` : 'disabled'}>
       <span class="inv-point-max">${max !== null ? 'of ' + max : '—'}</span>
     </div>`;
   }).join('');
 
-  const poolCards = pools.map(p => canWrite ? `
+  const poolCards = pools.map(p => canEditInventory ? `
     <div class="inv-pool-row">
       <input class="ability-input inv-pool-name" placeholder="Pool name" list="dl-pool-name"
         value="${escHtml(p.name||'')}" oninput="onPoolEdit('${escHtml(p.id)}','name',this.value)">
@@ -1004,7 +1020,7 @@ function renderInventoryTab(c) {
     </div>`).join('');
 
   const itemCards = items.map((it, i) => {
-    if (canWrite) {
+    if (canEditInventory) {
       return `
     <div class="ability-card ability-card-editable">
       <div class="ability-edit-row">
@@ -1025,11 +1041,16 @@ function renderInventoryTab(c) {
   if (!items.length) {
     itemCards.push(`<div class="inv-empty">No items yet.</div>`);
   }
-  if (canWrite) {
+  if (canEditInventory) {
     itemCards.push(`<button class="add-attack-btn" onclick="onItemAdd()">+ Add item</button>`);
   }
 
   tabContent.innerHTML = `
+    ${canEditInventory ? '' : `
+    <div class="inv-locked-note">
+      Your inventory is kept by the DM. Money and gear arrive by being earned,
+      granted, or bought — spend it in the <a href="../shop.html">Shop</a>.
+    </div>`}
     <div class="inv-currency-panel">
       <div class="inv-currency-title">Currency</div>
       <div class="inv-currency-row">${currencyBlocks}</div>
@@ -1045,11 +1066,11 @@ function renderInventoryTab(c) {
     <div class="inv-currency-panel">
       <div class="inv-currency-title">Points &amp; resources</div>
       <div class="inv-currency-row">${pointBlocks}</div>
-      ${pools.length || canWrite ? `
+      ${pools.length || canEditInventory ? `
       <div class="inv-part-group">
         <div class="inv-part-group-label">Specialization &amp; quirk pools</div>
         ${poolCards || '<div class="inv-empty">None tracked.</div>'}
-        ${canWrite ? `
+        ${canEditInventory ? `
         <button class="add-attack-btn inv-add-pool" onclick="onPoolAdd()">+ Add pool</button>
         <datalist id="dl-pool-name">${POOL_SUGGESTIONS.map(v => `<option value="${v}">`).join('')}</datalist>` : ''}
       </div>` : ''}
@@ -1061,6 +1082,7 @@ function renderInventoryTab(c) {
 }
 
 function onCurrencyChange(key, value) {
+  if (!canEditInventory) return;
   const num = Math.max(0, parseInt(value) || 0);
   selected.inventory.currency[key] = num;
   scheduleCharSave(selected);
@@ -1068,6 +1090,7 @@ function onCurrencyChange(key, value) {
 }
 
 function onPartChange(key, value) {
+  if (!canEditInventory) return;
   selected.inventory.parts = selected.inventory.parts || {};
   selected.inventory.parts[key] = Math.max(0, parseInt(value) || 0);
   scheduleCharSave(selected);
@@ -1075,6 +1098,7 @@ function onPartChange(key, value) {
 }
 
 function onPointChange(key, value) {
+  if (!canEditInventory) return;
   selected.inventory.points = selected.inventory.points || {};
   selected.inventory.points[key] = Math.max(0, parseInt(value) || 0);
   scheduleCharSave(selected);
@@ -1088,6 +1112,7 @@ function onPointChange(key, value) {
    are: fsMergeSave merges them by id, and handlers must address them by id
    rather than by render-time index. See the note above findAbility. */
 function onPoolEdit(id, field, value) {
+  if (!canEditInventory) return;
   const pool = (selected.inventory?.pools || []).find(p => p.id === id);
   if (!pool) return;
   if (field === 'name') pool.name = value;
@@ -1097,6 +1122,7 @@ function onPoolEdit(id, field, value) {
 }
 
 function onPoolAdd() {
+  if (!canEditInventory) return;
   selected.inventory.pools = selected.inventory.pools || [];
   selected.inventory.pools.push({ id: genId('pool'), name: '', value: 0, max: null });
   scheduleCharSave(selected);
@@ -1104,6 +1130,7 @@ function onPoolAdd() {
 }
 
 function onPoolDelete(id) {
+  if (!canEditInventory) return;
   const pools = selected.inventory?.pools || [];
   const idx = pools.findIndex(p => p.id === id);
   if (idx === -1) return;
@@ -1114,6 +1141,7 @@ function onPoolDelete(id) {
 
 // Addressed by id, not index — same reasoning as onAttackEdit above.
 function onItemEdit(id, field, value) {
+  if (!canEditInventory) return;
   const item = (selected.inventory?.items || []).find(it => it.id === id);
   if (!item) return;
   item[field] = field === 'qty' ? Math.max(0, parseInt(value) || 0) : value;
@@ -1121,12 +1149,14 @@ function onItemEdit(id, field, value) {
 }
 
 function onItemAdd() {
+  if (!canEditInventory) return;
   selected.inventory.items.push({ id: genId('item'), name: '', qty: 1, notes: '' });
   scheduleCharSave(selected);
   renderInventoryTab(selected);
 }
 
 function onItemDelete(id) {
+  if (!canEditInventory) return;
   const items = selected.inventory.items;
   const idx = items.findIndex(it => it.id === id);
   if (idx === -1) return;

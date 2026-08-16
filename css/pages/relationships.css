@@ -1006,3 +1006,19 @@ body { height: 100vh; overflow: hidden; }
   background:
     linear-gradient(120deg, var(--surface) 0%, color-mix(in srgb, var(--accent) 5%, var(--surface)) 100%);
 }
+
+/* Shown to players in place of the inventory's editing controls — see the
+   canEditInventory note in relationships.js. A row of greyed-out number
+   fields with no explanation reads as a bug; this says whose they are. */
+.inv-locked-note {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  background: var(--surface2);
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.inv-locked-note a { color: var(--accent-text); font-weight: 600; }

@@ -384,6 +384,27 @@ let locked = false;
 let pinEntry = '';
 let pinError = false;
 
+/* Which pad the current unlock was earned for.
+   `locked` alone is not enough: it is one boolean for the whole page, so
+   entering a passkey for one character and then using Switch walked
+   straight into the next character's pad without being asked. An unlock
+   is permission to open *that* pad, not permission to open pads.
+
+   Cleared on every switch rather than remembered per pad. Letting a pad
+   stay unlocked because you opened it earlier in the session is the kind
+   of convenience that is indistinguishable, at a shared table, from the
+   bug this fixes: someone hands the device back and the pad they were
+   just in is still open. Switching always asks again. */
+let unlockedFor = null;
+
+// Called whenever the active pad changes, or a remote copy of it arrives.
+// A pad with a passkey that this session has not unlocked gets locked,
+// however it came to be on screen.
+function enforceLock() {
+  if (locked) return;
+  if (hasPasskey() && unlockedFor !== activeFile) lockPad();
+}
+
 function lockNotifications() {
   const out = [];
   const since = bankLastReadAt();
@@ -494,6 +515,7 @@ function onLockTap() {
 function lockPad() {
   pinEntry = '';
   pinError = false;
+  unlockedFor = null;
   closeApp();
   locked = true;
   renderLock();
@@ -507,6 +529,7 @@ function lockPad() {
 function unlockPad() {
   if (!locked) return;
   locked = false;
+  unlockedFor = activeFile;   // this unlock belongs to this pad, and no other
   const el = $('pad-lock');
   el.classList.remove('open');
   $('pad-device').classList.remove('locked');
@@ -2270,14 +2293,24 @@ async function pushPad() {
 async function loadPad(file) {
   pad = pads[file] ? Object.assign(defaultPad(), pads[file]) : defaultPad();
   applyPad();
+  enforceLock();
   try {
     await fbAuthReady;
     const snap = await db.collection('mha-dnd').doc(padDocId(file)).get();
-    if (snap.exists && snap.data() && snap.data().pad && file === activeFile) {
+    // Never land the stored copy on top of an edit made while it was in
+    // flight. Switching to a pad and immediately setting a passkey used to
+    // lose the passkey: this fetch resolved a moment later and wrote the
+    // older document straight over it. The live-sync path already guarded
+    // this; the initial load did not.
+    const localEditPending = _padSaveInFlight || _padSaveTimer;
+    if (snap.exists && snap.data() && snap.data().pad && file === activeFile && !localEditPending) {
       pad = Object.assign(defaultPad(), snap.data().pad);
       pads[file] = pad;
       saveLocalPads();
       applyPad();
+      // The stored copy may carry a passkey the local one did not know
+      // about — set on another device, or by another player.
+      enforceLock();
     }
   } catch {
     // Offline or blocked — the local copy already on screen stands.
@@ -2303,6 +2336,8 @@ function startPadLiveSync(file) {
     pads[file] = pad;
     saveLocalPads();
     applyPad();
+    // A passkey added from another device must take effect here too.
+    enforceLock();
     if (openAppId === 'customise') $('pad-app-body').innerHTML = renderCustomiseApp();
   }, err => console.error('[heropad] live sync stopped:', err));
 }
@@ -2368,6 +2403,8 @@ function toggleSetupAll() {
 // pick always lands back on the home screen. Switching character out from
 // under an open statement would silently swap the numbers being read anyway.
 function chooseOwner(file) {
+  // Leaving a pad ends the unlock, whichever pad you are heading to.
+  unlockedFor = null;
   activeFile = file;
   try { localStorage.setItem(LS_ACTIVE, file); } catch {}
   closeSetup();

@@ -116,7 +116,7 @@ async function loadStaticCharacters() {
     }
   }
 
-  for (const c of out) c._staticId = c._type + '::' + c.name;
+  for (const c of out) c._staticId = fbCharacterKey(c._type, c.name);
   return out;
 }
 

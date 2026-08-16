@@ -1253,6 +1253,81 @@
 }
 .mr-foot:empty { margin-top: 0; }
 
+/* ── Recaps ─────────────────────────────────────────────────── */
+.rc-summary {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding: 11px 13px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+}
+.rc-summary strong {
+  color: var(--pad-accent);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  margin-right: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.rc-card {
+  padding: 13px;
+  margin-bottom: 9px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--pad-accent);
+  background: var(--surface);
+}
+.rc-head { display: flex; align-items: baseline; gap: 9px; }
+.rc-number {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--pad-accent);
+  font-variant-numeric: tabular-nums;
+}
+.rc-title { font-size: var(--pad-body); font-weight: 700; }
+.rc-date {
+  margin-top: 2px;
+  font-size: var(--fs-2xs);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.rc-text {
+  margin-top: 9px;
+  font-size: var(--fs-xs);
+  line-height: 1.65;
+  color: var(--text-muted);
+  white-space: pre-wrap;
+}
+.rc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+.rc-meta:empty { display: none; }
+.rc-xp, .rc-loot {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+}
+.rc-xp {
+  background: color-mix(in srgb, var(--green) 20%, var(--surface2));
+  color: var(--green-text);
+  font-variant-numeric: tabular-nums;
+}
+.rc-loot {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
 /* ── Quirks ─────────────────────────────────────────────────── */
 .qk-search { width: 100%; margin-bottom: 12px; }
 .qk-card {

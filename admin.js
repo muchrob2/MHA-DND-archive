@@ -17,7 +17,7 @@ async function loadCharacterOptions() {
   try {
     const roster = await fetch('CLASS-1A/roster.json').then(r => r.json());
     for (const s of (roster.students || [])) {
-      if (s.file) out.push({ id: 'Student (1-A)::' + s.name, name: s.name });
+      if (s.file) out.push({ id: fbCharacterKey('Student (1-A)', s.name), name: s.name });
     }
   } catch {}
   try {

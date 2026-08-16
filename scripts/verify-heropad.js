@@ -208,6 +208,23 @@ check('touch targets are enlarged on small screens, not shrunk',
   /max-width: 560px[\s\S]*?--pad-ico: 60px/.test(css),
   'touch needs more room than a cursor, not less');
 
+/* ── One definition of the assignment key ───────────────────────── */
+// heropad.js spent months asking canEdit() for a numeric roster id while
+// admin.js stored "Student (1-A)::Name" strings, so "open my own pad"
+// silently matched nothing. The format now lives in auth.js and everyone
+// calls it; a file that spells it out again is how that comes back.
+const auth = read('auth.js');
+check('auth.js owns the assignment-key format',
+  /window\.fbCharacterKey = function/.test(auth));
+for (const f of ['admin.js', 'characters.js', 'heropad.js']) {
+  const src = read(f);
+  check(`${f} builds assignment keys through fbCharacterKey()`,
+    /fbCharacterKey\(/.test(src));
+  check(`${f} does not spell the format out itself`,
+    !/['"]\s*\+\s*['"]::['"]|::['"]\s*\+/.test(src.replace(/window\.fbCharacterKey[\s\S]{0,200}/, '')),
+    'one definition, in auth.js');
+}
+
 /* ── CSS covers what gets rendered ──────────────────────────────── */
 // The device is one styled object; these are the pieces the illusion needs.
 for (const sel of ['#pad-device', '#pad-wallpaper', '#pad-screen', '#pad-grid',

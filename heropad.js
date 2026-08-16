@@ -143,7 +143,7 @@ let canSync = false;        // signed in with write access to mha-dnd docs
 let myRole = null;
 let myCharacterKeys = [];
 
-function padKeyFor(student) { return 'Student (1-A)::' + student.name; }
+function padKeyFor(student) { return fbCharacterKey('Student (1-A)', student.name); }
 
 function mayUsePad(student) {
   if (myRole === 'admin') return true;
@@ -222,6 +222,18 @@ const APPS = [
       const n = unreadBankCount();
       return n ? (n > 99 ? '99+' : n) : null;
     },
+  },
+  {
+    id: 'recaps',
+    name: 'Recaps',
+    icon: '📓',
+    accent: '#FFA023',
+    render: renderRecapsApp,
+    badge: () => {
+      const n = unreadRecapCount();
+      return n || null;
+    },
+    onOpen: markRecapsRead,
   },
   {
     id: 'quirks',
@@ -453,6 +465,16 @@ function lockNotifications() {
       title: e.label || e.kind,
       meta: e.yen ? (e.yen > 0 ? '+' : '−') + yenStr(Math.abs(e.yen)) : '',
       ts: e.ts,
+    });
+  }
+  const freshRecaps = unreadRecapCount();
+  if (freshRecaps) {
+    const newest = sortedRecaps()[0] || {};
+    out.push({
+      icon: '📓', app: 'Recaps',
+      title: newest.title || 'A new session write-up',
+      meta: newest.xp ? '+' + newest.xp + ' XP' : '',
+      ts: null,
     });
   }
   if (ranking) {
@@ -1267,6 +1289,110 @@ function startBankLiveSync() {
     rerenderBankIfOpen();
     if (openAppId === 'eats') $('pad-app-body').innerHTML = renderEatsApp();
   }, err => console.error('[heropad] inventory sync stopped:', err));
+}
+
+/* ══ App: Recaps ════════════════════════════════════════════════════
+   What happened last session, in the players' pockets.
+
+   The DM already writes all of this on session-log.html — recap, XP,
+   loot — into mha-dnd/session-log. That page sits behind the DM block on
+   the dashboard, so the people who were actually at the table had no way
+   to read back what they did. This is the same document, read-only, with
+   the newest session first.
+
+   Nothing new is stored: "unread" is a per-device timestamp, the same
+   trick the Bank and Messages use, so a badge appears when the DM writes
+   up a session and clears when it has been read.
+   ═══════════════════════════════════════════════════════════════════ */
+const FS_SESSIONLOG_DOC = db.collection('mha-dnd').doc('session-log');
+let recaps = null;
+
+function recapReadKey() { return 'mha-heropad-recapsread-' + activeFile; }
+
+function recapsLastReadAt() {
+  try {
+    const stored = Number(localStorage.getItem(recapReadKey()));
+    if (stored) return stored;
+    const now = Date.now();
+    localStorage.setItem(recapReadKey(), String(now));
+    return now;
+  } catch { return Date.now(); }
+}
+
+function markRecapsRead() {
+  try { localStorage.setItem(recapReadKey(), String(Date.now())); } catch {}
+  if (locked) renderLock(); else renderHome();
+}
+
+// Sessions are dated, not timestamped, so "new" means written up since the
+// player last looked — measured against the date the DM put on them.
+function unreadRecapCount() {
+  if (!recaps || !activeFile) return 0;
+  const since = recapsLastReadAt();
+  return recaps.filter(r => Date.parse(r.date || '') > since).length;
+}
+
+function sortedRecaps() {
+  return (recaps || []).slice().sort((a, b) => {
+    const byNumber = (Number(b.number) || 0) - (Number(a.number) || 0);
+    if (byNumber) return byNumber;
+    return String(b.date || '').localeCompare(String(a.date || ''));
+  });
+}
+
+function renderRecapsApp() {
+  if (!recaps) return '<p class="bk-empty">Fetching the log…</p>';
+  const list = sortedRecaps();
+  if (!list.length) {
+    return '<p class="bk-empty">No sessions written up yet. The DM keeps this one.</p>';
+  }
+
+  const totalXp = list.reduce((sum, r) => sum + (Number(r.xp) || 0), 0);
+  const cards = list.map(r => `
+    <article class="rc-card">
+      <header class="rc-head">
+        <span class="rc-number">${r.number ? '#' + escHtml(String(r.number)) : '—'}</span>
+        <span class="rc-title">${escHtml(r.title || 'Untitled session')}</span>
+      </header>
+      ${r.date ? `<div class="rc-date">${escHtml(new Date(r.date).toLocaleDateString([], {
+        weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }))}</div>` : ''}
+      ${r.recap ? `<p class="rc-text">${escHtml(r.recap)}</p>` : ''}
+      <div class="rc-meta">
+        ${r.xp ? `<span class="rc-xp">+${escHtml(String(r.xp))} XP</span>` : ''}
+        ${r.loot ? `<span class="rc-loot">${escHtml(r.loot)}</span>` : ''}
+      </div>
+    </article>`).join('');
+
+  return `
+    <div class="rc-summary">
+      <span><strong>${list.length}</strong> session${list.length === 1 ? '' : 's'}</span>
+      <span><strong>${totalXp.toLocaleString()}</strong> XP awarded</span>
+    </div>
+    ${cards}`;
+}
+
+function rerenderRecapsIfOpen() {
+  if (openAppId === 'recaps') $('pad-app-body').innerHTML = renderRecapsApp();
+}
+
+async function loadRecaps() {
+  try {
+    await fbAuthReady;
+    const snap = await FS_SESSIONLOG_DOC.get();
+    recaps = snap.exists && Array.isArray(snap.data().sessions) ? snap.data().sessions : [];
+  } catch {
+    recaps = recaps || [];
+  }
+  rerenderRecapsIfOpen();
+}
+
+function startRecapsLiveSync() {
+  FS_SESSIONLOG_DOC.onSnapshot(snap => {
+    if (!snap.exists || (snap.metadata && snap.metadata.fromCache)) return;
+    recaps = Array.isArray(snap.data().sessions) ? snap.data().sessions : [];
+    rerenderRecapsIfOpen();
+    if (locked) renderLock(); else if (!openAppId) renderHome();
+  }, err => console.error('[heropad] recaps sync stopped:', err));
 }
 
 /* ══ App: Quirks ════════════════════════════════════════════════════
@@ -2576,11 +2702,12 @@ document.addEventListener('auth-state-changed', e => {
   // Class-wide, not per-pad, so these load once and stay subscribed for the
   // life of the page rather than being re-fetched on every owner switch.
   // Started before the owner is known so the apps are warm either way.
-  await Promise.all([loadRanking(), loadBank(), loadMessages(), loadBoard()]);
+  await Promise.all([loadRanking(), loadBank(), loadMessages(), loadBoard(), loadRecaps()]);
   startRankLiveSync();
   startBankLiveSync();
   startMessageLiveSync();
   startBoardLiveSync();
+  startRecapsLiveSync();
 
   activeFile = pickDefaultOwner();
   if (!activeFile) {

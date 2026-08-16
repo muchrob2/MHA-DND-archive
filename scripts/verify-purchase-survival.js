@@ -239,7 +239,9 @@ shared.run = async function () {
   // other field. Pinned here so the behaviour is a documented choice and
   // any future change to it is visible.
   boot(200000);
-  onCurrencyChange('yen', 199000);            // player hand-edits their own money
+  // Inventory editing is admin-only now (canEditInventory in relationships.js),
+  // so the person hand-editing a purse mid-purchase is the DM, not the player.
+  onCurrencyChange('yen', 199000);            // DM hand-edits the purse
   buyOnServer(${JSON.stringify(KATANA)}, 1, 85000);
   handleRelSnapshot({ exists: true, metadata: { fromCache: false }, data: () => fsCloneDoc(SERVER) });
   await manualSaveRelationships();
@@ -249,7 +251,10 @@ shared.run = async function () {
 };
 `;
 
-eval(toolkitSrc + '\n;' + scenarios);
+// Inventory handlers refuse unless the actor is an admin; these scenarios
+// exercise the merge, not the permission, so run them as the DM. The gate
+// itself is covered in verify-relationship-sync.js.
+eval(toolkitSrc + '\n;canEditInventory = true;\n' + scenarios);
 
 shared.run().then(() => {
   let allPass = true;

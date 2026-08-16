@@ -203,13 +203,31 @@ refreshSidebar = function () { renderCount++; };
   check('attack edit does not touch the neighbour', punch.name === 'Punch');
   check('editing an attack marks the character dirty', _dirtyCharFiles.has('a.json'));
 
-  // Same for inventory.
+  // Same for inventory. Inventory editing is admin-only (see
+  // canEditInventory in relationships.js), and these cases are about ids
+  // surviving a reorder, not about permissions — so drive them as the DM.
+  canEditInventory = true;
   selected.inventory.items.reverse();
   onItemEdit('item-2', 'name', 'Lantern');
   check('item edit follows the id after a reorder',
         selected.inventory.items.find(i => i.id === 'item-2').name === 'Lantern');
   check('item edit does not touch the neighbour',
         selected.inventory.items.find(i => i.id === 'item-1').name === 'Rope');
+
+  // A player must not be able to move their own inventory, even by calling
+  // the handler directly — the fields are disabled in the UI, and the
+  // handlers refuse as well so a console poke is inert too.
+  canEditInventory = false;
+  const beforeYen = selected.inventory.currency ? selected.inventory.currency.yen : undefined;
+  onItemEdit('item-2', 'name', 'Free Lantern');
+  onItemAdd();
+  check('a player cannot rename an item',
+        selected.inventory.items.find(i => i.id === 'item-2').name === 'Lantern');
+  check('a player cannot add an item', selected.inventory.items.length === 2);
+  onCurrencyChange('yen', 999999);
+  check('a player cannot grant themselves money',
+        (selected.inventory.currency ? selected.inventory.currency.yen : undefined) === beforeYen);
+  canEditInventory = true;
 
   // Deleting by id must remove the right row, whatever the order.
   onAttackDelete('atk-1');

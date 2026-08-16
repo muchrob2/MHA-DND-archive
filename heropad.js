@@ -137,6 +137,13 @@ function escHtml(s) {
 }
 function $(id) { return document.getElementById(id); }
 
+// Same shape as the generators in shop.js and admin.js. Ids only ever need to
+// be unique within a document, and the timestamp prefix keeps them sortable
+// by eye when reading raw Firestore data.
+function genId(prefix) {
+  return prefix + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
 // Wallpaper URLs go into a CSS value, not HTML, so escHtml is the wrong
 // escape here. Quotes and backslashes are the only characters that can break
 // out of url("…"); data URIs and ordinary http URLs never contain them.
@@ -221,15 +228,39 @@ const APPS = [
     render: renderDiceApp,
   },
   {
-    // Contacts is deliberately small: it exists to prove the app API above
-    // with a real, data-driven app rather than a placeholder, and it reads
-    // CLASS-1A/roster.json, which is already on disk. Delete the entry to
-    // remove it — nothing else references it.
-    id: 'contacts',
-    name: 'Contacts',
-    icon: '👥',
+    id: 'eats',
+    name: 'Eats',
+    icon: '🍜',
+    accent: '#FF6B35',
+    render: renderEatsApp,
+  },
+  {
+    id: 'board',
+    name: 'Board',
+    icon: '🖍',
+    accent: '#12D296',
+    render: renderBoardApp,
+    onOpen: mountBoard,
+  },
+  {
+    id: 'tally',
+    name: 'Tally',
+    icon: '🧮',
+    accent: '#A855F7',
+    render: renderTallyApp,
+  },
+  {
+    // Was Contacts, now the class list doubles as the messaging app: tap a
+    // classmate to open the thread with them.
+    id: 'messages',
+    name: 'Messages',
+    icon: '💬',
     accent: '#2F6BFF',
-    render: renderContactsApp,
+    render: renderMessagesApp,
+    badge: () => {
+      const n = unreadMessageCount();
+      return n || null;
+    },
   },
 ];
 
@@ -861,6 +892,25 @@ const CURRENCY_KEYS = ['yen', 'pp', 'gp', 'ep', 'sp', 'cp'];
 const CURRENCY_TO_YEN = { yen: 1, cp: 10, sp: 100, ep: 500, gp: 1000, pp: 10000 };
 const CURRENCY_SHORT = { yen: '¥', pp: 'pp', gp: 'gp', ep: 'ep', sp: 'sp', cp: 'cp' };
 
+// The ledger's ENTRY SHAPE is documented in full at the top of shop.js and
+// must stay identical in all three files that touch it; verify-ledger.js
+// fails if they drift. These two are the writer half, used by the Eats app —
+// the Bank itself only ever reads.
+const MAX_LEDGER_ENTRIES = 400;
+
+function ledgerEntry(file, kind, label, unit, amount, yenValue) {
+  return { id: genId('led'), ts: Date.now(), file, kind, label, unit, amount, yen: yenValue };
+}
+
+function appendToLedger(snap, additions) {
+  const data = (snap && snap.exists && snap.data()) || {};
+  const existing = Array.isArray(data.entries) ? data.entries : [];
+  const merged = existing.concat(additions);
+  return Object.assign({}, data, {
+    entries: merged.length > MAX_LEDGER_ENTRIES ? merged.slice(merged.length - MAX_LEDGER_ENTRIES) : merged,
+  });
+}
+
 let ledger = null;        // [{...}] once loaded, null while fetching
 let bundle = null;        // the shared character bundle, for the balance
 let bankFilter = 'all';   // all | in | out
@@ -1334,24 +1384,571 @@ function rollDice() {
   $('pad-app-body').innerHTML = renderDiceApp();
 }
 
-/* ══ App: Contacts ══════════════════════════════════════════════════
-   The class list straight off CLASS-1A/roster.json. See the note on the
-   APPS entry — this is the worked example of the app API.
+/* ══ App: Messages ══════════════════════════════════════════════════
+   The class list, and a thread with each of them. Tap a classmate to
+   open the conversation; messages are sent as whoever the pad belongs to.
+
+   ⚠ NOT PRIVATE, and the app says so on screen. Every mha-dnd document
+   is world-readable by design (firestore.rules), so a thread is private
+   the way a note passed in class is private: nobody is reading it unless
+   they want to, and the DM can whenever they like. Anything that must
+   actually be secret belongs somewhere else.
+
+   One document holds every thread. Messages merge per-id through
+   fsMergeSave, so two players typing at once cannot overwrite each
+   other's lines.
    ═══════════════════════════════════════════════════════════════════ */
-function renderContactsApp() {
+const FS_MSG_DOC = db.collection('mha-dnd').doc('messages');
+const MAX_MESSAGES = 500;
+
+let messages = null;        // [{id, ts, from, to, text}]
+let msgThread = null;       // roster file of whoever's thread is open
+let _msgSyncedBaseline = null;
+let _msgSaveInFlight = false;
+
+// Threads are keyed by the pair, order-independent, so both halves of a
+// conversation land in the same place regardless of who wrote first.
+function threadKey(a, b) { return [a, b].sort().join('|'); }
+
+function threadMessages(otherFile) {
+  if (!messages || !activeFile) return [];
+  const key = threadKey(activeFile, otherFile);
+  return messages
+    .filter(m => threadKey(m.from, m.to) === key)
+    .sort((a, b) => (a.ts || 0) - (b.ts || 0));
+}
+
+// "Unread" is anything addressed to this character since they last opened
+// the app, which is per-device state — a read receipt shared between all
+// twenty students is not something a badge should be inventing.
+function lastReadAt() {
+  try { return Number(localStorage.getItem('mha-heropad-read-' + activeFile)) || 0; } catch { return 0; }
+}
+function markMessagesRead() {
+  try { localStorage.setItem('mha-heropad-read-' + activeFile, String(Date.now())); } catch {}
+}
+function unreadMessageCount() {
+  if (!messages || !activeFile) return 0;
+  const since = lastReadAt();
+  return messages.filter(m => m.to === activeFile && (m.ts || 0) > since).length;
+}
+
+function renderMessagesApp() {
   if (!ROSTER.length) return '<p class="ct-empty">The class list could not be loaded.</p>';
-  const rows = ROSTER.map(s => {
-    const isOwner = s.file === activeFile;
+  if (msgThread) return renderThread();
+
+  const rows = ROSTER.filter(s => s.file !== activeFile).map(s => {
+    const thread = threadMessages(s.file);
+    const last = thread[thread.length - 1];
     const initials = String(s.name || '?').split(/\s+/).map(p => p[0]).slice(0, 2).join('');
-    return `<li class="ct-row${isOwner ? ' me' : ''}">
+    const unread = last && last.to === activeFile && (last.ts || 0) > lastReadAt();
+    return `<button type="button" class="ct-row${unread ? ' unread' : ''}" onclick="openThread('${escHtml(s.file)}')">
       <span class="ct-avatar">${escHtml(initials)}</span>
       <span class="ct-body">
-        <span class="ct-name">${escHtml(s.name)}${isOwner ? '<em>you</em>' : ''}</span>
-        <span class="ct-quirk">${escHtml(s.quirk || '')}</span>
+        <span class="ct-name">${escHtml(s.name)}</span>
+        <span class="ct-quirk">${last ? escHtml((last.from === activeFile ? 'You: ' : '') + last.text) : escHtml(s.quirk || '')}</span>
       </span>
-    </li>`;
+      ${unread ? '<span class="ct-dot"></span>' : ''}
+    </button>`;
   }).join('');
-  return `<p class="cz-lead">Class 1-A — ${ROSTER.length} students.</p><ul class="ct-list">${rows}</ul>`;
+
+  return `<p class="cz-lead">Anyone can read these — including the DM. Pass notes accordingly.</p>
+    <div class="ct-list">${rows}</div>`;
+}
+
+function renderThread() {
+  const who = ROSTER.find(s => s.file === msgThread);
+  const lines = threadMessages(msgThread);
+  const body = lines.length
+    ? lines.map(m => `<div class="msg${m.from === activeFile ? ' mine' : ''}">
+        <span class="msg-text">${escHtml(m.text)}</span>
+        <span class="msg-time">${new Date(m.ts || 0).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+      </div>`).join('')
+    : '<p class="bk-empty">No messages yet. Say something.</p>';
+
+  return `
+    <button type="button" class="msg-back" onclick="closeThread()">← All chats</button>
+    <div class="msg-who">${escHtml(who ? who.name : 'Unknown')}</div>
+    <div class="msg-list" id="msg-list">${body}</div>
+    <form class="msg-form" onsubmit="sendMessage(event)">
+      <input type="text" id="msg-input" class="cz-input" maxlength="300" autocomplete="off"
+             placeholder="Message…" aria-label="Your message">
+      <button type="submit" class="msg-send" aria-label="Send">➤</button>
+    </form>`;
+}
+
+function openThread(file) {
+  msgThread = file;
+  markMessagesRead();
+  $('pad-app-body').innerHTML = renderMessagesApp();
+  const input = $('msg-input');
+  if (input && input.focus) input.focus();
+  scrollThreadToEnd();
+  renderHome();   // the badge just cleared
+}
+
+function closeThread() {
+  msgThread = null;
+  $('pad-app-body').innerHTML = renderMessagesApp();
+}
+
+function scrollThreadToEnd() {
+  const list = $('msg-list');
+  if (list && typeof list.scrollHeight === 'number') list.scrollTop = list.scrollHeight;
+}
+
+async function sendMessage(ev) {
+  if (ev && ev.preventDefault) ev.preventDefault();
+  const input = $('msg-input');
+  const text = input ? input.value.trim() : '';
+  if (!text || !msgThread || !activeFile) return;
+  if (!canSync) { setSyncNote('Sign in to send messages — this device can only read them.'); return; }
+
+  const entry = { id: genId('msg'), ts: Date.now(), from: activeFile, to: msgThread, text };
+  messages = (messages || []).concat([entry]);
+  if (messages.length > MAX_MESSAGES) messages = messages.slice(messages.length - MAX_MESSAGES);
+  if (input) input.value = '';
+  $('pad-app-body').innerHTML = renderMessagesApp();
+  const again = $('msg-input');
+  if (again && again.focus) again.focus();
+  scrollThreadToEnd();
+
+  _msgSaveInFlight = true;
+  try {
+    await fbAuthReady;
+    // Per-id merge: two people typing at the same moment both keep their line.
+    const merged = await fsMergeSave(FS_MSG_DOC, { messages }, _msgSyncedBaseline,
+      [{ path: 'messages', idKey: 'id' }]);
+    _msgSyncedBaseline = merged;
+    messages = Array.isArray(merged.messages) ? merged.messages : messages;
+  } catch (e) {
+    setSyncNote('Message not sent: ' + (e.code || e.message));
+  } finally {
+    _msgSaveInFlight = false;
+  }
+}
+
+async function loadMessages() {
+  try {
+    await fbAuthReady;
+    const snap = await FS_MSG_DOC.get();
+    messages = snap.exists && Array.isArray(snap.data().messages) ? snap.data().messages : [];
+    _msgSyncedBaseline = fsCloneDoc({ messages });
+  } catch {
+    messages = messages || [];
+  }
+}
+
+function startMessageLiveSync() {
+  FS_MSG_DOC.onSnapshot(snap => {
+    if (!snap.exists || (snap.metadata && snap.metadata.fromCache)) return;
+    if (_msgSaveInFlight) return;   // our own line is still in flight
+    messages = Array.isArray(snap.data().messages) ? snap.data().messages : [];
+    _msgSyncedBaseline = fsCloneDoc({ messages });
+    if (openAppId === 'messages') {
+      $('pad-app-body').innerHTML = renderMessagesApp();
+      scrollThreadToEnd();
+    } else if (locked) renderLock(); else renderHome();
+  }, err => console.error('[heropad] messages sync stopped:', err));
+}
+
+/* ══ App: Tally ═════════════════════════════════════════════════════
+   Named counters. "Times Toshida's head got stuck", "detentions",
+   "Bakugo-style explosions" — whatever the table decides is worth
+   counting. Stored on the pad, so each character keeps their own and
+   they sync like any other pad setting.
+   ═══════════════════════════════════════════════════════════════════ */
+function tallies() {
+  if (!Array.isArray(pad.tallies)) pad.tallies = [];
+  return pad.tallies;
+}
+
+function renderTallyApp() {
+  const list = tallies();
+  const rows = list.length ? list.map(t => `
+    <div class="tl-row">
+      <span class="tl-name">${escHtml(t.name)}</span>
+      <span class="tl-controls">
+        <button type="button" onclick="bumpTally('${escHtml(t.id)}',-1)" aria-label="Subtract one from ${escHtml(t.name)}">−</button>
+        <span class="tl-count">${Number(t.count) || 0}</span>
+        <button type="button" onclick="bumpTally('${escHtml(t.id)}',1)" aria-label="Add one to ${escHtml(t.name)}">+</button>
+        <button type="button" class="tl-del" onclick="removeTally('${escHtml(t.id)}')" aria-label="Delete ${escHtml(t.name)}">✕</button>
+      </span>
+    </div>`).join('') : '<p class="bk-empty">Nothing counted yet. Add something worth keeping score of.</p>';
+
+  return `
+    <form class="tl-form" onsubmit="addTally(event)">
+      <input type="text" id="tl-new" class="cz-input" maxlength="40" autocomplete="off"
+             placeholder="What are you counting?" aria-label="New tally name">
+      <button type="submit" class="cz-btn">Add</button>
+    </form>
+    <div class="tl-list">${rows}</div>`;
+}
+
+function addTally(ev) {
+  if (ev && ev.preventDefault) ev.preventDefault();
+  const input = $('tl-new');
+  const name = input ? input.value.trim() : '';
+  if (!name) return;
+  tallies().push({ id: genId('tly'), name, count: 0 });
+  schedulePadSave();
+  $('pad-app-body').innerHTML = renderTallyApp();
+  const again = $('tl-new');
+  if (again && again.focus) again.focus();
+}
+
+function bumpTally(id, delta) {
+  const t = tallies().find(x => x.id === id);
+  if (!t) return;
+  // Floored at zero: a negative count of "detentions" is not a thing.
+  t.count = Math.max(0, (Number(t.count) || 0) + delta);
+  schedulePadSave();
+  $('pad-app-body').innerHTML = renderTallyApp();
+}
+
+function removeTally(id) {
+  pad.tallies = tallies().filter(x => x.id !== id);
+  schedulePadSave();
+  $('pad-app-body').innerHTML = renderTallyApp();
+}
+
+/* ══ App: Eats ══════════════════════════════════════════════════════
+   Food delivery, and it costs real money: an order spends from the same
+   purse the Shop spends from and writes the same kind of ledger entry,
+   so lunch turns up on the Bank statement next to the combat knives.
+
+   spendFromWallet below is a faithful port of the one in shop.js —
+   cash first, then whole coins, breaking a larger coin only as a last
+   resort — because collapsing a purse into yen and back would melt a
+   player's platinum into small change on their first bowl of ramen.
+   verify-eats.js runs both copies against the same cases and fails if
+   they ever disagree.
+   ═══════════════════════════════════════════════════════════════════ */
+const EATS_MENU = [
+  { id: 'ramen',    name: 'Tonkotsu ramen',       price: 900,  icon: '🍜', desc: 'The one by the station. Always a queue.' },
+  { id: 'katsu',    name: 'Katsu curry',          price: 850,  icon: '🍛', desc: 'Enormous. Regret is part of the portion.' },
+  { id: 'onigiri',  name: 'Onigiri, two',         price: 260,  icon: '🍙', desc: 'Tuna mayo and salmon. Convenience store.' },
+  { id: 'gyudon',   name: 'Gyudon',               price: 600,  icon: '🥩', desc: 'Beef bowl. Fast, cheap, correct.' },
+  { id: 'yakisoba', name: 'Yakisoba bread',       price: 220,  icon: '🥖', desc: 'Carbohydrate on carbohydrate. Cafeteria classic.' },
+  { id: 'takoyaki', name: 'Takoyaki, six',        price: 480,  icon: '🐙', desc: 'Molten. Wait longer than you think.' },
+  { id: 'sushi',    name: 'Sushi set',            price: 2400, icon: '🍣', desc: 'For when the mission paid out.' },
+  { id: 'parfait',  name: 'Strawberry parfait',   price: 780,  icon: '🍨', desc: 'Structurally unsound. Worth it.' },
+  { id: 'coffee',   name: 'Canned coffee',        price: 130,  icon: '☕', desc: 'From the machine outside the dorms.' },
+  { id: 'family',   name: 'Family bucket, shared', price: 3600, icon: '🍗', desc: 'Feeds the common room. Briefly.' },
+];
+
+const EATS_LABEL = 'Eats';   // ledger entries are prefixed with this
+let eatsStatus = '';
+
+// Ported from shop.js — see the note above. Kept byte-comparable in
+// behaviour, not in text, so verify-eats.js drives both and compares.
+function spendFromWallet(currency, cost) {
+  if (cost < 0) return false;
+  if (walletTotalYen(currency) < cost) return false;
+  let owed = cost;
+
+  const fromYen = Math.min(currency.yen || 0, owed);
+  currency.yen = (currency.yen || 0) - fromYen;
+  owed -= fromYen;
+
+  const ascending = ['cp', 'sp', 'ep', 'gp', 'pp'];
+  for (const k of ascending) {
+    if (owed <= 0) break;
+    const rate = CURRENCY_TO_YEN[k];
+    const use = Math.min(currency[k] || 0, Math.floor(owed / rate));
+    if (use > 0) { currency[k] = (currency[k] || 0) - use; owed -= use * rate; }
+  }
+
+  if (owed > 0) {
+    for (const k of ascending) {
+      if ((currency[k] || 0) > 0 && CURRENCY_TO_YEN[k] >= owed) {
+        currency[k] -= 1;
+        currency.yen = (currency.yen || 0) + (CURRENCY_TO_YEN[k] - owed);
+        owed = 0;
+        break;
+      }
+    }
+  }
+  return owed === 0;
+}
+
+function eatsOrders() {
+  return ownerEntries().filter(e => String(e.label || '').startsWith(EATS_LABEL + ' ·')).slice(0, 5);
+}
+
+function renderEatsApp() {
+  const purse = ownerPurse();
+  const have = purse ? walletTotalYen(purse) : 0;
+  const recent = eatsOrders();
+
+  const items = EATS_MENU.map(m => {
+    const afford = purse && have >= m.price;
+    return `<div class="et-item${afford ? '' : ' poor'}">
+      <span class="et-ico">${escHtml(m.icon)}</span>
+      <span class="et-body">
+        <span class="et-name">${escHtml(m.name)}</span>
+        <span class="et-desc">${escHtml(m.desc)}</span>
+      </span>
+      <button type="button" class="et-buy" onclick="orderFood('${escHtml(m.id)}')"
+              ${canSync && afford ? '' : 'disabled'}>${yenStr(m.price)}</button>
+    </div>`;
+  }).join('');
+
+  return `
+    <div class="et-head">
+      <span class="et-head-label">U.A. Eats</span>
+      <span class="et-head-purse">${purse ? yenStr(have) : 'No purse'}</span>
+    </div>
+    ${!canSync ? '<p class="et-note">Sign in to order — this device can only browse the menu.</p>' : ''}
+    ${eatsStatus ? `<p class="et-status">${escHtml(eatsStatus)}</p>` : ''}
+    <div class="et-list">${items}</div>
+    ${recent.length ? `<p class="dc-history-label">Recent orders</p>
+      <div class="et-recent">${recent.map(o =>
+        `<div class="et-recent-row"><span>${escHtml(String(o.label).replace(EATS_LABEL + ' · ', ''))}</span>
+         <em>${yenStr(Math.abs(o.yen))}</em></div>`).join('')}</div>` : ''}`;
+}
+
+async function orderFood(id) {
+  const item = EATS_MENU.find(m => m.id === id);
+  if (!item || !canSync || !activeFile) return;
+  eatsStatus = 'Ordering…';
+  $('pad-app-body').innerHTML = renderEatsApp();
+
+  try {
+    await fbAuthReady;
+    // Same shape as the Shop's checkout: purse and ledger move inside one
+    // transaction, so an order cannot exist without its statement line.
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(FS_BUNDLE_DOC);
+      const ledgerSnap = await tx.get(FS_LEDGER_DOC);
+      if (!snap.exists) throw new Error('No character bundle — open the toolkit and save once first.');
+      const data = snap.data();
+      const characters = data.characters || {};
+      const character = characters[activeFile];
+      if (!character) throw new Error('This character has no sheet in the shared bundle yet.');
+      character.inventory = character.inventory || {};
+      character.inventory.currency = character.inventory.currency || {};
+      if (!spendFromWallet(character.inventory.currency, item.price)) {
+        throw new Error('Not enough money — the purse holds ' +
+          yenStr(walletTotalYen(character.inventory.currency)) + '.');
+      }
+      const entry = ledgerEntry(activeFile, 'purchase',
+        `${EATS_LABEL} · ${item.name}`, 'yen', -item.price, -item.price);
+      tx.set(FS_BUNDLE_DOC, Object.assign({}, data, { characters }));
+      tx.set(FS_LEDGER_DOC, appendToLedger(ledgerSnap, [entry]));
+    });
+    eatsStatus = `${item.name} ordered. It is on its way.`;
+  } catch (e) {
+    eatsStatus = e.message || 'That order did not go through.';
+  }
+  $('pad-app-body').innerHTML = renderEatsApp();
+}
+
+/* ══ App: Board ═════════════════════════════════════════════════════
+   A shared whiteboard. Everyone draws on the same surface and sees each
+   other's strokes as they land — the communal scrap of paper that
+   normally gets passed around the table.
+
+   Strokes are stored in normalised 0–1000 coordinates rather than
+   pixels, so a phone and a laptop draw on the same board rather than on
+   two differently-scaled ones. Points are thinned as they are captured:
+   a raw pointer trail is hundreds of points a second and would fill the
+   1MB document in a couple of minutes.
+
+   Per-stroke merge through fsMergeSave means two people drawing at once
+   keep both drawings.
+   ═══════════════════════════════════════════════════════════════════ */
+const FS_BOARD_DOC = db.collection('mha-dnd').doc('whiteboard');
+const MAX_STROKES = 300;
+const BOARD_UNITS = 1000;          // coordinate space, both axes
+const BOARD_MIN_STEP = 6;          // in board units, between captured points
+
+const BOARD_COLOURS = ['#FFC220', '#FF2E4D', '#12D296', '#2F6BFF', '#A855F7', '#F2F5FA'];
+let boardStrokes = null;
+let boardColour = BOARD_COLOURS[0];
+let boardWidth = 4;
+let _boardBaseline = null;
+let _boardSaveInFlight = false;
+let _boardDrawing = null;
+
+function renderBoardApp() {
+  const swatches = BOARD_COLOURS.map(c =>
+    `<button type="button" class="bd-swatch${c === boardColour ? ' sel' : ''}" style="--sw:${c}"
+             onclick="setBoardColour('${c}')" aria-label="Draw in ${c}"></button>`).join('');
+  return `
+    <div class="bd-tools">
+      <div class="bd-swatches">${swatches}</div>
+      <div class="bd-sizes">
+        ${[2, 4, 8].map(w => `<button type="button" class="bd-size${w === boardWidth ? ' sel' : ''}"
+            onclick="setBoardWidth(${w})" aria-label="Pen size ${w}"><i style="height:${w}px"></i></button>`).join('')}
+      </div>
+    </div>
+    <canvas id="bd-canvas" class="bd-canvas" aria-label="Shared whiteboard"></canvas>
+    <div class="bd-actions">
+      <button type="button" class="cz-btn" onclick="undoMyStroke()">Undo mine</button>
+      ${window.isAdmin && window.isAdmin() ? '<button type="button" class="cz-btn danger" onclick="clearBoard()">Wipe the board</button>' : ''}
+      <span class="bd-count" id="bd-count"></span>
+    </div>
+    <p class="fx-note">Everyone in the class draws on this same board.</p>`;
+}
+
+function setBoardColour(c) { boardColour = c; $('pad-app-body').innerHTML = renderBoardApp(); mountBoard(); }
+function setBoardWidth(w) { boardWidth = w; $('pad-app-body').innerHTML = renderBoardApp(); mountBoard(); }
+
+function boardCtx() {
+  const cv = $('bd-canvas');
+  if (!cv || typeof cv.getContext !== 'function') return null;
+  const ctx = cv.getContext('2d');
+  if (!ctx) return null;
+  // Match the backing store to the element's real size, so lines are crisp
+  // and coordinates map 1:1 with what the pointer reports.
+  const rect = typeof cv.getBoundingClientRect === 'function' ? cv.getBoundingClientRect() : null;
+  const w = Math.max(1, Math.round((rect && rect.width) || cv.clientWidth || 300));
+  const h = Math.max(1, Math.round((rect && rect.height) || cv.clientHeight || 300));
+  const dpr = window.devicePixelRatio || 1;
+  if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) {
+    cv.width = Math.round(w * dpr);
+    cv.height = Math.round(h * dpr);
+  }
+  if (typeof ctx.setTransform === 'function') ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, w, h };
+}
+
+function drawBoard() {
+  const c = boardCtx();
+  if (!c) return;
+  const { ctx, w, h } = c;
+  ctx.clearRect(0, 0, w, h);
+  const all = (boardStrokes || []).concat(_boardDrawing ? [_boardDrawing] : []);
+  for (const s of all) {
+    const pts = s.pts || [];
+    if (pts.length < 4) continue;
+    ctx.beginPath();
+    ctx.strokeStyle = s.color || '#fff';
+    ctx.lineWidth = s.w || 4;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.moveTo(pts[0] / BOARD_UNITS * w, pts[1] / BOARD_UNITS * h);
+    for (let i = 2; i < pts.length; i += 2) {
+      ctx.lineTo(pts[i] / BOARD_UNITS * w, pts[i + 1] / BOARD_UNITS * h);
+    }
+    ctx.stroke();
+  }
+  const count = $('bd-count');
+  if (count) count.textContent = `${(boardStrokes || []).length} stroke${(boardStrokes || []).length === 1 ? '' : 's'}`;
+}
+
+function mountBoard() {
+  const cv = $('bd-canvas');
+  if (!cv || typeof cv.addEventListener !== 'function') return;
+  if (cv.dataset && cv.dataset.wired === '1') { drawBoard(); return; }
+  if (cv.dataset) cv.dataset.wired = '1';
+
+  const toBoard = (ev) => {
+    const rect = cv.getBoundingClientRect();
+    return [
+      Math.round((ev.clientX - rect.left) / Math.max(1, rect.width) * BOARD_UNITS),
+      Math.round((ev.clientY - rect.top) / Math.max(1, rect.height) * BOARD_UNITS),
+    ];
+  };
+
+  cv.addEventListener('pointerdown', (ev) => {
+    if (!canSync) { setSyncNote('Sign in to draw on the shared board.'); return; }
+    ev.preventDefault();
+    if (cv.setPointerCapture) cv.setPointerCapture(ev.pointerId);
+    const [x, y] = toBoard(ev);
+    _boardDrawing = { id: genId('str'), file: activeFile, color: boardColour, w: boardWidth, pts: [x, y] };
+    drawBoard();
+  });
+
+  cv.addEventListener('pointermove', (ev) => {
+    if (!_boardDrawing) return;
+    const [x, y] = toBoard(ev);
+    const pts = _boardDrawing.pts;
+    const dx = x - pts[pts.length - 2], dy = y - pts[pts.length - 1];
+    // Thinning: a raw pointer trail is hundreds of points a second.
+    if (dx * dx + dy * dy < BOARD_MIN_STEP * BOARD_MIN_STEP) return;
+    pts.push(x, y);
+    drawBoard();
+  });
+
+  const finish = () => {
+    if (!_boardDrawing) return;
+    const stroke = _boardDrawing;
+    _boardDrawing = null;
+    if (stroke.pts.length >= 4) commitStroke(stroke);
+    else drawBoard();
+  };
+  cv.addEventListener('pointerup', finish);
+  cv.addEventListener('pointercancel', finish);
+  cv.addEventListener('pointerleave', finish);
+
+  drawBoard();
+}
+
+async function commitStroke(stroke) {
+  boardStrokes = (boardStrokes || []).concat([stroke]);
+  if (boardStrokes.length > MAX_STROKES) boardStrokes = boardStrokes.slice(boardStrokes.length - MAX_STROKES);
+  drawBoard();
+  await pushBoard();
+}
+
+async function pushBoard() {
+  _boardSaveInFlight = true;
+  try {
+    await fbAuthReady;
+    const merged = await fsMergeSave(FS_BOARD_DOC, { strokes: boardStrokes }, _boardBaseline,
+      [{ path: 'strokes', idKey: 'id' }]);
+    _boardBaseline = merged;
+    boardStrokes = Array.isArray(merged.strokes) ? merged.strokes : boardStrokes;
+    drawBoard();
+  } catch (e) {
+    setSyncNote('The board did not save: ' + (e.code || e.message));
+  } finally {
+    _boardSaveInFlight = false;
+  }
+}
+
+function undoMyStroke() {
+  if (!canSync || !boardStrokes) return;
+  for (let i = boardStrokes.length - 1; i >= 0; i--) {
+    if (boardStrokes[i].file === activeFile) {
+      boardStrokes = boardStrokes.slice(0, i).concat(boardStrokes.slice(i + 1));
+      drawBoard();
+      pushBoard();
+      return;
+    }
+  }
+}
+
+function clearBoard() {
+  if (!(window.isAdmin && window.isAdmin())) return;
+  boardStrokes = [];
+  drawBoard();
+  pushBoard();
+}
+
+async function loadBoard() {
+  try {
+    await fbAuthReady;
+    const snap = await FS_BOARD_DOC.get();
+    boardStrokes = snap.exists && Array.isArray(snap.data().strokes) ? snap.data().strokes : [];
+    _boardBaseline = fsCloneDoc({ strokes: boardStrokes });
+  } catch {
+    boardStrokes = boardStrokes || [];
+  }
+}
+
+function startBoardLiveSync() {
+  FS_BOARD_DOC.onSnapshot(snap => {
+    if (!snap.exists || (snap.metadata && snap.metadata.fromCache)) return;
+    // Never apply a remote board over a stroke still being drawn or saved:
+    // the line would vanish from under the pen.
+    if (_boardSaveInFlight || _boardDrawing) return;
+    boardStrokes = Array.isArray(snap.data().strokes) ? snap.data().strokes : [];
+    _boardBaseline = fsCloneDoc({ strokes: boardStrokes });
+    if (openAppId === 'board') drawBoard();
+  }, err => console.error('[heropad] board sync stopped:', err));
 }
 
 /* ══ Persistence ════════════════════════════════════════════════════ */
@@ -1587,9 +2184,11 @@ document.addEventListener('auth-state-changed', e => {
   // Class-wide, not per-pad, so these load once and stay subscribed for the
   // life of the page rather than being re-fetched on every owner switch.
   // Started before the owner is known so the apps are warm either way.
-  await Promise.all([loadRanking(), loadBank()]);
+  await Promise.all([loadRanking(), loadBank(), loadMessages(), loadBoard()]);
   startRankLiveSync();
   startBankLiveSync();
+  startMessageLiveSync();
+  startBoardLiveSync();
 
   activeFile = pickDefaultOwner();
   if (!activeFile) {

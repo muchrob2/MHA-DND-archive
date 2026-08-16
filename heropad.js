@@ -221,6 +221,13 @@ const APPS = [
     render: renderExchangeApp,
   },
   {
+    id: 'settings',
+    name: 'Settings',
+    icon: '⚙',
+    accent: '#93A3B8',
+    render: renderSettingsApp,
+  },
+  {
     id: 'dice',
     name: 'Dice',
     icon: '🎲',
@@ -374,6 +381,8 @@ function renderWidget() {
    costs no extra reads and updates itself.
    ─────────────────────────────────────────────────────────────────── */
 let locked = false;
+let pinEntry = '';
+let pinError = false;
 
 function lockNotifications() {
   const out = [];
@@ -421,10 +430,74 @@ function renderLock() {
     </div>`).join('');
 }
 
+function renderLockPin() {
+  const el = $('lock-pin');
+  const notifs = $('lock-notifs');
+  const hint = $('lock-hint');
+  if (!hasPasskey()) {
+    el.hidden = true;
+    notifs.hidden = false;
+    hint.textContent = '';
+    hint.innerHTML = '<span class="lock-arrow">⌃</span> Tap to unlock';
+    return;
+  }
+  // With a passkey set the notification stack is hidden too — a lock that
+  // still shows you the messages underneath is not much of a lock.
+  el.hidden = false;
+  notifs.hidden = true;
+  hint.textContent = 'Enter your passkey';
+
+  const dots = [0, 1, 2, 3].map(i =>
+    `<span class="lk-dot${i < pinEntry.length ? ' filled' : ''}${pinError ? ' error' : ''}"></span>`).join('');
+  const keys = ['1','2','3','4','5','6','7','8','9','','0','⌫'].map(k => {
+    if (!k) return '<span></span>';
+    const action = k === '⌫' ? 'pinDelete()' : `pinPress('${k}')`;
+    return `<button type="button" class="lk-key" onclick="event.stopPropagation();${action}"
+             aria-label="${k === '⌫' ? 'Delete' : k}">${k}</button>`;
+  }).join('');
+
+  el.innerHTML = `<div class="lk-dots">${dots}</div><div class="lk-pad">${keys}</div>` +
+    (window.isAdmin && window.isAdmin()
+      ? '<button type="button" class="lk-dm" onclick="event.stopPropagation();unlockPad()">Unlock as DM</button>'
+      : '');
+}
+
+function pinPress(digit) {
+  if (pinEntry.length >= 4) return;
+  pinError = false;
+  pinEntry += digit;
+  renderLockPin();
+  if (pinEntry.length === 4) setTimeout(checkPasskey, 120);
+}
+
+function pinDelete() {
+  pinEntry = pinEntry.slice(0, -1);
+  pinError = false;
+  renderLockPin();
+}
+
+async function checkPasskey() {
+  const attempt = pinEntry;
+  const ok = pad.lock && (await hashPasskey(attempt, pad.lock.salt)) === pad.lock.hash;
+  if (ok) { pinEntry = ''; pinError = false; unlockPad(); return; }
+  pinError = true;
+  renderLockPin();
+  setTimeout(() => { pinEntry = ''; pinError = false; renderLockPin(); }, 700);
+}
+
+// Tapping the lock screen only wakes it when there is no passkey — otherwise
+// the keypad is the way through, and a stray tap must not open the pad.
+function onLockTap() {
+  if (!hasPasskey()) unlockPad();
+}
+
 function lockPad() {
+  pinEntry = '';
+  pinError = false;
   closeApp();
   locked = true;
   renderLock();
+  renderLockPin();
   const el = $('pad-lock');
   el.hidden = false;
   $('pad-device').classList.add('locked');
@@ -444,7 +517,13 @@ function unlockPad() {
 }
 
 document.addEventListener('keydown', e => {
-  if (locked && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); unlockPad(); }
+  if (!locked) return;
+  if (hasPasskey()) {
+    if (e.key >= '0' && e.key <= '9') { e.preventDefault(); pinPress(e.key); }
+    if (e.key === 'Backspace') { e.preventDefault(); pinDelete(); }
+    return;   // Enter must not open a pad that asked for four digits
+  }
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); unlockPad(); }
 });
 
 /* ── Opening and closing apps ───────────────────────────────────── */
@@ -1367,6 +1446,119 @@ function setFxRate(value) {
   pad.gbpRate = n > 0 ? n : DEFAULT_GBP_RATE;
   schedulePadSave();
   fxRepaint();
+}
+
+/* ══ App: Settings ══════════════════════════════════════════════════
+   A 4-digit passkey for the pad.
+
+   ── What this actually protects ────────────────────────────────────
+   The pad's document is world-readable (firestore.rules: every mha-dnd
+   doc is `allow read: if true`), and this is a static site, so anyone
+   with the browser console can read whatever it stores. That rules out
+   real secrecy, so the design aims at what a phone passcode is actually
+   for at a table: stopping the person sitting next to you from picking
+   your pad up and reading your Notes.
+
+   Two consequences, both deliberate:
+
+   · The passkey is stored as a salted SHA-256 hash, not as "1234". Four
+     digits is 10,000 combinations and falls to a script instantly, so
+     the hash is not a security control — it just means a curious player
+     glancing at the raw document sees noise instead of their friend's
+     passcode.
+   · The app says all of this on screen. A lock that quietly promises
+     more than it delivers is worse than no lock.
+
+   Nobody can be permanently locked out: the DM can clear it, and the
+   Switch control in the owner bar sits outside the phone entirely.
+   ═══════════════════════════════════════════════════════════════════ */
+let settingsStatus = '';
+
+async function hashPasskey(pin, salt) {
+  const bytes = new TextEncoder().encode(salt + ':' + pin);
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function hasPasskey() {
+  return !!(pad.lock && pad.lock.hash && pad.lock.salt);
+}
+
+function renderSettingsApp() {
+  const set = hasPasskey();
+  return `
+    <p class="cz-lead">Settings for ${escHtml((ownerStudent() || {}).name || 'this pad')}.</p>
+
+    <section class="cz-block">
+      <h3 class="cz-h">Passkey</h3>
+      <p class="cz-note">${set
+        ? 'Your pad asks for four digits when it wakes.'
+        : 'Set four digits and the pad will ask for them when it wakes.'}</p>
+
+      ${set ? `
+        <div class="cz-row">
+          <button type="button" class="cz-btn" onclick="startPasskeyChange()">Change it</button>
+          <button type="button" class="cz-btn danger" onclick="removePasskey()">Remove it</button>
+        </div>
+      ` : `
+        <div class="cz-row">
+          <input type="password" id="st-pin" class="cz-input" inputmode="numeric" maxlength="4"
+                 autocomplete="off" placeholder="Four digits" aria-label="New passkey">
+          <input type="password" id="st-pin2" class="cz-input" inputmode="numeric" maxlength="4"
+                 autocomplete="off" placeholder="Again" aria-label="Confirm passkey">
+        </div>
+        <div class="cz-row">
+          <button type="button" class="cz-btn" onclick="savePasskey()">Set passkey</button>
+        </div>
+      `}
+      <div class="cz-msg${/could not|match|four digits/i.test(settingsStatus) ? ' err' : ''}"
+           id="st-msg" role="status">${escHtml(settingsStatus)}</div>
+
+      <p class="st-truth">
+        Worth knowing: this keeps a classmate out of your pad, not a determined one.
+        Everything here is stored in a document anyone can read, so treat the passkey
+        like a diary lock — it is a door, not a vault. The DM can always clear it.
+      </p>
+    </section>
+
+    <section class="cz-block">
+      <h3 class="cz-h">This pad</h3>
+      <div class="st-row"><span>Owner</span><strong>${escHtml((ownerStudent() || {}).name || '—')}</strong></div>
+      <div class="st-row"><span>Saved</span><strong>${canSync ? 'To your account' : 'On this device only'}</strong></div>
+      <div class="st-row"><span>Passkey</span><strong>${set ? 'Set' : 'Not set'}</strong></div>
+    </section>`;
+}
+
+function startPasskeyChange() {
+  // Removing first keeps one path for setting a passkey rather than two that
+  // can disagree about validation.
+  pad.lock = null;
+  settingsStatus = 'Enter a new passkey.';
+  schedulePadSave();
+  $('pad-app-body').innerHTML = renderSettingsApp();
+}
+
+async function savePasskey() {
+  const a = ($('st-pin') || {}).value || '';
+  const b = ($('st-pin2') || {}).value || '';
+  if (!/^\d{4}$/.test(a)) {
+    settingsStatus = 'A passkey is exactly four digits.';
+  } else if (a !== b) {
+    settingsStatus = 'Those did not match.';
+  } else {
+    const salt = genId('salt');
+    pad.lock = { salt, hash: await hashPasskey(a, salt) };
+    schedulePadSave();
+    settingsStatus = 'Passkey set. The pad will ask for it when it wakes.';
+  }
+  $('pad-app-body').innerHTML = renderSettingsApp();
+}
+
+function removePasskey() {
+  pad.lock = null;
+  schedulePadSave();
+  settingsStatus = 'Passkey removed.';
+  $('pad-app-body').innerHTML = renderSettingsApp();
 }
 
 /* ══ App: Dice ══════════════════════════════════════════════════════

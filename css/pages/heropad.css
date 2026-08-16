@@ -471,6 +471,98 @@
   50%      { transform: translateY(-3px); opacity: 1; }
 }
 
+/* ── Lock screen keypad ─────────────────────────────────────── */
+#lock-pin {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 12px 0;
+}
+#lock-pin[hidden] { display: none; }
+
+.lk-dots { display: flex; gap: 14px; }
+.lk-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.6);
+  transition: background var(--dur-fast), border-color var(--dur-fast), transform var(--dur-fast);
+}
+.lk-dot.filled { background: #fff; transform: scale(1.1); }
+.lk-dot.error {
+  border-color: var(--hero-crimson);
+  background: var(--hero-crimson);
+  animation: lkShake .38s var(--ease-out);
+}
+@keyframes lkShake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-5px); }
+  75%      { transform: translateX(5px); }
+}
+
+.lk-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: min(240px, 82%);
+}
+.lk-key {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.16);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition: background var(--dur-fast), transform var(--dur-fast);
+}
+.lk-key:hover { background: rgba(255,255,255,.22); }
+.lk-key:active { transform: scale(.92); }
+
+.lk-dm {
+  margin-top: 2px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.18);
+  color: #fff;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.lk-dm:hover { background: rgba(255,255,255,.2); }
+
+/* ── Settings ───────────────────────────────────────────────── */
+.st-truth {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--amber);
+  background: var(--surface2);
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.st-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: var(--pad-row) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+.st-row:last-child { border-bottom: none; }
+.st-row strong { color: var(--text); }
+
 /* ── Home widget ────────────────────────────────────────────── */
 #pad-widget {
   flex-shrink: 0;

@@ -35,7 +35,9 @@
   min-height: calc(100dvh - var(--nav-h));
   max-width: 760px;
   margin: 0 auto;
-  padding: 20px 24px 24px;
+  /* Trimmed from 20/24: every pixel here comes straight off the phone's
+     height, and the phone is the page. */
+  padding: 12px 20px 14px;
 }
 
 /* ── Owner bar ───────────────────────────────────────────────
@@ -45,9 +47,9 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px 16px;
-  padding: 12px 14px;
-  margin-bottom: 18px;
+  gap: 8px 14px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -99,6 +101,17 @@
 
 #pad-device {
   --pad-accent: var(--accent);
+
+  /* Everything inside the phone is spaced in these, so the whole UI
+     loosens or tightens as one instead of a dozen hardcoded paddings
+     drifting apart. The steps live in the media queries at the bottom:
+     bigger on a roomy desktop, generous touch targets on a phone. */
+  --pad-pad: 20px;      /* screen and app-body padding */
+  --pad-row: 11px;      /* vertical padding inside list rows */
+  --pad-gap: 22px;      /* icon grid row gap */
+  --pad-ico: 60px;      /* app icon size */
+  --pad-label: 11px;    /* icon labels and micro-labels */
+  --pad-body: 14px;     /* body text inside apps */
   position: relative;
   /* Sized by the space actually available rather than by subtracting a
      guessed allowance from the viewport. Height fills the stage; the aspect
@@ -108,7 +121,7 @@
      the device stayed taller than the space it had and pushed the page into
      scrolling. */
   height: 100%;
-  max-height: 812px;
+  max-height: 880px;
   min-height: 380px;
   aspect-ratio: 390 / 812;
   width: auto;
@@ -168,7 +181,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 14px 18px 16px;
+  padding: 14px var(--pad-pad) 16px;
   color: #fff;
   transition: transform var(--dur-slow) var(--ease-out);
 }
@@ -386,7 +399,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
+  padding: var(--pad-row) 12px;
   border-radius: 16px;
   background: rgba(255,255,255,.13);
   border: 1px solid rgba(255,255,255,.16);
@@ -509,7 +522,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-content: start;
-  gap: 20px 6px;
+  gap: var(--pad-gap) 6px;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding-bottom: 8px;
@@ -527,10 +540,10 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: 58px;
-  height: 58px;
-  border-radius: 17px;
-  font-size: 27px;
+  width: var(--pad-ico);
+  height: var(--pad-ico);
+  border-radius: 18px;
+  font-size: calc(var(--pad-ico) * .46);
   line-height: 1;
   overflow: visible;
   background:
@@ -595,7 +608,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: var(--fs-2xs);
+  font-size: var(--pad-label);
   font-weight: 600;
   text-shadow: 0 1px 4px rgba(0,0,0,.75);
 }
@@ -688,7 +701,9 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 16px 16px 28px;
+  padding: var(--pad-pad) var(--pad-pad) 32px;
+  font-size: var(--pad-body);
+  line-height: 1.6;
 }
 
 /* ── First-run setup ─────────────────────────────────────────
@@ -861,7 +876,7 @@
   display: flex;
   align-items: center;
   gap: 11px;
-  padding: 9px 2px;
+  padding: var(--pad-row) 2px;
   border-bottom: 1px solid var(--border);
 }
 .bk-row:last-child { border-bottom: none; }
@@ -879,7 +894,7 @@
 .bk-body { flex: 1; min-width: 0; }
 .bk-label {
   display: block;
-  font-size: var(--fs-sm);
+  font-size: var(--pad-body);
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -905,7 +920,7 @@
 /* ── Customise ──────────────────────────────────────────────── */
 .cz-lead {
   margin-bottom: 18px;
-  font-size: var(--fs-sm);
+  font-size: var(--pad-body);
   color: var(--text-muted);
 }
 .cz-block { margin-bottom: 24px; }
@@ -1046,7 +1061,7 @@
   display: flex;
   align-items: flex-start;
   gap: 11px;
-  padding: 9px 8px;
+  padding: var(--pad-row) 8px;
   border-radius: var(--radius-sm);
   border-bottom: 1px solid var(--border);
 }
@@ -1165,7 +1180,7 @@
 .qk-head-body { flex: 1; min-width: 0; }
 .qk-quirk {
   display: block;
-  font-size: var(--fs-sm);
+  font-size: var(--pad-body);
   font-weight: 700;
 }
 .qk-who {
@@ -1569,7 +1584,7 @@
   background: color-mix(in srgb, var(--pad-accent) 24%, var(--surface2));
   border-color: color-mix(in srgb, var(--pad-accent) 45%, var(--border));
 }
-.msg-text { display: block; font-size: var(--fs-sm); line-height: 1.45; word-break: break-word; }
+.msg-text { display: block; font-size: var(--pad-body); line-height: 1.45; word-break: break-word; }
 .msg-time { display: block; margin-top: 3px; font-size: 9px; color: var(--text-dim); }
 .msg-form { display: flex; gap: 6px; }
 .msg-send {
@@ -1589,7 +1604,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 11px;
+  padding: var(--pad-row) 12px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--surface);
@@ -1645,7 +1660,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 11px;
+  padding: var(--pad-row) 12px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--surface);
@@ -1661,7 +1676,7 @@
   font-size: 17px;
 }
 .et-body { flex: 1; min-width: 0; }
-.et-name { display: block; font-size: var(--fs-sm); font-weight: 600; }
+.et-name { display: block; font-size: var(--pad-body); font-weight: 600; }
 .et-desc { display: block; font-size: var(--fs-2xs); color: var(--text-dim); }
 .et-buy {
   flex-shrink: 0;
@@ -1743,7 +1758,7 @@
   display: flex;
   align-items: center;
   gap: 11px;
-  padding: 9px 2px;
+  padding: var(--pad-row) 2px;
   border-bottom: 1px solid var(--border);
 }
 .ct-row:last-child { border-bottom: none; }
@@ -1770,7 +1785,7 @@
   display: flex;
   align-items: baseline;
   gap: 7px;
-  font-size: var(--fs-sm);
+  font-size: var(--pad-body);
   font-weight: 600;
 }
 .ct-name em {
@@ -1793,11 +1808,45 @@
 
 #pad-foot {
   max-width: 430px;
-  margin: 22px auto 0;
+  margin: 12px auto 0;
   text-align: center;
   font-size: var(--fs-xs);
   line-height: 1.6;
   color: var(--text-dim);
+}
+
+
+/* ── Roomy screens ───────────────────────────────────────────
+   A 390px phone stranded in the middle of a 27" monitor was the
+   worst of both worlds: acres of empty page, and 11px labels
+   inside the one thing you are looking at. Given the height, the
+   device grows and everything in it grows with it. */
+@media (min-width: 620px) and (min-height: 820px) {
+  #pad-device {
+    --pad-pad: 24px;
+    --pad-row: 13px;
+    --pad-gap: 26px;
+    --pad-ico: 68px;
+    --pad-label: 12px;
+    --pad-body: 15px;
+  }
+  #pad-headline { padding: 26px 2px 26px; }
+  #pad-day { font-size: 46px; }
+  #lock-time { font-size: 84px; }
+}
+
+/* Short desktop windows: keep the phone whole rather than letting
+   it grow into a scrollbar. */
+@media (max-height: 700px) {
+  #pad-device {
+    --pad-pad: 16px;
+    --pad-row: 9px;
+    --pad-gap: 16px;
+    --pad-ico: 52px;
+  }
+  #pad-headline { padding: 12px 2px 14px; }
+  #pad-day { font-size: 30px; }
+  #pad-foot { display: none; }
 }
 
 /* ── Small screens ───────────────────────────────────────────
@@ -1836,11 +1885,26 @@
     border-radius: 28px;
     box-shadow: 0 0 0 1px var(--border-strong), 0 16px 34px rgba(0,0,0,.5);
   }
-  #pad-screen { padding: 12px 14px 14px; }
-  #pad-headline { padding: 16px 2px 18px; }
-  #pad-day { font-size: 34px; }
-  #pad-grid { gap: 17px 4px; }
-  .pad-app-ico { width: 52px; height: 52px; border-radius: 15px; font-size: 24px; }
-  #pad-app-bar { padding: 20px 14px 11px; }
-  #pad-foot { margin-top: 16px; }
+  #pad-device {
+    /* Touch wants more room than a cursor, not less — the old values
+       shrank everything here, which is backwards. 44px is the smallest
+       comfortable tap target, and the icons clear it easily. */
+    --pad-pad: 18px;
+    --pad-row: 13px;
+    --pad-gap: 22px;
+    --pad-ico: 60px;
+    --pad-label: 11px;
+    --pad-body: 15px;
+  }
+  #pad-screen { padding: 12px var(--pad-pad) 14px; }
+  #pad-headline { padding: 18px 2px 20px; }
+  #pad-day { font-size: 36px; }
+  #pad-app-bar { padding: 20px 16px 12px; }
+  #pad-foot { display: none; }   /* the phone is the page here */
+
+  /* Comfortable hit areas for the controls that are fiddliest on touch. */
+  .tl-controls button { width: 32px; height: 32px; }
+  .mr-move { width: 34px; height: 26px; }
+  .bd-swatch { width: 28px; height: 28px; }
+  .msg-send { width: 46px; }
 }

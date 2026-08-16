@@ -186,6 +186,28 @@ check('its floor is small enough not to overflow a short window',
 check('#pad-stage can shrink', /#pad-stage\s*\{[^}]*min-height:\s*0/.test(css),
   'without min-height:0 a flex child refuses to shrink below its content');
 
+/* ── The spacing scale is real, and used ────────────────────────── */
+// The pad was cramped because a dozen paddings and font sizes were
+// hardcoded independently, so nothing could loosen together. These tokens
+// are the fix; a rule that goes back to a literal value re-fragments it.
+const TOKENS = ['--pad-pad', '--pad-row', '--pad-gap', '--pad-ico', '--pad-label', '--pad-body'];
+const deviceBlock = (css.match(/#pad-device\s*\{([^}]*)\}/) || [])[1] || '';
+for (const t of TOKENS) {
+  check(`${t} is defined on #pad-device`, deviceBlock.includes(t + ':'));
+  const uses = (css.match(new RegExp('var\\(' + t + '\\)', 'g')) || []).length;
+  check(`${t} is actually used`, uses > 0, 'defined but never referenced');
+}
+check('the icon grid and icons share one size token',
+  /gap: var\(--pad-gap\)/.test(css) && /width: var\(--pad-ico\)/.test(css));
+check('the scale steps up when there is room',
+  /min-width: 620px\) and \(min-height: 820px/.test(css),
+  'a 390px phone on a large monitor is the case this exists for');
+check('and steps down on short windows',
+  /max-height: 700px/.test(css));
+check('touch targets are enlarged on small screens, not shrunk',
+  /max-width: 560px[\s\S]*?--pad-ico: 60px/.test(css),
+  'touch needs more room than a cursor, not less');
+
 /* ── CSS covers what gets rendered ──────────────────────────────── */
 // The device is one styled object; these are the pieces the illusion needs.
 for (const sel of ['#pad-device', '#pad-wallpaper', '#pad-screen', '#pad-grid',

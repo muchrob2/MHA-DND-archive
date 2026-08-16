@@ -16,29 +16,49 @@
 const db = firebase.firestore();
 const FS_BUNDLE_DOC = db.collection('mha-dnd').doc('relationships-bundle');
 
-/* Inventories moved out of the character bundle into their own collection,
-   which no client may write (firestore.rules) — only the Cloud Functions do.
-   The bundle is still where names and sheets live, so both are read: one for
-   who someone is, one for what they have. */
-const FS_INVENTORIES = db.collection('inventories');
-let INVENTORIES = {};   // characterFile -> inventory
-
 /* ── The ledger ─────────────────────────────────────────────────────
-   Every movement of money is recorded in mha-dnd/ledger, which the
-   Heropad's Bank app reads. Neither this page nor any other client
-   writes it: the ledger and the purses are written by the Cloud
-   Functions alone (functions/index.js), and firestore.rules refuses a
-   client write to either. A statement nobody can forge is the only kind
-   worth showing.
+   Every movement of money is appended to mha-dnd/ledger, which is what
+   the Heropad's Bank app reads. Before this existed the only record of a
+   purchase was the receipt list further down this file — DOM only, gone
+   on reload — so a player could see their purse had shrunk and had no way
+   to find out what they'd bought.
+
+   One entry per basket line rather than one per checkout: a statement
+   that says "¥14,200" and nothing else is not a statement.
+
+   ENTRY SHAPE — kept in step with admin.js (the other writer) and
+   heropad.js (the reader). verify-ledger.js fails if the three drift.
+
+     id      unique string
+     ts      Date.now() at the time of the movement
+     file    roster filename the entry belongs to
+     kind    purchase | currency | item | parts | points | pool
+     label   human text, e.g. "2 × Combat Knife"
+     unit    denomination key for money entries, else null
+     amount  signed; money in `unit`, or a quantity for the rest
+     yen     signed yen-equivalent for money entries, 0 for the rest
    ─────────────────────────────────────────────────────────────────── */
+const FS_LEDGER_DOC = db.collection('mha-dnd').doc('ledger');
 
 // A Firestore document caps at 1MB and entries are ~150 bytes, so this is
 // nowhere near the limit — it exists so a campaign that runs for years
 // doesn't grow a document that has to be downloaded in full on every read.
+const MAX_LEDGER_ENTRIES = 400;
 
+function ledgerEntry(file, kind, label, unit, amount, yenValue) {
+  return { id: genId('led'), ts: Date.now(), file, kind, label, unit, amount, yen: yenValue };
+}
 
 // Takes the transaction's own read of the ledger and returns the document to
 // write back. Oldest entries fall off the front once the cap is reached.
+function appendToLedger(snap, additions) {
+  const data = (snap && snap.exists && snap.data()) || {};
+  const existing = Array.isArray(data.entries) ? data.entries : [];
+  const merged = existing.concat(additions);
+  return Object.assign({}, data, {
+    entries: merged.length > MAX_LEDGER_ENTRIES ? merged.slice(merged.length - MAX_LEDGER_ENTRIES) : merged,
+  });
+}
 
 // Kept in step with CLASS-1A/relationships.js. verify-inventory-grants.js
 // asserts the three files still agree, since a drifted key would spend or
@@ -181,11 +201,6 @@ function applyLineEffect(inventory, entry, qty) {
 
 // `lines` is [{ entry, qty, unitPrice }]. Mutates `inventory`; on failure it
 // mutates nothing, so a refused checkout leaves the sheet exactly as it was.
-/* ⚠ The server is authoritative — money actually moves in
-   functions/index.js. These two model that behaviour so the verification
-   scripts can drive it without a deployment, and so the basket can show an
-   honest "left after" figure before you commit. verify-functions.js pins
-   this file's spendFromWallet against the server's on 500 purses. */
 function applyBasket(inventory, lines) {
   const total = basketTotal(lines);
   inventory.currency = inventory.currency || { yen: 0, cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 };
@@ -234,7 +249,7 @@ function sortedCharacters() {
 
 function charOptionsHtml(selectedFile) {
   return sortedCharacters().map(s => {
-    const inv = inventoryOf(s.file);
+    const inv = BUNDLE?.characters?.[s.file]?.inventory;
     const purse = inv ? ' — ' + yen(walletTotalYen(inv.currency)) : '';
     return `<option value="${escHtml(s.file)}" ${s.file === selectedFile ? 'selected' : ''}>${
       escHtml(s.name)}${s.is_pc ? ' (PC)' : ''}${purse}</option>`;
@@ -242,7 +257,7 @@ function charOptionsHtml(selectedFile) {
 }
 
 function currentInventory(file) {
-  return inventoryOf(file);
+  return BUNDLE?.characters?.[file]?.inventory || null;
 }
 
 // Remembers the last options markup written into the character picker. The
@@ -643,16 +658,37 @@ async function checkout() {
   btn.disabled = true;
 
   try {
-    // The purse is not ours to touch. inventories/{file} is writable by
-    // nothing (firestore.rules) and this page cannot spend even if it wanted
-    // to — it sends catalogue ids and quantities, and the Cloud Function
-    // looks up the prices itself, checks the caller owns the character, and
-    // moves the money and the ledger together. Sending a price from here
-    // would just be a suggestion the server ignores.
-    await fbCall('spend', {
-      characterFile: file,
-      source: 'shop',
-      lines: lines.map(l => ({ id: l.id, qty: l.qty })),
+    // Read, check and deduct all inside one transaction. Checking against
+    // the page's cached purse instead would let two open tabs each see the
+    // same balance and both spend it.
+    //
+    // The ledger is written in the SAME transaction as the purse, so the two
+    // can never disagree: either the money moves and the statement records
+    // it, or neither happens. A follow-up write would leave a window where a
+    // purchase went through and the player's statement never mentioned it.
+    // Firestore requires every read before any write, hence both gets first.
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(FS_BUNDLE_DOC);
+      const ledgerSnap = await tx.get(FS_LEDGER_DOC);
+      if (!snap.exists) throw new Error('No character bundle found — open the Class 1-A toolkit and save once first.');
+      const data = snap.data();
+      const characters = data.characters || {};
+      const character = characters[file];
+      if (!character) throw new Error('That character has no sheet in the shared bundle yet.');
+
+      character.inventory = character.inventory || {};
+      const result = applyBasket(character.inventory, lines);
+      if (!result.ok) {
+        throw new Error('Not enough money — the purse holds ' +
+          yen(walletTotalYen(character.inventory.currency)) + '.');
+      }
+
+      const additions = lines.map(l => ledgerEntry(
+        file, 'purchase', `${l.qty} × ${l.entry.name}`, 'yen', -lineCost(l), -lineCost(l)
+      ));
+
+      tx.set(FS_BUNDLE_DOC, Object.assign({}, data, { characters }));
+      tx.set(FS_LEDGER_DOC, appendToLedger(ledgerSnap, additions));
     });
 
     const who = (ROSTER.find(s => s.file === file) || {}).name || file;
@@ -689,23 +725,12 @@ function logReceipt(text) {
 /* ── Data loading ──────────────────────────────────────────── */
 async function refreshBundle() {
   try {
-    const [bundleSnap, invSnap] = await Promise.all([FS_BUNDLE_DOC.get(), FS_INVENTORIES.get()]);
-    BUNDLE = bundleSnap.exists ? bundleSnap.data() : null;
-    const next = {};
-    invSnap.forEach(doc => { next[doc.id] = doc.data(); });
-    INVENTORIES = next;
+    const snap = await FS_BUNDLE_DOC.get();
+    BUNDLE = snap.exists ? snap.data() : null;
   } catch {
     BUNDLE = null;
   }
   renderWallet();
-}
-
-// A character's purse, from the locked collection — falling back to the copy
-// still sitting in the bundle for anyone the migration has not moved yet.
-function inventoryOf(file) {
-  if (INVENTORIES[file]) return INVENTORIES[file];
-  const character = BUNDLE && BUNDLE.characters && BUNDLE.characters[file];
-  return (character && character.inventory) || null;
 }
 
 document.addEventListener('auth-state-changed', (e) => {

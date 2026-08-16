@@ -25,11 +25,6 @@ function setSaveStatus(state, text) {
 }
 
 /* ── Firestore storage ────────────────────────────────── */
-/* Inventory no longer lives in this bundle. It sits in inventories/{file},
-   which no client may write — only the Cloud Functions do (firestore.rules,
-   functions/index.js). The tab reads it from there and never writes it back,
-   so a sheet save can no longer carry a purse with it. */
-const FS_INVENTORIES = 'inventories';
 const FS_COLLECTION = 'mha-dnd';
 const FS_DOC        = 'relationships-bundle';
 
@@ -58,34 +53,8 @@ document.addEventListener('auth-state-changed', (e) => {
 
 function buildBundle() {
   const characters = {};
-  for (const c of CHARACTERS) {
-    if (!c._file) continue;
-    // Inventory is deliberately dropped from every save. It lives in
-    // inventories/{file} now, written only by the Cloud Functions, and
-    // carrying a stale copy along in a sheet save is exactly how a purchase
-    // made thirty seconds ago would get quietly undone.
-    const { inventory, ...rest } = c;
-    characters[c._file] = rest;
-  }
+  for (const c of CHARACTERS) { if (c._file) characters[c._file] = c; }
   return { version: 1, exported_at: new Date().toISOString(), relationships: rels, characters };
-}
-
-// Inventories are fetched separately and hung back onto the character objects
-// so every existing reader (the Inventory tab, the totals, the grant panel's
-// view) keeps working unchanged. Nothing writes them back.
-async function loadInventories() {
-  try {
-    const snap = await db.collection(FS_INVENTORIES).get();
-    const byFile = {};
-    snap.forEach(doc => { byFile[doc.id] = doc.data(); });
-    for (const c of CHARACTERS) {
-      if (c._file && byFile[c._file]) c.inventory = byFile[c._file];
-    }
-  } catch {
-    // Falls through to whatever the bundle still holds — during the
-    // migration that is the right answer, and after it the tab simply shows
-    // what it last knew rather than an empty purse.
-  }
 }
 
 // Attacks and inventory items are edited live by whoever has this character
@@ -1459,9 +1428,6 @@ function renderDiceHistory() {
     return a._roster_id - b._roster_id;
   });
   selected = CHARACTERS[0];
-  // After the sheets, before the first paint: purses come from their own
-  // collection now, not from the bundle above.
-  await loadInventories();
   if (fsBundle) startRelLiveSync();
   renderSidebar();
   renderProfile();

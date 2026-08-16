@@ -174,10 +174,7 @@ shared.run = async function () {
   check('the edit that was being made survives too',
         SERVER.characters[FILE].backstory === 'I have been typing this for ten minutes');
   check('the money spent stays spent', serverYen() === 115000);
-  // Inventory no longer travels in this document at all, so "did the save
-  // clobber the purchase" is answered structurally rather than by merge luck.
-  check('a sheet save carries no inventory whatsoever',
-        Object.values(buildBundle().characters).every(c => c.inventory === undefined));
+  check('pre-existing items are untouched', hasItem('Rope'));
 
   // ── 2. Same, but the tab never saw the snapshot (blocked live channel) ──
   // Firestore's streaming transport is refused by some browsers/blockers
@@ -215,14 +212,13 @@ shared.run = async function () {
 
   // ── 5. Editing one item while another is bought ─────────────────────────
   boot(200000);
-  // Editing an item is admin-only now, and even the DM's edit never reaches
-  // this document — it goes to inventories/{file} through a Cloud Function.
-  canEditInventory = true;
   onItemEdit('item-1', 'name', 'Silk Rope');
   scheduleCharSave(selected);
+  buyOnServer(${JSON.stringify(KATANA)}, 1, 85000);
+  handleRelSnapshot({ exists: true, metadata: { fromCache: false }, data: () => fsCloneDoc(SERVER) });
   await manualSaveRelationships();
-  check('an inventory edit never reaches the shared bundle',
-        !JSON.stringify(SERVER.characters[FILE] || {}).includes('Silk Rope'));
+  check('renaming one item keeps the rename', hasItem('Silk Rope'));
+  check('renaming one item does not eat a concurrent purchase', hasItem('Katana'));
 
   // ── 6. Several purchases back to back, then a save ──────────────────────
   boot(500000);
@@ -237,22 +233,22 @@ shared.run = async function () {
         SERVER.characters[FILE].inventory.parts.pro === 6);
   check('the whole spree is paid for exactly', serverYen() === 500000 - 85000 - 15000 - 30000);
 
-  // ── 7. The conflict that used to exist, now impossible ─────────────────
-  // A hand-edited purse used to beat a concurrent deduction, because both
-  // were writes to the same field of the same document and the merge had to
-  // pick one. Purses are not in this document any more, and only the server
-  // writes them, so there is nothing left to race.
+  // ── 7. The known conflict, asserted rather than assumed ────────────────
+  // If the player is editing the purse ITSELF when a purchase lands, one of
+  // the two must lose; the merge resolves that last-writer-wins, like every
+  // other field. Pinned here so the behaviour is a documented choice and
+  // any future change to it is visible.
   boot(200000);
   // Inventory editing is admin-only now (canEditInventory in relationships.js),
-  // so the person hand-editing a purse is the DM, not the player — and even
-  // their edit never reaches this document, because purses do not live here.
+  // so the person hand-editing a purse mid-purchase is the DM, not the player.
   canEditInventory = true;
-  onCurrencyChange('yen', 199000);
+  onCurrencyChange('yen', 199000);            // DM hand-edits the purse
+  buyOnServer(${JSON.stringify(KATANA)}, 1, 85000);
+  handleRelSnapshot({ exists: true, metadata: { fromCache: false }, data: () => fsCloneDoc(SERVER) });
   await manualSaveRelationships();
-  check('a hand-edited purse never reaches the shared bundle',
-        serverYen() !== 199000);
-  check("and the server's own copy is left exactly as it was", serverYen() === 200000);
-
+  check('a hand-edited purse wins over a concurrent deduction (documented)',
+        serverYen() === 199000);
+  check('the bought item is still delivered even then', hasItem('Katana'));
 };
 `;
 

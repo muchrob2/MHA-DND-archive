@@ -1805,6 +1805,13 @@
    screen on bezel. Below 560px the device drops its shell and
    becomes the page. */
 @media (max-width: 560px) {
+  /* iOS zooms the whole page in when a focused input's text is under 16px,
+     which on a full-bleed device throws the layout off and is very hard to
+     get back from. Only the fields you actually type into need it. */
+  .cz-input, .fx-input, .nt-body, .fx-rate-input, .msg-form input {
+    font-size: 16px;
+  }
+
   #content { padding: 14px 12px 32px; }
 
   #pad-owner-bar {

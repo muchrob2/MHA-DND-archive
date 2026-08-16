@@ -159,12 +159,29 @@ if (helperSrc) {
   check('unrelated fields on the document survive an append', other.somethingElse === 42);
 }
 
-/* ── The Bank app is read-only ──────────────────────────────────── */
-// The pad writes its own document; it must never write these two.
-check('heropad.js never writes the ledger',
-  !/FS_LEDGER_DOC\.set|tx\.set\(FS_LEDGER_DOC/.test(padSrc));
-check('heropad.js never writes the character bundle',
-  !/FS_BUNDLE_DOC\.set|tx\.set\(FS_BUNDLE_DOC/.test(padSrc));
+/* ── Where the pad is allowed to write ──────────────────────────── */
+// The pad gained a writer when the Eats app shipped: ordering food spends
+// from the purse and records it, exactly as the Shop does. So "the pad never
+// writes" is no longer the invariant — this is:
+//
+//   the Bank *reads*, and the only pad code that writes does so inside a
+//   transaction that moves the purse and the ledger together.
+//
+// A ledger write anywhere else in the pad, or one outside a transaction,
+// would let a statement line exist without the money having moved.
+for (const doc of ['FS_LEDGER_DOC', 'FS_BUNDLE_DOC']) {
+  check(`heropad.js never writes ${doc} outside a transaction`,
+    !new RegExp(`${doc}\\.set\\(`).test(padSrc),
+    'a bare .set() bypasses the read-check-write the money depends on');
+}
+const padWrites = [...padSrc.matchAll(/tx\.set\(FS_(LEDGER|BUNDLE)_DOC/g)].length;
+check('the pad has exactly one place that moves money', padWrites === 2,
+  `${padWrites} transactional writes found; expected 2 (purse + ledger, in orderFood)`);
+
+// The Bank's own rendering path must stay a reader.
+const bankSection = padSrc.slice(padSrc.indexOf('App: Bank'), padSrc.indexOf('App: Quirks'));
+check('nothing in the Bank app writes', !/tx\.set|\.set\(/.test(bankSection),
+  'a bank app that can edit your balance is not a bank app');
 
 console.log(failed ? `>>> ${failed} check(s) failed` : '>>> ledger OK');
 process.exit(failed ? 1 : 0);

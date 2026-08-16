@@ -2,8 +2,8 @@
   "name": "mha-dnd-archive",
   "version": "1.0.0",
   "private": true,
-  "description": "MHA D&D campaign toolkit — static site. No build step; this file exists only to give the verification scripts a single entry point.",
+  "description": "MHA D&D campaign toolkit \u2014 static site. No build step; this file exists only to give the verification scripts a single entry point.",
   "scripts": {
-    "test": "node scripts/verify-js-syntax.js && node scripts/verify-merge-safety.js && node scripts/verify-relationship-sync.js && node scripts/verify-inventory-grants.js && node scripts/verify-shop-purchases.js && node scripts/verify-purchase-survival.js && node scripts/verify-heropad.js && node scripts/verify-ledger.js && node scripts/verify-eats.js"
+    "test": "node scripts/verify-js-syntax.js && node scripts/verify-merge-safety.js && node scripts/verify-relationship-sync.js && node scripts/verify-inventory-grants.js && node scripts/verify-shop-purchases.js && node scripts/verify-purchase-survival.js && node scripts/verify-heropad.js && node scripts/verify-ledger.js && node scripts/verify-eats.js && node scripts/verify-inventory-rules.js"
   }
 }

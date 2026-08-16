@@ -111,11 +111,14 @@ if (orderFn) {
   const body = orderFn[0];
   check('an order runs inside a transaction', /runTransaction/.test(body));
   check('it reads both documents before writing either',
-    body.indexOf('tx.get(FS_LEDGER_DOC') < body.indexOf('tx.set(FS_BUNDLE_DOC'),
+    body.indexOf('tx.get(FS_LEDGER_DOC') < body.indexOf('tx.set('),
     'Firestore requires every read to precede every write');
   check('it writes the purse and the ledger together',
-    /tx\.set\(FS_BUNDLE_DOC/.test(body) && /tx\.set\(FS_LEDGER_DOC/.test(body),
+    /tx\.set\(invRef/.test(body) && /tx\.set\(FS_LEDGER_DOC/.test(body),
     'an order without a statement line is exactly what the ledger exists to prevent');
+  check('it writes the protected inventory document, not the bundle',
+    !/FS_BUNDLE_DOC/.test(body),
+    'purses live in inventories/{characterFile}, where the rules can refuse an increase');
   check('it builds its entry with the shared ledgerEntry()', /ledgerEntry\(/.test(body));
   check('it refuses when the purse cannot cover it', /Not enough money/.test(body));
 }

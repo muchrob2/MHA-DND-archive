@@ -21,6 +21,62 @@ service cloud.firestore {
       allow write: if isAdmin() || isEditorFor(id);
     }
 
+    /* ── Inventories ───────────────────────────────────────────────────
+       Money and gear, kept apart from the character bundle so a rule can
+       be written about them at all.
+
+       While inventory lived inside relationships-bundle there was nothing
+       to enforce: a purchase and a hand-edit were the same shape of write
+       to the same document, and the rules language has no loops to walk
+       twenty characters checking whose purse moved. One document per
+       character makes the question answerable.
+
+       The rule below is the whole point:
+
+         a player may write an inventory, but never one whose purse is
+         worth more than the purse already there.
+
+       Spending is a decrease, so the Shop and the Eats app work
+       untouched. Giving yourself ¥10,000 is an increase, so it is refused
+       by the database rather than by a check in a page the player
+       controls. The DM is unrestricted — grants are supposed to add money.
+
+       ── What this does NOT stop ──────────────────────────────────────
+       · Adding items, parts or points out of thin air. Only the purse is
+         valued, because only the purse has a handbook exchange rate to
+         value it by.
+       · One player spending another player's money. Editors are not tied
+         to particular inventories here — editableCharacterIds is stored
+         inconsistently across the app (see the note in verify-inventory-
+         rules.js), and a rule built on it would lock honest players out
+         of buying. A tighter ownership rule is worth doing once that is
+         cleaned up; refusing to *create* money is the protection that
+         matters and it works today.
+       ─────────────────────────────────────────────────────────────── */
+    function purseValue(inv) {
+      return inv.get('currency', {}).get('yen', 0)
+           + inv.get('currency', {}).get('cp', 0) * 10
+           + inv.get('currency', {}).get('sp', 0) * 100
+           + inv.get('currency', {}).get('ep', 0) * 500
+           + inv.get('currency', {}).get('gp', 0) * 1000
+           + inv.get('currency', {}).get('pp', 0) * 10000;
+    }
+
+    match /inventories/{characterFile} {
+      allow read: if true;
+
+      // Creating one is how a character's inventory first arrives, so it
+      // is admin-only — the migration on the admin page does it.
+      allow create: if isAdmin();
+
+      allow update: if isAdmin()
+        || (isEditor()
+            && purseValue(request.resource.data) <= purseValue(resource.data));
+
+      // Nothing legitimate deletes an inventory.
+      allow delete: if isAdmin();
+    }
+
     match /users/{uid} {
       allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
       allow create: if request.auth != null && request.auth.uid == uid

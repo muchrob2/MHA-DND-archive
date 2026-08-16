@@ -96,6 +96,9 @@ async function saveUser(uid) {
    the inventory ones it explicitly touches.
    ───────────────────────────────────────────────────────────── */
 const FS_BUNDLE_DOC = db.collection('mha-dnd').doc('relationships-bundle');
+// Inventories moved out of the bundle so the rules could protect them; the
+// DM is the only role allowed to increase a purse.
+const FS_INVENTORIES = db.collection('inventories');
 
 // Kept deliberately in step with CLASS-1A/relationships.js — same keys, same
 // labels, same handbook sources. A key that disagrees would write a counter
@@ -348,39 +351,34 @@ async function applyGrant() {
   btn.disabled = true;
   setGrantStatus('Granting…', '');
   try {
-    const missing = await db.runTransaction(async (tx) => {
-      const snap = await tx.get(FS_BUNDLE_DOC);
-      // Both reads before either write — Firestore requires it, and it keeps
-      // the grant and its ledger entries in one atomic commit.
-      const ledgerSnap = await tx.get(FS_LEDGER_DOC);
-      if (!snap.exists) throw new Error('No character bundle found — open the Class 1-A toolkit and save once first.');
-      const data = snap.data();
-      const characters = data.characters || {};
-      const absent = [];
-      const additions = [];
-      const summary = grantSummary(spec);
-      for (const file of files) {
-        // Only characters already in the bundle are touched. Creating a stub
-        // here would produce a nameless character that the toolkit renders as
-        // an empty row, so an un-synced sheet is reported instead.
-        if (!characters[file]) { absent.push(file); continue; }
-        const inv = characters[file].inventory = characters[file].inventory || {};
-        const before = grantCounterValue(inv, spec);
-        applyGrantToInventory(inv, spec);
-        const after = grantCounterValue(inv, spec);
-        // Items have no counter; everything else records what actually moved.
-        const delta = before === null ? Math.max(1, spec.amount) : after - before;
-        additions.push(ledgerEntry(
-          file, spec.kind, summary,
-          spec.kind === 'currency' ? spec.key : null,
-          delta,
-          spec.kind === 'currency' ? delta * (CURRENCY_TO_YEN[spec.key] || 0) : 0
-        ));
+    // One transaction per recipient: they are separate documents now, and
+    // a single failure should not take the rest of the grant with it.
+    const missing = [];
+    for (const file of files) {
+      try {
+        await db.runTransaction(async (tx) => {
+          const invRef = FS_INVENTORIES.doc(file);
+          const invSnap = await tx.get(invRef);
+          const ledgerSnap = await tx.get(FS_LEDGER_DOC);
+          if (!invSnap.exists) { missing.push(file); return; }
+          const inv = invSnap.data() || {};
+
+          const before = grantCounterValue(inv, spec);
+          applyGrantToInventory(inv, spec);
+          const after = grantCounterValue(inv, spec);
+          const delta = before === null ? Math.max(1, spec.amount) : after - before;
+
+          const entry = ledgerEntry(file, spec.kind, grantSummary(spec),
+            spec.kind === 'currency' ? spec.key : null, delta,
+            spec.kind === 'currency' ? delta * (CURRENCY_TO_YEN[spec.key] || 0) : 0);
+
+          tx.set(invRef, inv);
+          tx.set(FS_LEDGER_DOC, appendToLedger(ledgerSnap, [entry]));
+        });
+      } catch (e) {
+        missing.push(file);
       }
-      tx.set(FS_BUNDLE_DOC, Object.assign({}, data, { characters }));
-      tx.set(FS_LEDGER_DOC, appendToLedger(ledgerSnap, additions));
-      return absent;
-    });
+    }
 
     const nameOf = f => (rosterStudents.find(s => s.file === f) || {}).name || f;
     const granted = files.length - missing.length;
@@ -415,3 +413,45 @@ document.addEventListener('auth-state-changed', async (state) => {
   await loadRecipients();
   renderGrantTarget();
 });
+
+
+/* ── One-time migration ─────────────────────────────────────────────
+   Copies each character's inventory out of the shared bundle into its own
+   document, where the rules can protect it. Creating an inventory is
+   admin-only, so this belongs here.
+
+   Safe to run more than once: it never overwrites an inventory that
+   already exists, so a second run only picks up characters added since
+   the first. The bundle's copies are left exactly where they are —
+   nothing reads them once this has run, and leaving them means a bad day
+   can be undone without anyone's money disappearing.
+   ─────────────────────────────────────────────────────────────────── */
+async function migrateInventories() {
+  const btn = document.getElementById('migrate-btn');
+  const out = document.getElementById('migrate-status');
+  if (btn) btn.disabled = true;
+  if (out) out.textContent = 'Migrating…';
+  try {
+    const snap = await FS_BUNDLE_DOC.get();
+    const characters = (snap.exists && snap.data().characters) || {};
+    const moved = [];
+    const skipped = [];
+    for (const [file, character] of Object.entries(characters)) {
+      const ref = FS_INVENTORIES.doc(file);
+      const existing = await ref.get();
+      if (existing.exists) { skipped.push(file); continue; }
+      await ref.set(character.inventory || {});
+      moved.push(file);
+    }
+    if (out) {
+      out.textContent = moved.length
+        ? `Moved ${moved.length} inventor${moved.length === 1 ? 'y' : 'ies'}` +
+          (skipped.length ? `, left ${skipped.length} already in place.` : '.')
+        : `Nothing to move — all ${skipped.length} are already in place.`;
+    }
+  } catch (e) {
+    if (out) out.textContent = 'Migration failed: ' + (e.code || e.message);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}

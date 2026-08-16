@@ -988,6 +988,10 @@ async function loadRanking() {
    ═══════════════════════════════════════════════════════════════════ */
 const FS_LEDGER_DOC = db.collection('mha-dnd').doc('ledger');
 const FS_BUNDLE_DOC = db.collection('mha-dnd').doc('relationships-bundle');
+// Purses live here, where firestore.rules can refuse any write that would
+// make one worth more than it already was.
+const FS_INVENTORIES = db.collection('inventories');
+let inventories = {};
 
 // Kept in step with shop.js and CLASS-1A/relationships.js — a drifted key
 // would show a denomination the rest of the site never fills in.
@@ -1062,9 +1066,15 @@ function walletTotalYen(currency) {
   return CURRENCY_KEYS.reduce((sum, k) => sum + (currency?.[k] || 0) * CURRENCY_TO_YEN[k], 0);
 }
 
-function ownerPurse() {
+function ownerInventory() {
+  if (inventories[activeFile]) return inventories[activeFile];
   const character = bundle && bundle.characters && bundle.characters[activeFile];
-  return (character && character.inventory && character.inventory.currency) || null;
+  return (character && character.inventory) || null;   // pre-migration fallback
+}
+
+function ownerPurse() {
+  const inv = ownerInventory();
+  return (inv && inv.currency) || null;
 }
 
 function ownerEntries() {
@@ -1179,9 +1189,14 @@ function rerenderBankIfOpen() {
 async function loadBank() {
   try {
     await fbAuthReady;
-    const [ledgerSnap, bundleSnap] = await Promise.all([FS_LEDGER_DOC.get(), FS_BUNDLE_DOC.get()]);
+    const [ledgerSnap, bundleSnap, invSnap] = await Promise.all([
+      FS_LEDGER_DOC.get(), FS_BUNDLE_DOC.get(), FS_INVENTORIES.get(),
+    ]);
     ledger = ledgerSnap.exists && Array.isArray(ledgerSnap.data().entries) ? ledgerSnap.data().entries : [];
     bundle = bundleSnap.exists ? bundleSnap.data() : null;
+    const next = {};
+    invSnap.forEach(doc => { next[doc.id] = doc.data(); });
+    inventories = next;
   } catch {
     // Offline or blocked — an empty statement is better than a stuck spinner.
     ledger = ledger || [];
@@ -1204,7 +1219,16 @@ function startBankLiveSync() {
     if (!snap.exists || (snap.metadata && snap.metadata.fromCache)) return;
     bundle = snap.data();
     rerenderBankIfOpen();
-  }, err => console.error('[heropad] purse sync stopped:', err));
+  }, err => console.error('[heropad] bundle sync stopped:', err));
+
+  FS_INVENTORIES.onSnapshot(snap => {
+    if (snap.metadata && snap.metadata.fromCache) return;
+    const next = {};
+    snap.forEach(doc => { next[doc.id] = doc.data(); });
+    inventories = next;
+    rerenderBankIfOpen();
+    if (openAppId === 'eats') $('pad-app-body').innerHTML = renderEatsApp();
+  }, err => console.error('[heropad] inventory sync stopped:', err));
 }
 
 /* ══ App: Quirks ════════════════════════════════════════════════════
@@ -1982,30 +2006,29 @@ async function orderFood(id) {
 
   try {
     await fbAuthReady;
-    // Same shape as the Shop's checkout: purse and ledger move inside one
-    // transaction, so an order cannot exist without its statement line.
     await db.runTransaction(async (tx) => {
-      const snap = await tx.get(FS_BUNDLE_DOC);
+      const invRef = FS_INVENTORIES.doc(activeFile);
+      const invSnap = await tx.get(invRef);
       const ledgerSnap = await tx.get(FS_LEDGER_DOC);
-      if (!snap.exists) throw new Error('No character bundle — open the toolkit and save once first.');
-      const data = snap.data();
-      const characters = data.characters || {};
-      const character = characters[activeFile];
-      if (!character) throw new Error('This character has no sheet in the shared bundle yet.');
-      character.inventory = character.inventory || {};
-      character.inventory.currency = character.inventory.currency || {};
-      if (!spendFromWallet(character.inventory.currency, item.price)) {
+      if (!invSnap.exists) {
+        throw new Error('No inventory yet — the DM needs to run the migration on the admin page.');
+      }
+      const inventory = invSnap.data() || {};
+      inventory.currency = inventory.currency || {};
+      if (!spendFromWallet(inventory.currency, item.price)) {
         throw new Error('Not enough money — the purse holds ' +
-          yenStr(walletTotalYen(character.inventory.currency)) + '.');
+          yenStr(walletTotalYen(inventory.currency)) + '.');
       }
       const entry = ledgerEntry(activeFile, 'purchase',
         `${EATS_LABEL} · ${item.name}`, 'yen', -item.price, -item.price);
-      tx.set(FS_BUNDLE_DOC, Object.assign({}, data, { characters }));
+      // Only ever a decrease, which is all the rule on this collection
+      // permits an editor to write.
+      tx.set(invRef, inventory);
       tx.set(FS_LEDGER_DOC, appendToLedger(ledgerSnap, [entry]));
     });
     eatsStatus = `${item.name} ordered. It is on its way.`;
   } catch (e) {
-    eatsStatus = e.message || 'That order did not go through.';
+    eatsStatus = (e && e.message) || 'That order did not go through.';
   }
   $('pad-app-body').innerHTML = renderEatsApp();
 }

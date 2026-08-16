@@ -102,12 +102,21 @@ const ACCENTS = [
   { name: 'Bone', value: '#F2F5FA' },
 ];
 
+// Yen per £1, used by the Exchange app. A static site has no way to know
+// today's rate, so this is a starting figure the player edits rather than a
+// number pretending to be live — see the note on that app. Stored on the pad
+// so an edit syncs with everything else; RATE_SET_ON is what the app shows
+// so nobody mistakes a stale default for a current rate.
+const DEFAULT_GBP_RATE = 190;
+const RATE_SET_ON = 'August 2026';
+
 function defaultPad() {
   return {
     wallpaper: { type: 'preset', id: 'aurora' },
     accent: '#FFC220',
     carrier: 'U.A. NET',
     notes: '',
+    gbpRate: DEFAULT_GBP_RATE,
   };
 }
 
@@ -196,6 +205,13 @@ const APPS = [
     accent: '#FFC220',
     render: renderNotesApp,
     onOpen: focusNotes,
+  },
+  {
+    id: 'exchange',
+    name: 'Exchange',
+    icon: '💱',
+    accent: '#3DDC64',
+    render: renderExchangeApp,
   },
   {
     id: 'dice',
@@ -1127,6 +1143,130 @@ function setNotes(value) {
     const words = value.trim() ? value.trim().split(/\s+/).length : 0;
     foot.textContent = words ? `${words} word${words === 1 ? '' : 's'} · saved` : '';
   }
+}
+
+/* ══ App: Exchange ══════════════════════════════════════════════════
+   Yen to pounds, for when a handbook price needs translating into money
+   that means something.
+
+   ── On the rate ──────────────────────────────────────────────────
+   This is a static site with no backend, so there is no honest way for
+   it to know today's rate. Rather than hardcode a number and let it
+   quietly rot into a lie, the rate is a visible, editable field: it
+   starts at DEFAULT_GBP_RATE, shows the month that default was written,
+   and whatever the player types is stored on their pad and syncs like
+   any other setting. A wrong rate is then obviously a wrong rate, and
+   one tap from being right.
+
+   Live rates would mean a third-party API call on every open — a new
+   network dependency, a new failure mode, and a real-world request from
+   a page about a fictional school. Not worth it for a converter.
+   ═══════════════════════════════════════════════════════════════════ */
+let fxAmount = 1000;    // in whichever currency is currently the source
+let fxFromYen = true;   // false converts the other way, pounds to yen
+
+function fxRate() {
+  const r = Number(pad.gbpRate);
+  return r > 0 ? r : DEFAULT_GBP_RATE;
+}
+
+function gbpStr(n) {
+  return Number(n || 0).toLocaleString(undefined, {
+    style: 'currency', currency: 'GBP', maximumFractionDigits: 2,
+  });
+}
+
+function fxConvert(amount) {
+  const n = Number(amount) || 0;
+  return fxFromYen ? n / fxRate() : n * fxRate();
+}
+
+function fxResultStr() {
+  const out = fxConvert(fxAmount);
+  return fxFromYen ? gbpStr(out) : yenStr(Math.round(out));
+}
+
+// Handbook prices worth having a feel for, rather than round numbers for
+// their own sake — a cheap meal up to a serious piece of support gear.
+const FX_QUICK = [500, 2000, 5000, 20000, 100000];
+
+function fxQuickHtml() {
+  return FX_QUICK.map(v => `
+    <button type="button" class="fx-quick" onclick="setFxAmount(${v}, true)">
+      <span>${yenStr(v)}</span>
+      <em>${escHtml(gbpStr(v / fxRate()))}</em>
+    </button>`).join('');
+}
+
+function renderExchangeApp() {
+  const purse = ownerPurse();
+  const purseYen = purse ? walletTotalYen(purse) : null;
+
+  return `
+    <div class="fx-dir">
+      <button type="button" class="fx-dir-btn${fxFromYen ? ' sel' : ''}" onclick="setFxDir(true)">¥ → £</button>
+      <button type="button" class="fx-dir-btn${!fxFromYen ? ' sel' : ''}" onclick="setFxDir(false)">£ → ¥</button>
+    </div>
+
+    <label class="fx-field">
+      <span class="fx-field-label">${fxFromYen ? 'Yen' : 'Pounds'}</span>
+      <input type="number" id="fx-amount" class="fx-input" inputmode="decimal" min="0"
+             value="${escHtml(String(fxAmount))}" oninput="setFxAmount(this.value)"
+             aria-label="Amount to convert">
+    </label>
+
+    <div class="fx-result" id="fx-result">${escHtml(fxResultStr())}</div>
+
+    <div class="fx-rate">
+      <span class="fx-rate-label">Rate</span>
+      <span class="fx-rate-body">
+        <input type="number" id="fx-rate-input" class="fx-rate-input" min="1" step="0.01"
+               value="${escHtml(String(fxRate()))}" oninput="setFxRate(this.value)"
+               aria-label="Yen per pound">
+        <span class="fx-rate-unit">yen to £1</span>
+      </span>
+    </div>
+    <p class="fx-note">Set from a rate current in ${escHtml(RATE_SET_ON)}. Edit it and it saves to your pad —
+      this page can't look up a live rate on its own.</p>
+
+    ${purseYen !== null ? `<div class="fx-purse">
+      <span class="fx-purse-label">Your balance</span>
+      <span class="fx-purse-yen">${yenStr(purseYen)}</span>
+      <span class="fx-purse-gbp">${escHtml(gbpStr(purseYen / fxRate()))}</span>
+    </div>` : ''}
+
+    <p class="dc-history-label">Common prices</p>
+    <div class="fx-quicks" id="fx-quicks">${fxQuickHtml()}</div>`;
+}
+
+// Only the result and the quick table are repainted, never the whole app:
+// re-rendering would drop the caret out of whichever field is being typed in.
+function fxRepaint() {
+  const res = $('fx-result');
+  if (res) res.textContent = fxResultStr();
+  const quicks = $('fx-quicks');
+  if (quicks) quicks.innerHTML = fxQuickHtml();
+}
+
+function setFxAmount(value, full) {
+  fxAmount = Math.max(0, Number(value) || 0);
+  if (full) { $('pad-app-body').innerHTML = renderExchangeApp(); return; }
+  fxRepaint();
+}
+
+function setFxDir(fromYen) {
+  // Carry the converted figure across, so flipping the direction reads as
+  // "and back again" rather than resetting to an unrelated number.
+  fxAmount = Math.round(fxConvert(fxAmount) * 100) / 100;
+  fxFromYen = fromYen;
+  $('pad-app-body').innerHTML = renderExchangeApp();
+}
+
+function setFxRate(value) {
+  const n = Number(value);
+  pad.gbpRate = n > 0 ? n : DEFAULT_GBP_RATE;
+  schedulePadSave();
+  fxRepaint();
 }
 
 /* ══ App: Dice ══════════════════════════════════════════════════════

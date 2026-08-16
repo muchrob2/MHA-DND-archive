@@ -1248,6 +1248,156 @@
   color: var(--text-dim);
 }
 
+/* ── Exchange ───────────────────────────────────────────────── */
+.fx-dir { display: flex; gap: 6px; margin-bottom: 14px; }
+.fx-dir-btn {
+  flex: 1;
+  padding: 9px 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast);
+}
+.fx-dir-btn:hover { color: var(--text); }
+.fx-dir-btn.sel {
+  color: var(--ink);
+  background: var(--pad-accent);
+  border-color: var(--pad-accent);
+}
+
+.fx-field { display: block; }
+.fx-field-label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.fx-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xl);
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+.fx-input:focus { border-color: var(--pad-accent); }
+
+.fx-result {
+  margin-top: 12px;
+  padding: 20px 14px;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(150deg, color-mix(in srgb, var(--pad-accent) 15%, transparent), transparent 62%),
+    var(--surface);
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  line-height: 1;
+  color: var(--pad-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.fx-rate {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 9px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.fx-rate-label {
+  flex: 1;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.fx-rate-body { display: flex; align-items: center; gap: 6px; }
+.fx-rate-input {
+  width: 78px;
+  padding: 5px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  outline: none;
+}
+.fx-rate-input:focus { border-color: var(--pad-accent); }
+.fx-rate-unit { font-size: var(--fs-2xs); color: var(--text-dim); }
+.fx-note {
+  margin-top: 7px;
+  font-size: var(--fs-2xs);
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.fx-purse {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin-top: 14px;
+  padding: 11px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--pad-accent);
+  background: color-mix(in srgb, var(--pad-accent) 10%, var(--surface));
+}
+.fx-purse-label {
+  flex: 1;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.fx-purse-yen {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.fx-purse-gbp {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--pad-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.fx-quicks { display: grid; gap: 5px; }
+.fx-quick {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 8px 11px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--dur-fast), transform var(--dur-fast);
+}
+.fx-quick:hover { border-color: var(--pad-accent); transform: translateX(2px); }
+.fx-quick span { font-size: var(--fs-sm); font-weight: 600; color: var(--text-muted); }
+.fx-quick em {
+  font-style: normal;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--pad-accent);
+}
+
 /* ── Dice ───────────────────────────────────────────────────── */
 .dc-dice {
   display: grid;

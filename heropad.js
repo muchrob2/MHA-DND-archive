@@ -2115,8 +2115,11 @@ function renderBoardApp() {
     </div>
     <canvas id="bd-canvas" class="bd-canvas" aria-label="Shared whiteboard"></canvas>
     <div class="bd-actions">
-      <button type="button" class="cz-btn" onclick="undoMyStroke()">Undo mine</button>
-      ${window.isAdmin && window.isAdmin() ? '<button type="button" class="cz-btn danger" onclick="clearBoard()">Wipe the board</button>' : ''}
+      <button type="button" class="cz-btn" onclick="undoMyStroke()" ${canSync ? '' : 'disabled'}>Undo mine</button>
+      ${!canSync ? '' : boardWipeArmed
+        ? `<button type="button" class="cz-btn danger" onclick="clearBoard()">Wipe it — everyone's</button>
+           <button type="button" class="cz-btn" onclick="cancelBoardWipe()">Keep it</button>`
+        : '<button type="button" class="cz-btn danger" onclick="armBoardWipe()">Wipe the board</button>'}
       <span class="bd-count" id="bd-count"></span>
     </div>
     <p class="fx-note">Everyone in the class draws on this same board.</p>`;
@@ -2265,11 +2268,41 @@ function undoMyStroke() {
   }
 }
 
+/* Wiping is everyone's now, not just the DM's — it is a shared scrap of
+   paper, and having to find the DM to clear it is friction nobody wanted.
+
+   It asks first, because this is the one control on the pad that destroys
+   other people's work and cannot be undone. Two taps, in the app, rather
+   than a browser confirm() dialog that would sit outside the phone.
+
+   A stroke another player drew in the last moment or two can survive a
+   wipe: fsMergeSave treats an id it has never synced as somebody else's
+   new work and keeps it, rather than letting a stale client delete
+   something it never saw. That is the right trade — a stray line is
+   cheaper than losing a drawing to a race. */
+let boardWipeArmed = false;
+
+function armBoardWipe() {
+  if (!canSync) return;
+  boardWipeArmed = true;
+  $('pad-app-body').innerHTML = renderBoardApp();
+  mountBoard();
+}
+
+function cancelBoardWipe() {
+  boardWipeArmed = false;
+  $('pad-app-body').innerHTML = renderBoardApp();
+  mountBoard();
+}
+
 function clearBoard() {
-  if (!(window.isAdmin && window.isAdmin())) return;
+  if (!canSync) return;
+  boardWipeArmed = false;
   boardStrokes = [];
   drawBoard();
   pushBoard();
+  $('pad-app-body').innerHTML = renderBoardApp();
+  mountBoard();
 }
 
 async function loadBoard() {

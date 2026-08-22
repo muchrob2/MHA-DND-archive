@@ -89,7 +89,7 @@
           "description": "U.A.'s annual Sports Festival. Public, broadcast, massive audience. Full tournament structure: obstacle race → cavalry battle → individual brackets with Class 1-B competing alongside Class 1-A. The 1-A vs 1-B rivalry becomes concrete here for the first time.",
           "beats": [
             "Pre-festival: the class arrives to a stadium already full. Kazama is recognised from the entrance exam footage and loses his composure for about four seconds — long enough for someone to notice his ears go red before the mirror-bright hardening kicks in and hides it.",
-            "Obstacle race: Zaro wins her heat by portaling ahead through gaps nobody else could see, fog trailing behind her the whole way — nobody realised how far ahead she was until the leaderboard updated. Ren places first overall; nobody saw him pass anyone, he was just suddenly at the front. Setaka's iron cannon-balls ricochet through a bottleneck and eliminate four competitors at once, and he apologises to each of them individually afterward. Kinosho places top five in a near-sleep state for most of the course. Yamaru Todao (1-B) places third — the class's first look at him in a competitive context.",
+            "Obstacle race: Ren places first overall; nobody saw him pass anyone, he was just suddenly at the front. Setaka's iron cannon-balls ricochet through a bottleneck and eliminate four competitors at once, and he apologises to each of them individually afterward. Kinosho places top five in a near-sleep state for most of the course. Yamaru Todao (1-B) places third — the class's first look at him in a competitive context.",
             "Cavalry battle: alliances form and collapse. Class 1-B's coordination is visibly drilled and slightly alarming to watch. Yoshibara doubles the wrong person at the wrong moment — an opponent already in the lead. This becomes a permanent campaign reference.",
             "Broadcast: the commentary team is unprepared for half the quirks on display. 'What Is She Doing?' about Kinosho trends nationally within twenty minutes. Masahata's ongoing scoring commentary in the waiting room is caught on a spectator's phone and briefly goes viral.",
             "Post-festival: the ranking chart, brought to the festival laminated, doesn't get updated for four days. When asked why: 'The model is broken.' He reprints it anyway."
@@ -98,7 +98,6 @@
             "event_1_obstacle_race": {
               "summary": "All participants, mixed classes. Results seed the individual brackets.",
               "key_moments": [
-                "Zaro portals through gaps nobody else could see, fog trailing the whole route",
                 "Ren places 1st overall — nobody saw him pass anyone",
                 "Setaka's iron balls ricochet through a bottleneck and eliminate four at once, apologies included",
                 "Kinosho places top 5 in a near-sleep state for most of the course",
@@ -185,17 +184,12 @@
                 {
                   "match": "R1-5",
                   "fighter_a": "Ren Suzuki (1-A, Seed 1)",
-                  "fighter_b": "Zaro Brando (1-A)",
+                  "fighter_b": "— (bye)",
+                  "bye": true,
                   "favored": "Ren",
-                  "how_it_goes": "Zaro drops a shroud of deep purple fog around herself before the opening bell and puts a portal down at the arena's far edge. Ren wins in eleven seconds — he crossed the arena faster than the introduction finished, arriving at the portal's mouth before she'd finished routing anything through it. Her plan assumed her opponent needed to find the portal first. He didn't look for it; he just arrived. The crowd replays the footage three times trying to find the contact point.",
+                  "how_it_goes": "The bracket leaves the top seed without a first-round opponent. Ren spends the slot on the walkway watching R1-4 instead, and says nothing about it afterwards.",
                   "winner": "Ren Suzuki",
-                  "dm_note": "Run this as a demonstration, not a fight. The class should clock that Zaro had a real plan and it simply didn't matter — Ren's own private tally of 'things that should have stopped me' gets a new entry he'll never admit counts. Zaro is a PC — if a player is running her, let this be about her plan being sound and the outcome not being humiliating, just outpaced.",
-                  "alternate_outcome": {
-                    "if_winner": "Zaro Brando",
-                    "how_it_goes": "She opens a second, closer portal she never announced, and steps through it the instant Ren commits to the first one. Ren's eleven-second plan assumes a location she isn't at anymore. He overshoots; in the half-second he's reorienting, she lands the hit nobody saw coming from behind the fog.",
-                    "downstream": "MAJOR UPSET — Ren eliminated Round 1. Zaro advances to QF-1 vs Izuto, who reads her portal placement through the way the fog thins right before she opens one, and wins.",
-                    "dm_note": "The class's reaction to Ren losing matters more than the fight. Masahata does not update the chart for a long time."
-                  }
+                  "dm_note": "A bye, not a fight — there is nothing to run here. If you want Ren to have shown the crowd something before the quarterfinals, give him a warm-up exhibition rather than a scored bout."
                 },
                 {
                   "match": "R1-6",
@@ -248,7 +242,7 @@
                   "match": "QF-1",
                   "fighter_a": "Ren Suzuki (1-A, Seed 1)",
                   "fighter_b": "Izuto Kutsu (1-A)",
-                  "note": "Fighter B is whoever won R1-4 (default Izuto; Ando if alt R1-4; Zaro takes the slot if she upset Ren in R1-5, in which case fighter A becomes Zaro)",
+                  "note": "Fighter B is whoever won R1-4 (default Izuto; Ando if alt R1-4)",
                   "favored": "Ren",
                   "how_it_goes": "The fastest fight of the tournament. Izuto has been clocking Ren's movement since the entrance exam and built a three-move plan; he gets through two. Ren wins. Izuto is already thinking about the third move he didn't land — the same methodical instinct he uses maintaining his own leg components.",
                   "winner": "Ren Suzuki",

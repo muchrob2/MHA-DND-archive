@@ -84,19 +84,6 @@
     },
     {
       "id": 7,
-      "name": "Zaro Brando",
-      "quirk": "Warp Gate",
-      "gender": "Female",
-      "height": "5'4\"",
-      "physiology": "Standard",
-      "role": "Mobility / Battlefield Control",
-      "is_pc": true,
-      "personality_tag": "Guarded and quiet in class, watching more than she says; a completely different person once a portal's open and a fight starts",
-      "notable_trait": "A shroud of deep purple fog drifts around her whenever her quirk is active; small held objects occasionally vanish into it and reappear elsewhere once a forgotten portal closes",
-      "file": "takazuki_hanori.json"
-    },
-    {
-      "id": 8,
       "name": "Masahata Shikoji",
       "quirk": "Water Gun",
       "gender": "Male",
@@ -109,7 +96,7 @@
       "file": "masahata_shikoji.json"
     },
     {
-      "id": 9,
+      "id": 8,
       "name": "Nomi Igisa",
       "quirk": "Poltergeist",
       "gender": "Female",
@@ -122,7 +109,7 @@
       "file": "nomi_igisa.json"
     },
     {
-      "id": 10,
+      "id": 9,
       "name": "Nakaya Emari",
       "quirk": "Element (Lightning)",
       "gender": "Female",
@@ -135,7 +122,7 @@
       "file": "nakaya_emari.json"
     },
     {
-      "id": 11,
+      "id": 10,
       "name": "Ichitaka Shijime",
       "quirk": "Hologram",
       "gender": "Male",
@@ -148,7 +135,7 @@
       "file": "ichitaka_shijime.json"
     },
     {
-      "id": 12,
+      "id": 11,
       "name": "Smeet Nozoto",
       "quirk": "Quirkless",
       "gender": "Female",
@@ -161,7 +148,7 @@
       "file": "kinosho_kochimiko.json"
     },
     {
-      "id": 13,
+      "id": 12,
       "name": "Toragi Kayo",
       "quirk": "Twin Impact",
       "gender": "Male",
@@ -174,7 +161,7 @@
       "file": "toragi_kayo.json"
     },
     {
-      "id": 14,
+      "id": 13,
       "name": "Rakuka Rizo",
       "quirk": "Dying Flight",
       "gender": "Male",
@@ -187,7 +174,7 @@
       "file": "toshida_shogoro.json"
     },
     {
-      "id": 15,
+      "id": 14,
       "name": "Tazato Tadamaki",
       "quirk": "Dragon",
       "gender": "Female",
@@ -200,7 +187,7 @@
       "file": "tazato_tadamaki.json"
     },
     {
-      "id": 16,
+      "id": 15,
       "name": "Setaka Toko",
       "quirk": "Iron Ball",
       "gender": "Male",
@@ -213,7 +200,7 @@
       "file": "setaka_toko.json"
     },
     {
-      "id": 17,
+      "id": 16,
       "name": "Ren Suzuki",
       "quirk": "Beams From His Eyes",
       "gender": "Male",
@@ -226,7 +213,7 @@
       "file": "ren_suzuki.json"
     },
     {
-      "id": 18,
+      "id": 17,
       "name": "Kazama Kenji",
       "quirk": "Steel",
       "gender": "Male",
@@ -239,7 +226,7 @@
       "file": "kazama_kenji.json"
     },
     {
-      "id": 19,
+      "id": 18,
       "name": "Chozen Tadachi",
       "quirk": "Stress",
       "gender": "Male",
@@ -252,7 +239,7 @@
       "file": "chosen_tadachi.json"
     },
     {
-      "id": 20,
+      "id": 19,
       "name": "Izuto Kutsu",
       "quirk": "Engine",
       "gender": "Male",

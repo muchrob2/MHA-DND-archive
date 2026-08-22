@@ -157,6 +157,15 @@ function buyOnServer(entry, qty, unitPrice) {
   const inv = SERVER.characters[FILE].inventory;
   return shared.applyPurchase(inv, entry, qty, unitPrice);
 }
+// The inventories collection delivering its document to this tab, the way
+// startInventoryLiveSync does. SERVER keeps the inventory inside the bundle
+// for the harness's convenience; what matters is which code path carries it.
+function deliverInventory() {
+  applyInventorySnapshot({
+    metadata: { fromCache: false },
+    forEach(fn) { fn({ id: FILE, data: () => fsCloneDoc(SERVER.characters[FILE].inventory) }); },
+  });
+}
 function serverItems() { return SERVER.characters[FILE].inventory.items; }
 function serverYen()   { return shared.walletTotalYen(SERVER.characters[FILE].inventory.currency); }
 function hasItem(name) { return serverItems().some(i => i.name === name); }
@@ -193,17 +202,26 @@ shared.run = async function () {
   check('the offline tab still lands its own edit',
         SERVER.characters[FILE].backstory === 'typed while offline');
 
-  // ── 3. A cached (stale) snapshot must not resurrect the old inventory ───
+  // ── 3. A purchase reaches the tab, and the bundle cannot undo it ────────
+  // A purchase travels on the inventories collection, never in this bundle,
+  // so it is applyInventorySnapshot that must deliver it — the tab's own
+  // listener on that collection.
   boot(200000);
   buyOnServer(${JSON.stringify(KATANA)}, 1, 85000);
-  const fresh = fsCloneDoc(SERVER);
-  handleRelSnapshot({ exists: true, metadata: { fromCache: false }, data: () => fresh });
+  deliverInventory();
   check('a clean tab picks the purchase up live', selected.inventory.items.some(i => i.name === 'Katana'));
-  // now a cached replay of the pre-purchase document arrives
-  handleRelSnapshot({ exists: true, metadata: { fromCache: true },
+
+  // Now the bundle speaks up carrying its migration-era fossil: ¥20,000 and
+  // no items. It must be ignored completely. This is the regression that let
+  // a purchase land in Firestore and disappear off the Inventory tab a moment
+  // later — the failure that reads as "buying things doesn't work".
+  handleRelSnapshot({ exists: true, metadata: { fromCache: false },
                       data: () => ({ version: 1, relationships: {}, characters: { [FILE]: {
-                        inventory: { currency: { yen: 200000 }, items: [{ id: 'item-1', name: 'Rope', qty: 1 }] } } } }) });
-  check('a cached replay does not un-buy it', selected.inventory.items.some(i => i.name === 'Katana'));
+                        name: 'Ren',
+                        inventory: { currency: { yen: 20000 }, items: [] } } } }) });
+  check('a stale bundle copy does not un-buy it', selected.inventory.items.some(i => i.name === 'Katana'));
+  check('a stale bundle copy does not refill the purse',
+        selected.inventory.currency.yen === 115000);
 
   // ── 4. Deleting still deletes — the protection must not be a ratchet ────
   // If "keep anything the server has that we lack" were unconditional, no

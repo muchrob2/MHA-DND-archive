@@ -353,7 +353,15 @@ async function applyGrant() {
   try {
     // One transaction per recipient: they are separate documents now, and
     // a single failure should not take the rest of the grant with it.
+    //
+    // "No inventory document yet" and "the write blew up" are different
+    // problems with different fixes — the first wants the migration button
+    // below, the second wants the actual error read. Lumping a thrown
+    // exception in with the missing ones reported a permission failure or a
+    // dropped connection as "not yet in the bundle", which sends the DM to
+    // re-run a migration that was never the problem.
     const missing = [];
+    const failed = [];
     for (const file of files) {
       try {
         await db.runTransaction(async (tx) => {
@@ -376,18 +384,23 @@ async function applyGrant() {
           tx.set(FS_LEDGER_DOC, appendToLedger(ledgerSnap, [entry]));
         });
       } catch (e) {
-        missing.push(file);
+        console.error('[admin] grant to ' + file + ' failed:', e);
+        failed.push({ file, message: e.code || e.message || String(e) });
       }
     }
 
     const nameOf = f => (rosterStudents.find(s => s.file === f) || {}).name || f;
-    const granted = files.length - missing.length;
+    const granted = files.length - missing.length - failed.length;
     logGrant(`${grantSummary(spec)} → ${granted} character${granted === 1 ? '' : 's'}`);
+
+    const notes = [];
+    if (missing.length) notes.push(`no inventory yet (run the migration below): ${missing.map(nameOf).join(', ')}`);
+    if (failed.length) notes.push(`failed: ${failed.map(f => `${nameOf(f.file)} — ${f.message}`).join('; ')}`);
     setGrantStatus(
-      missing.length
-        ? `Granted to ${granted}. Not yet in the bundle: ${missing.map(nameOf).join(', ')}`
+      notes.length
+        ? `Granted to ${granted}. ${notes.join('. ')}`
         : `Granted to ${granted} character${granted === 1 ? '' : 's'} ✓`,
-      missing.length ? 'warn' : 'ok'
+      failed.length ? 'err' : missing.length ? 'warn' : 'ok'
     );
   } catch (e) {
     setGrantStatus('Could not grant: ' + e.message, 'err');

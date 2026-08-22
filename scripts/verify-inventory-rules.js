@@ -112,6 +112,23 @@ check('the toolkit strips inventory from every save',
   /const \{ inventory, \.\.\.rest \} = c;/.test(read('CLASS-1A/relationships.js')),
   'a sheet save carrying a stale purse would undo a purchase');
 
+/* ── The bundle is not allowed to speak for inventory ────────────
+   Symmetry with the check above: stripped on the way out, stripped on the
+   way in. The bundle's inventory keys are migration-era fossils that no
+   longer move, so applying one over the live copy makes a grant or a
+   purchase appear to fail. And the tab needs its own listener, because the
+   collection it now reads is not the document it was listening to. */
+const toolkitSrc = read('CLASS-1A/relationships.js');
+check('the toolkit strips inventory from every snapshot it applies',
+  /Object\.assign\(c, stripInventory\(/.test(toolkitSrc),
+  'the bundle still carries a stale inventory for every character');
+check('the toolkit watches the inventories collection live',
+  /FS_INVENTORIES\.onSnapshot\(/.test(toolkitSrc),
+  'without it a grant or purchase never shows up until a reload');
+check('the toolkit ignores a cached inventory replay',
+  /function startInventoryLiveSync[\s\S]*?fromCache/.test(toolkitSrc),
+  'a replayed cache is this tab\'s own stale copy, not news');
+
 /* ── The migration ──────────────────────────────────────────────── */
 check('the admin page can move inventories across',
   /async function migrateInventories\(\)/.test(adminSrc));

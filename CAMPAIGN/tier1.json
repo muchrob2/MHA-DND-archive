@@ -131,7 +131,7 @@
       "arc_type": "Downtime / social arc",
       "sessions": "1-2",
       "summary": "The class moves into Heights Alliance. No combat. Pure character chaos — this is how a class becomes a class instead of a results column.",
-      "dm_setup": "Heights Alliance in the first week is burnt rice, an argument about whose turn it is to do dishes, and Zaro's fog drifting into a room a half-second before she does, startling someone new every other day. Toshida's speech bubble catches on a doorway again. Nakaya insists the toaster was already broken. These are small, and that's the whole point — this is where personality shows up without a quirk attached to it, and the best moments are the ones nobody scheduled: an unplanned late-night conversation, a rivalry starting over something as small as who gets the last of the good rice.",
+      "dm_setup": "Heights Alliance in the first week is burnt rice, an argument about whose turn it is to do dishes, and Toshida's speech bubble catching on a doorway again. Nakaya insists the toaster was already broken. These are small, and that's the whole point — this is where personality shows up without a quirk attached to it, and the best moments are the ones nobody scheduled: an unplanned late-night conversation, a rivalry starting over something as small as who gets the last of the good rice.",
       "major_beats": [
         {
           "name": "Moving Day",
@@ -171,7 +171,6 @@
         }
       ],
       "minor_beats": [
-        "Zaro's first appearance in the common room is the fog before she is — someone nearly walks straight into a drift of deep purple haze in the corner, then jumps when a flat voice from inside it says: 'I was here first.'",
         "Kinosho is found asleep in the stairwell between floors two and three. This becomes her primary spot. She has others. Nobody has catalogued them all.",
         "First communal cooking attempt goes badly. Samitsu watches from the doorway, says nothing, and is in the kitchen unprompted the next night. Nobody has had a bad meal since.",
         "Ichitaka projects a small hologram bird onto his own desk for no stated reason and lets it sit there for an hour before dismissing it. He doesn't explain. It looked like art.",
@@ -256,8 +255,7 @@
       "minor_beats": [
         "Masahata distributes a weakness analysis to his team the night before. His team splits up to 'optimise' and immediately stops communicating. His analysis was correct. Their execution wasn't.",
         "Izuto's engine timing misfires at the worst moment — he overshoots the flag zone entirely. Audible.",
-        "Ren starts before the signal. Oshiro: 'Foul.' Hamagawa, consulting a rulebook that has no clear entry for this: 'Actually—' Oshiro overrules her. Points stand. Hamagawa makes a note anyway.",
-        "Zaro wins her matchup by portaling behind the flag line before anyone's finished scanning the field. Technically within the rules. Masahata's chart gets a correction: 'Quirk: Warp Gate, underweighted in initial analysis.'"
+        "Ren starts before the signal. Oshiro: 'Foul.' Hamagawa, consulting a rulebook that has no clear entry for this: 'Actually—' Oshiro overrules her. Points stand. Hamagawa makes a note anyway."
       ],
       "npc_interactions": [
         {
@@ -288,7 +286,7 @@
           "enemies": "NPC versions of the opposing student team — simplified stats: HP = 15 + (3 × level), AC = 11 + DEX mod, attack +3 to hit, 1d6 + STR/DEX damage.",
           "terrain": "Open training ground, four cover positions, two flag zones, one central choke point.",
           "setup": "Two-team capture the flag. Elimination by tag, HP-to-0, or a 3-second grapple hold. No lethal quirk use.",
-          "tactics": "NPC students play to their actual character strengths — Yoshibara duplicates immediately, Zaro drops a fog shroud and pre-places a portal, Masahata executes his plan regardless of whether it's working.",
+          "tactics": "NPC students play to their actual character strengths — Yoshibara duplicates immediately, Masahata executes his plan regardless of whether it's working.",
           "rewards": "Winning team picks: extended curfew, premium meals, priority training room access, or a reasonable player suggestion."
         }
       ],

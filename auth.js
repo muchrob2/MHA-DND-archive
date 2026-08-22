@@ -41,6 +41,16 @@
   window.isAdmin = function () {
     return currentState.role === 'admin';
   };
+  /* The key an editable-character assignment is stored under.
+     admin.js writes these from its checkboxes, characters.js builds the
+     same string as _staticId, and heropad.js matches roster students
+     against it. Three files spelling out `type + '::' + name` separately
+     is how heropad.js ended up asking for a numeric roster id instead and
+     silently matching nothing for months. One definition, here. */
+  window.fbCharacterKey = function (type, name) {
+    return String(type) + '::' + String(name);
+  };
+
   window.canEdit = function (characterId) {
     if (currentState.role === 'admin') return true;
     if (characterId != null && currentState.role === 'editor') {

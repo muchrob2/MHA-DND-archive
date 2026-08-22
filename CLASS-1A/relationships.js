@@ -75,18 +75,43 @@ function buildBundle() {
 // Inventories are fetched separately and hung onto the character objects, so
 // the Inventory tab and its totals keep working unchanged. Nothing writes
 // them back from this page.
+const FS_INVENTORIES = db.collection('inventories');
+
+function applyInventorySnapshot(snap) {
+  const byFile = {};
+  snap.forEach(doc => { byFile[doc.id] = doc.data(); });
+  for (const c of CHARACTERS) {
+    if (c._file && byFile[c._file]) c.inventory = byFile[c._file];
+  }
+}
+
 async function loadInventories() {
   try {
-    const snap = await db.collection('inventories').get();
-    const byFile = {};
-    snap.forEach(doc => { byFile[doc.id] = doc.data(); });
-    for (const c of CHARACTERS) {
-      if (c._file && byFile[c._file]) c.inventory = byFile[c._file];
-    }
+    applyInventorySnapshot(await FS_INVENTORIES.get());
   } catch {
     // Falls back to whatever the bundle still holds, which during the
     // migration is exactly right.
   }
+}
+
+/* A grant from the admin page and a purchase from the Shop both land in the
+   inventories collection, not in the bundle this page listens to — so without
+   a listener of its own the Inventory tab showed whatever was true when the
+   page opened and nothing after that. The DM would grant an item, switch to
+   this tab, see no change, and reasonably conclude the grant had failed.
+
+   Inventory is read-only here (canEditInventory is never true), so there is
+   no local edit to protect and no dirty-window question to answer: the
+   server's copy is always the right one to show. Same fromCache guard the
+   bundle listener uses — a replayed cache is this tab's own stale copy, not
+   news. */
+async function startInventoryLiveSync() {
+  await fbAuthReady;
+  FS_INVENTORIES.onSnapshot((snap) => {
+    if (snap.metadata?.fromCache) return;
+    applyInventorySnapshot(snap);
+    renderSynced();
+  }, err => console.error('[relationships] inventory sync stopped:', err));
 }
 
 // Attacks and inventory items are edited live by whoever has this character
@@ -221,43 +246,31 @@ function nextSyncBaseline(data, prevBaseline, dirtyCharFiles) {
   return Object.assign({}, data, { characters });
 }
 
-/* The inventory counters a DM grants in bulk from admin.js. Unlike attacks,
-   items and pools — which are id-keyed arrays that fsMergeSave merges
-   element-by-element — these are plain numbers nested in objects, and
-   deepMergeLocalOverServer resolves plain values local-wins. That is the
-   right default for single-actor state, but it makes a grant losable: if a
-   player has ANY unsaved edit on their sheet, the character is dirty, the
-   incoming grant is skipped by the loop below, and their next save writes
-   the pre-grant number straight back over it. The DM sees "granted ✓" and
-   the money quietly disappears.
+/* ── The bundle's inventory is a fossil ─────────────────────────────
+   Every character in mha-dnd/relationships-bundle still carries an
+   `inventory` key: the migration deliberately left those copies in place
+   so a bad day could be undone (see migrateInventories in admin.js), and
+   buildBundle() has stripped inventory from every save since, so they
+   have not moved an inch. Today they all still read ¥20,000 / no items.
 
-   mergeGrantCounters closes that by doing for these counters what
-   fsMergeSave does for arrays: a 3-way compare against the last-synced
-   baseline. A counter the player has not personally touched since that
-   baseline is not really "their edit" just because some other field on the
-   same sheet is dirty, so it takes the remote value; a counter they *have*
-   touched stays local. Only a genuine conflict — player and DM both editing
-   the same counter inside the same unsaved window — falls back to
-   last-writer-wins, which is the same rule the rest of the sheet follows. */
-const GRANT_COUNTER_GROUPS = ['currency', 'parts', 'points'];
+   That makes them actively dangerous on the way *in*. loadInventories()
+   hangs the real inventory off each character at startup, and then the
+   first bundle snapshot — which arrives seconds later, and again whenever
+   anyone saves anything — used to Object.assign the fossil straight over
+   it. The Inventory tab would show the correct purse and items for a
+   moment, then silently revert to the pre-migration numbers: a granted
+   item or a shop purchase would land in Firestore correctly and vanish
+   off the screen, which is indistinguishable from the write having
+   failed.
 
-function mergeGrantCounters(local, remote, baseline) {
-  const remoteInv = remote?.inventory;
-  if (!remoteInv) return;
-  local.inventory = local.inventory || {};
-  for (const group of GRANT_COUNTER_GROUPS) {
-    const remoteGroup = remoteInv[group];
-    if (!remoteGroup) continue;
-    const baseGroup = baseline?.inventory?.[group] || {};
-    const localGroup = local.inventory[group] = local.inventory[group] || {};
-    for (const key of Object.keys(remoteGroup)) {
-      // Absent and 0 are the same thing for a counter, so both sides are
-      // normalised before comparing — otherwise a never-initialised key
-      // reads as an edit and permanently rejects every grant to it.
-      const untouchedLocally = (localGroup[key] || 0) === (baseGroup[key] || 0);
-      if (untouchedLocally) localGroup[key] = remoteGroup[key];
-    }
-  }
+   So inventory is stripped on the way in exactly as buildBundle strips it
+   on the way out. The collection is the only source; the bundle's copy is
+   never read. stripInventory() also guards the day someone finally
+   deletes those keys — an absent key is simply nothing to strip. */
+function stripInventory(remoteChar) {
+  if (!remoteChar || remoteChar.inventory === undefined) return remoteChar;
+  const { inventory, ...rest } = remoteChar;
+  return rest;
 }
 
 function applyRemoteRelBundle(data) {
@@ -265,14 +278,13 @@ function applyRemoteRelBundle(data) {
 
   for (const c of CHARACTERS) {
     if (!c._file || !data.characters?.[c._file]) continue;
-    if (_dirtyCharFiles.has(c._file)) {
-      // Unsaved local edits — the sheet is left alone, except for granted
-      // counters the player has not themselves touched (see above).
-      mergeGrantCounters(c, data.characters[c._file], _lastSyncedRel?.characters?.[c._file]);
-      continue;
-    }
+    // Unsaved local edits — the sheet is left alone. There is nothing to
+    // rescue out of the bundle for inventory any more: grants and purchases
+    // go to the inventories collection, which startInventoryLiveSync watches
+    // independently of whether the sheet is dirty.
+    if (_dirtyCharFiles.has(c._file)) continue;
     const f = c._file, rid = c._roster_id, sec = c._section;
-    Object.assign(c, data.characters[c._file]);
+    Object.assign(c, stripInventory(data.characters[c._file]));
     c._file = f; c._roster_id = rid; c._section = sec;
     ensureCharIds(c); // backfill in case this remote copy predates the id fix
   }
@@ -1462,6 +1474,7 @@ function renderDiceHistory() {
   });
   selected = CHARACTERS[0];
   await loadInventories();
+  startInventoryLiveSync();
   if (fsBundle) startRelLiveSync();
   renderSidebar();
   renderProfile();

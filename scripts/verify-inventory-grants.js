@@ -200,66 +200,100 @@ const toolkitTests = `
   check('an existing pool id is left alone', c.inventory.pools[0].id === kept);
 })();
 
-// ── A grant must survive landing on a sheet with unsaved edits ────────────
-// The expensive failure: player has an unfinished edit anywhere on their
-// sheet, DM grants ¥5,000, the snapshot is skipped as "dirty", and the
-// player's next save writes the pre-grant number back. The DM sees success
-// and the money is gone.
+// ── The bundle must never speak for inventory again ───────────────────────
+// The expensive failure, and the one this replaced: mha-dnd/relationships-
+// bundle still carries an 'inventory' key for all twenty characters, frozen
+// at migration time (¥20,000, no items) because buildBundle has stripped
+// inventory from every save since. applyRemoteRelBundle used to Object.assign
+// that fossil straight over the live inventory loaded from the collection —
+// so a grant or a purchase landed in Firestore correctly and then vanished
+// off the Inventory tab the moment any bundle snapshot arrived, which is
+// exactly what a failed write looks like from the DM's chair.
 (function () {
   renderProfile = function () {}; renderRelationships = function () {}; refreshSidebar = function () {};
 
+  const live = { currency: { yen: 8000 }, points: { ftp: 4 },
+                 items: [{ id: 'item-1', name: 'Wallet', qty: 1, notes: '' }] };
   CHARACTERS = [{ _file: 'a.json', _roster_id: 1, _section: 'class-1a', name: 'A',
-                  HP: 30, inventory: { currency: { yen: 100 }, points: { ftp: 1 } } }];
+                  HP: 30, inventory: live }];
   selected = CHARACTERS[0];
   rels = {};
   _dirtyRelKeys = new Map();
-  _lastSyncedRel = { characters: { 'a.json': { inventory: { currency: { yen: 100 }, points: { ftp: 1 } } } } };
-
-  // The player edits HP (not money) and has not saved yet.
-  CHARACTERS[0].HP = 25;
-  _dirtyCharFiles = new Map([['a.json', 1]]);
+  _dirtyCharFiles = new Map();
+  _lastSyncedRel = null;
   document._active = null;
 
+  // A snapshot of the bundle as it actually is today: stale inventory and all.
   applyRemoteRelBundle({ version: 1, relationships: {}, characters: { 'a.json': {
-    name: 'A', HP: 30, inventory: { currency: { yen: 5100 }, points: { ftp: 4 } } } } });
+    name: 'A', HP: 31,
+    inventory: { currency: { yen: 20000 }, points: {}, items: [] } } } });
 
-  check('a grant reaches a dirty sheet the player was not editing',
-        CHARACTERS[0].inventory.currency.yen === 5100);
-  check('a granted point counter reaches it too', CHARACTERS[0].inventory.points.ftp === 4);
+  check('a bundle snapshot does not overwrite the purse',
+        CHARACTERS[0].inventory.currency.yen === 8000);
+  check('a bundle snapshot does not wipe granted items',
+        CHARACTERS[0].inventory.items.length === 1);
+  check('a bundle snapshot does not reset point counters',
+        CHARACTERS[0].inventory.points.ftp === 4);
+  check('the rest of the sheet still takes the remote update',
+        CHARACTERS[0].HP === 31);
+})();
+
+// Same again while the sheet has unsaved edits. The dirty branch skips the
+// character entirely, so inventory is safe there for a different reason —
+// but it must stay safe, because that branch used to reach into the bundle
+// for grant counters and would now be pulling in fossils.
+(function () {
+  CHARACTERS = [{ _file: 'a.json', _roster_id: 1, _section: 'class-1a', name: 'A',
+                  HP: 25, inventory: { currency: { yen: 8000 } } }];
+  selected = CHARACTERS[0];
+  _lastSyncedRel = { characters: { 'a.json': { inventory: { currency: { yen: 8000 } } } } };
+  _dirtyCharFiles = new Map([['a.json', 1]]);
+
+  applyRemoteRelBundle({ version: 1, relationships: {}, characters: { 'a.json': {
+    name: 'A', HP: 30, inventory: { currency: { yen: 20000 } } } } });
+
+  check('a dirty sheet keeps its real purse too',
+        CHARACTERS[0].inventory.currency.yen === 8000);
   check('the unsaved local edit is still protected', CHARACTERS[0].HP === 25);
 })();
 
-// A counter the player IS editing stays theirs — last-writer-wins, same as
-// every other field on the sheet.
+// ── The collection is the only thing that may move inventory ──────────────
+// And it must land whether or not the sheet has unsaved edits: inventory is
+// read-only on this page, so there is never a local edit to protect.
 (function () {
+  const mkSnap = (byFile) => ({
+    metadata: { fromCache: false },
+    forEach(fn) { for (const id of Object.keys(byFile)) fn({ id, data: () => byFile[id] }); },
+  });
+
   CHARACTERS = [{ _file: 'a.json', _roster_id: 1, _section: 'class-1a', name: 'A',
-                  inventory: { currency: { yen: 100 } } }];
+                  inventory: { currency: { yen: 100 }, items: [] } }];
   selected = CHARACTERS[0];
-  _lastSyncedRel = { characters: { 'a.json': { inventory: { currency: { yen: 100 } } } } };
-  CHARACTERS[0].inventory.currency.yen = 250;      // player spent some
-  _dirtyCharFiles = new Map([['a.json', 1]]);
+  _dirtyCharFiles = new Map();
 
-  applyRemoteRelBundle({ version: 1, relationships: {}, characters: { 'a.json': {
-    inventory: { currency: { yen: 5100 } } } } });
+  applyInventorySnapshot(mkSnap({ 'a.json': {
+    currency: { yen: 5100 }, parts: { pro: 6 },
+    items: [{ id: 'item-9', name: 'Hero Medkit', qty: 1, notes: '' }] } }));
 
-  check('a counter the player is editing is not overwritten',
-        CHARACTERS[0].inventory.currency.yen === 250);
-})();
-
-// A counter that has never existed locally must still be grantable: absent
-// and 0 have to compare equal, or the first grant to any new counter is
-// rejected forever.
-(function () {
-  CHARACTERS = [{ _file: 'a.json', _roster_id: 1, _section: 'class-1a', name: 'A', inventory: {} }];
-  selected = CHARACTERS[0];
-  _lastSyncedRel = { characters: { 'a.json': {} } };
-  _dirtyCharFiles = new Map([['a.json', 1]]);
-
-  applyRemoteRelBundle({ version: 1, relationships: {}, characters: { 'a.json': {
-    inventory: { parts: { pro: 6 } } } } });
-
-  check('a first-ever grant to an uninitialised counter lands',
+  check('a grant arriving on the collection lands',
+        CHARACTERS[0].inventory.currency.yen === 5100);
+  check('a first-ever counter arrives with it',
         CHARACTERS[0].inventory.parts.pro === 6);
+  check('a granted item arrives with it',
+        CHARACTERS[0].inventory.items.length === 1);
+
+  // Dirty sheet, same result.
+  _dirtyCharFiles = new Map([['a.json', 1]]);
+  applyInventorySnapshot(mkSnap({ 'a.json': { currency: { yen: 7000 }, items: [] } }));
+  check('the collection reaches a dirty sheet as well',
+        CHARACTERS[0].inventory.currency.yen === 7000);
+
+  // A character with no document of its own is left alone rather than blanked.
+  CHARACTERS.push({ _file: 'b.json', _roster_id: 2, _section: 'class-1a', name: 'B',
+                    inventory: { currency: { yen: 42 } } });
+  applyInventorySnapshot(mkSnap({ 'a.json': { currency: { yen: 7000 }, items: [] } }));
+  check('a character absent from the snapshot keeps what it had',
+        CHARACTERS[1].inventory.currency.yen === 42);
 })();
 
 shared.toolkitKeys = {

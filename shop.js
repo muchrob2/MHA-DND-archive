@@ -169,13 +169,16 @@ function spendFromWallet(currency, cost) {
 
 /* ── Applying a basket ─────────────────────────────────────
    What a line *does* depends on its entry's `kind`:
-     item    — appends an inventory row (with a stable id, so the toolkit's
-               merge layer treats it as an addition rather than replacing
-               the whole array)
-     part    — increments the matching crafting-part counter instead, since
-               parts are quantities on the Inventory tab, not rows
+     part    — increments the matching crafting-part counter, since parts
+               are quantities on the Inventory tab, not rows
      service — deducts money only. A hospital stay is not a thing you carry,
                and adding "Hospital Stay ×3" to a backpack reads as a bug.
+     item    — appends an inventory row (with a stable id, so the toolkit's
+               merge layer treats it as an addition rather than replacing
+               the whole array). This is the DEFAULT, not a third named
+               case: the catalogue card labels everything that is not a
+               part or a service an "inventory item", and a kind the card
+               calls an item must be delivered as one.
 
    A basket checks out as ONE all-or-nothing spend rather than as a series
    of individual purchases. Spending per line would let a basket half
@@ -190,11 +193,28 @@ function basketTotal(lines) {
   return (lines || []).reduce((sum, l) => sum + lineCost(l), 0);
 }
 
+// Where a line ends up, in the buyer's words. The receipt prints this so a
+// purchase that correctly adds nothing to the Items list — a part, which is a
+// counter, or a service, which is a haircut — says so at the moment of sale
+// instead of looking like a write that failed.
+function lineDestination(entry) {
+  if (entry.kind === 'part') return 'crafting parts';
+  if (entry.kind === 'service') return 'service — nothing added to the sheet';
+  return 'items';
+}
+
 function applyLineEffect(inventory, entry, qty) {
   if (entry.kind === 'part') {
     inventory.parts = inventory.parts || {};
     inventory.parts[entry.partKey] = (inventory.parts[entry.partKey] || 0) + qty;
-  } else if (entry.kind === 'item') {
+  } else if (entry.kind === 'service') {
+    // Money only. A hospital stay is not a thing you carry.
+  } else {
+    // Anything else is a thing you carry. Deliberately the default rather
+    // than `=== 'item'`: the catalogue card calls every non-part, non-service
+    // entry an "inventory item", so a mistyped or missing kind used to charge
+    // full price and hand over nothing at all, silently. Now the behaviour
+    // matches the label the buyer was shown.
     inventory.items = Array.isArray(inventory.items) ? inventory.items : [];
     inventory.items.push({
       id: genId('item'),
@@ -203,7 +223,6 @@ function applyLineEffect(inventory, entry, qty) {
       notes: itemNotes(entry),
     });
   }
-  // services: money only, handled by the single spend below
 }
 
 // `lines` is [{ entry, qty, unitPrice }]. Mutates `inventory`; on failure it
@@ -705,7 +724,9 @@ async function checkout() {
 
     const who = (ROSTER.find(s => s.file === file) || {}).name || file;
     const total = basketTotal(lines);
-    for (const l of lines) logReceipt(`${l.qty} × ${l.entry.name} → ${who} (${yen(lineCost(l))})`);
+    for (const l of lines) {
+      logReceipt(`${l.qty} × ${l.entry.name} → ${who} (${yen(lineCost(l))}) · ${lineDestination(l.entry)}`);
+    }
     logReceipt(`— checkout total ${yen(total)} —`);
 
     // Only cleared once the write has committed. Clearing optimistically

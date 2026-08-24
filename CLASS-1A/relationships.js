@@ -15,7 +15,76 @@ let activeTab = 'personality';
 let rels = {};
 let currentView = 'character';
 
-const SECTION_ORDER  = ['class-1a'];
+/* ── Categories ────────────────────────────────────────────
+   Every person sits in exactly one category, and that category is the
+   heading they appear under in the sidebar. The page used to have two,
+   spelled as a boolean: is_pc true meant "Player Characters", false meant
+   "Class 1-A". Anything else — teachers, villains, a rival class — had no
+   way to exist here at all.
+
+   The category is now a label on the character (`_group`), and the list of
+   categories is whatever labels are in use, so typing a new one on the way
+   in is all it takes to create it. The two originals stay pinned to the top
+   in their old order; the rest sort alphabetically underneath.
+
+   `is_pc` survives as the derived twin of the Players category. It is what
+   draws the PC badge and the accent avatar, it is stored in the bundle, and
+   other pages read it — so setGroup keeps the two in step rather than
+   leaving a second, disagreeing answer to "is this a player?".
+   ───────────────────────────────────────────────────────── */
+const PLAYERS_GROUP = 'Players';
+const CLASS_GROUP   = 'Class 1-A';
+const DEFAULT_GROUPS = [PLAYERS_GROUP, CLASS_GROUP];
+
+// Derived, never backfilled onto every character at load: writing _group to
+// all twenty at startup would mark the whole roster dirty and put a field in
+// the bundle for people who never needed one. Only an actual choice writes it.
+function groupOf(c) {
+  if (c && c._group) return c._group;
+  return (c && c.is_pc) ? PLAYERS_GROUP : CLASS_GROUP;
+}
+
+// The two defaults first, then everything in use, alphabetically. Order is
+// deliberately not "first seen": the sidebar would then reshuffle its
+// headings depending on who happened to load first.
+function allGroups() {
+  const seen = new Set(DEFAULT_GROUPS);
+  const extra = [];
+  for (const c of CHARACTERS) {
+    const g = groupOf(c);
+    if (!seen.has(g)) { seen.add(g); extra.push(g); }
+  }
+  extra.sort((a, b) => a.localeCompare(b));
+  return DEFAULT_GROUPS.concat(extra);
+}
+
+function setGroup(c, group) {
+  if (!c || !group) return;
+  c._group = group;
+  c.is_pc = group === PLAYERS_GROUP;
+  sortCharacters();
+  scheduleCharSave(c);
+}
+
+// Avatar colours follow the category. The classes already existed for the
+// sections this page used to show; unknown categories share the neutral one
+// rather than being handed a colour that means something else.
+const GROUP_AV = {
+  [PLAYERS_GROUP]: 'av-pc',
+  [CLASS_GROUP]:   'av-npc',
+  'Class 1-B':     'av-1b',
+  'Teachers':      'av-teacher',
+  'Villains':      'av-villain',
+};
+const AV_COLORS = {
+  'av-pc':         ['var(--accent-light)',  'var(--accent-text)'],
+  'av-npc':        ['var(--teal-light)',    'var(--teal-text)'],
+  'av-1b':         ['var(--amber-light)',   'var(--amber-text)'],
+  'av-teacher':    ['var(--green-light)',   'var(--green-text)'],
+  'av-villain':    ['var(--red-light)',     'var(--red-text)'],
+  'av-supporting': ['var(--primary-light)', 'var(--primary-text)'],
+};
+function avClassOf(c) { return GROUP_AV[groupOf(c)] || 'av-supporting'; }
 
 /* ── Save status ──────────────────────────────────────── */
 function setSaveStatus(state, text) {
@@ -510,11 +579,18 @@ function onSubFieldChange(field, value) {
   scheduleCharSave(selected);
   if (field === 'quirk') refreshSidebar();
 }
-function onCategoryChange(value) {
-  selected.is_pc = value === 'pc';
-  scheduleCharSave(selected);
+function onGroupChange(value) {
+  let group = value;
+  if (group === NEW_GROUP_OPTION) {
+    group = (prompt('New category name?') || '').trim();
+    // Cancelled or blank: re-render so the dropdown snaps back to the
+    // category the character is actually in, rather than sitting on "+ New".
+    if (!group) { renderProfile(); return; }
+  }
+  setGroup(selected, group);
   refreshSidebar();
   renderProfile();
+  renderRelationships();
 }
 
 /* ── Adding people ─────────────────────────────────────────
@@ -560,13 +636,14 @@ function dedupeRosterIds(chars) {
 // Every field is optional everywhere it is read (`c.HP || 10`, `c.personality
 // || {}` and so on), so a new person needs only enough to render a sheet; the
 // rest is filled in by editing the tabs like any other character.
-function newCustomCharacter(name) {
+function newCustomCharacter(name, group) {
   const clean = String(name || '').trim();
   if (!clean) return null;
+  const g = String(group || '').trim() || CLASS_GROUP;
   const ability_scores = {}, modifiers = {};
   for (const k of STAT_KEYS) { ability_scores[k] = 10; modifiers[k] = 0; }
   return {
-    name: clean, quirk: '', is_pc: false,
+    name: clean, quirk: '', _group: g, is_pc: g === PLAYERS_GROUP,
     level: 1, HP: 10, AC: 10,
     ability_scores, modifiers,
     // Unique per add rather than derived from the name or the id: it is the
@@ -579,10 +656,10 @@ function newCustomCharacter(name) {
   };
 }
 
-// Split from onAddPerson so the verification script can add a person without
-// stubbing prompt().
-function addPerson(name) {
-  const c = newCustomCharacter(name);
+// Split from the add panel so the verification script can add a person
+// without driving a form.
+function addPerson(name, group) {
+  const c = newCustomCharacter(name, group);
   if (!c) return null;
   CHARACTERS.push(c);
   dedupeRosterIds(CHARACTERS);
@@ -598,17 +675,89 @@ function addPerson(name) {
   return c;
 }
 
-function onAddPerson() {
+/* ── The add panel ─────────────────────────────────────────
+   Two fields rather than a prompt(): a name and a category are one decision
+   made together, and prompt() can only ask for one thing at a time — asking
+   twice in a row would also mean typing a category that already exists
+   instead of picking it.
+   ───────────────────────────────────────────────────────── */
+const NEW_GROUP_OPTION = '__new';
+
+function groupOptionsHtml(current) {
+  const opts = allGroups().map(g =>
+    `<option value="${escHtml(g)}"${g === current ? ' selected' : ''}>${escHtml(g)}</option>`);
+  opts.push(`<option value="${NEW_GROUP_OPTION}">+ New category…</option>`);
+  return opts.join('');
+}
+
+function openAddPerson() {
   if (!canWrite) return;
-  const name = prompt('Name of the new person?');
-  if (name === null || !name.trim()) return;
-  addPerson(name);
+  const panel = document.getElementById('add-person-panel');
+  const sel   = document.getElementById('add-person-group');
+  const name  = document.getElementById('add-person-name');
+  if (!panel || !sel || !name) return;
+  // Defaults to the category of whoever is open: adding three teachers in a
+  // row shouldn't mean choosing "Teachers" three times.
+  sel.innerHTML = groupOptionsHtml(groupOf(selected));
+  name.value = '';
+  panel.style.display = '';
+  const btn = document.getElementById('add-person-btn');
+  if (btn) btn.style.display = 'none';
+  name.focus();
+}
+
+function closeAddPerson() {
+  const panel = document.getElementById('add-person-panel');
+  if (panel) panel.style.display = 'none';
+  const name = document.getElementById('add-person-name');
+  if (name) name.value = '';
+  refreshAddPersonBtn();
+}
+
+// "+ New category…" is an item in the menu rather than a second text box, so
+// the common case — a category that already exists — stays one click.
+function onAddGroupPick(value) {
+  const sel = document.getElementById('add-person-group');
+  if (!sel || value !== NEW_GROUP_OPTION) return;
+  const group = (prompt('New category name?') || '').trim();
+  if (!group) { sel.value = groupOf(selected); return; }
+  addGroupOption(sel, group);
+}
+
+// A category exists because somebody is in it, so one invented here has
+// nowhere to live until the person using it is actually added — it waits in
+// the dropdown, in front of the "+ New category…" item.
+function addGroupOption(sel, group) {
+  const already = Array.from(sel.options).some(o => o.value === group);
+  if (!already) {
+    const opt = document.createElement('option');
+    opt.value = group;
+    opt.textContent = group;
+    sel.insertBefore(opt, sel.options[sel.options.length - 1]);
+  }
+  sel.value = group;
+}
+
+function submitAddPerson() {
+  const nameEl = document.getElementById('add-person-name');
+  const sel    = document.getElementById('add-person-group');
+  const name   = (nameEl && nameEl.value || '').trim();
+  if (!name) { if (nameEl) nameEl.focus(); return; }
+  let group = sel && sel.value;
+  if (!group || group === NEW_GROUP_OPTION) group = CLASS_GROUP;
+  addPerson(name, group);
+  closeAddPerson();
   if (isMobileLayout()) document.getElementById('app').classList.add('mobile-main');
 }
 
 function refreshAddPersonBtn() {
   const btn = document.getElementById('add-person-btn');
   if (btn) btn.style.display = canWrite ? '' : 'none';
+  // Signing out with the panel open would otherwise leave it there.
+  if (!canWrite) {
+    const panel = document.getElementById('add-person-panel');
+    if (panel) panel.style.display = 'none';
+  }
 }
 
 async function onDeletePerson() {
@@ -685,13 +834,15 @@ function customCharsFromBundle(bundle, skipFiles) {
   return out;
 }
 
-// PCs first, then the class in roster order, with added people (numbered from
-// 1000) after the twenty. Named because both startup and every add need it.
+// Category order first (the same order the sidebar prints its headings in),
+// then roster order within a category — which puts added people, numbered
+// from 1000, after the twenty. Named because startup, every add and every
+// category change all need it.
 function sortCharacters() {
+  const order = allGroups();
   CHARACTERS.sort((a, b) => {
-    const si = SECTION_ORDER.indexOf(a._section) - SECTION_ORDER.indexOf(b._section);
-    if (si !== 0) return si;
-    if (a._section === 'class-1a') { if (a.is_pc !== b.is_pc) return a.is_pc ? -1 : 1; }
+    const gi = order.indexOf(groupOf(a)) - order.indexOf(groupOf(b));
+    if (gi !== 0) return gi;
     return a._roster_id - b._roster_id;
   });
 }
@@ -699,20 +850,49 @@ function sortCharacters() {
 /* ── Sidebar ──────────────────────────────────────────── */
 function initials(name) { return name.split(' ').slice(0,2).map(w=>w[0]).join(''); }
 
-const AV_CLASS = { 'class-1a': c => c.is_pc ? 'av-pc' : 'av-npc' };
+/* Collapse state is per category and lives in localStorage, so shutting the
+   twenty-strong class to get at the four teachers underneath survives a
+   reload. Same storage-per-thing shape the relationship list already uses.
+
+   Collapsed members are still rendered, just hidden — see filterList, where a
+   search has to be able to reach into a shut category. */
+function groupCollapseKey(group) { return 'relGroupCollapsed-' + group; }
+function isGroupCollapsed(group) { return localStorage.getItem(groupCollapseKey(group)) === '1'; }
+
+// Takes the category's index rather than its name: the name is free text the
+// DM typed, and threading a string with an apostrophe in it through an inline
+// onclick= is how that button quietly stops working. Both ends read the same
+// allGroups() ordering, and any change to it re-renders these handlers.
+function toggleGroup(index) {
+  const group = allGroups()[index];
+  if (!group) return;
+  localStorage.setItem(groupCollapseKey(group), isGroupCollapsed(group) ? '0' : '1');
+  refreshSidebar();
+}
 
 function renderSidebar() {
-  const visible = CHARACTERS;
-
   let html = '';
-  const pcs = visible.filter(c => c.is_pc), npcs = visible.filter(c => !c.is_pc);
-  if (pcs.length)  { html += '<div class="section-label">Player Characters</div>'; for (const c of pcs)  html += charItem(c); }
-  if (npcs.length) { html += '<div class="section-label">Class 1-A</div>'; for (const c of npcs) html += charItem(c); }
+  allGroups().forEach((g, i) => {
+    const members = CHARACTERS.filter(c => groupOf(c) === g);
+    // An empty category is one nobody is in any more — it stops existing
+    // rather than leaving a bare heading behind.
+    if (!members.length) return;
+    const collapsed = isGroupCollapsed(g);
+    html += `<div class="char-group${collapsed ? ' collapsed' : ''}">
+      <button class="section-label group-header" onclick="toggleGroup(${i})"
+        title="Show or hide this category" aria-expanded="${!collapsed}">
+        <span class="group-caret">▾</span>
+        <span class="group-name">${escHtml(g)}</span>
+        <span class="group-count">${members.length}</span>
+      </button>
+      ${members.map(c => charItem(c)).join('')}
+    </div>`;
+  });
   document.getElementById('char-list').innerHTML = html;
 }
 
 function charItem(c) {
-  const av = (AV_CLASS[c._section] || (()=>'av-npc'))(c);
+  const av = avClassOf(c);
   const active = selected && c._roster_id === selected._roster_id ? ' active' : '';
   const sub = c._alias ? c._alias : c.quirk;
   return `<div class="char-item${active}" onclick="selectChar(${c._roster_id})" id="item-${c._roster_id}">
@@ -759,6 +939,11 @@ function mobileFwd(view) {
 
 function filterList(q) {
   const query = q.toLowerCase();
+  // A search reaches into collapsed categories. Leaving a match hidden
+  // because its heading happens to be shut is indistinguishable, from the
+  // other side of the screen, from there being no such person.
+  const list = document.getElementById('char-list');
+  if (list) list.classList.toggle('searching', !!q);
   document.querySelectorAll('.char-item').forEach(el => {
     const name = el.querySelector('.char-name').textContent.toLowerCase();
     const quirk = el.querySelector('.char-quirk').textContent.toLowerCase();
@@ -772,8 +957,7 @@ function renderProfile() {
   const c = selected;
   const avEl = document.getElementById('profile-avatar');
   avEl.textContent = initials(c.name);
-  const SEC_COLORS = { 'class-1a': c.is_pc ? ['var(--accent-light)','var(--accent-text)'] : ['var(--teal-light)','var(--teal-text)'], 'class-1b': ['var(--amber-light)','var(--amber-text)'], teachers: ['var(--green-light)','var(--green-text)'], villains: ['var(--red-light)','var(--red-text)'], supporting: ['rgba(99,102,241,0.13)','#a5b4fc'] };
-  const [avBg, avColor] = SEC_COLORS[c._section || 'class-1a'] || SEC_COLORS['class-1a'];
+  const [avBg, avColor] = AV_COLORS[avClassOf(c)] || AV_COLORS['av-npc'];
   avEl.style.background = avBg; avEl.style.color = avColor;
   document.getElementById('profile-name').innerHTML =
     `<input class="name-input" type="text" value="${escHtml(c.name||'')}" onchange="onNameChange(this.value)" title="Character name">`;
@@ -781,10 +965,7 @@ function renderProfile() {
   document.getElementById('profile-sub').innerHTML = `
     <input class="sub-input sub-input-quirk" type="text" value="${escHtml(c.quirk||'')}" placeholder="Quirk" onchange="onSubFieldChange('quirk',this.value)" title="Quirk">
     <span class="sub-sep">·</span>
-    <select class="sub-select" onchange="onCategoryChange(this.value)" title="Category">
-      <option value="npc" ${!c.is_pc?'selected':''}>Class 1-A</option>
-      <option value="pc" ${c.is_pc?'selected':''}>Player Character</option>
-    </select>
+    <select class="sub-select" onchange="onGroupChange(this.value)" title="Category">${groupOptionsHtml(groupOf(c))}</select>
     <span class="sub-sep">·</span>
     <input class="sub-input" type="text" value="${escHtml(c.physiology||'')}" placeholder="Physiology" onchange="onSubFieldChange('physiology',this.value)" title="Physiology">
     <span class="sub-sep">·</span>
@@ -1417,7 +1598,7 @@ function onTabEdit(value) {
 /* ── Relationships ────────────────────────────────────── */
 function renderRelationships() {
   const c = selected;
-  document.getElementById('rel-heading').textContent = c.name+"'s view of classmates";
+  document.getElementById('rel-heading').textContent = c.name+"'s view of the cast";
   const others = CHARACTERS.filter(o => o._roster_id !== c._roster_id && o._section === 'class-1a');
   let html = '';
   for (const o of others) {
@@ -1425,11 +1606,15 @@ function renderRelationships() {
     const score = rel.score||0;
     const scoreStr = score>0?'+'+score:''+score;
     const scoreClass = score<0?'score-neg':score>0?'score-pos':'score-zero';
-    const av = o.is_pc?'av-pc':'av-npc';
+    const av = avClassOf(o);
+    // Their category, except for the class itself — which is the default and
+    // would just repeat the same three words down the whole list.
+    const og = groupOf(o);
+    const sub = [o.quirk, og === CLASS_GROUP ? '' : og].filter(Boolean).join(' · ');
     html += `<div class="rel-row">
       <div><div style="display:flex;align-items:center;gap:6px">
         <div class="char-avatar ${av}" style="width:24px;height:24px;font-size:9px;flex-shrink:0">${initials(o.name)}</div>
-        <div><div class="rel-char-name">${o.name}</div><div class="rel-char-quirk">${o.quirk}${o.is_pc?' · PC':''}</div></div>
+        <div><div class="rel-char-name">${o.name}</div><div class="rel-char-quirk">${escHtml(sub)}</div></div>
       </div></div>
       <div class="rel-controls">
         <div class="slider-wrap"><input type="range" class="rel-slider" min="-10" max="10" step="1" value="${score}" oninput="setRelScore(${c._roster_id},${o._roster_id},this.value)"></div>

@@ -34,7 +34,16 @@
     <input id="search" type="text" placeholder="Search characters..." autocomplete="off" oninput="filterList(this.value)">
     <div id="char-list"></div>
     <!-- Hidden until the signed-in user can write; relationships.js shows it. -->
-    <button id="add-person-btn" class="btn" onclick="onAddPerson()" style="display:none;" title="Add someone to the class list">+ Add person</button>
+    <button id="add-person-btn" class="btn" onclick="openAddPerson()" style="display:none;" title="Add someone to the list">+ Add person</button>
+    <div id="add-person-panel" style="display:none;">
+      <input id="add-person-name" type="text" placeholder="Name" autocomplete="off"
+        onkeydown="if(event.key==='Enter')submitAddPerson();else if(event.key==='Escape')closeAddPerson();">
+      <select id="add-person-group" onchange="onAddGroupPick(this.value)" title="Category"></select>
+      <div id="add-person-actions">
+        <button class="btn" onclick="submitAddPerson()">Add</button>
+        <button class="btn" onclick="closeAddPerson()">Cancel</button>
+      </div>
+    </div>
   </div>
 
   <div id="main">
@@ -78,7 +87,7 @@
             <div class="leg"><div class="leg-dot" style="background:var(--text-dim)"></div>Neutral</div>
             <div class="leg"><div class="leg-dot" style="background:var(--accent)"></div>Positive</div>
           </div>
-          <button id="rel-toggle-btn" class="enc-btn" onclick="toggleRelCollapse()" title="Show/hide classmates" style="margin-left:10px;">▾</button>
+          <button id="rel-toggle-btn" class="enc-btn" onclick="toggleRelCollapse()" title="Show/hide the cast" style="margin-left:10px;">▾</button>
         </div>
         <div id="rel-list"></div>
       </div>

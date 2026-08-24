@@ -250,6 +250,19 @@
       "personality_tag": "Intelligent and self-reliant; prefers to figure things out independently",
       "notable_trait": "Black textured crew cut; engine protrusions on legs; needs juice to operate at full capacity",
       "file": "izuto_kutsu.json"
+    },
+    {
+      "id": 20,
+      "name": "Hiro",
+      "quirk": "Doll",
+      "gender": "Male",
+      "height": "5'6\"",
+      "physiology": "Heteromorph",
+      "role": "Recon / Expendable Position",
+      "is_pc": false,
+      "personality_tag": "Dry and unhurried; will answer anything completely the moment somebody actually asks",
+      "notable_trait": "Body is constructed rather than grown; feels no pain, does not bleed, and is in the support lab most Thursdays",
+      "file": "hiro.json"
     }
   ]
 }

@@ -56,7 +56,10 @@ let canEditInventory = false;
 
 document.addEventListener('auth-state-changed', (e) => {
   canWrite = e.detail.role === 'admin' || e.detail.role === 'editor';
-  if (selected) showTab(activeTab);
+  refreshAddPersonBtn();
+  // renderProfile rather than showTab: the Remove button for an added person
+  // lives in the profile header, and it is gated on canWrite too.
+  if (selected) renderProfile();
 });
 
 function buildBundle() {
@@ -288,10 +291,38 @@ function applyRemoteRelBundle(data) {
     c._file = f; c._roster_id = rid; c._section = sec;
     ensureCharIds(c); // backfill in case this remote copy predates the id fix
   }
+  syncCustomRoster(data);
   // Cloned because the Object.assign above hands `data`'s sub-objects to the
   // live characters — an uncloned baseline would alias them from here on.
   _lastSyncedRel = fsCloneDoc(nextSyncBaseline(data, _lastSyncedRel, _dirtyCharFiles.keys()));
   renderSynced();
+}
+
+/* Someone added or removed from another tab changes the *list*, which the
+   loop above cannot express: it only updates characters this tab already
+   knows about, so a new classmate would stay invisible until a reload and a
+   removed one would linger.
+
+   Removal needs the same care as an edit. A person added here and not yet
+   saved is missing from the bundle for exactly the same reason a person
+   deleted elsewhere is — so anything still dirty, and anything at all while a
+   save is in flight, is left alone. Only roster people and saved additions
+   are ever matched against the bundle. */
+function syncCustomRoster(data) {
+  const known = new Set(CHARACTERS.map(c => c._file));
+  const added = customCharsFromBundle(data, known);
+  if (added.length) CHARACTERS.push(...added);
+
+  let removed = 0;
+  if (!_relSavePending) {
+    const remote = data.characters || {};
+    const before = CHARACTERS.length;
+    CHARACTERS = CHARACTERS.filter(c =>
+      !c._custom || remote[c._file] !== undefined || _dirtyCharFiles.has(c._file));
+    removed = before - CHARACTERS.length;
+    if (removed && selected && !CHARACTERS.includes(selected)) selected = CHARACTERS[0] || null;
+  }
+  if (added.length || removed) sortCharacters();
 }
 
 function renderSynced() {
@@ -486,6 +517,185 @@ function onCategoryChange(value) {
   renderProfile();
 }
 
+/* ── Adding people ─────────────────────────────────────────
+   The class list is built from roster.json, a file in the repo — which the
+   browser cannot write to. So a person added here is stored in the Firestore
+   bundle instead, alongside everyone's sheet data, and carries `_custom: true`
+   to say where they came from.
+
+   That flag is a whitelist, not a description. The bundle also holds fossil
+   entries for people deliberately removed from the roster (Zaro Brando, for
+   one), and reading in "every character the bundle has that roster.json
+   doesn't" would walk them all straight back in. Only entries this page
+   created are picked up.
+   ───────────────────────────────────────────────────────── */
+
+// _roster_id is the identity used in relationship keys ("3:17") and in DOM
+// ids, so it must never collide with a roster id — including one added to
+// roster.json later. Added people are numbered from 1000 up, well clear of a
+// class of twenty.
+const CUSTOM_ID_BASE = 1000;
+
+function nextCustomRosterId(chars) {
+  let max = CUSTOM_ID_BASE - 1;
+  for (const c of (chars || CHARACTERS)) {
+    if (Number.isFinite(c._roster_id) && c._roster_id > max) max = c._roster_id;
+  }
+  return max + 1;
+}
+
+// Two tabs adding someone before either has saved allocate the same id from
+// the same highest-in-use number. The bundle keys people by _file (unique per
+// add, so both survive as separate people), but a shared _roster_id would make
+// them share relationships as well — every note about one showing up on the
+// other. Whoever loses the race gets renumbered on the way in instead.
+function dedupeRosterIds(chars) {
+  const seen = new Set();
+  for (const c of chars) {
+    while (seen.has(c._roster_id)) c._roster_id = nextCustomRosterId(chars);
+    seen.add(c._roster_id);
+  }
+}
+
+// Every field is optional everywhere it is read (`c.HP || 10`, `c.personality
+// || {}` and so on), so a new person needs only enough to render a sheet; the
+// rest is filled in by editing the tabs like any other character.
+function newCustomCharacter(name) {
+  const clean = String(name || '').trim();
+  if (!clean) return null;
+  const ability_scores = {}, modifiers = {};
+  for (const k of STAT_KEYS) { ability_scores[k] = 10; modifiers[k] = 0; }
+  return {
+    name: clean, quirk: '', is_pc: false,
+    level: 1, HP: 10, AC: 10,
+    ability_scores, modifiers,
+    // Unique per add rather than derived from the name or the id: it is the
+    // bundle's key for this person, and a collision would merge two people
+    // into one document.
+    _file: genId('custom') + '.json',
+    _roster_id: nextCustomRosterId(),
+    _section: 'class-1a',
+    _custom: true,
+  };
+}
+
+// Split from onAddPerson so the verification script can add a person without
+// stubbing prompt().
+function addPerson(name) {
+  const c = newCustomCharacter(name);
+  if (!c) return null;
+  CHARACTERS.push(c);
+  dedupeRosterIds(CHARACTERS);
+  sortCharacters();
+  // Unsaved until the Save button is clicked, exactly like every other edit on
+  // this page — and being dirty is also what stops an incoming snapshot (which
+  // knows nothing about this person yet) from treating them as deleted.
+  markCharDirty(c._file);
+  selected = c;
+  renderSidebar();
+  renderProfile();
+  renderRelationships();
+  return c;
+}
+
+function onAddPerson() {
+  if (!canWrite) return;
+  const name = prompt('Name of the new person?');
+  if (name === null || !name.trim()) return;
+  addPerson(name);
+  if (isMobileLayout()) document.getElementById('app').classList.add('mobile-main');
+}
+
+function refreshAddPersonBtn() {
+  const btn = document.getElementById('add-person-btn');
+  if (btn) btn.style.display = canWrite ? '' : 'none';
+}
+
+async function onDeletePerson() {
+  const c = selected;
+  if (!c || !c._custom || !canWrite) return;
+  if (!confirm(`Remove ${c.name}? Their sheet and every relationship note about them go with them, for everyone.`)) return;
+  const file = c._file, id = c._roster_id;
+
+  const orphanKeys = Object.keys(rels).filter(k => {
+    const [from, to] = k.split(':');
+    return Number(from) === id || Number(to) === id;
+  });
+  for (const k of orphanKeys) { delete rels[k]; _dirtyRelKeys.delete(k); }
+  _dirtyCharFiles.delete(file);
+  CHARACTERS = CHARACTERS.filter(o => o._file !== file);
+  selected = CHARACTERS[0] || null;
+
+  renderSidebar();
+  if (selected) { renderProfile(); renderRelationships(); }
+  refreshSaveBar();
+  await deletePersonRemotely(file, orphanKeys);
+}
+
+// Leaving someone out of the next save does NOT delete them. fsMergeSave
+// merges local over server and keeps server keys the local copy lacks — that
+// is what makes two people editing different characters safe, and it would
+// resurrect this person on the next save anybody made. The key has to be
+// removed explicitly.
+//
+// FieldPath (rather than a dotted 'characters.foo.json' string) because both
+// halves of the key contain dots and colons: a dotted path would be read as
+// four nested fields instead of one name.
+async function deletePersonRemotely(file, relKeys) {
+  if (!_lastSyncedRel || !_lastSyncedRel.characters || _lastSyncedRel.characters[file] === undefined) {
+    // Never reached the server — added and removed inside one sitting, or the
+    // page is running on the local-JSON fallback. Nothing to delete.
+    return;
+  }
+  setSaveStatus('saving', 'Removing…');
+  try {
+    await fbAuthReady;
+    const del = firebase.firestore.FieldValue.delete();
+    const args = [new firebase.firestore.FieldPath('characters', file), del];
+    for (const k of relKeys) args.push(new firebase.firestore.FieldPath('relationships', k), del);
+    await FS_REL_DOC.update(...args);
+    // Keep the merge baseline honest about what the server now holds.
+    delete _lastSyncedRel.characters[file];
+    if (_lastSyncedRel.relationships) for (const k of relKeys) delete _lastSyncedRel.relationships[k];
+    if (isDirty()) setSaveStatus('dirty', 'Unsaved changes');
+    else setSaveStatus('saved', 'Removed ' + new Date().toLocaleTimeString());
+  } catch (e) {
+    setSaveStatus('error', 'Remove failed: ' + e.message);
+  }
+}
+
+// Added people out of a bundle. `skipFiles` is whatever is already accounted
+// for — the roster's files at startup, the whole current list on a live
+// snapshot.
+function customCharsFromBundle(bundle, skipFiles) {
+  const out = [];
+  for (const [file, raw] of Object.entries((bundle && bundle.characters) || {})) {
+    if (!raw || !raw._custom || skipFiles.has(file)) continue;
+    const c = Object.assign({}, stripInventory(raw));
+    c._file = file;
+    c._section = 'class-1a';
+    c._custom = true;
+    c._roster_id = Number(raw._roster_id);
+    // A nameless or unnumbered entry has no identity to render or to key
+    // relationships by; skipping it is better than showing a blank row.
+    if (!c.name || !Number.isFinite(c._roster_id)) continue;
+    ensureCharIds(c);
+    out.push(c);
+  }
+  return out;
+}
+
+// PCs first, then the class in roster order, with added people (numbered from
+// 1000) after the twenty. Named because both startup and every add need it.
+function sortCharacters() {
+  CHARACTERS.sort((a, b) => {
+    const si = SECTION_ORDER.indexOf(a._section) - SECTION_ORDER.indexOf(b._section);
+    if (si !== 0) return si;
+    if (a._section === 'class-1a') { if (a.is_pc !== b.is_pc) return a.is_pc ? -1 : 1; }
+    return a._roster_id - b._roster_id;
+  });
+}
+
 /* ── Sidebar ──────────────────────────────────────────── */
 function initials(name) { return name.split(' ').slice(0,2).map(w=>w[0]).join(''); }
 
@@ -597,6 +807,12 @@ function renderProfile() {
   tagHtml += `<div class="stat-chip" title="Proficiency bonus (level ${lv})">Prof +${prof}</div>`;
   tagHtml += `<div class="stat-chip" title="Passive Perception = 10 + WIS mod + Prof">Passive ${passivePerc}</div>`;
   tagHtml += `<button class="profile-action-btn" onclick="copyStatBlock()" title="Copy stat block to clipboard">⧉ Copy</button>`;
+  // Only people added from this page can be removed here. Deleting a roster
+  // student would leave roster.json disagreeing with the bundle, and they'd
+  // reappear on the next load anyway.
+  if (c._custom && canWrite) {
+    tagHtml += `<button class="profile-action-btn danger" onclick="onDeletePerson()" title="Remove this person">✕ Remove</button>`;
+  }
   tags.innerHTML = tagHtml;
 
   const sc = c.ability_scores || {};
@@ -1444,6 +1660,11 @@ function renderDiceHistory() {
       c.name = c.name || s.name; c.quirk = c.quirk || s.quirk;
       return c;
     }).filter(c => c.name);
+    // People added from this page — they exist only in the bundle, because
+    // roster.json is a repo file the browser cannot write to.
+    const rosterFiles = new Set(CHARACTERS.map(c => c._file));
+    CHARACTERS.push(...customCharsFromBundle(fsBundle, rosterFiles));
+    dedupeRosterIds(CHARACTERS);
     setSaveStatus('saved', 'Loaded from Firestore ✓');
   } else {
     const [relsRes, ...charResults] = await Promise.all([
@@ -1466,16 +1687,12 @@ function renderDiceHistory() {
   // as "nothing changed here" and write the server's old copy back over it.
   if (fsBundle) _lastSyncedRel = fsCloneDoc(fsBundle);
 
-  CHARACTERS.sort((a, b) => {
-    const si = SECTION_ORDER.indexOf(a._section) - SECTION_ORDER.indexOf(b._section);
-    if (si !== 0) return si;
-    if (a._section === 'class-1a') { if (a.is_pc !== b.is_pc) return a.is_pc ? -1 : 1; }
-    return a._roster_id - b._roster_id;
-  });
+  sortCharacters();
   selected = CHARACTERS[0];
   await loadInventories();
   startInventoryLiveSync();
   if (fsBundle) startRelLiveSync();
+  refreshAddPersonBtn();
   renderSidebar();
   renderProfile();
   renderRelationships();

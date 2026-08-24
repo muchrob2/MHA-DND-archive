@@ -242,6 +242,61 @@ refreshSidebar = function () { renderCount++; };
   check('unknown id is a safe no-op', selected.quirk_mechanics.abilities.length === 1);
 })();
 
+// ── Scenario F: people added from this page ────────────────────────────────
+// roster.json is a repo file, so someone added here exists only in the
+// Firestore bundle. The risk is the list-reconciling path: to a live snapshot,
+// a person this tab added and hasn't saved yet is indistinguishable from a
+// person another tab deleted — both are simply absent from the bundle.
+(function () {
+  CHARACTERS = [{ _file: 'a.json', _roster_id: 1, _section: 'class-1a', name: 'A', is_pc: false }];
+  selected = CHARACTERS[0];
+  rels = {}; _dirtyRelKeys = new Map(); _dirtyCharFiles = new Map();
+  _lastSyncedRel = null; _relSavePending = false; document._active = null;
+
+  const added = addPerson('  Nurse Chiyo  ');
+  check('added person is named and trimmed', added.name === 'Nurse Chiyo');
+  check('added person is numbered clear of the roster', added._roster_id >= 1000);
+  check('added person is flagged as custom', added._custom === true);
+  check('adding marks them unsaved', _dirtyCharFiles.has(added._file));
+  check('added person is in the save bundle',
+        buildBundle().characters[added._file].name === 'Nurse Chiyo');
+
+  // The "my new person vanished" failure: a snapshot that predates the save.
+  applyRemoteRelBundle({ version: 1, relationships: {}, characters: { 'a.json': { name: 'A' } } });
+  check('an unsaved addition survives a snapshot without them', CHARACTERS.includes(added));
+
+  // Saved, and now coming back from the server.
+  _dirtyCharFiles.delete(added._file);
+  const withThem = { 'a.json': { name: 'A' } };
+  withThem[added._file] = { name: 'Nurse Chiyo', _custom: true, _roster_id: added._roster_id };
+  applyRemoteRelBundle({ version: 1, relationships: {}, characters: withThem });
+  check('a saved addition stays after it round-trips',
+        CHARACTERS.some(c => c._file === added._file));
+
+  // Deleted from another tab: gone from the bundle, nothing dirty locally.
+  applyRemoteRelBundle({ version: 1, relationships: {}, characters: { 'a.json': { name: 'A' } } });
+  check('a remote removal drops them here', !CHARACTERS.some(c => c._file === added._file));
+  check('selection falls back to someone real', selected && CHARACTERS.includes(selected));
+
+  // Someone else's addition, and a fossil that must stay dead: the bundle
+  // still holds characters removed from the roster on purpose, and they carry
+  // no _custom flag precisely so this path ignores them.
+  applyRemoteRelBundle({ version: 1, relationships: {}, characters: {
+    'a.json': { name: 'A' },
+    'custom-zz.json': { name: 'Recovery Girl', _custom: true, _roster_id: 1007 },
+    'zaro_brando.json': { name: 'Zaro Brando' } } });
+  check("another tab's addition appears here", CHARACTERS.some(c => c.name === 'Recovery Girl'));
+  check('a roster fossil does not come back', !CHARACTERS.some(c => c.name === 'Zaro Brando'));
+
+  // Two tabs allocating from the same high-water mark get the same id. The
+  // bundle keys people by file so both survive, but a shared _roster_id would
+  // mean shared relationship keys — every note about one showing on the other.
+  const clash = [{ _file: 'x.json', _roster_id: 1000, name: 'X' },
+                 { _file: 'y.json', _roster_id: 1000, name: 'Y' }];
+  dedupeRosterIds(clash);
+  check('colliding ids are separated', clash[0]._roster_id !== clash[1]._roster_id);
+})();
+
 // ── Scenario C: dirty state drives the Save button and unload warning ───────
 (function () {
   _dirtyRelKeys = new Map(); _dirtyCharFiles = new Map(); _relSavePending = false;

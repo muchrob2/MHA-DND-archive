@@ -90,6 +90,35 @@ body { height: 100vh; overflow: hidden; }
 }
 #add-person-btn:hover { color: var(--accent-text); background: var(--accent-light); border-color: var(--accent); }
 
+/* Name and category are one decision, so they are asked for together. Takes
+   the button's place while it is open. */
+#add-person-panel {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+}
+#add-person-name,
+#add-person-group {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: var(--fs-xs);
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+}
+#add-person-group { cursor: pointer; }
+#add-person-group option { background: var(--surface2); color: var(--text); }
+#add-person-name:focus, #add-person-group:focus { border-color: var(--accent); }
+#add-person-actions { display: flex; gap: 6px; }
+#add-person-actions .btn { flex: 1; padding: 6px 10px; font-size: var(--fs-2xs); }
+#add-person-actions .btn:hover { color: var(--accent-text); background: var(--accent-light); border-color: var(--accent); }
+
 /* ⚠ collision: a small sidebar group header, NOT the display
    heading manga.css gives .section-label on the hub */
 .section-label {
@@ -104,6 +133,37 @@ body { height: 100vh; overflow: hidden; }
   color: var(--text-dim);
 }
 .section-label::before { content: none; }
+
+/* ── Collapsible categories ──
+   Members stay in the DOM when a category is shut: filterList adds
+   .searching to #char-list so a search can still surface them, and the
+   inline display it writes per row decides which. */
+.section-label.group-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding-bottom: 4px;
+  text-align: left;
+}
+.section-label.group-header:hover { color: var(--text-muted); background: var(--surface2); }
+.group-caret {
+  font-size: 9px;
+  line-height: 1;
+  transition: transform var(--dur);
+}
+.char-group.collapsed .group-caret { transform: rotate(-90deg); }
+.group-name { flex: 1; }
+.group-count {
+  padding: 1px 6px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-dim);
+  background: var(--surface2);
+  border-radius: 999px;
+}
+.char-group.collapsed .char-item { display: none; }
+#char-list.searching .char-group.collapsed .char-item { display: flex; }
 
 .char-item {
   display: flex;

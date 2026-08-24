@@ -60,7 +60,14 @@ var document = {
   createElement() { return mkEl('tmp'); },
 };
 var window = { addEventListener() {}, innerWidth: 1200 };
-var localStorage = { getItem() { return null; }, setItem() {} };
+// A real store rather than a black hole: category collapse is persisted
+// through it, so a stub that forgets everything would pass whatever it was
+// asked.
+var localStorage = (function () {
+  const store = new Map();
+  return { getItem(k) { return store.has(k) ? store.get(k) : null; },
+           setItem(k, v) { store.set(k, String(v)); } };
+})();
 var setInterval = function () { return 0; };
 var setTimeout = function () { return 0; };
 var fetch = function () { return new Promise(function () {}); }; // never settles: the page's init IIFE just suspends
@@ -295,6 +302,111 @@ refreshSidebar = function () { renderCount++; };
                  { _file: 'y.json', _roster_id: 1000, name: 'Y' }];
   dedupeRosterIds(clash);
   check('colliding ids are separated', clash[0]._roster_id !== clash[1]._roster_id);
+})();
+
+// ── Scenario G: categories ─────────────────────────────────────────────────
+// The sidebar heading a person appears under used to be a boolean (is_pc), so
+// teachers, villains and rival classes had nowhere to be. It is a label now,
+// with is_pc kept as the derived twin of the Players category — the risk being
+// the two drifting apart and disagreeing about who is a player.
+(function () {
+  CHARACTERS = [
+    { _file: 'p.json', _roster_id: 1, _section: 'class-1a', name: 'Ren',  is_pc: true },
+    { _file: 'a.json', _roster_id: 2, _section: 'class-1a', name: 'Kibi', is_pc: false },
+  ];
+  selected = CHARACTERS[0];
+  rels = {}; _dirtyRelKeys = new Map(); _dirtyCharFiles = new Map();
+  _lastSyncedRel = null; _relSavePending = false; document._active = null;
+
+  check('a roster PC reads as Players with no category stored',
+        groupOf(CHARACTERS[0]) === PLAYERS_GROUP);
+  check('everyone else reads as Class 1-A', groupOf(CHARACTERS[1]) === CLASS_GROUP);
+  check('reading a category does not write one', CHARACTERS[0]._group === undefined);
+  check('the two defaults are always offered', allGroups().join('|') === 'Players|Class 1-A');
+
+  const teacher = addPerson('Oshiro Daikichi', 'Teachers');
+  check('an added person keeps the category they were given', teacher._group === 'Teachers');
+  check('a category other than Players is not a PC', teacher.is_pc === false);
+  check('a new category exists once someone is in it', allGroups().includes('Teachers'));
+  check('the defaults stay pinned in front',
+        allGroups()[0] === PLAYERS_GROUP && allGroups()[1] === CLASS_GROUP);
+  check('the category is saved with the sheet',
+        buildBundle().characters[teacher._file]._group === 'Teachers');
+  check('the category picks the avatar colour', avClassOf(teacher) === 'av-teacher');
+  check('an unnamed category gets the neutral avatar',
+        avClassOf({ _group: 'Support Staff' }) === 'av-supporting');
+
+  const player = addPerson('Smeet Nozoto', PLAYERS_GROUP);
+  check('adding into Players marks them a PC', player.is_pc === true);
+  check('the list is ordered by category, then roster order',
+        CHARACTERS.map(groupOf).join('|') === 'Players|Players|Class 1-A|Teachers');
+
+  const kibi = CHARACTERS.find(c => c.name === 'Kibi');
+  setGroup(kibi, PLAYERS_GROUP);
+  check('a category change carries is_pc with it', kibi.is_pc === true);
+  check('a category change is unsaved until Save is clicked', _dirtyCharFiles.has('a.json'));
+  check('a category change re-sorts the list',
+        CHARACTERS.indexOf(kibi) < CHARACTERS.findIndex(c => groupOf(c) === 'Teachers'));
+
+  setGroup(teacher, CLASS_GROUP);
+  check('a category nobody is in stops existing', !allGroups().includes('Teachers'));
+
+  // A category set in another tab has to arrive like any other sheet field.
+  _dirtyCharFiles = new Map();
+  const remote = { version: 1, relationships: {}, characters: {
+    'p.json': { name: 'Ren', is_pc: false, _group: 'Villains' },
+    'a.json': { name: 'Kibi', is_pc: true, _group: PLAYERS_GROUP } } };
+  remote.characters[teacher._file] = { name: 'Oshiro Daikichi', _custom: true,
+                                       _roster_id: teacher._roster_id, _group: 'Teachers' };
+  remote.characters[player._file]  = { name: 'Smeet Nozoto', _custom: true,
+                                       _roster_id: player._roster_id, _group: PLAYERS_GROUP };
+  applyRemoteRelBundle(remote);
+  check("another tab's category change arrives here",
+        groupOf(CHARACTERS.find(c => c._file === 'p.json')) === 'Villains');
+  check('and it brings the heading back with it', allGroups().includes('Villains'));
+})();
+
+// ── Scenario H: collapsing a category ──────────────────────────────────────
+// Members of a shut category stay in the DOM on purpose — filterList reaches
+// into them — so "collapsed" has to be visible in the markup and in the
+// stored state, not inferred from who got rendered.
+(function () {
+  CHARACTERS = [
+    { _file: 'p.json', _roster_id: 1,    _section: 'class-1a', name: 'Ren',    is_pc: true },
+    { _file: 'a.json', _roster_id: 2,    _section: 'class-1a', name: 'Kibi',   is_pc: false },
+    { _file: 't.json', _roster_id: 1000, _section: 'class-1a', name: 'Oshiro',
+      _group: 'Teachers', _custom: true },
+  ];
+  selected = CHARACTERS[0];
+  els['char-list'].innerHTML = '';
+
+  check('categories start open', isGroupCollapsed(CLASS_GROUP) === false);
+
+  toggleGroup(allGroups().indexOf(CLASS_GROUP));
+  check('a category can be shut', isGroupCollapsed(CLASS_GROUP) === true);
+  check('collapsing one leaves the others alone', isGroupCollapsed('Teachers') === false);
+  // toggleGroup repaints through refreshSidebar, which this harness stubs out
+  // along with the rest of the render layer — so draw it here.
+  renderSidebar();
+  check('the shut category says so in the markup',
+        /char-group collapsed/.test(els['char-list'].innerHTML));
+  check('its heading reports it shut',
+        /aria-expanded="false"/.test(els['char-list'].innerHTML));
+  check('its members are still rendered, for search to reach',
+        els['char-list'].innerHTML.includes('Kibi'));
+  check('the heading carries a head-count', /group-count">1</.test(els['char-list'].innerHTML));
+
+  renderSidebar();
+  check('the state survives a re-render',
+        /char-group collapsed/.test(els['char-list'].innerHTML));
+
+  toggleGroup(allGroups().indexOf(CLASS_GROUP));
+  check('and it opens again', isGroupCollapsed(CLASS_GROUP) === false);
+
+  // The index comes from a rendered handler; a list that has since changed
+  // must not throw.
+  toggleGroup(99);
+  check('an index that no longer exists is a safe no-op', isGroupCollapsed(CLASS_GROUP) === false);
 })();
 
 // ── Scenario C: dirty state drives the Save button and unload warning ───────

@@ -33,6 +33,8 @@
     </div>
     <input id="search" type="text" placeholder="Search characters..." autocomplete="off" oninput="filterList(this.value)">
     <div id="char-list"></div>
+    <!-- Hidden until the signed-in user can write; relationships.js shows it. -->
+    <button id="add-person-btn" class="btn" onclick="onAddPerson()" style="display:none;" title="Add someone to the class list">+ Add person</button>
   </div>
 
   <div id="main">

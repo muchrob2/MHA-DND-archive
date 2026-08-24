@@ -78,6 +78,18 @@ body { height: 100vh; overflow: hidden; }
 
 #char-list { flex: 1; overflow-y: auto; }
 
+/* Sits under the list, outside its scroll area, so it stays reachable with
+   twenty-odd students on screen. Hidden entirely for signed-out viewers —
+   relationships.js toggles it from the auth role. */
+#add-person-btn {
+  flex-shrink: 0;
+  width: calc(100% - 24px);
+  margin: 8px 12px;
+  padding: 7px 10px;
+  font-size: var(--fs-2xs);
+}
+#add-person-btn:hover { color: var(--accent-text); background: var(--accent-light); border-color: var(--accent); }
+
 /* ⚠ collision: a small sidebar group header, NOT the display
    heading manga.css gives .section-label on the hub */
 .section-label {
@@ -273,6 +285,8 @@ body { height: 100vh; overflow: hidden; }
 
 .profile-action-btn { padding: 3px 9px; font-size: var(--fs-2xs); }
 .profile-action-btn:hover { color: var(--accent-text); background: var(--accent-light); border-color: var(--accent); }
+/* destructive — only shown on people added from this page */
+.profile-action-btn.danger:hover { color: var(--red-text); background: var(--red-light); border-color: var(--red); }
 
 #scores-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .score-block {

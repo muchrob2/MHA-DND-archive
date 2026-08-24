@@ -552,6 +552,14 @@ function onAbilityScoreChange(key, value) {
   const c = selected;
   const num = parseInt(value);
   if (isNaN(num)) return;
+  // Not every character arrives with these. A sheet that reached the bundle as
+  // a stub — name and quirk and little else — has neither object, and
+  // renderProfile still draws seven editable inputs for it because it falls
+  // back to 10 per stat. Without this, the first edit throws here, nothing is
+  // marked dirty, and the next render puts 10 back: it looks from the outside
+  // like the page is refusing to save stats.
+  if (!c.ability_scores) c.ability_scores = {};
+  if (!c.modifiers) c.modifiers = {};
   c.ability_scores[key] = num;
   const mod = Math.floor((num - 10) / 2);
   c.modifiers[key] = mod;

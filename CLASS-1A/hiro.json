@@ -1,0 +1,78 @@
+{
+  "name": "Hiro",
+  "is_pc": false,
+  "gender": "Male",
+  "height": "5'6\"",
+  "body_type": "Athletic",
+  "physiology": "Heteromorph",
+  "quirk": "Doll",
+  "quirk_rarity": "Rare",
+  "quirk_type": "Mutant",
+  "appearance": {
+    "hair": "Black, cut short and blunt at the jaw. It is real hair, which is the one part of him people find hardest to account for, and he has never explained it.",
+    "build": "Compact and even. The proportions are slightly too regular, in the way a thing that was measured rather than grown is regular. Nobody notices until they are told, and then nobody stops noticing.",
+    "other": "He does not blink on a schedule. His hands are always exactly the temperature of the room. He wears the standard uniform correctly and completely, every day, including on the days the rest of the class has given up on the tie."
+  },
+  "personality": {
+    "summary": "Dry, unhurried and almost impossible to embarrass. He has spent his whole life being looked at by people who are working out how to ask, and he long ago stopped helping them. Not guarded exactly — he will answer anything, completely, the moment somebody actually asks. Nobody actually asks.",
+    "in_class": "Present, attentive, and the only student in the room who never fidgets. Takes no notes. Does not appear to need to.",
+    "in_combat": "Patient and appallingly willing. He walks into things the rest of the class flinches from, because he does not have the part that flinches. This reads as courage. He has never once claimed it was.",
+    "quirk_of_character": "He never eats with anyone. He is at every meal, sitting at the table, holding a cup he does not drink from, because leaving would be ruder than staying. He has done this every day since April and not one person has mentioned it."
+  },
+  "backstory": "Quirk registration: Doll. Body constructed rather than grown, jointed, dense and insensate, and maintained since before U.A. by people whose job that is. Nobara Forge built the current chassis over three weeks in April, took eleven pounds of food a day doing it, and delivered it herself; he is in the support lab most Thursdays and Forge is markedly more careful with him than she is with anybody's gear. He arrived in April with a school file two pages long, which is unusually short for a hero-course student. Nobody has read past the first page, because nobody has needed to.",
+  "ability_scores": {
+    "note": "TECH is primary and by a distance the highest in the class. CON reflects how the body is built rather than anything he trained. CHA is low not because he is unlikeable but because a face Forge machined does not do the small involuntary things people read.",
+    "STR": 14,
+    "DEX": 12,
+    "CON": 16,
+    "INT": 14,
+    "WIS": 13,
+    "CHA": 8,
+    "TECH": 16
+  },
+  "modifiers": {
+    "STR": 2,
+    "DEX": 1,
+    "CON": 3,
+    "INT": 2,
+    "WIS": 1,
+    "CHA": -1,
+    "TECH": 3
+  },
+  "level": 1,
+  "proficiency_bonus": 2,
+  "quirk_ability": "Technology",
+  "quirk_save_DC": 13,
+  "HP": 11,
+  "AC": 13,
+  "speed": "30 ft",
+  "suggested_class": "Combat Analyst",
+  "class_note": "Combat Analyst suits a student who is, structurally, a camera that can walk. He reads a fight from a position nobody else would survive standing in, and his value to a pair is what he can tell them rather than what he can hit.",
+  "quirk_mechanics": {
+    "source": "Quirk Compendium — Doll",
+    "weakness": "The body does not repair itself. Damage stays exactly where it lands until the support lab deals with it, and he cannot be away from the lab's rig for much more than a day without something going wrong. He feels no pain at all, which sounds like an advantage and is the single most dangerous thing about him — he has no idea he is failing until a limb stops answering. He has no offensive quirk whatsoever; everything he does in a fight, he does with leverage and mass. And at 0 hit points he does not die. He stops, and stays stopped, until somebody rebuilds him, which takes Forge about a week and a great deal of food.",
+    "abilities": [
+      {
+        "name": "Constructed Body",
+        "type": "Passive",
+        "description": "His body is made, not grown. He has full sight, hearing and speech, and no sense of touch, smell or pain whatsoever. He does not breathe, tire, bleed or sleep, and is immune to poison, disease, exhaustion and anything that targets a living body's chemistry. He is inorganic, and effects that specify constructs or inorganic material apply to him — including Ren Suzuki's beam, which does double damage to him, a fact the two of them established once in the first week and have never spoken about since."
+      },
+      {
+        "name": "Dead Weight",
+        "type": "Reaction",
+        "description": "He locks every joint at once. He instantly becomes two hundred pounds of inert mass wherever he happens to be — he cannot be thrown, moved by force effects, or lifted by anything under a Strength of 18, he falls straight down if he was in the air, and anything beneath him takes 2d6 bludgeoning damage. He can release it at the start of his next turn, from the floor. He uses this to block doors, to stop being carried, and once, memorably, on Ando Iorai."
+      },
+      {
+        "name": "Stand In",
+        "type": "Reaction",
+        "description": "A number of times equal to his proficiency bonus per long rest, when an ally within 5 feet is hit by an attack he can make himself the target instead, taking the damage and any effects in their place. He does not have to be asked and does not usually wait to be. His bracket partner has stopped trying to talk him out of it and started building plans around it."
+      }
+    ]
+  },
+  "dm_notes": {
+    "combat_role": "A body that can be spent. He takes positions no fifteen-year-old should take, holds them, and reports. Stand In makes him the single most useful person to have standing next to you in a 2v2 format and almost useless on his own. Do not give him damage. Give him presence in places nobody else can stand.",
+    "social_role": "The class's blind spot, and not through any unkindness — he is simply the person everyone has stopped seeing, which is what he is used to and has never once complained about. When he does say something the room listens, because it happens perhaps twice a term and he has never yet been wrong.",
+    "growth_arc": "Nobody has asked him anything. That is the whole arc and it is not self-pity — he will tell you he finds it restful, and about sixty per cent of that is true. The moment worth playing is a classmate asking him a direct question about himself and waiting for the answer, and Hiro discovering he has an enormous amount to say and no practice at saying it.",
+    "weakness_to_exploit": "He cannot feel damage. An enemy that works on him steadily rather than dramatically will have taken an arm off before he has any reason to look down. He does not heal, so damage accumulates across a whole arc until somebody takes him to the lab. Low CHA: he is the worst person in the class to send to talk to anybody."
+  }
+}

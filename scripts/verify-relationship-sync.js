@@ -366,6 +366,36 @@ refreshSidebar = function () { renderCount++; };
   check('and it brings the heading back with it', allGroups().includes('Villains'));
 })();
 
+// ── Scenario I: editing a character who has no ability_scores ──────────────
+// Hiro reached the live bundle as a stub: name, quirk and a couple of fields,
+// no ability_scores and no modifiers. The sheet still renders seven inputs for
+// him, because renderProfile falls back to 10 per stat — so the score looks
+// editable, the edit throws on the way in, nothing is marked dirty, and the
+// next render puts 10 back. It reads as "the page refuses to save my stats".
+(function () {
+  CHARACTERS = [
+    { _file: 'hiro.json', _roster_id: 20, _section: 'class-1a', name: 'Hiro', quirk: 'Doll' },
+  ];
+  selected = CHARACTERS[0];
+  _dirtyCharFiles = new Map();
+
+  let threw = null;
+  try { onAbilityScoreChange('STR', '14'); } catch (e) { threw = e; }
+
+  check('editing a stat on a scoreless character does not throw', threw === null);
+  check('the typed score is kept', (selected.ability_scores || {}).STR === 14);
+  check('its modifier is derived', (selected.modifiers || {}).STR === 2);
+  check('and the edit is marked dirty so Save can send it',
+        _dirtyCharFiles.has('hiro.json'));
+
+  // A second stat must not wipe the first — the lazy create has to be a
+  // create-if-missing, not a reset.
+  onAbilityScoreChange('CHA', '8');
+  check('a second stat leaves the first alone', selected.ability_scores.STR === 14);
+  check('the second stat lands too', selected.ability_scores.CHA === 8);
+  check('a negative modifier is derived correctly', selected.modifiers.CHA === -1);
+})();
+
 // ── Scenario H: collapsing a category ──────────────────────────────────────
 // Members of a shut category stay in the DOM on purpose — filterList reaches
 // into them — so "collapsed" has to be visible in the markup and in the

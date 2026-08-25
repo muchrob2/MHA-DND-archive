@@ -67,7 +67,7 @@
         }
       ],
       "minor_beats": [
-        "Kinosho is found asleep on a rooftop nobody saw her climb, in the top 5 regardless. When Neutralization actually activates near the end, her eyes flatten to a dull pewter grey for a second before colour drains back in — the first time most of the class sees it happen. Someone will eventually call this 'turning off.'",
+        "Kinji is found asleep on a rooftop nobody saw her climb, in the top 5 regardless. When Neutralization actually activates near the end, her eyes flatten to a dull pewter grey for a second before colour drains back in — the first time most of the class sees it happen. Someone will eventually call this 'turning off.'",
         "Nakaya tries to short a Mk.I drone's targeting system with a controlled arc — drone safety protocols eject her ten feet. She's fine. She's delighted. She scores the point anyway.",
         "Ando's scales shrug off a glancing drone hit and he immediately turns it into a bit for the nearest classmate — the sunglasses do not come off even once, including for the part where a drone detonation goes off directly behind him and everyone sees him flinch first and joke second.",
         "Ichitaka doesn't chase points. He projects a convincing decoy of himself standing still in the open, lets two drones waste their volley on it, and picks off the real targets while they reset. Nobody asked him to be efficient about it. He just is.",
@@ -141,7 +141,7 @@
             "izuto": "Done unpacking in three minutes flat, then spends the rest of the afternoon helping people who didn't ask — he doesn't know how to just sit with nothing to fix.",
             "masahata": "Arrives with a printed floor map and colour-coded furniture proposal. Nobody asked for this.",
             "samitsu": "Quietly claims the kitchen as his own territory within the hour. Nobody argues. Something already smells excellent.",
-            "kinosho": "Her belongings fit in one small bag. Her room has a kettle and nothing else. She seems entirely satisfied by this."
+            "kinji": "Her belongings fit in one small bag. Her room has a kettle and nothing else. She seems entirely satisfied by this."
           }
         },
         {
@@ -171,7 +171,7 @@
         }
       ],
       "minor_beats": [
-        "Kinosho is found asleep in the stairwell between floors two and three. This becomes her primary spot. She has others. Nobody has catalogued them all.",
+        "Kinji is found asleep in the stairwell between floors two and three. This becomes her primary spot. She has others. Nobody has catalogued them all.",
         "First communal cooking attempt goes badly. Samitsu watches from the doorway, says nothing, and is in the kitchen unprompted the next night. Nobody has had a bad meal since.",
         "Ichitaka projects a small hologram bird onto his own desk for no stated reason and lets it sit there for an hour before dismissing it. He doesn't explain. It looked like art.",
         "Toragi leaves something small and useful — a pencil, a snack — on Yoshibara's desk with no note, then leaves before she notices. This happens three more times across the tier. She starts leaving him things back. Neither of them has said a word about it out loud.",
@@ -244,7 +244,7 @@
         {
           "name": "The Moment",
           "description": "One unscripted decision changes the match.",
-          "dm_notes": "If nothing emerges naturally, give it to Kinosho — she was somewhere nobody expected, did something nobody saw coming, and won't explain herself after."
+          "dm_notes": "If nothing emerges naturally, give it to Kinji — she was somewhere nobody expected, did something nobody saw coming, and won't explain herself after."
         },
         {
           "name": "The Exhale",

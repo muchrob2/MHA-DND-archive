@@ -336,7 +336,7 @@ refreshSidebar = function () { renderCount++; };
   check('an unnamed category gets the neutral avatar',
         avClassOf({ _group: 'Support Staff' }) === 'av-supporting');
 
-  const player = addPerson('Smeet Nozoto', PLAYERS_GROUP);
+  const player = addPerson('Kinji Hamakida', PLAYERS_GROUP);
   check('adding into Players marks them a PC', player.is_pc === true);
   check('the list is ordered by category, then roster order',
         CHARACTERS.map(groupOf).join('|') === 'Players|Players|Class 1-A|Teachers');
@@ -358,7 +358,7 @@ refreshSidebar = function () { renderCount++; };
     'a.json': { name: 'Kibi', is_pc: true, _group: PLAYERS_GROUP } } };
   remote.characters[teacher._file] = { name: 'Oshiro Daikichi', _custom: true,
                                        _roster_id: teacher._roster_id, _group: 'Teachers' };
-  remote.characters[player._file]  = { name: 'Smeet Nozoto', _custom: true,
+  remote.characters[player._file]  = { name: 'Kinji Hamakida', _custom: true,
                                        _roster_id: player._roster_id, _group: PLAYERS_GROUP };
   applyRemoteRelBundle(remote);
   check("another tab's category change arrives here",

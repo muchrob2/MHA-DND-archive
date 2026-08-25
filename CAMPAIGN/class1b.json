@@ -518,11 +518,11 @@
       "quirk_type": "Emitter",
       "quirk_summary": "Hatashi's every physical and mental faculty runs slightly, permanently better than baseline — reflexes, strength, memory, recovery, all of it nudged upward by the same small margin. No single spectacular trick, just reliably, measurably better than expected at nearly everything.",
       "personality": "Steady and unflashy, genuinely comfortable being the reliable one instead of the impressive one. Consistent — consistently on time, consistently prepared, consistently the person a study group can count on. Keeps a small notebook of exact numbers — personal bests, reaction times, grip strength — updated after every training session.",
-      "rival_in_1a": "Kinosho Kochimiko",
-      "rivalry_dynamic": "Neutralization vs High Specs. Kinosho can shut a Quirk down on contact — but there's very little to actually neutralize in Hatashi's case, since his advantage is baked into his own body rather than an active effect she can switch off. The fight becomes about whether her tactics still work against someone whose 'Quirk' barely reads as one.",
+      "rival_in_1a": "Kinji Hamakida",
+      "rivalry_dynamic": "Neutralization vs High Specs. Kinji can shut a Quirk down on contact — but there's very little to actually neutralize in Hatashi's case, since his advantage is baked into his own body rather than an active effect she can switch off. The fight becomes about whether her tactics still work against someone whose 'Quirk' barely reads as one.",
       "sports_festival_role": "A generalist who wins by being reliably slightly better across the board rather than spectacularly better at any one thing. In the tournament bracket, any single specialist playing to their one strength usually beats his flat advantage in a direct contest — he has to out-strategize, not out-stat.",
       "tier1_appearance": "Finishes every drone-wave exam drill a few seconds faster than projected, without ever looking like he's trying particularly hard.",
-      "dm_notes": "Hatashi is the class's quiet backbone — people underestimate him right up until he's the one still standing. His rivalry with Kinosho hinges on her tactics not having an obvious lever to pull against him.",
+      "dm_notes": "Hatashi is the class's quiet backbone — people underestimate him right up until he's the one still standing. His rivalry with Kinji hinges on her tactics not having an obvious lever to pull against him.",
       "stat_block": {
         "level": 3, "HP": 22, "AC": 14,
         "STR": 13, "DEX": 13, "CON": 13, "INT": 13, "WIS": 13, "CHA": 13, "TECH": 13

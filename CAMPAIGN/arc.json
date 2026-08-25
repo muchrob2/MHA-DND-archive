@@ -40,8 +40,8 @@
           "beats": [
             "The doorframe incident (Toshida, day one): a word escapes him mid-yawn. A panel falls out of the doorframe. He apologises and fixes it. The panel falls again the next morning. He has quietly named the doorframe Hiroshi and considers this an ongoing rivalry.",
             "The charger incident (Nakaya, day two): she jump-starts Masahata's dead phone charger with a small controlled arc, purely as a favor. It works, technically. It also fuses the charging port shut permanently at roughly double voltage. She considers this an unambiguous success.",
-            "Masahata prints and laminates a ranking chart based on exam scores. It appears on the fridge, fully formatted with tier brackets. No one asked him to do this. Kinosho stares at it for a long time and says nothing.",
-            "Capture the Flag — Oshiro's opening combat class: team assignments calibrated for discomfort, not balance. Yoshibara immediately doubles herself — Oshiro rules it legal because he didn't say it wasn't. Kinosho predicted this exact outcome days ago, told no one, purely to test a hypothesis about whether anyone would believe her if she had. Ando loses to someone he was certain he'd beat and wears his sunglasses for the next 36 hours including during sleep.",
+            "Masahata prints and laminates a ranking chart based on exam scores. It appears on the fridge, fully formatted with tier brackets. No one asked him to do this. Kinji stares at it for a long time and says nothing.",
+            "Capture the Flag — Oshiro's opening combat class: team assignments calibrated for discomfort, not balance. Yoshibara immediately doubles herself — Oshiro rules it legal because he didn't say it wasn't. Kinji predicted this exact outcome days ago, told no one, purely to test a hypothesis about whether anyone would believe her if she had. Ando loses to someone he was certain he'd beat and wears his sunglasses for the next 36 hours including during sleep.",
             "Masahata updates the ranking chart to include 'combat performance (preliminary).' No methodology is explained. It is accurate.",
             "Cafeteria crossover: Class 1-B eats on the same schedule. First real contact is small and unremarkable — a shared table because the room is full, Matsunami's class visibly running a tighter ship than Oshiro's. No rivalry yet, just the first time 1-A registers there's another class exactly like them, a hallway away."
           ],
@@ -89,9 +89,9 @@
           "description": "U.A.'s annual Sports Festival. Public, broadcast, massive audience. Full tournament structure: obstacle race → cavalry battle → individual brackets with Class 1-B competing alongside Class 1-A. The 1-A vs 1-B rivalry becomes concrete here for the first time.",
           "beats": [
             "Pre-festival: the class arrives to a stadium already full. Kazama is recognised from the entrance exam footage and loses his composure for about four seconds — long enough for someone to notice his ears go red before the mirror-bright hardening kicks in and hides it.",
-            "Obstacle race: Ren places first overall; nobody saw him pass anyone, he was just suddenly at the front. Setaka's iron cannon-balls ricochet through a bottleneck and eliminate four competitors at once, and he apologises to each of them individually afterward. Kinosho places top five in a near-sleep state for most of the course. Yamaru Todao (1-B) places third — the class's first look at him in a competitive context.",
+            "Obstacle race: Ren places first overall; nobody saw him pass anyone, he was just suddenly at the front. Setaka's iron cannon-balls ricochet through a bottleneck and eliminate four competitors at once, and he apologises to each of them individually afterward. Kinji places top five in a near-sleep state for most of the course. Yamaru Todao (1-B) places third — the class's first look at him in a competitive context.",
             "Cavalry battle: alliances form and collapse. Class 1-B's coordination is visibly drilled and slightly alarming to watch. Yoshibara doubles the wrong person at the wrong moment — an opponent already in the lead. This becomes a permanent campaign reference.",
-            "Broadcast: the commentary team is unprepared for half the quirks on display. 'What Is She Doing?' about Kinosho trends nationally within twenty minutes. Masahata's ongoing scoring commentary in the waiting room is caught on a spectator's phone and briefly goes viral.",
+            "Broadcast: the commentary team is unprepared for half the quirks on display. 'What Is She Doing?' about Kinji trends nationally within twenty minutes. Masahata's ongoing scoring commentary in the waiting room is caught on a spectator's phone and briefly goes viral.",
             "Post-festival: the ranking chart, brought to the festival laminated, doesn't get updated for four days. When asked why: 'The model is broken.' He reprints it anyway."
           ],
           "tournament_bracket": {
@@ -100,7 +100,7 @@
               "key_moments": [
                 "Ren places 1st overall — nobody saw him pass anyone",
                 "Setaka's iron balls ricochet through a bottleneck and eliminate four at once, apologies included",
-                "Kinosho places top 5 in a near-sleep state for most of the course",
+                "Kinji places top 5 in a near-sleep state for most of the course",
                 "Yamaru Todao (1-B) places 3rd — Class 1-A has had his exam score on the fridge chart since week one"
               ]
             },
@@ -109,7 +109,7 @@
               "key_moments": [
                 "Yoshibara doubles herself mid-battle, then doubles the wrong person — an opponent already in the lead. Her double and the lead-holder collide centre-arena. Scoring briefly favours the class before correcting.",
                 "Class 1-B's coordination is surgical, drilled, and slightly alarming to watch.",
-                "Kinosho's team doesn't appear to be coordinating at all. They place 3rd anyway. Nobody can explain how."
+                "Kinji's team doesn't appear to be coordinating at all. They place 3rd anyway. Nobody can explain how."
               ]
             },
             "event_3_individual_tournament": {
@@ -153,17 +153,17 @@
                 },
                 {
                   "match": "R1-3",
-                  "fighter_a": "Kinosho Kochimiko (1-A)",
+                  "fighter_a": "Kinji Hamakida (1-A)",
                   "fighter_b": "Aikawa Sakume (1-A)",
                   "favored": "Aikawa — massive upset incoming",
-                  "how_it_goes": "Kinosho deactivates Aikawa's iron claws mid-swing, walks up to her, and it's over in about forty seconds. Her eyes flatten to that dull pewter grey for a second when Neutralization triggers — the crowd doesn't understand what happened. 'What Is She Doing?' trends within the hour.",
-                  "winner": "Kinosho Kochimiko",
+                  "how_it_goes": "Kinji deactivates Aikawa's iron claws mid-swing, walks up to her, and it's over in about forty seconds. Her eyes flatten to that dull pewter grey for a second when Neutralization triggers — the crowd doesn't understand what happened. 'What Is She Doing?' trends within the hour.",
+                  "winner": "Kinji Hamakida",
                   "dm_note": "Don't explain the win to the audience — the commentary team can't either. Masahata looks at the chart, says nothing, sits down.",
                   "alternate_outcome": {
                     "if_winner": "Aikawa Sakume",
-                    "how_it_goes": "Neutralization needs a targeting window — the right limb, a moment to close. Aikawa's claws are too fast and varied to give her one. Aikawa lands the hit Kinosho didn't expect, because Kinosho's plan assumed a window that never opened.",
+                    "how_it_goes": "Neutralization needs a targeting window — the right limb, a moment to close. Aikawa's claws are too fast and varied to give her one. Aikawa lands the hit Kinji didn't expect, because Kinji's plan assumed a window that never opened.",
                     "downstream": "Aikawa advances to QF-4 vs Kagamo. Palm Cannon blasts don't care about claws — ranged force beats her close-in strikes before she can close the gap. Kagamo wins.",
-                    "dm_note": "Kinosho watching from the stands afterward is very quiet. She's studying something specific in every subsequent fight."
+                    "dm_note": "Kinji watching from the stands afterward is very quiet. She's studying something specific in every subsequent fight."
                   }
                 },
                 {
@@ -232,8 +232,8 @@
                   "alternate_outcome": {
                     "if_winner": "Domoto Fumiju",
                     "how_it_goes": "She reads the third blast's wind-up and kicks off directly into Kagamo's personal space instead of away from it — too close for a Palm Cannon to aim properly. Neither of them planned for close range. She wins on improvisation, visibly bewildered by her own success.",
-                    "downstream": "Domoto advances to QF-4 vs Kinosho, who simply deactivates the Rabbit Quirk's burst mid-jump. Kinosho wins.",
-                    "dm_note": "Kagamo watching Kinosho work is a quiet beat — genuinely curious, not sore about the loss."
+                    "downstream": "Domoto advances to QF-4 vs Kinji, who simply deactivates the Rabbit Quirk's burst mid-jump. Kinji wins.",
+                    "dm_note": "Kagamo watching Kinji work is a quiet beat — genuinely curious, not sore about the loss."
                   }
                 }
               ],
@@ -282,22 +282,22 @@
                   "alternate_outcome": {
                     "if_winner": "Kazama Kenji",
                     "how_it_goes": "Kazama commits everything to Steel Weapon in the first thirty seconds, before Chozen's damage percentage has climbed anywhere near its threshold. Round 1 Chozen is manageable. Kazama wins before round 3.",
-                    "downstream": "Kazama advances to SF-2 vs Kinosho, who deactivates his Steel mid-harden. His trained physical technique underneath is real but not enough unarmored. Kinosho wins after four rounds.",
+                    "downstream": "Kazama advances to SF-2 vs Kinji, who deactivates his Steel mid-harden. His trained physical technique underneath is real but not enough unarmored. Kinji wins after four rounds.",
                     "dm_note": "The crowd wanted spectacle and got a clean, quiet win instead. Kazama isn't sure how to feel about winning by being less than what people came to see."
                   }
                 },
                 {
                   "match": "QF-4",
                   "fighter_a": "Kagamo Akake (1-B, Seed 4)",
-                  "fighter_b": "Kinosho Kochimiko (1-A)",
-                  "note": "Fighter A is whoever won R1-8 (default Kagamo; Domoto if alt R1-8). Fighter B is whoever won R1-3 (default Kinosho; Aikawa if alt R1-3)",
+                  "fighter_b": "Kinji Hamakida (1-A)",
+                  "note": "Fighter A is whoever won R1-8 (default Kagamo; Domoto if alt R1-8). Fighter B is whoever won R1-3 (default Kinji; Aikawa if alt R1-3)",
                   "favored": "Kagamo",
-                  "how_it_goes": "Kagamo's blasts are pure kinetic force at range — Neutralization can't deactivate something that's already left her hands as displaced air. Her first plan fails visibly. Her second plan is assembling something from arena debris mid-fight; Kagamo ends up briefly airborne, caught by a contraption Kinosho built in forty seconds. She doesn't have a construction quirk. Nobody asks how she did it.",
-                  "winner": "Kinosho Kochimiko",
+                  "how_it_goes": "Kagamo's blasts are pure kinetic force at range — Neutralization can't deactivate something that's already left her hands as displaced air. Her first plan fails visibly. Her second plan is assembling something from arena debris mid-fight; Kagamo ends up briefly airborne, caught by a contraption Kinji built in forty seconds. She doesn't have a construction quirk. Nobody asks how she did it.",
+                  "winner": "Kinji Hamakida",
                   "dm_note": "Kagamo afterward: 'I don't know what she did.' Genuinely interested, not embarrassed.",
                   "alternate_outcome": {
                     "if_winner": "Kagamo Akake",
-                    "how_it_goes": "Kinosho's contraption holds for thirty seconds; a second Palm Cannon blast dismantles it from underneath before the third component locks in. She concedes.",
+                    "how_it_goes": "Kinji's contraption holds for thirty seconds; a second Palm Cannon blast dismantles it from underneath before the third component locks in. She concedes.",
                     "downstream": "Kagamo advances to SF-2 vs Chozen (or Kazama). Against Chozen, the arena chaos and accumulated fight damage feed his escalation and he wins. Against Kazama, her blasts keep breaking his footing before Steel Weapon can close the gap, and Kagamo wins.",
                     "dm_note": "'What Is She Doing?' never airs a second segment. The silence where it would've been is its own thing."
                   }
@@ -323,30 +323,30 @@
                 {
                   "match": "SF-2",
                   "fighter_a": "Chozen Tadachi (1-A)",
-                  "fighter_b": "Kinosho Kochimiko (1-A)",
-                  "note": "Fighter A is whoever won QF-3. Fighter B is whoever won QF-4. Default path is Chozen vs Kinosho.",
-                  "favored": "Kinosho (tactically)",
-                  "how_it_goes": "Kinosho neutralizes Chozen's quirk directly. But Neutralization suppresses the label, not the damage percentage he's already banked from two prior escalating fights today — and any hit that still lands while the quirk is down just keeps that percentage climbing underneath the suppression. She deactivates what she can reach. What's already accumulated keeps feeding itself. Chozen wins, visibly running hot on the way out of the arena.",
+                  "fighter_b": "Kinji Hamakida (1-A)",
+                  "note": "Fighter A is whoever won QF-3. Fighter B is whoever won QF-4. Default path is Chozen vs Kinji.",
+                  "favored": "Kinji (tactically)",
+                  "how_it_goes": "Kinji neutralizes Chozen's quirk directly. But Neutralization suppresses the label, not the damage percentage he's already banked from two prior escalating fights today — and any hit that still lands while the quirk is down just keeps that percentage climbing underneath the suppression. She deactivates what she can reach. What's already accumulated keeps feeding itself. Chozen wins, visibly running hot on the way out of the arena.",
                   "winner": "Chozen Tadachi",
-                  "dm_note": "This is entirely a damage-accumulation mechanic, not an ambient-stress one — Chozen's own sheet is explicit that only actual damage taken raises his Stress percentage. Kinosho can suppress the quirk's active use but not undo banked damage. His win should feel slightly worrying, not triumphant.",
+                  "dm_note": "This is entirely a damage-accumulation mechanic, not an ambient-stress one — Chozen's own sheet is explicit that only actual damage taken raises his Stress percentage. Kinji can suppress the quirk's active use but not undo banked damage. His win should feel slightly worrying, not triumphant.",
                   "alternate_outcome": {
-                    "if_winner": "Kinosho Kochimiko",
+                    "if_winner": "Kinji Hamakida",
                     "how_it_goes": "She keeps landing precise, minimal hits that end exchanges before they add real damage to his total, denying him the accumulation he needs. The suppression holds because there's nothing new feeding it. She closes the window before it reopens.",
-                    "downstream": "Kinosho advances to the Final vs Toragi. Two methodical fighters at their actual ceiling. Kinosho wins on round four when Toragi's timing becomes readable.",
-                    "dm_note": "Run a Kinosho vs Toragi final as the quietest possible ending — no commentary noise, just the two of them and a crowd slowly realising it's already over."
+                    "downstream": "Kinji advances to the Final vs Toragi. Two methodical fighters at their actual ceiling. Kinji wins on round four when Toragi's timing becomes readable.",
+                    "dm_note": "Run a Kinji vs Toragi final as the quietest possible ending — no commentary noise, just the two of them and a crowd slowly realising it's already over."
                   }
                 }
               ],
               "third_place": {
                 "fighter_a": "Ren Suzuki (1-A)",
-                "fighter_b": "Kinosho Kochimiko (1-A)",
-                "note": "Fighters are the two SF losers. Default is Ren vs Kinosho.",
-                "how_it_goes": "Ren wins. Says nothing about it after. Kinosho seems to find this appropriate. Masahata notes the result and adds a column titled 'semantic outcomes' to the chart. Nobody asks him what this means.",
+                "fighter_b": "Kinji Hamakida (1-A)",
+                "note": "Fighters are the two SF losers. Default is Ren vs Kinji.",
+                "how_it_goes": "Ren wins. Says nothing about it after. Kinji seems to find this appropriate. Masahata notes the result and adds a column titled 'semantic outcomes' to the chart. Nobody asks him what this means.",
                 "winner": "Ren Suzuki",
                 "alternate_outcome": {
-                  "if_winner": "Kinosho Kochimiko",
-                  "how_it_goes": "Kinosho wins. Ren loses cleanly and accepts it cleanly — one nod. Masahata adds 'semantic outcomes: confirmed.'",
-                  "dm_note": "Run whichever result serves the table emotionally — a win for Ren after a brutal SF loss, or a definitive close for Kinosho's arc."
+                  "if_winner": "Kinji Hamakida",
+                  "how_it_goes": "Kinji wins. Ren loses cleanly and accepts it cleanly — one nod. Masahata adds 'semantic outcomes: confirmed.'",
+                  "dm_note": "Run whichever result serves the table emotionally — a win for Ren after a brutal SF loss, or a definitive close for Kinji's arc."
                 }
               },
               "final": {
@@ -368,8 +368,8 @@
                 "Yamaru finds Toragi after QF-2. 'Your Impact timing. Never seen anyone land four clean.' 'I know.' Both write it down.",
                 "Ren finds Toragi after SF-1. 'The second hit.' 'Yes.' He thinks about it for the rest of the campaign.",
                 "Kazama's stalemate against Isosato in R1-1 becomes the slowest, most talked-about fight of the day. Someone sends him a photo of the two of them locked mid-fight, a half-solidified wall between them. He never shows it to anyone.",
-                "'What Is She Doing?' about Kinosho airs twice. She watches both replays alone in the waiting room, satisfied.",
-                "Kagamo, after losing to Kinosho: 'I don't know what she did.' Genuinely interested. Masahata writes it down immediately.",
+                "'What Is She Doing?' about Kinji airs twice. She watches both replays alone in the waiting room, satisfied.",
+                "Kagamo, after losing to Kinji: 'I don't know what she did.' Genuinely interested. Masahata writes it down immediately.",
                 "The ranking chart — brought to the festival laminated — doesn't get updated for four days. 'The model is broken.' He reprints it anyway."
               ]
             }
@@ -430,7 +430,7 @@
   "recurring_elements": {
     "ranking_chart": "Masahata's ranking chart on the common room fridge persists through the entire campaign — a habit from a family that ranks things at dinner as a matter of course. Reference it at least once per tier. By Season 1's end it has been annotated, defaced, coffee-stained, and re-laminated over the original lamination. He reprints it every time. This is never commented on directly.",
     "oshiro_arrivals": "Whenever things get genuinely serious, Oshiro Daikichi arrives at the scene without being called. No explanation is offered. He just shows up. This should remain unexplained through Season 1.",
-    "kinosho_napping": "Kinosho Kochimiko is asleep somewhere in the background of every session where she is not the primary focus. She is always awake again before it matters. Her eyes flatten to pewter grey for a second whenever Neutralization actually triggers — the class calls this 'turning off.'",
+    "kinji_napping": "Kinji Hamakida is asleep somewhere in the background of every session where she is not the primary focus. She is always awake again before it matters. Her eyes flatten to pewter grey for a second whenever Neutralization actually triggers — the class calls this 'turning off.'",
     "toshida_head": "Toshida's speech bubble head gets stuck in, on, or through something structural at least once per tier — usually the dorm doorframe he's privately named Hiroshi. The scale escalates as his quirk control improves but his spatial awareness does not.",
     "toragi_and_yoshibara": "Toragi leaves Yoshibara small, useful, unexplained things — a pencil, a snack — and disappears before she can react. She's started leaving things back. Neither has said a word about it out loud. Let this thread surface once more before Season 1 ends.",
     "faction_symbol_thread": "The Fracture jagged-line symbol appears in each Tier 1 arc (entrance exam wall, dorm leaflet, alley concrete). Everyone knows it's Fracture's mark — it's a public movement. What lands by the time Shard introduces herself in The Fracture Problem is that the class has seen it enough times to feel like it's been following them personally, not just decorating the city."

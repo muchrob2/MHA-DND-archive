@@ -136,7 +136,7 @@
     },
     {
       "id": 11,
-      "name": "Smeet Nozoto",
+      "name": "Kinji Hamakida",
       "quirk": "Quirkless",
       "gender": "Female",
       "height": "5'9\"",
@@ -145,7 +145,7 @@
       "is_pc": false,
       "personality_tag": "Guarded and quiet in class; makes up for having no Quirk with raw physical technique and sharp analysis",
       "notable_trait": "Blonde, freckled; wears an old, several-sizes-too-small shirt she's had since childhood and won't explain why",
-      "file": "kinosho_kochimiko.json"
+      "file": "kinji_hamakida.json"
     },
     {
       "id": 12,

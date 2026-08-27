@@ -1,555 +1,921 @@
 {
-  "_note": "Per CAMPAIGN/villains.json, Ruin is one flat villain group (Undertow, Flashpoint, Riddle, Kuma, Null, Splice) — not a set of branded divisions. All rank-and-file 'Ruin' category enemies below know they work for Ruin and will say so if pressed. Fracture is a separate, independent movement (Shard, Voltage) that isn't part of Ruin at all — its members genuinely don't know about Undertow's funding. The only real unknown anywhere is Undertow's true identity: nobody below the six named Ruin members has ever met him in person.",
+  "_note": "Preset pieces for the encounter manager (CLASS-1A/encounter.html), rebuilt around the live cast of The Shortlist. The previous roster — Ruin, Fracture, and the teachers Oshiro / Fujisaki / Hamagawa / Yuzuki / Shimoda — was retired along with those characters and has been removed wholesale. PROVENANCE: Appetite's five stat blocks and the Generic difficulty dials are verbatim from the campaign's own appendices. Class 1-B and the Supporting Cast are generated from CAMPAIGN/class1b.json and CAMPAIGN/npcs.json, which carry real stat blocks. For the U.A. staff only Saki Hiyori has published AC/HP; every other member's abilities are verbatim from the appendix while the defensive numbers are pitched on the appendix's own three-tier scale, which it says to adjust freely. Each entry records this in its stats_source field. NOTE: dex_mod feeds initiative only (encounter.js rolls d20 + dexMod), so where the appendix states an Initiative bonus that differs from the DEX modifier, the stated Initiative bonus is used.",
   "categories": [
-    "Exam / Training",
-    "Ruin",
-    "Fracture",
-    "Villain",
-    "Boss",
-    "Teachers",
-    "Miscellaneous"
+    "Appetite",
+    "U.A. Staff",
+    "Class 1-B",
+    "Supporting Cast",
+    "Generic"
   ],
   "enemies": [
     {
-      "id": "combat_drone_mk1",
-      "name": "Combat Drone Mk.I",
-      "category": "Exam / Training",
-      "cr": "1/4",
-      "tier": 1,
-      "description": "Standard exam drone. Bipedal chassis, rubber-coated shock emitters. Non-lethal by design but hits hard enough to matter. Moves in arcs, fires on nearest student.",
-      "hp": 12,
-      "ac": 13,
-      "speed": "30 ft",
-      "dex_mod": 1,
-      "ability_scores": {
-        "STR": 12,
-        "DEX": 12,
-        "CON": 12,
-        "INT": 4,
-        "WIS": 8,
-        "CHA": 1
-      },
-      "attacks": [
-        {
-          "name": "Shock Blast",
-          "to_hit": "+3",
-          "damage": "1d6 lightning",
-          "range": "30 ft",
-          "notes": "Non-lethal"
-        }
-      ],
-      "traits": [
-        "Non-lethal: all damage dealt reduces HP but targets don't die — they're knocked out at 0",
-        "Constructed: immune to charm, fear, and poison",
-        "Exam Point: destroying one grants 1 point toward exam score"
-      ],
-      "tactics": "Moves toward nearest student and fires. No target priority logic. Will not pursue fleeing students — just acquires new target. Trivially easy to trick."
-    },
-    {
-      "id": "combat_drone_mk2",
-      "name": "Combat Drone Mk.II",
-      "category": "Exam / Training",
-      "cr": "1",
-      "tier": 1,
-      "description": "Heavier exam drone. Armoured plating, dual shock emitters, and a missile pod that makes students reconsider their positioning. Worth three times the points.",
+      "id": "appetite_riddle",
+      "name": "Riddle (Makochi Clue)",
+      "category": "Appetite",
+      "cr": "4",
+      "tier": 2,
+      "description": "Chapters 2, 4 and 5 — and not a fight. Tall and skinny, white hair, a scar running forehead to chin that leaves him with no nose to speak of. He asks a question, waits, and bleeds from the mouth. His entire offensive capability is a 1d4 punch and that is not a mistake.",
       "hp": 30,
-      "ac": 15,
-      "speed": "25 ft",
-      "dex_mod": 1,
+      "ac": 12,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "quirk_save_dc": 14,
       "ability_scores": {
-        "STR": 15,
-        "DEX": 12,
-        "CON": 15,
-        "INT": 4,
-        "WIS": 8,
-        "CHA": 1
+        "STR": 8,
+        "DEX": 14,
+        "CON": 10,
+        "INT": 16,
+        "WIS": 14,
+        "CHA": 12
       },
       "attacks": [
         {
-          "name": "Dual Shock Blast",
-          "to_hit": "+4",
-          "damage": "2d6 lightning",
-          "range": "30 ft",
-          "notes": "Non-lethal"
+          "name": "Unarmed",
+          "to_hit": "+2",
+          "damage": "1d4 bludgeoning",
+          "range": "Melee",
+          "notes": "His entire offensive capability."
         },
         {
-          "name": "Missile Burst",
+          "name": "Question Two",
           "to_hit": null,
-          "damage": "2d4 bludgeoning",
-          "range": "30 ft, 10 ft radius",
-          "notes": "DC 13 DEX save, half on success. Recharge 5-6. Non-lethal."
+          "damage": "2d6 psychic",
+          "range": "5 ft",
+          "notes": "Only against a creature currently engaged with Question One. 'What would hurt more?' A wrong answer comes true within 24 hours, exactly as described."
         }
       ],
       "traits": [
-        "Non-lethal: all damage is non-lethal",
-        "Constructed: immune to charm, fear, and poison",
-        "Armoured: resistant to piercing damage",
-        "Exam Point: destroying one grants 3 points"
+        "QUESTION ONE (Action) — one creature within 40 ft who can hear him. The target chooses whether to attempt an answer; a creature that does not attempt one is entirely unaffected. A creature that does is braindead for 5 rounds, or until it succeeds on a DC 14 Intelligence check at the end of each of its turns. A correct answer ends the effect instantly and the answerer knows exactly where he is standing.",
+        "One target at a time, and the question cannot be unanswerable.",
+        "HAEMORRHAGE (Passive) — every question costs him 3 hit points, ignoring everything. Ten questions kills him and he knows the number.",
+        "Range is the weakness: the quirk only affects people who can hear his voice."
       ],
-      "tactics": "Prioritises students who destroyed Mk.I drones (most threatening student by score). Uses Missile Burst when 2+ students are within 10ft of each other. Retreats 10ft before firing if adjacent."
+      "tactics": "He never raises his voice, never gloats, never fights back, and leaves when he is finished rather than when he is losing. If the party attacks, he lets them, and keeps talking. He is a delay, and the delay is measured in five-round blocks off one PC at a time. He does not want to win — he wants you to participate."
     },
     {
-      "id": "sentinel_boss_drone",
-      "name": "Sentinel Boss Drone",
-      "category": "Boss",
-      "cr": "3",
-      "tier": 1,
-      "description": "The finale of the entrance exam. A large, heavily armoured command drone that drops into the arena when Oshiro judges the class is ready to be tested as a unit. Designed to be unable to solo — the class must cooperate to bring it down.",
-      "hp": 72,
-      "ac": 17,
-      "speed": "20 ft",
-      "dex_mod": 0,
+      "id": "appetite_kuma",
+      "name": "Kuma",
+      "category": "Appetite",
+      "cr": "8",
+      "tier": 3,
+      "description": "Chapter 3, and a genuine boss fight. Gigantification: 9'5\" at rest, up to 25 feet at peak, strength and reach scaling with size. Shaved head, extremely wide, tends to break furniture by existing near it.",
+      "hp": 160,
+      "ac": 15,
+      "speed": "40 ft",
+      "dex_mod": 2,
+      "quirk_save_dc": 15,
       "ability_scores": {
         "STR": 20,
         "DEX": 10,
         "CON": 18,
-        "INT": 6,
+        "INT": 8,
         "WIS": 10,
-        "CHA": 1
+        "CHA": 14
       },
       "attacks": [
         {
-          "name": "Railgun Burst",
+          "name": "Slam (at 9'5\")",
           "to_hit": "+6",
-          "damage": "3d8 lightning",
-          "range": "60 ft",
-          "notes": "Non-lethal. Targets 1 creature."
+          "damage": "2d10+5 bludgeoning",
+          "range": "Reach 10 ft",
+          "notes": "Starting size."
         },
         {
-          "name": "Stomp",
-          "to_hit": "+6",
-          "damage": "2d10 bludgeoning",
-          "range": "5 ft, 10 ft radius",
-          "notes": "DC 14 STR save or knocked prone. Non-lethal."
+          "name": "Slam (at 15 ft)",
+          "to_hit": "+7",
+          "damage": "3d10+6 bludgeoning",
+          "range": "Reach 15 ft",
+          "notes": "Advantage on Strength checks and saves at this size."
         },
         {
-          "name": "Suppression Field",
-          "to_hit": null,
-          "damage": "none",
-          "range": "30 ft radius aura (bonus action)",
-          "notes": "Area becomes difficult terrain while active. Students must use double movement to close distance. Toggle on/off each turn."
+          "name": "Slam (at 25 ft)",
+          "to_hit": "+8",
+          "damage": "4d10+7 bludgeoning",
+          "range": "Reach 20 ft",
+          "notes": "Disadvantage against anything smaller than a car."
         }
       ],
       "traits": [
-        "Non-lethal: all damage is non-lethal",
-        "Constructed: immune to charm, fear, and poison",
-        "Phase Armour: resistant to all damage until its HP drops below 40, then loses this trait",
-        "Exam Point: destroying it grants 10 points, split among students who dealt the final 20 HP",
-        "Designed to Force Cooperation: its Suppression Field punishes solo attackers — it takes focused burst damage from multiple directions to break through efficiently"
+        "GIGANTIFICATION (Bonus action) — one size step per round, 9'5\" to 15 ft to 25 ft. He starts small and grows; the fight is a race against that clock.",
+        "In any enclosed space at 25 ft he takes 2d6 at the start of each of his turns from the structure he is wearing.",
+        "RUBBISH ON THE FLOOR — prone, he cannot grow, attacks at disadvantage, and needs his whole movement to stand. Taking his footing is worth more than damage.",
+        "NOT A KILLER — no interest in casualties, will not pursue a fleeing civilian."
       ],
-      "tactics": "Activates Suppression Field immediately. Targets the highest-scoring student with Railgun Burst. Uses Stomp when students cluster. The intent is not to 'win' but to hold out long enough that students must coordinate. Drops Suppression Field when below 20 HP — its last attempt to lure students in for a final Stomp."
+      "tactics": "Overconfident, loud, no strategy, and no particular malice — this is a job and he is good at it. Deny him room to grow and he is manageable; give him a stadium concourse and he is a natural disaster. The encounter is built to be won by taking his footing. Getting beaten by a class of first-years is going to be very embarrassing for him, and he will say so, at length, while it happens."
     },
     {
-      "id": "chain_grunt",
-      "name": "Ruin Grunt",
-      "category": "Ruin",
-      "cr": "1/4",
-      "tier": 1,
-      "description": "Low-level Ruin muscle. No quirk. Hired for physical work — moving things, intimidating people, holding doors. Knows enough not to ask questions and not enough to be a real threat to a student.",
-      "hp": 16,
+      "id": "appetite_powder",
+      "name": "Powder (Yutaki Yusuzen)",
+      "category": "Appetite",
+      "cr": "7",
+      "tier": 3,
+      "description": "Chapter 4. Grey shoulder-length hair, white button-up shirt, smart black trousers. Tears off parts of his own body and detonates them, cheerfully and constantly. Once ripped his own eye out and used it to kill his own parents.",
+      "hp": 75,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "quirk_save_dc": 15,
+      "ability_scores": {
+        "STR": 12,
+        "DEX": 16,
+        "CON": 16,
+        "INT": 12,
+        "WIS": 10,
+        "CHA": 14
+      },
+      "attacks": [
+        {
+          "name": "Destruction",
+          "to_hit": null,
+          "damage": "4d6 fire",
+          "range": "30 ft",
+          "notes": "DC 15 Dexterity save for half. He takes 1d6 doing it and does not appear to notice."
+        },
+        {
+          "name": "Left Hand, Thumb, Two Fingers (Trap)",
+          "to_hit": null,
+          "damage": "4d6 fire",
+          "range": "10 ft radius",
+          "notes": "Three of them, placed before the party arrives, DC 15 Dexterity for half, triggered when he chooses. Using one in the first round establishes that the street is his."
+        },
+        {
+          "name": "Burst",
+          "to_hit": null,
+          "damage": "15d12 + his current hit points, force or fire",
+          "range": "100 ft radius",
+          "notes": "Once, and it kills him. Strength save at disadvantage vs DC 15 or full damage, 5 ranks of bleed, 5 ranks of Concussed, and knocked back to the edge; success is half damage, no knockback, half the conditions. Ignores resistance, treats immunity as resistance, ignores all damage reduction."
+        }
+      ],
+      "traits": [
+        "BURST KILLS HIM. It has killed him before. A third party can trigger it if he is incapacitated — the detail that should make the table stop breathing.",
+        "Burst collapses structures and leaves a crater; the area is inhospitable for up to a week.",
+        "Touch Up is why he is a recurring enemy instead of a one-off: she restores what he tears off."
+      ],
+      "tactics": "Plays from range and likes to set up deadly traps around the battlefield. Loud, violent, laughs in the face of anyone who gets in his way. DO NOT USE BURST IN HIS FIRST APPEARANCE — he threatens it, enjoys threatening it, and does up his shirt button again."
+    },
+    {
+      "id": "appetite_touch_up",
+      "name": "Touch Up (Fuchiguchi Yuko)",
+      "category": "Appetite",
+      "cr": "3",
+      "tier": 2,
+      "description": "Chapter 4, and the actual problem. She does not fight, does not speak, and does not look at the students. She is more frightening as a function than as a person and her sheet should stay this empty.",
+      "hp": 40,
       "ac": 12,
       "speed": "30 ft",
-      "dex_mod": 0,
+      "dex_mod": 1,
+      "quirk_save_dc": 13,
       "ability_scores": {
-        "STR": 15,
-        "DEX": 10,
+        "STR": 8,
+        "DEX": 12,
         "CON": 14,
-        "INT": 9,
-        "WIS": 10,
-        "CHA": 8
+        "INT": 12,
+        "WIS": 16,
+        "CHA": 10
       },
       "attacks": [
         {
-          "name": "Baton",
-          "to_hit": "+4",
-          "damage": "1d6+2 bludgeoning",
-          "range": "5 ft"
+          "name": "Healing Touch",
+          "to_hit": null,
+          "damage": "Restores 3d6",
+          "range": "5 ft",
+          "notes": "Also mends a named limb, fracture or burn (reduces Burn rank by one). Cannot regrow what is missing."
         },
         {
-          "name": "Grab",
-          "to_hit": "+4",
-          "damage": "0 + grappled",
+          "name": "Regenerative Kiss",
+          "to_hit": null,
+          "damage": "Restores 5 HP/round for 1 minute",
           "range": "5 ft",
-          "notes": "DC 12 STR to escape. While grappled, target is restrained and can't move."
+          "notes": "3/long rest. Also strips a rank of Bleeding, Queasy and Concussed each turn."
         }
       ],
       "traits": [
-        "Pack Fighter: deals +1d4 damage when adjacent ally is also in melee",
-        "Surrender Threshold: at 0 HP, doesn't die — immediately surrenders and spills nothing useful ('I just do pickup and delivery, I swear')"
+        "CELLULAR FATIGUE — this is the encounter. Heal a creature 5 times within one minute and it gains a rank of exhaustion, plus one more for every 2 further uses, to a maximum of 5. Fades after a short rest.",
+        "Powder is being healed constantly. Count it out loud once the players start watching her.",
+        "She is the correct target and it takes the class an embarrassingly long time to work that out."
       ],
-      "tactics": "Tries to grapple the smallest-looking student so an ally can beat on them. Not courageous — will flee at 5HP if no Ruin enforcer is present to stop them."
+      "tactics": "Stays behind Powder and keeps him standing. She never engages. The only clock the class has against her is the exhaustion her own healing inflicts."
     },
     {
-      "id": "chain_enforcer",
-      "name": "Ruin Enforcer",
-      "category": "Ruin",
-      "cr": "1",
-      "tier": 1,
-      "description": "Mid-tier Ruin operative. Has a minor quirk and uses it. Knows how Ruin's day-to-day work gets done, not who's really at the top. Disciplined enough not to run, smart enough to know when a fight is lost.",
-      "hp": 38,
-      "ac": 14,
+      "id": "appetite_sylar",
+      "name": "Sylar (Ken Reed)",
+      "category": "Appetite",
+      "cr": "12",
+      "tier": 4,
+      "description": "Chapter 5. Transfer — a consumed brain gives him that quirk, permanently. Slim, black well-kept hair, a HUGE pair of indestructible metal teeth, and a jaw he can dislocate at will. Cold, sociopathic, and appallingly fast.",
+      "hp": 190,
+      "ac": 17,
+      "speed": "40 ft",
+      "dex_mod": 5,
+      "quirk_save_dc": 16,
+      "ability_scores": {
+        "STR": 18,
+        "DEX": 16,
+        "CON": 18,
+        "INT": 14,
+        "WIS": 12,
+        "CHA": 6
+      },
+      "attacks": [
+        {
+          "name": "Maw",
+          "to_hit": "+9",
+          "damage": "3d12 slashing, then 2d12/round",
+          "range": "Melee",
+          "notes": "On a hit the target is grabbed, forced prone and restrained, and he begins working through the skull. DC 12 check at the start of each of his turns to maintain; while maintained the target takes 2d12 at the start of each of his turns. THE RESTRAINT IS BROKEN BY AN ALLY — DC 16 Strength or Dexterity check by any creature within 5 ft. Say this out loud at the table."
+        },
+        {
+          "name": "Borrowed quirk (old acquisition)",
+          "to_hit": "+9",
+          "damage": "Full damage dice",
+          "range": "Varies",
+          "notes": "e.g. Falsework's construction quirk, held since April."
+        },
+        {
+          "name": "Borrowed quirk (recent acquisition)",
+          "to_hit": "+5",
+          "damage": "Half damage dice, rounded down",
+          "range": "Varies",
+          "notes": "e.g. Moshita Maro's Copy, nine days. On an attack roll of 5 or less he has reached for the wrong one entirely — describe the mistake and lose him the action."
+        }
+      ],
+      "traits": [
+        "KEEPSAKE (Passive) — a consumed brain gives him that quirk, permanently.",
+        "BORROWED QUIRKS — give him three or four, name each one aloud, and say how long he has had it.",
+        "THE HEADACHE (Passive) — the first time he drops below half hit points he stops, puts the heel of his hand against his temple, and loses his entire turn. Once per fight, free, and the players should see it happen.",
+        "The collection is the weakness: every quirk he holds worsens a permanent headache, and by Chapter 5 he is in constant pain and increasingly imprecise with abilities he has not practised."
+      ],
+      "tactics": "Never opens a fight and never fights fair. He disengages the moment a fight becomes a fight — he does not pursue committed opposition, he goes and finds somebody on their own instead. Patient, quiet, and the restraint rule is the campaign's whole argument expressed as a rule."
+    },
+    {
+      "id": "staff_saki_hiyori",
+      "name": "Saki Hiyori (Creed)",
+      "category": "U.A. Staff",
+      "cr": "9",
+      "tier": 3,
+      "description": "Deathly Endurance. The answer to Powder, and the campaign's best single image. Extreme passion for teaching, and does not hold back when someone gets between him and his students.",
+      "hp": 140,
+      "ac": 16,
       "speed": "30 ft",
       "dex_mod": 1,
       "ability_scores": {
         "STR": 16,
         "DEX": 12,
-        "CON": 15,
-        "INT": 11,
-        "WIS": 12,
-        "CHA": 10
+        "CON": 24,
+        "INT": 12,
+        "WIS": 14,
+        "CHA": 14
       },
       "attacks": [
         {
-          "name": "Reinforced Fist",
-          "to_hit": "+5",
-          "damage": "1d8+3 bludgeoning",
-          "range": "5 ft"
-        },
-        {
-          "name": "Shockwave Clap (Quirk)",
-          "to_hit": null,
-          "damage": "2d6 thunder",
-          "range": "15 ft cone",
-          "notes": "DC 13 STR save or pushed 10 ft. Recharge 5-6."
+          "name": "Unarmed",
+          "to_hit": "+8",
+          "damage": "2d8+7 bludgeoning",
+          "range": "Melee",
+          "notes": "He is not there to deal damage."
         }
       ],
       "traits": [
-        "Hardened: resistant to bludgeoning damage",
-        "Command Presence: Ruin Grunts within 30 ft can't be frightened and deal +1d4 damage",
-        "Composure: advantage on saves against fear and charm"
+        "DEATH'S STANDING — at 0 hit points he may spend hit dice to stabilise and regain consciousness, and may keep doing it as long as he has dice left. He has 12d12.",
+        "Spend them out loud, one at a time, and say the number remaining each time he stands up. When they are gone, he stays down."
       ],
-      "tactics": "Gets into melee and holds position. Uses Shockwave Clap when 2+ students are adjacent. Will not abandon wounded allies — will drag them away before retreating. If captured: gives false name, asks for a lawyer, says nothing about Ruin beyond 'I'm a freelancer.'"
+      "tactics": "He stands in front of it. That is the whole plan and it is the right one.",
+      "stats_source": "Appendix — AC, HP and CON are the campaign's own; other ability scores derived."
     },
     {
-      "id": "chain_hardskin",
-      "name": "Ruin Hardskin",
-      "category": "Ruin",
-      "cr": "1",
-      "tier": 1,
-      "description": "A Ruin quirk-user with hardening ability. Dense, slow, nearly impossible to hurt with normal attacks. Has a Ruin tattoo partially visible under a collar if someone looks. Knows who he works for — everyone does. Has no idea who's really behind the name 'Undertow,' and isn't paid enough to wonder.",
-      "hp": 42,
-      "ac": 16,
-      "speed": "25 ft",
-      "dex_mod": -1,
-      "ability_scores": {
-        "STR": 18,
-        "DEX": 8,
-        "CON": 18,
-        "INT": 9,
-        "WIS": 10,
-        "CHA": 8
-      },
-      "attacks": [
-        {
-          "name": "Reinforced Strike",
-          "to_hit": "+6",
-          "damage": "1d10+4 bludgeoning",
-          "range": "5 ft"
-        },
-        {
-          "name": "Hardened Rush",
-          "to_hit": "+6",
-          "damage": "2d6+4 bludgeoning",
-          "range": "Charge up to 20 ft then strike",
-          "notes": "Target makes DC 14 STR save or knocked prone. Can only be used if Hardskin moved at least 10 ft."
-        }
-      ],
-      "traits": [
-        "Skin of Steel: resistant to bludgeoning, slashing, and piercing damage from non-magical sources",
-        "Quirk Weakness: vulnerable to lightning damage (double damage)",
-        "Ruin Mark: a partial tattoo is visible under the collar. DC 15 Perception to spot, DC 12 Investigation to identify as an organisation mark.",
-        "Immovable: immune to the prone condition while Hardskin stance is active (toggle off as bonus action)"
-      ],
-      "tactics": "Absorbs hits without flinching, trying to demoralise students. Aims for Hardened Rush to knock someone prone, then stands over them. Doesn't talk during a fight. If students discover the lightning weakness, their satisfaction is visible even through the stoicism."
-    },
-    {
-      "id": "chain_blaster",
-      "name": "Ruin Blaster",
-      "category": "Ruin",
-      "cr": "1",
-      "tier": 1,
-      "description": "Long-range Ruin operative. Energy projection quirk. Prefers distance and cover. Hired for jobs that need firepower without getting close. Nervous when cornered.",
-      "hp": 24,
-      "ac": 12,
-      "speed": "30 ft",
-      "dex_mod": 2,
-      "ability_scores": {
-        "STR": 9,
-        "DEX": 14,
-        "CON": 12,
-        "INT": 11,
-        "WIS": 12,
-        "CHA": 10
-      },
-      "attacks": [
-        {
-          "name": "Energy Bolt",
-          "to_hit": "+4",
-          "damage": "1d10 radiant",
-          "range": "60 ft"
-        },
-        {
-          "name": "Multi-Bolt",
-          "to_hit": "+4 per bolt",
-          "damage": "1d6 radiant per bolt",
-          "range": "60 ft",
-          "notes": "Fires 3 bolts, each must target a different creature. Bonus action."
-        }
-      ],
-      "traits": [
-        "Overcharge: when at 10 HP or below, attacks deal +1d6 damage but Blaster takes 1d4 recoil damage each time they attack",
-        "Cover Seeker: while behind half or full cover, attack rolls against Blaster are made at disadvantage"
-      ],
-      "tactics": "Stays at maximum range. Uses Multi-Bolt to spread pressure across multiple students. Fires from behind cover if possible. At 10 HP, enters Overcharge — becomes more dangerous but is now hurting themselves. Will try to run if cover is removed or students close to melee."
-    },
-    {
-      "id": "hired_muscle",
-      "name": "Hired Muscle",
-      "category": "Villain",
-      "cr": "1/2",
-      "tier": 1,
-      "description": "No quirk, no organisation affiliation, just size and experience. Hired for intimidation or physical enforcement. Treats this like a professional job — no more violence than contracted, no personal grudges.",
-      "hp": 32,
-      "ac": 13,
-      "speed": "30 ft",
-      "dex_mod": 0,
-      "ability_scores": {
-        "STR": 18,
-        "DEX": 10,
-        "CON": 16,
-        "INT": 10,
-        "WIS": 11,
-        "CHA": 9
-      },
-      "attacks": [
-        {
-          "name": "Heavy Fist",
-          "to_hit": "+6",
-          "damage": "1d8+4 bludgeoning",
-          "range": "5 ft"
-        },
-        {
-          "name": "Haymaker",
-          "to_hit": "+6",
-          "damage": "2d8+4 bludgeoning",
-          "range": "5 ft",
-          "notes": "Once per combat. On hit, target is stunned until end of their next turn (DC 14 CON save to negate stun)."
-        }
-      ],
-      "traits": [
-        "Shrug It Off: once per short rest, reduce incoming damage by 1d6+2 as a reaction",
-        "Professional: will not attack fallen, unconscious opponents unless instructed. Not a monster — just employed."
-      ],
-      "tactics": "Targets whoever looks most dangerous. Uses Haymaker immediately against the most mobile student. If the job is clearly lost, stops fighting and says 'I'm done.' — he considers a fight professionally over when the odds are obvious. Will cooperate with authorities if his employer is dead or gone."
-    },
-    {
-      "id": "street_villain",
-      "name": "Street Villain",
-      "category": "Villain",
-      "cr": "1/4",
-      "tier": 1,
-      "description": "An unlicensed quirk user in over their head. Desperate, not dangerous. Usually committing crimes out of necessity rather than ideology. High role-play potential. Low threat. The kind of encounter that teaches students about the grey zones.",
-      "hp": 14,
-      "ac": 11,
+      "id": "staff_fred_entoss",
+      "name": "Fred Entoss (Fridas)",
+      "category": "U.A. Staff",
+      "cr": "6",
+      "tier": 2,
+      "description": "Cement. Containment, and rationed. Sarcastic, enjoys banter, on the students' side. Stadium containment is his.",
+      "hp": 90,
+      "ac": 15,
       "speed": "30 ft",
       "dex_mod": 1,
       "ability_scores": {
-        "STR": 11,
+        "STR": 14,
         "DEX": 12,
-        "CON": 10,
-        "INT": 10,
-        "WIS": 9,
+        "CON": 18,
+        "INT": 14,
+        "WIS": 13,
+        "CHA": 15
+      },
+      "attacks": [
+        {
+          "name": "Cement Spike Rush",
+          "to_hit": null,
+          "damage": "4d10",
+          "range": "30 ft cone",
+          "notes": "DC 15 Dexterity for half."
+        }
+      ],
+      "traits": [
+        "CEMENT WALL (Action) — 20 feet of three-quarters cover, or a 15-foot restraining trap, DC 15 Strength to break out. Uses equal to his Constitution modifier (4) per day.",
+        "PAST HIS USES he can keep going, and each further use costs him 3d6 force damage and a level of exhaustion he cannot reduce. He will do this. He will be sarcastic about it."
+      ],
+      "tactics": "Shapes the ground rather than fighting on it. Spend his four uses early if the scene needs them — him going past his limit is the point of having him there.",
+      "stats_source": "Abilities verbatim from the appendix; CON derived from the stated +4 modifier, AC/HP pitched on the appendix's three-tier scale."
+    },
+    {
+      "id": "staff_rawagi_chiso",
+      "name": "Rawagi Chiso (Instinct)",
+      "category": "U.A. Staff",
+      "cr": "5",
+      "tier": 2,
+      "description": "Foresight. Seconded to the Case 9 investigation and visibly worse at his job for it. Dry, poor at conversation, denies having favourites while obviously having them. The only thing that makes Sylar legible.",
+      "hp": 85,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": {
+        "STR": 12,
+        "DEX": 14,
+        "CON": 14,
+        "INT": 16,
+        "WIS": 17,
         "CHA": 9
       },
       "attacks": [
         {
-          "name": "Desperate Strike",
-          "to_hit": "+3",
-          "damage": "1d6 bludgeoning or by quirk",
-          "range": "5 ft or 20 ft"
+          "name": "Unarmed",
+          "to_hit": "+6",
+          "damage": "1d8+2 bludgeoning",
+          "range": "Melee",
+          "notes": "He is not a fighter."
         }
       ],
       "traits": [
-        "Minor Quirk (DM chooses): weak energy burst (1d4 fire, 20ft), minor hardening (+1 AC, 1 minute), brief invisibility (1 round, recharge on 5-6), minor levitation (hover 5ft, move 20ft, no weight-bearing)",
-        "Panicked: disadvantage on attacks if reduced below half HP",
-        "Wants Out: will attempt to flee if an escape route opens. If cornered, surrenders. Will talk if treated well — might mention neighbourhood changes, Ruin's name if they've heard it."
+        "FORESIGHT (Action, concentration) — one visible creature must declare its movement, action and reaction in advance, and Rawagi learns its current hit points, AC and initiative. Requires uninterrupted vision.",
+        "THE COST — after every use, DC 14 Constitution save or a level of Concussed, and at the start of each of his turns a DC 13 Perception check or he cannot use it again for 3 rounds.",
+        "He will burn himself past the point of sense."
       ],
-      "tactics": "Erratic. Uses quirk first, panics when it doesn't work, tries to run. Best encounter resolution is often social rather than combat. Has information if students choose de-escalation."
+      "tactics": "Take him off the board before the end of the finale and let the party watch it happen.",
+      "stats_source": "Abilities verbatim from the appendix; defensive numbers pitched on the appendix's three-tier scale."
     },
     {
-      "id": "speedster_villain",
-      "name": "Speedster Villain",
-      "category": "Villain",
-      "cr": "1",
-      "tier": 1,
-      "description": "Fast, aggressive, overconfident. Thinks speed is an automatic win. Hasn't fought Ren. Will learn something today.",
-      "hp": 26,
+      "id": "staff_sugitsu_jarvichi",
+      "name": "Sugitsu Jarvichi (Principal)",
+      "category": "U.A. Staff",
+      "cr": "5",
+      "tier": 2,
+      "description": "Search. Principal of U.A. Strict, funny once you know him. Never in a fight — he is the reason the school is safe and the reason the failure at the festival is unbearable.",
+      "hp": 80,
       "ac": 14,
-      "speed": "50 ft",
-      "dex_mod": 4,
+      "speed": "30 ft",
+      "dex_mod": 1,
       "ability_scores": {
-        "STR": 12,
-        "DEX": 18,
-        "CON": 13,
-        "INT": 10,
-        "WIS": 10,
-        "CHA": 12
+        "STR": 10,
+        "DEX": 12,
+        "CON": 14,
+        "INT": 18,
+        "WIS": 17,
+        "CHA": 14
       },
-      "attacks": [
-        {
-          "name": "Rapid Strike",
-          "to_hit": "+6",
-          "damage": "1d6+4 bludgeoning",
-          "range": "5 ft",
-          "notes": "Can attack twice (Extra Attack)."
-        },
-        {
-          "name": "Blitz",
-          "to_hit": "+6",
-          "damage": "2d6+4 bludgeoning",
-          "range": "Move up to full speed in straight line then strike",
-          "notes": "Target makes DC 14 DEX save or knocked prone. Can be used once per turn as part of movement."
-        }
-      ],
+      "attacks": [],
       "traits": [
-        "Evasion: when subjected to a DEX save for half damage, takes no damage on success and half on failure",
-        "Fleet-Footed: opportunity attacks against this creature have disadvantage",
-        "Overconfident: if this villain goes 2 rounds without being hit, they become reckless (attacks at advantage but attack rolls against them also have advantage)"
+        "SEARCH — scans a one-mile radius as a bonus action; tracks up to a hundred targets across five miles; stores ten individuals permanently, wherever they are.",
+        "DEFEATED BY presented biological material — blood or tissue belonging to somebody else — and by sealed refrigerated structures. Both limits are written in his own quirk file, and somebody has read it."
       ],
-      "tactics": "Opens with Blitz to establish dominance. Rapid Strikes from multiple angles. Never stays in one place. Gets cocky if no one can land hits. Actually vulnerable to anything that locks movement — grapple, restraint, or Ren just being faster."
+      "tactics": "He avoids combat and withdraws after striking. Never run him as a combatant; run him as the reason a scene can or cannot happen.",
+      "stats_source": "Abilities verbatim from the appendix; defensive numbers pitched on the appendix's three-tier scale."
     },
     {
-      "id": "bruiser_villain",
-      "name": "Bruiser Villain",
-      "category": "Villain",
-      "cr": "2",
-      "tier": 1,
-      "description": "A heavyweight quirk-user — growth and density enhancement. Hits like a structure. Thinks like a sledgehammer. End-of-Tier-1 or early-Tier-2 threat. Not appropriate as a first encounter.",
-      "hp": 58,
+      "id": "staff_yanami_maho",
+      "name": "Yanami Maho",
+      "category": "U.A. Staff",
+      "cr": "5",
+      "tier": 2,
+      "description": "Magic. Rescue specialist. Enjoys being alone, and accepts the majority of the credit for things she did not do — play this honestly, it is funny and then it is a little sad.",
+      "hp": 75,
       "ac": 15,
-      "speed": "30 ft (40 ft in Titan form)",
-      "dex_mod": -1,
-      "ability_scores": {
-        "STR": 20,
-        "DEX": 8,
-        "CON": 18,
-        "INT": 8,
-        "WIS": 9,
-        "CHA": 10
-      },
-      "attacks": [
-        {
-          "name": "Slam",
-          "to_hit": "+7",
-          "damage": "2d8+5 bludgeoning",
-          "range": "5 ft (10 ft in Titan form)"
-        },
-        {
-          "name": "Ground Pound",
-          "to_hit": null,
-          "damage": "3d6 bludgeoning",
-          "range": "10 ft radius",
-          "notes": "DC 15 STR save or knocked prone. Recharge 5-6."
-        }
-      ],
-      "traits": [
-        "Titan Form (Quirk): as a bonus action, grows to 10ft. Gains +2 AC (total 17), attacks deal +1d6, reach becomes 10ft. Reverts if knocked unconscious.",
-        "Resilient: at the start of each turn, the first 3 damage from any source is ignored (not resistance — flat reduction)",
-        "Slow Burn: takes 2 full rounds to warm into Titan Form. Uses it immediately on round 1 — be ready by round 3."
-      ],
-      "tactics": "Activates Titan Form immediately. Focuses one target to maximum effect — doesn't split attention. Uses Ground Pound when students cluster trying to flank. The fight against this enemy is about positioning, burst damage windows, and not letting anyone get isolated."
-    },
-    {
-      "id": "trickster_villain",
-      "name": "Trickster Villain",
-      "category": "Villain",
-      "cr": "1/2",
-      "tier": 1,
-      "description": "Illusion quirk. Annoying, evasive, difficult to pin down. Creates confusion rather than damage. The kind of villain who makes students feel like they're losing until someone figures out the trick.",
-      "hp": 22,
-      "ac": 13,
       "speed": "30 ft",
       "dex_mod": 2,
       "ability_scores": {
-        "STR": 9,
+        "STR": 10,
         "DEX": 14,
-        "CON": 11,
+        "CON": 13,
+        "INT": 14,
+        "WIS": 15,
+        "CHA": 16
+      },
+      "attacks": [],
+      "traits": [
+        "ENERGY RINGS — grant flight, or halve a creature's movement. Concentration. Useless above 500 pounds.",
+        "MOMENTUM LOCK (Reaction) — freeze one creature mid-air. Once, spectacularly, and she will accept the credit for rather more than that."
+      ],
+      "tactics": "Rescue first, credit afterwards. She is a mobility answer, not a damage one.",
+      "stats_source": "Abilities verbatim from the appendix; defensive numbers pitched on the appendix's three-tier scale."
+    },
+    {
+      "id": "staff_aditya_bose",
+      "name": "Aditya Bose (Bad Touch Bose)",
+      "category": "U.A. Staff",
+      "cr": "8",
+      "tier": 3,
+      "description": "Rifle. Drill sergeant, always precisely on time, shouts at minor inconveniences. Festival training is his. Despite the range he prefers to close and beat people with no quirk at all.",
+      "hp": 110,
+      "ac": 16,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 16,
+        "DEX": 17,
+        "CON": 15,
+        "INT": 12,
+        "WIS": 14,
+        "CHA": 13
+      },
+      "attacks": [
+        {
+          "name": "Standard Shot",
+          "to_hit": "+8",
+          "damage": "4d12 piercing",
+          "range": "120 ft",
+          "notes": "Ignores resistance."
+        },
+        {
+          "name": "Unarmed",
+          "to_hit": "+8",
+          "damage": "2d6+3 bludgeoning",
+          "range": "Melee",
+          "notes": "What he would rather be doing."
+        }
+      ],
+      "traits": [
+        "AMMUNITION costs an inch of his own hair, one hundred inches maximum, regrowing an inch an hour.",
+        "He would rather close and hit you."
+      ],
+      "tactics": "Opens at range because he should, closes because he wants to. Track the hair — it is a real resource and running him out of it is a legitimate scene.",
+      "stats_source": "Abilities verbatim from the appendix; defensive numbers pitched on the appendix's three-tier scale."
+    },
+    {
+      "id": "staff_rob_joestar",
+      "name": "Rob Joestar",
+      "category": "U.A. Staff",
+      "cr": "7",
+      "tier": 3,
+      "description": "Acid. English teacher. Chill until he isn't; short temper. Strict, gets the lesson done, and holds a written permission slip to beat Kinji and only Kinji if she is naughty, which he waves at people.",
+      "hp": 100,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": {
+        "STR": 15,
+        "DEX": 14,
+        "CON": 16,
         "INT": 14,
         "WIS": 12,
         "CHA": 15
       },
       "attacks": [
         {
-          "name": "Blade",
-          "to_hit": "+4",
-          "damage": "1d6+2 piercing",
-          "range": "5 ft"
-        },
-        {
-          "name": "Illusion Burst",
-          "to_hit": null,
-          "damage": "Blinded condition",
-          "range": "1 creature within 30 ft",
-          "notes": "DC 13 INT save or blinded until end of next turn. Bonus action."
+          "name": "Acid strike",
+          "to_hit": "+7",
+          "damage": "3d8 acid",
+          "range": "Melee or 30 ft",
+          "notes": "Adds an Acid Pressure Point on every shot."
         }
       ],
       "traits": [
-        "Mirror Image: creates 3 illusory duplicates at the start of combat. When attacked, roll 1d4 — on a 1, the real Trickster is hit. On 2-4, a duplicate is struck and destroyed. Recharge 5-6.",
-        "Displacement: while Mirror Image is active, can use a reaction to move 15 ft without provoking opportunity attacks"
+        "ACID PRESSURE POINTS accumulate on every shot and reset on a rest.",
+        "AT FULL WIND-UP he enters the rage and summons Whitesnake — and in Chapter 5 that stops being funny."
       ],
-      "tactics": "Creates Mirror Image immediately. Uses Illusion Burst on the most dangerous student. Stays mobile, never adjacent if possible. The fight has a clear solution — dealing with duplicates, identifying the real target — and the satisfaction is in finding it."
+      "tactics": "Play the wind-up as comedy for four chapters. Do not play it as comedy in the fifth.",
+      "stats_source": "Abilities from the appendix; damage line and defensive numbers pitched on the appendix's three-tier scale."
     },
     {
-      "id": "training_arena_bot",
-      "name": "Training Arena Bot",
-      "category": "Exam / Training",
-      "cr": "1",
-      "tier": 1,
-      "description": "Heavy training robot used in formal combat drills. Armoured, slow, and telegraphs its attacks — designed to teach students positioning and timing rather than to win. Used in Capture the Flag and Combat Training arcs as demonstration or obstacle.",
-      "hp": 40,
-      "ac": 16,
-      "speed": "20 ft",
-      "dex_mod": -1,
+      "id": "staff_carlos_might",
+      "name": "Carlos Might",
+      "category": "U.A. Staff",
+      "cr": "10",
+      "tier": 4,
+      "description": "Calos over wall. Barely attends — turns up in the canteen eating Mexican food, or in the training room with Kinji Hamakida, and nowhere else. Insanely muscular, black moustache, sombrero, and sometimes a cape of the Mexican flag. A plot device with a sombrero: use him exactly once.",
+      "hp": 150,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 0,
       "ability_scores": {
-        "STR": 18,
-        "DEX": 8,
-        "CON": 18,
-        "INT": 4,
-        "WIS": 8,
-        "CHA": 1
+        "STR": 24,
+        "DEX": 11,
+        "CON": 20,
+        "INT": 10,
+        "WIS": 12,
+        "CHA": 18
       },
       "attacks": [
         {
-          "name": "Heavy Piston",
-          "to_hit": "+6",
-          "damage": "1d12+4 bludgeoning",
-          "range": "5 ft",
-          "notes": "Non-lethal. DM announces the target one round before the attack — the bot telegraphs its strikes."
+          "name": "Durango Smash",
+          "to_hit": "+11",
+          "damage": "6d6 bludgeoning",
+          "range": "Melee",
+          "notes": "Everyone present is covered in beans."
         },
         {
-          "name": "Suppression Burst",
-          "to_hit": null,
-          "damage": "2d6 bludgeoning",
-          "range": "15 ft cone",
-          "notes": "DC 13 STR save or pushed 10 ft. Non-lethal. Recharge 5-6."
+          "name": "Estados Unidos de Smash",
+          "to_hit": "+11",
+          "damage": "7d12 bludgeoning",
+          "range": "Melee",
+          "notes": "Ends with him pointing at Kinji and saying 'Ahora es tu turno.'"
         }
       ],
       "traits": [
-        "Armoured Shell: resistant to bludgeoning and piercing damage",
-        "Slow: cannot take reactions or opportunity attacks",
-        "Non-lethal: all damage is non-lethal",
-        "Telegraphed: at the end of the bot's turn, DM announces which target it will attack next round. This is the training mechanic — students should be reacting to that information."
+        "Two moves, and no defence worth writing down.",
+        "WEAKNESS — he has to eat Mexican food before use.",
+        "Play the absence as a running joke for three chapters and then do not play it as a joke."
       ],
-      "tactics": "Slow advance. Announces target one round ahead. Uses Suppression Burst when students stop moving. Not designed to win — designed to teach."
+      "tactics": "Use him exactly once.",
+      "stats_source": "Both smashes verbatim from the appendix; defensive numbers pitched on the appendix's three-tier scale, deliberately soft ('no defence worth writing down')."
     },
     {
-      "id": "ns_analyst",
-      "name": "Ruin Analyst",
-      "category": "Ruin",
-      "cr": "1/2",
+      "id": "staff_nobara_forge",
+      "name": "Nobara Forge (Forge)",
+      "category": "U.A. Staff",
+      "cr": "6",
       "tier": 2,
-      "description": "Low-level field operative. Observes, documents, and backs up Specialists. Usually armed with a suppression baton and a data capture device. They are paid to not ask questions.",
+      "description": "Creation. Class 1-A homeroom. Builds the class's paired gear out of her own caloric budget — ten pounds of food a day, minimum, and she will eat during a lesson without apologising. Chapter 2 is hers.",
+      "hp": 85,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 12,
+        "DEX": 13,
+        "CON": 16,
+        "INT": 17,
+        "WIS": 14,
+        "CHA": 13
+      },
+      "attacks": [
+        {
+          "name": "Created weapon",
+          "to_hit": "+7",
+          "damage": "2d8+3",
+          "range": "Melee or thrown 30 ft",
+          "notes": "Whatever the situation calls for, costed against her calories."
+        }
+      ],
+      "traits": [
+        "CREATION — builds equipment out of her own caloric budget. Ten pounds of food a day, minimum.",
+        "She reads the entrance exam footage the way a Creation user reads anything — as a materials problem — and concluded that Class 1-A is twenty excellent components that have never been assembled."
+      ],
+      "tactics": "She solves scenes by building the answer. Make her pay calories for it out loud.",
+      "stats_source": "Role from the appendix; combat numbers pitched on the appendix's three-tier scale."
+    },
+    {
+      "id": "staff_super_panda",
+      "name": "Super Panda (pasta man)",
+      "category": "U.A. Staff",
+      "cr": "5",
+      "tier": 2,
+      "description": "Anivoice. Maths, passionately, and nothing else. Happy, sleepy, never angry. In Chapter 4 he finds three missing students by asking the crows, and it is the least funny thing that happens that session.",
+      "hp": 70,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 12,
+        "CON": 15,
+        "INT": 16,
+        "WIS": 15,
+        "CHA": 12
+      },
+      "attacks": [
+        {
+          "name": "Hitchcock Birds",
+          "to_hit": null,
+          "damage": "3d6 slashing",
+          "range": "30 ft cone",
+          "notes": "Blinds the cone and restrains; DC 14 Dexterity save resists."
+        }
+      ],
+      "traits": [
+        "ANIVOICE — talks to and commands animals within 120 feet.",
+        "This is a school with a maths teacher who is a panda, and the comedy staying in the building is exactly what makes the quiet chapters land."
+      ],
+      "tactics": "He is an information source with wings. Asking the crows is a real action with a real answer.",
+      "stats_source": "Abilities from the appendix; damage line and defensive numbers pitched on the appendix's three-tier scale."
+    },
+    {
+      "id": "staff_help_woman",
+      "name": "Help Woman",
+      "category": "U.A. Staff",
+      "cr": "2",
+      "tier": 1,
+      "description": "Heal. School nurse. Short, hunched, grey. Straight to the point and tells no lies, including the ones that would help. Every chapter ends in her office.",
+      "hp": 45,
+      "ac": 12,
+      "speed": "25 ft",
+      "dex_mod": 0,
+      "ability_scores": {
+        "STR": 8,
+        "DEX": 10,
+        "CON": 13,
+        "INT": 15,
+        "WIS": 18,
+        "CHA": 11
+      },
+      "attacks": [
+        {
+          "name": "Heal",
+          "to_hit": null,
+          "damage": "Restores 4d8",
+          "range": "Touch",
+          "notes": "Costs the patient stamina, not her."
+        }
+      ],
+      "traits": [
+        "She never softens anything.",
+        "Tells no lies, including the ones that would help."
+      ],
+      "tactics": "Not a combatant. She is where chapters end.",
+      "stats_source": "Role from the appendix; all numbers pitched on the appendix's three-tier scale."
+    },
+    {
+      "id": "staff_ebina_chikara",
+      "name": "Ebina Chikara",
+      "category": "U.A. Staff",
+      "cr": "4",
+      "tier": 2,
+      "description": "Class 1-B homeroom. He brings his class in every morning for nine days after Moshita is taken, because the alternative is them sitting at home. He is in the corridor in the epilogue and he has been there the whole time.",
+      "hp": 70,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 13,
+        "DEX": 12,
+        "CON": 14,
+        "INT": 14,
+        "WIS": 15,
+        "CHA": 13
+      },
+      "attacks": [
+        {
+          "name": "Unarmed",
+          "to_hit": "+5",
+          "damage": "1d8+1 bludgeoning",
+          "range": "Melee",
+          "notes": "He is not in this campaign to fight."
+        }
+      ],
+      "traits": [
+        "He and the 1-B staff push the festival committee to run the final tournament as pairs. Nobody involved in that decision knows what they have done.",
+        "Somebody has to tell Class 1-B. Do not skip this."
+      ],
+      "tactics": "Never a combatant. He is a presence in a corridor, and the campaign is better if you play the walk.",
+      "stats_source": "Role from the campaign; no stat block exists — all numbers pitched on the appendix's three-tier scale."
+    },
+    {
+      "id": "class1b_kakita_keiko",
+      "name": "Kakita Keiko",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Once Kakita has studied a target long enough to lock on, anything she throws afterward curves through the air to find them — around corners, past cover, through a crowd. She can't do it on reflex; the lock takes real concentration to establish. But once it's up, missing isn't really a possibility anymore, which is exactly the kind of certainty she prefers to work with.",
+      "hp": 19,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 11,
+        "DEX": 17,
+        "CON": 12,
+        "INT": 13,
+        "WIS": 15,
+        "CHA": 10
+      },
+      "tech_score": 12,
+      "quirk": "Homing",
+      "attacks": [
+        {
+          "name": "Homing (quirk action)",
+          "to_hit": "+5",
+          "damage": "2d6",
+          "range": "Melee or 30 ft",
+          "notes": "No damage line exists in the source; pitched at the appendix's Minor Threat dial. Reshape it around the abilities below."
+        }
+      ],
+      "traits": [
+        "Lock On (Action): studies a visible target within 60ft, marking it locked for up to one minute.",
+        "Homing Throw (Action): ranged thrown attack against a locked target with advantage, curving around minor cover.",
+        "Double Lock (Passive, 7th level): can maintain a second lock simultaneously, at disadvantage on attacks against the second target.",
+        "WEAKNESS — A lock must be established with a full action of concentrated study on a visible target, and losing line of sight to that target for a full round breaks it entirely — nothing she throws before establishing a lock behaves any differently than an ordinary thrown weapon."
+      ],
+      "tactics": "A backline precision striker in any event with cover or crowding — once she locks a target, thrown objects find them regardless of what's in between. In the tournament bracket, opponents who never let her get a clean three-second study window are the only ones who reliably give her trouble. A thrown weapon that cannot miss, locked onto Ando Iorai early and permanently. She has studied his exam footage. Rival in 1-A: Ando Iorai.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_domoto_fumiju",
+      "name": "Domoto Fumiju",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Domoto's legs carry far more force than her frame suggests — a single push sends her covering ground in short, explosive bursts rather than a smooth sprint. Her hearing sharpens the same way, ears standing up and swiveling toward sound whenever she's alert. She uses both constantly and casually, which makes her genuinely disorienting to track in a fight.",
+      "hp": 21,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 12,
+        "DEX": 17,
+        "CON": 12,
+        "INT": 10,
+        "WIS": 14,
+        "CHA": 13
+      },
+      "tech_score": 9,
+      "quirk": "Rabbit",
+      "attacks": [
+        {
+          "name": "Piston Kick",
+          "to_hit": "+5",
+          "damage": "1d10",
+          "range": "See notes",
+          "notes": "A leaping kick using stored momentum: 1d10 + Strength modifier bludgeoning damage, and if she used Kick Off this turn, the target must succeed on a Strength save or be knocked prone."
+        }
+      ],
+      "traits": [
+        "Kick Off (Bonus Action): explosive push granting 20 extra feet of movement and advantage on an Athletics/Acrobatics check this turn.",
+        "Piston Kick (Action): leaping kick, 1d10 + STR bludgeoning; knocks prone (STR save) if Kick Off was used this turn.",
+        "Long Ears (Passive): advantage on Wisdom (Perception) checks that rely on hearing.",
+        "WEAKNESS — Her explosive bursts require a running start or a solid surface to push off of — restrained, grappled, or on unstable/loose ground, she moves like anyone else her size."
+      ],
+      "tactics": "The worst kind of opponent in any pursuit or containment event — impossible to read a chase against. In the tournament bracket, once she's restrained or knocked off her feet, the explosive advantage disappears completely, which is the only reliable way anyone's beaten her yet. Right behind Izuto Kutsu at the bottleneck and delighted about it. Rival in 1-A: Ren Suzuki.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_hama_kokao",
+      "name": "Hama Kokao",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "A second, smaller pair of eyelids beneath his normal ones opens onto flat, reflective silver irises when he concentrates — and once they're open, Hama can sense the rough direction and distance of anyone or anything he's already encountered, through walls, across floors, regardless of what's in the way. It only works on things he's actually met before, and it needs several uncontested seconds to work at all.",
+      "hp": 18,
+      "ac": 12,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 9,
+        "DEX": 13,
+        "CON": 11,
+        "INT": 15,
+        "WIS": 16,
+        "CHA": 10
+      },
+      "tech_score": 13,
+      "quirk": "Search",
+      "attacks": [
+        {
+          "name": "Search (quirk action)",
+          "to_hit": "+3",
+          "damage": "2d6",
+          "range": "Melee or 30 ft",
+          "notes": "No damage line exists in the source; pitched at the appendix's Minor Threat dial. Reshape it around the abilities below."
+        }
+      ],
+      "traits": [
+        "Locate (Action, concentration): senses direction and rough distance of a known person or object within 100ft, through obstacles.",
+        "Read the Room (Bonus Action): advantage on his next Perception/Investigation check in his current location.",
+        "Second Sight (Passive): his true eyes never need to be described as closed — cannot be surprised while his Locate is active.",
+        "WEAKNESS — Locating something requires several seconds of stillness and concentration — forced to keep moving or under active attack, his searching ability is effectively unavailable, and he can only search for something he's directly encountered before (met, held, touched)."
+      ],
+      "tactics": "Reconnaissance and target-location support in any team-based event — before he throws a single attack, he's usually already told his side where everyone else on the field is. In the tournament bracket, opponents who close distance fast and stay aggressive give him no window to actually use his Quirk. Rival in 1-A: Aikawa Sakume.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_naza_keiseki",
+      "name": "Naza Keiseki",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "A dark, faintly-formed entity clings to Naza's shoulders and answers to him — mostly. In low light it grows large and genuinely dangerous, striking with a strength he can't match on his own. In bright light it shrinks to something barely useful. He's spent years learning to keep it on a short leash, because on the rare occasion it's acted on its own, the results weren't something he's eager to repeat.",
       "hp": 22,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 12,
+        "CON": 13,
+        "INT": 12,
+        "WIS": 13,
+        "CHA": 16
+      },
+      "tech_score": 10,
+      "quirk": "Dark Shadow",
+      "attacks": [
+        {
+          "name": "Shadow Strike",
+          "to_hit": "+3",
+          "damage": "2d8",
+          "range": "See notes",
+          "notes": "The shadow lashes out at a target within 15 feet: 2d8 + Charisma modifier necrotic damage. Damage and reach both scale up in darkness and are halved in bright light."
+        }
+      ],
+      "traits": [
+        "Shadow Strike (Action): 2d8 + CHA necrotic, range 15ft, scaling with ambient darkness.",
+        "Loom (Bonus Action): half cover from outside the shadow's reach, negligible in bright light.",
+        "Off the Leash (Passive): in near-total darkness, once per encounter the shadow can act on its own initiative unless Naza succeeds a WIS save to hold it.",
+        "WEAKNESS — Strength and size scale directly with ambient darkness and shrink sharply in bright light or direct sun — in full daylight the shadow is barely more than a passive haze, and if it ever acts against his direct will, he must succeed a Wisdom save to regain control before it acts again."
+      ],
+      "tactics": "A heavy melee threat in low light, drastically weaker under bright arena lighting or direct sun — his effectiveness swings hard with the environment. In the tournament bracket, forcing a fight into full daylight is the single most reliable way to blunt him. Rival in 1-A: Chozen Tadachi.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_mawa_hisaya",
+      "name": "Mawa Hisaya",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Mawa's skin ignites at will, holding a controlled burn without harming her — her fists come out swinging hot, and anything that gets close enough to hit her gets burned in return. She can dial it down to something closer to 'warm' when she wants to, but her default setting under any real pressure is all the way up.",
+      "hp": 25,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 15,
+        "DEX": 12,
+        "CON": 15,
+        "INT": 9,
+        "WIS": 11,
+        "CHA": 14
+      },
+      "tech_score": 10,
+      "quirk": "Fire skin",
+      "attacks": [
+        {
+          "name": "Ignite",
+          "to_hit": null,
+          "damage": "1d6",
+          "range": "See notes",
+          "notes": "Her skin catches and holds a controlled fire for up to one minute. Unarmed strikes deal an additional 1d6 fire damage, and she sheds bright light in a 15-foot radius."
+        },
+        {
+          "name": "Flare Guard",
+          "to_hit": null,
+          "damage": "1d6",
+          "range": "See notes",
+          "notes": "When hit by a melee attack, the attacker takes 1d6 fire damage from the heat radiating off her skin."
+        }
+      ],
+      "traits": [
+        "Ignite (Bonus Action): unarmed strikes deal +1d6 fire damage for up to one minute; sheds light in a 15ft radius.",
+        "Flare Guard (Reaction, while Ignite active): melee attackers against her take 1d6 fire damage.",
+        "Simmer (Passive): can hold Ignite at reduced intensity indefinitely with no exhaustion risk, dealing no bonus damage but still shedding light and warmth.",
+        "WEAKNESS — Prolonged use raises her own core temperature — after sustaining ignition for more than three consecutive rounds, she must succeed a DC 13 Constitution save or take 1d8 fire damage from her own heat and gain one level of exhaustion."
+      ],
+      "tactics": "A front-line aggressor who trades damage confidently in extended close-range exchanges. In the tournament bracket, opponents who can stall or extend a fight long enough are working with the clock — her own heat becomes a liability well before most opponents' stamina runs out. Rival in 1-A: Tazato Tadamaki.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_koto_kohomi",
+      "name": "Koto Kohomi",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Koto can spin her whole body at speeds that shouldn't be structurally reasonable, using the momentum both to deflect incoming hits and to lash out in a wide, sweeping arc. She rarely moves in a straight line once she's spinning — the whole fight bends around her instead.",
+      "hp": 20,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 12,
+        "DEX": 16,
+        "CON": 12,
+        "INT": 10,
+        "WIS": 12,
+        "CHA": 13
+      },
+      "tech_score": 11,
+      "quirk": "Gyrate",
+      "attacks": [
+        {
+          "name": "Centrifugal Sweep",
+          "to_hit": "+5",
+          "damage": "1d10",
+          "range": "See notes",
+          "notes": "A wide sweeping strike against all creatures within 10 feet: 1d10 + Dexterity modifier bludgeoning damage, Strength save or knocked back 10 feet."
+        }
+      ],
+      "traits": [
+        "Spin Up (Bonus Action): resistance to bludgeoning damage from a single source while spinning; disadvantage on opportunity attacks against her.",
+        "Centrifugal Sweep (Action, while spinning): 10ft radius, 1d10 + DEX bludgeoning, STR save or knocked back 10ft.",
+        "Overspin (Passive): after two consecutive rounds spinning, disadvantage on her next attack or DEX save unless she decelerates first.",
+        "WEAKNESS — Sustained spin builds up disorientation of her own — after two consecutive rounds at full spin, she has disadvantage on her next attack roll or Dexterity save unless she spends a round decelerating first."
+      ],
+      "tactics": "Disruptive in any close-quarters or grappling-heavy event — hard to pin down, hard to hold. In the tournament bracket, ranged opponents who never let her close distance take away most of what makes her dangerous. Rival in 1-A: Isokono Yoromu.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_moshita_maro",
+      "name": "Moshita Maro",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Moshita can borrow a Quirk by landing a hit on its user — for two minutes he has full use of whatever ability they're carrying. He's spent years cataloguing how other people's powers actually work in practice, which means he rarely copies something he doesn't already know how to use well. He can't copy mutation- or accumulation-based Quirks, and copying anything risky means inheriting its drawbacks too.",
+      "hp": 20,
       "ac": 13,
       "speed": "30 ft",
       "dex_mod": 2,
@@ -557,194 +923,1089 @@
         "STR": 11,
         "DEX": 14,
         "CON": 12,
-        "INT": 13,
-        "WIS": 11,
-        "CHA": 10
+        "INT": 15,
+        "WIS": 14,
+        "CHA": 15
       },
+      "tech_score": 12,
+      "quirk": "Copy",
       "attacks": [
         {
-          "name": "Suppression Baton",
+          "name": "Copy (quirk action)",
           "to_hit": "+4",
-          "damage": "1d6+2 bludgeoning",
-          "range": "5 ft",
-          "notes": "On hit, target makes DC 12 CON save or their quirk use costs an additional action until end of next turn."
-        },
-        {
-          "name": "Tranq Dart",
-          "to_hit": "+4",
-          "damage": "1d4 piercing + DC 12 CON save or Poisoned for 1 minute",
-          "range": "30 ft",
-          "notes": "Single use per encounter."
+          "damage": "2d6",
+          "range": "Melee or 30 ft",
+          "notes": "No damage line exists in the source; pitched at the appendix's Minor Threat dial. Reshape it around the abilities below."
         }
       ],
       "traits": [
-        "Cell Discipline: Will not retreat unless half the cell is down. Breaks routing saves at advantage.",
-        "Data Collar: Carries a device that transmits biometric data on any quirk user they touch back to Ruin. Destroying it (AC 10, 5 HP) stops the feed."
+        "Mimic Touch (Bonus Action): on landing an unarmed strike, copy the target's Quirk for two minutes. Cannot copy mutation/accumulation Quirks; inherits copied drawbacks.",
+        "Quirk Swap (Bonus Action): switches which copied Quirk is active; can hold up to two in reserve.",
+        "Cold Read (Passive): advantage on the Athletics check required when first copying a Quirk he's observed the target use before.",
+        "WEAKNESS — Physical contact is required to copy a Quirk, and each copied power fades after two minutes. Accumulation- or mutation-based Quirks cannot be properly replicated, and upon copying he inherits all of its drawbacks, requiring a successful DC 16 Athletics check — on a failure, he cannot attempt to copy that specific Quirk again for seven rounds."
       ],
-      "tactics": "Hangs back at 20-30 ft. Uses Tranq Dart early to create a poisoned target for the Specialist to focus. Never engages in melee unless forced."
+      "tactics": "Adaptive to a fault — his ceiling is whatever he's copied, which makes him either the biggest threat on the field or the least depending entirely on his last hit. In the tournament bracket, he's a puzzle encounter: opponents have to avoid giving him a clean touch while he's actively hunting for the most dangerous Quirk in reach. Four separate segments of admiring commentary in the cavalry battle — his is the most televisually interesting quirk in the year. He is the student who does not come back. Every minute of screen time in Chapter 3 is worth double in Chapter 4. Rival in 1-A: Kazama Kenji.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
     },
     {
-      "id": "ns_specialist",
-      "name": "Ruin Specialist",
-      "category": "Ruin",
-      "cr": "2",
-      "tier": 2,
-      "description": "Mid-rank operative with a suppression quirk or suppression tech equivalent. Acquisition's primary field unit. Trained in restraint and extraction — these people have done this before.",
-      "hp": 52,
+      "id": "class1b_isosato_sari",
+      "name": "Isosato Sari",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Isosato compresses ordinary air into solid, load-bearing shapes — walls, platforms, stairs — fast enough to reshape a battlefield mid-fight. It looks unassuming until someone tries to walk through a wall that wasn't there a second ago. She thinks in load-bearing angles the way most people think in words.",
+      "hp": 19,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 13,
+        "CON": 12,
+        "INT": 16,
+        "WIS": 14,
+        "CHA": 11
+      },
+      "tech_score": 15,
+      "quirk": "Solid Air",
+      "attacks": [
+        {
+          "name": "Solid Air (quirk action)",
+          "to_hit": "+3",
+          "damage": "2d6",
+          "range": "Melee or 30 ft",
+          "notes": "No damage line exists in the source; pitched at the appendix's Minor Threat dial. Reshape it around the abilities below."
+        }
+      ],
+      "traits": [
+        "Compress (Action): conjures a solid air construct up to 10ft in any dimension within 30ft; AC 14, 20 HP, fully solid at start of her next turn.",
+        "Quick Step (Bonus Action, 5th level): instant small platform under an ally's feet within 15ft, granting 10ft of otherwise-unavailable movement.",
+        "Load-Bearing Eye (Passive): advantage on checks to judge whether a structure or surface can hold weight.",
+        "WEAKNESS — Constructs take a full round to solidify from soft to load-bearing, and their structural strength is capped by how much pressure she can compress into them at once — enough concentrated force applied before a construct fully solidifies simply breaks through it."
+      ],
+      "tactics": "Battlefield control and support — conjured platforms, walls, and stairs reshape terrain in her team's favor on the fly. In the tournament bracket, opponents who can apply enough concentrated force before a fresh construct solidifies get through her defenses before they're actually up. Builds platforms that reshape the field twice in one event. Put one under a PC and you buy enormous goodwill for Chapter 4. Rival in 1-A: Ichitaka Shijime.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_yamaru_todao",
+      "name": "Yamaru Todao",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Yamaru's body simply keeps functioning past the point where most people's would stop — pain registers, damage registers, but none of it changes his output until he's genuinely out of runway. A pale, faintly grey undertone spreads across his skin the longer a fight runs, the only outward sign that anything's actually catching up to him.",
+      "hp": 29,
       "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 0,
+      "ability_scores": {
+        "STR": 15,
+        "DEX": 10,
+        "CON": 17,
+        "INT": 11,
+        "WIS": 13,
+        "CHA": 10
+      },
+      "tech_score": 9,
+      "quirk": "Deathly Endurance",
+      "attacks": [
+        {
+          "name": "Ignore It",
+          "to_hit": null,
+          "damage": "1d4",
+          "range": "See notes",
+          "notes": "When he takes damage, he can choose to treat any resulting condition (prone, stunned, frightened) as not applying to him until the end of his next turn, at the cost of taking 1d4 additional damage from the same hit."
+        }
+      ],
+      "traits": [
+        "Push Through (Passive, once per encounter): drops to 1 HP instead of 0.",
+        "Ignore It (Reaction): shrugs off a resulting condition until the end of his next turn, taking 1d4 extra damage.",
+        "Grinding Pace (Passive): resistance to exhaustion effects and immune to being frightened.",
+        "WEAKNESS — The endurance delays damage rather than preventing it — once his hidden threshold is exceeded, he collapses suddenly and completely rather than gradually, with no warning sign visible to anyone who hasn't studied him closely."
+      ],
+      "tactics": "An attrition tank who keeps functioning at HP totals that would end most fights, brutal in long exchanges and unremarkable in short ones. In the tournament bracket, he and Izuto are the fight everyone in both classes has circled on the schedule. A man who does not stop, against Kazama Kenji, who has a hard cap on what he can absorb. The match of the tournament — run it as a clock. Rival in 1-A: Izuto Kutsu.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_chisano_tomose",
+      "name": "Chisano Tomose",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Chisano builds and releases pulses of kinetic force in rolling waves — nothing instant, everything building, pressure that arrives a beat after it's earned. A visible ripple runs through the air around her palms right before release, the only warning she gives.",
+      "hp": 20,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 12,
+        "CON": 12,
+        "INT": 12,
+        "WIS": 16,
+        "CHA": 13
+      },
+      "tech_score": 12,
+      "quirk": "Wave Motion",
+      "attacks": [
+        {
+          "name": "Build",
+          "to_hit": "+3",
+          "damage": "2d8",
+          "range": "See notes",
+          "notes": "Begins building a kinetic wave. At the start of her next turn, she may release it as a free action: a 20-foot cone dealing 2d8 + Wisdom modifier force damage, Strength save for half and no push, or full damage and pushed back 15 feet on a failure."
+        }
+      ],
+      "traits": [
+        "Build (Action, then released at start of next turn): 20ft cone, 2d8 + WIS force damage, STR save for half and no push.",
+        "Ripple (Reaction): pushes a melee attacker back 5ft, no damage.",
+        "Standing Wave (Passive): difficult terrain in a 10ft radius around her doesn't affect her own movement.",
+        "WEAKNESS — Each wave takes a full action to build to a releasable force and telegraphs clearly in the moments before release — an opponent who closes distance during the buildup can reach her before the wave ever forms."
+      ],
+      "tactics": "A sustained-pressure ranged attacker who wears opponents down wave after wave rather than one-shotting them. In the tournament bracket, opponents who close distance fast during the buildup beat her before the wave ever forms. Rival in 1-A: Nomi Igisa.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_hashige_tataka",
+      "name": "Hashige Tataka",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Hashige controls ferrous metal within his range, reshaping it into barriers, weapons, or restraints — and given enough of a room to work with, he can wire the whole space with fine, sensing control that tells him exactly where everyone in it is moving. Precise, methodical, and only as dangerous as the environment lets him be.",
+      "hp": 21,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 12,
+        "DEX": 13,
+        "CON": 12,
+        "INT": 16,
+        "WIS": 13,
+        "CHA": 11
+      },
+      "tech_score": 15,
+      "quirk": "Metal Manipulation",
+      "attacks": [
+        {
+          "name": "Reshape",
+          "to_hit": "+3",
+          "damage": "1d8",
+          "range": "See notes",
+          "notes": "Bends, redirects, or reforms up to 50 pounds of unattended metal within 60 feet into a barrier, weapon, or restraint. A reshaped weapon deals 1d8 + Intelligence modifier bludgeoning or slashing damage on his next attack; a barrier grants half or three-quarters cover."
+        }
+      ],
+      "traits": [
+        "Reshape (Action): reforms up to 50 lbs of unattended metal within 60ft into a weapon (1d8 + INT) or a barrier (half/three-quarters cover).",
+        "Wire the Room (Action, concentration): senses every creature moving through a 30ft radius of metal-wired terrain for up to one minute.",
+        "Ferrous Sense (Passive): can sense the rough location of significant metal objects within a wide radius without seeing them.",
+        "WEAKNESS — Only works on ferrous metal already present in the environment — in a fully non-metallic space, he has nothing to work with, and objects larger than roughly 200 pounds resist his control significantly, requiring a full action to move at all."
+      ],
+      "tactics": "Devastating in any event with structure — he pre-rigs environments with reshaped metal during setup phases. In the tournament bracket, he's the student everyone is wary of facing in a room with anything metal in it at all. Against Setaka Toko, whose entire quirk is iron. Rival in 1-A: Nakaya Emari.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_asabira_magi",
+      "name": "Asabira Magi",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Asabira can generate genuine, localized weather — building from a change in wind through rain to a full lightning storm if she's given the time and the focus to get there. It's slow to reach its ceiling and entirely dependent on staying uninterrupted, but a fully formed storm changes the terms of an entire fight, not just her part of it.",
+      "hp": 18,
+      "ac": 12,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 9,
+        "DEX": 12,
+        "CON": 11,
+        "INT": 13,
+        "WIS": 17,
+        "CHA": 14
+      },
+      "tech_score": 13,
+      "quirk": "Weather Manipulation",
+      "attacks": [
+        {
+          "name": "Gathering Storm",
+          "to_hit": "+3",
+          "damage": "3d8",
+          "range": "See notes",
+          "notes": "Begins generating localized weather in a 40-foot radius. Round 1: wind and overcast, no mechanical effect. Round 2: rain, difficult terrain and disadvantage on Perception (sight). Round 3+: lightning strikes a random creature in the area each round for 3d8 lightning damage (DC 15 Dexterity save for half)."
+        }
+      ],
+      "traits": [
+        "Gathering Storm (Action, concentration, escalates over rounds): wind → rain (difficult terrain, disadvantage on sight-based Perception) → lightning (3d8, DC 15 DEX save for half) by round 3.",
+        "Clear Skies (Action): disperses any weather effect in a 60ft radius, hers or otherwise.",
+        "Forecast (Passive): cannot be caught off guard by natural weather; always knows what's coming within the hour.",
+        "WEAKNESS — A full storm takes several rounds of sustained concentration to build to its peak effect, and losing concentration at any point resets the buildup — she cannot generate anything beyond mild, harmless weather without a real ramp-up."
+      ],
+      "tactics": "One of the most dangerous students at the Festival in any enclosed group event — a fully built storm reshapes visibility and terrain for the entire field, not just her immediate area. In the tournament bracket, her concentration requirement is the obvious target; break her focus early and she never gets past overcast skies. Rival in 1-A: Hiro.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_achi_homei",
+      "name": "Achi Homei",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Achi's voice does more than talk — pitched and directed correctly, it maps a space through sound the way a bat reads a cave, letting him sense shapes and movement through darkness, fog, or obstruction that would blind anyone else. He talks constantly in a fight, not out of nerves; he's actively reading the room.",
+      "hp": 20,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 15,
+        "CON": 12,
+        "INT": 12,
+        "WIS": 15,
+        "CHA": 14
+      },
+      "tech_score": 11,
+      "quirk": "Voice",
+      "attacks": [
+        {
+          "name": "Shriek",
+          "to_hit": "+4",
+          "damage": "2d8",
+          "range": "See notes",
+          "notes": "A concentrated vocal blast in a 15-foot cone: 2d8 thunder damage, Constitution save or deafened until the end of the target's next turn."
+        }
+      ],
+      "traits": [
+        "Echo Read (Bonus Action): maps a 30ft radius through darkness/fog/obstruction for one round.",
+        "Shriek (Action, recharge 5-6): 15ft cone, 2d8 thunder damage, CON save or deafened.",
+        "Never Lost (Passive): cannot become lost or disoriented while conscious, even blinded or in total darkness.",
+        "WEAKNESS — Echolocation only works on things loud enough to bounce sound back to him — genuinely silent environments or opponents give him nothing to work with, and a deafened Achi loses the ability entirely until the condition ends."
+      ],
+      "tactics": "Battlefield awareness and disruption — echolocates through obstruction and darkness that would blind anyone else, and can loose a disorienting shriek at close range. In the tournament bracket, his echolocation depends on sound; a fight in a place that's already very loud, or an opponent who can dampen noise, takes away most of his advantage. Echolocates through a scrum and calls positions for his whole team. Rival in 1-A: Setaka Toko.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_zabata_haho",
+      "name": "Zabata Haho",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Zabata's body stretches, flattens, and compresses well past what it should be able to — an arm extended ten feet, a whole body gone momentarily slack to shrug off a hit, a gap too narrow for a person suddenly not a problem. She treats all of it as a fairly relaxed party trick, which undersells it badly.",
+      "hp": 19,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 15,
+        "CON": 11,
+        "INT": 11,
+        "WIS": 12,
+        "CHA": 15
+      },
+      "tech_score": 10,
+      "quirk": "Elasticity",
+      "attacks": [
+        {
+          "name": "Elasticity (quirk action)",
+          "to_hit": "+4",
+          "damage": "2d6",
+          "range": "Melee or 30 ft",
+          "notes": "No damage line exists in the source; pitched at the appendix's Minor Threat dial. Reshape it around the abilities below."
+        }
+      ],
+      "traits": [
+        "Stretch (Bonus Action): extends a limb up to 15ft for a melee attack, grapple, or object interaction this turn.",
+        "Slack (Reaction): halves damage from a bludgeoning/force hit and auto-succeeds saves against being knocked prone or pushed by it.",
+        "Narrow Fit (Passive): can compress her body to fit through any gap at least 6 inches wide.",
+        "WEAKNESS — Overextending too far or too fast leaves her limbs slow to retract for a full round, during which sudden forced movement against a fully stretched limb deals her an extra 1d6 damage."
+      ],
+      "tactics": "A reach-based skirmisher whose extended limbs strike, grab, or trip from well outside normal range. In the tournament bracket, enough sudden force applied while she's fully stretched can genuinely injure her — the one real opening her style leaves. Rival in 1-A: Kibi Kankei.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_kagamo_akake",
+      "name": "Kagamo Akake",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Kagamo fires compressed air from her palms and heels — hard enough to propel herself in short, explosive bursts, or hard enough to hit like a battering ram at range. She uses both constantly, fighting like she's perpetually mid-jump.",
+      "hp": 23,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 13,
+        "CON": 13,
+        "INT": 9,
+        "WIS": 11,
+        "CHA": 15
+      },
+      "tech_score": 12,
+      "quirk": "Air Cannon",
+      "attacks": [
+        {
+          "name": "Palm Cannon",
+          "to_hit": "+4",
+          "damage": "2d8",
+          "range": "See notes",
+          "notes": "A concentrated blast at a target within 30 feet: 2d8 + Strength modifier bludgeoning damage, Strength save or pushed back 15 feet."
+        }
+      ],
+      "traits": [
+        "Blast Off (Bonus Action): 20ft of propulsion movement in any direction, no opportunity attacks provoked.",
+        "Palm Cannon (Action): 30ft ranged blast, 2d8 + STR bludgeoning, STR save or pushed back 15ft.",
+        "Overdrive (Passive): after the third Blast Off in an encounter, each further use costs 1d6 HP from recoil strain.",
+        "WEAKNESS — Chaining propulsion bursts drains her fast — after three uses of Blast Off in a single encounter, each further use costs her 1d6 HP from the physical strain of the recoil."
+      ],
+      "tactics": "Devastating in group events that require movement or terrain control — her Palm Cannon and propulsion bursts create visible, dramatic shockwaves the audience loves. In the tournament bracket, chaining too many bursts costs her real HP from the recoil, a cost she's occasionally too excited to remember. Rival in 1-A: Toshida Shogoro.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_detsu_narumitsu",
+      "name": "Detsu Narumitsu",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Detsu can manifest short-lived beast constructs from nothing, shaped from something between mud and instinct, obeying him the moment they form. He directs more than he fights directly — sending creations in first, reading the field through them, trading personal risk for numbers.",
+      "hp": 18,
+      "ac": 12,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 12,
+        "CON": 12,
+        "INT": 14,
+        "WIS": 15,
+        "CHA": 12
+      },
+      "tech_score": 13,
+      "quirk": "Beast Creation",
+      "attacks": [
+        {
+          "name": "Beast Creation (quirk action)",
+          "to_hit": "+3",
+          "damage": "2d6",
+          "range": "Melee or 30 ft",
+          "notes": "No damage line exists in the source; pitched at the appendix's Minor Threat dial. Reshape it around the abilities below."
+        }
+      ],
+      "traits": [
+        "Shape Beast (Action, concentration): manifests a CR 1/4 or lower beast construct, obeying his commands.",
+        "Dismiss & Reform (Bonus Action): dissolves an active creation and shapes a new one of equal or lesser Hit Dice.",
+        "Kindly Maker (Passive): his creations never act with cruelty beyond what's needed to follow his commands, and can be shaped for non-combat utility.",
+        "WEAKNESS — Maintaining a creation requires ongoing concentration and physical stamina — if his concentration breaks or he's reduced below half HP, any active creations dissolve immediately, and he can only sustain creations totaling his level in Hit Dice at once."
+      ],
+      "tactics": "A summoner/controller who trades raw personal combat power for battlefield presence and numbers. In the tournament bracket, overwhelming his creations fast enough leaves him personally undefended with very little combat capability of his own. Rival in 1-A: Samitsu Hinsei.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_kukino_kaino",
+      "name": "Kukino Kaino",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Kukino produces cleansing bubbles and foam that dissolve grime on contact and, applied differently, make an excellent mess of a battlefield — blinding bursts, treacherous slick footing, fields nobody wants to walk through. She thinks of it mostly as cleaning. It's also a genuinely dangerous crowd-control Quirk she hasn't fully clocked yet.",
+      "hp": 18,
+      "ac": 12,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 9,
+        "DEX": 13,
+        "CON": 11,
+        "INT": 12,
+        "WIS": 14,
+        "CHA": 15
+      },
+      "tech_score": 12,
+      "quirk": "Clean Bubbler",
+      "attacks": [
+        {
+          "name": "Clean Bubbler (quirk action)",
+          "to_hit": "+3",
+          "damage": "2d6",
+          "range": "Melee or 30 ft",
+          "notes": "No damage line exists in the source; pitched at the appendix's Minor Threat dial. Reshape it around the abilities below."
+        }
+      ],
+      "traits": [
+        "Foam Field (Action): 15ft radius difficult terrain within 30ft; DEX save or fall prone when moving through it.",
+        "Bubble Burst (Bonus Action): target within 20ft is blinded until end of its next turn unless it succeeds a CON save.",
+        "Spotless (Passive): can dissolve most non-organic residue and minor stains on contact, at will, outside combat.",
+        "WEAKNESS — Her bubbles and foam are easily disrupted by strong wind or open flame, which pops or burns through a field instantly — she has no way to reform a cleared field mid-fight faster than one section per action."
+      ],
+      "tactics": "Battlefield control through terrain denial — foam and bubble fields obscure vision and ruin footing more than they deal direct damage. In the tournament bracket, her fields are easily cleared by strong wind or fire, and she has no real answer once the field's been reset. Rival in 1-A: Toragi Kayo.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_hatashi_hamba",
+      "name": "Hatashi Hamba",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Hatashi's every physical and mental faculty runs slightly, permanently better than baseline — reflexes, strength, memory, recovery, all of it nudged upward by the same small margin. No single spectacular trick, just reliably, measurably better than expected at nearly everything.",
+      "hp": 22,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 13,
+        "DEX": 13,
+        "CON": 13,
+        "INT": 13,
+        "WIS": 13,
+        "CHA": 13
+      },
+      "tech_score": 13,
+      "quirk": "High Specs",
+      "attacks": [
+        {
+          "name": "Steady Recovery",
+          "to_hit": null,
+          "damage": "1d4",
+          "range": "See notes",
+          "notes": "Regains an additional 1d4 HP whenever he spends a Hit Die, and recovers from exhaustion levels at twice the normal rate."
+        }
+      ],
+      "traits": [
+        "Balanced Output (Passive): +1 to every ability score and TECH; advantage on comparative physical-performance checks.",
+        "Steady Recovery (Passive): +1d4 HP when spending a Hit Die; exhaustion recovers twice as fast.",
+        "No Weak Link (Passive): never has disadvantage from a single poor ability score on a skill check requiring two.",
+        "WEAKNESS — The boost is small and universal rather than large and specialized — against any opponent who has trained a single stat far past its normal ceiling, his flat, modest advantage rarely wins a direct contest of that specific stat."
+      ],
+      "tactics": "A generalist who wins by being reliably slightly better across the board rather than spectacularly better at any one thing. In the tournament bracket, any single specialist playing to their one strength usually beats his flat advantage in a direct contest — he has to out-strategize, not out-stat. Consistently, unglamorously better than everyone at everything. Keeps a notebook of exact numbers. Rival in 1-A: Kinji Hamakida.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_tateta_fumira",
+      "name": "Tateta Fumira",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Tateta fires precise, high-velocity laser bolts, each one aimed rather than sprayed. She reads a fight like a series of single shots that each need to count, which means she's usually thinking two exchanges ahead of whoever she's actually shooting at.",
+      "hp": 17,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 9,
+        "DEX": 17,
+        "CON": 11,
+        "INT": 14,
+        "WIS": 13,
+        "CHA": 11
+      },
+      "tech_score": 13,
+      "quirk": "Bullet Laser",
+      "attacks": [
+        {
+          "name": "Charged Shot",
+          "to_hit": "+5",
+          "damage": "2d10",
+          "range": "See notes",
+          "notes": "A precise laser bolt at a target within 90 feet: 2d10 + Dexterity modifier radiant damage. Requires a clear line of sight to charge."
+        }
+      ],
+      "traits": [
+        "Charged Shot (Action): 90ft ranged attack, 2d10 + DEX radiant damage, requires clear line of sight.",
+        "Signal Flare (Bonus Action): non-damaging beam visible up to a mile, marks a location.",
+        "Steady Aim (Passive): after not moving on her turn, her next Charged Shot this encounter has advantage.",
+        "WEAKNESS — Firing drains her fast — after three shots in a single encounter, each further shot costs her 1d4 HP, and she requires a clear line of sight to charge a shot properly; smoke, fog, or heavy obscurement prevents her from firing at all."
+      ],
+      "tactics": "Long-range precision damage that hits hard and accurate at range, at the cost of being fairly fragile up close. In the tournament bracket, smoke, fog, or an opponent closing the gap immediately takes away most of what makes her dangerous. Two precision shooters at range with nowhere to hide, against Ren Suzuki, with Kazama standing in the open being a mirror. Rival in 1-A: Masahata Shikoji.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "class1b_detsami_doki",
+      "name": "Detsami Doki",
+      "category": "Class 1-B",
+      "cr": "1",
+      "tier": 1,
+      "description": "Detsami's body is built for amphibious mobility more than raw force — sticky skin for climbing anything, a long tongue for reach and grabbing, powerful legs for jumping, and genuinely excellent swimming. He treats most terrain as usable ground, because for him, most of it actually is.",
+      "hp": 21,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 11,
+        "DEX": 16,
+        "CON": 12,
+        "INT": 10,
+        "WIS": 13,
+        "CHA": 12
+      },
+      "tech_score": 10,
+      "quirk": "Frog",
+      "attacks": [
+        {
+          "name": "Frog (quirk action)",
+          "to_hit": "+5",
+          "damage": "2d6",
+          "range": "Melee or 30 ft",
+          "notes": "No damage line exists in the source; pitched at the appendix's Minor Threat dial. Reshape it around the abilities below."
+        }
+      ],
+      "traits": [
+        "Long Tongue (Action or Bonus Action): 20ft reach to grab an object or pull a Small-or-smaller creature 10ft (STR save negates the pull).",
+        "Wall Cling (Passive): climbs any surface, including ceilings, at full speed with no check required.",
+        "Amphibious (Passive): can breathe underwater indefinitely and swims at his full speed.",
+        "WEAKNESS — Dries out and slows in prolonged heat or arid conditions — after ten minutes without access to water or moisture in a hot environment, his speed is halved and he has disadvantage on Strength and Dexterity checks until he can rehydrate."
+      ],
+      "tactics": "A mobility and utility fighter who climbs, clings, and swims his way past terrain that stops everyone else. In the tournament bracket, an opponent who can force a long fight somewhere hot and dry has a real, discoverable advantage over him. Rival in 1-A: Yoshibara Hiyoko.",
+      "stats_source": "CAMPAIGN/class1b.json stat block (level 3)."
+    },
+    {
+      "id": "npc-blazewatch",
+      "name": "Natsuki Kaori (Blazewatch)",
+      "category": "Supporting Cast",
+      "cr": "8",
+      "tier": 3,
+      "description": "Natsuki's body generates a living layer of fire just beneath her skin. Anyone who touches her gets burned, and she can flare it outward in a defensive burst or whip it into a full firestorm when she needs to clear a room. She keeps it banked low in everyday situations out of habit and courtesy.",
+      "hp": 94,
+      "ac": 16,
       "speed": "30 ft",
       "dex_mod": 2,
       "ability_scores": {
         "STR": 14,
         "DEX": 15,
-        "CON": 14,
-        "INT": 14,
-        "WIS": 12,
-        "CHA": 11
+        "CON": 16,
+        "INT": 16,
+        "WIS": 17,
+        "CHA": 15
       },
+      "tech_score": 14,
+      "quirk": "Fire Skin",
+      "role": "Pro Hero",
       "attacks": [
         {
-          "name": "Restraint Cuffs",
-          "to_hit": "+5",
-          "damage": "none",
-          "range": "5 ft (grapple)",
-          "notes": "On successful grapple, target is also Restrained. DC 14 STR to break. Cuffs have 20 HP and resistance to all damage."
-        },
-        {
-          "name": "Suppression Pulse (Tech)",
+          "name": "Firery Burn Skin",
           "to_hit": null,
-          "damage": "none",
-          "range": "15 ft cone",
-          "notes": "All creatures in cone make DC 13 CON save or their quirk is suppressed for 1 round. Recharge 5-6."
+          "damage": "1d6",
+          "range": "See notes",
+          "notes": "Any creature that touches her takes 1d6 fire damage."
         },
         {
-          "name": "Baton Strike",
-          "to_hit": "+5",
-          "damage": "2d6+2 bludgeoning",
-          "range": "5 ft",
-          "notes": ""
+          "name": "Fire Surge",
+          "to_hit": null,
+          "damage": "3d6",
+          "range": "See notes",
+          "notes": "When attacked, releases a burst of fire in a 10-foot radius around herself, dealing 3d6 fire damage to the attackers."
+        },
+        {
+          "name": "Firestorm",
+          "to_hit": "+6",
+          "damage": "5d6",
+          "range": "See notes",
+          "notes": "Creates a storm of fire in a 30-foot radius. All creatures in the area make a Dexterity saving throw; on a failure they take 5d6 fire damage and gain one rank of Burned."
         }
       ],
       "traits": [
-        "Extraction Priority: If a target is Restrained and below half HP, Specialist attempts extraction (removing target from combat) instead of attacking. Requires one full action and no other threats adjacent.",
-        "Coordinated Takedown: When attacking a target already grappled by an ally, gains advantage on the attack roll."
+        "WEAKNESS — After taking cold damage, she suffers muscle cramps, giving disadvantage on Dexterity checks for 1d4 rounds."
       ],
-      "tactics": "Moves to grapple the most quirk-dependent PC. Calls Analysts to screen. Uses Suppression Pulse to create a window, then immediately closes to grapple. Works in pairs when possible."
+      "tactics": "Top-ranked Tokyo hero. Runs Blazewatch Agency in Shibuya. Arc 3 (Agency Visit), Arc 5 (The Fracture Problem) — her blocked investigation becomes relevant when the class starts pulling the same thread.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
     },
     {
-      "id": "ns_operative",
-      "name": "Ruin Operative",
-      "category": "Ruin",
-      "cr": "4",
+      "id": "npc-irongate",
+      "name": "Tobari Jin (Irongate)",
+      "category": "Supporting Cast",
+      "cr": "7",
       "tier": 3,
-      "description": "Elite field agent. Each Operative has a notable combat quirk and has been briefed on the target's abilities. They are not mercenaries — they are invested in the outcome.",
-      "hp": 90,
-      "ac": 16,
-      "speed": "35 ft",
-      "dex_mod": 3,
+      "description": "Tobari generates rigid translucent barriers at any point he can see within 60ft. He can hold up to four simultaneously, reposition them as a free action, and detonate any of them as an explosive force burst. Size scales from door-panel to full wall. The barriers are indestructible for three rounds; after that they crack and collapse.",
+      "hp": 82,
+      "ac": 17,
+      "speed": "30 ft",
+      "dex_mod": 1,
       "ability_scores": {
         "STR": 16,
-        "DEX": 17,
-        "CON": 16,
+        "DEX": 13,
+        "CON": 17,
         "INT": 15,
-        "WIS": 14,
-        "CHA": 13
+        "WIS": 16,
+        "CHA": 10
       },
+      "tech_score": 12,
+      "quirk": "Lock Down",
+      "role": "Pro Hero",
+      "attacks": [],
+      "traits": [
+        "Lock Down (Action) — Touches a creature, object, or piece of terrain; target makes a Strength save against his Quirk save DC or becomes immobilized for one minute, unable to move, take actions, bonus actions, or reactions. New save allowed at the end of each of its turns. Can maintain a number of locks equal to twice his Proficiency Bonus.",
+        "Deadbolt (Action) — Places a hand on a surface and twists, anchoring everything within a 180-ft square in space for 2 minutes — halting all movement and shifting terrain. Causes one level of exhaustion afterward; only one Deadbolt active at a time.",
+        "WEAKNESS — Requires direct physical contact with the target to initiate a lock, and locking down larger or more complex objects/creatures inflicts two levels of exhaustion on him from the strain of anchoring them in space."
+      ],
+      "tactics": "Underground hero, Kurogane Wharf. Criminal investigation and takedowns. Arc 3 (Agency Visit), Arc 5 (The Fracture Problem), Arc 6 (Convergence) — he is the closest thing the class has to a ground-level ally for the Ruin investigation.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
+    },
+    {
+      "id": "npc-silkwind",
+      "name": "Haruno Setsuko (Silkwind)",
+      "category": "Supporting Cast",
+      "cr": "6",
+      "tier": 3,
+      "description": "Haruno generates powerful, controlled gusts and miniature tornadoes from her body. She can blast a target off their feet, sweep a room clear with a directional gale, or spin up a sustained tornado to lift and carry people clear of danger. In rescue scenarios she's used a contained tornado to lift three people clear of a collapse simultaneously and guide them down gently. In combat she uses gale blasts for crowd control and tornado formation to dominate a battlefield.",
+      "hp": 70,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 17,
+        "CON": 13,
+        "INT": 14,
+        "WIS": 18,
+        "CHA": 15
+      },
+      "tech_score": 13,
+      "quirk": "Whirlwind",
+      "role": "Pro Hero",
       "attacks": [
         {
-          "name": "Quirk Strike",
+          "name": "Gale Blast",
           "to_hit": "+7",
-          "damage": "3d8+4 (type varies by Operative)",
-          "range": "varies",
-          "notes": "The DM should choose a specific quirk for each Operative — treat as a flavoured version of the damage type."
+          "damage": "3d8",
+          "range": "See notes",
+          "notes": "Creates a 30-ft line or 20-ft cone of high-pressure wind. Targets make a Strength save, taking 3d8 bludgeoning damage and pushed 20 ft on a fail, or half damage and pushed 10 ft on a success. Structures take double damage."
         },
         {
-          "name": "Counter Protocol",
+          "name": "Cyclone Reaction",
           "to_hit": null,
-          "damage": "reaction",
-          "range": "self",
-          "notes": "When targeted by a quirk attack, Operative may make a DC 14 INT save. On success, halves incoming damage and identifies the quirk's weakness."
-        },
-        {
-          "name": "Multiattack",
-          "to_hit": null,
-          "damage": "none",
-          "range": "self",
-          "notes": "Makes two Quirk Strike attacks per action."
+          "damage": "2d6",
+          "range": "See notes",
+          "notes": "When a creature moves within range or makes a melee attack, creates a 10-ft gust pushing creatures 10 feet and dealing 2d6 bludgeoning damage to unattended objects or structures (double to fragile ones)."
         }
       ],
       "traits": [
-        "Briefed: Operative has full dossiers on Class 1-A PCs. On the first round, they correctly predict the PC's most likely action and are not surprised by it.",
-        "Field Professionalism: Immune to Frightened. Advantage on saves against Charmed.",
-        "Tactical Comm: As a bonus action, can relay target intel — all Ruin allies gain advantage on their next attack against one target this turn."
+        "Tornado Formation (Action (5th level)) — Summons a tornado within 60 feet with a 10-ft radius lasting 1 minute, used for battlefield control and rescue lift.",
+        "WEAKNESS — Requires focus and control — strong winds can harm allies or destroy terrain. Using multiple tornadoes or extreme speeds in a single turn forces a DC 15 Constitution save or she takes 2d6 true damage from exhaustion."
       ],
-      "tactics": "Opens by identifying the most dangerous PC and calling it out to the cell. Uses Counter Protocol aggressively — these people have fought quirk users before. Protects Analysts from focus fire."
+      "tactics": "Rescue specialist hero. Consults at U.A. for Shimoda Iku's field operations classes. Tier 1 training touchstone. Arc 5 and 6 first responder. Her early relationship with the class pays off when she's the one pulling them out of something in the endgame.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
     },
     {
-      "id": "splice_boss",
-      "name": "Splice (Ryo Karashi)",
-      "category": "Ruin",
-      "cr": "8",
-      "tier": 3,
-      "description": "Head of Acquisition. Boss encounter. Prefers incapacitation to damage — he wants the class intact for study. Should be fought with his Operatives screening for him.",
-      "hp": 105,
-      "ac": 15,
-      "speed": "35 ft",
-      "dex_mod": 4,
+      "id": "npc-journalist",
+      "name": "Mizushima Dayo",
+      "category": "Supporting Cast",
+      "cr": "1/8",
+      "tier": 1,
+      "description": "Passive. Mizushima retains every sensory experience with perfect fidelity — every conversation, document, scene he's witnessed is available to him as if it just happened. No degradation. He can't process more than a normal human, but he never forgets any of it. He's been an investigative journalist for twelve years. He remembers everything.",
+      "hp": 8,
+      "ac": 11,
+      "speed": "30 ft",
+      "dex_mod": 0,
       "ability_scores": {
-        "STR": 17,
-        "DEX": 18,
-        "CON": 16,
-        "INT": 15,
+        "STR": 9,
+        "DEX": 11,
+        "CON": 10,
+        "INT": 18,
+        "WIS": 16,
+        "CHA": 14
+      },
+      "tech_score": 13,
+      "quirk": "Search",
+      "role": "Civilian",
+      "attacks": [],
+      "traits": [
+        "Surveillance (Bonus Action) — Scans a 1-mile radius to locate up to two targets and identify their immediate vulnerabilities (exposed body parts, low defenses, status effects).",
+        "Mass Track (Passive) — At 3rd level, monitors up to 5 targets within 1 mile, gaining insight into their general condition and positioning; at 5th level, up to 100 targets within 5 miles.",
+        "Persistent Insight (Passive) — At 5th level, permanently stores detailed location, condition, weakness, and behavior information for up to 10 individuals, recallable instantly without needing to rescan them.",
+        "WEAKNESS — Repeated use can mentally overwhelm him, making him susceptible to deception. He must maintain concentration — if damaged, distracted, or tracking too many targets, he must succeed on a DC 14 Constitution check at the end of his turn or lose track of all monitored targets. Subjects can also falsify biological samples to mislead the scan."
+      ],
+      "tactics": "Investigative journalist, Tokyo Herald. Currently investigating Ruin. Arc 5 trigger. His story is the stone that starts the avalanche. Arc 6 — he's either the person who helps the class understand what they're fighting, or a liability depending on what's happened to him.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
+    },
+    {
+      "id": "npc-cafe-owner",
+      "name": "Okabe Fumi",
+      "category": "Supporting Cast",
+      "cr": "1/8",
+      "tier": 1,
+      "description": "No quirk. Okabe grew up quirkless in an era when that was less of an obstacle than it used to be and more of one than people admit. She has a gift for paying attention to people and a sixty-year understanding of what Kurogane Wharf looked like before the hero agencies moved in.",
+      "hp": 6,
+      "ac": 10,
+      "speed": "30 ft",
+      "dex_mod": 0,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 10,
+        "CON": 11,
+        "INT": 14,
+        "WIS": 18,
+        "CHA": 16
+      },
+      "tech_score": 8,
+      "role": "Civilian",
+      "attacks": [],
+      "traits": [],
+      "tactics": "Owner, The Anchor café, Kurogane Wharf. Arc 3 recurring space. Arc 5 — she noticed something before the class did and can confirm a detail they can't verify anywhere else.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
+    },
+    {
+      "id": "npc-port-kid",
+      "name": "Ryuto Hana",
+      "category": "Supporting Cast",
+      "cr": "1/8",
+      "tier": 1,
+      "description": "Hana can flood an area with light from her body bright enough to blind, or trigger a sudden defensive flash when she's caught off guard. The Commission's entrance exam scored it as 'low combat rating' against quirks that hit harder — but a hero who can't see is a hero who can't act, and Hana has spent three years figuring out exactly how to use that. She's genuinely creative about it.",
+      "hp": 6,
+      "ac": 10,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 8,
+        "DEX": 13,
+        "CON": 10,
+        "INT": 14,
+        "WIS": 12,
+        "CHA": 15
+      },
+      "tech_score": 10,
+      "quirk": "Luminescence",
+      "role": "Civilian",
+      "attacks": [],
+      "traits": [
+        "Glow (Bonus Action) — Sheds bright light in a 30-ft radius and dim light for an additional 30 feet; can activate or deactivate as a bonus action.",
+        "Flash Burst (Reaction) — When targeted by an attack, releases a sudden flash of light. The attacker must succeed on a Constitution save or have disadvantage on the attack roll. Creatures within 10 feet must also save or be blinded until the start of their next turn.",
+        "Beacon (Action) — Emits an intense flare of light in a 60-ft radius. Creatures of her choice that can see her must make a Constitution save or be blinded for 1 minute, repeating the save each turn to end it.",
+        "WEAKNESS — Prolonged or excessive use may cause eye strain or temporary blindness to her, imposing disadvantage on Wisdom (Perception) checks that rely on sight for 1d4 rounds."
+      ],
+      "tactics": "Kurogane Wharf resident. Wants to be a hero. Knows Ren Suzuki's neighbourhood better than he does. Arc 3 first appearance. Her map is a meaningful piece of evidence. Arc 5 — her brother thread becomes a moral complication.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
+    },
+    {
+      "id": "npc-commission",
+      "name": "Shirai Kenzo (Sentinel)",
+      "category": "Supporting Cast",
+      "cr": "5",
+      "tier": 2,
+      "description": "Shirai perceives threat levels, structural weaknesses, and probability assessments as visible overlays when he focuses on a target. He can evaluate a person's quirk threat rating, a building's load-bearing weak points, or the tactical vulnerabilities in any formation. He cannot act on what he sees — he only perceives. He has never stopped perceiving.",
+      "hp": 62,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 11,
+        "DEX": 13,
+        "CON": 13,
+        "INT": 20,
+        "WIS": 18,
+        "CHA": 17
+      },
+      "tech_score": 18,
+      "quirk": "Foresight",
+      "role": "Commission Official",
+      "attacks": [],
+      "traits": [
+        "Foresight (Bonus Action/Reaction) — After touching a target and making eye contact, predicts the next turn of visible creatures within 60 feet up to his Proficiency Bonus in number. While active, he knows every creature's current HP, AC, and initiative within 60 feet and automatically applies the Read Enemy action to all of them. A target may attempt a Wisdom save against his Quirk DC to alter one declared choice.",
+        "WEAKNESS — Requires uninterrupted vision — if blinded, loses line of sight, or his view is obscured, the effect ends. After using it, he must succeed on a DC 14 Constitution save or gain one level of Concussed, and a failed DC 13 Perception check locks him out of using it again for three rounds."
+      ],
+      "tactics": "Hero Safety Commission senior liaison to U.A. High. The person Natsuki Kaori's clearance requests go to. Background threat from Arc 1 onwards. Becomes active plot in Arc 5 when the class realises their Chain evidence isn't going anywhere. Central to Arc 6.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
+    },
+    {
+      "id": "npc-wireframe",
+      "name": "Makoto Tsurugi (Wireframe)",
+      "category": "Supporting Cast",
+      "cr": "4",
+      "tier": 2,
+      "description": "Makoto can generate precise schematic overlays of any structure she observes — full load-bearing maps, utility line paths, access points, structural vulnerabilities — appearing as ghostly blue wireframes visible only to her. She can share them as physical documents by sketching with uncanny accuracy. She has used this for hero agency coordination for eleven years. Nobody considers her a combatant.",
+      "hp": 44,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 14,
+        "CON": 12,
+        "INT": 18,
+        "WIS": 16,
+        "CHA": 11
+      },
+      "tech_score": 17,
+      "quirk": "Weld",
+      "role": "Pro Hero",
+      "attacks": [
+        {
+          "name": "Weld Touch / Restrain and Fuse",
+          "to_hit": "+5",
+          "damage": "1d8",
+          "range": "See notes",
+          "notes": "Touches two objects or creatures in contact with each other. Target makes a Strength save against her Quirk DC or becomes restrained as their bodies/materials meld together, taking 1d8 force damage plus her proficiency bonus, until freed by a Strength check."
+        }
+      ],
+      "traits": [
+        "Weapon Fusion (Passive) — Welding two items merges their properties temporarily — e.g., a welded sword and shield grants +1 AC and +1 damage; lasts 1 minute or until dismissed.",
+        "Construction-Done-Kwik (Weldcraft) (Bonus Action/Reaction) — Forces a target to make a Dexterity save against her Quirk DC or be unable to react to her next Weld Touch.",
+        "WEAKNESS — Requires direct hand contact with at least two objects or creatures to activate."
+      ],
+      "tactics": "Operations coordinator at Tobari Jin's agency. Handles logistics, resource mapping, and intel structuring. Arc 3 (Agency Visit) — the contact who changes what the investigation looks like. Arc 5 — her data is a critical piece. She is in danger once Ruin realises she has it.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
+    },
+    {
+      "id": "npc-gen-studies",
+      "name": "Adachi Yui",
+      "category": "Supporting Cast",
+      "cr": "1",
+      "tier": 1,
+      "description": "Adachi can fold her own body down into a paper-thin form, letting her slip through gaps no wider than half an inch — under doors, through grates, into spaces nobody thinks to guard. While folded she's effectively invisible and impossible to pin down. The Commission's entrance exam evaluation noted: 'Passive utility, low combat rating.' She disagrees — she can close distance and land a hit from an angle nobody's covering before they even register she's there.",
+      "hp": 20,
+      "ac": 12,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": {
+        "STR": 9,
+        "DEX": 14,
+        "CON": 11,
+        "INT": 16,
+        "WIS": 15,
+        "CHA": 13
+      },
+      "tech_score": 12,
+      "quirk": "Fold-A-Body",
+      "role": "Student",
+      "attacks": [
+        {
+          "name": "Precision Shot",
+          "to_hit": "+4",
+          "damage": "3d8",
+          "range": "See notes",
+          "notes": "Dashes to an unoccupied space within 60 feet of an opponent, ending within 5 feet, then makes a ranged attack ignoring damage reduction. On a hit, deals 3d8 piercing damage and 1 rank of Bleed; target makes a Constitution save or becomes incapacitated until the end of its next turn."
+        }
+      ],
+      "traits": [
+        "Fold (Action/Reaction) — Folds her body into a paper-thin form (usable as a reaction when grappled), allowing her to slip through openings as small as 0.5 inches. While in this state she becomes invisible, gains advantage on attack rolls, and can Dash as a bonus action.",
+        "Stealthy Maneuver (Passive) — Advantage on Dexterity saving throws and Dexterity-based skill checks.",
+        "WEAKNESS — Overuse causes disorientation — after using it for three consecutive turns, she must succeed on a DC 14 Constitution save or become incapacitated until the end of her next turn."
+      ],
+      "tactics": "U.A. General Studies student. Seeking Hero Course transfer. Would do well in any infiltration or stealth-dependent scenario. Optional recurring asset. The class meeting her in Tier 1 and building a relationship pays off significantly in Arc 5 when a mission requires her exact skillset.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
+    },
+    {
+      "id": "npc-shiketsu",
+      "name": "Dojima Hiroto",
+      "category": "Supporting Cast",
+      "cr": "1",
+      "tier": 1,
+      "description": "Dojima can nullify gravity on whatever he touches with his fingertips, rendering it weightless while it keeps its full mass and momentum. On himself, a tap of the heels gives him a sustained hover — he can hang in open air, redirect a fall, or reposition over a battlefield with no wasted motion. On an opponent he's struck, he can send them thirty feet skyward and leave them stranded there. He has mastered the transitions to a degree that makes his movement look effortless.",
+      "hp": 24,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 13,
+        "DEX": 16,
+        "CON": 13,
+        "INT": 14,
         "WIS": 13,
         "CHA": 14
       },
+      "tech_score": 11,
+      "quirk": "Zero Gravity",
+      "role": "Student",
       "attacks": [
         {
-          "name": "Graft Touch",
-          "to_hit": "+8",
-          "damage": "2d6+4 necrotic",
-          "range": "5 ft",
-          "notes": "Target makes DC 16 CON save or suffers one of: fused hand (disadvantage on attacks), fused leg (halved speed), or fused jaw (can't speak). Gloves off: +1d8 necrotic."
-        },
-        {
-          "name": "Self-Graft (Bonus)",
+          "name": "Zero Gravity",
           "to_hit": null,
-          "damage": "none",
-          "range": "self",
-          "notes": "Extend reach by 5 ft OR gain +3 AC until start of next turn."
-        },
-        {
-          "name": "Acquisition Protocol",
-          "to_hit": null,
-          "damage": "Paralysed",
-          "range": "grapple",
-          "notes": "Grappled target: DC 16 CON save or Paralysed until end of next turn. Splice can't move while using this."
-        },
-        {
-          "name": "Multiattack",
-          "to_hit": null,
-          "damage": "none",
-          "range": "self",
-          "notes": "Two Graft Touch attacks."
+          "damage": "1d12",
+          "range": "See notes",
+          "notes": "Makes a struck object or creature weightless, sending it 30 feet into the air. Target makes a Strength save against his Quirk DC or is suspended at a fixed height, unable to take reactions (unless it can fly/levitate), and has disadvantage on Dexterity saves for a number of rounds equal to his Proficiency Bonus. Can be ended early to drop the target, dealing 1d12 bludgeoning damage per 10 feet fallen."
         }
       ],
       "traits": [
-        "Glove Removal: Splice starts with gloves on. Removing them (bonus action) adds 1d8 necrotic to Graft Touch. He only does this when forced.",
-        "Briefed: Has dossiers on all PCs. On round 1, correctly anticipates the most dangerous PC's action.",
-        "Acquisition Priority: Below 40 HP, Splice stops attacking and attempts to withdraw with any incapacitated target he can carry."
+        "Meteor Strike (Action) — Slams a hand into the ground, launching rubble skyward then crashing it down. Creatures in a 30-ft radius make a Dexterity save against his Quirk DC, taking Xd10 + Xd4 bludgeoning damage and being knocked prone on a failure (X scaling with fall height), or half damage with no prone on a success. Requires loose ground, rubble, or difficult terrain in range.",
+        "Self-Skill (Bonus Action) — Taps his heels to activate weightlessness on himself, gaining a 60-ft hover speed until the end of his next turn, maintainable each turn with a bonus action.",
+        "Gravity Plus (Bonus Action (5th level)) — When he uses Zero Gravity to lift a creature, he can immediately attempt to slam it back down.",
+        "WEAKNESS — Exerts tremendous pressure on his body each time he defies gravity — each use grants 1 level of Gravity Strain, and if total strain equals or exceeds his Level + double his Proficiency Bonus, he gains the Queasy condition. Strain clears on a short or long rest."
       ],
-      "tactics": "Stays mobile, probes for grapple opportunities. Screened by Operatives. Targets support-role PCs or anyone already debuffed. Removes gloves at 50% HP. Attempts extraction if he has a paralysed target — he'd rather leave with one subject than fight to the end."
+      "tactics": "Exchange student from Shiketsu High. At U.A. for one semester. Natural rival to multiple Class 1-A students. Arc 2 (Dorm Life) introduction. Arc 4 (Sports Festival) as a wildcard competitor. Potentially returns in Tier 2 when the stakes get real — Shiketsu's teachers have noticed what's happening in Tokyo too.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
     },
     {
-      "id": "fracture_member",
-      "name": "Fracture Cell Member",
-      "category": "Fracture",
-      "cr": "1/4",
+      "id": "npc-coerced",
+      "name": "Kurosawa Emi",
+      "category": "Supporting Cast",
+      "cr": "1/8",
       "tier": 1,
-      "description": "A true believer. Mostly young adults with minor or mid-range quirks who feel the system has failed them. They are not trained fighters. Some are scared. Most are angry. A few are genuinely dangerous. They wear a jagged-line symbol somewhere on their person.",
-      "hp": 18,
+      "description": "Kurosawa can stretch her earlobes out like jacks and plug them into solid surfaces — walls, lampposts, the ground itself — to pick up vibration and sound carried through the material from well beyond normal earshot. Plugged into the right surface, she can tell a hero patrol is coming blocks before it arrives. The Commission evaluated her quirk as insufficient for hero licensing. Ruin evaluated it differently: she can tell them when hero patrols are approaching and they never have to ask twice.",
+      "hp": 7,
+      "ac": 11,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 9,
+        "DEX": 12,
+        "CON": 10,
+        "INT": 13,
+        "WIS": 15,
+        "CHA": 11
+      },
+      "tech_score": 10,
+      "quirk": "Earphone Jack",
+      "role": "Civilian",
+      "attacks": [
+        {
+          "name": "Earphone Jack",
+          "to_hit": "+3",
+          "damage": "3d8",
+          "range": "See notes",
+          "notes": "Stretches her earlobes up to 25 feet to plug into solid surfaces, electronic ports, or creatures. Plugged into a device or creature, she can unleash a 30-ft long, 10-ft wide line of thunderous energy: targets make a Strength save, taking 3d8 thunder damage, deafened, and pushed 20 feet on a fail, or half damage and pushed 10 feet on a success. Directly targeting a creature instead allows a melee attack dealing 2d6 thunder damage on a hit."
+        }
+      ],
+      "traits": [
+        "Tracking Plug (Bonus Action) — Plugs her Earphone Jacks into the ground to gain advantage on checks to track items or creatures (cannot roll lower than 10), though it does not work on silent or flying creatures.",
+        "WEAKNESS — Her earlobes count as her ears and are vulnerable to damage; using the Quirk more than her Level + double her Proficiency Bonus times causes a rank of unreducible bleed on each subsequent use until she takes a short rest."
+      ],
+      "tactics": "Unwilling Chain informant, Kurogane Wharf. Monitors and reports hero patrol timing. Arc 3 or 5 encounter. Her records are the piece of evidence that connects the patrol coverage to Ruin's operations. She is also in immediate danger if Ruin suspects she's been contacted by heroes.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
+    },
+    {
+      "id": "npc-retired-hero",
+      "name": "Nakata Isamu (Wallbreaker (retired))",
+      "category": "Supporting Cast",
+      "cr": "5",
+      "tier": 2,
+      "description": "Nakata's body absorbs kinetic force and redistributes it at a chosen point of contact. He absorbed blows that should have broken him for fifteen years and redirected them into every surface he touched. He still has the quirk. He doesn't use it. The gym bags in his training space are double-stuffed with sand.",
+      "hp": 72,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 18,
+        "DEX": 13,
+        "CON": 18,
+        "INT": 14,
+        "WIS": 16,
+        "CHA": 12
+      },
+      "tech_score": 10,
+      "quirk": "Impact Recoil",
+      "role": "Civilian",
+      "attacks": [
+        {
+          "name": "Reversal Strike",
+          "to_hit": null,
+          "damage": "1d8",
+          "range": "See notes",
+          "notes": "Immediately follows up Recoil Reflex with a melee or unarmed attack as part of the same reaction, dealing normal weapon damage plus 1d8 Force damage; target makes a Strength save or is knocked prone."
+        },
+        {
+          "name": "Impact Rebound",
+          "to_hit": null,
+          "damage": "3d10",
+          "range": "See notes",
+          "notes": "Before falling unconscious from a melee attack, unleashes stored kinetic energy — creatures within 10 feet make a Strength save, taking 3d10 Force damage, knocked prone, and pushed 15 feet on a fail, or half damage on a success."
+        }
+      ],
+      "traits": [
+        "Recoil Reflex (Reaction) — When struck by a physical melee attack, reflects the force back. The attacker makes a Dexterity save, taking Force damage equal to the amount dealt to him on a fail (half on a success), and can be repelled 10 feet if they fail by 5 or more.",
+        "WEAKNESS — Only functions against direct physical attacks (melee, thrown weapons, unarmed blows) — energy, elemental, psychic, or ranged projectile damage cannot be reflected. Using it three times in a row without a rest gives one level of exhaustion; using it again while exhausted deals 2d10 Force damage to him instead."
+      ],
+      "tactics": "Retired hero. Runs Nakata's Gym in Kurogane Wharf, one block from The Anchor. Arc 3 optional encounter. Arc 5 — his connection to Undertow becomes plot-critical. Arc 6 — he makes a decision about Hatch that the class has to live with.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
+    },
+    {
+      "id": "npc-alucard",
+      "name": "Alucard Chosoji",
+      "category": "Supporting Cast",
+      "cr": "9",
+      "tier": 4,
+      "description": "Alucard can fuse with any dark-colored object or shadow, natural or artificial. While merged he becomes one with the darkness, able to move unseen and unhindered through shadows and solid objects alike — which is how he can be standing in a crowd one second and simply gone the next.",
+      "hp": 88,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 12,
+        "DEX": 17,
+        "CON": 14,
+        "INT": 15,
+        "WIS": 18,
+        "CHA": 16
+      },
+      "tech_score": 11,
+      "quirk": "Black",
+      "role": "Unaffiliated / Wildcard",
+      "attacks": [],
+      "traits": [
+        "Shadow Merge (Bonus Action or Reaction) — Merges with a shadow or dark object within 30 feet, becoming invisible and silent. While merged he can move through darkness or solid matter freely and gains +20 movement speed. He can exit the shadow as a free action.",
+        "Dark Command (Action) — Controls a creature or dark object within 10 feet. The target must succeed on a Wisdom save against his Quirk save DC or fall under his influence, performing basic movements or melee attacks for 2 rounds.",
+        "WEAKNESS — Exposure to bright light forcibly ejects him from the shadow or object he is merged with, and he cannot merge at all if no dark surface or shaded area exists nearby."
+      ],
+      "tactics": "Solo anti-hero. No registered hero license, no faction ties, no known agenda. Appears to be tracking something — or someone — across Tokyo, and Class 1-A appears to be incidental to whatever that is. Or it isn't.",
+      "stats_source": "CAMPAIGN/npcs.json stat block."
+    },
+    {
+      "id": "npc_falsework",
+      "name": "Tsuzuri Hane (Falsework)",
+      "category": "Supporting Cast",
+      "cr": "4",
+      "tier": 2,
+      "description": "The first victim, and the campaign's only ghost. A mid-ranked pro with a construction quirk and a genuinely nice reputation. Twenty-nine, eleven years on the boards, a fourth place at his own Sports Festival that he never stopped mentioning.",
+      "hp": 60,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 12,
+        "CON": 15,
+        "INT": 13,
+        "WIS": 12,
+        "CHA": 14
+      },
+      "quirk": "Construction",
+      "role": "Pro Hero (deceased)",
+      "attacks": [
+        {
+          "name": "Raised structure",
+          "to_hit": "+6",
+          "damage": "2d8+2 bludgeoning",
+          "range": "Melee or 30 ft",
+          "notes": "For flashback and archive-footage scenes only."
+        }
+      ],
+      "traits": [
+        "He appears only in archive footage, in a commentary clip, and in the fact that Rawagi Chiso knew him.",
+        "Sylar has held his quirk since April — an old acquisition, used at full strength."
+      ],
+      "tactics": "Not an encounter. Present only if you run the footage as a scene.",
+      "stats_source": "No stat block exists — pitched on the appendix's three-tier scale for flashback use."
+    },
+    {
+      "id": "npc_okuma_shizuka",
+      "name": "Inspector Okuma Shizuka",
+      "category": "Supporting Cast",
+      "cr": "1/2",
+      "tier": 1,
+      "description": "Hero Public Safety Commission, Serious Incidents. Forties, unhurried, entirely without warmth and entirely without malice. She thinks a school is the worst possible place to run an investigation and she is correct.",
+      "hp": 30,
       "ac": 12,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 12,
+        "CON": 12,
+        "INT": 16,
+        "WIS": 16,
+        "CHA": 13
+      },
+      "role": "Commission Official",
+      "attacks": [],
+      "traits": [
+        "She and Sugitsu Jarvichi disagree in a formal, polite, escalating way across three chapters, and neither of them is wrong."
+      ],
+      "tactics": "Never a combatant. She is procedural pressure with a notebook.",
+      "stats_source": "No stat block exists — pitched on the appendix's three-tier scale."
+    },
+    {
+      "id": "generic_minor_threat",
+      "name": "Minor Threat",
+      "category": "Generic",
+      "cr": "1/2",
+      "tier": 1,
+      "description": "Difficulty dial from the campaign's own thirty-second stat block guide. Reskin it as whatever the scene needs — a person, a drone, a thing in a corridor.",
+      "hp": 25,
+      "ac": 13,
       "speed": "30 ft",
       "dex_mod": 1,
       "ability_scores": {
@@ -753,343 +2014,90 @@
         "CON": 12,
         "INT": 10,
         "WIS": 10,
-        "CHA": 11
+        "CHA": 10
       },
       "attacks": [
         {
-          "name": "Quirk Attack (Minor)",
-          "to_hit": "+3",
-          "damage": "1d8 (type varies)",
-          "range": "varies",
-          "notes": "Roll a d6 to determine damage type: 1-2 bludgeoning, 3-4 fire, 5 lightning, 6 slashing."
-        },
-        {
-          "name": "Improvised Weapon",
-          "to_hit": "+3",
-          "damage": "1d6+1 bludgeoning",
-          "range": "5 ft",
-          "notes": "Used as fallback."
+          "name": "Attack",
+          "to_hit": "+4",
+          "damage": "2d6",
+          "range": "Melee or 30 ft",
+          "notes": "Give it one interesting thing it can do and nothing else."
         }
       ],
       "traits": [
-        "Ideology Check: When a PC attempts to talk them down (CHA check DC 12), a Cell Member may hesitate — losing their action that turn but not fully standing down. DC 16 causes them to withdraw.",
-        "Not a Killer: Will not make attacks that could kill a downed target. Breaks from combat if forced into lethal choices.",
-        "Cell Loyalty: Has disadvantage on saves against being frightened by the class, but advantage if a Cell Leader is present."
+        "Name it, say what it does in one sentence, and say what it cannot do. The limit is what makes it feel real."
       ],
-      "tactics": "Attacks in groups. Stays near Cell Leader if one is present. Easy to talk down if approached with genuine engagement rather than force. Will scatter if their leader is defeated."
+      "tactics": "Whatever the scene needs. Do not build it a sheet.",
+      "stats_source": "Verbatim from the appendix."
     },
     {
-      "id": "fracture_cell_leader",
-      "name": "Fracture Cell Leader",
-      "category": "Fracture",
-      "cr": "2",
-      "tier": 2,
-      "description": "Experienced member with a solid combat quirk and genuine tactical sense. Leads a cell of 4-8 members. Protective of their people — this shapes their decisions more than ideology does.",
-      "hp": 58,
-      "ac": 14,
-      "speed": "30 ft",
-      "dex_mod": 2,
-      "ability_scores": {
-        "STR": 14,
-        "DEX": 15,
-        "CON": 14,
-        "INT": 13,
-        "WIS": 13,
-        "CHA": 14
-      },
-      "attacks": [
-        {
-          "name": "Quirk Strike",
-          "to_hit": "+5",
-          "damage": "2d8+3 (type varies)",
-          "range": "varies",
-          "notes": ""
-        },
-        {
-          "name": "Multiattack",
-          "to_hit": null,
-          "damage": "none",
-          "range": "self",
-          "notes": "Two Quirk Strikes."
-        }
-      ],
-      "traits": [
-        "Rally: As a bonus action, Cell Leader grants all Fracture Cell Members within 30 ft advantage on their next attack roll or saving throw.",
-        "Protect the People: If a Cell Member is downed, Cell Leader immediately targets whoever downed them, gaining advantage on attacks against that target for 1 round.",
-        "Ideological Argument: A PC who succeeds on a CHA (Persuasion) DC 15 check can force the Cell Leader to hesitate for 1 round. DC 20 ends the encounter without combat. This resets if the class is overtly aggressive.",
-        "Never Surrenders Alone: Will not surrender while any Cell Members are still up and able to retreat."
-      ],
-      "tactics": "Positions behind Cell Members. Uses Rally at the start of combat. Targets the PC who's doing the most damage to their team. Willing to end the fight via argument if approached correctly — but only if the class hasn't already hurt someone they care about."
-    },
-    {
-      "id": "voltage_boss",
-      "name": "Voltage (Tatsumi Yuma)",
-      "category": "Fracture",
-      "cr": "7",
-      "tier": 3,
-      "description": "Co-founder of Fracture. Boss encounter. Tactically intelligent — he reads the class and adapts. Use him to punish overconfidence. He fights to protect, not to win, which makes him unpredictable.",
-      "hp": 115,
-      "ac": 14,
-      "speed": "35 ft",
-      "dex_mod": 3,
-      "ability_scores": {
-        "STR": 14,
-        "DEX": 16,
-        "CON": 16,
-        "INT": 13,
-        "WIS": 15,
-        "CHA": 12
-      },
-      "attacks": [
-        {
-          "name": "Shock Strike",
-          "to_hit": "+6",
-          "damage": "2d8+3 lightning",
-          "range": "5 ft",
-          "notes": "Target makes DC 16 CON save or movement halved until end of next turn."
-        },
-        {
-          "name": "Blackout",
-          "to_hit": null,
-          "damage": "3d8 lightning",
-          "range": "15 ft radius",
-          "notes": "Kills power in the radius for 1 minute — support gear, comms, drones, and powered prosthetics inside stop functioning. Creatures in the area on trigger make DC 16 DEX save or take full damage and are Stunned until end of next turn (half damage, not stunned, on success)."
-        },
-        {
-          "name": "Paralytic Surge",
-          "to_hit": null,
-          "damage": "Paralysed",
-          "range": "touch",
-          "notes": "Once per short rest. DC 16 CON save or Paralysed for 1 minute. Save repeats at end of each turn."
-        },
-        {
-          "name": "Multiattack",
-          "to_hit": null,
-          "damage": "none",
-          "range": "self",
-          "notes": "Two Shock Strikes."
-        }
-      ],
-      "traits": [
-        "Grounded: Immune to lightning damage. Advantage on saves against quirks affecting the nervous system.",
-        "Environmental Read: Voltage starts combat by identifying conductive surfaces and anything tech-reliant on the class. He has advantage on his first Blackout if he set up his position before combat started.",
-        "Adaptive: After the first round, Voltage correctly identifies the class's most powerful combo and positions to break it.",
-        "Dead Zone Recovery: After using Blackout, Voltage has disadvantage on his own attack rolls until the start of his next turn.",
-        "Protective Priority: If Shard or a Cell Leader is present and drops below 30 HP, Voltage immediately moves to their position and uses Paralytic Surge on whoever threatens them."
-      ],
-      "tactics": "Picks his ground before combat if possible. Opens with Blackout on clustered PCs, especially anyone leaning on support gear. Knows Steel conducts electricity straight through it and baits hardened opponents into eating a hit they think is safe. Willing to take a hit to get Paralytic Surge off on the biggest threat."
-    },
-    {
-      "id": "undertow_boss",
-      "name": "Undertow (Soryu Hatch)",
-      "category": "Ruin",
-      "cr": "12",
-      "tier": 3,
-      "description": "Founder of Ruin. Riptide quirk — liquefies his own body to seawater, untouchable and able to flow through any unsealed gap, then drags targets under with a current pulled from the environment. Never raises his voice.",
-      "hp": 165,
-      "ac": 17,
-      "speed": "35 ft",
-      "dex_mod": 5,
-      "ability_scores": { "STR": 14, "DEX": 20, "CON": 16, "INT": 18, "WIS": 16, "CHA": 15, "TECH": 12 }
-    },
-    {
-      "id": "flashpoint_boss",
-      "name": "Flashpoint (Goda Miruki)",
-      "category": "Ruin",
-      "cr": "14",
-      "tier": 3,
-      "description": "Ruin's enforcer and demolitions specialist. Combustion Point quirk — marks surfaces or people with a latent charge and detonates them later, from range, with surgical precision. Overwhelming once the marks are already set.",
-      "hp": 220,
-      "ac": 16,
-      "speed": "30 ft",
-      "dex_mod": 3,
-      "ability_scores": { "STR": 16, "DEX": 17, "CON": 18, "INT": 12, "WIS": 12, "CHA": 16, "TECH": 8 }
-    },
-    {
-      "id": "riddle_boss",
-      "name": "Riddle (Sae Ichiro)",
-      "category": "Ruin",
-      "cr": "9",
-      "tier": 2,
-      "description": "Ruin's information broker and manipulator. Brainwashing quirk — commands implanted through voice. Prefers never to be in the room when things go wrong.",
-      "hp": 110,
-      "ac": 14,
-      "speed": "30 ft",
-      "dex_mod": 2,
-      "ability_scores": { "STR": 10, "DEX": 15, "CON": 13, "INT": 17, "WIS": 15, "CHA": 19, "TECH": 14 }
-    },
-    {
-      "id": "kuma_boss",
-      "name": "Kuma",
-      "category": "Ruin",
-      "cr": "6",
-      "tier": 2,
-      "description": "Ruin's heavy. Gigantification quirk — grows to enormous size, dramatically increasing strength and durability. No alias, no pretense. Just Kuma.",
-      "hp": 140,
-      "ac": 15,
-      "speed": "30 ft (40 ft gigantified)",
-      "dex_mod": 0,
-      "ability_scores": { "STR": 20, "DEX": 10, "CON": 18, "INT": 8, "WIS": 10, "CHA": 8, "TECH": 6 }
-    },
-    {
-      "id": "null_boss",
-      "name": "Null (Aoi Tenshin)",
-      "category": "Ruin",
-      "cr": "11",
-      "tier": 3,
-      "description": "Ruin's chief scientist. Dead Air quirk — drops a radius where no quirks or powered electronics function at all, her own gear included. Calm, methodical, and terrifying in a quiet room.",
-      "hp": 120,
-      "ac": 14,
-      "speed": "30 ft",
-      "dex_mod": 2,
-      "ability_scores": { "STR": 12, "DEX": 14, "CON": 14, "INT": 18, "WIS": 16, "CHA": 14, "TECH": 16 }
-    },
-    {
-      "id": "teacher_oshiro",
-      "name": "Oshiro Daikichi",
-      "category": "Teachers",
-      "cr": "10",
-      "tier": 1,
-      "description": "Homeroom teacher and combat training lead. Aftershock quirk — every heavy strike sends a concussive shockwave through the ground. Absolute unit. Students learn quickly not to pull punches in his class.",
-      "hp": 175,
-      "ac": 18,
-      "speed": "30 ft",
-      "dex_mod": 1,
-      "ability_scores": { "STR": 20, "DEX": 12, "CON": 20, "INT": 14, "WIS": 15, "CHA": 14, "TECH": 10 }
-    },
-    {
-      "id": "teacher_fujisaki",
-      "name": "Fujisaki Nene",
-      "category": "Teachers",
-      "cr": "5",
-      "tier": 1,
-      "description": "Support technology and gear crafting teacher. Fiber Master quirk — generates and controls high-tensile threads. Can restrain, redirect, and construct with them.",
-      "hp": 90,
-      "ac": 14,
-      "speed": "35 ft",
-      "dex_mod": 2,
-      "ability_scores": { "STR": 10, "DEX": 15, "CON": 13, "INT": 18, "WIS": 15, "CHA": 14, "TECH": 20 }
-    },
-    {
-      "id": "teacher_hamagawa",
-      "name": "Hamagawa Rei",
-      "category": "Teachers",
-      "cr": "7",
-      "tier": 1,
-      "description": "Hero ethics and law teacher. Mirror quirk — turns a Quirk-based attack back on whoever used it, once he's felt it land. Students who think ethics is a soft subject reconsider after sparring with him.",
-      "hp": 105,
-      "ac": 15,
-      "speed": "30 ft",
-      "dex_mod": 2,
-      "ability_scores": { "STR": 12, "DEX": 14, "CON": 14, "INT": 17, "WIS": 18, "CHA": 16, "TECH": 12 }
-    },
-    {
-      "id": "teacher_yuzuki",
-      "name": "Yuzuki Taro",
-      "category": "Teachers",
-      "cr": "8",
-      "tier": 1,
-      "description": "Physical training and conditioning teacher. Muscle Augmentation quirk — dramatically enhances his own physical capability on demand. Has never needed to go above 40%.",
-      "hp": 155,
-      "ac": 16,
-      "speed": "35 ft",
-      "dex_mod": 0,
-      "ability_scores": { "STR": 22, "DEX": 10, "CON": 20, "INT": 12, "WIS": 14, "CHA": 13, "TECH": 8 }
-    },
-    {
-      "id": "teacher_shimoda",
-      "name": "Shimoda Iku",
-      "category": "Teachers",
-      "cr": "9",
-      "tier": 1,
-      "description": "Field operations and rescue tactics teacher. Weather Manipulation quirk — localised weather control including wind, rain, lightning, and fog. Runs the most chaotic outdoor exercises.",
-      "hp": 125,
-      "ac": 15,
-      "speed": "30 ft",
-      "dex_mod": 2,
-      "ability_scores": { "STR": 12, "DEX": 14, "CON": 15, "INT": 16, "WIS": 18, "CHA": 16, "TECH": 14 }
-    },
-    {
-      "id": "misc_hero",
-      "name": "Miscellaneous Hero",
-      "category": "Miscellaneous",
-      "cr": "4",
-      "tier": 1,
-      "description": "A licensed hero of average ability. Competent, professional, and effective within their power set. Useful as an ally, a challenge, or a comparison point for the class.",
-      "hp": 60,
-      "ac": 14,
-      "speed": "30 ft",
-      "dex_mod": 2,
-      "ability_scores": { "STR": 14, "DEX": 14, "CON": 14, "INT": 12, "WIS": 13, "CHA": 13, "TECH": 10 }
-    },
-    {
-      "id": "misc_villain",
-      "name": "Miscellaneous Villain",
-      "category": "Miscellaneous",
+      "id": "generic_real_threat",
+      "name": "Real Threat",
+      "category": "Generic",
       "cr": "3",
-      "tier": 1,
-      "description": "An unlicensed quirk user operating outside the law. Dangerous but not exceptional. Average across the board — the benchmark for what a villain looks like before Ruin gets involved.",
-      "hp": 45,
-      "ac": 12,
-      "speed": "30 ft",
-      "dex_mod": 1,
-      "ability_scores": { "STR": 13, "DEX": 12, "CON": 13, "INT": 10, "WIS": 10, "CHA": 10, "TECH": 8 }
-    },
-    {
-      "id": "shard_boss",
-      "name": "Shard (Maki Torune)",
-      "category": "Fracture",
-      "cr": "6",
-      "tier": 3,
-      "description": "Co-founder of Fracture. Boss encounter. She doesn't want to fight. She will fight. Area control specialist — the encounter is as much about navigating a floor riddled with her seeded fracture points as defeating her. She should have talking opportunities built in.",
-      "hp": 88,
+      "tier": 2,
+      "description": "Difficulty dial from the campaign's own thirty-second stat block guide. Reskin it as whatever the scene needs — a person, a drone, a thing in a corridor.",
+      "hp": 60,
       "ac": 15,
       "speed": "30 ft",
-      "dex_mod": 3,
+      "dex_mod": 1,
       "ability_scores": {
-        "STR": 11,
-        "DEX": 17,
-        "CON": 14,
-        "INT": 16,
-        "WIS": 14,
-        "CHA": 18
+        "STR": 12,
+        "DEX": 12,
+        "CON": 12,
+        "INT": 10,
+        "WIS": 10,
+        "CHA": 10
       },
       "attacks": [
         {
-          "name": "Fracture Volley",
-          "to_hit": "+7",
-          "damage": "3d6 slashing",
-          "range": "60 ft",
-          "notes": "Flings shards torn from a fractured surface. Can target 2 creatures within 5 ft of each other as one action."
-        },
-        {
-          "name": "Fault Line",
-          "to_hit": null,
-          "damage": "1d4 slashing per 5 ft",
-          "range": "20 ft radius within 40 ft",
-          "notes": "Seeds fractures across the ground itself. Difficult terrain, 1 minute. Action to place."
-        },
-        {
-          "name": "Barrier (Reaction)",
-          "to_hit": null,
-          "damage": "none",
-          "range": "self",
-          "notes": "Fractures a section of wall or floor upward into a jagged crystalline barricade: 10 ft wide, 10 ft tall, 30 HP. Must destroy barrier to hit her."
-        },
-        {
-          "name": "Shatterpoint",
-          "to_hit": null,
-          "damage": "5d6 slashing",
-          "range": "30 ft radius",
-          "notes": "Triggers every fracture she's seeded in the area at once. Recharge 5-6. DC 16 DEX save or take full damage + begin bleeding (1d4/turn, action to stop). Half on success, no bleed."
+          "name": "Attack",
+          "to_hit": "+6",
+          "damage": "3d8",
+          "range": "Melee or 30 ft",
+          "notes": "Give it one interesting thing it can do and nothing else."
         }
       ],
       "traits": [
-        "Won't Kill: Shard does not make attacks that would reduce a target to 0 HP if she knows they're already below half health. She will incapacitate, not kill.",
-        "Debate Opening: Once per encounter, as an action, Shard stops fighting and addresses one PC directly. That PC makes a DC 14 WIS save. On fail, they are compelled to respond for 1 round (can't attack Shard, can still defend). On success, they are unaffected but Shard gains no further debate opportunities.",
-        "Fracture Sense: Shard has tremorsense 30 ft through any surface she's seeded with a fracture. Invisible creatures don't gain advantage against her within this range if they're standing on seeded ground."
+        "Name it, say what it does in one sentence, and say what it cannot do. The limit is what makes it feel real."
       ],
-      "tactics": "Opens with Fault Line to control the space. Uses Barrier reactively to buy time for talking. Fracture Volley at range. Uses Shatterpoint when cornered. Always tries to create one conversation — if a PC engages honestly, she responds in kind, even mid-fight."
+      "tactics": "Whatever the scene needs. Do not build it a sheet.",
+      "stats_source": "Verbatim from the appendix."
+    },
+    {
+      "id": "generic_serious_threat",
+      "name": "Serious Threat",
+      "category": "Generic",
+      "cr": "7",
+      "tier": 3,
+      "description": "Difficulty dial from the campaign's own thirty-second stat block guide. Reskin it as whatever the scene needs — a person, a drone, a thing in a corridor.",
+      "hp": 120,
+      "ac": 17,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 12,
+        "DEX": 12,
+        "CON": 12,
+        "INT": 10,
+        "WIS": 10,
+        "CHA": 10
+      },
+      "attacks": [
+        {
+          "name": "Attack",
+          "to_hit": "+8",
+          "damage": "4d10",
+          "range": "Melee or 30 ft",
+          "notes": "Plus one special move. Nobody needs a full sheet."
+        }
+      ],
+      "traits": [
+        "Name it, say what it does in one sentence, and say what it cannot do. The limit is what makes it feel real."
+      ],
+      "tactics": "Whatever the scene needs. Do not build it a sheet.",
+      "stats_source": "Verbatim from the appendix."
     }
   ]
 }

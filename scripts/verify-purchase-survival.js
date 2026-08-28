@@ -94,9 +94,26 @@ var setInterval = function () { return 0; };
 var setTimeout = function (fn) { return 0; };
 var fetch = function () { return new Promise(function () {}); }; // parks each page's init IIFE
 var fbAuthReady = Promise.resolve({});
-var _dbStub = { collection() { return { doc() { return { get() { return new Promise(function () {}); },
+// The inventories collection, backed by SERVER, so the toolkit's item-save
+// transaction runs for real against the same object the shop is buying from.
+// (SERVER keeps each inventory inside the bundle for the harness's
+// convenience; what matters is which code path carries it.)
+function _invDocOf(id) {
+  return (SERVER && SERVER.characters[id]) ? SERVER.characters[id].inventory : null;
+}
+var _tx = {
+  get(ref) {
+    const inv = _invDocOf(ref._id);
+    return Promise.resolve({ exists: !!inv, data: () => JSON.parse(JSON.stringify(inv)) });
+  },
+  // Field-level, exactly like the real one: keys not named are left alone, so
+  // a write of { items } cannot disturb the purse sitting beside it.
+  update(ref, patch) { Object.assign(_invDocOf(ref._id), JSON.parse(JSON.stringify(patch))); },
+};
+var _dbStub = { collection(name) { return { doc(id) { return { _col: name, _id: id,
+                                                        get() { return new Promise(function () {}); },
                                                         onSnapshot() {} }; } }; },
-                runTransaction() { return new Promise(function () {}); } };
+                runTransaction(fn) { return fn(_tx); } };
 var firebase = { firestore: function () { return _dbStub; } };
 var fsCloneDoc = function (d) { return d == null ? d : JSON.parse(JSON.stringify(d)); };
 var navigator = { clipboard: { writeText() { return Promise.resolve(); } } };
@@ -150,6 +167,8 @@ function boot(startingYen) {
   _dirtyRelKeys = new Map(); _dirtyCharFiles = new Map();
   _lastSyncedRel = fsCloneDoc(SERVER);
   document._active = null;
+  _dirtyItemFiles.clear(); _lastSyncedItems.clear(); inventoryDocs.clear();
+  deliverInventory();     // the collection's listener, first delivery
 }
 
 // Someone buys something on the server, from another page/device.
@@ -228,18 +247,54 @@ shared.run = async function () {
   // one could ever throw an item away.
   boot(200000);
   onItemDelete('item-1');
-  await manualSaveRelationships();
+  await saveInventoryItems(FILE);
   check('deleting an item really deletes it', !hasItem('Rope'));
+  check('and deleting one does not spend anything', serverYen() === 200000);
 
   // ── 5. Editing one item while another is bought ─────────────────────────
+  // The player's half of the tab writes now, so there IS a sheet-side write
+  // racing the shop again — but to the inventories collection, merged by id,
+  // rather than to the bundle. Neither side may flatten the other.
   boot(200000);
-  // The Inventory tab is a view now — nothing here can edit an inventory, so
-  // there is no sheet-side write left to race a purchase.
   onItemEdit('item-1', 'name', 'Silk Rope');
-  scheduleCharSave(selected);
-  await manualSaveRelationships();
-  check('an inventory edit never reaches the shared bundle',
-        !JSON.stringify(SERVER.characters[FILE] || {}).includes('Silk Rope'));
+  buyOnServer(${JSON.stringify(KATANA)}, 1, 85000);   // the shop lands mid-edit
+  await saveInventoryItems(FILE);
+  check('a rename typed here lands', hasItem('Silk Rope'));
+  check('and does not flatten a purchase that arrived mid-edit', hasItem('Katana'));
+  check('an item write leaves the purse exactly where the shop left it',
+        serverYen() === 115000);
+  check('an inventory edit never travels in the shared bundle',
+        Object.values(buildBundle().characters).every(c => c.inventory === undefined));
+
+  // ── 5b. An item added here survives a snapshot arriving before the save ─
+  // The listener delivers the server's array while the new row is still only
+  // in this tab. Taking that array wholesale — which is what a read-only tab
+  // could safely do — would erase the row between typing it and saving it.
+  boot(200000);
+  onItemAdd();
+  onItemEdit(selected.inventory.items[1].id, 'name', 'Grappling Hook');
+  buyOnServer(${JSON.stringify(KATANA)}, 1, 85000);
+  deliverInventory();
+  check('an unsaved new row survives a snapshot',
+        selected.inventory.items.some(i => i.name === 'Grappling Hook'));
+  check('and the purchase in that same snapshot is picked up',
+        selected.inventory.items.some(i => i.name === 'Katana'));
+  await saveInventoryItems(FILE);
+  check('the new row reaches the server', hasItem('Grappling Hook'));
+  check('with the purchase still beside it', hasItem('Katana'));
+
+  // ── 5c. Money is not the player's, whatever they type ───────────────────
+  // The currency inputs are disabled, so this is the console-poke case: the
+  // handler must refuse, and — belt and braces — an item save must never
+  // carry a purse even if one somehow changed locally.
+  boot(200000);
+  onCurrencyChange('yen', 999999);
+  check('the currency handler refuses a player outright',
+        selected.inventory.currency.yen === 200000);
+  selected.inventory.currency.yen = 999999;   // as if it had got through
+  onItemAdd();
+  await saveInventoryItems(FILE);
+  check('an item save writes no currency at all', serverYen() === 200000);
 
   // ── 6. Several purchases back to back, then a save ──────────────────────
   boot(500000);
@@ -270,10 +325,10 @@ shared.run = async function () {
 };
 `;
 
-// Inventory handlers refuse unless the actor is an admin; these scenarios
-// exercise the merge, not the permission, so run them as the DM. The gate
-// itself is covered in verify-relationship-sync.js.
-eval(toolkitSrc + '\n;canEditInventory = true;\n' + scenarios);
+// canWrite is what lets the item handlers run at all (the money handlers stay
+// refused, which scenario 5c leans on). These scenarios exercise the merge,
+// not the gate; the gate itself is covered in verify-relationship-sync.js.
+eval(toolkitSrc + '\n;canWrite = true;\n' + scenarios);
 
 shared.run().then(() => {
   let allPass = true;

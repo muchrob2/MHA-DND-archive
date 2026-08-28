@@ -105,11 +105,37 @@ const order = (padSrc.match(/async function orderFood\([\s\S]*?\n\}/) || [])[0] 
 check('an Eats order only ever deducts', /spendFromWallet\(/.test(order));
 check('an Eats order writes the inventory document', /tx\.set\(invRef/.test(order));
 
-check('the toolkit never writes an inventory',
-  !/collection\('inventories'\)[\s\S]{0,200}\.set\(/.test(read('CLASS-1A/relationships.js')),
-  'the Inventory tab is a view; changes go through the grant panel');
+/* The toolkit writes items, and only items. Players keep their own kit on the
+   Inventory tab, so this page is a fourth writer of the inventories
+   collection — but a deliberately narrow one. The rule above values only the
+   purse, so an update that never names `currency` is one it cannot refuse,
+   and a purse that is never written is a purse that cannot be lost. Both
+   halves are checked: what the write carries, and what still gates the
+   money inputs. */
+const toolkitSrc = read('CLASS-1A/relationships.js');
+const toolkitWrite = (toolkitSrc.match(/async function saveInventoryItems\([\s\S]*?\n\}/) || [])[0] || '';
+check('the toolkit has exactly one inventory write path', !!toolkitWrite,
+  'items are editable there; nothing else about an inventory is');
+check('it writes the items array and nothing else',
+  /tx\.update\(ref, \{ items \}\)/.test(toolkitWrite),
+  'a write carrying currency would be judged by the rule above, and could lose a purchase');
+// Comments stripped: the code is what runs, and the comment right above the
+// update is explaining which fields it deliberately leaves out.
+check('it never touches currency, parts or points',
+  !/currency|\bparts\b|\bpoints\b/.test(toolkitWrite.replace(/\/\/.*$/gm, '')));
+
+// One assignment, and it is to false. Written as "collect them and look"
+// rather than a negative lookahead, which quietly passes the declaration
+// itself by backtracking over the space before the value.
+const gateWrites = (toolkitSrc.match(/canEditInventory\s*=\s*[^;]+/g) || [])
+  .map((m) => m.replace(/\s+/g, ' ').trim());
+check('the money fields are still gated on canEditInventory',
+  gateWrites.length === 1, JSON.stringify(gateWrites));
+check('and nothing anywhere sets that gate true',
+  gateWrites[0] === 'canEditInventory = false',
+  'grants are the admin page\'s job, and they write a ledger line with the money');
 check('the toolkit strips inventory from every save',
-  /const \{ inventory, \.\.\.rest \} = c;/.test(read('CLASS-1A/relationships.js')),
+  /const \{ inventory, \.\.\.rest \} = c;/.test(toolkitSrc),
   'a sheet save carrying a stale purse would undo a purchase');
 
 /* ── The bundle is not allowed to speak for inventory ────────────
@@ -118,7 +144,6 @@ check('the toolkit strips inventory from every save',
    longer move, so applying one over the live copy makes a grant or a
    purchase appear to fail. And the tab needs its own listener, because the
    collection it now reads is not the document it was listening to. */
-const toolkitSrc = read('CLASS-1A/relationships.js');
 check('the toolkit strips inventory from every snapshot it applies',
   /Object\.assign\(c, stripInventory\(/.test(toolkitSrc),
   'the bundle still carries a stale inventory for every character');

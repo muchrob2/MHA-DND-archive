@@ -926,10 +926,28 @@ body { height: 100vh; overflow: hidden; }
   .score-val-input { width: 32px; font-size: var(--fs-md); }
   .stat-chip     { font-size: var(--fs-2xs); }
 
-  #profile-tabs { flex-shrink: 0; }
+  /* #profile does not shrink, and .main-view clips what does not fit — so on
+     a short phone the *bottom of the tab's own scroller* sat below the fold,
+     with nothing able to scroll it into view. The Inventory tab is where that
+     bites: it is the tallest one (400px), and the rows that fall off the end
+     are the last item card and the + Add item button, which is exactly the
+     part someone reaches for. Scrolling inside the tab did nothing, because
+     the missing pixels were the container's, not the content's.
+
+     Letting #profile shrink puts the end of that scroller back on screen.
+     #rel-section is flex:1 with a zero basis, so its scaled shrink factor is
+     zero and #profile absorbs the whole difference; profile-inner and the tab
+     strip hold their size, so the tab body is what gives. */
+  #profile      { display: flex; flex-direction: column; flex-shrink: 1; min-height: 0; }
+  #profile-inner, #profile-tabs { flex-shrink: 0; }
   .tab-btn      { padding: 7px 10px; }
-  #tab-content  { max-height: 180px; padding: 10px 14px; }
+  #tab-content  { flex: 0 1 auto; max-height: 180px; padding: 10px 14px 16px; }
   #tab-content.tab-quirk { max-height: 240px; }
+  /* A floor for the two tall tabs only, so a very tall header cannot squeeze
+     them to nothing. The short tabs keep sizing to their content, as before —
+     a minimum there would just add empty box under one line of text. */
+  #tab-content.tab-attacks,
+  #tab-content.tab-inventory { min-height: 120px; }
 
   #rel-list   { padding: 0 14px 24px; }
   #rel-header { padding: 8px 14px; }

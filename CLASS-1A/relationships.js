@@ -99,29 +99,42 @@ const FS_DOC        = 'relationships-bundle';
 
 let canWrite = false;
 
-/* Inventory is the DM's to move, not the players'.
-   canWrite covers a player editing their own sheet — personality, attacks,
-   relationships, all the things the sheet is for. Inventory is different:
-   money, crafting parts, points and items arrive by being earned, granted
-   from the admin page, or bought in the Shop. A player typing themselves
-   10,000 yen skips all three.
+/* ── Money is not editable here; items are ──────────────────────────
+   The Inventory tab holds two different kinds of thing, and they get two
+   different answers.
 
-   ⚠ This is a UI control, not a security boundary. firestore.rules still
-   lets an editor write this document, because a purchase and a hand-edit
-   are the same shape of write from the same client, and the rules language
-   cannot tell them apart. Locking it properly means moving purchases behind
-   a Cloud Function. What this does do is stop the inventory being editable
-   by accident or on a whim, which is the actual problem at a table. */
-/* Nobody edits inventory here any more, DM included.
-   Inventories moved into their own collection so firestore.rules could
-   refuse a write that increases a purse. Editing them from this tab would
-   mean a second write path with its own bugs, and — worse — one that
-   changes someone's money without leaving a line on the Bank statement.
-   Every change now goes through the admin page's grant panel, which
-   writes the inventory and its ledger entry in one transaction.
+   MONEY — currency, crafting parts, points — is not the players' to move.
+   It arrives by being earned, granted from the admin page, or bought in
+   the Shop, and every one of those routes leaves a line on the Bank
+   statement. A player typing themselves ¥10,000 skips all three. So those
+   inputs stay disabled for everyone, DM included: the grant panel writes
+   the inventory and its ledger entry in one transaction, and a second
+   write path here would be a way to change someone's money without any
+   record of it. canEditInventory is that gate, and nothing sets it true.
 
-   The tab still shows everything; it is a view of the collection. */
+   ITEMS are. A player picking up a rope, using the last of a medkit or
+   noting where something came from is bookkeeping, not economy: no
+   handbook price, nothing to reconcile against the ledger, and the only
+   alternative is the DM typing twenty people's kit for them. Item rows
+   are editable by anyone who can edit sheets at all, and they are written
+   straight to the inventories collection — the items array on its own,
+   never the purse beside it (see saveInventoryItems).
+
+   ⚠ canEditItems is a UI gate; firestore.rules is the boundary. The rule
+   there refuses any write that leaves a purse worth more than it was, and
+   an items-only update leaves it worth exactly what it was. Items
+   themselves are unvalued and unguarded — which is the right trade, since
+   an item is worth nothing the database could count anyway. */
 let canEditInventory = false;
+
+// Whether the signed-in user may add, edit and remove item rows on `c`.
+// Needs a document in the inventories collection to write to: only the DM
+// can create one (the migration on the admin page does it), so a character
+// who was never migrated shows the tab read-only rather than offering an
+// Add button whose write the database would refuse.
+function canEditItems(c) {
+  return canWrite && !!c && !!c._file && inventoryDocs.has(c._file);
+}
 
 document.addEventListener('auth-state-changed', (e) => {
   canWrite = e.detail.role === 'admin' || e.detail.role === 'editor';
@@ -145,15 +158,141 @@ function buildBundle() {
 }
 
 // Inventories are fetched separately and hung onto the character objects, so
-// the Inventory tab and its totals keep working unchanged. Nothing writes
-// them back from this page.
+// the Inventory tab and its totals keep working unchanged. The only thing
+// this page ever writes back is the items array (see saveInventoryItems).
 const FS_INVENTORIES = db.collection('inventories');
+
+// Which characters actually have a document in that collection. Only the DM's
+// migration creates one, so this doubles as the answer to "is there anything
+// here for an item edit to be written to".
+const inventoryDocs = new Set();
+
+// Item rows with unsaved local edits: file -> edit seq, the same shape and the
+// same job as _dirtyCharFiles. It keeps an incoming snapshot from overwriting
+// rows that have not been written yet.
+const _dirtyItemFiles = new Map();
+// What this client last saw on the server, per file — the third input to the
+// merge below.
+const _lastSyncedItems = new Map();
+
+/* The merge fsMergeSave does for the bundle's id-keyed arrays, over one items
+   array. Three inputs, because two cannot tell "they added this" apart from
+   "I deleted it":
+
+     server  what is in the collection right now
+     local   what this tab is showing
+     last    what this tab last saw on the server
+
+   A row on the server we have never seen is someone else's purchase, and is
+   kept. A row we have seen and no longer hold was deleted here, and stays
+   deleted. A row we hold and changed beats the server's copy; one we hold but
+   did not touch does not. Pure and top-level so the verification scripts can
+   drive it directly. */
+function mergeItemsById(server, local, last) {
+  const lastById  = new Map((last  || []).map(i => [i.id, i]));
+  const localById = new Map((local || []).map(i => [i.id, i]));
+  const merged = [], seen = new Set();
+  for (const item of (server || [])) {
+    const id = item.id;
+    seen.add(id);
+    if (!localById.has(id)) { if (!lastById.has(id)) merged.push(item); continue; }
+    const changedLocally =
+      JSON.stringify(localById.get(id)) !== JSON.stringify(lastById.get(id));
+    merged.push(changedLocally ? localById.get(id) : item);
+  }
+  for (const item of (local || [])) {
+    if (!seen.has(item.id) && !lastById.has(item.id)) merged.push(item);
+  }
+  return merged;
+}
 
 function applyInventorySnapshot(snap) {
   const byFile = {};
   snap.forEach(doc => { byFile[doc.id] = doc.data(); });
   for (const c of CHARACTERS) {
-    if (c._file && byFile[c._file]) c.inventory = byFile[c._file];
+    const file = c._file;
+    if (!file || !byFile[file]) continue;
+    const incoming = byFile[file];
+    const serverItems = Array.isArray(incoming.items) ? incoming.items : [];
+    // A row with no id can be neither addressed by a handler nor matched by
+    // the merge. Everything that writes items gives them one; this covers a
+    // document written before they did.
+    for (const it of serverItems) if (!it.id) it.id = genId('item');
+    incoming.items = serverItems;
+
+    if (_dirtyItemFiles.has(file)) {
+      // An unsaved add, rename or delete is still in this tab's hands. Merge
+      // rather than overwrite — and leave the baseline where it is, because
+      // advancing it here would make the next save read those unwritten rows
+      // as deletions.
+      incoming.items = mergeItemsById(serverItems, c.inventory?.items, _lastSyncedItems.get(file));
+    } else {
+      _lastSyncedItems.set(file, fsCloneDoc(serverItems));
+    }
+    c.inventory = incoming;
+    inventoryDocs.add(file);
+  }
+}
+
+/* ── Writing item rows back ─────────────────────────────────────────
+   Items are the one thing on this tab that leaves the page. They go to
+   the inventories collection — never the bundle, which strips inventory
+   from every save — as an update carrying `items` and nothing else. The
+   purse in the same document is therefore untouched by construction, and
+   the rule guarding it has nothing to object to.
+
+   Written on a short debounce rather than by the Save button: that button
+   flushes the bundle, this is a different document with a different
+   merge, and a player who adds an item and closes the tab should not lose
+   it for want of a click. The transaction re-reads the server's copy and
+   merges by id, so a purchase landing from the Shop mid-edit is not
+   flattened by a rename typed here. ─────────────────────────────────── */
+const ITEM_SAVE_DEBOUNCE_MS = 600;
+const _itemSaveTimers = new Map();   // file -> timeout id
+
+function scheduleItemsSave(c) {
+  const file = c?._file;
+  if (!file) return;
+  _dirtyItemFiles.set(file, ++_editSeq);
+  setSaveStatus('dirty', 'Unsaved changes');
+  clearTimeout(_itemSaveTimers.get(file));
+  _itemSaveTimers.set(file, setTimeout(() => saveInventoryItems(file), ITEM_SAVE_DEBOUNCE_MS));
+}
+
+async function saveInventoryItems(file) {
+  clearTimeout(_itemSaveTimers.get(file));
+  _itemSaveTimers.delete(file);
+  const c = CHARACTERS.find(x => x._file === file);
+  if (!c) return;
+  // Captured before the round-trip, the way manualSaveRelationships does it:
+  // a keystroke landing mid-flight must stay dirty rather than be marked
+  // clean by a save that did not carry it.
+  const seq = _dirtyItemFiles.get(file);
+  const local = fsCloneDoc(c.inventory?.items || []);
+  setSaveStatus('saving', 'Saving…');
+  try {
+    await fbAuthReady;
+    const ref = FS_INVENTORIES.doc(file);
+    const written = await db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      if (!snap.exists) {
+        throw new Error('No inventory for this character yet — the DM needs to run the migration on the admin page.');
+      }
+      const serverItems = Array.isArray(snap.data().items) ? snap.data().items : [];
+      const items = mergeItemsById(serverItems, local, _lastSyncedItems.get(file));
+      // `items` alone: currency, parts and points are not in this write, so
+      // the purse cannot move even by accident.
+      tx.update(ref, { items });
+      return items;
+    });
+    _lastSyncedItems.set(file, fsCloneDoc(written));
+    if (_dirtyItemFiles.get(file) === seq) _dirtyItemFiles.delete(file);
+    if (isDirty() || _dirtyItemFiles.size) setSaveStatus('dirty', 'Unsaved changes');
+    else setSaveStatus('saved', 'Saved ' + new Date().toLocaleTimeString());
+  } catch (e) {
+    // Left dirty on purpose: the rows are still on screen, and the next edit
+    // schedules another attempt.
+    setSaveStatus('error', e.message || 'Could not save items');
   }
 }
 
@@ -172,11 +311,11 @@ async function loadInventories() {
    page opened and nothing after that. The DM would grant an item, switch to
    this tab, see no change, and reasonably conclude the grant had failed.
 
-   Inventory is read-only here (canEditInventory is never true), so there is
-   no local edit to protect and no dirty-window question to answer: the
-   server's copy is always the right one to show. Same fromCache guard the
-   bundle listener uses — a replayed cache is this tab's own stale copy, not
-   news. */
+   Money is read-only here, so the server's copy of the purse is always the
+   right one to show. Item rows can now be edited, so they do have a dirty
+   window — applyInventorySnapshot merges those by id instead of taking the
+   server's array wholesale. Same fromCache guard the bundle listener uses: a
+   replayed cache is this tab's own stale copy, not news. */
 async function startInventoryLiveSync() {
   await fbAuthReady;
   FS_INVENTORIES.onSnapshot((snap) => {
@@ -496,9 +635,11 @@ async function manualSaveRelationships() {
 }
 
 // Warn before leaving the tab with unsaved edits sitting in memory — there's
-// no auto-save left to fall back on now that saving is manual.
+// no auto-save left to fall back on now that saving is manual. Item rows do
+// save themselves, but on a debounce: one typed in the last half-second is
+// still sitting in a timer, and is just as lost.
 window.addEventListener('beforeunload', (e) => {
-  if (!isDirty()) return;
+  if (!isDirty() && !_itemSaveTimers.size) return;
   e.preventDefault();
   e.returnValue = '';
 });
@@ -1437,8 +1578,9 @@ function renderInventoryTab(c) {
       <span class="inv-pool-val-read">${p.value ?? 0}${p.max ? ' / ' + p.max : ''}</span>
     </div>`).join('');
 
+  const mayEditItems = canEditItems(c);
   const itemCards = items.map((it, i) => {
-    if (canEditInventory) {
+    if (mayEditItems) {
       return `
     <div class="ability-card ability-card-editable">
       <div class="ability-edit-row">
@@ -1459,16 +1601,24 @@ function renderInventoryTab(c) {
   if (!items.length) {
     itemCards.push(`<div class="inv-empty">No items yet.</div>`);
   }
-  if (canEditInventory) {
+  if (mayEditItems) {
     itemCards.push(`<button class="add-attack-btn" onclick="onItemAdd()">+ Add item</button>`);
   }
 
   tabContent.innerHTML = `
     <div class="inv-locked-note">
-      This is a view. Money and gear arrive by being earned, granted from the
-      admin page, or bought in the <a href="../shop.html">Shop</a> — and every
-      change lands on the Bank statement. The database itself refuses any
-      write that would make a purse worth more, so nobody can top themselves up.
+      ${mayEditItems
+        ? `Items are yours — add, edit and delete them as you like; they save
+           themselves. Money, parts and points are not: they arrive by being
+           earned, granted from the admin page, or bought in the
+           <a href="../shop.html">Shop</a>, and every change lands on the Bank
+           statement. The database itself refuses any write that would make a
+           purse worth more, so nobody can top themselves up.`
+        : `This is a view. Money and gear arrive by being earned, granted from
+           the admin page, or bought in the <a href="../shop.html">Shop</a> —
+           and every change lands on the Bank statement. The database itself
+           refuses any write that would make a purse worth more, so nobody can
+           top themselves up.`}
     </div>
     <div class="inv-currency-panel">
       <div class="inv-currency-title">Currency</div>
@@ -1558,29 +1708,36 @@ function onPoolDelete(id) {
   renderInventoryTab(selected);
 }
 
-// Addressed by id, not index — same reasoning as onAttackEdit above.
+/* Items are the editable half of this tab, and they save themselves — to the
+   inventories collection, not the bundle, so scheduleItemsSave rather than
+   scheduleCharSave. Calling the latter here would mark the whole *sheet*
+   dirty, holding back everyone else's edits behind a Save button press for a
+   change that never travels in that document anyway.
+
+   Addressed by id, not index — same reasoning as onAttackEdit above. */
 function onItemEdit(id, field, value) {
-  if (!canEditInventory) return;
+  if (!canEditItems(selected)) return;
   const item = (selected.inventory?.items || []).find(it => it.id === id);
   if (!item) return;
   item[field] = field === 'qty' ? Math.max(0, parseInt(value) || 0) : value;
-  scheduleCharSave(selected);
+  scheduleItemsSave(selected);
 }
 
 function onItemAdd() {
-  if (!canEditInventory) return;
+  if (!canEditItems(selected)) return;
+  selected.inventory.items = selected.inventory.items || [];
   selected.inventory.items.push({ id: genId('item'), name: '', qty: 1, notes: '' });
-  scheduleCharSave(selected);
+  scheduleItemsSave(selected);
   renderInventoryTab(selected);
 }
 
 function onItemDelete(id) {
-  if (!canEditInventory) return;
-  const items = selected.inventory.items;
+  if (!canEditItems(selected)) return;
+  const items = selected.inventory?.items || [];
   const idx = items.findIndex(it => it.id === id);
   if (idx === -1) return;
   items.splice(idx, 1);
-  scheduleCharSave(selected);
+  scheduleItemsSave(selected);
   renderInventoryTab(selected);
 }
 

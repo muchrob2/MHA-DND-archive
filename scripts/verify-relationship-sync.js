@@ -210,10 +210,12 @@ refreshSidebar = function () { renderCount++; };
   check('attack edit does not touch the neighbour', punch.name === 'Punch');
   check('editing an attack marks the character dirty', _dirtyCharFiles.has('a.json'));
 
-  // Same for inventory. Inventory editing is admin-only (see
-  // canEditInventory in relationships.js), and these cases are about ids
-  // surviving a reorder, not about permissions — so drive them as the DM.
-  canEditInventory = true;
+  // Same for inventory. Item rows are editable by anyone who can edit sheets,
+  // and need a document in the inventories collection to write to — so grant
+  // both. These cases are about ids surviving a reorder, not permissions;
+  // the permissions are the block below.
+  canWrite = true;
+  inventoryDocs.add('a.json');
   selected.inventory.items.reverse();
   onItemEdit('item-2', 'name', 'Lantern');
   check('item edit follows the id after a reorder',
@@ -221,20 +223,38 @@ refreshSidebar = function () { renderCount++; };
   check('item edit does not touch the neighbour',
         selected.inventory.items.find(i => i.id === 'item-1').name === 'Rope');
 
-  // A player must not be able to move their own inventory, even by calling
-  // the handler directly — the fields are disabled in the UI, and the
-  // handlers refuse as well so a console poke is inert too.
-  canEditInventory = false;
-  const beforeYen = selected.inventory.currency ? selected.inventory.currency.yen : undefined;
-  onItemEdit('item-2', 'name', 'Free Lantern');
+  // The split that matters: a player may keep their own kit, and may not
+  // touch their own money. Both handlers are called directly here, the way a
+  // console poke would, because disabling an input is not a rule.
+  selected.inventory.currency = { yen: 500 };
   onItemAdd();
-  check('a player cannot rename an item',
-        selected.inventory.items.find(i => i.id === 'item-2').name === 'Lantern');
-  check('a player cannot add an item', selected.inventory.items.length === 2);
+  check('a player may add an item', selected.inventory.items.length === 3);
+  onItemDelete(selected.inventory.items[2].id);
+  check('a player may delete an item', selected.inventory.items.length === 2);
   onCurrencyChange('yen', 999999);
-  check('a player cannot grant themselves money',
-        (selected.inventory.currency ? selected.inventory.currency.yen : undefined) === beforeYen);
-  canEditInventory = true;
+  check('a player cannot grant themselves money', selected.inventory.currency.yen === 500);
+  onPartChange('pro', 99);
+  check('a player cannot grant themselves crafting parts',
+        (selected.inventory.parts || {}).pro === undefined);
+  onPointChange('plusUltra', 5);
+  check('a player cannot grant themselves points',
+        (selected.inventory.points || {}).plusUltra === undefined);
+
+  // An item edit must not mark the *sheet* dirty: items travel in the
+  // inventories collection, and holding the bundle's Save button hostage for
+  // a change that never rides in it would strand everyone else's edits.
+  _dirtyCharFiles = new Map();
+  onItemEdit('item-2', 'name', 'Storm Lantern');
+  check('an item edit does not mark the sheet dirty', !_dirtyCharFiles.has('a.json'));
+  check('an item edit does mark the items dirty', _dirtyItemFiles.has('a.json'));
+
+  // Without a document in the collection there is nothing to write to, so the
+  // tab stays read-only rather than offering an edit the database refuses.
+  inventoryDocs.delete('a.json');
+  onItemAdd();
+  check('an unmigrated character cannot have items added',
+        selected.inventory.items.length === 2);
+  inventoryDocs.add('a.json');
 
   // Deleting by id must remove the right row, whatever the order.
   onAttackDelete('atk-1');

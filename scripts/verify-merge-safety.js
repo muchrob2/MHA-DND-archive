@@ -29,7 +29,7 @@ const authPath = (path ? path.join(repoRoot, 'auth.js') : 'auth.js');
 const authSrc = readFile(authPath);
 
 const helpers = {};
-for (const name of ['isPlainObject', 'getAtPath', 'setAtPath', 'deepMergeLocalOverServer', 'cloneDoc']) {
+for (const name of ['isPlainObject', 'getAtPath', 'setAtPath', 'deepMergeLocalOverServer', 'cloneDoc', 'orderMergedLikeLocal']) {
   const m = authSrc.match(new RegExp('function ' + name + '\\([\\s\\S]*?\\n  \\}'));
   if (!m) throw new Error('Could not find ' + name + '() in auth.js — has fsMergeSave changed shape?');
   eval(m[0]);
@@ -56,7 +56,7 @@ function mergeCompute(server, localDoc, lastSyncedDoc, idArrays) {
       merged.push(changedLocally ? localById.get(id) : item);
     }
     for (const item of localArr) { const id = item[idKey]; if (!seen.has(id) && !lastById.has(id)) merged.push(item); }
-    helpers.setAtPath(result, p, merged);
+    helpers.setAtPath(result, p, helpers.orderMergedLikeLocal(merged, localArr, lastArr, idKey));
   }
   return result;
 }
@@ -215,6 +215,80 @@ function serverWithOneAttack() {
   const src = readFile(authPath);
   const returnsClone = /tx\.set\(docRef, result\);[\s\S]*?return cloneDoc\(result\);/.test(src);
   results.push(['fsMergeSave returns a detached baseline', returnsClone]);
+})();
+
+// ── Array order (the "the initiative sort undoes itself" bug) ──────────────
+// Sorting moves items without changing them, so scenarios 1-2's content merge
+// has nothing to notice: every combatant compares equal to its baseline and
+// the server's copy is taken for each. Before orderMergedLikeLocal the merged
+// array therefore came back in the server's order, the sorted list was written
+// back unsorted, and the live listener replayed that over the DM's screen a
+// second or two after they pressed Sort.
+const combatantsPath = [{ path: 'combatants', idKey: 'id' }];
+function rosterInInitiativeOrder() {
+  return { round: 1, currentIndex: 0, combatants: [
+    { id: 'c1', name: 'Ren', initiative: 4 },
+    { id: 'c2', name: 'Kinji', initiative: 19 },
+    { id: 'c3', name: 'Nomu', initiative: 11 },
+  ] };
+}
+
+// Scenario 10: a pure reorder — no item's contents change at all — must reach
+// the server, because the order *is* the change.
+(function sortSurvivesItsOwnSaveScenario() {
+  const server = rosterInInitiativeOrder();
+  const baseline = helpers.cloneDoc(server);
+  const local = helpers.cloneDoc(server);
+  local.combatants.sort((a, b) => b.initiative - a.initiative);
+  const saved = mergeCompute(server, local, baseline, combatantsPath);
+  const order = saved.combatants.map(c => c.id).join(',');
+  results.push(['initiative sort survives its own save', order === 'c2,c3,c1']);
+})();
+
+// Scenario 11: a client that did NOT reorder must not push its own stale order
+// back over somebody else's sort — the mirror image of scenario 10, and the
+// reason the local order only wins when it differs from the baseline.
+(function remoteSortIsNotUndoneScenario() {
+  const baseline = rosterInInitiativeOrder();
+  const server = helpers.cloneDoc(baseline);
+  server.combatants.sort((a, b) => b.initiative - a.initiative); // the DM sorted
+  const local = helpers.cloneDoc(baseline);                      // a player, still unsorted
+  local.combatants[0].name = 'Ren Suzuki';                       // editing something unrelated
+  const saved = mergeCompute(server, local, baseline, combatantsPath);
+  const order = saved.combatants.map(c => c.id).join(',');
+  const ok = order === 'c2,c3,c1' && saved.combatants[2].name === 'Ren Suzuki';
+  results.push(['a remote sort is not undone by an unrelated edit', ok]);
+})();
+
+// Scenario 12: a combatant somebody else added while this client was sorting
+// must still arrive, and must not be sorted out of existence for having no
+// place in the local order.
+(function sortKeepsRemotelyAddedCombatantScenario() {
+  const baseline = rosterInInitiativeOrder();
+  const server = helpers.cloneDoc(baseline);
+  server.combatants.push({ id: 'c4', name: 'Thug', initiative: 7 }); // added elsewhere
+  const local = helpers.cloneDoc(baseline);
+  local.combatants.sort((a, b) => b.initiative - a.initiative);
+  const saved = mergeCompute(server, local, baseline, combatantsPath);
+  const order = saved.combatants.map(c => c.id).join(',');
+  results.push(['a remotely added combatant survives a local sort', order === 'c2,c3,c1,c4']);
+})();
+
+// Scenario 13: rolling initiative changes every item *and* reorders them, so
+// the two halves of the merge have to agree — the new numbers and the order
+// they imply must both land.
+(function rollAllInitiativeScenario() {
+  const server = rosterInInitiativeOrder();
+  const baseline = helpers.cloneDoc(server);
+  const local = helpers.cloneDoc(server);
+  local.combatants[0].initiative = 20; // Ren rolled high
+  local.combatants[1].initiative = 2;
+  local.combatants[2].initiative = 9;
+  local.combatants.sort((a, b) => b.initiative - a.initiative);
+  const saved = mergeCompute(server, local, baseline, combatantsPath);
+  const order = saved.combatants.map(c => c.id).join(',');
+  const ok = order === 'c1,c3,c2' && saved.combatants[0].initiative === 20;
+  results.push(['roll-all-initiative lands values and order together', ok]);
 })();
 
 let allPass = true;

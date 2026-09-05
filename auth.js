@@ -79,6 +79,10 @@
   // Array fields NOT named in idArrays are therefore still last-write-wins
   // wholesale, same as before — name every array a client might race on.
   //
+  // The *order* of an idArrays array is merged too, by orderMergedLikeLocal
+  // below: a client that reordered its copy since the baseline keeps its
+  // order, otherwise the server's stands.
+  //
   // idArrays: [{ path: 'combatants', idKey: 'id' }, { path: ['a', 'b', 'c'], idKey: 'id' }, ...]
   // `path` is a single key (string) or, to reach an array nested inside
   // plain objects/maps, an array of segments — e.g. per-character
@@ -132,6 +136,35 @@
   }
   window.fsCloneDoc = cloneDoc;
 
+  // Order is data too, and the item merge below does not preserve it: that
+  // loop walks the *server's* array, so what it produces comes out in the
+  // server's order. A sort is the case that breaks on — encounter.js orders
+  // combatants by initiative, and sorting moves items without changing any of
+  // them, so every item compares equal to its baseline, the server's copy is
+  // taken for each one, and the freshly sorted list is written straight back
+  // in the old order. The client then watches its own save return through the
+  // live listener and sees the list un-sort itself a second or two later.
+  //
+  // So order gets the same 3-way treatment the items get: compare this
+  // client's order against the baseline's, across the ids the two share. If
+  // they differ, this client is the one that reordered and its order is the
+  // news; if they match, the server's order stands, which is what carries a
+  // reorder somebody else just made. Items only the server has (added
+  // concurrently, never seen here) have no local rank and all tie, so the
+  // stable sort leaves them in server order at the end.
+  function orderMergedLikeLocal(merged, localArr, lastArr, idKey) {
+    const localIds = localArr.map((item) => item[idKey]);
+    const lastIds = lastArr.map((item) => item[idKey]);
+    const inLocal = new Set(localIds);
+    const inLast = new Set(lastIds);
+    const sharedLocal = localIds.filter((id) => inLast.has(id));
+    const sharedLast = lastIds.filter((id) => inLocal.has(id));
+    if (!sharedLocal.some((id, i) => id !== sharedLast[i])) return merged;
+    const rank = new Map(localIds.map((id, i) => [id, i]));
+    const rankOf = (item) => (rank.has(item[idKey]) ? rank.get(item[idKey]) : Number.MAX_SAFE_INTEGER);
+    return merged.slice().sort((a, b) => rankOf(a) - rankOf(b));
+  }
+
   window.fsMergeSave = async function (docRef, localDoc, lastSyncedDoc, idArrays) {
     idArrays = idArrays || [];
     await window.fbAuthReady;
@@ -180,7 +213,7 @@
           if (!seen.has(id) && !lastById.has(id)) merged.push(item);
         }
 
-        setAtPath(result, path, merged);
+        setAtPath(result, path, orderMergedLikeLocal(merged, localArr, lastArr, idKey));
       }
 
       tx.set(docRef, result);

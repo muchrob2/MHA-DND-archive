@@ -359,7 +359,27 @@ body { height: 100vh; overflow: hidden; }
   border-radius: var(--radius-sm);
 }
 #turn-modal-close:hover { color: var(--text); border-color: var(--border-strong); }
-#turn-modal-body { padding: 18px 18px 0; }
+/* The modal is a max-height flex column that clips (overflow:hidden above),
+   and the body is the only part of it that may give — the header and footer
+   are flex-shrink:0. But a flex item will not shrink below its content's own
+   height unless min-height is cleared, so on any viewport shorter than the
+   body's full height (a laptop at 90vh, most phones) the column overflowed
+   its own max-height and the bottom was simply clipped away. What fell off
+   the end was #turn-modal-footer — i.e. End Turn, the one control the whole
+   modal exists to reach — with nothing able to scroll it into view, because
+   the missing pixels belonged to the container and not to the content.
+
+   min-height:0 lets the body shrink; overflow-y:auto gives the content it no
+   longer has room for somewhere to go. overscroll-behavior keeps a flick at
+   the end of the zone list from scrolling the page behind the overlay. */
+#turn-modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 18px 18px 0;
+}
 
 .tm-combatant-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
 .tm-avatar {
@@ -651,6 +671,13 @@ body { height: 100vh; overflow: hidden; }
   .enc-actions  { grid-column: 3; grid-row: 1; flex-direction: row; align-items: center; }
   .enc-hp-col   { grid-column: 1 / -1; grid-row: 2; }
   .cond-selector, .enc-notes-row { grid-column: 1 / -1; }
+
+  /* The 90vh cap in components.css measures the *large* viewport on a phone —
+     the one you get with the address bar retracted — so with the bar showing,
+     a modal at its full height still runs off the bottom of what is actually
+     on screen, footer first. dvh measures what is visible right now. */
+  #turn-modal-overlay { padding: 10px; }
+  #turn-modal         { max-height: calc(100dvh - 20px); }
 
   #board-modal {
     width: 100vw;

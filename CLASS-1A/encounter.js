@@ -111,6 +111,9 @@ async function encLoad() {
       encounter.boardStrokes = encounter.boardStrokes || [];
       encounter.boardTerrain = encounter.boardTerrain || [];
       _lastSyncedEncounter = fsCloneDoc(encounter); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
+      // After the baseline clone, never before: the baseline is what the
+      // server holds, which is still the duplicated version until a save lands.
+      if (encRepairDuplicateIds(encounter)) encSave();
       return;
     }
   } catch {}
@@ -121,6 +124,7 @@ async function encLoad() {
   encounter.attackLog = encounter.attackLog || [];
   encounter.boardStrokes = encounter.boardStrokes || [];
   encounter.boardTerrain = encounter.boardTerrain || [];
+  if (encRepairDuplicateIds(encounter)) encSave(); // the local cache can hold duplicates too
 }
 
 // Live feed: push board/encounter updates to every open tab in real time.
@@ -143,6 +147,7 @@ function applyRemoteEncounter(data) {
   encounter.boardStrokes = encounter.boardStrokes || [];
   encounter.boardTerrain = encounter.boardTerrain || [];
   _lastSyncedEncounter = fsCloneDoc(data); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
+  if (encRepairDuplicateIds(encounter)) encSave(); // after the clone — see encLoad
   boardBumpArtVersion(); // invalidate the cached terrain/drawing layer — `encounter` was just replaced wholesale
   renderEncounter();
   renderAttackLog();

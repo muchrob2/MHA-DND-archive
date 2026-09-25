@@ -47,9 +47,15 @@ function mergeCompute(server, localDoc, lastSyncedDoc, idArrays) {
     const lastArr = Array.isArray(helpers.getAtPath(lastSyncedDoc, p)) ? helpers.getAtPath(lastSyncedDoc, p) : [];
     const lastById = new Map(lastArr.map((item) => [item[idKey], item]));
     const localById = new Map(localArr.map((item) => [item[idKey], item]));
+    const localCount = new Map();
+    for (const item of localArr) localCount.set(item[idKey], (localCount.get(item[idKey]) || 0) + 1);
     const merged = [], seen = new Set();
     for (const item of serverArr) {
-      const id = item[idKey]; seen.add(id);
+      const id = item[idKey];
+      // A duplicate already in the stored array: keep it if this client holds a
+      // duplicate too (it has not repaired), drop it if this client holds one.
+      if (seen.has(id)) { if ((localCount.get(id) || 0) > 1) merged.push(item); continue; }
+      seen.add(id);
       const hadLocally = localById.has(id), wasSyncedBefore = lastById.has(id);
       if (!hadLocally) { if (!wasSyncedBefore) merged.push(item); continue; }
       const changedLocally = JSON.stringify(localById.get(id)) !== JSON.stringify(lastById.get(id));
@@ -208,6 +214,15 @@ function serverWithOneAttack() {
   results.push(['newly added attack survives its own save', names === 'Kick,Punch']);
 })();
 
+// Scenario 9b: mergeCompute above is a hand-written mirror of fsMergeSave, so
+// the duplicate-id skip that scenarios 17-22 turn on has to actually be in
+// auth.js and not just in the mirror.
+(function mergeSkipsDuplicateServerIdsScenario() {
+  const src = readFile(authPath);
+  const skips = /for \(const item of serverArr\) \{[\s\S]*?if \(seen\.has\(id\)\) \{[\s\S]*?localCount\.get\(id\)[\s\S]*?\}[\s\S]*?seen\.add\(id\);/.test(src);
+  results.push(['fsMergeSave skips a duplicate id in the stored array', skips]);
+})();
+
 // Scenario 9: fsMergeSave's return value is what every caller stores as its
 // next baseline, so it must not alias the local doc it was built from —
 // otherwise the *second* edit-then-save on a page hits scenario 7's bug again.
@@ -348,6 +363,128 @@ const encSrc = readFile(encPath);
   for (let i = 0; i < 1000; i++) all.add(encId());
   const clearOfLegacyIds = all.size === 1000 && [...all].every(id => Number.isSafeInteger(id) && id > 1000);
   results.push(['ids are unique across page loads and clear of legacy ids', clearOfLegacyIds]);
+})();
+
+// ── Duplicate ids already in the document (the "I move a token and it moves
+// ── back, I change a team and it changes back" bug) ────────────────────────
+// Two combatants sharing an id defeats both halves of the system: every board
+// lookup is a find(c => c.id === id), which returns the first match, so an edit
+// aimed at the second one lands on the first and the thing you touched redraws
+// unchanged; and the merge keys the array by id, so it reverts from the server
+// too. Duplicates reached the live document from encId()'s restarting counter
+// and, before the merge existed, from a plain .set() of whatever a page held.
+// encRepairDuplicateIds() re-ids them on the way in; fsMergeSave has to carry
+// that repair through rather than multiplying the duplicate on every save.
+const boardSharedPath = (path ? path.join(repoRoot, 'CLASS-1A', 'board-shared.js') : 'CLASS-1A/board-shared.js');
+{
+  const m = readFile(boardSharedPath).match(/function encRepairDuplicateIds\([\s\S]*?\n\}/);
+  if (!m) throw new Error('Could not find encRepairDuplicateIds() in board-shared.js — has the repair changed shape?');
+  eval(m[0].replace(/console\.warn\([^;]*\);/, '')); // no console in osascript
+}
+
+// A document holding two combatants on id 1, as the pre-merge .set() path left
+// it. `enc` is what a page loads; the baseline is the raw server copy.
+function docWithDuplicateIds() {
+  return { round: 2, currentIndex: 0, combatants: [
+    { id: 1, name: 'Ren',  boardX: 3, boardY: 4, team: null },
+    { id: 1, name: 'Toga', boardX: 7, boardY: 2, team: null },
+    { id: 2, name: 'Nomu', boardX: 5, boardY: 5, team: null },
+  ] };
+}
+
+// Scenario 17: the repair itself — every combatant survives with an id of its
+// own, and the ids are derived from the document, not drawn at random, so two
+// tabs repairing the same document independently agree.
+(function repairGivesEveryCombatantItsOwnIdScenario() {
+  const a = docWithDuplicateIds(), b = docWithDuplicateIds();
+  const n = encRepairDuplicateIds(a);
+  encRepairDuplicateIds(b);
+  const ids = a.combatants.map(c => c.id);
+  const ok = n === 1
+          && a.combatants.length === 3
+          && new Set(ids).size === 3
+          && a.combatants.map(c => c.name).join(',') === 'Ren,Toga,Nomu'
+          && JSON.stringify(ids) === JSON.stringify(b.combatants.map(c => c.id)); // deterministic
+  results.push(['duplicate ids are repaired deterministically, losing nobody', ok]);
+})();
+
+// Scenario 18: a move and a team change on the *first* of a duplicated pair —
+// the copy whose edits used to be silently dropped — must now reach the server,
+// and the repair must go with them.
+(function editOnFirstDuplicateLandsScenario() {
+  const server = docWithDuplicateIds();
+  const baseline = helpers.cloneDoc(server); // taken before the repair, as the pages do
+  const local = helpers.cloneDoc(server);
+  encRepairDuplicateIds(local);
+  local.combatants[0].boardX = 9; local.combatants[0].boardY = 9; local.combatants[0].team = 0;
+  const saved = mergeCompute(server, local, baseline, combatantsPath);
+  const ren = saved.combatants.find(c => c.name === 'Ren');
+  const ok = saved.combatants.length === 3
+          && new Set(saved.combatants.map(c => c.id)).size === 3
+          && ren.boardX === 9 && ren.boardY === 9 && ren.team === 0;
+  results.push(['a move+team edit on the first of a duplicated pair lands', ok]);
+})();
+
+// Scenario 19: the same edit on the *second* copy, which used to be the one
+// that worked — it must keep working, and must not drag the first one with it.
+(function editOnSecondDuplicateLandsScenario() {
+  const server = docWithDuplicateIds();
+  const baseline = helpers.cloneDoc(server);
+  const local = helpers.cloneDoc(server);
+  encRepairDuplicateIds(local);
+  local.combatants[1].boardX = 9; local.combatants[1].boardY = 9; local.combatants[1].team = 0;
+  const saved = mergeCompute(server, local, baseline, combatantsPath);
+  const toga = saved.combatants.find(c => c.name === 'Toga');
+  const ren = saved.combatants.find(c => c.name === 'Ren');
+  const ok = saved.combatants.length === 3
+          && toga.boardX === 9 && toga.team === 0
+          && ren.boardX === 3 && ren.team === null;
+  results.push(['a move+team edit on the second of a duplicated pair lands', ok]);
+})();
+
+// Scenario 20: the repair on its own, with nothing else changed, must persist —
+// otherwise the document stays broken and the next load repairs it again.
+(function bareRepairPersistsScenario() {
+  const server = docWithDuplicateIds();
+  const baseline = helpers.cloneDoc(server);
+  const local = helpers.cloneDoc(server);
+  encRepairDuplicateIds(local);
+  const saved = mergeCompute(server, local, baseline, combatantsPath);
+  const ok = saved.combatants.length === 3
+          && new Set(saved.combatants.map(c => c.id)).size === 3
+          && saved.combatants.map(c => c.name).sort().join(',') === 'Nomu,Ren,Toga';
+  results.push(['the repair persists through a save of its own', ok]);
+})();
+
+// Scenario 21: the trap this was nearly written into — walking both copies of a
+// duplicated id makes each of them look up the same single local item and push
+// it, so one combatant comes back as two and multiplies on every save. A second
+// save must be a fixed point.
+(function duplicateDoesNotMultiplyScenario() {
+  const server = docWithDuplicateIds();
+  const stale = helpers.cloneDoc(server); // a tab that has not repaired anything
+  const saved = mergeCompute(server, stale, helpers.cloneDoc(server), combatantsPath);
+  const again = mergeCompute(saved, helpers.cloneDoc(saved), helpers.cloneDoc(saved), combatantsPath);
+  const names = (arr) => arr.map(c => c.name).sort().join(',');
+  const ok = names(saved.combatants) === 'Nomu,Ren,Toga' && names(again.combatants) === 'Nomu,Ren,Toga';
+  results.push(['a stored duplicate does not multiply across saves', ok]);
+})();
+
+// Scenario 22: two tabs that repaired the same document independently must not
+// turn the repaired combatant into two rows — the reason the new id is derived
+// from the document rather than random.
+(function twoTabsRepairToTheSameIdScenario() {
+  const server = docWithDuplicateIds();
+  const baseline = helpers.cloneDoc(server);
+  const tabA = helpers.cloneDoc(server); encRepairDuplicateIds(tabA);
+  const tabB = helpers.cloneDoc(server); encRepairDuplicateIds(tabB);
+  let saved = mergeCompute(server, tabA, baseline, combatantsPath);
+  tabB.combatants[2].team = 1;                                   // tab B then edits Nomu
+  saved = mergeCompute(saved, tabB, baseline, combatantsPath);
+  const ok = saved.combatants.filter(c => c.name === 'Toga').length === 1
+          && saved.combatants.length === 3
+          && saved.combatants.find(c => c.name === 'Nomu').team === 1;
+  results.push(['two tabs repairing the same document agree on the new id', ok]);
 })();
 
 let allPass = true;

@@ -47,6 +47,47 @@ const TEAM_COLORS = [
   { name: 'Lime',   bg: '#65A30D', light: 'rgba(101,163,13,0.10)' },
 ];
 
+/* ── Duplicate combatant ids ──────────────────────────────
+   Every lookup on this board resolves a token through
+   `encounter.combatants.find(c => c.id === id)` — the drag drop, the tray
+   placement, the team dot, the HP row. find() returns the *first* match, so
+   two combatants sharing an id means edits aimed at the second one land on
+   the first: the token you dragged redraws at the cell it started in (its own
+   boardX never changed) and the team dot you clicked flips back, while some
+   other row silently moves or changes colour. fsMergeSave has the same blind
+   spot on the way out — it keys the array by id — so the edit reverts again
+   from the server for good measure.
+
+   Duplicates got into the live document two ways, both now closed: encId()
+   used to restart its counter at 1 on every page load and hand out ids the
+   document was already using, and the save path before the merge existed was
+   a plain .set() of whatever the page held, duplicates and all.
+
+   So repair on the way in, wherever encounter state enters a page. The new id
+   is derived from the document (max + 1, + 2, …) rather than drawn at random,
+   deliberately: two tabs repairing the same document independently have to
+   arrive at the *same* id, or the merge sees two different new combatants and
+   the duplicate comes back as two rows. Returns the number of ids changed, so
+   the caller can persist the repair.
+
+   Callers must take their fsMergeSave baseline from the raw incoming data
+   *before* calling this — the baseline is "what the server holds", which is
+   still the duplicated version until a save lands. */
+function encRepairDuplicateIds(enc) {
+  const cs = (enc && enc.combatants) || [];
+  let nextId = cs.reduce((max, c) => (Number.isFinite(c.id) && c.id > max ? c.id : max), 0);
+  const seen = new Set();
+  let repaired = 0;
+  for (const c of cs) {
+    if (!seen.has(c.id)) { seen.add(c.id); continue; }
+    c.id = ++nextId;
+    seen.add(c.id);
+    repaired++;
+  }
+  if (repaired) console.warn(`[board] repaired ${repaired} duplicate combatant id(s)`);
+  return repaired;
+}
+
 /* ── Board Mode ───────────────────────────────────────── */
 const BOARD_COLS = 100;
 const BOARD_ROWS = 100;

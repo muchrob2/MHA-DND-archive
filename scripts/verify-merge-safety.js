@@ -291,6 +291,65 @@ function rosterInInitiativeOrder() {
   results.push(['roll-all-initiative lands values and order together', ok]);
 })();
 
+// ── Combatant ids (the "I add a character and it's instantly removed" bug) ──
+// The merge above keys the combatants array by id, which only works if an id
+// means one combatant. encounter.js used a plain ++counter that started over at
+// 1 on every page load, so the first combatant added after a reload was handed
+// an id the server was already using: the two collapsed into one item, the
+// roster came back no longer than it went in, and a row vanished seconds after
+// the DM added someone.
+const encPath = (path ? path.join(repoRoot, 'CLASS-1A', 'encounter.js') : 'CLASS-1A/encounter.js');
+const encSrc = readFile(encPath);
+{
+  // A one-line function, body and all, so match it on a single line.
+  const m = encSrc.match(/^function encId\(\).*$/m);
+  if (!m) throw new Error('Could not find encId() in encounter.js — has the id generator changed shape?');
+  eval(m[0]);
+}
+
+// Scenario 14: the report itself. An encounter saved in an earlier session,
+// reloaded (so the id generator starts from scratch), plus one combatant added
+// — every combatant that was there must still be there, and the new one too.
+(function addedCombatantSurvivesAfterReloadScenario() {
+  const server = { round: 3, currentIndex: 0, combatants: [
+    { id: 1, name: 'Ren' }, { id: 2, name: 'Kinji' }, { id: 3, name: 'Nomu' },
+  ] };
+  const baseline = helpers.cloneDoc(server); // encLoad(): what the server handed this page
+  const local = helpers.cloneDoc(server);
+  local.combatants.push({ id: encId(), name: 'Toga' }); // encAddFromRoster()
+  const saved = mergeCompute(server, local, baseline, combatantsPath);
+  const names = saved.combatants.map(c => c.name).sort().join(',');
+  results.push(['a combatant added after a reload survives its own save', names === 'Kinji,Nomu,Ren,Toga']);
+})();
+
+// Scenario 15: and again for a run of adds — the enemy picker pushes a whole
+// squad in one go, each of which used to land on a successive legacy id.
+(function addedSquadSurvivesAfterReloadScenario() {
+  const server = { round: 1, currentIndex: 0, combatants: [
+    { id: 1, name: 'Ren' }, { id: 2, name: 'Kinji' },
+  ] };
+  const baseline = helpers.cloneDoc(server);
+  const local = helpers.cloneDoc(server);
+  for (let i = 1; i <= 4; i++) local.combatants.push({ id: encId(), name: 'Thug #' + i }); // encAddEnemy(), qty 4
+  const saved = mergeCompute(server, local, baseline, combatantsPath);
+  const ids = new Set(saved.combatants.map(c => c.id));
+  results.push(['a squad added after a reload keeps every member and every original',
+    saved.combatants.length === 6 && ids.size === 6]);
+})();
+
+// Scenario 16: the generator itself must carry no per-load state to restart —
+// that's what makes two page loads (or the encounter tab and the board tab,
+// the normal way this gets run) safe from handing out the same id, which a
+// counter starting at 1 in each of them guarantees they do. Drawing a run of
+// ids and requiring them all distinct, and all outside the range of the legacy
+// sequential ids, pins both halves of that down.
+(function idsAreGloballyUniqueScenario() {
+  const all = new Set();
+  for (let i = 0; i < 1000; i++) all.add(encId());
+  const clearOfLegacyIds = all.size === 1000 && [...all].every(id => Number.isSafeInteger(id) && id > 1000);
+  results.push(['ids are unique across page loads and clear of legacy ids', clearOfLegacyIds]);
+})();
+
 let allPass = true;
 for (const [name, ok] of results) {
   console.log((ok ? 'PASS' : 'FAIL') + ' — ' + name);

@@ -47,8 +47,22 @@ function populateRosterSelect() {
 // the team-dot picker, and by the board engine for token colors.
 
 let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], boardStrokes: [], boardTerrain: [] };
-let _encId = 0;
-function encId() { return ++_encId; }
+// Combatant ids have to be unique across page loads and across clients, not
+// just within one session. fsMergeSave keys the combatants array by id, so a
+// counter that restarts at 1 on every load hands the next combatant added an
+// id the server is already using: the merge reads the two as one item, folds
+// the addition onto the combatant already sitting at that id, and the roster
+// comes back from the next snapshot no longer than it was — the DM adds
+// someone and watches a row disappear a moment later. (Worse on a reload after
+// a session of adding, where the ids handed out again are exactly the ones the
+// recently added combatants hold.)
+//
+// Ids are only ever compared for equality, and get interpolated into inline
+// onclick= handlers, so they must stay plain numbers — a random 15-digit
+// integer serves: well clear of the small sequential ids older encounters
+// still hold, comfortably inside Number.MAX_SAFE_INTEGER, and colliding about
+// once in 1e11 adds even between two tabs saving at the same instant.
+function encId() { return Math.floor(Math.random() * 1e15) + 1; }
 
 const FS_ENCOUNTER_DOC = db.collection('mha-dnd').doc('encounter-state');
 let encSaveTimer = null;

@@ -47,7 +47,14 @@ function encSave() {
         { path: 'boardTerrain', idKey: 'id' },
       ]);
       _lastSyncedEncounter = merged;
-    } catch {} finally {
+    } catch (e) {
+      // This was a bare `catch {}`, and that silence is why a token moving
+      // back or a team dot flipping back is so hard to account for: writes to
+      // encounter-state are admin-only (firestore.rules), so a failed one is
+      // invisible — the edit stays on screen until the next snapshot arrives
+      // and quietly replaces it with the server's copy. Say so instead.
+      console.error('[board] save failed — this edit will revert on the next sync:', e);
+    } finally {
       _encSavePending = false;
     }
   }, 600);

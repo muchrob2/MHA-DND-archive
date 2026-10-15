@@ -365,12 +365,13 @@ function searchHaystack(it) {
 }
 
 // Purely decorative — the category rail reads much faster with a glyph than
-// with thirteen similarly-shaped words. Kept in the page rather than in
+// with sixteen similarly-shaped words. Kept in the page rather than in
 // shop-catalog.json: the catalogue is game data, this is presentation.
 const CATEGORY_ICONS = {
   firearms: '🔫', melee: '⚔', explosives: '💥', parts: '⚙',
   'suits-pro': '🦸', 'suits-student': '🎓', gear: '🧰', provisions: '🍱',
   licenses: '📋', medical: '🏥', training: '🥋', media: '📺', underworld: '🕶',
+  nonlethal: '🪢', consumables: '🧃', leisure: '🎳',
 };
 
 function cardHtml(it) {

@@ -472,6 +472,1743 @@
           "season_1_role": "Met directly in The Fracture Problem (Tier 2) — performs a hero move (protecting an elderly protester) while being a villain. Present but non-combative in Convergence, ensuring Shard's exit is clean. If forced into combat, use full stat block."
         }
       ]
+    },
+    {
+      "id": "byakko",
+      "name": "Byakko",
+      "description": "A street gang that runs the backstreets of west Tokyo and ranks its members by who beat whom. The more the class tangle with them, the stronger the people who come next.",
+      "structure": "Ranked by who beat whom: Stray (unranked), Claw (one stripe), Fang (two stripes), Stripe (three stripes). Above them the Four Corners hold the compass points, and above all of them the White Tiger.",
+      "public_awareness": "Known locally as a street gang. The Heat track measures how much attention the class have drawn to themselves.",
+      "tier_introduced": 1,
+      "colour": "#E8E8E8",
+      "villains": [
+        {
+          "name": "Byakko Stray",
+          "role": "Byakko — unranked",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_stray",
+            "abilities": [
+              {
+                "name": "Knuckles",
+                "type": "Action",
+                "attackBonus": "+3",
+                "damage": "1d6+1 bludgeoning",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "UNRANKED",
+                "type": "Trait",
+                "description": "beating Strays raises no Heat. Byakko do not count them, and neither should you."
+              },
+              {
+                "name": "They run the moment the first one goes down",
+                "type": "Trait",
+                "description": ""
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "1/4",
+            "tier": 1,
+            "HP": 13,
+            "AC": 12,
+            "speed": "30 ft",
+            "STR": 12,
+            "DEX": 12,
+            "CON": 11,
+            "INT": 9,
+            "WIS": 9,
+            "CHA": 10
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Not a member yet. Strays hang around the gang hoping to be noticed, in threes, in tracksuits, at volume.",
+          "dm_notes": {
+            "combat_role": "Mob whoever looks smallest, shout a lot, scatter. Use them to show the players the street before the street is dangerous."
+          }
+        },
+        {
+          "name": "Byakko Claw",
+          "role": "Byakko — one stripe",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_claw",
+            "abilities": [
+              {
+                "name": "Tekko-kagi (hand claws)",
+                "type": "Action",
+                "attackBonus": "+4",
+                "damage": "2d6 slashing",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "ONE TRICK",
+                "type": "Trait",
+                "description": "every Claw has exactly one quirk trick. Pick one: a 15-ft shove (STR DC 12), a blinding flash (CON DC 12, blinded 1 round), or a 20-ft standing leap."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "1",
+            "tier": 1,
+            "HP": 25,
+            "AC": 13,
+            "speed": "30 ft",
+            "STR": 13,
+            "DEX": 13,
+            "CON": 12,
+            "INT": 10,
+            "WIS": 10,
+            "CHA": 11,
+            "quirk_save_DC": 12
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "The bottom rung: one white stripe tattooed on the inside of the left forearm. Claws collect protection money and enforce it.",
+          "dm_notes": {
+            "combat_role": "Fights to win, not to kill. Surrenders cleanly to anyone who beats them cleanly — and then goes and tells a Fang."
+          }
+        },
+        {
+          "name": "Byakko Fang",
+          "role": "Byakko — two stripes",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_fang",
+            "abilities": [
+              {
+                "name": "Multiattack — two claw strikes",
+                "type": "Action",
+                "attackBonus": "+5",
+                "damage": "2d8+2 slashing each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "SIGNATURE (recharge 5–6)",
+                "type": "Trait",
+                "description": "one real quirk move: 3d8 in a 15-ft cone (DEX DC 13 half), or a grab that restrains (STR DC 13 to escape)."
+              },
+              {
+                "name": "RING-WISE",
+                "type": "Trait",
+                "description": "advantage on saves against being knocked prone."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "3",
+            "tier": 2,
+            "HP": 45,
+            "AC": 14,
+            "speed": "30 ft",
+            "STR": 15,
+            "DEX": 14,
+            "CON": 14,
+            "INT": 10,
+            "WIS": 11,
+            "CHA": 12,
+            "quirk_save_DC": 13
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Two stripes. A Fang runs a block and wants a witness for everything.",
+          "dm_notes": {
+            "combat_role": "Will not fight in an empty alley. Walks you to a street with people in it, because a win nobody saw does not count."
+          }
+        },
+        {
+          "name": "Byakko Stripe",
+          "role": "Byakko — three stripes",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_stripe",
+            "abilities": [
+              {
+                "name": "Multiattack — two strikes",
+                "type": "Action",
+                "attackBonus": "+6",
+                "damage": "3d8 each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "TWO SIGNATURES",
+                "type": "Trait",
+                "description": "give a Stripe two real quirk moves on the Fang pattern, one of them a recharge."
+              },
+              {
+                "name": "THE LAW",
+                "type": "Trait",
+                "description": "a Stripe fights one challenger at a time if they can. If two PCs engage together, every Byakko member watching stops being an audience and joins in."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "5",
+            "tier": 2,
+            "HP": 70,
+            "AC": 15,
+            "speed": "30 ft",
+            "STR": 16,
+            "DEX": 15,
+            "CON": 15,
+            "INT": 11,
+            "WIS": 12,
+            "CHA": 14,
+            "quirk_save_DC": 14
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Three stripes. Holds a street. There are about a dozen of them, and each one got there by beating the last one.",
+          "dm_notes": {
+            "combat_role": "Arrives with an escort of two Claws who do not fight unless the Law is broken. Offers the challenge by name."
+          }
+        },
+        {
+          "name": "Hazama Ritsu",
+          "alias": "Ricochet",
+          "role": "Byakko — Claw (one stripe)",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_hazama",
+            "abilities": [
+              {
+                "name": "Elbow",
+                "type": "Action",
+                "attackBonus": "+5",
+                "damage": "2d6 bludgeoning",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "RUBBER JOINTS (reaction, once per round)",
+                "type": "Trait",
+                "description": "when hit in melee, he takes half damage and bounces 15 ft away without provoking."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "1",
+            "tier": 1,
+            "HP": 24,
+            "AC": 14,
+            "speed": "35 ft",
+            "STR": 10,
+            "DEX": 16,
+            "CON": 12,
+            "INT": 10,
+            "WIS": 9,
+            "CHA": 13,
+            "quirk_save_DC": 12
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Sixteen, skinny, one stripe and desperate for a second. Picks the smallest-looking PC every single time and narrates the whole fight, badly, at volume.",
+          "dm_notes": {
+            "combat_role": "Hit and bounce. Gives up the moment he is cornered — and then follows the PCs home to ask how they did that. A good first Byakko for any table."
+          }
+        },
+        {
+          "name": "Kei & Rei Okita",
+          "alias": "the Echo Twins",
+          "role": "Byakko — Claws (one stripe)",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_okita",
+            "abilities": [
+              {
+                "name": "Twin batons",
+                "type": "Action",
+                "attackBonus": "+4",
+                "damage": "1d8+2 bludgeoning",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "ECHO STEP",
+                "type": "Trait",
+                "description": "whatever one twin did on their last turn, the other may do on this one with +2 to hit, and the target has disadvantage on any save against it."
+              },
+              {
+                "name": "PAIR",
+                "type": "Trait",
+                "description": "they have never met anybody else who fights as two."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "1",
+            "tier": 1,
+            "HP": 22,
+            "AC": 13,
+            "speed": "30 ft",
+            "STR": 12,
+            "DEX": 14,
+            "CON": 12,
+            "INT": 11,
+            "WIS": 10,
+            "CHA": 10,
+            "quirk_save_DC": 12
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "One preset per twin — run two. Byakko's only pair, and the rest of the gang thinks they are a joke.",
+          "dm_notes": {
+            "combat_role": "The 2v2 bracket's mirror. Fought as a pair it is a fair, funny, excellent fight. Fought alone, they take you apart. Either way they will want to know who taught you."
+          }
+        },
+        {
+          "name": "Dōmeki Daigo",
+          "alias": "Brick",
+          "role": "Byakko — Fang (two stripes)",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_domeki",
+            "abilities": [
+              {
+                "name": "Multiattack — two haymakers",
+                "type": "Action",
+                "attackBonus": "+6",
+                "damage": "2d8+4 bludgeoning each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "BRICKHIDE",
+                "type": "Trait",
+                "description": "resistance to bludgeoning damage."
+              },
+              {
+                "name": "BRICK WALL (bonus action, recharge 5–6)",
+                "type": "Trait",
+                "description": "until his next turn he cannot be moved, knocked prone or grappled, and anything that hits him in melee takes 1d6."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "3",
+            "tier": 2,
+            "HP": 60,
+            "AC": 15,
+            "speed": "30 ft",
+            "STR": 18,
+            "DEX": 10,
+            "CON": 16,
+            "INT": 9,
+            "WIS": 11,
+            "CHA": 10,
+            "quirk_save_DC": 13
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Runs Swing Town, a batting centre in the Ikebukuro backstreets, and the Ring nights in its back cage. Twenty-four, gentle with the kids who come in to bat, and the Fang most PCs meet first.",
+          "dm_notes": {
+            "combat_role": "Stands still and lets you hit him, because hitting him hurts. Respects anybody who works out that he hates being made to move."
+          }
+        },
+        {
+          "name": "Saeki Momo",
+          "alias": "Hairpin",
+          "role": "Byakko — Fang (two stripes)",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_saeki",
+            "abilities": [
+              {
+                "name": "Needle hair — two shots",
+                "type": "Action",
+                "attackBonus": "+6",
+                "damage": "2d6+2 piercing each",
+                "range": "60/120 ft",
+                "description": ""
+              },
+              {
+                "name": "PINCUSHION (recharge 5–6)",
+                "type": "Trait",
+                "description": "15-ft burst around her, DEX DC 13, 3d6 piercing, half on a save."
+              },
+              {
+                "name": "TRACK LEGS",
+                "type": "Trait",
+                "description": "can Disengage as a bonus action."
+              },
+              {
+                "name": "SOMETHING STANDING BEHIND HER (Heat 4+ only)",
+                "type": "Trait",
+                "description": "since spring there has been a figure at her shoulder that she cannot explain and her registry does not list. It is an Envoy, and it is the Astral Court's first trace. See \"The Astral Court.\""
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "3",
+            "tier": 2,
+            "HP": 42,
+            "AC": 14,
+            "speed": "40 ft",
+            "STR": 10,
+            "DEX": 18,
+            "CON": 12,
+            "INT": 12,
+            "WIS": 12,
+            "CHA": 13,
+            "quirk_save_DC": 13
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Ex-sprinter, thrown off her school team for using her quirk on the track. Izuto Kutsu is everything she lost and she will want to race him.",
+          "dm_notes": {
+            "combat_role": "Kites. Never stands still. If a PC outruns her, she stops fighting and asks for a rematch on a track."
+          }
+        },
+        {
+          "name": "Ibuki Kōsuke",
+          "alias": "Three-Stripe Kō",
+          "role": "Byakko — Stripe (three stripes)",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_ibuki",
+            "abilities": [
+              {
+                "name": "Multiattack — two claw strikes",
+                "type": "Action",
+                "attackBonus": "+6",
+                "damage": "3d8 slashing each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "AFTERIMAGE",
+                "type": "Trait",
+                "description": "begins each fight with two afterimages. While any remain, attacks against him have disadvantage, and any hit or area effect that would touch him pops one instead of dealing damage."
+              },
+              {
+                "name": "THE COLLECTOR",
+                "type": "Trait",
+                "description": "he has watched the festival archive. He quotes the commentary at you, accurately, and he has read your weakness."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "5",
+            "tier": 2,
+            "HP": 75,
+            "AC": 15,
+            "speed": "35 ft",
+            "STR": 14,
+            "DEX": 17,
+            "CON": 14,
+            "INT": 12,
+            "WIS": 13,
+            "CHA": 14,
+            "quirk_save_DC": 14
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Holds Ikebukuro North Alley. Cold, precise, honourable to the letter of the Law, and the owner of a notebook with the name of everyone he has ever beaten.",
+          "dm_notes": {
+            "combat_role": "The first Byakko who has done his homework. Play the commentary-quoting lightly — it is a schoolyard echo of Appetite, not a scare."
+          }
+        },
+        {
+          "name": "Tsuruoka Fusae",
+          "alias": "Madame Tsuru",
+          "role": "Byakko — Stripe (three stripes)",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_tsuru",
+            "abilities": [
+              {
+                "name": "Heavy Hand",
+                "type": "Action",
+                "attackBonus": "+7",
+                "damage": "3d8+4 bludgeoning",
+                "range": "Melee",
+                "description": "Once per round, the target makes a CON DC 15 save or is stunned until the end of its next turn."
+              },
+              {
+                "name": "SEEN IT ALL",
+                "type": "Trait",
+                "description": "advantage on saves against being frightened, charmed or tricked, and she cannot be surprised."
+              },
+              {
+                "name": "THE HOUSE",
+                "type": "Trait",
+                "description": "inside Lucky Seven, every Byakko member present fights for her without being asked."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "5",
+            "tier": 2,
+            "HP": 80,
+            "AC": 13,
+            "speed": "25 ft",
+            "STR": 16,
+            "DEX": 10,
+            "CON": 16,
+            "INT": 14,
+            "WIS": 16,
+            "CHA": 16,
+            "quirk_save_DC": 15
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Sixty-eight. Runs Lucky Seven, the dice den above a noodle shop, and has held three stripes for thirty-one years because nobody has beaten her yet. Adores Kinji's shoes.",
+          "dm_notes": {
+            "combat_role": "Does not start fights. Ends them, with one slap, and then offers you tea. Would very much like to see what Kinji's quirk does, and has a die she would like him to roll."
+          }
+        },
+        {
+          "name": "Kuze Asagi",
+          "alias": "the Azure Corner",
+          "role": "Byakko — one of the Four Corners",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_kuze",
+            "weakness": "lightning in water. If he takes lightning damage while standing in water, he is stunned until the end of his next turn. Nakaya Emari will find this out.",
+            "abilities": [
+              {
+                "name": "Multiattack — two Riptide whips",
+                "type": "Action",
+                "attackBonus": "+8",
+                "damage": "4d8 bludgeoning each",
+                "range": "20 ft reach",
+                "description": "A hit pulls the target 15 ft toward him."
+              },
+              {
+                "name": "TIDECALL",
+                "type": "Trait",
+                "description": "pulls water out of drains, pipes and gutters. While he stands in water, +2 AC."
+              },
+              {
+                "name": "FLOOD LANE (recharge 5–6)",
+                "type": "Trait",
+                "description": "60-ft line, DEX DC 16 or 5d8 bludgeoning, knocked prone and pushed 20 ft; half and no push on a save. The line stays flooded."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "8",
+            "tier": 3,
+            "HP": 125,
+            "AC": 16,
+            "speed": "30 ft, swim 40 ft",
+            "STR": 14,
+            "DEX": 16,
+            "CON": 16,
+            "INT": 13,
+            "WIS": 14,
+            "CHA": 12,
+            "quirk_save_DC": 16
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Holds the east. Twenty-two, a former national-level swimmer, calm to the point of boredom. Masahata Shikoji is the first person in years he has wanted to fight.",
+          "dm_notes": {
+            "combat_role": "Floods the street first and fights second. Every Corner is named for one of the other three guardian beasts, as a boast: the other gods are Byakko's doormen.",
+            "weakness_to_exploit": "lightning in water. If he takes lightning damage while standing in water, he is stunned until the end of his next turn. Nakaya Emari will find this out."
+          }
+        },
+        {
+          "name": "Hōjō Akane",
+          "alias": "the Vermilion Corner",
+          "role": "Byakko — one of the Four Corners",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_hojo",
+            "abilities": [
+              {
+                "name": "Multiattack — two flame talons",
+                "type": "Action",
+                "attackBonus": "+8",
+                "damage": "3d10 fire each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "PYRE DIVE (recharge 5–6)",
+                "type": "Trait",
+                "description": "dives on a point within 40 ft: 10-ft radius, DEX DC 16, 6d10 fire, half on a save."
+              },
+              {
+                "name": "REBIRTH (once per day)",
+                "type": "Trait",
+                "description": "at 0 HP she bursts into flame (3d10 fire to everything within 15 ft, no save) and stands back up with 40 HP."
+              },
+              {
+                "name": "SHOWWOMAN",
+                "type": "Trait",
+                "description": "will not fight without an audience, and plays to it."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "8",
+            "tier": 3,
+            "HP": 115,
+            "AC": 16,
+            "speed": "30 ft, fly 40 ft",
+            "STR": 12,
+            "DEX": 18,
+            "CON": 14,
+            "INT": 12,
+            "WIS": 12,
+            "CHA": 18,
+            "quirk_save_DC": 16
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Holds the south. Nineteen, theatrical, gorgeous, insufferable. Watched Tazato breathe fire at the festival and has been furious about the competition ever since. Rakuka thinks she is the coolest person he has ever seen.",
+          "dm_notes": {
+            "combat_role": "Opens from the air and never lands if she can help it. Hates being ignored more than being hit."
+          }
+        },
+        {
+          "name": "Genda Tetsuo",
+          "alias": "the Black Corner",
+          "role": "Byakko — one of the Four Corners",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_genda",
+            "abilities": [
+              {
+                "name": "Shell Slam",
+                "type": "Action",
+                "attackBonus": "+9",
+                "damage": "4d10+6 bludgeoning",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "SHELL",
+                "type": "Trait",
+                "description": "if he has not moved this turn: AC 20 and resistance to all damage except psychic."
+              },
+              {
+                "name": "IMMOVABLE",
+                "type": "Trait",
+                "description": "cannot be pushed, pulled, knocked prone or grappled by anything smaller than Huge."
+              },
+              {
+                "name": "DOORMAN",
+                "type": "Trait",
+                "description": "to reach the White Tiger in the Cage, you go through him or you talk your way past him. He is open to both."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "8",
+            "tier": 3,
+            "HP": 160,
+            "AC": 18,
+            "speed": "20 ft",
+            "STR": 22,
+            "DEX": 8,
+            "CON": 20,
+            "INT": 12,
+            "WIS": 15,
+            "CHA": 10,
+            "quirk_save_DC": 16
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Holds the north and the front door of the Cage. Forty, enormous, sells takoyaki from a cart, reads philosophy between customers, and has not lost a fight in eleven years.",
+          "dm_notes": {
+            "combat_role": "Plants himself and waits. Thinks Kazama, Setaka and Hiro are the most interesting things to happen to him in a decade, and will happily stop a fight to discuss load-bearing."
+          }
+        },
+        {
+          "name": "Kōga Rin",
+          "alias": "the Yellow Corner",
+          "role": "Byakko — one of the Four Corners",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_koga",
+            "abilities": [
+              {
+                "name": "Multiattack — two Thunderhoof kicks",
+                "type": "Action",
+                "attackBonus": "+9",
+                "damage": "2d10+5 bludgeoning + 2d10 lightning each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "STORM STRIDE",
+                "type": "Trait",
+                "description": "never provokes opportunity attacks."
+              },
+              {
+                "name": "ARC STEP (bonus action)",
+                "type": "Trait",
+                "description": "teleports up to 30 ft along anything conductive: rail, wire, wet ground."
+              },
+              {
+                "name": "OVERCHARGE",
+                "type": "Trait",
+                "description": "if she is soaked, her next kick deals its lightning damage to her as well."
+              },
+              {
+                "name": "SECOND",
+                "type": "Trait",
+                "description": "if the White Tiger is in the fight, Rin acts immediately after her."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "9",
+            "tier": 3,
+            "HP": 120,
+            "AC": 17,
+            "speed": "60 ft",
+            "STR": 14,
+            "DEX": 20,
+            "CON": 14,
+            "INT": 13,
+            "WIS": 14,
+            "CHA": 13,
+            "quirk_save_DC": 17
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Holds the centre — the Cage itself — and is the White Tiger's second. Twenty-five, unsmiling, and the fastest thing in west Tokyo until the festival. She has watched Izuto Kutsu's obstacle course run forty times.",
+          "dm_notes": {
+            "combat_role": "Izuto's rival whether he likes it or not, and Nakaya's too. Never stops moving; hates water."
+          }
+        },
+        {
+          "name": "Hakuro Mitsuki",
+          "alias": "the White Tiger",
+          "role": "Byakko — the gang’s apex",
+          "quirk_mechanics": {
+            "source": "Encounter preset — byakko_hakuro",
+            "abilities": [
+              {
+                "name": "Multiattack — two claws",
+                "type": "Action",
+                "attackBonus": "+11",
+                "damage": "3d10+6 slashing each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "Bite (after Pounce only)",
+                "type": "Action",
+                "attackBonus": "+11",
+                "damage": "2d10+6 piercing",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "POUNCE",
+                "type": "Trait",
+                "description": "if she moves 20 ft straight at a creature and hits it with a claw, it makes a STR DC 18 save or is knocked prone, and she may bite it as a bonus action."
+              },
+              {
+                "name": "ROAR (recharge 5–6)",
+                "type": "Trait",
+                "description": "30-ft cone, WIS DC 18 or frightened for 1 minute (repeat the save at the end of each turn)."
+              },
+              {
+                "name": "APEX READ",
+                "type": "Trait",
+                "description": "after a creature hits her, she has advantage on her next attack against that creature."
+              },
+              {
+                "name": "UNDEFEATED (2 per round, at the end of another creature's turn)",
+                "type": "Trait",
+                "description": "move up to half her speed without provoking, or make one claw attack."
+              },
+              {
+                "name": "THE LAW IS THE LAW",
+                "type": "Trait",
+                "description": "she fights one challenger at a time. If a second U.A. student joins in, she steps back and declares the fight void. The way round this is in \"The White Tiger,\" and it is the campaign's thesis."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "12",
+            "tier": 4,
+            "HP": 230,
+            "AC": 18,
+            "speed": "40 ft",
+            "STR": 22,
+            "DEX": 18,
+            "CON": 20,
+            "INT": 13,
+            "WIS": 16,
+            "CHA": 18,
+            "quirk_save_DC": 18
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Byakko. Twenty-seven, six foot four, a white-tiger heteromorph with black stripes down her arms and gold eyes, undefeated for six years. Eats at the same ramen stall at one in the morning every night. Watched the Sports Festival's paired tournament and thought it was cowardice.",
+          "dm_notes": {
+            "combat_role": "Not a monster, not a villain in the Appetite sense — a champion. She wants the best fight in Tokyo and she thinks the festival winners might be it. Play her with total sincerity."
+          }
+        }
+      ]
+    },
+    {
+      "id": "scarlet-legion",
+      "name": "Scarlet Legion",
+      "description": "Vampires, in the Hellsing tradition: old, aristocratic, military, and appalling. They came to Japan with the foreign legations in 1868, and they run a members’ club in Ginza, a private clinic in Minato and the night shipping at Kurogane Wharf. They feed on people nobody misses, which lately has meant Byakko.",
+      "structure": "Thralls and legionaries under Centurions, with the Legate above them all.",
+      "public_awareness": "None. On paper they are old-money foreigners with no quirks.",
+      "tier_introduced": 3,
+      "colour": "#B3202C",
+      "villains": [
+        {
+          "name": "Legion Thrall",
+          "role": "Scarlet Legion — thrall",
+          "quirk_mechanics": {
+            "source": "Encounter preset — legion_thrall",
+            "abilities": [
+              {
+                "name": "Claw",
+                "type": "Action",
+                "attackBonus": "+4",
+                "damage": "1d8+2 slashing",
+                "range": "Melee",
+                "description": "On a hit, CON DC 11 or gain a rank of Queasy."
+              },
+              {
+                "name": "MINDLESS",
+                "type": "Trait",
+                "description": "immune to being charmed or frightened; obeys the nearest Legion vampire."
+              },
+              {
+                "name": "SUNLIGHT",
+                "type": "Trait",
+                "description": "crumbles to ash at the end of any turn it spends in direct sunlight."
+              },
+              {
+                "name": "ONCE A PERSON",
+                "type": "Trait",
+                "description": "they were somebody. A private clinic in Minato has the records of who."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "1/2",
+            "tier": 1,
+            "HP": 22,
+            "AC": 11,
+            "speed": "25 ft",
+            "STR": 14,
+            "DEX": 10,
+            "CON": 14,
+            "INT": 3,
+            "WIS": 6,
+            "CHA": 3
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Scarlet Legion. Somebody the Scarlet Legion fed from and did not finish. Grey, slow, silent, always in numbers. Hellsing's ghouls, in a Tokyo dock.",
+          "dm_notes": {
+            "combat_role": "Six at a time, out of the dark, at the wharf. The horror is that they are slow and do not stop."
+          }
+        },
+        {
+          "name": "Legionary",
+          "role": "Scarlet Legion — rank and file",
+          "quirk_mechanics": {
+            "source": "Encounter preset — legion_legionary",
+            "weakness": "in direct sunlight: no regeneration, 4d6 radiant at the start of each turn, disadvantage on everything. Vulnerable to radiant and silver. Cannot enter a private home uninvited. Cannot cross running water unaided.",
+            "abilities": [
+              {
+                "name": "Claw",
+                "type": "Action",
+                "attackBonus": "+6",
+                "damage": "2d8+3 slashing",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "Bite",
+                "type": "Action",
+                "attackBonus": "+6",
+                "damage": "2d6+3 piercing + 2d6 necrotic",
+                "range": "Melee",
+                "description": "It regains HP equal to the necrotic damage dealt."
+              },
+              {
+                "name": "REGENERATION",
+                "type": "Trait",
+                "description": "regains 10 HP at the start of its turn unless it took radiant, fire or silver damage since its last turn."
+              },
+              {
+                "name": "GAZE (action)",
+                "type": "Trait",
+                "description": "one creature within 30 ft, WIS DC 13 or charmed for 1 minute (treats the Legionary as a trusted friend)."
+              },
+              {
+                "name": "MIST (once per night)",
+                "type": "Trait",
+                "description": "becomes mist until its next turn: fly 30 ft, passes through gaps, immune to non-radiant damage."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "4",
+            "tier": 2,
+            "HP": 60,
+            "AC": 14,
+            "speed": "35 ft",
+            "STR": 16,
+            "DEX": 16,
+            "CON": 16,
+            "INT": 12,
+            "WIS": 12,
+            "CHA": 15,
+            "quirk_save_DC": 13
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Scarlet Legion. A turned vampire of the Legion's rank and file. Often recruited from people who were already strong — some of them used to be Byakko.",
+          "dm_notes": {
+            "combat_role": "Claw then bite, every turn, on the same target. Ren Suzuki's beam is radiant — the Legion will know what that means before he does.",
+            "weakness_to_exploit": "in direct sunlight: no regeneration, 4d6 radiant at the start of each turn, disadvantage on everything. Vulnerable to radiant and silver. Cannot enter a private home uninvited. Cannot cross running water unaided."
+          }
+        },
+        {
+          "name": "Mina Toda",
+          "role": "Scarlet Legion — Centurion",
+          "quirk_mechanics": {
+            "source": "Encounter preset — legion_mina",
+            "weakness": "as a Legionary.",
+            "abilities": [
+              {
+                "name": "Multiattack — two claw strikes",
+                "type": "Action",
+                "attackBonus": "+8",
+                "damage": "2d10+4 slashing each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "Bite",
+                "type": "Action",
+                "attackBonus": "+8",
+                "damage": "2d8+4 piercing + 3d6 necrotic",
+                "range": "Melee",
+                "description": "She regains HP equal to the necrotic damage."
+              },
+              {
+                "name": "REGENERATION 15",
+                "type": "Trait",
+                "description": "as a Legionary."
+              },
+              {
+                "name": "GAZE",
+                "type": "Trait",
+                "description": "WIS DC 15."
+              },
+              {
+                "name": "RESTRICTION RELEASE (bonus action)",
+                "type": "Trait",
+                "description": "she fights sealed at Level Three. Each release (Three → Two → One) gives +2 to hit and damage and 20 temporary HP, and makes her stranger to look at: by Level One her shadow has eyes in it."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "7",
+            "tier": 3,
+            "HP": 105,
+            "AC": 16,
+            "speed": "40 ft",
+            "STR": 16,
+            "DEX": 18,
+            "CON": 16,
+            "INT": 16,
+            "WIS": 15,
+            "CHA": 20,
+            "quirk_save_DC": 15
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Scarlet Legion. Looks nineteen. Has looked nineteen since 1923. The Legion's diplomat and recruiter, and almost certainly the first of them a PC ever speaks to — at a party, holding a glass of something red she does not drink.",
+          "dm_notes": {
+            "combat_role": "Talks first, always. Would much rather recruit a PC than fight one, and is honest about what the offer costs, which is the frightening part.",
+            "weakness_to_exploit": "as a Legionary."
+          }
+        },
+        {
+          "name": "Captain Grau",
+          "role": "Scarlet Legion — Centurion",
+          "quirk_mechanics": {
+            "source": "Encounter preset — legion_grau",
+            "weakness": "as a Legionary.",
+            "abilities": [
+              {
+                "name": "Multiattack — two fists",
+                "type": "Action",
+                "attackBonus": "+9",
+                "damage": "3d10+6 bludgeoning each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "REGENERATION 15",
+                "type": "Trait",
+                "description": "as a Legionary."
+              },
+              {
+                "name": "UNBROKEN",
+                "type": "Trait",
+                "description": "the first time each night he would drop to 0 HP, he drops to 1 instead."
+              },
+              {
+                "name": "RESTRICTION RELEASE",
+                "type": "Trait",
+                "description": "as Mina Toda."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "9",
+            "tier": 3,
+            "HP": 170,
+            "AC": 17,
+            "speed": "30 ft",
+            "STR": 22,
+            "DEX": 12,
+            "CON": 20,
+            "INT": 10,
+            "WIS": 13,
+            "CHA": 8,
+            "quirk_save_DC": 16
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Scarlet Legion. The Legion's soldier. Seven feet, grey greatcoat, has not spoken since 1945. The Legion sends Grau when talking has failed.",
+          "dm_notes": {
+            "combat_role": "Walks forward. Hits whatever is in front of him. Stops when told to.",
+            "weakness_to_exploit": "as a Legionary."
+          }
+        },
+        {
+          "name": "Lady Akabane Seraphine",
+          "role": "Scarlet Legion — Legate",
+          "quirk_mechanics": {
+            "source": "Encounter preset — legion_akabane",
+            "abilities": [
+              {
+                "name": "Multiattack — three claws",
+                "type": "Action",
+                "attackBonus": "+12",
+                "damage": "3d10+7 slashing each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "Bite",
+                "type": "Action",
+                "attackBonus": "+12",
+                "damage": "3d8+7 piercing + 4d8 necrotic",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "REGENERATION 25",
+                "type": "Trait",
+                "description": ""
+              },
+              {
+                "name": "GAZE",
+                "type": "Trait",
+                "description": "every creature of her choice within 30 ft, WIS DC 19."
+              },
+              {
+                "name": "LEVEL ZERO (once)",
+                "type": "Trait",
+                "description": "she stops being a person-shaped thing, and four shadow hounds step out of her coat (AC 15, 30 HP, bite +10 for 2d10+5)."
+              },
+              {
+                "name": "NOT A FIGHT",
+                "type": "Trait",
+                "description": "she is beyond the party at any level this campaign reaches. She is a negotiation, and the campaign treats her as one."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "14",
+            "tier": 4,
+            "HP": 260,
+            "AC": 19,
+            "speed": "40 ft, fly 40 ft",
+            "STR": 20,
+            "DEX": 20,
+            "CON": 22,
+            "INT": 20,
+            "WIS": 18,
+            "CHA": 24,
+            "quirk_save_DC": 19
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Scarlet Legion. Four hundred years old, looks thirty, runs the Legion from the Crimson Room in Ginza. Unfailingly courteous. Has outlived eleven generations of heroes and considers hero society a phase.",
+          "dm_notes": {
+            "combat_role": "She does not fight students. She invites them to dinner, and the danger is in what she offers."
+          }
+        }
+      ]
+    },
+    {
+      "id": "astral-court",
+      "name": "Astral Court",
+      "description": "A court of sun-priests older than the shogunate, who practise Sunbreath: a breathing art that carries sunlight through the blood. Its masters wake a second self called an Envoy, a figure that stands beside them and does one impossible thing. They are the Legion’s oldest enemy.",
+      "structure": "Initiates beneath Envoy-bearers, with Elders above them.",
+      "public_awareness": "None. They are registered Quirkless and proud of it, and one of them teaches English at U.A.",
+      "tier_introduced": 3,
+      "colour": "#E8A020",
+      "villains": [
+        {
+          "name": "Daybreak Initiate",
+          "role": "Astral Court — initiate",
+          "quirk_mechanics": {
+            "source": "Encounter preset — court_initiate",
+            "abilities": [
+              {
+                "name": "Sunbreath strike",
+                "type": "Action",
+                "attackBonus": "+4",
+                "damage": "1d6+2 bludgeoning + 1d6 radiant",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "SUNBREATH (3 per short rest)",
+                "type": "Trait",
+                "description": "add 1d6 radiant to a hit; or walk on water or up a wall until the end of the turn; or heal 1d8 by touch. Against a Legion vampire the heal deals 2d8 radiant instead."
+              },
+              {
+                "name": "BREATH IS EVERYTHING",
+                "type": "Trait",
+                "description": "gagged, choked or underwater without a breath, Sunbreath stops working."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "1",
+            "tier": 1,
+            "HP": 22,
+            "AC": 13,
+            "speed": "30 ft",
+            "STR": 12,
+            "DEX": 14,
+            "CON": 14,
+            "INT": 11,
+            "WIS": 13,
+            "CHA": 10,
+            "quirk_save_DC": 12
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Astral Court. A first-rung student of Sunbreath. Registered Quirkless, and proud of it. Trained in a bathhouse.",
+          "dm_notes": {
+            "combat_role": "Defensive, polite, and absolutely certain the PCs are about to be eaten by something."
+          }
+        },
+        {
+          "name": "Hōshō Kaito & PAPER PLANES",
+          "role": "Astral Court — Envoy-bearer",
+          "quirk_mechanics": {
+            "source": "Encounter preset — court_kaito",
+            "abilities": [
+              {
+                "name": "Multiattack — Paper Planes' fists",
+                "type": "Action",
+                "attackBonus": "+7",
+                "damage": "2d8+3 bludgeoning each",
+                "range": "10 ft",
+                "description": ""
+              },
+              {
+                "name": "ENVOY: PAPER PLANES",
+                "type": "Trait",
+                "description": "Power B · Speed B · Range D · Durability C · Precision B · Potential A. Anything it punches folds like paper for one minute: a door becomes a crane, a car folds flat, a wall folds open. A creature it hits makes a CON DC 14 save or is folded flat (incapacitated, speed 0) until the end of its next turn."
+              },
+              {
+                "name": "ENVOY RULES",
+                "type": "Trait",
+                "description": "an Envoy can only be hurt by another Envoy or by radiant damage, and damage dealt to it is dealt to its bearer. Hit Kaito."
+              },
+              {
+                "name": "SUNBREATH (4 per short rest)",
+                "type": "Trait",
+                "description": ""
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "5",
+            "tier": 2,
+            "HP": 75,
+            "AC": 15,
+            "speed": "30 ft",
+            "STR": 13,
+            "DEX": 16,
+            "CON": 14,
+            "INT": 12,
+            "WIS": 13,
+            "CHA": 16,
+            "quirk_save_DC": 14
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Astral Court. Seventeen, night clerk at a Kōenji convenience store, magnificent pompadour, extremely polite until you mention his hair.",
+          "dm_notes": {
+            "combat_role": "A good kid who has been fighting a war nobody told him was optional. The likeliest Court friend for the class."
+          }
+        },
+        {
+          "name": "Grandmother Hinata Sae",
+          "role": "Astral Court — Elder",
+          "quirk_mechanics": {
+            "source": "Encounter preset — court_hinata",
+            "abilities": [
+              {
+                "name": "Multiattack — two Sunbreath palms",
+                "type": "Action",
+                "attackBonus": "+10",
+                "damage": "2d8+4 bludgeoning + 3d8 radiant each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "SUNBREATH (unlimited)",
+                "type": "Trait",
+                "description": ""
+              },
+              {
+                "name": "OVERDRIVE (recharge 5–6)",
+                "type": "Trait",
+                "description": "a 30-ft line of sunlight carried through water or metal: DEX DC 17, 8d8 radiant. Legion vampires save at disadvantage and take double."
+              },
+              {
+                "name": "NO ENVOY",
+                "type": "Trait",
+                "description": "she never wanted one. She has buried three students who did."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "10",
+            "tier": 3,
+            "HP": 140,
+            "AC": 17,
+            "speed": "35 ft",
+            "STR": 12,
+            "DEX": 18,
+            "CON": 16,
+            "INT": 15,
+            "WIS": 20,
+            "CHA": 16,
+            "quirk_save_DC": 17
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Astral Court. Eighty-one, runs the Matsu-no-Yu bathhouse in Kōenji. The rumour is that she can stay underwater for ten minutes. The rumour is wrong. It is twelve.",
+          "dm_notes": {
+            "combat_role": "She will test a PC, not fight one: a slap that hurts like sunburn, and then a question about how they breathe."
+          }
+        },
+        {
+          "name": "Saotome Shin & BAD MOON",
+          "alias": "the Arrowhead Thief",
+          "role": "Astral Court",
+          "quirk_mechanics": {
+            "source": "Encounter preset — court_saotome",
+            "abilities": [
+              {
+                "name": "Multiattack — Bad Moon's fists",
+                "type": "Action",
+                "attackBonus": "+8",
+                "damage": "3d8+3 bludgeoning each",
+                "range": "10 ft",
+                "description": ""
+              },
+              {
+                "name": "The Arrowhead",
+                "type": "Action",
+                "attackBonus": "+8",
+                "damage": "1d4 piercing",
+                "range": "Melee",
+                "description": "CON DC 16. Success: the target awakens an Envoy within the week. Failure: it drops to 0 HP and begins dying."
+              },
+              {
+                "name": "ENVOY: BAD MOON",
+                "type": "Trait",
+                "description": "Power B · Speed C · Range C · Durability A · Precision C · Potential E. ECLIPSE: within 30 ft of Bad Moon, light sources go out and radiant damage and Sunbreath stop working."
+              },
+              {
+                "name": "ENVOY RULES",
+                "type": "Trait",
+                "description": "as Hōshō Kaito."
+              },
+              {
+                "name": "He has been cutting Byakko fighters with a stolen arrowhead since spring. Saeki Momo is one of the ones who lived",
+                "type": "Trait",
+                "description": ""
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "8",
+            "tier": 3,
+            "HP": 120,
+            "AC": 16,
+            "speed": "30 ft",
+            "STR": 14,
+            "DEX": 16,
+            "CON": 16,
+            "INT": 15,
+            "WIS": 12,
+            "CHA": 15,
+            "quirk_save_DC": 16
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Astral Court. Thirty-four, a former Courtier who believes Envoys should belong to the strong. Byakko's ladder of power is his idea of heaven, and he has been feeding it.",
+          "dm_notes": {
+            "combat_role": "The Court storyline's villain if you want one. Fights from inside his Eclipse so that nothing the Court taught can touch him."
+          }
+        }
+      ]
+    },
+    {
+      "id": "kuroshiki",
+      "name": "Kuroshiki",
+      "description": "The black rite. Old families who pass down inherited techniques fuelled by Sumi, the ink of dread turned against itself, and use them to exorcise Kegare — things born out of human fear, invisible to everybody else. A city that has spent a year afraid of Case 9 is full of Kegare, and the Kuroshiki are badly overstretched.",
+      "structure": "Sorcerers ranked by grade, trained at the Kurama Rite School above Hachiōji. Filed here alongside the Kegare they exist to exorcise.",
+      "public_awareness": "None. They hide their work behind Veils that cameras cannot see through, and on the registry sorcerers are Quirkless or claim small, dull quirks.",
+      "tier_introduced": 3,
+      "colour": "#2E2A33",
+      "villains": [
+        {
+          "name": "Mibu Tsubaki",
+          "role": "Kuroshiki sorcerer — Grade Two",
+          "quirk_mechanics": {
+            "source": "Encounter preset — kuro_tsubaki",
+            "abilities": [
+              {
+                "name": "Blood Lance — two lances",
+                "type": "Action",
+                "attackBonus": "+7",
+                "damage": "3d8 piercing each",
+                "range": "60 ft",
+                "description": ""
+              },
+              {
+                "name": "SUMI (8 per long rest)",
+                "type": "Trait",
+                "description": ""
+              },
+              {
+                "name": "MIBU BLOOD RITE",
+                "type": "Trait",
+                "description": "Red Bind (bonus action, 1 Sumi): STR DC 15 or restrained. Clot (reaction, 2 Sumi): halve the damage of one hit."
+              },
+              {
+                "name": "VEIL (action, 2 Sumi)",
+                "type": "Trait",
+                "description": "a black dome up to 100 ft across. From outside, nothing is happening, and cameras record an empty street."
+              },
+              {
+                "name": "PACT (once per fight)",
+                "type": "Trait",
+                "description": "she declares a restriction aloud (\"I will not move from this spot\") and gains +2 to her save DC and +1d10 on Blood Lance while she keeps it."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "5",
+            "tier": 2,
+            "HP": 70,
+            "AC": 15,
+            "speed": "30 ft",
+            "STR": 12,
+            "DEX": 16,
+            "CON": 14,
+            "INT": 14,
+            "WIS": 14,
+            "CHA": 12,
+            "quirk_save_DC": 15
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Kuroshiki. Sixteen, prickly, the Mibu house's best student in a generation and painfully aware of it. Hunts in a pair, like every Kuroshiki: \"one to see, one to cut.\"",
+          "dm_notes": {
+            "combat_role": "Will tell U.A. students to go home, twice, and then need their help."
+          }
+        },
+        {
+          "name": "Kagura Ichirō",
+          "role": "Kuroshiki sorcerer — Grade Two",
+          "quirk_mechanics": {
+            "source": "Encounter preset — kuro_ichiro",
+            "abilities": [
+              {
+                "name": "Shadow-hound bite (each hound)",
+                "type": "Action",
+                "attackBonus": "+6",
+                "damage": "2d8+3 piercing",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "SUMI (8 per long rest)",
+                "type": "Trait",
+                "description": ""
+              },
+              {
+                "name": "KAGURA SHADOW RITE",
+                "type": "Trait",
+                "description": "Hound (bonus action, 2 Sumi): a shadow hound forms from his hand-shadow (AC 13, 25 HP), lasting 1 minute; at most two."
+              },
+              {
+                "name": "THE ONE WHO SEES",
+                "type": "Trait",
+                "description": "he can see Kegare from a mile away and always knows where the nearest one is."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "5",
+            "tier": 2,
+            "HP": 72,
+            "AC": 14,
+            "speed": "30 ft",
+            "STR": 12,
+            "DEX": 14,
+            "CON": 14,
+            "INT": 13,
+            "WIS": 17,
+            "CHA": 12,
+            "quirk_save_DC": 15
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Kuroshiki. Seventeen, sleepy, polite, and Tsubaki's partner since they were nine. He does the seeing; she does the cutting.",
+          "dm_notes": {
+            "combat_role": "Stays behind Tsubaki and points. Gets on quietly well with Kibi Kankei, for reasons neither of them examines."
+          }
+        },
+        {
+          "name": "Shirasagi Rei",
+          "role": "Kuroshiki sorcerer — unranked",
+          "quirk_mechanics": {
+            "source": "Encounter preset — kuro_shirasagi",
+            "abilities": [
+              {
+                "name": "Anything he likes",
+                "type": "Action",
+                "attackBonus": "+13",
+                "damage": "4d10+6 force",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "THE LONG WAY ROUND",
+                "type": "Trait",
+                "description": "he can make the distance between himself and anything he chooses impossible to cross. Attacks against him do not arrive unless he allows them to."
+              },
+              {
+                "name": "ENCLOSURE: THE LONG CORRIDOR (once per day)",
+                "type": "Trait",
+                "description": "a 60-ft sphere; every creature inside is walking down an endless corridor toward him and is incapacitated for 1 minute (WIS DC 20 at the end of each turn)."
+              },
+              {
+                "name": "NOT A FIGHT",
+                "type": "Trait",
+                "description": "like the Legate, he is beyond this campaign. He is a mentor, a warning, and a very irritating lunch."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "15",
+            "tier": 4,
+            "HP": 250,
+            "AC": 20,
+            "speed": "40 ft",
+            "STR": 16,
+            "DEX": 22,
+            "CON": 18,
+            "INT": 20,
+            "WIS": 18,
+            "CHA": 20,
+            "quirk_save_DC": 20
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Kuroshiki. Twenty-eight, heir of the Shirasagi house, wears sunglasses indoors, extraordinarily strong and extraordinarily annoying about it. Teaches at the Kurama Rite School. Thinks Ando Iorai's sunglasses show good character.",
+          "dm_notes": {
+            "combat_role": "Never fights the class. Shows up, makes an enormous problem disappear in one move, eats somebody's snack, and leaves."
+          }
+        },
+        {
+          "name": "Kegare, Grade Four",
+          "role": "Kegare — a thing born out of human fear",
+          "quirk_mechanics": {
+            "source": "Encounter preset — kegare_grade4",
+            "abilities": [
+              {
+                "name": "Grasp",
+                "type": "Action",
+                "attackBonus": "+4",
+                "damage": "2d4 necrotic",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "UNSEEN",
+                "type": "Trait",
+                "description": "invisible to anybody without Sumi, and it does not appear on cameras."
+              },
+              {
+                "name": "BORN OF DREAD",
+                "type": "Trait",
+                "description": "resistance to all damage except radiant and Sumi-infused attacks."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "1/2",
+            "tier": 1,
+            "HP": 18,
+            "AC": 12,
+            "speed": "30 ft, climb 30 ft",
+            "STR": 10,
+            "DEX": 14,
+            "CON": 12,
+            "INT": 2,
+            "WIS": 10,
+            "CHA": 3
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Kuroshiki. A knot of somebody's fear that has learned to move. A thing in a stairwell. Mostly harmless. Mostly.",
+          "dm_notes": {
+            "combat_role": "They gather where people have been afraid: hospitals, crime scenes, every place Appetite has ever been."
+          }
+        },
+        {
+          "name": "Kegare, Grade Two",
+          "role": "Kegare — a thing born out of human fear",
+          "quirk_mechanics": {
+            "source": "Encounter preset — kegare_grade2",
+            "abilities": [
+              {
+                "name": "Multiattack — two limbs",
+                "type": "Action",
+                "attackBonus": "+7",
+                "damage": "2d10+4 bludgeoning each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "UNSEEN and BORN OF DREAD",
+                "type": "Trait",
+                "description": "as Grade Four."
+              },
+              {
+                "name": "DREAD (recharge 5–6)",
+                "type": "Trait",
+                "description": "every creature within 30 ft that can perceive it makes a WIS DC 14 save or is frightened until the end of its next turn."
+              },
+              {
+                "name": "FEAR FEEDS IT",
+                "type": "Trait",
+                "description": "whenever a creature within 30 ft fails a save against being frightened, it regains 10 HP."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "5",
+            "tier": 2,
+            "HP": 85,
+            "AC": 14,
+            "speed": "40 ft",
+            "STR": 18,
+            "DEX": 14,
+            "CON": 16,
+            "INT": 6,
+            "WIS": 12,
+            "CHA": 6,
+            "quirk_save_DC": 14
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Kuroshiki. Big enough to be a problem and old enough to talk. It speaks in the voice of whatever fear made it.",
+          "dm_notes": {
+            "combat_role": "Picks the most frightened person in the room and stays on them."
+          }
+        },
+        {
+          "name": "Kegare, Grade One",
+          "alias": "the Roll Call",
+          "role": "Kegare — a thing born out of human fear",
+          "quirk_mechanics": {
+            "source": "Encounter preset — kegare_rollcall",
+            "abilities": [
+              {
+                "name": "Multiattack — two grasps",
+                "type": "Action",
+                "attackBonus": "+9",
+                "damage": "3d10+4 necrotic each",
+                "range": "Melee",
+                "description": ""
+              },
+              {
+                "name": "UNSEEN and BORN OF DREAD",
+                "type": "Trait",
+                "description": "as Grade Four."
+              },
+              {
+                "name": "COUNTING",
+                "type": "Trait",
+                "description": "at the start of each round it counts the people in the room aloud, in the voice of whoever started the roll call in the loading yard, and loses its place, and starts again. Every creature that hears it makes a WIS DC 17 save or is frightened until the end of its next turn."
+              },
+              {
+                "name": "FED",
+                "type": "Trait",
+                "description": "it regains 15 HP whenever a creature within 60 ft fails a save against being frightened."
+              }
+            ]
+          },
+          "stat_block": {
+            "CR": "9",
+            "tier": 3,
+            "HP": 170,
+            "AC": 16,
+            "speed": "30 ft",
+            "STR": 18,
+            "DEX": 16,
+            "CON": 20,
+            "INT": 8,
+            "WIS": 16,
+            "CHA": 10,
+            "quirk_save_DC": 17
+          },
+          "campaign_appearances": [
+            "The Shortlist: After Hours"
+          ],
+          "tags": [
+            "After Hours"
+          ],
+          "personality": "Kuroshiki. Born in the Heights Alliance ground-floor corridor out of a class that lost somebody. It counts.",
+          "dm_notes": {
+            "combat_role": "Run it only if the table has the appetite — see the safety note in \"The Thing in the Laundry Room.\" It is beaten by people who refuse to be counted: anybody who answers the count out loud with their own name is immune to Counting for the rest of the fight."
+          }
+        }
+      ]
     }
   ]
 }

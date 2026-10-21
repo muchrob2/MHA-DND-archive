@@ -27,6 +27,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 <script>window.AUTH_BASE = '../';</script>
 <script src="../auth.js"></script>
+<script src="board-prefabs.js"></script>
 <script src="board-shared.js"></script>
 </head>
 <body>
@@ -196,12 +197,37 @@
           <button class="board-tool-btn" data-tool="water" onclick="boardSetTool('water')" title="Mark water">〰 Water</button>
           <button class="board-tool-btn" data-tool="cover" onclick="boardSetTool('cover')" title="Mark cover">⛊ Cover</button>
           <button class="board-tool-btn eraser" data-tool="eraser" onclick="boardSetTool('eraser')" title="Erase drawings &amp; terrain">⌫ Erase</button>
-          <button class="enc-btn danger" style="margin-left:auto;" onclick="boardClearArt()" title="Clear all drawings and terrain markings">Clear Art</button>
+          <button class="enc-btn danger" style="margin-left:auto;" onclick="boardClearArt()" title="Clear all drawings, terrain markings and props">Clear Art</button>
+        </div>
+        <div id="board-map-bar">
+          <span id="board-map-label">Map:</span>
+          <select id="board-map-select" title="Preset battlefields"><option value="">— preset map —</option></select>
+          <button class="board-tool-btn" onclick="boardLoadPresetMap()" title="Replace the board's terrain, props and drawings with this map">⤓ Load</button>
+          <span id="board-map-note"></span>
+          <div class="board-draw-sep"></div>
+          <label id="board-autoterrain-wrap" title="Placed props also mark the squares they cover — buildings become walls, trees become cover, fire becomes a hazard">
+            <input type="checkbox" id="board-autoterrain" checked>
+            Auto-terrain
+          </label>
+          <div class="board-draw-sep"></div>
+          <span id="board-prop-actions" style="display:none;">
+            <span id="board-prop-selected-label">Selected:</span>
+            <b id="board-prop-name"></b>
+            <button class="board-tool-btn" onclick="boardRotateSelectedProp()" title="Rotate 90° (R)">↻ Rotate</button>
+            <button class="board-tool-btn eraser" onclick="boardDeleteSelectedProp()" title="Remove this prop (Delete)">🗑 Remove</button>
+          </span>
         </div>
         <div id="board-body">
           <div id="board-tray">
             <div id="board-tray-title">UNPLACED</div>
             <div id="board-tray-list"></div>
+            <div id="board-props-panel">
+              <div id="board-props-header">
+                <span id="board-props-title">PREFABS</span>
+                <input id="board-prop-filter" type="text" placeholder="Filter…" aria-label="Filter prefabs">
+              </div>
+              <div id="board-props-list"></div>
+            </div>
           </div>
           <div id="board-grid-wrap">
             <canvas id="board-canvas"></canvas>

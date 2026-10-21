@@ -16,7 +16,7 @@ const db = firebase.firestore();
 
 // TEAM_COLORS / TERRAIN_STYLES are defined in board-shared.js (loaded above).
 
-let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], boardStrokes: [], boardTerrain: [] };
+let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], boardStrokes: [], boardTerrain: [], boardProps: [] };
 // Fail closed: nobody can move tokens here until the admin check below
 // resolves and says otherwise (see boardCanEdit's definition in
 // board-shared.js). Everyone can still pan/zoom/measure in the meantime.
@@ -38,13 +38,15 @@ function encSave() {
   clearTimeout(encSaveTimer);
   encSaveTimer = setTimeout(async () => {
     try {
-      // boardStrokes/boardTerrain merge per-item (like combatants) so moving
-      // a token here can't clobber terrain/drawings the DM painted — this
-      // page never edits those arrays, so they always pass through inert.
+      // boardStrokes/boardTerrain/boardProps merge per-item (like combatants)
+      // so moving a token here can't clobber terrain, drawings or scenery the
+      // DM placed — this page never edits those arrays, so they always pass
+      // through inert.
       const merged = await fsMergeSave(FS_ENCOUNTER_DOC, encounter, _lastSyncedEncounter, [
         { path: 'combatants', idKey: 'id' },
         { path: 'boardStrokes', idKey: 'id' },
         { path: 'boardTerrain', idKey: 'id' },
+        { path: 'boardProps', idKey: 'id' },
       ]);
       _lastSyncedEncounter = merged;
     } catch (e) {
@@ -69,6 +71,7 @@ async function encLoad() {
       encounter.attackLog = encounter.attackLog || [];
       encounter.boardStrokes = encounter.boardStrokes || [];
       encounter.boardTerrain = encounter.boardTerrain || [];
+      encounter.boardProps = encounter.boardProps || [];
       _lastSyncedEncounter = fsCloneDoc(encounter); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
       // After the baseline clone, never before: the baseline is what the server
       // holds, duplicates and all, until a save lands. The repair is left
@@ -85,6 +88,7 @@ async function encLoad() {
   encounter.attackLog = encounter.attackLog || [];
   encounter.boardStrokes = encounter.boardStrokes || [];
   encounter.boardTerrain = encounter.boardTerrain || [];
+  encounter.boardProps = encounter.boardProps || [];
   encRepairDuplicateIds(encounter); // the local cache can hold duplicates too
 }
 
@@ -92,7 +96,7 @@ function isRangeInputFocused() {
   return document.activeElement === document.getElementById('board-range-input');
 }
 function isBoardBusy() {
-  return !!(boardState.dragging || boardPan || isRangeInputFocused() || _encSavePending);
+  return !!(boardState.dragging || boardState.draggingProp || boardPan || isRangeInputFocused() || _encSavePending);
 }
 
 let _pendingRemoteEncounter = null;
@@ -101,6 +105,7 @@ function applyRemoteEncounter(data) {
   encounter.attackLog = encounter.attackLog || [];
   encounter.boardStrokes = encounter.boardStrokes || [];
   encounter.boardTerrain = encounter.boardTerrain || [];
+  encounter.boardProps = encounter.boardProps || [];
   _lastSyncedEncounter = fsCloneDoc(data); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
   encRepairDuplicateIds(encounter); // after the clone, unsaved — see encLoad
   boardBumpArtVersion(); // invalidate the cached terrain/drawing layer — `encounter` was just replaced wholesale
@@ -131,7 +136,10 @@ setInterval(() => {
 
 // The grid/tokens/drag/touch engine (constants, rendering, event wiring)
 // lives in board-shared.js, loaded above — shared with the DM's Board Mode
-// in encounter.html instead of a hand-kept-in-sync copy.
+// in encounter.html instead of a hand-kept-in-sync copy. board-prefabs.js
+// comes with it: this page renders the scenery the DM placed (it needs the
+// prop draw functions) but shows neither the palette nor the map picker, so
+// nothing here can add or move a prop.
 
 (async () => {
   await encLoad();

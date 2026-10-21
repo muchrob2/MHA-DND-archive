@@ -46,7 +46,7 @@ function populateRosterSelect() {
 // TEAM_COLORS is defined in board-shared.js (loaded above) — used here for
 // the team-dot picker, and by the board engine for token colors.
 
-let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], boardStrokes: [], boardTerrain: [] };
+let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], boardStrokes: [], boardTerrain: [], boardProps: [] };
 // Combatant ids have to be unique across page loads and across clients, not
 // just within one session. fsMergeSave keys the combatants array by id, so a
 // counter that restarts at 1 on every load hands the next combatant added an
@@ -86,14 +86,16 @@ function encSave() {
   clearTimeout(encSaveTimer);
   encSaveTimer = setTimeout(async () => {
     try {
-      // boardStrokes/boardTerrain are merged per-item (like combatants) rather
-      // than overwritten whole, so a player nudging a token on their board
-      // tab can't clobber terrain/drawings the DM painted a moment earlier
-      // with their own (possibly stale) local copy of that field.
+      // boardStrokes/boardTerrain/boardProps are merged per-item (like
+      // combatants) rather than overwritten whole, so a player nudging a token
+      // on their board tab can't clobber terrain, drawings or scenery the DM
+      // placed a moment earlier with their own (possibly stale) local copy of
+      // that field.
       const merged = await fsMergeSave(FS_ENCOUNTER_DOC, encounter, _lastSyncedEncounter, [
         { path: 'combatants', idKey: 'id' },
         { path: 'boardStrokes', idKey: 'id' },
         { path: 'boardTerrain', idKey: 'id' },
+        { path: 'boardProps', idKey: 'id' },
       ]);
       _lastSyncedEncounter = merged;
     } catch (e) {
@@ -117,6 +119,7 @@ async function encLoad() {
       encounter.attackLog = encounter.attackLog || [];
       encounter.boardStrokes = encounter.boardStrokes || [];
       encounter.boardTerrain = encounter.boardTerrain || [];
+      encounter.boardProps = encounter.boardProps || [];
       _lastSyncedEncounter = fsCloneDoc(encounter); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
       // After the baseline clone, never before: the baseline is what the
       // server holds, which is still the duplicated version until a save lands.
@@ -131,6 +134,7 @@ async function encLoad() {
   encounter.attackLog = encounter.attackLog || [];
   encounter.boardStrokes = encounter.boardStrokes || [];
   encounter.boardTerrain = encounter.boardTerrain || [];
+  encounter.boardProps = encounter.boardProps || [];
   if (encRepairDuplicateIds(encounter)) encSave(); // the local cache can hold duplicates too
 }
 
@@ -143,16 +147,18 @@ function isEncEditing() {
   if (tag !== 'INPUT' && tag !== 'TEXTAREA') return false;
   return !!document.activeElement.closest('#enc-list, #board-overlay, #turn-modal-overlay');
 }
-// True mid-stroke or mid-terrain-drag. Without this, a remote snapshot that
-// lands between mousedown and mouseup would wholesale-replace `encounter`
-// (and therefore the in-progress, not-yet-saved boardStrokes/boardTerrain
-// edit) with server data from before the gesture started.
-function isBoardDrawing() { return !!(boardState.drawingStroke || _boardPainting); }
+// True mid-stroke, mid-terrain-drag or mid-prop-drag. Without this, a remote
+// snapshot that lands between mousedown and mouseup would wholesale-replace
+// `encounter` (and therefore the in-progress, not-yet-saved
+// boardStrokes/boardTerrain/boardProps edit) with server data from before the
+// gesture started.
+function isBoardDrawing() { return !!(boardState.drawingStroke || _boardPainting || boardState.draggingProp); }
 function applyRemoteEncounter(data) {
   encounter = data;
   encounter.attackLog = encounter.attackLog || [];
   encounter.boardStrokes = encounter.boardStrokes || [];
   encounter.boardTerrain = encounter.boardTerrain || [];
+  encounter.boardProps = encounter.boardProps || [];
   _lastSyncedEncounter = fsCloneDoc(data); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
   if (encRepairDuplicateIds(encounter)) encSave(); // after the clone — see encLoad
   boardBumpArtVersion(); // invalidate the cached terrain/drawing layer — `encounter` was just replaced wholesale
@@ -266,7 +272,11 @@ function encPrevTurn() {
 
 function encReset() {
   if (!confirm('Reset encounter? This will clear all combatants and round count.')) return;
-  encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], boardStrokes: encounter.boardStrokes || [], boardTerrain: encounter.boardTerrain || [] };
+  // The map survives a reset — terrain, drawings and scenery are the scene,
+  // not the fight that happened in it.
+  encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [],
+    boardStrokes: encounter.boardStrokes || [], boardTerrain: encounter.boardTerrain || [],
+    boardProps: encounter.boardProps || [] };
   encSave(); document.getElementById('enc-round-num').textContent = 1; renderEncounter(); renderAttackLog();
 }
 
@@ -1054,7 +1064,9 @@ function openBoardMode() {
 }
 function closeBoardMode() {
   document.getElementById('board-overlay').classList.remove('open');
-  boardState = { pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false, tool: 'move', penColor: boardState.penColor, drawingStroke: null };
+  boardState = { pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false,
+    tool: 'move', penColor: boardState.penColor, drawingStroke: null,
+    pendingProp: null, selectedPropId: null, draggingProp: null, propPreview: null };
   boardHoverInfo = null;
   document.querySelectorAll('.board-tool-btn').forEach(b => b.classList.toggle('active', b.dataset.tool === 'move'));
   const inp = document.getElementById('board-range-input');
@@ -1071,6 +1083,10 @@ document.addEventListener('keydown', e => {
     }
     return;
   }
-  if (document.getElementById('board-overlay').classList.contains('open')) closeBoardMode();
-  else if (document.getElementById('turn-modal-overlay').classList.contains('open')) closeTurnModal();
+  if (document.getElementById('board-overlay').classList.contains('open')) {
+    // Escape first disarms a prefab / deselects a prop, and only closes the
+    // board once there's nothing left to put down — otherwise cancelling a
+    // mis-picked prefab means losing the whole board view.
+    if (!boardCancelPropMode()) closeBoardMode();
+  } else if (document.getElementById('turn-modal-overlay').classList.contains('open')) closeTurnModal();
 });

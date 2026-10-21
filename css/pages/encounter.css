@@ -648,6 +648,170 @@ body { height: 100vh; overflow: hidden; }
 }
 .board-draw-sep { flex-shrink: 0; width: 1px; height: 18px; margin: 0 2px; background: var(--border); }
 
+/* ── preset-map bar ──
+   A second row under the drawing tools: pick a battlefield, toggle whether
+   dropped props mark the squares they cover, and act on the selected prop. */
+#board-map-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+#board-map-label,
+#board-props-title,
+#board-prop-selected-label {
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+#board-map-select {
+  max-width: 230px;
+  padding: 4px 6px;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+#board-map-note {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--fs-2xs);
+  font-style: italic;
+  color: var(--text-dim);
+}
+#board-autoterrain-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+#board-autoterrain { accent-color: var(--accent); }
+#board-prop-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+#board-prop-name {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--accent-text);
+}
+/* Remove reads as destructive without waiting for an .active state it never
+   gets — it's a one-shot button, not a tool toggle. */
+#board-prop-actions .board-tool-btn.eraser {
+  color: var(--red-text);
+  border-color: color-mix(in srgb, var(--red) 45%, transparent);
+}
+#board-prop-actions .board-tool-btn.eraser:hover {
+  background: var(--red-light);
+  border-color: var(--red);
+}
+
+/* ── prefab palette ──
+   Lives in the token tray, under the unplaced units. DM-only markup, which is
+   why it's here rather than in the shared css/board.css — the player board has
+   no palette to style. The width bump is scoped to #board-modal for the same
+   reason. */
+#board-modal #board-tray { width: 198px; }
+#board-modal #board-tray-list {
+  flex: 0 1 auto;
+  max-height: 34%;
+}
+#board-props-panel {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;             /* or the list below can't scroll inside it */
+  border-top: 1px solid var(--border);
+}
+#board-props-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px 5px;
+}
+#board-prop-filter {
+  flex: 1;
+  min-width: 0;
+  padding: 3px 6px;
+  font-size: var(--fs-2xs);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+#board-props-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 8px 8px;
+}
+.board-prop-cat {
+  margin: 6px 0 3px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.board-prop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+  gap: 4px;
+  align-items: stretch;
+}
+.board-prop-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 2px 3px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: grab;
+  user-select: none;
+  transition: border-color var(--dur-fast), background var(--dur-fast);
+}
+.board-prop-chip:hover    { border-color: var(--accent); background: var(--accent-light); }
+.board-prop-chip:active   { cursor: grabbing; }
+.board-prop-chip.selected {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  box-shadow: 0 0 8px var(--gold-glow);
+}
+/* Deliberately NOT sized in percentages: these are canvases, and scaling one
+   in CSS resamples what board-prefabs.js drew at 44px. */
+.board-prop-icon { width: 44px; height: 44px; display: block; pointer-events: none; }
+.board-prop-label {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--text-muted);
+}
+.board-prop-none {
+  padding: 8px 4px;
+  font-size: var(--fs-2xs);
+  font-style: italic;
+  color: var(--text-dim);
+}
+
 /* ════════════════════════════════════════════════════════════
    MOBILE
    ════════════════════════════════════════════════════════════ */
@@ -689,6 +853,14 @@ body { height: 100vh; overflow: hidden; }
   #board-header { flex-wrap: wrap; padding: 8px 10px; gap: 8px; }
   #board-title  { flex-basis: 100%; }
   #board-draw-bar { padding: 6px 8px; gap: 5px; }
+  #board-map-bar  { padding: 6px 8px; gap: 5px; }
   .board-tool-btn { padding: 6px 9px; }
   #board-close-btn { width: 36px; height: 36px; }
+
+  /* The tray stacks above the grid on a phone, so units and prefabs have to
+     share its height — each half scrolls on its own. */
+  #board-modal #board-tray { width: 100%; height: 42vh; }
+  #board-modal #board-tray-list { max-height: 30%; }
+  #board-map-select { max-width: 150px; }
+  #board-map-note { flex-basis: 100%; }
 }

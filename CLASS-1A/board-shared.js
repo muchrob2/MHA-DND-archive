@@ -20,18 +20,28 @@
    bug) had to be applied twice by hand, which is exactly how bugs like that
    slip through. One copy, one bug surface.
 
+   The prop catalog and the preset maps live in board-prefabs.js, which both
+   pages load alongside this file — see the header there for the prop data
+   model. This file owns the interaction (place, select, drag, rotate, erase);
+   that one owns the content (what a car looks like, which squares a city
+   street covers).
+
    Contract — the host page must, before this <script> tag runs any of its
    functions (i.e. before DOMContentLoaded / its own init sequence, script
    tag order relative to this file doesn't matter beyond that):
-     - declare `let encounter = { combatants: [], boardStrokes: [], boardTerrain: [], ... }`
+     - declare `let encounter = { combatants: [], boardStrokes: [], boardTerrain: [], boardProps: [], ... }`
      - define `function encSave() { ... }` (persists + syncs `encounter`)
+     - merge boardProps per-item in that save, the same way boardTerrain and
+       boardStrokes are — see encounter.js's fsMergeSave call
      - call `boardBumpArtVersion()` whenever it replaces `encounter` wholesale
        (i.e. inside its own `applyRemoteEncounter`), so the cached terrain/
        drawing layer doesn't keep showing stale art after a remote update.
    The host's markup must include #board-canvas, #board-grid-wrap,
    #board-tray-list, #board-hint, #board-distance-label, #board-range-input,
    #board-zoom-label. Drawing-tool markup (.board-tool-btn[data-tool], the
-   pen color input) is optional — only encounter.html has it.
+   pen color input), the prefab palette (#board-props-list, #board-prop-filter,
+   #board-prop-actions) and the map picker (#board-map-select) are optional —
+   only encounter.html has them.
 */
 
 const TEAM_COLORS = [
@@ -47,12 +57,60 @@ const TEAM_COLORS = [
   { name: 'Lime',   bg: '#65A30D', light: 'rgba(101,163,13,0.10)' },
 ];
 
+/* ── Duplicate combatant ids ──────────────────────────────
+   Every lookup on this board resolves a token through
+   `encounter.combatants.find(c => c.id === id)` — the drag drop, the tray
+   placement, the team dot, the HP row. find() returns the *first* match, so
+   two combatants sharing an id means edits aimed at the second one land on
+   the first: the token you dragged redraws at the cell it started in (its own
+   boardX never changed) and the team dot you clicked flips back, while some
+   other row silently moves or changes colour. fsMergeSave has the same blind
+   spot on the way out — it keys the array by id — so the edit reverts again
+   from the server for good measure.
+
+   Duplicates got into the live document two ways, both now closed: encId()
+   used to restart its counter at 1 on every page load and hand out ids the
+   document was already using, and the save path before the merge existed was
+   a plain .set() of whatever the page held, duplicates and all.
+
+   So repair on the way in, wherever encounter state enters a page. The new id
+   is derived from the document (max + 1, + 2, …) rather than drawn at random,
+   deliberately: two tabs repairing the same document independently have to
+   arrive at the *same* id, or the merge sees two different new combatants and
+   the duplicate comes back as two rows. Returns the number of ids changed, so
+   the caller can persist the repair.
+
+   Callers must take their fsMergeSave baseline from the raw incoming data
+   *before* calling this — the baseline is "what the server holds", which is
+   still the duplicated version until a save lands. */
+function encRepairDuplicateIds(enc) {
+  const cs = (enc && enc.combatants) || [];
+  let nextId = cs.reduce((max, c) => (Number.isFinite(c.id) && c.id > max ? c.id : max), 0);
+  const seen = new Set();
+  let repaired = 0;
+  for (const c of cs) {
+    if (!seen.has(c.id)) { seen.add(c.id); continue; }
+    c.id = ++nextId;
+    seen.add(c.id);
+    repaired++;
+  }
+  if (repaired) console.warn(`[board] repaired ${repaired} duplicate combatant id(s)`);
+  return repaired;
+}
+
 /* ── Board Mode ───────────────────────────────────────── */
 const BOARD_COLS = 100;
 const BOARD_ROWS = 100;
 const CELL_BASE = 16; // base px per square at zoom 1.0
 let boardZoom = 0.5;  // start zoomed out to fit the full grid
-let boardState = { pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false, tool: 'move', penColor: '#E8A020', drawingStroke: null };
+let boardState = {
+  pendingId: null, selectedIds: [], rangeFt: 0, dragging: null, _wasDragging: false,
+  tool: 'move', penColor: '#E8A020', drawingStroke: null,
+  // Props (see the Props section below): pendingProp is a prefab armed for
+  // stamping, selectedPropId the placed prop that rotate/remove/drag act on,
+  // propPreview the translucent footprint showing where one would land.
+  pendingProp: null, selectedPropId: null, draggingProp: null, propPreview: null,
+};
 // Gates every board *mutation* (placing/moving/removing tokens, drawing).
 // Pan, zoom, and the local-only distance/range selection always work
 // regardless of this flag. Defaults true so encounter.html (DM — full
@@ -65,6 +123,11 @@ let boardHoverInfo = null; // { combatant, col, row }
 let boardPan = null;        // { startX, startY, scrollLeft, scrollTop } while panning
 let _boardWasPanning = false;
 let _boardPainting = false; // mid-drag while painting terrain/erasing
+// The prefab key of an in-flight HTML5 drag out of the palette. dragover/drop
+// on the canvas can't read dataTransfer's payload until the drop itself
+// (browsers hide it during the drag for security), so the preview needs its
+// own copy of what's being dragged.
+let _boardDragPrefab = null;
 
 // Terrain marker styles: fill colour + a small glyph drawn at cell centre.
 const TERRAIN_STYLES = {
@@ -76,7 +139,7 @@ const TERRAIN_STYLES = {
 };
 
 const BOARD_TOOL_HINTS = {
-  move: 'Click a unit in the tray, then click a grid square to place it. Drag placed tokens to move them.',
+  move: 'Click a unit in the tray, then click a grid square to place it. Drag placed tokens to move them. Drag a prefab from the palette to add scenery.',
   pen: 'Click and drag on the grid to draw.',
   wall: 'Click or drag across squares to mark walls.',
   difficult: 'Click or drag across squares to mark difficult terrain.',
@@ -92,20 +155,487 @@ function boardSetTool(tool) {
   boardState.tool = tool;
   boardState.pendingId = null;
   boardState.selectedIds = [];
+  // Placing, selecting and dragging props all live under the move tool, so
+  // picking up a pen or a terrain brush puts them down.
+  boardState.pendingProp = null;
+  boardState.selectedPropId = null;
+  boardState.propPreview = null;
   document.querySelectorAll('.board-tool-btn').forEach(b => b.classList.toggle('active', b.dataset.tool === tool));
-  const hint = document.getElementById('board-hint');
-  if (hint) hint.textContent = BOARD_TOOL_HINTS[tool] || BOARD_TOOL_HINTS.move;
+  renderPrefabPaletteSelection();
+  updateBoardHint();
   renderBoardCanvas();
 }
 
 function boardClearArt() {
-  if (!(encounter.boardStrokes || []).length && !(encounter.boardTerrain || []).length) return;
-  if (!confirm('Clear all drawings and terrain markings from the board?')) return;
+  if (!(encounter.boardStrokes || []).length && !(encounter.boardTerrain || []).length
+      && !(encounter.boardProps || []).length) return;
+  if (!confirm('Clear all drawings, terrain markings and props from the board?')) return;
   encounter.boardStrokes = [];
   encounter.boardTerrain = [];
+  encounter.boardProps = [];
+  boardState.selectedPropId = null;
+  boardState.propPreview = null;
   boardBumpArtVersion();
   encSave();
+  renderPrefabPaletteSelection();
   renderBoardCanvas();
+}
+
+
+/* ── Props: drag-and-drop scenery ──────────────────────────
+   Buildings, trees, cars and the rest, from the BOARD_PREFABS catalog in
+   board-prefabs.js. Stored in encounter.boardProps as
+       { id, type, col, row, rot, t }
+   — a flat, id-keyed array for the same reason boardTerrain/boardStrokes are
+   (see boardPaintTerrainAt): encSave merges those per item, so a player
+   nudging a token can't stomp scenery the DM just laid down.
+
+   `t: 1` records that this prop stamped the terrain under itself (the
+   "Auto-terrain" toggle was on when it was placed), which is what lets
+   removing or moving it take that terrain back out again without touching
+   walls the DM painted by hand. Prefabs whose terrain is 'clear' (doorways,
+   bridge planks) delete terrain instead, and that is not reversible — pulling
+   a door out does not rebuild the wall it opened.
+
+   Unlike terrain and drawings, props are NOT baked into the cached art layer.
+   There are tens of them at most, and drawing a few dozen vector shapes per
+   frame costs far less than invalidating and rebuilding a full-canvas layer
+   every time one is dragged a square. */
+
+function boardPrefab(type) {
+  return (typeof BOARD_PREFABS_BY_KEY !== 'undefined' && BOARD_PREFABS_BY_KEY[type]) || null;
+}
+
+// Footprint in squares. Derived from the catalog rather than stored on the
+// prop, so retuning a prefab's size updates props already on the board.
+function boardPropFootprint(p) {
+  const pf = boardPrefab(p.type);
+  const w = pf ? pf.w : 1, h = pf ? pf.h : 1;
+  return (p.rot === 90 || p.rot === 270) ? { w: h, h: w } : { w, h };
+}
+
+// Topmost prop covering a square, or null. Later entries win, so the most
+// recently placed thing is the one you grab.
+function boardPropAt(col, row) {
+  const props = encounter.boardProps || [];
+  for (let i = props.length - 1; i >= 0; i--) {
+    const p = props[i];
+    const fp = boardPropFootprint(p);
+    if (col >= p.col && col < p.col + fp.w && row >= p.row && row < p.row + fp.h) return p;
+  }
+  return null;
+}
+
+function boardSelectedProp() {
+  return (encounter.boardProps || []).find(p => p.id === boardState.selectedPropId) || null;
+}
+
+function boardAutoTerrainOn() {
+  const el = document.getElementById('board-autoterrain');
+  return !el || el.checked;
+}
+
+function boardPropCellIds(p) {
+  const fp = boardPropFootprint(p);
+  const ids = [];
+  for (let r = p.row; r < p.row + fp.h; r++) {
+    for (let c = p.col; c < p.col + fp.w; c++) {
+      if (c >= 0 && r >= 0 && c < BOARD_COLS && r < BOARD_ROWS) ids.push(c + ',' + r);
+    }
+  }
+  return ids;
+}
+
+// Stamp the terrain a prefab implies over the prop's footprint.
+function boardApplyPropTerrain(p) {
+  const pf = boardPrefab(p.type);
+  if (!pf || !pf.terrain) return false;
+  encounter.boardTerrain = encounter.boardTerrain || [];
+  const ids = boardPropCellIds(p);
+  if (!ids.length) return false;
+  if (pf.terrain === 'clear') {
+    const before = encounter.boardTerrain.length;
+    const drop = new Set(ids);
+    encounter.boardTerrain = encounter.boardTerrain.filter(t => !drop.has(t.id));
+    return encounter.boardTerrain.length !== before;
+  }
+  const byId = new Map(encounter.boardTerrain.map(t => [t.id, t]));
+  for (const id of ids) {
+    const existing = byId.get(id);
+    if (existing) existing.type = pf.terrain;
+    else encounter.boardTerrain.push({ id, type: pf.terrain });
+  }
+  return true;
+}
+
+// The inverse, and deliberately conservative: only squares still holding
+// exactly what this prop stamped are cleared, so a building removed from on
+// top of a wall the DM drew by hand leaves that wall alone.
+function boardStripPropTerrain(p) {
+  const pf = boardPrefab(p.type);
+  if (!pf || !pf.terrain || pf.terrain === 'clear') return false;
+  encounter.boardTerrain = encounter.boardTerrain || [];
+  const ids = new Set(boardPropCellIds(p));
+  const before = encounter.boardTerrain.length;
+  encounter.boardTerrain = encounter.boardTerrain.filter(t => !(ids.has(t.id) && t.type === pf.terrain));
+  return encounter.boardTerrain.length !== before;
+}
+
+function boardClampPropPos(fp, col, row) {
+  return {
+    col: Math.max(0, Math.min(BOARD_COLS - fp.w, col)),
+    row: Math.max(0, Math.min(BOARD_ROWS - fp.h, row)),
+  };
+}
+
+// col/row is the square the cursor is over; a multi-square prefab is centred
+// on it rather than hung off it to the south-east, which is where you expect
+// a 4x3 warehouse to land when you drop it.
+function boardPlaceProp(type, col, row, rot) {
+  if (!boardCanEdit) return null;
+  const pf = boardPrefab(type);
+  if (!pf) return null;
+  rot = rot || 0;
+  const fp = (rot === 90 || rot === 270) ? { w: pf.h, h: pf.w } : { w: pf.w, h: pf.h };
+  const at = boardClampPropPos(fp, col - Math.floor((fp.w - 1) / 2), row - Math.floor((fp.h - 1) / 2));
+  const prop = { id: boardNextArtId(), type, col: at.col, row: at.row, rot };
+  encounter.boardProps = encounter.boardProps || [];
+  encounter.boardProps.push(prop);
+  if (boardAutoTerrainOn() && boardApplyPropTerrain(prop)) prop.t = 1;
+  boardBumpArtVersion();
+  encSave();
+  return prop;
+}
+
+function boardRemoveProp(id) {
+  if (!boardCanEdit) return false;
+  const props = encounter.boardProps || [];
+  const p = props.find(x => x.id === id);
+  if (!p) return false;
+  if (p.t) boardStripPropTerrain(p);
+  encounter.boardProps = props.filter(x => x.id !== id);
+  if (boardState.selectedPropId === id) boardState.selectedPropId = null;
+  boardBumpArtVersion();
+  encSave();
+  return true;
+}
+
+function boardMoveProp(p, col, row) {
+  const fp = boardPropFootprint(p);
+  const at = boardClampPropPos(fp, col, row);
+  if (at.col === p.col && at.row === p.row) return false;
+  if (p.t) boardStripPropTerrain(p);
+  p.col = at.col; p.row = at.row;
+  if (p.t) boardApplyPropTerrain(p);
+  boardBumpArtVersion();
+  encSave();
+  return true;
+}
+
+function boardRotateSelectedProp() {
+  const p = boardSelectedProp();
+  if (!p || !boardCanEdit) return;
+  if (p.t) boardStripPropTerrain(p);
+  p.rot = ((p.rot || 0) + 90) % 360;
+  const fp = boardPropFootprint(p);
+  const at = boardClampPropPos(fp, p.col, p.row);
+  p.col = at.col; p.row = at.row;
+  if (p.t) boardApplyPropTerrain(p);
+  boardBumpArtVersion();
+  encSave();
+  renderBoard();
+}
+
+function boardDeleteSelectedProp() {
+  const p = boardSelectedProp();
+  if (!p) return;
+  boardRemoveProp(p.id);
+  renderBoard();
+}
+
+function boardSelectProp(id) {
+  boardState.selectedPropId = id;
+  boardState.pendingProp = null;
+  boardState.pendingId = null;
+  boardState.selectedIds = [];
+  renderPrefabPaletteSelection();
+  renderBoard();
+  updateBoardHint();
+}
+
+// Arm a prefab for stamping. It stays armed after each placement — laying a
+// row of trees is the common case — until the same chip is clicked again,
+// Escape is pressed, or the tool changes.
+function boardSelectPrefab(type) {
+  if (!boardCanEdit) return;
+  const next = boardState.pendingProp === type ? null : type;
+  // Before the assignment, not after: boardSetTool clears pendingProp (props
+  // are a move-tool concern), so arming first and switching second would
+  // disarm the chip the moment it was clicked.
+  if (next && boardState.tool !== 'move') boardSetTool('move');
+  boardState.pendingProp = next;
+  boardState.pendingId = null;
+  boardState.selectedIds = [];
+  boardState.selectedPropId = null;
+  renderPrefabPaletteSelection();
+  renderBoard();
+  updateBoardHint();
+}
+
+// Escape's first job inside board mode is putting the prop tools down; only
+// once there's nothing armed or selected does it close the modal. Returns
+// whether it consumed the key — see the keydown handler in encounter.js.
+function boardCancelPropMode() {
+  let consumed = false;
+  if (boardState.pendingProp)    { boardState.pendingProp = null;    consumed = true; }
+  if (boardState.selectedPropId) { boardState.selectedPropId = null; consumed = true; }
+  if (boardState.propPreview)    { boardState.propPreview = null;    consumed = true; }
+  if (consumed) {
+    renderPrefabPaletteSelection();
+    updateBoardHint();
+    renderBoardCanvas();
+  }
+  return consumed;
+}
+
+/* ── prop rendering ── */
+
+// Draws one prefab into the footprint at col,row. Rotation happens about the
+// footprint centre, and the prefab itself always draws into its own
+// unrotated w x h box — so a 3x1 car defined pointing right comes out
+// pointing down at rot 90 without every draw() needing to know about angles.
+function boardPaintProp(ctx, p, SZ, col, row) {
+  const pf = boardPrefab(p.type);
+  const fp = boardPropFootprint(p);
+  const cx = col * SZ + (fp.w * SZ) / 2;
+  const cy = row * SZ + (fp.h * SZ) / 2;
+  ctx.save();
+  ctx.translate(cx, cy);
+  if (p.rot) ctx.rotate((p.rot * Math.PI) / 180);
+  if (pf) {
+    const dw = pf.w * SZ, dh = pf.h * SZ;
+    pf.draw(ctx, -dw / 2, -dh / 2, dw, dh);
+  } else {
+    // A prop whose prefab no longer exists still has to render as something.
+    pfRect(ctx, -SZ / 2 + 1, -SZ / 2 + 1, SZ - 2, SZ - 2, 'rgba(148,152,164,0.5)', 0, 1);
+    if (SZ >= 12) {
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      ctx.font = `bold ${Math.max(7, SZ * 0.5)}px sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('?', 0, 0);
+    }
+  }
+  ctx.restore();
+}
+
+function paintPropsLayer(ctx, SZ) {
+  const props = encounter.boardProps || [];
+  const dragId = boardState.draggingProp ? boardState.draggingProp.id : null;
+  for (const p of props) {
+    if (p.id === dragId) {
+      ctx.save();
+      ctx.globalAlpha = 0.22;
+      boardPaintProp(ctx, p, SZ, p.col, p.row);
+      ctx.restore();
+      continue;
+    }
+    boardPaintProp(ctx, p, SZ, p.col, p.row);
+  }
+
+  // Selected prop: bracketed outline, so it reads differently from a token's
+  // round glow.
+  const sel = boardSelectedProp();
+  if (sel && sel.id !== dragId) {
+    const fp = boardPropFootprint(sel);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,194,32,0.95)';
+    ctx.lineWidth = Math.max(1.5, SZ / 10);
+    ctx.setLineDash([Math.max(3, SZ / 3), Math.max(2, SZ / 5)]);
+    ctx.strokeRect(sel.col * SZ + 1, sel.row * SZ + 1, fp.w * SZ - 2, fp.h * SZ - 2);
+    ctx.restore();
+  }
+
+  // The prop being dragged, drawn at the square it would land on.
+  if (boardState.draggingProp) {
+    const d = boardState.draggingProp;
+    const p = props.find(x => x.id === d.id);
+    if (p) {
+      const ghost = { type: p.type, rot: p.rot, col: d.curCol, row: d.curRow };
+      ctx.save();
+      ctx.globalAlpha = 0.8;
+      boardPaintProp(ctx, ghost, SZ, d.curCol, d.curRow);
+      ctx.restore();
+      const fp = boardPropFootprint(ghost);
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(d.curCol * SZ + 1, d.curRow * SZ + 1, fp.w * SZ - 2, fp.h * SZ - 2);
+      ctx.restore();
+    }
+  }
+
+  // Where an armed prefab (palette click, or a drag hovering the canvas)
+  // would land.
+  const preview = boardState.propPreview;
+  if (preview) {
+    const pf = boardPrefab(preview.type);
+    if (pf) {
+      const rot = preview.rot || 0;
+      const base = (rot === 90 || rot === 270) ? { w: pf.h, h: pf.w } : { w: pf.w, h: pf.h };
+      const at = boardClampPropPos(base,
+        preview.col - Math.floor((base.w - 1) / 2),
+        preview.row - Math.floor((base.h - 1) / 2));
+      ctx.save();
+      ctx.globalAlpha = 0.55;
+      boardPaintProp(ctx, { type: preview.type, rot }, SZ, at.col, at.row);
+      ctx.restore();
+      ctx.save();
+      ctx.strokeStyle = 'rgba(14,158,133,0.9)';
+      ctx.lineWidth = Math.max(1.5, SZ / 10);
+      ctx.strokeRect(at.col * SZ + 1, at.row * SZ + 1, base.w * SZ - 2, base.h * SZ - 2);
+      ctx.restore();
+    }
+  }
+}
+
+/* ── prefab palette (encounter.html only) ── */
+
+function renderPrefabPalette() {
+  const list = document.getElementById('board-props-list');
+  if (!list || typeof BOARD_PREFABS === 'undefined') return;
+  const raw = document.getElementById('board-prop-filter');
+  const filter = (raw ? raw.value : '').trim().toLowerCase();
+  let html = '';
+  for (const cat of BOARD_PREFAB_CATS) {
+    const items = BOARD_PREFABS.filter(p => p.cat === cat &&
+      (!filter || p.label.toLowerCase().includes(filter) || cat.toLowerCase().includes(filter)));
+    if (!items.length) continue;
+    html += `<div class="board-prop-cat">${cat}</div><div class="board-prop-grid">`;
+    for (const p of items) {
+      const selected = boardState.pendingProp === p.key ? ' selected' : '';
+      html += `<div class="board-prop-chip${selected}" draggable="true" data-prop="${p.key}"
+        title="${p.label} — ${p.w}×${p.h} squares. ${p.note}"
+        onclick="boardSelectPrefab('${p.key}')">
+        <canvas class="board-prop-icon" width="44" height="44" data-prop-icon="${p.key}"></canvas>
+        <span class="board-prop-label">${p.label}</span></div>`;
+    }
+    html += '</div>';
+  }
+  list.innerHTML = html || '<div class="board-prop-none">Nothing matches that.</div>';
+  list.querySelectorAll('canvas[data-prop-icon]').forEach(boardPaintPrefabIcon);
+}
+
+// Chips draw their own icon with the same draw() the board uses, so a prefab
+// can never look like one thing in the palette and another on the grid.
+function boardPaintPrefabIcon(cv) {
+  const pf = boardPrefab(cv.dataset.propIcon);
+  if (!pf) return;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  const pad = 3;
+  const s = Math.min((cv.width - pad * 2) / pf.w, (cv.height - pad * 2) / pf.h);
+  const w = pf.w * s, h = pf.h * s;
+  pf.draw(ctx, (cv.width - w) / 2, (cv.height - h) / 2, w, h);
+}
+
+// Selection is a class toggle, not a rebuild: renderBoard runs on every drop
+// and remote update, and repainting 28 icon canvases each time is waste.
+function renderPrefabPaletteSelection() {
+  document.querySelectorAll('.board-prop-chip').forEach(el => {
+    el.classList.toggle('selected', el.dataset.prop === boardState.pendingProp);
+  });
+  renderBoardPropActions();
+}
+
+function renderBoardPropActions() {
+  const wrap = document.getElementById('board-prop-actions');
+  if (!wrap) return;
+  const p = boardSelectedProp();
+  wrap.style.display = p ? '' : 'none';
+  if (!p) return;
+  const pf = boardPrefab(p.type);
+  const name = document.getElementById('board-prop-name');
+  if (name) name.textContent = pf ? pf.label : p.type;
+}
+
+// One place that decides what the footer says, instead of six call sites
+// each setting it to their own idea of the current mode.
+function updateBoardHint() {
+  const hint = document.getElementById('board-hint');
+  if (!hint) return;
+  if (!boardCanEdit) {
+    hint.textContent = 'View only — pan and zoom to see the battle. The DM controls the board.';
+    return;
+  }
+  if (boardState.pendingProp) {
+    const pf = boardPrefab(boardState.pendingProp);
+    hint.textContent = `Placing ${pf ? pf.label : boardState.pendingProp} — click the grid to drop one (Esc to stop). `
+      + 'Click a placed prop to select it, then drag to move, R to rotate, Delete to remove.';
+    return;
+  }
+  if (boardState.pendingId !== null) {
+    hint.textContent = 'Click a grid square to place the selected unit.';
+    return;
+  }
+  if (boardState.selectedPropId) {
+    hint.textContent = 'Prop selected — drag it to move, R to rotate, Delete to remove. Click empty ground to deselect.';
+    return;
+  }
+  hint.textContent = BOARD_TOOL_HINTS[boardState.tool] || BOARD_TOOL_HINTS.move;
+}
+
+/* ── preset maps (encounter.html only) ── */
+
+function boardPopulateMapSelect() {
+  const sel = document.getElementById('board-map-select');
+  if (!sel || typeof BOARD_MAPS === 'undefined') return;
+  sel.innerHTML = '<option value="">— preset map —</option>'
+    + BOARD_MAPS.map(m => `<option value="${m.key}" title="${m.desc}">${m.label} · ${m.w}×${m.h}</option>`).join('');
+}
+
+function boardLoadPresetMap() {
+  if (!boardCanEdit) return;
+  const sel = document.getElementById('board-map-select');
+  const note = document.getElementById('board-map-note');
+  const mp = sel && typeof BOARD_MAPS_BY_KEY !== 'undefined' ? BOARD_MAPS_BY_KEY[sel.value] : null;
+  if (!mp) {
+    if (note) note.textContent = 'Pick a map first.';
+    return;
+  }
+  const hasArt = (encounter.boardTerrain || []).length
+    || (encounter.boardProps || []).length
+    || (encounter.boardStrokes || []).length;
+  if (hasArt && !confirm(`Load "${mp.label}"?\n\nThis replaces the terrain, props and drawings on the board. Unit positions are kept.`)) return;
+  boardApplyPresetMap(mp);
+  if (note) note.textContent = `${mp.label} loaded.`;
+}
+
+// Maps are built in their own 0,0-based coordinates and dropped into the
+// middle of the 100x100 grid, which is also where boardComputeBBox's
+// nothing-placed-yet fallback looks — so a freshly loaded map is on screen
+// without having to go hunting for it.
+function boardApplyPresetMap(mp) {
+  if (!boardCanEdit) return;
+  const built = mp.build();
+  const offC = Math.max(0, Math.floor((BOARD_COLS - built.w) / 2));
+  const offR = Math.max(0, Math.floor((BOARD_ROWS - built.h) / 2));
+  encounter.boardTerrain = built.terrain.map(t => {
+    const parts = t.id.split(',');
+    return { id: (+parts[0] + offC) + ',' + (+parts[1] + offR), type: t.type };
+  });
+  encounter.boardProps = built.props.map(p => ({
+    id: boardNextArtId(), type: p.type,
+    col: p.col + offC, row: p.row + offR, rot: p.rot || 0, t: 1,
+  }));
+  encounter.boardStrokes = [];
+  boardState.pendingProp = null;
+  boardState.selectedPropId = null;
+  boardBumpArtVersion();
+  encSave();
+  renderPrefabPaletteSelection();
+  boardFitZoom();
+  renderBoard();
+  updateBoardHint();
 }
 
 function boardCanvasPoint(e) {
@@ -159,6 +689,18 @@ function boardEraseAt(p) {
     if (points.length > 1) nextStrokes.push({ id: s.id, color: s.color, width: s.width, points });
   }
   encounter.boardStrokes = nextStrokes;
+
+  // The eraser lifts a prop off the square as well, along with the terrain
+  // that prop stamped (see boardStripPropTerrain) — erasing a building and
+  // leaving an invisible wall standing where it was would be worse than not
+  // erasing it at all.
+  const erasedProp = boardPropAt(p.col, p.row);
+  if (erasedProp) {
+    if (erasedProp.t) boardStripPropTerrain(erasedProp);
+    encounter.boardProps = (encounter.boardProps || []).filter(x => x.id !== erasedProp.id);
+    if (boardState.selectedPropId === erasedProp.id) boardState.selectedPropId = null;
+    changed = true;
+  }
 
   if (changed) {
     boardBumpArtVersion();
@@ -244,19 +786,35 @@ function updateZoomLabel() {
 // the *entire* grid (the old behaviour) meant "Fit" could never actually fit
 // on a phone screen, and there was nothing to anchor the initial scroll
 // position to — you'd land on an arbitrary, likely-empty corner. Fit to the
-// bounding box of the tokens actually in play instead, padded a bit, and
-// scroll to it.
+// bounding box of what's in play instead, padded a bit, and scroll to it.
+//
+// "In play" is everything on the board, not just the tokens: a freshly loaded
+// preset map has terrain and props but no units yet, and fitting to tokens
+// alone would drop the DM on empty grid next to the map they just loaded.
 function boardComputeBBox() {
-  const placed = encounter.combatants.filter(c => c.boardX != null);
   const PAD = 4;
-  if (!placed.length) {
+  let minC = Infinity, maxC = -Infinity, minR = Infinity, maxR = -Infinity;
+  const include = (c1, r1, c2, r2) => {
+    minC = Math.min(minC, c1); maxC = Math.max(maxC, c2);
+    minR = Math.min(minR, r1); maxR = Math.max(maxR, r2);
+  };
+  for (const c of encounter.combatants) {
+    if (c.boardX != null) include(c.boardX, c.boardY, c.boardX, c.boardY);
+  }
+  for (const p of encounter.boardProps || []) {
+    const fp = boardPropFootprint(p);
+    include(p.col, p.row, p.col + fp.w - 1, p.row + fp.h - 1);
+  }
+  for (const t of encounter.boardTerrain || []) {
+    const parts = t.id.split(',');
+    include(+parts[0], +parts[1], +parts[0], +parts[1]);
+  }
+  for (const s of encounter.boardStrokes || []) {
+    for (const pt of s.points || []) include(Math.floor(pt.x), Math.floor(pt.y), Math.floor(pt.x), Math.floor(pt.y));
+  }
+  if (minC === Infinity) {
     const midC = Math.floor(BOARD_COLS / 2), midR = Math.floor(BOARD_ROWS / 2);
     return { minC: midC - 10, maxC: midC + 10, minR: midR - 10, maxR: midR + 10 };
-  }
-  let minC = Infinity, maxC = -Infinity, minR = Infinity, maxR = -Infinity;
-  for (const c of placed) {
-    minC = Math.min(minC, c.boardX); maxC = Math.max(maxC, c.boardX);
-    minR = Math.min(minR, c.boardY); maxR = Math.max(maxR, c.boardY);
   }
   return {
     minC: Math.max(0, minC - PAD), maxC: Math.min(BOARD_COLS - 1, maxC + PAD),
@@ -306,7 +864,14 @@ function boardClearPositions() {
   if (!encounter.combatants.some(c => c.boardX != null)) return;
   if (!confirm('Remove all units from the grid?')) return;
   encounter.combatants.forEach(c => { c.boardX = null; c.boardY = null; });
-  boardState = { pendingId: null, selectedIds: [] };
+  // Field-by-field, not a fresh object literal: replacing boardState wholesale
+  // here dropped `tool` and `penColor` on the floor, and an undefined tool is
+  // read as "not move" by every handler below — so clearing the grid quietly
+  // left the board in a drawing mode it never showed in the toolbar.
+  boardState.pendingId = null;
+  boardState.selectedIds = [];
+  boardState.selectedPropId = null;
+  boardState.propPreview = null;
   encSave();
   renderBoard();
 }
@@ -340,6 +905,7 @@ function renderBoard() {
   renderBoardTray();
   renderBoardCanvas();
   renderBoardDistance();
+  renderBoardPropActions();
 }
 
 function renderBoardTray() {
@@ -530,6 +1096,8 @@ function renderBoardCanvas() {
   ctx.drawImage(boardGetBgLayer(canvas.width, canvas.height, SZ, isDark, showLabels), 0, 0);
   ctx.drawImage(boardGetArtLayer(canvas.width, canvas.height, SZ), 0, 0);
   if (boardState.drawingStroke) paintStrokesLayer(ctx, SZ, [boardState.drawingStroke]);
+  // Above terrain and drawings, below tokens — units stand on the scenery.
+  paintPropsLayer(ctx, SZ);
 
   // Range overlay
   if (boardState.rangeFt > 0 && boardState.selectedIds.length >= 1) {
@@ -774,10 +1342,15 @@ function boardSelectTrayItem(id) {
   if (!boardCanEdit) return;
   boardState.pendingId = boardState.pendingId === id ? null : id;
   boardState.selectedIds = [];
-  document.getElementById('board-hint').textContent = boardState.pendingId !== null
-    ? 'Click a grid square to place the selected unit.'
-    : BOARD_TOOL_HINTS.move;
+  // Picking a unit puts any armed prefab down. The click handler checks
+  // pendingProp first, so leaving both set would stamp scenery every time the
+  // DM tried to place the unit they'd just chosen.
+  boardState.pendingProp = null;
+  boardState.selectedPropId = null;
+  boardState.propPreview = null;
+  renderPrefabPaletteSelection();
   renderBoard();
+  updateBoardHint();
 }
 
 function boardCanvasCell(e) {
@@ -808,8 +1381,22 @@ function boardHandleMouseDown(e) {
   const { col, row } = boardCanvasCell(e);
   if (col < 0 || col >= BOARD_COLS || row < 0 || row >= BOARD_ROWS) return;
   const hit = boardHitTest(col, row);
+  // Only the *already selected* prop drags. A loaded preset map covers most of
+  // the visible grid in buildings, and dragging any prop under the cursor
+  // would leave almost nowhere to grab for a pan — so it's click-to-select,
+  // then drag, and an unselected prop passes the gesture through to the pan
+  // below exactly like empty ground.
+  const propHit = hit ? null : boardPropAt(col, row);
   if (hit && boardCanEdit) {
     boardState.dragging = { id: hit.id, originX: col, originY: row, curCol: col, curRow: row };
+    document.getElementById('board-canvas').style.cursor = 'grabbing';
+  } else if (propHit && boardCanEdit && propHit.id === boardState.selectedPropId) {
+    boardState.draggingProp = {
+      id: propHit.id,
+      grabC: col - propHit.col, grabR: row - propHit.row,
+      originC: propHit.col, originR: propHit.row,
+      curCol: propHit.col, curRow: propHit.row,
+    };
     document.getElementById('board-canvas').style.cursor = 'grabbing';
   } else {
     // Left-click/touch drag on empty space — or on a token when this viewer
@@ -833,8 +1420,36 @@ function boardHandleMouseMove(e) {
     wrap.scrollTop  = boardPan.scrollTop  - (e.clientY - boardPan.startY);
     return;
   }
+  if (boardState.draggingProp) {
+    const d = boardState.draggingProp;
+    const p = (encounter.boardProps || []).find(x => x.id === d.id);
+    if (!p) { boardState.draggingProp = null; return; }
+    const { col, row } = boardCanvasCell(e);
+    const at = boardClampPropPos(boardPropFootprint(p), col - d.grabC, row - d.grabR);
+    if (at.col !== d.curCol || at.row !== d.curRow) {
+      d.curCol = at.col; d.curRow = at.row;
+      boardRequestRender();
+    }
+    return;
+  }
   if (!boardState.dragging) {
     const { col, row } = boardCanvasCell(e);
+    // With a prefab armed, the cursor is a stamp: show the footprint it would
+    // drop rather than hover tooltips for whatever is underneath.
+    if (boardState.pendingProp && col >= 0 && col < BOARD_COLS && row >= 0 && row < BOARD_ROWS) {
+      const prev = boardState.propPreview;
+      if (!prev || prev.col !== col || prev.row !== row || prev.type !== boardState.pendingProp) {
+        boardState.propPreview = { type: boardState.pendingProp, col, row };
+        boardRequestRender();
+      }
+      boardHoverInfo = null;
+      canvas.style.cursor = 'copy';
+      return;
+    }
+    if (boardState.propPreview && !_boardDragPrefab) {
+      boardState.propPreview = null;
+      boardRequestRender();
+    }
     const hit = col >= 0 && col < BOARD_COLS && row >= 0 && row < BOARD_ROWS
       ? encounter.combatants.find(c => c.boardX === col && c.boardY === row) : null;
     canvas.style.cursor = hit ? 'grab' : 'crosshair';
@@ -867,6 +1482,18 @@ function boardHandleMouseUp(e) {
     if (moved) _boardWasPanning = true;
     return;
   }
+  if (boardState.draggingProp) {
+    const d = boardState.draggingProp;
+    boardState.draggingProp = null;
+    document.getElementById('board-canvas').style.cursor = 'crosshair';
+    const p = (encounter.boardProps || []).find(x => x.id === d.id);
+    if (p && (d.curCol !== d.originC || d.curRow !== d.originR)) {
+      boardMoveProp(p, d.curCol, d.curRow);
+      boardState._wasDragging = true; // so the click that follows doesn't re-handle it
+    }
+    renderBoard();
+    return;
+  }
   if (!boardState.dragging) return;
   const { id, originX, originY, curCol, curRow } = boardState.dragging;
   boardState.dragging = null;
@@ -890,6 +1517,15 @@ function boardHandleCanvasClick(e) {
   if (boardState._wasDragging) { boardState._wasDragging = false; return; }
   const { col, row } = boardCanvasCell(e);
   if (col < 0 || col >= BOARD_COLS || row < 0 || row >= BOARD_ROWS) return;
+
+  // Stamping scenery. Stays armed afterwards — laying a row of trees or a
+  // line of crates is the common case — so this returns before any of the
+  // token rules below get a look at the click.
+  if (boardCanEdit && boardState.pendingProp) {
+    boardPlaceProp(boardState.pendingProp, col, row);
+    renderBoard();
+    return;
+  }
 
   // Check if click lands on an existing placed token. Placement-occupancy
   // must use the exact cell; selecting a token for measurement can use touch
@@ -933,9 +1569,19 @@ function boardHandleCanvasClick(e) {
     }
   }
 
+  // A prop under the click gets selected, which is what arms rotate, remove
+  // and drag for it. Deliberately after the token rules above: moving a unit
+  // onto the square a car occupies has to keep working.
+  if (boardCanEdit) {
+    const propHit = boardPropAt(col, row);
+    if (propHit) { boardSelectProp(propHit.id); return; }
+  }
+
   // Clear selection on empty click
   boardState.selectedIds = [];
+  boardState.selectedPropId = null;
   renderBoard();
+  updateBoardHint();
 }
 
 function boardHandleCanvasRightClick(e) {
@@ -948,6 +1594,12 @@ function boardHandleCanvasRightClick(e) {
     boardState.selectedIds = boardState.selectedIds.filter(id => id !== hit.id);
     encSave();
     renderBoard();
+    return;
+  }
+  const propHit = boardPropAt(col, row);
+  if (propHit && boardRemoveProp(propHit.id)) {
+    renderBoard();
+    updateBoardHint();
   }
 }
 
@@ -974,10 +1626,10 @@ function boardHitTest(col, row) {
   return best;
 }
 
-// Long-press on a placed token = touch equivalent of desktop right-click
-// (remove from board), since touch has no separate right-click gesture.
+// Long-press on a placed token or prop = touch equivalent of desktop
+// right-click (remove it), since touch has no separate right-click gesture.
 let _boardLongPressTimer = null;
-let _boardLongPressStart = null; // { x, y, id }
+let _boardLongPressStart = null; // { x, y, id, kind: 'token' | 'prop' }
 const BOARD_LONG_PRESS_MS = 500;
 const BOARD_LONG_PRESS_SLOP = 10; // px of finger movement that cancels the hold
 
@@ -1008,18 +1660,30 @@ function boardHandleTouchStart(e) {
   e.preventDefault();
   const t = e.touches[0];
   const { col, row } = boardCanvasCell(boardPointFromTouch(t));
-  const hit = boardState.tool === 'move' && boardCanEdit ? boardHitTest(col, row) : null;
-  if (hit) {
-    _boardLongPressStart = { x: t.clientX, y: t.clientY, id: hit.id };
+  const canGrab = boardState.tool === 'move' && boardCanEdit;
+  const hit = canGrab ? boardHitTest(col, row) : null;
+  const propHit = (canGrab && !hit) ? boardPropAt(col, row) : null;
+  if (hit || propHit) {
+    _boardLongPressStart = {
+      x: t.clientX, y: t.clientY,
+      id: hit ? hit.id : propHit.id,
+      kind: hit ? 'token' : 'prop',
+    };
     _boardLongPressTimer = setTimeout(() => {
       _boardLongPressTimer = null;
       if (!_boardLongPressStart) return;
-      const c = encounter.combatants.find(x => x.id === _boardLongPressStart.id);
+      const { id, kind } = _boardLongPressStart;
       _boardLongPressStart = null;
       boardState.dragging = null;
+      boardState.draggingProp = null;
+      if (kind === 'prop') {
+        if (boardRemoveProp(id)) { renderBoard(); updateBoardHint(); }
+        return;
+      }
+      const c = encounter.combatants.find(x => x.id === id);
       if (c && c.boardX != null) {
         c.boardX = null; c.boardY = null;
-        boardState.selectedIds = boardState.selectedIds.filter(id => id !== c.id);
+        boardState.selectedIds = boardState.selectedIds.filter(cid => cid !== c.id);
         encSave();
         renderBoard();
       }
@@ -1072,7 +1736,7 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.addEventListener('mousedown', boardHandleMouseDown);
     canvas.addEventListener('mousemove', boardHandleMouseMove);
     canvas.addEventListener('mouseup',   boardHandleMouseUp);
-    canvas.addEventListener('mouseleave', e => { boardHoverInfo = null; boardPan = null; boardHandleMouseUp(e); document.getElementById('board-canvas').style.cursor = 'crosshair'; renderBoardCanvas(); });
+    canvas.addEventListener('mouseleave', e => { boardHoverInfo = null; boardState.propPreview = null; boardPan = null; boardHandleMouseUp(e); document.getElementById('board-canvas').style.cursor = 'crosshair'; renderBoardCanvas(); });
     canvas.addEventListener('mouseup', e => { if (e.button === 1 && boardPan) { boardPan = null; document.getElementById('board-canvas').style.cursor = 'crosshair'; } });
     canvas.addEventListener('auxclick', e => e.preventDefault());
     canvas.addEventListener('click', boardHandleCanvasClick);
@@ -1082,7 +1746,83 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.addEventListener('touchmove', boardHandleTouchMove, { passive: false });
     canvas.addEventListener('touchend', boardHandleTouchEnd, { passive: false });
     canvas.addEventListener('touchcancel', boardHandleTouchEnd, { passive: false });
+
+    // Dropping a prefab straight from the palette onto the grid. dragover has
+    // to preventDefault() on every event or the browser refuses the drop.
+    canvas.addEventListener('dragover', e => {
+      if (!_boardDragPrefab || !boardCanEdit) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+      const { col, row } = boardCanvasCell(e);
+      const prev = boardState.propPreview;
+      if (!prev || prev.col !== col || prev.row !== row || prev.type !== _boardDragPrefab) {
+        boardState.propPreview = { type: _boardDragPrefab, col, row };
+        boardRequestRender();
+      }
+    });
+    canvas.addEventListener('dragleave', () => {
+      if (boardState.propPreview && !boardState.pendingProp) {
+        boardState.propPreview = null;
+        boardRequestRender();
+      }
+    });
+    canvas.addEventListener('drop', e => {
+      e.preventDefault();
+      const type = (e.dataTransfer.getData('text/plain') || _boardDragPrefab || '').trim();
+      _boardDragPrefab = null;
+      boardState.propPreview = null;
+      if (!boardCanEdit || !boardPrefab(type)) { boardRequestRender(); return; }
+      const { col, row } = boardCanvasCell(e);
+      boardPlaceProp(type, col, row);
+      renderBoard();
+    });
   }
+
+  // Prefab palette and preset-map picker — encounter.html only; board.html has
+  // neither in its markup and every one of these is a no-op there.
+  const propList = document.getElementById('board-props-list');
+  if (propList) {
+    renderPrefabPalette();
+    propList.addEventListener('dragstart', e => {
+      const chip = e.target.closest && e.target.closest('.board-prop-chip');
+      if (!chip || !boardCanEdit) return;
+      _boardDragPrefab = chip.dataset.prop;
+      e.dataTransfer.setData('text/plain', chip.dataset.prop);
+      e.dataTransfer.effectAllowed = 'copy';
+    });
+    propList.addEventListener('dragend', () => {
+      _boardDragPrefab = null;
+      if (boardState.propPreview && !boardState.pendingProp) {
+        boardState.propPreview = null;
+        boardRequestRender();
+      }
+    });
+  }
+  const propFilter = document.getElementById('board-prop-filter');
+  if (propFilter) propFilter.addEventListener('input', renderPrefabPalette);
+  boardPopulateMapSelect();
+  const mapSelect = document.getElementById('board-map-select');
+  if (mapSelect) {
+    mapSelect.addEventListener('change', () => {
+      const note = document.getElementById('board-map-note');
+      const mp = BOARD_MAPS_BY_KEY[mapSelect.value];
+      if (note) note.textContent = mp ? mp.desc : '';
+    });
+  }
+
+  // R rotates the selected prop, Delete removes it. Guarded on the board
+  // actually being on screen (the modal is display:none when closed) and on
+  // nothing text-like having focus, so these never steal a keystroke from the
+  // encounter list's inputs.
+  document.addEventListener('keydown', e => {
+    if (!boardCanEdit || !boardState.selectedPropId) return;
+    const canvas = document.getElementById('board-canvas');
+    if (!canvas || !canvas.offsetParent) return;
+    const tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    if (e.key === 'r' || e.key === 'R') { e.preventDefault(); boardRotateSelectedProp(); }
+    else if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); boardDeleteSelectedProp(); }
+  });
   const rangeInp = document.getElementById('board-range-input');
   if (rangeInp) {
     rangeInp.addEventListener('input', () => {

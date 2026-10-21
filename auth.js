@@ -184,12 +184,38 @@
 
         const lastById = new Map(lastArr.map((item) => [item[idKey], item]));
         const localById = new Map(localArr.map((item) => [item[idKey], item]));
+        // How many local items share each id. These maps keep only the last
+        // item for a repeated id, so this is the one place that can still tell
+        // "this client holds a duplicate" from "this client holds one item".
+        const localCount = new Map();
+        for (const item of localArr) {
+          const id = item[idKey];
+          localCount.set(id, (localCount.get(id) || 0) + 1);
+        }
 
         const merged = [];
         const seen = new Set();
 
         for (const item of serverArr) {
           const id = item[idKey];
+          // A stored array is supposed to hold one item per id, and the maps
+          // above assume it: they keep only the last item for a repeated id.
+          // Documents written before this merge existed (a plain .set() of
+          // whatever the page held) can carry duplicates anyway, and walking
+          // every copy of a repeated id turns one item into two — each copy
+          // looks up that same single local item and pushes it.
+          //
+          // So only the first copy of an id goes through the merge proper.
+          // What happens to the rest depends on whether this client has
+          // repaired the duplicate: if it still holds two items on the id it
+          // has not, and dropping the stored copy here would delete one of
+          // them outright, so keep it; if it holds one (the extra now carrying
+          // a fresh id, which the local pass below adds), the stored copy is
+          // the repaired-away one and has to go.
+          if (seen.has(id)) {
+            if ((localCount.get(id) || 0) > 1) merged.push(item);
+            continue;
+          }
           seen.add(id);
           const hadLocally = localById.has(id);
           const wasSyncedBefore = lastById.has(id);

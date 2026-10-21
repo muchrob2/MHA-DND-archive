@@ -12,19 +12,149 @@ const db = firebase.firestore();
 function escHtml(s) { return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function uid(prefix) { return (prefix||'id') + '-' + Math.random().toString(36).slice(2, 9); }
 
+/* ─── Prose rendering ────────────────────────────────────
+   Campaign text is authored as plain text in a textarea, so the only
+   structure available is line shape. Three conventions are honoured,
+   all of them things the existing content already does:
+
+     •  a top-level bullet
+     ·  a sub-bullet (stat-block lines, list entries, faction ladders)
+     —  a nested bullet under the bullet above it
+
+   Everything else is a paragraph. A line may also open with an
+   ALL-CAPS lead-in — like this — or a LEAD-IN: like this, and that
+   label gets pulled out and emphasised, because almost every bullet
+   in this archive is written that way and a page of undifferentiated
+   capitals is the single worst thing for scanning at the table.
+
+   The previous version only made a list when EVERY line in a block
+   started with •, so the common mixed block (a bullet with — children,
+   or a · list) fell through to one <p> joined by <br> — a wall. */
+
+// Inline enrichment. Runs on already-escaped text.
+// Deliberately requires an explicit separator, so a dot-separated stat
+// line ("AC 16 · HP 125 · Speed 30 ft") can never match.
+// ĀĒĪŌŪ are in the class because romanised Japanese is everywhere in this
+// archive — a label like "KŌGA RIN" must still read as a label.
+const CAPS = "A-ZĀĒĪŌŪ";
+const LEAD_IN = new RegExp(`^([${CAPS}0-9][${CAPS}0-9 ,.'’()/&+×–\\-]{1,58}?)(\\s+—\\s+|:\\s+)`);
+
+function enrich(escaped) {
+  const m = escaped.match(LEAD_IN);
+  if (!m) return escaped;
+  // A lead-in needs at least one real letter; "1962 — " is a date, not a label.
+  if (!new RegExp(`[${CAPS}]{2}`).test(m[1])) return escaped;
+  const sep = m[2].trim() === ':' ? '<span class="lead-sep">:</span> ' : '<span class="lead-sep">—</span> ';
+  return `<b class="lead">${m[1]}</b>${sep}${escaped.slice(m[0].length)}`;
+}
+
+function classifyLine(raw) {
+  const t = raw.trim();
+  if (!t) return null;
+  if (t.startsWith('•')) return { kind: 'bullet', text: t.replace(/^•\s*/, '') };
+  if (t.startsWith('·')) return { kind: 'dot', text: t.replace(/^·\s*/, '') };
+  // Only a nested child when it was indented or follows a bullet — a bare
+  // em dash opening a sentence is prose.
+  if (/^[—–]\s+/.test(t) && /^\s/.test(raw)) return { kind: 'child', text: t.replace(/^[—–]\s*/, '') };
+  return { kind: 'plain', text: t };
+}
+
 function renderProse(text) {
   if (!text) return '';
-  const paragraphs = String(text).split(/\n\n+/);
-  return paragraphs.map(p => {
-    const lines = p.split('\n').filter(l => l.length);
-    if (lines.length > 1 && lines.every(l => l.trim().startsWith('•'))) {
-      return '<ul>' + lines.map(l => `<li>${escHtml(l.replace(/^•\s*/,''))}</li>`).join('') + '</ul>';
+  return String(text).split(/\n\n+/).map(block => {
+    const lines = block.split('\n').map(classifyLine).filter(Boolean);
+    if (!lines.length) return '';
+
+    const hasList = lines.some(l => l.kind === 'bullet' || l.kind === 'dot');
+    if (!hasList) {
+      return `<p>${lines.map(l => enrich(escHtml(l.text))).join('<br>')}</p>`;
     }
-    if (lines.length === 1 && lines[0].trim().startsWith('•')) {
-      return '<ul><li>' + escHtml(lines[0].replace(/^•\s*/,'')) + '</li></ul>';
+
+    let html = '';
+    let preamble = [];
+    let items = [];       // { text, children: [] }
+    let listKind = null;
+
+    for (const l of lines) {
+      if (l.kind === 'bullet' || l.kind === 'dot') {
+        listKind = listKind || l.kind;
+        items.push({ text: l.text, children: [] });
+      } else if (items.length) {
+        // Anything after the first bullet belongs to it: a — child, or a
+        // continuation line that the author wrapped.
+        items[items.length - 1].children.push(l.text);
+      } else {
+        preamble.push(l.text);
+      }
     }
-    return `<p>${lines.map(l=>escHtml(l)).join('<br>')}</p>`;
+
+    if (preamble.length) html += `<p>${preamble.map(t => enrich(escHtml(t))).join('<br>')}</p>`;
+    html += `<ul class="${listKind === 'dot' ? 'p-dots' : 'p-bullets'}">`;
+    for (const it of items) {
+      html += `<li>${enrich(escHtml(it.text))}`;
+      if (it.children.length) {
+        html += `<ul class="p-children">${it.children.map(c => `<li>${enrich(escHtml(c))}</li>`).join('')}</ul>`;
+      }
+      html += `</li>`;
+    }
+    html += `</ul>`;
+    return html;
   }).join('');
+}
+
+/* ─── Read-aloud rendering ───────────────────────────────
+   A read-aloud is not one speech. The content marks separate moments
+   with ▶, and inside a moment a line may be a labelled performance
+   beat — WHAT THEY SEE, SOMEBODY SAYS, ASK THEM. Rendering the whole
+   thing as one italic slab makes the DM find all of that mid-sentence,
+   so each ▶ becomes its own cue card and each labelled line its own
+   row. Text with no ▶ in it falls back to ordinary prose. */
+
+// Labels that are a prompt to the table rather than something to read out.
+const ASK_LABEL = /^(ASK|THE QUESTION|PUT IT|GIVE THE|ROUND THE TABLE)/;
+const BEAT = new RegExp(`^([${CAPS}][${CAPS}0-9 ,.'’()/&+–\\-]{1,44}?)\\s+—\\s+(.+)$`);
+
+function renderReadAloudBody(text) {
+  return String(text).split(/\n\n+/).map(block => {
+    const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+    if (!lines.length) return '';
+    // A block of labelled beats renders as rows; mixed or unlabelled
+    // blocks stay as prose so existing content is unaffected.
+    const beats = lines.map(l => l.match(BEAT));
+    if (beats.every(Boolean)) {
+      return beats.map(m => {
+        const ask = ASK_LABEL.test(m[1]);
+        return `<div class="ra-beat${ask ? ' ra-ask' : ''}">
+          <div class="ra-beat-label">${ask ? '❓ ' : ''}${escHtml(m[1])}</div>
+          <div class="ra-beat-text">${escHtml(m[2])}</div>
+        </div>`;
+      }).join('');
+    }
+    return `<p>${lines.map(l => escHtml(l)).join('<br>')}</p>`;
+  }).join('');
+}
+
+function renderReadAloud(text) {
+  if (!text) return '';
+  const src = String(text).trim();
+  if (!src.includes('▶')) return renderReadAloudBody(src);
+
+  // Anything before the first ▶ is a standing instruction, not a cue.
+  const firstCue = src.indexOf('▶');
+  const preamble = src.slice(0, firstCue).trim();
+  let html = preamble ? `<div class="ra-note">${renderReadAloudBody(preamble)}</div>` : '';
+
+  const cues = src.slice(firstCue).split(/\n*▶[ \t]*/).filter(s => s.trim());
+  html += cues.map(cue => {
+    const nl = cue.indexOf('\n');
+    const label = (nl === -1 ? cue : cue.slice(0, nl)).trim();
+    const body = nl === -1 ? '' : cue.slice(nl).trim();
+    return `<div class="ra-cue">
+      <div class="ra-cue-label">${escHtml(label)}</div>
+      ${body ? `<div class="ra-cue-body">${renderReadAloudBody(body)}</div>` : ''}
+    </div>`;
+  }).join('');
+  return html;
 }
 
 /* ─── State ──────────────────────────────────────────── */
@@ -380,6 +510,7 @@ function render() {
 
 /* ─── Render: library ────────────────────────────────── */
 function renderLibrary() {
+  document.body.classList.remove('reading');
   document.getElementById('view-library').style.display = '';
   document.getElementById('view-campaign').style.display = 'none';
   document.getElementById('crumb-campaign').innerHTML = '';
@@ -433,6 +564,7 @@ function newCampaignFormHtml() {
 /* ─── Render: campaign detail ────────────────────────── */
 function renderCampaignView() {
   const c = findCampaign(currentCampaignId);
+  document.body.classList.add('reading');
   document.getElementById('view-library').style.display = 'none';
   const view = document.getElementById('view-campaign');
   view.style.display = '';
@@ -446,6 +578,9 @@ function renderCampaignView() {
 
   const editingClass = editMode ? ' editing' : '';
   let html = `<a class="module-back" href="#" onclick="location.hash='';return false;">← All Campaigns</a>`;
+  // The rail is a second, sticky copy of the contents for wide screens. An
+  // eight-chapter module is too long to navigate by scrolling back to the top.
+  html += `<div class="module-layout">`;
   html += `<div class="module${editingClass}">`;
   html += renderBanner(c);
   html += renderToc(c);
@@ -454,7 +589,48 @@ function renderCampaignView() {
   html += renderProseSection(c, 'appendix', 'Appendix — Running Notes', false);
   html += renderLinksSection(c);
   html += `</div>`;
+  html += renderRail(c);
+  html += `</div>`;
   view.innerHTML = html;
+  syncRail();
+}
+
+/* The sticky rail. Chapters only — the inline contents carries the full
+   nested index, and a rail long enough to need its own scrollbar is worse
+   than no rail. Highlights the chapter currently on screen. */
+function renderRail(c) {
+  const chapters = c.chapters || [];
+  if (!chapters.length && !(c.appendix || []).length) return '';
+  let html = `<nav class="module-rail" aria-label="Module contents"><div class="rail-title">Contents</div>`;
+  if (c.background?.length) html += `<a class="rail-link" href="#toc-background">Background</a>`;
+  chapters.forEach(ch => {
+    html += `<a class="rail-link" href="#${ch.id}" data-rail-for="${ch.id}">
+      <span class="rail-num">${ch.number}</span><span class="rail-name">${escHtml(ch.title)}</span></a>`;
+  });
+  if (c.appendix?.length) html += `<a class="rail-link" href="#toc-appendix">Appendix</a>`;
+  html += `<a class="rail-link rail-top" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">↑ Top</a>`;
+  html += `</nav>`;
+  return html;
+}
+
+/* Marks the rail link for whichever chapter is currently on screen. Rebuilt
+   on every render, so the observer is torn down and recreated with it. */
+let _railObserver = null;
+function syncRail() {
+  if (_railObserver) { _railObserver.disconnect(); _railObserver = null; }
+  const links = document.querySelectorAll('.rail-link[data-rail-for]');
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  const byId = {};
+  links.forEach(a => { byId[a.dataset.railFor] = a; });
+  const targets = Object.keys(byId).map(id => document.getElementById(id)).filter(Boolean);
+  if (!targets.length) return;
+  _railObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      const a = byId[e.target.id];
+      if (a) a.classList.toggle('is-current', e.isIntersecting);
+    });
+  }, { rootMargin: '-25% 0px -65% 0px' });
+  targets.forEach(t => _railObserver.observe(t));
 }
 
 function renderBanner(c) {
@@ -495,13 +671,47 @@ function renderBanner(c) {
   </div>`;
 }
 
+/* Contents. Nested and collapsible, because a flat list of eight chapter
+   titles tells a DM nothing about where a given scene is — and the appendix
+   is now twenty-odd entries, which is the half people actually look things
+   up in. <details> gives the collapse with no JS and no state to keep. */
 function renderToc(c) {
+  const chapters = c.chapters || [];
   let html = `<div class="module-toc"><div class="module-toc-title">Table of Contents</div>`;
-  if (c.background?.length) html += `<a href="#toc-background">Adventure Background</a>`;
-  (c.chapters||[]).forEach(ch => {
-    html += `<a href="#${ch.id}">Chapter ${ch.number}: ${escHtml(ch.title)}<span class="toc-sub"> — ${escHtml(ch.levels||'')}</span></a>`;
+
+  if (c.background?.length) {
+    html += `<details class="toc-group"><summary class="toc-summary">
+        <span class="toc-label">Adventure Background</span>
+        <span class="toc-count">${c.background.length}</span>
+      </summary><div class="toc-children">`;
+    c.background.forEach(b => { html += `<a href="#${b.id}">${escHtml(b.heading)}</a>`; });
+    html += `</div></details>`;
+  }
+
+  chapters.forEach(ch => {
+    const secs = ch.sections || [];
+    const quests = ch.sidequests || [];
+    html += `<details class="toc-group"><summary class="toc-summary">
+        <span class="toc-label">Chapter ${ch.number}: ${escHtml(ch.title)}</span>
+        <span class="toc-count">${escHtml(ch.levels || '')}</span>
+      </summary><div class="toc-children">`;
+    html += `<a href="#${ch.id}">Chapter opening${ch.estimate ? ` — ${escHtml(ch.estimate)}` : ''}</a>`;
+    secs.forEach(s => {
+      html += `<a href="#${s.id}">${SECTION_ICON[s.type] || '📄'} ${escHtml(s.heading)}</a>`;
+    });
+    if (quests.length) html += `<a href="#quests-${ch.id}">🧭 Side quests <span class="toc-count">${quests.length}</span></a>`;
+    html += `</div></details>`;
   });
-  if (c.appendix?.length) html += `<a href="#toc-appendix">Appendix — Running Notes</a>`;
+
+  if (c.appendix?.length) {
+    html += `<details class="toc-group"><summary class="toc-summary">
+        <span class="toc-label">Appendix — Running Notes</span>
+        <span class="toc-count">${c.appendix.length}</span>
+      </summary><div class="toc-children">`;
+    c.appendix.forEach(a => { html += `<a href="#${a.id}">${escHtml(a.heading)}</a>`; });
+    html += `</div></details>`;
+  }
+
   html += `</div>`;
   return html;
 }
@@ -515,7 +725,7 @@ function renderProseSection(c, key, title, dropcap) {
     if (openEditId === `${key}:${item.id}`) {
       html += proseEditFormHtml(c.id, key, item);
     } else {
-      html += `<div class="prose-item">
+      html += `<div class="prose-item" id="${item.id}">
         <div class="prose-item-heading">${escHtml(item.heading)}</div>
         ${renderProse(item.body)}
         <div class="mini-row edit-only">
@@ -591,6 +801,8 @@ function renderChapter(c, ch, idx, total) {
     }
   }
 
+  html += renderSideQuests(c, ch);
+
   if (ch.closing?.body) {
     html += `<div class="callout callout-closing"><div class="callout-label">${escHtml(ch.closing.label||'Closing Note')}</div>${renderProse(ch.closing.body)}</div>`;
   }
@@ -599,6 +811,129 @@ function renderChapter(c, ch, idx, total) {
   }
   html += `</div>`;
   return html;
+}
+
+/* ─── Side quests ────────────────────────────────────────
+   These used to live in two enormous appendix entries sorted by the
+   chapter they unlock in, which meant a DM running Chapter 3 had to
+   scroll to the back of the book and read past four other chapters'
+   quests to find the three that were live. They belong in the chapter
+   that opens them. Each quest is { id, name, giver, slots, body,
+   reward, hook } — hook being an opening line to say out loud, so a
+   quest arrives as a scene rather than as an offer. */
+function renderSideQuests(c, ch) {
+  const quests = ch.sidequests || [];
+  if (!quests.length && !editMode) return '';
+
+  let html = `<div class="quest-block" id="quests-${ch.id}">
+    <div class="quest-block-head">
+      <span class="quest-block-title">🧭 Side Quests</span>
+      <span class="quest-block-sub">${quests.length ? `${quests.length} open from this chapter · offer two or three, casually` : 'none yet'}</span>
+    </div>`;
+
+  quests.forEach((q, i) => {
+    if (openEditId === `sq:${q.id}`) { html += questEditFormHtml(c.id, ch.id, q); return; }
+    const meta = [q.giver, q.slots].filter(Boolean).map(escHtml).join(' · ');
+    html += `<div class="quest-card" id="${q.id}">
+      <div class="quest-name">${escHtml(q.name)}</div>
+      ${meta ? `<div class="quest-meta">${meta}</div>` : ''}
+      ${q.hook ? `<div class="quest-hook">${escHtml(q.hook)}</div>` : ''}
+      ${q.body ? `<div class="quest-body prose">${renderProse(q.body)}</div>` : ''}
+      ${q.reward ? `<div class="quest-reward"><span class="quest-reward-label">Reward</span> ${escHtml(q.reward)}</div>` : ''}
+      <div class="mini-row edit-only">
+        <button class="mini-btn ghost" ${i===0?'disabled':''} onclick="moveQuest('${c.id}','${ch.id}','${q.id}',-1)">▲</button>
+        <button class="mini-btn ghost" ${i===quests.length-1?'disabled':''} onclick="moveQuest('${c.id}','${ch.id}','${q.id}',1)">▼</button>
+        <button class="mini-btn" onclick="openEdit('sq:${q.id}')">✏️ Edit</button>
+        <button class="mini-btn danger" onclick="deleteQuest('${c.id}','${ch.id}','${q.id}')">🗑 Delete</button>
+      </div>
+    </div>`;
+  });
+
+  if (editMode) {
+    if (openEditId === `new-quest:${ch.id}`) {
+      html += questEditFormHtml(c.id, ch.id, null);
+    } else {
+      html += `<button type="button" class="add-block-btn" onclick="openEdit('new-quest:${ch.id}')">+ Add Side Quest</button>`;
+    }
+  }
+  html += `</div>`;
+  return html;
+}
+
+function questEditFormHtml(campId, chId, q) {
+  const action = q ? `updateQuest('${campId}','${chId}','${q.id}')` : `submitNewQuest('${campId}','${chId}')`;
+  return `<div class="form-card">
+    <div class="edit-label">Quest name</div>
+    <input class="edit-input" id="f-sq-name" type="text" value="${escHtml(q?.name||'')}" placeholder="e.g. Hiro's Signs">
+    <div class="row-2">
+      <div><div class="edit-label">Who brings it</div><input class="edit-input" id="f-sq-giver" type="text" value="${escHtml(q?.giver||'')}" placeholder="e.g. Hiro"></div>
+      <div><div class="edit-label">Cost</div><input class="edit-input" id="f-sq-slots" type="text" value="${escHtml(q?.slots||'')}" placeholder="e.g. 2 slots"></div>
+    </div>
+    <div class="edit-label">Opening line (said out loud, optional)</div>
+    <input class="edit-input" id="f-sq-hook" type="text" value="${escHtml(q?.hook||'')}" placeholder="A line of dialogue that starts the scene.">
+    <div class="edit-label">What it is</div>
+    <textarea class="edit-textarea" id="f-sq-body">${escHtml(q?.body||'')}</textarea>
+    <div class="edit-label">Reward</div>
+    <textarea class="edit-textarea" id="f-sq-reward" style="min-height:70px;">${escHtml(q?.reward||'')}</textarea>
+    <div class="form-actions">
+      <button class="mini-btn" onclick="${action}">✓ Save Quest</button>
+      <button class="mini-btn ghost" onclick="closeEdit()">Cancel</button>
+    </div>
+  </div>`;
+}
+
+function readQuestForm() {
+  return {
+    name:   document.getElementById('f-sq-name').value.trim(),
+    giver:  document.getElementById('f-sq-giver').value.trim(),
+    slots:  document.getElementById('f-sq-slots').value.trim(),
+    hook:   document.getElementById('f-sq-hook').value.trim(),
+    body:   document.getElementById('f-sq-body').value.trim(),
+    reward: document.getElementById('f-sq-reward').value.trim(),
+  };
+}
+
+// Distinct from findChapter(c, chId) above, which takes a campaign object.
+function questChapter(campId, chId) {
+  const c = findCampaign(campId);
+  return (c?.chapters || []).find(x => x.id === chId);
+}
+
+function submitNewQuest(campId, chId) {
+  const ch = questChapter(campId, chId);
+  if (!ch) return;
+  const q = readQuestForm();
+  if (!q.name) return;
+  ch.sidequests = ch.sidequests || [];
+  ch.sidequests.push({ id: uid('sq'), ...q });
+  closeEdit(); saveCampaigns();
+}
+
+function updateQuest(campId, chId, qId) {
+  const ch = questChapter(campId, chId);
+  const q = (ch?.sidequests || []).find(x => x.id === qId);
+  if (!q) return;
+  Object.assign(q, readQuestForm());
+  closeEdit(); saveCampaigns();
+}
+
+function deleteQuest(campId, chId, qId) {
+  if (!confirm('Delete this side quest?')) return;
+  const ch = questChapter(campId, chId);
+  if (!ch) return;
+  ch.sidequests = (ch.sidequests || []).filter(x => x.id !== qId);
+  render(); saveCampaigns();
+}
+
+function moveQuest(campId, chId, qId, dir) {
+  const ch = questChapter(campId, chId);
+  const list = ch?.sidequests;
+  if (!list) return;
+  const i = list.findIndex(x => x.id === qId);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= list.length) return;
+  [list[i], list[j]] = [list[j], list[i]];
+  render(); saveCampaigns();
 }
 
 function chapterEditFormHtml(campId, ch) {
@@ -633,12 +968,12 @@ function renderSection(c, ch, s, idx, total) {
   if (openEditId === `sec:${s.id}`) {
     return `<div class="section-block">${sectionEditFormHtml(c.id, ch.id, s)}</div>`;
   }
-  let html = `<div class="section-block">
+  let html = `<div class="section-block" id="${s.id}">
     <div class="section-heading-row">
       <span class="section-heading-text">${SECTION_ICON[s.type]||'📄'} ${escHtml(s.heading)}</span>
       ${s.tag ? `<span class="section-tag">${escHtml(s.tag)}</span>` : ''}
     </div>`;
-  if (s.readAloud) html += `<div class="callout callout-readaloud"><div class="callout-label">📖 Read Aloud</div>${renderProse(s.readAloud)}</div>`;
+  if (s.readAloud) html += `<div class="callout callout-readaloud"><div class="callout-label">📖 Read Aloud</div>${renderReadAloud(s.readAloud)}</div>`;
   if (s.body) html += `<div class="prose">${renderProse(s.body)}</div>`;
   if (s.developments) html += `<div class="callout callout-developments"><div class="callout-label">🔀 Developments</div>${renderProse(s.developments)}</div>`;
   if (s.treasure) html += `<div class="callout callout-treasure"><div class="callout-label">💰 Treasure</div>${renderProse(s.treasure)}</div>`;

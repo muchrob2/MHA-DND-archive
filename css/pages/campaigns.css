@@ -9,6 +9,11 @@
 
 #main { max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; }
 
+/* The module reader gets more room than the library so the sticky contents
+   rail can sit beside the page rather than on top of it. campaigns.js puts
+   .reading on <body> while a module is open. */
+body.reading #main { max-width: 1240px; }
+
 .page-heading {
   margin-bottom: 4px;
   font-family: var(--font-book);
@@ -192,9 +197,72 @@
 }
 .module-tone { font-size: 16px; line-height: 1.78; }
 
+/* ════════════════════════════════════════════════════════════
+   LAYOUT — the book, plus a sticky contents rail beside it
+   ════════════════════════════════════════════════════════════ */
+
+.module-layout { display: flex; align-items: flex-start; gap: 26px; }
+.module-layout > .module { flex: 1 1 auto; min-width: 0; }
+
+/* Hidden until there is room for it; the inline contents is the real index
+   and this is a shortcut, so it must never squeeze the page it serves. */
+.module-rail { display: none; }
+
+@media (min-width: 1120px) {
+  .module-rail {
+    display: block;
+    position: sticky;
+    top: calc(var(--nav-h) + 18px);
+    flex: 0 0 188px;
+    max-height: calc(100vh - var(--nav-h) - 40px);
+    overflow-y: auto;
+    padding: 14px 14px 16px;
+    font-family: var(--font-ui);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+}
+.rail-title {
+  margin-bottom: 8px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.rail-link {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 5px 7px;
+  margin: 0 -5px;
+  border-radius: 6px;
+  font-size: var(--fs-xs);
+  line-height: 1.35;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.rail-link:hover { color: var(--text); background: var(--surface2); }
+.rail-link.is-current {
+  font-weight: 700;
+  color: var(--primary-text);
+  background: var(--primary-light);
+}
+.rail-num {
+  flex-shrink: 0;
+  width: 15px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  text-align: right;
+  color: var(--text-dim);
+}
+.rail-link.is-current .rail-num { color: var(--primary-text); }
+.rail-top { margin-top: 8px; padding-top: 9px; border-top: 1px solid var(--border); }
+
 /* ── contents ── */
 .module-toc {
-  padding: 16px 20px;
+  padding: 14px 18px 16px;
   margin-bottom: 26px;
   background: var(--mod-bg2);
   border: 1px solid var(--mod-border);
@@ -208,15 +276,48 @@
   text-transform: uppercase;
   color: var(--mod-heading);
 }
-.module-toc a {
+
+/* Collapsible groups. Eight chapters at seven-plus scenes each is sixty-odd
+   entries — a flat list is a wall, and a list of only chapter titles does
+   not tell a DM which chapter a given scene is in. */
+.toc-group { border-top: 1px solid var(--mod-border); }
+.toc-group:first-of-type { border-top: 0; }
+.toc-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 0;
+  cursor: pointer;
+  list-style: none;
+}
+.toc-summary::-webkit-details-marker { display: none; }
+.toc-summary::before {
+  content: '▸';
+  flex-shrink: 0;
+  font-size: 10px;
+  color: var(--mod-rule);
+  transition: transform .14s ease;
+}
+.toc-group[open] > .toc-summary::before { transform: rotate(90deg); }
+.toc-summary:hover .toc-label { color: var(--mod-heading); }
+.toc-label { flex: 1; font-size: 16px; font-weight: 600; }
+.toc-count {
+  flex-shrink: 0;
+  font-family: var(--font-ui);
+  font-size: var(--fs-2xs);
+  font-style: italic;
+  color: var(--mod-ink-muted);
+}
+.toc-children { padding: 0 0 8px 18px; }
+.toc-children a {
   display: block;
   padding: 3px 0;
-  font-size: 15px;
-  color: var(--mod-ink);
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: var(--mod-ink-muted);
   text-decoration: none;
 }
-.module-toc a:hover { color: var(--mod-heading); text-decoration: underline; }
-.module-toc .toc-sub { margin-left: 4px; font-size: var(--fs-sm); color: var(--mod-ink-muted); }
+.toc-children a:hover { color: var(--mod-heading); text-decoration: underline; }
 
 /* ── body ── */
 .module-h2 {
@@ -228,8 +329,9 @@
   border-bottom: 1px solid var(--mod-border);
 }
 .module-h2:first-of-type { margin-top: 0; }
+.module-h2 { scroll-margin-top: calc(var(--nav-h) + 16px); }
 
-.prose-item { margin-bottom: 20px; }
+.prose-item { margin-bottom: 20px; scroll-margin-top: calc(var(--nav-h) + 16px); }
 .prose-item-heading {
   margin-bottom: 5px;
   font-size: 17px;
@@ -239,9 +341,71 @@
   text-decoration-color: var(--mod-border);
   text-underline-offset: 3px;
 }
+
+/* ── measure ──
+   The single biggest readability problem here was line length: the module
+   ran the full 820px of its content box, which at 16px Garamond is ~95
+   characters — far past the 60–75 where the eye reliably finds the start
+   of the next line. Capped on the text, not the box, so callout panels and
+   rules still span the page like a printed book's. */
+.prose p, .prose li,
+.chapter-intro, .module-tone, .module-tagline { max-width: 72ch; }
+.callout p, .callout li, .ra-beat-text { max-width: 68ch; }
+
 .prose p  { margin-bottom: 10px; font-size: 16px; line-height: 1.78; }
-.prose ul { margin: 6px 0 10px 22px; }
-.prose li { margin-bottom: 5px; font-size: 16px; line-height: 1.7; }
+.prose li { margin-bottom: 6px; font-size: 16px; line-height: 1.7; }
+
+/* ── lists ──
+   Two levels, visually distinct, because the content uses • for a point
+   and · for an enumeration (stat lines, ladders, tables). */
+.prose ul, .callout ul { margin: 8px 0 12px; padding: 0; list-style: none; }
+.p-bullets > li, .p-dots > li { position: relative; padding-left: 20px; }
+.p-bullets > li::before {
+  content: '';
+  position: absolute;
+  left: 4px; top: .62em;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--mod-heading);
+  opacity: .62;
+}
+.p-dots > li::before {
+  content: '·';
+  position: absolute;
+  left: 3px; top: -.12em;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--mod-rule);
+}
+.p-children {
+  margin: 6px 0 2px !important;
+  padding-left: 2px !important;
+}
+.p-children > li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 15px;
+  color: var(--mod-ink-muted);
+}
+.p-children > li::before {
+  content: '—';
+  position: absolute;
+  left: 0; top: 0;
+  color: var(--mod-rule);
+}
+
+/* ── lead-ins ──
+   Nearly every bullet in this archive opens with an ALL-CAPS label. Left as
+   running capitals they are unreadable in bulk; pulled out as small caps
+   they become the thing you scan for. */
+.lead {
+  font-family: var(--font-ui);
+  font-size: .82em;
+  font-weight: 700;
+  letter-spacing: .045em;
+  color: var(--mod-heading);
+}
+.lead-sep { margin: 0 .15em 0 .1em; color: var(--mod-rule); }
 
 /* illuminated drop cap */
 .dropcap p:first-of-type::first-letter {
@@ -258,6 +422,7 @@
   margin-top: 42px;
   padding-top: 24px;
   border-top: 4px double var(--mod-rule);
+  scroll-margin-top: calc(var(--nav-h) + 16px);
 }
 .chapter-block:first-of-type { margin-top: 30px; }
 .chapter-kicker {
@@ -291,6 +456,78 @@
 }
 .callout-readaloud { background: var(--mod-bg3); border-left: 3px solid var(--mod-heading); font-style: italic; }
 .callout-readaloud .callout-label { color: var(--mod-heading); font-style: normal; }
+
+/* ════════════════════════════════════════════════════════════
+   READ-ALOUD CUES
+
+   A read-aloud holds several separate moments, and the DM needs to find
+   the right one mid-session. One italic slab with ▶ markers buried in it
+   makes that a search; each moment as its own cue card makes it a glance.
+   ════════════════════════════════════════════════════════════ */
+
+.ra-note {
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-style: normal;
+  color: var(--mod-ink-muted);
+}
+.ra-cue {
+  position: relative;
+  padding: 10px 0 10px 13px;
+  margin: 10px 0;
+  border-left: 2px solid rgba(122,32,32,.3);
+}
+.ra-cue + .ra-cue { margin-top: 14px; }
+.ra-cue-label {
+  margin-bottom: 6px;
+  font-family: var(--font-ui);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--mod-heading);
+}
+.ra-cue-body p { margin-bottom: 8px; }
+.ra-cue-body p:last-child { margin-bottom: 0; }
+
+/* A labelled performance beat: what they see, who says what, what to ask. */
+.ra-beat {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  gap: 4px 14px;
+  padding: 5px 0;
+}
+.ra-beat + .ra-beat { border-top: 1px dotted var(--mod-border); }
+.ra-beat-label {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  text-align: right;
+  padding-top: .28em;
+  color: var(--mod-ink-muted);
+}
+.ra-beat-text { line-height: 1.7; }
+
+/* A prompt to the table, not something to read out. */
+.ra-ask {
+  margin: 8px 0 2px;
+  padding: 9px 12px;
+  border-top: 0 !important;
+  border-radius: var(--radius);
+  background: rgba(169,129,47,.14);
+}
+.ra-ask .ra-beat-label { color: var(--gold-text); }
+.ra-ask .ra-beat-text { font-style: normal; font-weight: 600; }
+
+@media (max-width: 620px) {
+  .ra-beat { grid-template-columns: 1fr; gap: 1px; }
+  .ra-beat-label { text-align: left; padding-top: 0; }
+}
 .callout-dm        { background: rgba(184,134,11,.10); border-left: 3px solid var(--gold); }
 .callout-dm .callout-label { color: var(--gold-text); }
 .callout-aside     { background: rgba(122,32,32,.08); border-left: 3px solid var(--mod-heading); }
@@ -304,8 +541,97 @@
 .callout-milestone .callout-label { justify-content: center; color: var(--gold-text); }
 .callout-milestone p { margin-bottom: 0; font-weight: 700; }
 
+/* ════════════════════════════════════════════════════════════
+   SIDE QUESTS — in the chapter that opens them, not the appendix
+   ════════════════════════════════════════════════════════════ */
+
+.quest-block {
+  margin-top: 26px;
+  padding: 16px 18px 18px;
+  background: rgba(169,129,47,.07);
+  border: 1px solid var(--mod-border);
+  border-left: 4px solid var(--mod-rule);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  scroll-margin-top: calc(var(--nav-h) + 16px);
+}
+.quest-block-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--mod-border);
+}
+.quest-block-title {
+  font-family: var(--font-ui);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--gold-text);
+}
+.quest-block-sub {
+  font-size: var(--fs-xs);
+  font-style: italic;
+  color: var(--mod-ink-muted);
+}
+
+.quest-card {
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  background: var(--mod-bg);
+  border: 1px solid var(--mod-border);
+  border-radius: var(--radius);
+  scroll-margin-top: calc(var(--nav-h) + 16px);
+}
+.quest-name {
+  font-size: 16.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--mod-heading);
+}
+.quest-meta {
+  margin-top: 2px;
+  font-family: var(--font-ui);
+  font-size: var(--fs-2xs);
+  letter-spacing: .02em;
+  color: var(--mod-ink-muted);
+}
+/* The line the DM says to start it. A quest that arrives as dialogue is a
+   scene; a quest that arrives as a description is an item on a list. */
+.quest-hook {
+  margin: 9px 0 8px;
+  padding: 8px 12px;
+  font-size: 15.5px;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--mod-ink);
+  background: var(--mod-bg3);
+  border-left: 2px solid rgba(122,32,32,.3);
+  border-radius: 0 6px 6px 0;
+}
+.quest-body { margin-top: 6px; }
+.quest-body p, .quest-body li { font-size: 15.5px; max-width: 68ch; }
+.quest-body p:last-child { margin-bottom: 0; }
+.quest-reward {
+  margin-top: 9px;
+  padding-top: 8px;
+  font-size: 15px;
+  line-height: 1.65;
+  border-top: 1px dotted var(--mod-border);
+}
+.quest-reward-label {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--teal-text);
+}
+
 /* ── sections ── */
-.section-block { margin-top: 22px; }
+.section-block { margin-top: 22px; scroll-margin-top: calc(var(--nav-h) + 16px); }
 .section-heading-row {
   display: flex;
   align-items: baseline;
@@ -353,6 +679,9 @@
 
 @media (max-width: 640px) {
   #main { padding: 16px 12px 60px; }
+  .module-layout { gap: 0; }
+  .quest-block { padding: 12px 13px 14px; }
+  .toc-children { padding-left: 14px; }
   .module { padding: 22px 18px 32px; font-size: 15px; }
   .module::before { display: none; }
   .module-title  { font-size: 25px; }

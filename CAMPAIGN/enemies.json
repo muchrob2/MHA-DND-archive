@@ -3237,6 +3237,933 @@
       ],
       "tactics": "Never fights the class. Shows up, makes an enormous problem disappear in one move, eats somebody's snack, and leaves.",
       "stats_source": "Written for The Shortlist: After Hours on the campaign's three-tier scale."
+    },
+    {
+      "id": "byakko_nagira_pylon",
+      "name": "Nagira Sou, \"Pylon\" (Claw)",
+      "category": "Byakko",
+      "cr": "1",
+      "tier": 1,
+      "description": "Seventeen, holds the laundrette corner, makes himself heavy enough to be immovable and hates every part of his job except that. Apologises before and after.",
+      "hp": 30,
+      "ac": 13,
+      "speed": "25 ft",
+      "dex_mod": 0,
+      "quirk_save_dc": 12,
+      "ability_scores": {
+        "STR": 15,
+        "DEX": 11,
+        "CON": 15,
+        "INT": 10,
+        "WIS": 11,
+        "CHA": 12
+      },
+      "attacks": [
+        {
+          "name": "Shoulder",
+          "to_hit": "+5",
+          "damage": "2d6+2 bludgeoning",
+          "range": "Melee",
+          "notes": ""
+        }
+      ],
+      "traits": [
+        "DEADWEIGHT (bonus action) — until his next turn he cannot be moved, pushed or knocked prone by anything short of Huge, and his speed is 0."
+      ],
+      "tactics": "Plants himself in a doorway so nobody can get past, which is the entire extent of his ambition. Will stand aside if asked nicely, and then be in trouble for it.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "byakko_tobe_tally",
+      "name": "Tobe Miyu, \"Tally\" (Claw)",
+      "category": "Byakko",
+      "cr": "1/4",
+      "tier": 1,
+      "description": "Sixteen, one stripe, earned with a chair in front of nine witnesses. Keeps the gang’s books in three exercise books and a phone. Not a fight — a conversation.",
+      "hp": 16,
+      "ac": 12,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "quirk_save_dc": 11,
+      "ability_scores": {
+        "STR": 9,
+        "DEX": 14,
+        "CON": 10,
+        "INT": 16,
+        "WIS": 14,
+        "CHA": 13
+      },
+      "attacks": [
+        {
+          "name": "A chair",
+          "to_hit": "+2",
+          "damage": "1d6 bludgeoning",
+          "range": "Melee",
+          "notes": "She is not a fighter and the stat block is a formality."
+        }
+      ],
+      "traits": [
+        "THE BOOKS — she knows what every member of Byakko is owed, owes and is worth, and where the money goes, and she has never shown anybody.",
+        "NOT A FIGHT — the most useful non-combatant in the backstreets."
+      ],
+      "tactics": "Talk to her. Everything in \"the turf economy\" is in her exercise books, and she will trade it for help with a problem that has nothing to do with the gang.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "byakko_okawachi_dropkick",
+      "name": "Ōkawachi Jin, \"Dropkick\" (Claw)",
+      "category": "Byakko",
+      "cr": "1",
+      "tier": 1,
+      "description": "Eighteen, challenges upward constantly, loses constantly, undeterred. The reason rule six exists.",
+      "hp": 28,
+      "ac": 13,
+      "speed": "35 ft",
+      "dex_mod": 2,
+      "quirk_save_dc": 12,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 15,
+        "CON": 13,
+        "INT": 8,
+        "WIS": 8,
+        "CHA": 14
+      },
+      "attacks": [
+        {
+          "name": "Flying kick",
+          "to_hit": "+4",
+          "damage": "2d8+2 bludgeoning",
+          "range": "Melee",
+          "notes": "If he moved 20 ft first, add 1d8 — and he lands prone, every time, without fail."
+        }
+      ],
+      "traits": [
+        "UNDETERRED — he fights until he is unconscious and is cheerful about it the next day."
+      ],
+      "tactics": "Announce him. Have him challenge the most famous PC in the street in front of everybody, lose in two rounds, and come back next window.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "byakko_murase_nettle",
+      "name": "Murase Kotoha, \"Nettle\" (Fang)",
+      "category": "Byakko",
+      "cr": "3",
+      "tier": 2,
+      "description": "Nineteen, holds the noodle bar’s street, personally enforces rule four. Kind to the unstriped kids and frightening to everybody else.",
+      "hp": 48,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "quirk_save_dc": 13,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 16,
+        "CON": 14,
+        "INT": 11,
+        "WIS": 14,
+        "CHA": 12
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — two sting strikes",
+          "to_hit": "+6",
+          "damage": "2d6+3 slashing + 1d6 poison each",
+          "range": "Melee",
+          "notes": ""
+        },
+        {
+          "name": "Nettle (recharge 5–6)",
+          "to_hit": "—",
+          "damage": "3d6 poison, 15-ft radius",
+          "range": "15 ft radius",
+          "notes": "CON DC 13; half and no condition on a save. On a failure, poisoned until the end of its next turn."
+        }
+      ],
+      "traits": [
+        "RULE FOUR — anybody who threatens the noodle bar or an unstriped kid in her presence gets her full attention, and nothing else does."
+      ],
+      "tactics": "The Byakko most likely to end up helping the class, which she will deny. Fight her once and she is a contact for the rest of the campaign.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "byakko_yanagi_halfstep",
+      "name": "Yanagi Daichi, \"Half-Step\" (Fang)",
+      "category": "Byakko",
+      "cr": "4",
+      "tier": 2,
+      "description": "Twenty-one, the gang’s teacher and the best pure technician in two wards. Failed the U.A. entrance exam twice at fifteen and never mentions it.",
+      "hp": 55,
+      "ac": 16,
+      "speed": "30 ft",
+      "dex_mod": 4,
+      "quirk_save_dc": 14,
+      "ability_scores": {
+        "STR": 15,
+        "DEX": 18,
+        "CON": 14,
+        "INT": 13,
+        "WIS": 15,
+        "CHA": 13
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — three palm strikes",
+          "to_hit": "+7",
+          "damage": "1d10+4 bludgeoning each",
+          "range": "Melee",
+          "notes": ""
+        }
+      ],
+      "traits": [
+        "HALF-STEP — once per round, as a reaction to being targeted by a melee attack, he moves 5 ft and the attack misses.",
+        "HE HAS WATCHED YOUR MATCH, AND NOT ON CLEAN READ — he watched the broadcast, twice, because he loves it. He will tell a PC what they did well, specifically, and he will be right."
+      ],
+      "tactics": "A spar, not a fight. Honourable, delighted, and the most generous opponent in the campaign. Bose would have him tomorrow and the table should feel that.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "byakko_imai_sandbag",
+      "name": "Imai Tatsuhiko, \"Sandbag\" (Fang)",
+      "category": "Byakko",
+      "cr": "3",
+      "tier": 2,
+      "description": "Twenty, runs the Ring’s betting book out of Swing Town’s back office. Knows what everybody is worth to the yen. The first member of Byakko to buy a Clean Read page.",
+      "hp": 50,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "quirk_save_dc": 13,
+      "ability_scores": {
+        "STR": 16,
+        "DEX": 12,
+        "CON": 16,
+        "INT": 15,
+        "WIS": 12,
+        "CHA": 15
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — two body blows",
+          "to_hit": "+6",
+          "damage": "2d8+3 bludgeoning each",
+          "range": "Melee",
+          "notes": ""
+        }
+      ],
+      "traits": [
+        "SOAK — the first 10 damage from each attack against him is reduced to half. He has been hit for a living for four years.",
+        "THE BOOK — quotes odds on the PCs to their faces and sells information about any fighter in two wards. In Chapter 7 he is the first to work out what Clean Read means for the Stripe Law, and he is frightened by it, and he is right to be."
+      ],
+      "tactics": "A businessman who can take a punch. Would much rather have the class’s custom than their blood.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "byakko_kono_hinge",
+      "name": "Kōno Sae, \"Hinge\" (Stripe)",
+      "category": "Byakko",
+      "cr": "5",
+      "tier": 2,
+      "description": "Twenty-four, holds the chop shop, opens any lock by touch. The Stripe who sold a man with a scar a white van for cash in the spring and watched him bleed on the counter.",
+      "hp": 72,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "quirk_save_dc": 14,
+      "ability_scores": {
+        "STR": 13,
+        "DEX": 17,
+        "CON": 15,
+        "INT": 14,
+        "WIS": 13,
+        "CHA": 12
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — two jimmy strikes",
+          "to_hit": "+6",
+          "damage": "3d6+3 piercing each",
+          "range": "Melee",
+          "notes": ""
+        },
+        {
+          "name": "Unhinge (recharge 5–6)",
+          "to_hit": "—",
+          "damage": "No damage",
+          "range": "5 ft",
+          "notes": "One creature wearing armour or carrying a weapon: STR DC 14 or it comes apart and falls to the ground."
+        }
+      ],
+      "traits": [
+        "HINGE (action) — she touches any lock, door, restraint, panel or joint and it opens. Any of them. Including a cell, a cold-store hatch, or handcuffs on somebody else.",
+        "THE VAN — she remembers him exactly and will describe him once, properly, to anybody who asks properly. That is the whole of the Appetite connection and it should never be more."
+      ],
+      "tactics": "Professional, bored, and completely willing to be arrested, which nobody expects. She will not resist.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "byakko_fukami_ladder",
+      "name": "Fukami Ryōta, \"Ladder\" (Stripe)",
+      "category": "Byakko",
+      "cr": "5",
+      "tier": 2,
+      "description": "Twenty-six, holds the Shinjuku west-exit alleys, and recruits. Finds the fourteen-year-olds on the crash barriers and gives them somewhere to belong. The most dangerous man in Byakko, and he has never hurt anybody in his life.",
+      "hp": 78,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "quirk_save_dc": 15,
+      "ability_scores": {
+        "STR": 16,
+        "DEX": 14,
+        "CON": 16,
+        "INT": 13,
+        "WIS": 14,
+        "CHA": 18
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — two hooks",
+          "to_hit": "+6",
+          "damage": "3d8+3 bludgeoning each",
+          "range": "Melee",
+          "notes": ""
+        },
+        {
+          "name": "Climb with me (once per fight)",
+          "to_hit": "—",
+          "damage": "No damage",
+          "range": "30 ft",
+          "notes": "One creature that can hear him: WIS DC 15 or it cannot attack him until the end of its next turn. He is not charming them — he is telling them, sincerely, that they are better than this street."
+        }
+      ],
+      "traits": [
+        "EVERY SINGLE THING HE SAYS to an unstriped fourteen-year-old is something U.A. said to the class in Chapter 1."
+      ],
+      "tactics": "Warm. Genuinely warm. He believes he is doing those kids a favour, and for about a third of them he is.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "byakko_sawaguchi_quiet",
+      "name": "Sawaguchi Hidemi, \"Quiet\" (Stripe)",
+      "category": "Byakko",
+      "cr": "5",
+      "tier": 2,
+      "description": "Thirty-three, holds the hospital street, murmurs, patches up every fighter in the backstreets and asks nothing. A nurse for eleven years first. The Scarlet Legion’s loudest trace in the city.",
+      "hp": 85,
+      "ac": 14,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "quirk_save_dc": 15,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 13,
+        "CON": 17,
+        "INT": 15,
+        "WIS": 18,
+        "CHA": 13
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — two pressure strikes",
+          "to_hit": "+6",
+          "damage": "2d8+2 bludgeoning each",
+          "range": "Melee",
+          "notes": "CON DC 15 or disadvantage on its next attack."
+        },
+        {
+          "name": "Field dressing (3/day)",
+          "to_hit": "—",
+          "damage": "Heals 4d8",
+          "range": "5 ft",
+          "notes": "She will use these on the PCs, in a fight, without being asked, if somebody is badly hurt."
+        }
+      ],
+      "traits": [
+        "THE GREY ONES — since spring she has treated four Claws who turned up pale, slow and missing a night, with two neat marks on the neck, and she stopped asking. Nobody has ever talked to her about it."
+      ],
+      "tactics": "Barely a fight at all; she would rather treat than hit. If the class are kind to her once, she is the Underground’s best doorway and does not know it.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "byakko_amano_footnote",
+      "name": "Amano Keita, \"Footnote\" (four stripes)",
+      "category": "Byakko",
+      "cr": "6",
+      "tier": 2,
+      "description": "Nineteen. A Stray eight months ago. His quirk lets him stand up once. He has beaten a Claw, two Fangs, Three-Stripe Kō and Saeki Momo, every one of them by knowing exactly what they could not do.",
+      "hp": 80,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "quirk_save_dc": 14,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 16,
+        "CON": 16,
+        "INT": 16,
+        "WIS": 15,
+        "CHA": 11
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — two plain strikes",
+          "to_hit": "+7",
+          "damage": "2d8+3 bludgeoning each",
+          "range": "Melee",
+          "notes": "No quirk in them at all."
+        }
+      ],
+      "traits": [
+        "PREPARED FOR YOU (once per round) — he names, out loud and accurately, one thing a target’s quirk cannot do, read off a teardown he watched before the fight, and gains advantage on his next attack roll against them. Say the actual limitation from the PC’s sheet.",
+        "SECOND WIND — the first time he drops to 0 HP, he stands back up with 25.",
+        "FOOTWORK, NOTHING ELSE — no signature move at all. Any creature that uses a technique, training benefit or Underground gift that has never been filmed strips Prepared For You for the rest of the fight, against everybody. Do not tell the players this."
+      ],
+      "tactics": "Polite, apologetic, and genuinely puzzled that anybody minds. He did not break the Law; he read it. See Chapter 7, \"A Challenge, Bought and Paid For.\"",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "ledger_arrear_month",
+      "name": "Arrear, one month overdue",
+      "category": "Underground",
+      "cr": "1",
+      "tier": 1,
+      "description": "The Ledger. Somebody who was not collected on time and has been standing where they were told to stand for five weeks. Still mostly shaped like a person, which is worse.",
+      "hp": 30,
+      "ac": 12,
+      "speed": "20 ft",
+      "dex_mod": 0,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 10,
+        "CON": 14,
+        "INT": 6,
+        "WIS": 8,
+        "CHA": 5
+      },
+      "attacks": [
+        {
+          "name": "Grasp",
+          "to_hit": "+4",
+          "damage": "2d6+2 necrotic",
+          "range": "Melee",
+          "notes": ""
+        }
+      ],
+      "traits": [
+        "OVERDUE — quirk damage is halved against it. Radiant damage, Sumi-infused attacks and writs hurt it fully.",
+        "WAITING — it cannot willingly move more than 30 ft from the spot it was told to wait in, and it will not pursue. It also will not stop."
+      ],
+      "tactics": "It does not hunt. It stands in a stairwell, or under a barrier, or at the back of a hospital car park, and anybody who comes within reach is within reach.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "ledger_arrear_year",
+      "name": "Arrear, one year overdue",
+      "category": "Underground",
+      "cr": "4",
+      "tier": 2,
+      "description": "The Ledger. Twelve months of standing still. It has stopped having a face and started having a direction.",
+      "hp": 70,
+      "ac": 14,
+      "speed": "25 ft",
+      "dex_mod": 1,
+      "quirk_save_dc": 13,
+      "ability_scores": {
+        "STR": 17,
+        "DEX": 12,
+        "CON": 16,
+        "INT": 5,
+        "WIS": 9,
+        "CHA": 5
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — two grasps",
+          "to_hit": "+6",
+          "damage": "2d8+3 necrotic each",
+          "range": "Melee",
+          "notes": ""
+        },
+        {
+          "name": "Still due (recharge 5–6)",
+          "to_hit": "—",
+          "damage": "No damage",
+          "range": "20 ft radius",
+          "notes": "It says the date it was supposed to be collected on. WIS DC 13 or frightened until the end of its next turn."
+        }
+      ],
+      "traits": [
+        "OVERDUE — quirk damage halved; radiant, Sumi and writs hurt it fully.",
+        "WAITING — 30 ft from its spot, no pursuit, no stopping."
+      ],
+      "tactics": "Immobile, relentless, and loud about one number. The fight is a positioning puzzle, not a chase.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "ledger_arrear_barrier",
+      "name": "Arrear, nine months overdue (\"the one under the barrier\")",
+      "category": "Underground",
+      "cr": "8",
+      "tier": 3,
+      "description": "The Ledger. The Yanaka level crossing. Nine months in the four inches under the barrier arm, because the Rite calls it a Kegare and the Ledger calls it an Arrear and nobody will sign. Chapter 8’s Contact encounter.",
+      "hp": 120,
+      "ac": 15,
+      "speed": "25 ft",
+      "dex_mod": 2,
+      "quirk_save_dc": 15,
+      "ability_scores": {
+        "STR": 18,
+        "DEX": 14,
+        "CON": 18,
+        "INT": 6,
+        "WIS": 11,
+        "CHA": 6
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — three grasps",
+          "to_hit": "+8",
+          "damage": "2d10+4 necrotic each",
+          "range": "15 ft reach",
+          "notes": ""
+        },
+        {
+          "name": "Four minutes (start of each round)",
+          "to_hit": "—",
+          "damage": "No damage",
+          "range": "20 ft of the rails",
+          "notes": "The barriers come down. Everything within 20 ft of the rails is pushed 10 ft toward the crossing (STR DC 15 to resist), then a train goes over, then they go up."
+        }
+      ],
+      "traits": [
+        "BOTH AND NEITHER — it is an Arrear and a Kegare at once. Unseen without Sumi or a Mark, Born of Dread, and Overdue, and the three rules stack, which is exactly why nobody has dealt with it.",
+        "WAITING — it will not leave the crossing under any circumstances, including to save itself."
+      ],
+      "tactics": "Not a hard fight for a party at level 11; a strange one. Two wardens will watch and will not help, and will be helpful about it.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "ledger_arrear_century",
+      "name": "Arrear, a century overdue",
+      "category": "Underground",
+      "cr": "13",
+      "tier": 3,
+      "description": "The Ledger. A hundred and ten years at the back of a building that was knocked down in 1962. There is no person left in it and there is still a date.",
+      "hp": 210,
+      "ac": 17,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "quirk_save_dc": 18,
+      "ability_scores": {
+        "STR": 21,
+        "DEX": 16,
+        "CON": 20,
+        "INT": 8,
+        "WIS": 14,
+        "CHA": 8
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — four grasps",
+          "to_hit": "+10",
+          "damage": "3d10+5 necrotic each",
+          "range": "Melee",
+          "notes": ""
+        },
+        {
+          "name": "The wrong date (recharge 5–6)",
+          "to_hit": "—",
+          "damage": "6d8 psychic",
+          "range": "40 ft radius",
+          "notes": "WIS DC 18 or 6d8 psychic and frightened 1 minute; half and no fear on a save. A creature that answers with its own name is immune to The Wrong Date for the rest of the fight."
+        }
+      ],
+      "traits": [
+        "OVERDUE, and BORN OF DREAD if you want it both ways.",
+        "WAITING, STILL — a 60-ft radius it has not left since the Occupation. Inside it, advantage on everything. Outside it, it cannot go."
+      ],
+      "tactics": "Only if a third season wants it. The Ledger’s version of the Roll Call: beaten by people who refuse to be a number, and by nothing else.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "ledger_hibino_asa",
+      "name": "Hibino Asa, Runner of the Ninth Round",
+      "category": "Underground",
+      "cr": "2",
+      "tier": 1,
+      "description": "The Ledger. Fifteen, and has been fifteen since 1998. A satchel, a bicycle, a pencil she licks, and the best records in the department. No writ — Runners do not get one, and she has asked four times.",
+      "hp": 40,
+      "ac": 14,
+      "speed": "35 ft",
+      "dex_mod": 4,
+      "quirk_save_dc": 12,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 18,
+        "CON": 12,
+        "INT": 14,
+        "WIS": 15,
+        "CHA": 16
+      },
+      "attacks": [
+        {
+          "name": "Notice",
+          "to_hit": "+6",
+          "damage": "1d6+4 force",
+          "range": "Melee",
+          "notes": "She hits people with a rolled-up form. It works better than it should."
+        },
+        {
+          "name": "A Mark (action, once per day)",
+          "to_hit": "—",
+          "damage": "No damage",
+          "range": "Touch",
+          "notes": "She inks a character on the back of a willing creature’s hand: they see wardens, writs and Arrears permanently. It costs them a page, and she explains that clearly first, every time."
+        }
+      ],
+      "traits": [
+        "FILED — a warden on duty does not appear on any camera, and anybody without a Mark, a Sumi pool or recent proximity to their own death sees only a person in black they will not remember. Quirk attacks still hit her perfectly well.",
+        "THE ROUND — she knows where every Arrear in her district is standing, and how long it has been there, and will tell anybody who asks politely.",
+        "NOT A FIGHT — the friendliest thing in the Underground, and the most upsetting: four of the Case 9 names are in her notebook with ticks against them, filed correctly, and she would like to know whether there was a problem with it."
+      ],
+      "tactics": "Cheerful, chatty, and relieved to have somebody to talk to. Deliver the notebook flatly and then say nothing.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "ledger_kajiura",
+      "name": "Kajiura, Hand of the Fourth Desk",
+      "category": "Underground",
+      "cr": "9",
+      "tier": 3,
+      "description": "The Ledger. Seven feet, black uniform, a writ called Second Frost, and a Desk above him that has been vacant since 1945 — which means his countersignatures come from nowhere and most of his authority is theoretical.",
+      "hp": 150,
+      "ac": 17,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "quirk_save_dc": 16,
+      "ability_scores": {
+        "STR": 20,
+        "DEX": 14,
+        "CON": 18,
+        "INT": 12,
+        "WIS": 16,
+        "CHA": 10
+      },
+      "attacks": [
+        {
+          "name": "Writ: Second Frost",
+          "to_hit": "+9",
+          "damage": "3d10+5 slashing + 2d10 cold",
+          "range": "Melee",
+          "notes": "Hurts an Arrear or a Kegare fully."
+        },
+        {
+          "name": "First Reading (once per fight)",
+          "to_hit": "—",
+          "damage": "4d10 cold",
+          "range": "30 ft cone",
+          "notes": "\"Second Frost, settle.\" DEX DC 16 or 4d10 cold and speed 0 until the end of its next turn."
+        }
+      ],
+      "traits": [
+        "FILED — as Hibino Asa.",
+        "NO COUNTERSIGNATURE — he will not draw Second Frost outside his jurisdiction, and almost nothing in Tokyo is inside it. He is a CR 9 stat block standing perfectly still with his hands at his sides, and that is not a bug.",
+        "WITH A COUNTERSIGNATURE — forged, granted, or signed by a PC who did not read the form — he is the best ally in the Underground and ends most fights in two rounds."
+      ],
+      "tactics": "One sentence per scene, maximum, and always a procedural observation. The sentence he says when a PC is about to die is the most useful thing anybody says all chapter.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "ledger_shirouzu_genbei",
+      "name": "Shirouzu Genbei, struck off",
+      "category": "Underground",
+      "cr": "11",
+      "tier": 3,
+      "description": "The Ledger. Struck off in 1954 for a countersignature he wrote himself. Runs a sweet shop in Yanaka, three streets from the crossing. Was a Desk. Still writes like one. Not a fight.",
+      "hp": 180,
+      "ac": 18,
+      "speed": "35 ft",
+      "dex_mod": 5,
+      "quirk_save_dc": 17,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 20,
+        "CON": 16,
+        "INT": 18,
+        "WIS": 18,
+        "CHA": 17
+      },
+      "attacks": [
+        {
+          "name": "Writ: Long Summer",
+          "to_hit": "+10",
+          "damage": "4d8+5 slashing",
+          "range": "Melee",
+          "notes": "It still answers to him, which is technically theft."
+        }
+      ],
+      "traits": [
+        "STRUCK OFF — he is not Filed. Cameras see him. He pays tax. He finds this hilarious.",
+        "A COUNTERSIGNATURE, FORGED (ritual, one hour) — indistinguishable from a real one. His price is never money: a favour, an errand, a true answer to a question he asks, or a jar of something from the Astral Court’s bathhouse.",
+        "NOT A FIGHT — the Ledger’s way in and its only sympathetic authority."
+      ],
+      "tactics": "Delighted to see visitors. Sells them something cheap first. Tells them the truth in the wrong order.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "ledger_tono_first_desk",
+      "name": "Tōno Shigemori, the First Desk",
+      "category": "Underground",
+      "cr": "16",
+      "tier": 3,
+      "description": "The Ledger. Holds the book. Everybody in the city is in it, on a page, with a date, and the dates are not wrong. Unfailingly polite, entirely without malice, and the least negotiable thing in this campaign. Not a fight.",
+      "hp": 280,
+      "ac": 20,
+      "speed": "40 ft",
+      "dex_mod": 6,
+      "quirk_save_dc": 20,
+      "ability_scores": {
+        "STR": 18,
+        "DEX": 22,
+        "CON": 20,
+        "INT": 22,
+        "WIS": 22,
+        "CHA": 20
+      },
+      "attacks": [
+        {
+          "name": "Writ: The Whole Of It",
+          "to_hit": "+13",
+          "damage": "4d12+6 force",
+          "range": "Melee",
+          "notes": ""
+        }
+      ],
+      "traits": [
+        "SECOND READING: THE DEPARTMENT (once) — a 120-ft radius becomes his jurisdiction. Inside it he cannot be surprised or moved, no creature may take the Dash action, and every creature hears its own page read out.",
+        "ONE QUESTION — he will answer exactly one question truthfully, to anybody who reaches him. The price is a page with their name on it, and he will say so, and he will not show them the date.",
+        "NOT A FIGHT — like the Legate and Shirasagi Rei, beyond any level this module reaches. He is a negotiation."
+      ],
+      "tactics": "He does not threaten and he does not bargain. He has an appointment at eleven. The horror is entirely in how reasonable he is about the price.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "market_miyashita_tenpin",
+      "name": "Miyashita Gō, \"Tenpin\"",
+      "category": "Supporting Cast",
+      "cr": "7",
+      "tier": 2,
+      "description": "Fifty-one, a C-rank villain with nine previous convictions and a kinetic quirk that puts a standing target down and keeps it down. Has never beaten anybody good in his life. Subscribed to Clean Read in February and has beaten four licensed heroes since.",
+      "hp": 110,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "quirk_save_dc": 15,
+      "ability_scores": {
+        "STR": 18,
+        "DEX": 14,
+        "CON": 16,
+        "INT": 11,
+        "WIS": 12,
+        "CHA": 9
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — two strikes",
+          "to_hit": "+8",
+          "damage": "2d10+4 bludgeoning each",
+          "range": "Melee",
+          "notes": "On a hit, STR DC 15 or knocked prone."
+        },
+        {
+          "name": "Split (recharge 5–6)",
+          "to_hit": "—",
+          "damage": "5d10 bludgeoning",
+          "range": "30 ft cone",
+          "notes": "DEX DC 15, pushed 20 ft and prone; half and no push on a save."
+        }
+      ],
+      "traits": [
+        "READ AHEAD (once per round) — he names one thing a target’s quirk cannot do, accurately, from the video playing on the phone clipped to his jacket, and gains advantage on his next attack roll against them. Read the real limitation off the PC’s sheet.",
+        "KEEPS THEM DOWN — advantage on attacks against prone creatures, and he does not let them up."
+      ],
+      "tactics": "Not clever and not fast, and he knows exactly what each of them cannot do. Surrenders the moment it goes badly and then talks, helpfully, at length, and gives the class Ebata Kyōsuke’s name.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "market_tokieda_mei",
+      "name": "Tokieda Mei, first year",
+      "category": "Supporting Cast",
+      "cr": "1/2",
+      "tier": 1,
+      "description": "Fifteen, 1-A, Replay. Enormously polite, relentless, and has built a fighting style entirely out of somebody else’s footage. An ally and a liability, usually at once.",
+      "hp": 25,
+      "ac": 13,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "quirk_save_dc": 12,
+      "ability_scores": {
+        "STR": 11,
+        "DEX": 16,
+        "CON": 12,
+        "INT": 15,
+        "WIS": 13,
+        "CHA": 14
+      },
+      "attacks": [
+        {
+          "name": "Borrowed opening",
+          "to_hit": "+4",
+          "damage": "1d8+3",
+          "range": "Melee",
+          "notes": "Damage type as whatever she is copying."
+        }
+      ],
+      "traits": [
+        "REPLAY — once per fight she repeats her own last action exactly, including the parts she does not understand.",
+        "SHE FIGHTS LIKE SOMEBODY ELSE — she uses a PC’s signature opening at the wrong moment, and it does not fit her body, and it will not, and she has not worked that out.",
+        "WILL NOT GO DOWN — at 0 HP she is unconscious and stable, never dying. The module does not kill her."
+      ],
+      "tactics": "In the car park she is up and losing and still going, because she copied somebody who does not stop. A PC who tells her to get out has to actually make her.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "market_yuka_oba",
+      "name": "Yuka Ōba",
+      "category": "Supporting Cast",
+      "cr": "1",
+      "tier": 1,
+      "description": "Thirty-eight, a cardigan, a nine-page printout she paid ¥18,000 for, no combat training of any kind, and a real grievance about a real hero that nobody would look at. She is going to try.",
+      "hp": 20,
+      "ac": 11,
+      "speed": "30 ft",
+      "dex_mod": 0,
+      "quirk_save_dc": 11,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 10,
+        "CON": 11,
+        "INT": 13,
+        "WIS": 12,
+        "CHA": 14
+      },
+      "attacks": [
+        {
+          "name": "She hits somebody with a bag",
+          "to_hit": "+2",
+          "damage": "1d4 bludgeoning",
+          "range": "Melee",
+          "notes": ""
+        }
+      ],
+      "traits": [
+        "WARP (3/day) — her quirk moves a held object three feet to the left. It is on a form. It is useless. She has read nine pages about how to use it on a sixteen-year-old and one of the nine pages is right.",
+        "SHE WILL NOT STOP — no save against being frightened and no interest in one.",
+        "THE HARDEST FIGHT IN THE CHAPTER — because hitting her is monstrous, because she is correct about the hero, and because she came to a karaoke booth in Shinjuku since it was the only door that opened."
+      ],
+      "tactics": "First customer in \"The Market.\" Do not make her dangerous and do not make her ridiculous. Let the class work out that the problem is not her.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "market_package_member",
+      "name": "A co-ordinated package (one of three)",
+      "category": "Supporting Cast",
+      "cr": "5",
+      "tier": 2,
+      "description": "¥60,000 bought three people one plan built around one real limitation, and they have rehearsed it, and they get to four minutes forty. Run three of these.",
+      "hp": 65,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "quirk_save_dc": 14,
+      "ability_scores": {
+        "STR": 15,
+        "DEX": 16,
+        "CON": 15,
+        "INT": 12,
+        "WIS": 12,
+        "CHA": 11
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — two strikes",
+          "to_hit": "+6",
+          "damage": "2d8+3",
+          "range": "Melee",
+          "notes": "Damage type to taste; give each of the three a different element."
+        }
+      ],
+      "traits": [
+        "THE PLAN — while at least two of them are within 30 ft of each other, each has advantage on attacks against the target the package was bought for.",
+        "FOUR MINUTES FORTY — at the start of round five, if the fight is still going, they all gain 20 temporary HP and say so out loud."
+      ],
+      "tactics": "In a stairwell at Nakano station, because the plan needs a corridor. Break up the trio and the plan collapses entirely.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "market_last_customer",
+      "name": "The last customer",
+      "category": "Supporting Cast",
+      "cr": "10",
+      "tier": 3,
+      "description": "She did not buy a teardown of a student. She bought forty minutes on Saki Hiyori, 2.3 million views, ¥400,000, and she is a professional with a three-year grudge, and four second-years are in the road.",
+      "hp": 165,
+      "ac": 17,
+      "speed": "35 ft",
+      "dex_mod": 5,
+      "quirk_save_dc": 17,
+      "ability_scores": {
+        "STR": 17,
+        "DEX": 20,
+        "CON": 17,
+        "INT": 14,
+        "WIS": 15,
+        "CHA": 13
+      },
+      "attacks": [
+        {
+          "name": "Multiattack — three precise strikes",
+          "to_hit": "+9",
+          "damage": "2d10+5 slashing each",
+          "range": "Melee",
+          "notes": ""
+        }
+      ],
+      "traits": [
+        "PREPARED FOR HER, NOT FOR YOU — she has no teardown of any PC and does not want one. The class are an obstacle, and she will walk away from them if they let her.",
+        "FORTY MINUTES OF HOMEWORK — against Saki Hiyori specifically she has advantage on all attacks and saves, and she knows the exact shape of Burst.",
+        "DISENGAGE AS A BONUS ACTION — she is not here for a brawl."
+      ],
+      "tactics": "Professional, unhurried, uninterested, and dangerous to a party at level 12 only because she is trying to get past them. If the table needs her, let Creed arrive at the end of round three, absolutely furious about the whole business.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "market_ebata_kyosuke",
+      "name": "Ebata Kyōsuke (not a fight)",
+      "category": "Supporting Cast",
+      "cr": "0",
+      "tier": 1,
+      "description": "Forty-five, Room 9 of a karaoke place off Shinjuku’s east exit, after eight, cash only. A former fight analyst made redundant in 2021. Quirk: Legible — he reads footage faster than a person should. Registered. Unremarked.",
+      "hp": 40,
+      "ac": 11,
+      "speed": "30 ft",
+      "dex_mod": 0,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 10,
+        "CON": 11,
+        "INT": 18,
+        "WIS": 14,
+        "CHA": 15
+      },
+      "attacks": [],
+      "traits": [
+        "HE DOES NOT DEFEND HIMSELF — if the class attack him he lets them, presses charges, and ends somebody’s provisional licence, and Sugitsu will not be able to fix it.",
+        "WHAT HE GIVES THEM — \"If you lot ever get to say something first, over the top of your own footage — say the thing the commentary got wrong. Not the weakness. The reason. Nobody’s ever put a reason in the archive.\""
+      ],
+      "tactics": "Courteous, unhurried, and not a sophist. A middle-aged man doing lawful work that hurts children, who knows the second half of that and has decided it is not his half.",
+      "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
     }
   ]
 }

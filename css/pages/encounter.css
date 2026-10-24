@@ -648,6 +648,25 @@ body { height: 100vh; overflow: hidden; }
 }
 .board-draw-sep { flex-shrink: 0; width: 1px; height: 18px; margin: 0 2px; background: var(--border); }
 
+/* ── a tool's own settings ──
+   The elevation step, and an area shape's kind, size and facing. They live
+   inline next to the button that owns them rather than in a panel: the tool
+   row already wraps, and a DM setting a cone's facing is doing it in the same
+   second as clicking the square. */
+.board-mini-select,
+.board-mini-input {
+  flex-shrink: 0;
+  padding: 3px 5px;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.board-mini-input { width: 48px; }
+.board-mini-select { max-width: 104px; }
+
 /* ── preset-map bar ──
    A second row under the drawing tools: pick a battlefield, toggle whether
    dropped props mark the squares they cover, and act on the selected prop. */

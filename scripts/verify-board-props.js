@@ -77,7 +77,18 @@ function boot({ autoTerrain = true } = {}) {
   autoEl.checked = autoTerrain;
   els.set('board-autoterrain', autoEl);
 
+  // A promptable, storable sandbox: labels ask for their text, and the DM's
+  // own saved maps live in localStorage.
+  let promptReply = '';
+  const store = new Map();
+
   const sandbox = {
+    prompt: () => promptReply,
+    localStorage: {
+      getItem: (k) => (store.has(k) ? store.get(k) : null),
+      setItem: (k, v) => { store.set(k, String(v)); },
+      removeItem: (k) => { store.delete(k); },
+    },
     document: {
       getElementById: (id) => els.get(id) || null,
       createElement: () => makeCanvas(calls),
@@ -100,13 +111,17 @@ function boot({ autoTerrain = true } = {}) {
   };
 
   const factory = new Function('sandbox', `
-    const { document, window, getComputedStyle, requestAnimationFrame, confirm, alert, console } = sandbox;
+    const { document, window, getComputedStyle, requestAnimationFrame, confirm, alert, console,
+            prompt, localStorage } = sandbox;
     let _saves = 0;
-    let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [],
-                      boardStrokes: [], boardTerrain: [], boardProps: [] };
     function encSave() { _saves++; }
     ${read('CLASS-1A/board-prefabs.js')}
     ${read('CLASS-1A/board-shared.js')}
+    // Declared after the engine, exactly as the pages do it (encounter.js and
+    // board.js both load last), and defaulted through the same registry — so
+    // a layer added to BOARD_LAYERS is present here without this stub having
+    // to be told about it.
+    let encounter = boardEnsureLayers({ round: 1, currentIndex: 0, combatants: [], attackLog: [] });
     return {
       get encounter() { return encounter; },
       get saves() { return _saves; },
@@ -114,16 +129,26 @@ function boot({ autoTerrain = true } = {}) {
       BOARD_PREFABS, BOARD_PREFABS_BY_KEY, BOARD_MAPS, BOARD_MAPS_BY_KEY,
       BOARD_COLS, BOARD_ROWS, TERRAIN_STYLES,
       boardPlaceProp, boardRemoveProp, boardMoveProp, boardRotateSelectedProp,
-      boardSelectProp, boardPropAt, boardPropFootprint, boardApplyPresetMap,
+      boardSelectProp, boardPropAt, boardPropFootprint, boardApplyPresetMap, boardGetArtLayer,
       boardEraseAt, boardClearArt, boardComputeBBox, boardCell,
       renderBoardCanvas, renderBoard, paintPropsLayer, boardPaintProp,
       boardSelectPrefab, boardCancelPropMode, boardHandleMouseDown,
       boardHandleMouseMove, boardHandleMouseUp, boardHandleCanvasClick,
       boardHandleCanvasRightClick, boardSelectTrayItem,
+      BOARD_LAYERS, boardEnsureLayers, boardLayerMergePaths, BOARD_TERRAIN_TOOLS, BOARD_TOOL_HINTS,
+      boardTemplateCells, boardTemplateAt, boardPlaceTemplate, boardClearTemplates,
+      boardNoteAt, boardPlaceNote, boardElevLevel, boardPaintElevAt,
+      paintTerrainLayer, paintFogLayer, paintNotesLayer, paintTemplatesLayer, paintElevLayer,
+      boardSerializeCurrent, boardSaveCurrentMap, boardReadSavedMaps, boardMapByKey,
+      boardPopulateMapSelect, boardSetTool, boardDrawStart,
       get boardPan() { return boardPan; },
+      set canEdit(v) { boardCanEdit = v; },
+      get canEdit() { return boardCanEdit; },
     };
   `);
   const api = factory(sandbox);
+  api._setPrompt = (v) => { promptReply = v; };
+  api._store = store;
   api._calls = calls;
   api._canvas = canvas;
   return api;
@@ -232,6 +257,32 @@ const B = boot();
   }
   check('every preset map is one connected space — no sealed rooms, no door that opens into a wall',
     split.length === 0, split.join('\n        '));
+
+  // The other half of that: a doorway that cuts no wall. Those are silent —
+  // the map still works, the door just isn't a door, which is how two of
+  // Gym Gamma's four gates sat one square outside their own wall ring. Build
+  // each map a second time with the doorway prefab's terrain disabled, so
+  // nothing gets cut, and every door must land on a wall in that version.
+  const idle = [];
+  const doorPf = B.BOARD_PREFABS_BY_KEY['door'];
+  const doorTerrain = doorPf.terrain;
+  try {
+    for (const mp of B.BOARD_MAPS) {
+      const placed = mp.build().props.filter(p => p.type === 'door');
+      doorPf.terrain = null;
+      const uncut = mp.build();
+      doorPf.terrain = doorTerrain;
+      const walls = new Set();
+      for (const t of uncut.terrain) if (t.type === 'wall') walls.add(t.id);
+      const nowhere = placed.filter(p => !walls.has(p.col + ',' + p.row))
+                            .map(p => p.col + ',' + p.row);
+      if (nowhere.length) idle.push(`${mp.key}: ${nowhere.length} at ${nowhere.join(' ')}`);
+    }
+  } finally {
+    doorPf.terrain = doorTerrain;
+  }
+  check('every doorway on a preset map is cut through an actual wall',
+    idle.length === 0, idle.join('\n        '));
 }
 
 /* ── 3. loading a map lands on the grid ── */
@@ -469,13 +520,40 @@ const B = boot();
 
 /* ── 6. the save paths ── */
 {
+  // One registry (BOARD_LAYERS) is what makes adding a layer a one-line
+  // change instead of six copies of the same three lines across two files.
+  // These check the registry is honoured rather than that any one field is
+  // named — the field-by-field version of this test was the thing that kept
+  // having to be updated.
+  check('every board layer gets a per-item merge path',
+    JSON.stringify(B.boardLayerMergePaths())
+      === JSON.stringify(B.BOARD_LAYERS.map(path => ({ path, idKey: 'id' }))),
+    JSON.stringify(B.boardLayerMergePaths()));
+  check('the registry covers the layers that existed before it',
+    ['boardStrokes', 'boardTerrain', 'boardProps'].every(k => B.BOARD_LAYERS.includes(k)),
+    B.BOARD_LAYERS.join(' '));
+
+  const bare = B.boardEnsureLayers({});
+  check('boardEnsureLayers defaults every layer to an array',
+    B.BOARD_LAYERS.every(k => Array.isArray(bare[k])), JSON.stringify(bare));
+  const alreadyThere = [{ id: 'x' }];
+  check('and leaves a layer that already has data alone',
+    B.boardEnsureLayers({ boardProps: alreadyThere }).boardProps === alreadyThere);
+  check('and replaces a layer a stale document stored as something other than an array',
+    Array.isArray(B.boardEnsureLayers({ boardTerrain: null }).boardTerrain));
+
   for (const file of ['CLASS-1A/encounter.js', 'CLASS-1A/board.js']) {
     const src = read(file);
-    check(`${file} merges boardProps per item`,
-      /\{\s*path:\s*'boardProps',\s*idKey:\s*'id'\s*\}/.test(src));
-    check(`${file} defaults boardProps to an array everywhere state arrives`,
-      (src.match(/encounter\.boardProps = encounter\.boardProps \|\| \[\]/g) || []).length >= 3,
-      (src.match(/encounter\.boardProps = encounter\.boardProps \|\| \[\]/g) || []).length + ' guards');
+    check(`${file} spreads the layer merge paths into fsMergeSave`,
+      /\.\.\.boardLayerMergePaths\(\)/.test(src));
+    // Four: the initial declaration, the Firestore load, the local-cache
+    // fallback and the remote-update path. Miss one and a document written
+    // before a layer existed arrives with that field undefined.
+    check(`${file} defaults the layers everywhere state arrives`,
+      (src.match(/boardEnsureLayers\(/g) || []).length >= 4,
+      (src.match(/boardEnsureLayers\(/g) || []).length + ' calls');
+    check(`${file} no longer defaults board fields one at a time`,
+      !/encounter\.board\w+ = encounter\.board\w+ \|\| \[\]/.test(src));
   }
   // Both pages have to load the catalog or props render as "?" tiles.
   for (const page of ['CLASS-1A/encounter.html', 'CLASS-1A/board.html']) {
@@ -485,6 +563,295 @@ const B = boot();
     check(`${page} loads board-prefabs.js`, iProps !== -1);
     check(`${page} loads it before the engine`, iProps !== -1 && iProps < iShared);
   }
+}
+
+/* ── 7. the layers that aren't terrain or scenery ──
+   Fog, labels, area shapes and elevation. These are what a DM actually
+   touches mid-session, and all four are invisible to every check above. */
+{
+  const env = boot();
+  const cells = (t) => [...env.boardTemplateCells(t)].sort();
+
+  check('every terrain brush names a real terrain style, and every style has a brush',
+    JSON.stringify([...env.BOARD_TERRAIN_TOOLS].sort()) === JSON.stringify(Object.keys(env.TERRAIN_STYLES).sort()),
+    env.BOARD_TERRAIN_TOOLS.join(' ') + '  vs  ' + Object.keys(env.TERRAIN_STYLES).join(' '));
+
+  check('a burst covers every square within its radius',
+    cells({ kind: 'burst', col: 10, row: 10, size: 1 }).length === 9,
+    cells({ kind: 'burst', col: 10, row: 10, size: 1 }).join(' '));
+  check('a line runs its length along its facing',
+    cells({ kind: 'line', col: 10, row: 10, size: 3, rot: 0 }).join(' ') === '10,10 11,10 12,10',
+    cells({ kind: 'line', col: 10, row: 10, size: 3, rot: 0 }).join(' '));
+  check('and turns with it',
+    cells({ kind: 'line', col: 10, row: 10, size: 3, rot: 90 }).join(' ') === '10,10 10,11 10,12',
+    cells({ kind: 'line', col: 10, row: 10, size: 3, rot: 90 }).join(' '));
+  check('a cone widens one square either side for every square of length',
+    cells({ kind: 'cone', col: 10, row: 10, size: 3, rot: 0 }).length === 1 + 3 + 5,
+    cells({ kind: 'cone', col: 10, row: 10, size: 3, rot: 0 }).join(' '));
+  check('a shape hanging off the edge of the grid keeps only the squares on it',
+    cells({ kind: 'burst', col: 0, row: 0, size: 2 }).length === 9,
+    cells({ kind: 'burst', col: 0, row: 0, size: 2 }).join(' '));
+
+  env.boardPlaceTemplate(20, 20);
+  check('clicking the grid drops an area shape', env.encounter.boardTemplates.length === 1);
+  env.boardPlaceTemplate(20, 21);
+  check('and clicking inside one takes it away instead of stacking another on it',
+    env.encounter.boardTemplates.length === 0);
+}
+
+{
+  const env = boot();
+  env._setPrompt('EXIT');
+  env.boardPlaceNote(5, 5);
+  check('a label is placed with the text you type',
+    env.encounter.boardNotes.length === 1 && env.encounter.boardNotes[0].text === 'EXIT',
+    JSON.stringify(env.encounter.boardNotes));
+  env._setPrompt('FIRE EXIT');
+  env.boardPlaceNote(5, 5);
+  check('clicking the same square edits that label instead of adding a second',
+    env.encounter.boardNotes.length === 1 && env.encounter.boardNotes[0].text === 'FIRE EXIT',
+    JSON.stringify(env.encounter.boardNotes));
+  env._setPrompt('   ');
+  env.boardPlaceNote(5, 5);
+  check('and clearing the text removes it', env.encounter.boardNotes.length === 0);
+
+  // 'note' and 'template' are tools that aren't terrain brushes. Before the
+  // dispatch knew the difference, boardDrawStart's else branch would have
+  // painted a terrain type literally called "note" onto the square.
+  const env2 = boot();
+  env2.boardSetTool('note');
+  env2._setPrompt('');
+  env2.boardDrawStart({ clientX: 100, clientY: 100, button: 0, preventDefault() {} });
+  check('a tool that is not a terrain brush paints no terrain',
+    env2.encounter.boardTerrain.length === 0, JSON.stringify(env2.encounter.boardTerrain));
+
+  // And the two that do have their own behaviour have to actually reach it
+  // through the same gesture the DM makes, not just when called directly.
+  const env3 = boot();
+  const press = (col, row) => {
+    const SZ = env3.boardCell();
+    const scale = 1600 / (100 * SZ);
+    env3.boardDrawStart({ clientX: (col + 0.5) * SZ * scale, clientY: (row + 0.5) * SZ * scale,
+                          button: 0, preventDefault() {} });
+  };
+  env3.boardSetTool('elev');
+  press(30, 30);
+  check('the elevation tool marks the square it was clicked on',
+    env3.encounter.boardElev.length === 1, JSON.stringify(env3.encounter.boardElev));
+  env3.boardSetTool('template');
+  press(60, 60);
+  check('the area tool drops a shape on the square it was clicked on',
+    env3.encounter.boardTemplates.length === 1, JSON.stringify(env3.encounter.boardTemplates));
+  env3.boardSetTool('fog');
+  press(70, 70);
+  check('and the fog brush paints fog, which is terrain like any other',
+    env3.encounter.boardTerrain.some(t => t.type === 'fog'),
+    JSON.stringify(env3.encounter.boardTerrain));
+}
+
+{
+  const env = boot();
+  env.boardPaintElevAt({ col: 7, row: 7 }, 2);
+  check('elevation marks a square', env.boardElevLevel(7, 7) === 2);
+  env.boardPaintElevAt({ col: 7, row: 7 }, 0);
+  check('and zero takes the mark off rather than storing a zero',
+    env.boardElevLevel(7, 7) === 0 && env.encounter.boardElev.length === 0,
+    JSON.stringify(env.encounter.boardElev));
+  env.boardPaintElevAt({ col: 101, row: 7 }, 1);
+  check('elevation painted off the grid is ignored', env.encounter.boardElev.length === 0);
+
+  // Same for the two tools that place a single thing per click: a label or a
+  // shape anchored off the grid is saved where nobody can ever click it again.
+  env._setPrompt('OFF');
+  env.boardPlaceNote(101, 5);
+  env.boardPlaceNote(5, -1);
+  env.boardPlaceTemplate(-2, 5);
+  check('labels and area shapes anchored off the grid are ignored too',
+    env.encounter.boardNotes.length === 0 && env.encounter.boardTemplates.length === 0,
+    `${env.encounter.boardNotes.length} labels / ${env.encounter.boardTemplates.length} shapes`);
+}
+
+{
+  // One square, four kinds of mark on it, one eraser.
+  const env = boot();
+  env._setPrompt('ALARM');
+  env.boardPlaceNote(9, 9);
+  env.boardPaintElevAt({ col: 9, row: 9 }, 1);
+  env.boardPlaceTemplate(9, 9);
+  env.encounter.boardTerrain.push({ id: '9,9', type: 'fog' });
+  env.boardEraseAt({ x: 9.5, y: 9.5, col: 9, row: 9 });
+  check('the eraser lifts the label, the elevation, the area shape and the fog together',
+    !env.encounter.boardNotes.length && !env.encounter.boardElev.length
+    && !env.encounter.boardTemplates.length && !env.encounter.boardTerrain.length,
+    `${env.encounter.boardNotes.length}/${env.encounter.boardElev.length}/${env.encounter.boardTemplates.length}/${env.encounter.boardTerrain.length}`);
+}
+
+{
+  const env = boot();
+  env._setPrompt('ROOF');
+  env.boardPlaceNote(3, 3);
+  env.boardPaintElevAt({ col: 3, row: 3 }, 1);
+  env.boardPlaceTemplate(12, 12);
+  env.boardPlaceProp('crate', 15, 15);
+  env.encounter.boardTerrain.push({ id: '1,1', type: 'wall' });
+  env.encounter.boardStrokes.push({ id: 's', color: '#fff', width: 3, points: [{ x: 1, y: 1 }, { x: 2, y: 2 }] });
+  check('every layer has something on it before Clear Art',
+    env.BOARD_LAYERS.every(k => env.encounter[k].length > 0),
+    env.BOARD_LAYERS.filter(k => !env.encounter[k].length).join(' ') + ' empty');
+  env.boardClearArt();
+  check('Clear Art empties every layer, not just the three it used to name',
+    env.BOARD_LAYERS.every(k => env.encounter[k].length === 0),
+    env.BOARD_LAYERS.filter(k => env.encounter[k].length).join(' ') + ' left');
+}
+
+{
+  /* Fog is the one layer where the two boards must disagree, so it is the one
+     worth proving: the DM's veil must not render on a board that can't edit,
+     and that board must get an opaque pass of its own after the tokens. */
+  const env = boot();
+  env.encounter.boardTerrain.push({ id: '12,12', type: 'fog' });
+  const dmCalls = [];
+  env.paintTerrainLayer(makeCtx(dmCalls), 20, env.encounter.boardTerrain);
+  check('the DM sees fog painted in with the rest of the terrain',
+    dmCalls.some(([m]) => m === 'fillRect'));
+
+  env.canEdit = false;
+  const playerCalls = [];
+  env.paintTerrainLayer(makeCtx(playerCalls), 20, env.encounter.boardTerrain);
+  check('a board that cannot edit gets no see-through veil in the terrain layer',
+    !playerCalls.some(([m]) => m === 'fillRect'),
+    playerCalls.map(c => c[0]).join(' '));
+  const fogCalls = [];
+  env.paintFogLayer(makeCtx(fogCalls), 20, true);
+  check('it gets an opaque one of its own instead',
+    fogCalls.some(([m]) => m === 'fillRect'));
+
+  // board.html opens with edit rights true and flips them when the admin
+  // check resolves. A layer baked before that must not be reused after.
+  const env2 = boot();
+  env2.encounter.boardTerrain.push({ id: '5,5', type: 'fog' });
+  const before = env2.boardGetArtLayer(200, 200, 20);
+  env2.canEdit = false;
+  check('flipping edit rights rebuilds the cached art layer',
+    env2.boardGetArtLayer(200, 200, 20) !== before);
+}
+
+{
+  // Every tool needs a button, and the two tools with settings need the
+  // controls those settings are read from: boardTemplateOptions and
+  // boardElevOption both fall back to a default when their input is missing,
+  // so a mistyped id degrades silently into "always a burst of 2" rather
+  // than failing where anyone would notice.
+  const page = read('CLASS-1A/encounter.html');
+  const noButton = Object.keys(B.BOARD_TOOL_HINTS).filter(t => !page.includes(`data-tool="${t}"`));
+  check('every board tool has a button on the DM page', noButton.length === 0, noButton.join(', '));
+  const controls = ['board-template-kind', 'board-template-size', 'board-template-rot', 'board-elev-level'];
+  const missing = controls.filter(id => !page.includes(`id="${id}"`));
+  check('the area-shape and elevation controls the engine reads are on the page',
+    missing.length === 0, missing.join(', '));
+  check('the players\' board has no tool buttons at all', !read('CLASS-1A/board.html').includes('data-tool='));
+}
+
+/* ── 8. the DM's own saved maps ── */
+{
+  const env = boot();
+  env.boardPlaceProp('crate', 40, 40);
+  env.encounter.boardTerrain.push({ id: '41,41', type: 'wall' });
+  env._setPrompt('My alley');
+  env.boardSaveCurrentMap();
+  const saved = env.boardReadSavedMaps()['My alley'];
+  check('saving the board stores it normalised to its own top-left corner',
+    saved && saved.w === 2 && saved.h === 2
+    && saved.props.length === 1 && saved.props[0].col === 0 && saved.props[0].row === 0,
+    JSON.stringify(saved));
+  check('and it resolves out of the picker like a preset',
+    env.boardMapByKey('saved:My alley') !== null);
+  check('while a name nobody saved resolves to nothing',
+    env.boardMapByKey('saved:not a map') === null);
+
+  const env2 = boot();
+  env2.encounter.boardTerrain.push({ id: '50,50', type: 'wall' });
+  env2.encounter.boardNotes.push({ id: 'n1', col: 51, row: 50, text: 'DOOR' });
+  env2.encounter.boardElev.push({ id: '52,50', level: 2 });
+  env2._setPrompt('Round trip');
+  env2.boardSaveCurrentMap();
+  env2.boardApplyPresetMap(env2.boardMapByKey('saved:Round trip'));
+  const wall = env2.encounter.boardTerrain.find(t => t.type === 'wall');
+  const wc = wall ? +wall.id.split(',')[0] : null;
+  const note = env2.encounter.boardNotes[0];
+  const elev = env2.encounter.boardElev[0];
+  check('loading a saved map brings back its labels and elevation',
+    env2.encounter.boardNotes.length === 1 && note.text === 'DOOR'
+    && env2.encounter.boardElev.length === 1 && elev.level === 2,
+    JSON.stringify({ notes: env2.encounter.boardNotes, elev: env2.encounter.boardElev }));
+  check('with the geometry between them intact',
+    wc !== null && note.col === wc + 1 && +elev.id.split(',')[0] === wc + 2,
+    `wall ${wall && wall.id}, label ${note && note.col}, elev ${elev && elev.id}`);
+
+  // A preset has no labels or elevation of its own, so loading one has to
+  // take the old map's away rather than leave them floating over the new one.
+  const env3 = boot();
+  env3._setPrompt('STALE');
+  env3.boardPlaceNote(1, 1);
+  env3.boardPaintElevAt({ col: 1, row: 1 }, 1);
+  env3.boardPlaceTemplate(5, 5);
+  env3.boardApplyPresetMap(env3.BOARD_MAPS_BY_KEY['warehouse']);
+  check('loading a preset clears the labels, elevation and shapes from the last map',
+    !env3.encounter.boardNotes.length && !env3.encounter.boardElev.length
+    && !env3.encounter.boardTemplates.length,
+    `${env3.encounter.boardNotes.length}/${env3.encounter.boardElev.length}/${env3.encounter.boardTemplates.length}`);
+}
+
+/* ── 9. the campaign's encounter groups ──
+   CAMPAIGN/enemies.json's groups each name a line-up and the preset map it
+   was written for. Both halves of that can rot without anything complaining:
+   a retired stat block makes a group quietly add fewer units than it says,
+   and a renamed map key leaves the picker sitting on whatever was selected
+   before, which is the sort of thing a DM discovers at the table. */
+{
+  const data = JSON.parse(read('CAMPAIGN/enemies.json'));
+  const groups = data.groups || [];
+  const enemyIds = new Set((data.enemies || []).map(e => e.id));
+  const categories = new Set(data.categories || []);
+
+  check('the campaign file carries encounter groups', groups.length >= 6, groups.length + ' found');
+
+  const ids = groups.map(g => g.id);
+  check('every group has a unique id', new Set(ids).size === ids.length,
+    ids.filter((k, i) => ids.indexOf(k) !== i).join(', '));
+
+  const malformed = groups.filter(g =>
+    !g.id || !g.name || !g.note || !Array.isArray(g.members) || !g.members.length);
+  check('every group has an id, a name, a note and members',
+    malformed.length === 0, malformed.map(g => g.id || '(no id)').join(', '));
+
+  const strayCat = groups.filter(g => !categories.has(g.category));
+  check('every group sits in one of the file\'s own categories',
+    strayCat.length === 0, strayCat.map(g => `${g.id} → ${g.category}`).join(', '));
+
+  const missingMembers = [];
+  for (const g of groups) {
+    for (const m of g.members || []) {
+      if (!enemyIds.has(m.id)) missingMembers.push(`${g.id} → ${m.id}`);
+      else if (m.count != null && (!Number.isInteger(m.count) || m.count < 1 || m.count > 20)) {
+        missingMembers.push(`${g.id} → ${m.id} count ${m.count}`);
+      }
+    }
+  }
+  check('every group member is a stat block that exists, in a sane quantity',
+    missingMembers.length === 0, missingMembers.join('\n        '));
+
+  const missingMaps = groups.filter(g => g.map && !B.BOARD_MAPS_BY_KEY[g.map])
+                            .map(g => `${g.id} → ${g.map}`);
+  check('every group\'s suggested map is a preset that still exists',
+    missingMaps.length === 0, missingMaps.join(', '));
+
+  // The picker is built from the file, and encAddGroup is what reads it.
+  const encSrc = read('CLASS-1A/encounter.js');
+  check('encounter.js loads the groups and builds their picker',
+    /ENEMY_GROUPS = ed\.groups/.test(encSrc) && /buildGroupSelect\(\)/.test(encSrc));
+  check('and the DM page has somewhere to pick one',
+    read('CLASS-1A/encounter.html').includes('id="enc-group-select"'));
 }
 
 console.log(failures ? `\n>>> board props FAILED (${failures})` : '\n>>> board props OK');

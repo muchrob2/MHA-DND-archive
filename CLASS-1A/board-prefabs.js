@@ -272,6 +272,33 @@ const BOARD_PREFABS = [
     },
   },
 
+  {
+    key: 'elevator', label: 'Lift', cat: 'Structures', w: 2, h: 2,
+    terrain: 'wall', note: 'Impassable until the doors open — ask the DM',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(Math.min(w, h));
+      pfRect(ctx, x, y, w, h, '#5C6472', Math.min(w, h) * 0.04, lw * 1.5);
+      pfRect(ctx, x + w * 0.12, y + h * 0.12, w * 0.76, h * 0.76, '#3C4350', 0, lw * 0.8);
+      pfLines(ctx, [[x + w * 0.5, y + h * 0.12, x + w * 0.5, y + h * 0.88]], 'rgba(255,255,255,0.22)', lw);
+      pfPoly(ctx, [[x + w * 0.30, y + h * 0.42], [x + w * 0.38, y + h * 0.30], [x + w * 0.46, y + h * 0.42]], '#E8A020', 0);
+      pfPoly(ctx, [[x + w * 0.54, y + h * 0.58], [x + w * 0.62, y + h * 0.70], [x + w * 0.70, y + h * 0.58]], '#E8A020', 0);
+    },
+  },
+  {
+    key: 'helipad', label: 'Helipad', cat: 'Structures', w: 3, h: 3,
+    terrain: null, note: 'Open ground, and a very obvious place to stand',
+    draw(ctx, x, y, w, h) {
+      const s = Math.min(w, h), lw = pfInkW(s);
+      const cx = x + w / 2, cy = y + h / 2;
+      pfCircle(ctx, cx, cy, s * 0.46, 'rgba(32,38,48,0.55)', lw * 1.6);
+      pfCircle(ctx, cx, cy, s * 0.34, null, lw * 1.2);
+      const bar = w * 0.07;
+      pfRect(ctx, cx - s * 0.17, cy - s * 0.20, bar, s * 0.40, '#E8E3D4', 0, 0);
+      pfRect(ctx, cx + s * 0.10, cy - s * 0.20, bar, s * 0.40, '#E8E3D4', 0, 0);
+      pfRect(ctx, cx - s * 0.17, cy - s * 0.035, s * 0.34, s * 0.07, '#E8E3D4', 0, 0);
+    },
+  },
+
   /* ── Nature ── */
   {
     key: 'tree', label: 'Tree', cat: 'Nature', w: 1, h: 1,
@@ -360,6 +387,18 @@ const BOARD_PREFABS = [
     },
   },
 
+  {
+    key: 'torii', label: 'Torii gate', cat: 'Nature', w: 3, h: 1,
+    terrain: null, note: 'Walk straight under it; the posts are the only cover',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfRect(ctx, x + w * 0.02, y + h * 0.10, w * 0.96, h * 0.16, '#B33A2B', 0, lw);
+      pfRect(ctx, x + w * 0.08, y + h * 0.32, w * 0.84, h * 0.12, '#B33A2B', 0, lw * 0.8);
+      pfRect(ctx, x + w * 0.12, y + h * 0.10, w * 0.08, h * 0.80, '#8E2E22', 0, lw * 0.8);
+      pfRect(ctx, x + w * 0.80, y + h * 0.10, w * 0.08, h * 0.80, '#8E2E22', 0, lw * 0.8);
+    },
+  },
+
   /* ── Vehicles (rot 0 points right) ── */
   {
     key: 'car', label: 'Car', cat: 'Vehicles', w: 2, h: 1,
@@ -443,6 +482,34 @@ const BOARD_PREFABS = [
       }
       pfRect(ctx, x, y + h * 0.36, w * 0.015, h * 0.28, '#3A4049', 0, 0);
       pfRect(ctx, x + w * 0.985, y + h * 0.36, w * 0.015, h * 0.28, '#3A4049', 0, 0);
+    },
+  },
+
+  {
+    key: 'foodcart', label: 'Food cart', cat: 'Vehicles', w: 2, h: 1,
+    terrain: 'cover', note: 'Half cover; a hot plate and a gas bottle under it',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfRect(ctx, x + w * 0.06, y + h * 0.26, w * 0.88, h * 0.52, '#7A4F33', h * 0.1, lw * 1.2);
+      pfRect(ctx, x + w * 0.06, y + h * 0.10, w * 0.88, h * 0.18, '#D9B23A', h * 0.06, lw * 0.8);
+      for (let i = 0; i < 4; i++) {
+        pfRect(ctx, x + w * (0.08 + i * 0.22), y + h * 0.10, w * 0.11, h * 0.18, 'rgba(180,40,36,0.75)', 0, 0);
+      }
+      pfCircle(ctx, x + w * 0.22, y + h * 0.84, h * 0.12, '#23262D', lw * 0.6);
+      pfCircle(ctx, x + w * 0.74, y + h * 0.84, h * 0.12, '#23262D', lw * 0.6);
+    },
+  },
+  {
+    key: 'forklift', label: 'Forklift', cat: 'Vehicles', w: 2, h: 1,
+    terrain: 'cover', note: 'Half cover; drivable, and the forks are a weapon',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfWheels(ctx, x, y, w, h, 2);
+      pfRect(ctx, x + w * 0.08, y + h * 0.18, w * 0.52, h * 0.64, '#D9941F', h * 0.1, lw * 1.2);
+      pfRect(ctx, x + w * 0.20, y + h * 0.28, w * 0.26, h * 0.44, '#9A6A14', 0, lw * 0.6);
+      pfRect(ctx, x + w * 0.62, y + h * 0.10, w * 0.06, h * 0.80, '#5A626E', 0, 0);
+      pfRect(ctx, x + w * 0.68, y + h * 0.22, w * 0.28, h * 0.08, '#C3C8CF', 0, 0);
+      pfRect(ctx, x + w * 0.68, y + h * 0.70, w * 0.28, h * 0.08, '#C3C8CF', 0, 0);
     },
   },
 
@@ -687,10 +754,142 @@ const BOARD_PREFABS = [
     },
   },
 
+  {
+    key: 'generator', label: 'Generator', cat: 'Scatter', w: 2, h: 1,
+    terrain: 'cover', note: 'Half cover; the lights go out if it does',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfRect(ctx, x + w * 0.04, y + h * 0.18, w * 0.92, h * 0.64, '#E8A020', h * 0.08, lw * 1.3);
+      pfRect(ctx, x + w * 0.12, y + h * 0.28, w * 0.40, h * 0.44, '#9A6A14', 0, lw * 0.7);
+      const segs = [];
+      for (let i = 0; i < 5; i++) segs.push([x + w * (0.58 + i * 0.07), y + h * 0.26, x + w * (0.58 + i * 0.07), y + h * 0.74]);
+      pfLines(ctx, segs, 'rgba(0,0,0,0.38)', lw * 0.9);
+      pfRect(ctx, x + w * 0.46, y + h * 0.06, w * 0.07, h * 0.14, '#5A626E', 0, 0);
+    },
+  },
+  {
+    key: 'awning', label: 'Awning', cat: 'Scatter', w: 3, h: 1,
+    terrain: null, note: 'Overhead cover only — hides you from above, not from across the street',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfRect(ctx, x + w * 0.02, y + h * 0.20, w * 0.96, h * 0.56, 'rgba(46,125,79,0.55)', h * 0.06, lw);
+      for (let i = 0; i < 6; i++) {
+        pfRect(ctx, x + w * (0.02 + i * 0.163), y + h * 0.20, w * 0.082, h * 0.56, 'rgba(240,244,250,0.22)', 0, 0);
+      }
+      pfLines(ctx, [[x + w * 0.02, y + h * 0.76, x + w * 0.98, y + h * 0.76]], 'rgba(0,0,0,0.3)', lw * 0.9);
+    },
+  },
+
+  /* ── Interiors ──
+     Furniture, for the maps that happen inside a building. Everything here
+     is waist-height unless the note says otherwise, so most of it is cover
+     you can see over and none of it stops a Quirk. */
+  {
+    key: 'bed', label: 'Bed', cat: 'Interiors', w: 2, h: 1,
+    terrain: 'cover', note: 'Half cover; someone may be in it',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfRect(ctx, x + w * 0.04, y + h * 0.12, w * 0.92, h * 0.76, '#C7CCD4', h * 0.08, lw * 1.2);
+      pfRect(ctx, x + w * 0.06, y + h * 0.16, w * 0.24, h * 0.68, '#EDF1F6', h * 0.06, lw * 0.6);
+      pfRect(ctx, x + w * 0.34, y + h * 0.16, w * 0.60, h * 0.68, '#5E8FBF', 0, lw * 0.6);
+      pfLines(ctx, [[x + w * 0.52, y + h * 0.16, x + w * 0.52, y + h * 0.84]], 'rgba(255,255,255,0.30)', lw * 0.8);
+    },
+  },
+  {
+    key: 'desk', label: 'Desk', cat: 'Interiors', w: 1, h: 1,
+    terrain: 'cover', note: 'Half cover crouched behind it; flip it for more',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(Math.min(w, h));
+      pfRect(ctx, x + w * 0.10, y + h * 0.22, w * 0.80, h * 0.50, '#A5793F', w * 0.05, lw * 1.2);
+      pfRect(ctx, x + w * 0.14, y + h * 0.26, w * 0.72, h * 0.16, '#C1914F', 0, 0);
+      pfRect(ctx, x + w * 0.26, y + h * 0.74, w * 0.48, h * 0.16, '#4B5058', 0, lw * 0.6);
+    },
+  },
+  {
+    key: 'sofa', label: 'Sofa', cat: 'Interiors', w: 2, h: 1,
+    terrain: 'cover', note: 'Half cover; tip it on its back for three-quarters',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfRect(ctx, x + w * 0.04, y + h * 0.14, w * 0.92, h * 0.72, '#6E5A8C', h * 0.16, lw * 1.2);
+      pfRect(ctx, x + w * 0.10, y + h * 0.34, w * 0.80, h * 0.46, '#8873A8', h * 0.1, lw * 0.6);
+      pfLines(ctx, [[x + w * 0.50, y + h * 0.34, x + w * 0.50, y + h * 0.80]], 'rgba(0,0,0,0.25)', lw * 0.8);
+    },
+  },
+  {
+    key: 'table', label: 'Table', cat: 'Interiors', w: 2, h: 2,
+    terrain: 'cover', note: 'Half cover; full if someone upends it',
+    draw(ctx, x, y, w, h) {
+      const s = Math.min(w, h), lw = pfInkW(s);
+      const cx = x + w / 2, cy = y + h / 2;
+      pfCircle(ctx, cx, cy, s * 0.42, '#8A6A47', lw * 1.3);
+      pfCircle(ctx, cx, cy, s * 0.30, '#A5793F', lw * 0.6);
+      for (let i = 0; i < 4; i++) {
+        const a = (i / 4) * Math.PI * 2 + Math.PI / 4;
+        pfRect(ctx, cx + Math.cos(a) * s * 0.44 - w * 0.06, cy + Math.sin(a) * s * 0.44 - h * 0.06,
+               w * 0.12, h * 0.12, '#6B4A2E', w * 0.03, 0);
+      }
+    },
+  },
+  {
+    key: 'lockers', label: 'Lockers', cat: 'Interiors', w: 2, h: 1,
+    terrain: 'wall', note: 'Full cover; impassable, and loud when hit',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfRect(ctx, x, y + h * 0.16, w, h * 0.68, '#55707E', 0, lw * 1.3);
+      const segs = [];
+      for (let i = 1; i < 6; i++) segs.push([x + (w * i) / 6, y + h * 0.16, x + (w * i) / 6, y + h * 0.84]);
+      pfLines(ctx, segs, 'rgba(0,0,0,0.35)', lw * 0.9);
+      for (let i = 0; i < 6; i++) {
+        pfRect(ctx, x + (w * (i + 0.72)) / 6, y + h * 0.44, w * 0.025, h * 0.12, '#D9DDE3', 0, 0);
+      }
+    },
+  },
+  {
+    key: 'bars', label: 'Cell bars', cat: 'Interiors', w: 2, h: 1,
+    terrain: 'cover', note: 'Impassable to bodies, not to sight or reach',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfLines(ctx, [
+        [x, y + h * 0.20, x + w, y + h * 0.20],
+        [x, y + h * 0.80, x + w, y + h * 0.80],
+      ], '#6E7682', lw * 1.4);
+      const segs = [];
+      for (let i = 0; i <= 8; i++) segs.push([x + (w * i) / 8, y + h * 0.16, x + (w * i) / 8, y + h * 0.84]);
+      pfLines(ctx, segs, '#9DA5B0', lw * 1.3);
+    },
+  },
+  {
+    key: 'bath', label: 'Bath', cat: 'Interiors', w: 3, h: 2,
+    terrain: 'water', note: 'Waist-deep water; difficult going, and everyone is unarmed',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(Math.min(w, h));
+      pfRect(ctx, x + w * 0.03, y + h * 0.08, w * 0.94, h * 0.84, '#8F96A1', Math.min(w, h) * 0.08, lw * 1.4);
+      pfRect(ctx, x + w * 0.08, y + h * 0.18, w * 0.84, h * 0.64, 'rgba(37,99,235,0.45)', Math.min(w, h) * 0.06, lw * 0.7);
+      pfLines(ctx, [
+        [x + w * 0.16, y + h * 0.38, x + w * 0.52, y + h * 0.38],
+        [x + w * 0.44, y + h * 0.62, x + w * 0.84, y + h * 0.62],
+      ], 'rgba(220,240,255,0.55)', lw * 0.9);
+    },
+  },
+  {
+    key: 'turnstile', label: 'Turnstile', cat: 'Interiors', w: 1, h: 1,
+    terrain: 'cover', note: 'Squeeze through one at a time, or jump it',
+    draw(ctx, x, y, w, h) {
+      const s = Math.min(w, h), lw = pfInkW(s);
+      pfRect(ctx, x + w * 0.10, y + h * 0.12, w * 0.26, h * 0.76, '#55707E', w * 0.05, lw);
+      pfRect(ctx, x + w * 0.64, y + h * 0.12, w * 0.26, h * 0.76, '#55707E', w * 0.05, lw);
+      pfLines(ctx, [
+        [x + w * 0.36, y + h * 0.42, x + w * 0.64, y + h * 0.42],
+        [x + w * 0.36, y + h * 0.62, x + w * 0.64, y + h * 0.62],
+      ], '#C3C8CF', lw * 1.2);
+      pfRect(ctx, x + w * 0.18, y + h * 0.22, w * 0.10, h * 0.14, '#5FD08A', 0, 0);
+    },
+  },
+
 ];
 
 const BOARD_PREFABS_BY_KEY = Object.fromEntries(BOARD_PREFABS.map(p => [p.key, p]));
-const BOARD_PREFAB_CATS = ['Structures', 'Nature', 'Vehicles', 'Scatter'];
+const BOARD_PREFAB_CATS = ['Structures', 'Interiors', 'Nature', 'Vehicles', 'Scatter'];
 
 /* ── Preset maps ──────────────────────────────────────────
    Each map is a *builder* rather than a literal list of squares: a city
@@ -831,6 +1030,23 @@ function pfContainerYard(m, c, r, cols, rows) {
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) m.prop('container', c + i * 4, r + j * 3);
   }
+}
+
+// A row of rooms along a corridor: `count` rooms, each `w` wide and `h` deep,
+// sharing their side walls so the partitions are one square thick. Returns
+// the doorway squares rather than placing them, because doors have to go in
+// after every wall on the map — anything outlined later would brick them up.
+function pfRoomRow(m, c, r, w, h, count, doorSide) {
+  const doors = [];
+  for (let i = 0; i < count; i++) {
+    const c0 = c + i * (w - 1);
+    m.outline(c0, r, w, h, 'wall');
+    const mid = c0 + Math.floor(w / 2);
+    const dr = doorSide === 'south' ? r + h - 1 : r;
+    doors.push([mid, dr]);
+    if (w >= 8) doors.push([mid + 1, dr]);
+  }
+  return doors;
 }
 
 const BOARD_MAPS = [
@@ -1114,7 +1330,7 @@ const BOARD_MAPS = [
 
     // doors and gates, last — they cut back through everything above
     m.repeat('door', [[24, 12], [25, 12], [17, 8], [25, 8], [33, 8], [21, 5], [29, 5]]);
-    m.repeat('door', [[7, 23], [7, 35], [1, 29], [13, 29]]);
+    m.repeat('door', [[7, 23], [7, 34], [1, 29], [12, 29]]);
     m.repeat('door', [[24, 39], [25, 39], [0, 20], [0, 21], [49, 19], [49, 20]]);
   }),
 
@@ -1380,6 +1596,311 @@ const BOARD_MAPS = [
     m.repeat('door', [[18, 8], [18, 9], [12, 17], [13, 17], [25, 11], [26, 11], [31, 6], [31, 14], [34, 17]]);
     m.repeat('door', [[18, 22], [19, 22], [33, 22]]);
     m.repeat('door', [[0, 10], [20, 0], [21, 0]]);
+  }),
+
+  pfMap('hospital', 'Hospital Ward', 'Eight ward rooms off a long corridor, a nurse station and a theatre. Beds, lifts and nowhere to take cover that isn’t someone’s.', 46, 32, m => {
+    m.outline(0, 0, 46, 32, 'wall');
+    const doors = [];
+    doors.push(...pfRoomRow(m, 0, 0, 8, 9, 4, 'south'));    // wards, north — rows 0-8
+    doors.push(...pfRoomRow(m, 0, 23, 8, 9, 4, 'north'));   // wards, south — rows 23-31
+    m.outline(28, 0, 18, 14, 'wall');    // nurse station and the lifts
+    m.outline(28, 18, 18, 14, 'wall');   // theatre
+
+    // two beds and a bedside table per ward
+    for (let i = 0; i < 4; i++) {
+      const c = i * 7;
+      m.prop('bed', c + 1, 2);  m.prop('bed', c + 1, 6);  m.prop('desk', c + 5, 4);
+      m.prop('bed', c + 1, 25); m.prop('bed', c + 1, 29); m.prop('desk', c + 5, 27);
+    }
+    // nurse station
+    m.prop('counter', 30, 3);
+    m.repeat('desk', [[30, 6], [33, 6]]);
+    m.prop('lockers', 30, 11);
+    m.prop('vending', 44, 11);
+    m.repeat('elevator', [[40, 2], [43, 2]]);
+    m.prop('stairs', 36, 11);
+    // theatre
+    m.repeat('bed', [[32, 22], [32, 27], [40, 22], [40, 27]]);
+    m.repeat('counter', [[36, 20], [36, 30]]);
+    m.repeat('lockers', [[30, 25], [43, 25]]);
+    // the corridor — gurneys left against the wall, and the drinks machine
+    m.repeat('bed', [[10, 10], [20, 21]]);
+    m.repeat('bench', [[4, 12], [14, 19], [24, 12]]);
+    m.repeat('vending', [[1, 16], [26, 16]]);
+    m.prop('stairs', 2, 10);
+
+    m.repeat('door', doors);
+    m.repeat('door', [[36, 13], [37, 13], [36, 18], [37, 18]]);
+    m.repeat('door', [[0, 15], [0, 16], [45, 15], [45, 16]]);
+  }),
+
+  pfMap('classroom', 'U.A. Classroom Block', 'Six classrooms and a staff room off one corridor. Desks for cover, lockers for hiding behind, and a fight that will cost the school money.', 48, 30, m => {
+    m.outline(0, 0, 48, 30, 'wall');
+    const doors = [];
+    doors.push(...pfRoomRow(m, 0, 0, 12, 10, 3, 'south'));    // rows 0-9
+    doors.push(...pfRoomRow(m, 0, 20, 12, 10, 3, 'north'));   // rows 20-29
+    m.outline(33, 0, 15, 14, 'wall');    // staff room
+    m.outline(33, 17, 15, 13, 'wall');   // club room
+
+    // desks, five across and three deep, facing the teacher's own
+    for (let i = 0; i < 3; i++) {
+      const c = i * 11;
+      m.prop('counter', c + 4, 1);
+      m.prop('counter', c + 4, 28);
+      for (let j = 0; j < 3; j++) for (let k = 0; k < 4; k++) {
+        m.prop('desk', c + 2 + k * 2, 3 + j * 2);
+        m.prop('desk', c + 2 + k * 2, 22 + j * 2);
+      }
+    }
+    // staff room
+    m.repeat('desk', [[35, 2], [38, 2], [41, 2], [35, 5], [38, 5], [41, 5]]);
+    m.prop('counter', 44, 8);
+    m.prop('lockers', 34, 11);
+    m.prop('sofa', 40, 11);
+    m.prop('vending', 46, 2);
+    // club room
+    m.repeat('table', [[35, 19], [40, 19]]);
+    m.repeat('sofa', [[35, 25], [40, 25]]);
+    m.prop('lockers', 45, 27);
+    m.prop('stairs', 34, 23);
+    // the corridor
+    m.repeat('lockers', [[2, 11], [6, 11], [14, 11], [18, 11], [26, 11], [30, 11]]);
+    m.repeat('lockers', [[2, 18], [10, 18], [22, 18], [28, 18]]);
+    m.repeat('bench', [[8, 14], [20, 14], [31, 15]]);
+    m.repeat('vending', [[12, 11], [24, 18]]);
+    m.repeat('stairs', [[1, 14], [31, 18]]);
+
+    m.repeat('door', doors);
+    m.repeat('door', [[39, 13], [40, 13], [39, 17], [40, 17]]);
+    m.repeat('door', [[0, 14], [0, 15], [47, 15], [47, 16], [16, 29], [17, 29]]);
+  }),
+
+  pfMap('apartment', 'Apartment Block', 'Eight flats off a shared corridor, two stair cores, and walls thin enough that everybody hears it.', 44, 34, m => {
+    m.outline(0, 0, 44, 34, 'wall');
+    const doors = [];
+    doors.push(...pfRoomRow(m, 0, 0, 10, 12, 4, 'south'));    // rows 0-11
+    doors.push(...pfRoomRow(m, 0, 22, 10, 12, 4, 'north'));   // rows 22-33
+    m.outline(36, 0, 8, 12, 'wall');     // stair core, north
+    m.outline(36, 22, 8, 12, 'wall');    // stair core, south
+
+    // furnished flat by flat, alternating the layout so they aren't identical
+    for (let i = 0; i < 4; i++) {
+      const c = i * 9;
+      if (i % 2 === 0) {
+        m.prop('sofa', c + 2, 2);  m.prop('table', c + 5, 2);  m.prop('bed', c + 2, 8);
+        m.prop('counter', c + 5, 9); m.prop('desk', c + 8, 5);
+        m.prop('bed', c + 2, 24);  m.prop('sofa', c + 5, 24);  m.prop('table', c + 2, 29);
+        m.prop('counter', c + 5, 31); m.prop('desk', c + 8, 27);
+      } else {
+        m.prop('bath', c + 2, 2);  m.prop('sofa', c + 6, 5);  m.prop('bed', c + 2, 8);
+        m.prop('desk', c + 6, 9);
+        m.prop('bath', c + 2, 24); m.prop('sofa', c + 6, 27); m.prop('bed', c + 2, 31);
+        m.prop('table', c + 6, 30);
+      }
+    }
+    // the cores: a lift, the stairs and the mailboxes
+    m.prop('elevator', 37, 1);
+    m.prop('stairs', 40, 4);
+    m.prop('lockers', 37, 9);
+    m.prop('elevator', 37, 23);
+    m.prop('stairs', 40, 26);
+    m.prop('lockers', 37, 31);
+    // the corridor
+    m.repeat('bench', [[6, 14], [20, 19], [31, 14]]);
+    m.repeat('vending', [[1, 17], [42, 17]]);
+    m.repeat('rubble', [[14, 20], [26, 13]]);
+    m.prop('dumpster', 17, 16);
+
+    m.repeat('door', doors);
+    m.repeat('door', [[39, 11], [40, 11], [39, 22], [40, 22]]);
+    m.repeat('door', [[0, 16], [0, 17], [43, 16], [43, 17]]);
+  }),
+
+  pfMap('night-market', 'Night Market Street', 'Two rows of stalls under the awnings, carts down the middle, and a shrine gate at the end of it. Cover everywhere, room to swing nowhere.', 52, 22, m => {
+    pfFrontage(m, 0, 0, 52, 0);
+    pfFrontage(m, 0, 19, 52, 3);
+    // stalls either side of the lane, under their awnings
+    for (let i = 0; i < 6; i++) {
+      const c = 2 + i * 8;
+      m.prop('stall', c, 4);     m.propOnly('awning', c, 3);
+      m.prop('stall', c + 4, 16); m.propOnly('awning', c + 4, 18);
+    }
+    // the lane
+    m.repeat('foodcart', [[6, 10], [18, 11], [30, 10], [42, 11]]);
+    m.repeat('crate', [[10, 9], [23, 12], [35, 9], [47, 12]]);
+    m.repeat('barrel', [[13, 12], [27, 9], [39, 12]]);
+    m.repeat('bench', [[8, 13], [21, 8], [33, 13], [45, 8]]);
+    m.repeat('streetlight', [[4, 8], [16, 13], [28, 8], [40, 13], [50, 10]]);
+    m.repeat('vending', [[1, 11], [25, 11]]);
+    m.prop('torii', 48, 9);
+    m.prop('tree', 48, 13);
+    m.repeat('dumpster', [[12, 17], [37, 4]]);
+    m.repeat('rubble', [[20, 16], [44, 5]]);
+    m.propOnly('bike', 31, 13);
+    m.propOnly('van', 15, 5);
+  }),
+
+  pfMap('construction', 'Half-Built High-rise', 'One floor plate of a tower that isn’t finished: no outside walls, three open shafts, and a long way down off every edge.', 42, 34, m => {
+    // the edges are open air, not walls — the whole hazard of the place
+    m.fill(0, 0, 42, 2, 'hazard');
+    m.fill(0, 32, 42, 2, 'hazard');
+    m.fill(0, 2, 2, 30, 'hazard');
+    m.fill(40, 2, 2, 30, 'hazard');
+    // and the shafts through the floor
+    m.fill(9, 8, 4, 4, 'hazard');
+    m.fill(25, 20, 5, 4, 'hazard');
+    m.fill(18, 14, 3, 3, 'hazard');
+    // the lift core, the only finished thing on the floor
+    m.outline(17, 4, 9, 8, 'wall');
+    m.prop('elevator', 19, 6);
+    m.prop('stairs', 22, 9);
+    m.repeat('door', [[21, 11], [22, 11]]);
+    // columns on a grid, and the scaffold against the open edges
+    for (let r = 5; r <= 29; r += 8) for (let c = 4; c <= 36; c += 8) m.prop('pillar', c, r);
+    m.repeat('scaffold', [[2, 2], [2, 14], [2, 28], [38, 6], [38, 20], [20, 2], [32, 30]]);
+    m.repeat('crate', [[6, 16], [14, 24], [30, 8], [34, 26]]);
+    m.repeat('barrel', [[7, 25], [23, 16], [35, 15]]);
+    m.repeat('pipes', [[5, 20], [28, 28], [12, 30]]);
+    m.prop('generator', 33, 4);
+    m.prop('forklift', 10, 20);
+    m.prop('container', 13, 28);
+    m.repeat('cone', [[9, 7], [12, 13], [24, 19], [30, 24], [17, 13], [21, 17]]);
+    m.repeat('barricade', [[8, 12], [26, 19]]);
+    m.repeat('rubble', [[15, 7], [22, 26], [36, 11], [7, 11]]);
+    m.repeat('fire', [[31, 17]]);
+    // planks across two of the shafts, last so they clear the drop
+    m.prop('bridge', 9, 9);
+    m.prop('bridge', 26, 21);
+  }),
+
+  pfMap('subway', 'Subway Tunnel', 'A stalled three-car train in the tube, walkways either side of the live rail, and the platform at the far end.', 54, 26, m => {
+    m.outline(0, 0, 54, 26, 'wall');
+    m.fill(1, 10, 52, 6, 'difficult');   // the track bed
+    m.prop('train', 4, 11);
+    m.prop('train', 11, 11);
+    m.prop('train', 18, 11);
+    // maintenance rooms off the north walkway
+    m.outline(8, 0, 5, 5, 'wall');
+    m.outline(30, 0, 5, 5, 'wall');
+    m.repeat('crate', [[9, 2], [31, 2]]);
+    m.prop('generator', 32, 3);
+    // north walkway
+    m.repeat('pillar', [[4, 8], [16, 8], [28, 8], [40, 8], [48, 8]]);
+    m.repeat('pipes', [[2, 6], [20, 6], [44, 6]]);
+    m.repeat('rubble', [[14, 7], [26, 9], [38, 6], [50, 7]]);
+    m.repeat('fire', [[24, 7]]);
+    m.repeat('barrel', [[6, 6], [36, 9]]);
+    // south walkway
+    m.repeat('pillar', [[6, 18], [14, 18], [22, 18], [30, 18]]);
+    m.repeat('lockers', [[2, 24], [10, 24], [18, 24]]);
+    m.repeat('rubble', [[8, 20], [20, 23], [28, 21]]);
+    m.prop('pipes', 25, 24);
+    // the platform, east end
+    m.repeat('railing', [[38, 16], [40, 16], [44, 16], [48, 16]]);
+    m.repeat('turnstile', [[42, 21], [44, 21], [46, 21]]);
+    m.repeat('bench', [[38, 19], [48, 19]]);
+    m.repeat('vending', [[36, 23], [51, 19]]);
+    m.prop('stairs', 50, 23);
+    m.prop('counter', 39, 23);
+
+    m.repeat('door', [[10, 4], [32, 4], [0, 12], [0, 13], [53, 12], [53, 13]]);
+  }),
+
+  pfMap('holding', 'Police Holding Wing', 'Six cells along one side, three interview rooms along the other, and the squad room between you and the door.', 40, 28, m => {
+    m.outline(0, 0, 40, 28, 'wall');
+    const doors = [];
+    // The cells' doorways are their bars, placed at the end — bars stamp cover
+    // over the wall, which is both the gap and the thing standing in it — so
+    // this row's generated doorways are dropped on the floor.
+    pfRoomRow(m, 0, 0, 6, 7, 6, 'south');                    // cells, rows 0-6
+    doors.push(...pfRoomRow(m, 0, 21, 9, 7, 3, 'north'));    // interview rooms, rows 21-27
+    m.outline(30, 0, 10, 13, 'wall');    // squad room
+    m.outline(24, 21, 16, 7, 'wall');    // evidence store
+
+    for (let i = 0; i < 6; i++) m.prop('bed', i * 5 + 1, 2);
+    // squad room
+    m.repeat('desk', [[32, 2], [35, 2], [32, 5], [35, 5]]);
+    m.prop('counter', 32, 9);
+    m.prop('lockers', 37, 11);
+    m.prop('vending', 38, 2);
+    // interview rooms
+    m.repeat('table', [[2, 23], [10, 23], [18, 23]]);
+    m.repeat('desk', [[5, 25], [13, 25], [21, 25]]);
+    // evidence
+    m.repeat('crate', [[26, 23], [28, 23], [30, 23], [26, 26], [28, 26]]);
+    m.repeat('lockers', [[33, 23], [36, 23]]);
+    m.prop('container', 33, 26);
+    // the corridor, and the booking desk you have to get past
+    m.prop('counter', 26, 15);
+    m.repeat('turnstile', [[24, 18], [26, 18]]);
+    m.repeat('bench', [[4, 9], [14, 18], [20, 9]]);
+    m.repeat('lockers', [[8, 19], [30, 15]]);
+    m.repeat('vending', [[1, 13], [38, 17]]);
+    m.prop('stairs', 2, 18);
+
+    m.repeat('door', doors);
+    m.repeat('door', [[35, 12], [31, 21], [32, 21]]);
+    m.repeat('door', [[0, 16], [0, 17], [39, 19], [39, 20]]);
+    // the cells are barred, not doored — placed after the doorways they sit in
+    for (let i = 0; i < 6; i++) { m.prop('bars', i * 5 + 1, 6); m.prop('bars', i * 5 + 3, 6); }
+  }),
+
+  pfMap('onsen', 'Bathhouse', 'Changing rooms, the washing floor, the big bath and the rock pool outside. Everyone starts unarmed and nobody is dressed for this.', 38, 28, m => {
+    m.outline(0, 0, 38, 28, 'wall');
+    m.outline(0, 0, 12, 10, 'wall');     // changing room, north
+    m.outline(0, 18, 12, 10, 'wall');    // changing room, south
+    m.outline(11, 0, 27, 10, 'wall');    // the bath hall
+    m.outline(11, 18, 27, 10, 'wall');   // the rock pool, open to the sky
+
+    // changing rooms
+    m.repeat('lockers', [[1, 1], [4, 1], [7, 1], [1, 4], [4, 4]]);
+    m.repeat('bench', [[2, 7], [7, 7]]);
+    m.repeat('lockers', [[1, 19], [4, 19], [7, 19], [1, 22], [4, 22]]);
+    m.repeat('bench', [[2, 25], [7, 25]]);
+    // the bath hall: two baths and the stools along the wall
+    m.repeat('bath', [[14, 2], [19, 2], [24, 2], [29, 2]]);
+    m.repeat('desk', [[13, 7], [16, 7], [19, 7], [22, 7], [25, 7], [28, 7]]);
+    m.prop('counter', 33, 6);
+    // the washing floor between them
+    m.repeat('desk', [[14, 12], [17, 12], [20, 12], [23, 12]]);
+    m.prop('counter', 2, 13);
+    m.repeat('bench', [[6, 15], [30, 12]]);
+    m.repeat('vending', [[1, 11], [36, 15]]);
+    // the rock pool
+    m.repeat('bath', [[14, 21], [19, 21], [24, 21]]);
+    m.repeat('boulder', [[13, 25], [18, 25], [23, 25], [29, 24], [32, 20]]);
+    m.repeat('tree', [[35, 19], [35, 26], [30, 26]]);
+    m.prop('torii', 33, 22);
+    m.prop('pond', 29, 19);
+
+    m.repeat('door', [[5, 9], [6, 9], [5, 18], [6, 18]]);
+    m.repeat('door', [[20, 9], [21, 9], [20, 18], [21, 18]]);
+    m.repeat('door', [[11, 4], [11, 23], [0, 13], [0, 14]]);
+  }),
+
+  pfMap('mountain-road', 'Mountain Road', 'One switchback with the rock on one side and nothing at all on the other. A tunnel mouth, a tipped van, and no way round.', 52, 24, m => {
+    m.fill(0, 0, 52, 5, 'wall');      // the mountainside
+    m.fill(0, 19, 52, 5, 'hazard');   // the drop
+    m.fill(14, 5, 6, 9, 'wall');      // spurs that make the road snake
+    m.fill(33, 10, 7, 9, 'wall');
+    m.fill(44, 5, 4, 6, 'wall');
+    // the guardrail along the edge, where there still is one
+    for (let c = 0; c < 52; c += 2) { if (c >= 26 && c <= 31) continue; m.prop('railing', c, 18); }
+    m.repeat('rubble', [[24, 17], [28, 18], [30, 16]]);   // where it went over
+    m.repeat('boulder', [[8, 7], [21, 15], [41, 7], [49, 14], [12, 16]]);
+    m.repeat('tree', [[3, 6], [11, 6], [25, 7], [31, 6], [43, 16], [50, 6]]);
+    m.prop('bigtree', 5, 14);
+    m.repeat('bush', [[9, 12], [23, 9], [38, 8], [46, 16]]);
+    m.propOnly('van', 20, 10, 90);
+    m.propOnly('car', 36, 7);
+    m.repeat('cone', [[25, 16], [33, 9], [34, 9]]);
+    m.prop('barricade', 29, 15);
+    m.repeat('rubble', [[16, 14], [36, 19], [44, 12]]);
+    m.prop('torii', 2, 10);
+    m.prop('streetlight', 42, 17);
+    m.prop('fire', 22, 12);
+    // the tunnel mouth, last — it cuts the rock
+    m.repeat('door', [[49, 4], [50, 4], [49, 3], [50, 3], [49, 2], [50, 2], [49, 1], [50, 1], [49, 0], [50, 0]]);
   }),
 
 ];

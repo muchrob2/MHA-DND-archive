@@ -13,6 +13,7 @@ const CONDITIONS = ['Blinded','Charmed','Deafened','Exhausted','Frightened','Gra
 
 let CHARACTERS = [];
 let ENEMIES = [];
+let ENEMY_GROUPS = [];
 
 const SECTION_ORDER = ['class-1a'];
 
@@ -46,7 +47,7 @@ function populateRosterSelect() {
 // TEAM_COLORS is defined in board-shared.js (loaded above) — used here for
 // the team-dot picker, and by the board engine for token colors.
 
-let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], boardStrokes: [], boardTerrain: [], boardProps: [] };
+let encounter = boardEnsureLayers({ round: 1, currentIndex: 0, combatants: [], attackLog: [] });
 // Combatant ids have to be unique across page loads and across clients, not
 // just within one session. fsMergeSave keys the combatants array by id, so a
 // counter that restarts at 1 on every load hands the next combatant added an
@@ -86,16 +87,14 @@ function encSave() {
   clearTimeout(encSaveTimer);
   encSaveTimer = setTimeout(async () => {
     try {
-      // boardStrokes/boardTerrain/boardProps are merged per-item (like
-      // combatants) rather than overwritten whole, so a player nudging a token
-      // on their board tab can't clobber terrain, drawings or scenery the DM
-      // placed a moment earlier with their own (possibly stale) local copy of
-      // that field.
+      // Every board layer (BOARD_LAYERS in board-shared.js — drawings,
+      // terrain, scenery, labels, elevation, area shapes) is merged per item
+      // like combatants rather than overwritten whole, so a player nudging a
+      // token on their board tab can't clobber something the DM placed a
+      // moment earlier with their own possibly-stale copy of that field.
       const merged = await fsMergeSave(FS_ENCOUNTER_DOC, encounter, _lastSyncedEncounter, [
         { path: 'combatants', idKey: 'id' },
-        { path: 'boardStrokes', idKey: 'id' },
-        { path: 'boardTerrain', idKey: 'id' },
-        { path: 'boardProps', idKey: 'id' },
+        ...boardLayerMergePaths(),
       ]);
       _lastSyncedEncounter = merged;
     } catch (e) {
@@ -117,9 +116,7 @@ async function encLoad() {
     if (snap.exists) {
       encounter = snap.data();
       encounter.attackLog = encounter.attackLog || [];
-      encounter.boardStrokes = encounter.boardStrokes || [];
-      encounter.boardTerrain = encounter.boardTerrain || [];
-      encounter.boardProps = encounter.boardProps || [];
+      boardEnsureLayers(encounter);
       _lastSyncedEncounter = fsCloneDoc(encounter); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
       // After the baseline clone, never before: the baseline is what the
       // server holds, which is still the duplicated version until a save lands.
@@ -132,9 +129,7 @@ async function encLoad() {
     if (raw) encounter = JSON.parse(raw);
   } catch {}
   encounter.attackLog = encounter.attackLog || [];
-  encounter.boardStrokes = encounter.boardStrokes || [];
-  encounter.boardTerrain = encounter.boardTerrain || [];
-  encounter.boardProps = encounter.boardProps || [];
+  boardEnsureLayers(encounter);
   if (encRepairDuplicateIds(encounter)) encSave(); // the local cache can hold duplicates too
 }
 
@@ -150,15 +145,12 @@ function isEncEditing() {
 // True mid-stroke, mid-terrain-drag or mid-prop-drag. Without this, a remote
 // snapshot that lands between mousedown and mouseup would wholesale-replace
 // `encounter` (and therefore the in-progress, not-yet-saved
-// boardStrokes/boardTerrain/boardProps edit) with server data from before the
-// gesture started.
+// board-layer edit) with server data from before the gesture started.
 function isBoardDrawing() { return !!(boardState.drawingStroke || _boardPainting || boardState.draggingProp); }
 function applyRemoteEncounter(data) {
   encounter = data;
   encounter.attackLog = encounter.attackLog || [];
-  encounter.boardStrokes = encounter.boardStrokes || [];
-  encounter.boardTerrain = encounter.boardTerrain || [];
-  encounter.boardProps = encounter.boardProps || [];
+  boardEnsureLayers(encounter);
   _lastSyncedEncounter = fsCloneDoc(data); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
   if (encRepairDuplicateIds(encounter)) encSave(); // after the clone — see encLoad
   boardBumpArtVersion(); // invalidate the cached terrain/drawing layer — `encounter` was just replaced wholesale
@@ -274,9 +266,9 @@ function encReset() {
   if (!confirm('Reset encounter? This will clear all combatants and round count.')) return;
   // The map survives a reset — terrain, drawings and scenery are the scene,
   // not the fight that happened in it.
-  encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [],
-    boardStrokes: encounter.boardStrokes || [], boardTerrain: encounter.boardTerrain || [],
-    boardProps: encounter.boardProps || [] };
+  const keptLayers = {};
+  for (const k of BOARD_LAYERS) keptLayers[k] = encounter[k] || [];
+  encounter = Object.assign({ round: 1, currentIndex: 0, combatants: [], attackLog: [] }, keptLayers);
   encSave(); document.getElementById('enc-round-num').textContent = 1; renderEncounter(); renderAttackLog();
 }
 
@@ -617,6 +609,16 @@ function buildEnemySelect() {
   }
 }
 
+function encEnemyCombatant(e, suffix) {
+  return {
+    id: encId(), name: e.name + suffix, initiative: 0,
+    hp: e.hp, maxHp: e.hp, ac: e.ac, conditions: [],
+    notes: '', rosterId: null, isPC: false,
+    quirk: `CR ${e.cr} · ${e.category}`,
+    condOpen: false, editingHp: false, dexMod: e.dex_mod || 0, team: null, tempHp: 0
+  };
+}
+
 function encAddEnemy() {
   const sel = document.getElementById('enc-enemy-select');
   const qty = Math.max(1, Math.min(10, parseInt(document.getElementById('enc-enemy-qty').value) || 1));
@@ -625,14 +627,61 @@ function encAddEnemy() {
   const e = ENEMIES.find(x => x.id === id);
   if (!e) return;
   for (let i = 0; i < qty; i++) {
-    const suffix = qty > 1 ? ` #${i+1}` : '';
-    encounter.combatants.push({
-      id: encId(), name: e.name + suffix, initiative: 0,
-      hp: e.hp, maxHp: e.hp, ac: e.ac, conditions: [],
-      notes: '', rosterId: null, isPC: false,
-      quirk: `CR ${e.cr} · ${e.category}`,
-      condOpen: false, editingHp: false, dexMod: e.dex_mod || 0, team: null, tempHp: 0
-    });
+    encounter.combatants.push(encEnemyCombatant(e, qty > 1 ? ` #${i + 1}` : ''));
+  }
+  sel.value = '';
+  encSave(); renderEncounter();
+}
+
+/* ── Encounter groups ─────────────────────────────────────
+   A named line-up out of CAMPAIGN/enemies.json: every member added in one
+   click, and the preset map the group was written for pre-selected in Board
+   Mode's picker. Pre-selected, not loaded — the DM may already have a board
+   they care about, and Load is the button that warns before replacing it.
+
+   Each group names its map by key. verify-board-props.js checks every one of
+   those keys against BOARD_MAPS, because a group pointing at a map that was
+   since renamed would fail silently: the picker would simply stay on whatever
+   was selected before. */
+function buildGroupSelect() {
+  const sel = document.getElementById('enc-group-select');
+  if (!sel || !ENEMY_GROUPS.length) return;
+  sel.innerHTML = '<option value="">— choose —</option>';
+  for (const cat of [...new Set(ENEMY_GROUPS.map(g => g.category))]) {
+    const grp = document.createElement('optgroup');
+    grp.label = cat;
+    for (const g of ENEMY_GROUPS.filter(x => x.category === cat)) {
+      const units = g.members.reduce((n, m) => n + (m.count || 1), 0);
+      const mp = typeof BOARD_MAPS_BY_KEY !== 'undefined' ? BOARD_MAPS_BY_KEY[g.map] : null;
+      const opt = document.createElement('option');
+      opt.value = g.id;
+      opt.textContent = `${g.name} (${units} units${mp ? ' · ' + mp.label : ''})`;
+      opt.title = g.note || '';
+      grp.appendChild(opt);
+    }
+    sel.appendChild(grp);
+  }
+}
+
+function encAddGroup() {
+  const sel = document.getElementById('enc-group-select');
+  if (!sel || !sel.value) return;
+  const g = ENEMY_GROUPS.find(x => x.id === sel.value);
+  if (!g) return;
+  for (const m of g.members) {
+    const e = ENEMIES.find(x => x.id === m.id);
+    if (!e) continue;   // a member whose stat block was retired out from under it
+    const count = Math.max(1, Math.min(20, m.count || 1));
+    for (let i = 0; i < count; i++) {
+      encounter.combatants.push(encEnemyCombatant(e, count > 1 ? ` #${i + 1}` : ''));
+    }
+  }
+  const mapSel = document.getElementById('board-map-select');
+  const mp = typeof BOARD_MAPS_BY_KEY !== 'undefined' ? BOARD_MAPS_BY_KEY[g.map] : null;
+  if (mapSel && mp) {
+    mapSel.value = g.map;
+    const note = document.getElementById('board-map-note');
+    if (note) note.textContent = `${g.name} — press Load for ${mp.label}.`;
   }
   sel.value = '';
   encSave(); renderEncounter();
@@ -644,7 +693,11 @@ function encAddEnemy() {
     fetch('../CAMPAIGN/enemies.json'),
   ]);
   const roster = await rosterRes.json();
-  try { const ed = await enemiesRes.json(); ENEMIES = ed.enemies || []; } catch {}
+  try {
+    const ed = await enemiesRes.json();
+    ENEMIES = ed.enemies || [];
+    ENEMY_GROUPS = ed.groups || [];
+  } catch {}
 
   // Try Firestore first (current character sheets, kept live by the Class 1-A
   // toolkit), fall back to bundled JSON files.
@@ -679,6 +732,7 @@ function encAddEnemy() {
   startEncLiveSync();
   populateRosterSelect();
   buildEnemySelect();
+  buildGroupSelect();
   renderEncounter();
 })();
 

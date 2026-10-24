@@ -1,5 +1,5 @@
 {
-  "_note": "Preset pieces for the encounter manager (CLASS-1A/encounter.html), rebuilt around the live cast of The Shortlist. The previous roster — Ruin, Fracture, and the teachers Oshiro / Fujisaki / Hamagawa / Yuzuki / Shimoda — was retired along with those characters and has been removed wholesale. PROVENANCE: Appetite's five stat blocks and the Generic difficulty dials are verbatim from the campaign's own appendices. Class 1-B and the Supporting Cast are generated from CAMPAIGN/class1b.json and CAMPAIGN/npcs.json, which carry real stat blocks. For the U.A. staff only Saki Hiyori has published AC/HP; every other member's abilities are verbatim from the appendix while the defensive numbers are pitched on the appendix's own three-tier scale, which it says to adjust freely. Each entry records this in its stats_source field. NOTE: dex_mod feeds initiative only (encounter.js rolls d20 + dexMod), so where the appendix states an Initiative bonus that differs from the DEX modifier, the stated Initiative bonus is used.",
+  "_note": "Preset pieces for the encounter manager (CLASS-1A/encounter.html), rebuilt around the live cast of The Shortlist. The previous roster — Ruin, Fracture, and the teachers Oshiro / Fujisaki / Hamagawa / Yuzuki / Shimoda — was retired along with those characters and has been removed wholesale. PROVENANCE: Appetite's five stat blocks and the Generic difficulty dials are verbatim from the campaign's own appendices. Class 1-B and the Supporting Cast are generated from CAMPAIGN/class1b.json and CAMPAIGN/npcs.json, which carry real stat blocks. For the U.A. staff only Saki Hiyori has published AC/HP; every other member's abilities are verbatim from the appendix while the defensive numbers are pitched on the appendix's own three-tier scale, which it says to adjust freely. Each entry records this in its stats_source field. NOTE: dex_mod feeds initiative only (encounter.js rolls d20 + dexMod), so where the appendix states an Initiative bonus that differs from the DEX modifier, the stated Initiative bonus is used. GROUPS: the `groups` array is named line-ups for the encounter manager's Group picker — every member is an id from `enemies` below and nothing in a group invents a stat block, a rank or a story beat; the `map` field names a preset battlefield key from CLASS-1A/board-prefabs.js, which scripts/verify-board-props.js checks still exists, and adding a group pre-selects that map in Board Mode rather than loading it over whatever the DM already has on the board.",
   "categories": [
     "Appetite",
     "U.A. Staff",
@@ -8,6 +8,404 @@
     "Generic",
     "Byakko",
     "Underground"
+  ],
+  "groups": [
+    {
+      "id": "byakko_shakedown",
+      "name": "Byakko shakedown",
+      "category": "Byakko",
+      "map": "hosu-district",
+      "note": "Unranked muscle with two stripes behind it — the version of Byakko that turns up for a street and expects not to be argued with. Strays break first; the Fang is the only one who stays.",
+      "members": [
+        {
+          "id": "byakko_stray",
+          "count": 4
+        },
+        {
+          "id": "byakko_claw",
+          "count": 2
+        },
+        {
+          "id": "byakko_fang",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "byakko_market_sweep",
+      "name": "Byakko market sweep",
+      "category": "Byakko",
+      "map": "night-market",
+      "note": "Named Claws in a street full of cover and bystanders. Tally counts, Pylon blocks the lane, Dropkick comes over the stalls.",
+      "members": [
+        {
+          "id": "byakko_tobe_tally",
+          "count": 1
+        },
+        {
+          "id": "byakko_nagira_pylon",
+          "count": 1
+        },
+        {
+          "id": "byakko_okawachi_dropkick",
+          "count": 1
+        },
+        {
+          "id": "byakko_claw",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "byakko_cage_night",
+      "name": "Byakko cage night",
+      "category": "Byakko",
+      "map": "arena",
+      "note": "A card of four, in a bowl with nowhere to hide in the middle. Sandbag and Half-Step first, the Stripe last.",
+      "members": [
+        {
+          "id": "byakko_imai_sandbag",
+          "count": 1
+        },
+        {
+          "id": "byakko_yanagi_halfstep",
+          "count": 1
+        },
+        {
+          "id": "byakko_fang",
+          "count": 2
+        },
+        {
+          "id": "byakko_stripe",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "byakko_corner_table",
+      "name": "Byakko at the corner table",
+      "category": "Byakko",
+      "map": "hideout",
+      "note": "A Stripe holding court in a bar with one back door and a sewer under it. Madame Tsuru does not get up; Hinge decides which door works.",
+      "members": [
+        {
+          "id": "byakko_tsuru",
+          "count": 1
+        },
+        {
+          "id": "byakko_kono_hinge",
+          "count": 1
+        },
+        {
+          "id": "byakko_fang",
+          "count": 2
+        },
+        {
+          "id": "byakko_claw",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "byakko_two_corners",
+      "name": "Byakko — two Corners",
+      "category": "Byakko",
+      "map": "factory",
+      "note": "Two of the five Corners with an escort, in a building full of pillars and vats. A fight that moves between rooms rather than standing still in one.",
+      "members": [
+        {
+          "id": "byakko_kuze",
+          "count": 1
+        },
+        {
+          "id": "byakko_hojo",
+          "count": 1
+        },
+        {
+          "id": "byakko_stripe",
+          "count": 2
+        },
+        {
+          "id": "byakko_fang",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "byakko_white_tiger",
+      "name": "Byakko — the White Tiger",
+      "category": "Byakko",
+      "map": "overpass",
+      "note": "Hakuro, the Black Corner, and two Stripes, on four lanes with a long drop off either side and one span already down. The top of the organisation, as a last fight rather than a first one.",
+      "members": [
+        {
+          "id": "byakko_hakuro",
+          "count": 1
+        },
+        {
+          "id": "byakko_genda",
+          "count": 1
+        },
+        {
+          "id": "byakko_stripe",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "legion_patrol",
+      "name": "Scarlet Legion patrol",
+      "category": "Underground",
+      "map": "subway",
+      "note": "Thralls in numbers with two Legionaries behind them, in a tunnel where the walkways are the only dry footing.",
+      "members": [
+        {
+          "id": "legion_thrall",
+          "count": 6
+        },
+        {
+          "id": "legion_legionary",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "legion_centurion_raid",
+      "name": "Scarlet Legion — Centurion's raid",
+      "category": "Underground",
+      "map": "harbor",
+      "note": "A Centurion with a squad, among container aisles that break every sight line. Mina picks the ground; the Thralls arrive from somewhere else.",
+      "members": [
+        {
+          "id": "legion_mina",
+          "count": 1
+        },
+        {
+          "id": "legion_legionary",
+          "count": 3
+        },
+        {
+          "id": "legion_thrall",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "court_envoy",
+      "name": "Astral Court envoy",
+      "category": "Underground",
+      "map": "onsen",
+      "note": "An Envoy-bearer and four Initiates somewhere nobody is armed or dressed for it. Kaito is the fight; the Initiates are the reason it is not a duel.",
+      "members": [
+        {
+          "id": "court_kaito",
+          "count": 1
+        },
+        {
+          "id": "court_initiate",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "kegare_infestation",
+      "name": "Kegare infestation",
+      "category": "Underground",
+      "map": "hospital",
+      "note": "Grade Fours through a ward with a Grade Two somewhere in it. Eight rooms, one corridor, and beds in the way of all of it.",
+      "members": [
+        {
+          "id": "kegare_grade4",
+          "count": 6
+        },
+        {
+          "id": "kegare_grade2",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "kuroshiki_pair",
+      "name": "Kuroshiki sorcerers, Grade Two",
+      "category": "Underground",
+      "map": "holding",
+      "note": "Two Grade Twos and what they brought with them, inside a building designed to keep people in.",
+      "members": [
+        {
+          "id": "kuro_tsubaki",
+          "count": 1
+        },
+        {
+          "id": "kuro_ichiro",
+          "count": 1
+        },
+        {
+          "id": "kegare_grade4",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "ledger_collection",
+      "name": "The Ledger — a collection",
+      "category": "Underground",
+      "map": "apartment",
+      "note": "A Runner and the Arrears she is here to collect, in a corridor with eight doors off it. Paperwork, arriving.",
+      "members": [
+        {
+          "id": "ledger_hibino_asa",
+          "count": 1
+        },
+        {
+          "id": "ledger_arrear_month",
+          "count": 4
+        },
+        {
+          "id": "ledger_arrear_year",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "ledger_audit",
+      "name": "The Ledger — an audit",
+      "category": "Underground",
+      "map": "station",
+      "note": "A Hand of the Fourth Desk, two Arrears a year overdue and the one from under the barrier, on a platform between two live tracks.",
+      "members": [
+        {
+          "id": "ledger_kajiura",
+          "count": 1
+        },
+        {
+          "id": "ledger_arrear_year",
+          "count": 2
+        },
+        {
+          "id": "ledger_arrear_barrier",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "appetite_two_doors",
+      "name": "Appetite — two of the five",
+      "category": "Appetite",
+      "map": "mall",
+      "note": "Powder and Touch Up with hired hands, in a building whose only exits are four doors. Shoppers are the problem, not the opposition.",
+      "members": [
+        {
+          "id": "appetite_powder",
+          "count": 1
+        },
+        {
+          "id": "appetite_touch_up",
+          "count": 1
+        },
+        {
+          "id": "generic_minor_threat",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "appetite_the_top",
+      "name": "Appetite — Sylar and Kuma",
+      "category": "Appetite",
+      "map": "construction",
+      "note": "The two heaviest blocks in the appendix, on a floor plate with no outside walls and three open shafts. Falling is a real outcome here for both sides.",
+      "members": [
+        {
+          "id": "appetite_sylar",
+          "count": 1
+        },
+        {
+          "id": "appetite_kuma",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "training_ground_beta",
+      "name": "Training — Ground Beta sweep",
+      "category": "Generic",
+      "map": "ground-beta",
+      "note": "Six Minor Threats in the ruins, for an exercise rather than a story beat. Dial them with the Generic entries' own notes.",
+      "members": [
+        {
+          "id": "generic_minor_threat",
+          "count": 6
+        }
+      ]
+    },
+    {
+      "id": "training_escalation",
+      "name": "Training — escalation drill",
+      "category": "Generic",
+      "map": "ua-campus",
+      "note": "Three Real Threats and one Serious, spread over the campus: the plaza, the gym and the training field are three different fights.",
+      "members": [
+        {
+          "id": "generic_real_threat",
+          "count": 3
+        },
+        {
+          "id": "generic_serious_threat",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "street_brawl",
+      "name": "Street brawl",
+      "category": "Generic",
+      "map": "city-street",
+      "note": "The default. Four Minor, two Real, one street, no plot attached to any of them.",
+      "members": [
+        {
+          "id": "generic_minor_threat",
+          "count": 4
+        },
+        {
+          "id": "generic_real_threat",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "classroom_incident",
+      "name": "Classroom incident",
+      "category": "Generic",
+      "map": "classroom",
+      "note": "Two Real Threats inside a school block, for when the fight is somewhere the students have to be careful with. Desks everywhere and a staff room full of teachers.",
+      "members": [
+        {
+          "id": "generic_real_threat",
+          "count": 2
+        },
+        {
+          "id": "generic_minor_threat",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "mountain_ambush",
+      "name": "Mountain road ambush",
+      "category": "Generic",
+      "map": "mountain-road",
+      "note": "One switchback, rock on one side and nothing on the other, with the guardrail already gone in one place. A Serious Threat and the escort that walked it up there.",
+      "members": [
+        {
+          "id": "generic_serious_threat",
+          "count": 1
+        },
+        {
+          "id": "generic_minor_threat",
+          "count": 4
+        }
+      ]
+    }
   ],
   "enemies": [
     {

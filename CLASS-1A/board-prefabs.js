@@ -219,6 +219,59 @@ const BOARD_PREFABS = [
     },
   },
 
+  {
+    key: 'pillar', label: 'Pillar', cat: 'Structures', w: 1, h: 1,
+    terrain: 'wall', note: 'Impassable; full cover, and it holds the roof up',
+    draw(ctx, x, y, w, h) {
+      const s = Math.min(w, h), lw = pfInkW(s);
+      pfRect(ctx, x + w * 0.16, y + h * 0.16, w * 0.68, h * 0.68, '#8B919B', w * 0.06, lw * 1.4);
+      pfRect(ctx, x + w * 0.30, y + h * 0.30, w * 0.40, h * 0.40, '#6B7280', 0, lw * 0.7);
+      pfLines(ctx, [[x + w * 0.20, y + h * 0.80, x + w * 0.80, y + h * 0.20]], 'rgba(0,0,0,0.25)', lw * 0.8);
+    },
+  },
+  {
+    key: 'container', label: 'Shipping container', cat: 'Structures', w: 3, h: 2,
+    terrain: 'wall', note: 'Impassable; climb on top for high ground',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(Math.min(w, h));
+      pfRect(ctx, x + w * 0.02, y + h * 0.06, w * 0.96, h * 0.88, '#B2562F', w * 0.015, lw * 1.4);
+      const segs = [];
+      for (let i = 1; i < 12; i++) segs.push([x + (w * i) / 12, y + h * 0.06, x + (w * i) / 12, y + h * 0.94]);
+      pfLines(ctx, segs, 'rgba(0,0,0,0.22)', lw * 0.6);
+      pfRect(ctx, x + w * 0.74, y + h * 0.12, w * 0.22, h * 0.76, '#9C4826', 0, lw * 0.8);
+      pfRect(ctx, x + w * 0.10, y + h * 0.36, w * 0.24, h * 0.28, 'rgba(255,255,255,0.18)', 0, 0);
+    },
+  },
+  {
+    key: 'tank', label: 'Storage tank', cat: 'Structures', w: 2, h: 2,
+    terrain: 'wall', note: 'Impassable; ask what is in it before you shoot it',
+    draw(ctx, x, y, w, h) {
+      const s = Math.min(w, h), lw = pfInkW(s);
+      const cx = x + w / 2, cy = y + h / 2;
+      pfCircle(ctx, cx, cy, s * 0.46, '#7C848F', lw * 1.4);
+      pfCircle(ctx, cx, cy, s * 0.30, '#646C78', lw * 0.7);
+      pfLines(ctx, [
+        [cx - s * 0.46, cy, cx + s * 0.46, cy],
+        [cx, cy - s * 0.46, cx, cy + s * 0.46],
+      ], 'rgba(0,0,0,0.25)', lw * 0.7);
+      pfRect(ctx, cx - w * 0.04, cy + s * 0.32, w * 0.08, h * 0.16, '#E8A020', 0, 0);
+    },
+  },
+  {
+    key: 'railing', label: 'Railing / fence', cat: 'Structures', w: 2, h: 1,
+    terrain: 'cover', note: 'Half cover; vault it, climb it, or shove someone over it',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfLines(ctx, [
+        [x, y + h * 0.38, x + w, y + h * 0.38],
+        [x, y + h * 0.62, x + w, y + h * 0.62],
+      ], '#9DA5B0', lw * 1.6);
+      for (let i = 0; i <= 4; i++) {
+        pfRect(ctx, x + (w * i) / 4 - w * 0.02, y + h * 0.26, w * 0.04, h * 0.48, '#6E7682', 0, 0);
+      }
+    },
+  },
+
   /* ── Nature ── */
   {
     key: 'tree', label: 'Tree', cat: 'Nature', w: 1, h: 1,
@@ -281,6 +334,32 @@ const BOARD_PREFABS = [
     },
   },
 
+  {
+    key: 'hedge', label: 'Hedge', cat: 'Nature', w: 3, h: 1,
+    terrain: 'cover', note: 'Half cover; blocks sight but not a determined shoulder',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfRect(ctx, x, y + h * 0.18, w, h * 0.64, '#2C6236', h * 0.2, lw);
+      for (let i = 0; i < 6; i++) {
+        pfBlob(ctx, x + w * (0.09 + i * 0.166), y + h * 0.46, h * 0.26, 8, 0.16, '#39773F', 0);
+      }
+    },
+  },
+  {
+    key: 'pond', label: 'Pond', cat: 'Nature', w: 2, h: 2,
+    terrain: 'water', note: 'Shallow water; difficult going, and it puts fires out',
+    draw(ctx, x, y, w, h) {
+      const s = Math.min(w, h), lw = pfInkW(s);
+      const cx = x + w / 2, cy = y + h / 2;
+      pfBlob(ctx, cx, cy, s * 0.48, 18, 0.08, 'rgba(32,86,156,0.78)', lw);
+      pfBlob(ctx, cx, cy, s * 0.32, 14, 0.10, 'rgba(58,126,196,0.70)', 0);
+      pfLines(ctx, [
+        [cx - s * 0.22, cy - s * 0.10, cx + s * 0.06, cy - s * 0.10],
+        [cx - s * 0.06, cy + s * 0.14, cx + s * 0.22, cy + s * 0.14],
+      ], 'rgba(220,240,255,0.5)', lw * 0.9);
+    },
+  },
+
   /* ── Vehicles (rot 0 points right) ── */
   {
     key: 'car', label: 'Car', cat: 'Vehicles', w: 2, h: 1,
@@ -330,6 +409,40 @@ const BOARD_PREFABS = [
       pfRect(ctx, x + w * 0.24, y + h * 0.44, w * 0.52, h * 0.12, '#3A4049', h * 0.05, 0);  // frame
       pfRect(ctx, x + w * 0.32, y + h * 0.36, w * 0.26, h * 0.28, '#B8402F', h * 0.06, lw * 0.7); // tank + seat
       pfRect(ctx, x + w * 0.64, y + h * 0.26, w * 0.06, h * 0.48, '#2E3238', 0, 0);         // handlebars
+    },
+  },
+
+  {
+    key: 'truck', label: 'Box truck', cat: 'Vehicles', w: 5, h: 2,
+    terrain: 'cover', note: 'Full cover; the trailer is a room if the DM says so',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(Math.min(w, h));
+      pfWheels(ctx, x, y, w, h, 3);
+      pfRect(ctx, x + w * 0.01, y + h * 0.08, w * 0.70, h * 0.84, '#D4D8DE', w * 0.01, lw * 1.4);
+      pfRect(ctx, x + w * 0.08, y + h * 0.22, w * 0.42, h * 0.24, 'rgba(0,0,0,0.12)', 0, 0);
+      pfLines(ctx, [[x + w * 0.04, y + h * 0.50, x + w * 0.67, y + h * 0.50]], 'rgba(0,0,0,0.20)', lw * 0.8);
+      pfRect(ctx, x + w * 0.72, y + h * 0.14, w * 0.27, h * 0.72, '#2F6EA8', h * 0.08, lw * 1.2);
+      pfRect(ctx, x + w * 0.87, y + h * 0.22, w * 0.10, h * 0.56, 'rgba(190,225,255,0.5)', 0, lw * 0.6);
+      pfRect(ctx, x + w * 0.98, y + h * 0.26, w * 0.02, h * 0.14, '#FFE9A8', 0, 0);
+    },
+  },
+  {
+    key: 'train', label: 'Train car', cat: 'Vehicles', w: 6, h: 2,
+    terrain: 'wall', note: 'Full cover; the doors and the roof are the ways in',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(Math.min(w, h));
+      pfRect(ctx, x + w * 0.01, y + h * 0.10, w * 0.98, h * 0.80, '#C9CED6', h * 0.14, lw * 1.5);
+      pfRect(ctx, x + w * 0.01, y + h * 0.44, w * 0.98, h * 0.12, '#2E7D4F', 0, 0);
+      for (let i = 0; i < 6; i++) {
+        const fx = 0.07 + i * 0.15;
+        pfRect(ctx, x + w * fx, y + h * 0.16, w * 0.08, h * 0.22, 'rgba(190,225,255,0.55)', 0, lw * 0.5);
+        pfRect(ctx, x + w * fx, y + h * 0.62, w * 0.08, h * 0.22, 'rgba(190,225,255,0.55)', 0, lw * 0.5);
+      }
+      for (const fx of [0.22, 0.52, 0.82]) {
+        pfRect(ctx, x + w * fx, y + h * 0.10, w * 0.05, h * 0.80, 'rgba(40,46,56,0.55)', 0, lw * 0.6);
+      }
+      pfRect(ctx, x, y + h * 0.36, w * 0.015, h * 0.28, '#3A4049', 0, 0);
+      pfRect(ctx, x + w * 0.985, y + h * 0.36, w * 0.015, h * 0.28, '#3A4049', 0, 0);
     },
   },
 
@@ -488,6 +601,92 @@ const BOARD_PREFABS = [
       pfCircle(ctx, x + w * 0.5, y + h * 0.5, s * 0.08, '#7C838C', 0);
     },
   },
+  {
+    key: 'counter', label: 'Counter', cat: 'Scatter', w: 3, h: 1,
+    terrain: 'cover', note: 'Half cover; duck behind it, serve drinks over it',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfRect(ctx, x, y + h * 0.22, w, h * 0.56, '#6B4A2E', h * 0.12, lw * 1.2);
+      pfRect(ctx, x + w * 0.02, y + h * 0.26, w * 0.96, h * 0.14, '#8A6238', 0, 0);
+      pfLines(ctx, [
+        [x + w * 0.34, y + h * 0.22, x + w * 0.34, y + h * 0.78],
+        [x + w * 0.67, y + h * 0.22, x + w * 0.67, y + h * 0.78],
+      ], 'rgba(0,0,0,0.28)', lw * 0.8);
+      pfRect(ctx, x + w * 0.74, y + h * 0.34, w * 0.14, h * 0.30, '#C3C8CF', 0, lw * 0.6);
+    },
+  },
+  {
+    key: 'bench', label: 'Bench', cat: 'Scatter', w: 2, h: 1,
+    terrain: 'cover', note: 'Half cover lying behind it; a seat otherwise',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      pfRect(ctx, x + w * 0.04, y + h * 0.30, w * 0.92, h * 0.40, '#8A6A47', h * 0.08, lw);
+      pfLines(ctx, [[x + w * 0.04, y + h * 0.50, x + w * 0.96, y + h * 0.50]], 'rgba(0,0,0,0.25)', lw * 0.8);
+      pfRect(ctx, x + w * 0.12, y + h * 0.68, w * 0.08, h * 0.16, '#4B5058', 0, 0);
+      pfRect(ctx, x + w * 0.80, y + h * 0.68, w * 0.08, h * 0.16, '#4B5058', 0, 0);
+    },
+  },
+  {
+    key: 'stall', label: 'Market stall', cat: 'Scatter', w: 2, h: 2,
+    terrain: 'cover', note: 'Half cover; the awning hides whoever is under it',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(Math.min(w, h));
+      pfRect(ctx, x + w * 0.08, y + h * 0.08, w * 0.84, h * 0.84, '#C94F3C', w * 0.05, lw * 1.3);
+      for (let i = 0; i < 4; i++) {
+        pfRect(ctx, x + w * (0.08 + i * 0.21), y + h * 0.08, w * 0.105, h * 0.84, 'rgba(255,255,255,0.32)', 0, 0);
+      }
+      pfRect(ctx, x + w * 0.22, y + h * 0.58, w * 0.56, h * 0.28, '#6B4A2E', w * 0.03, lw * 0.9);
+    },
+  },
+  {
+    key: 'pipes', label: 'Pipe run', cat: 'Scatter', w: 3, h: 1,
+    terrain: 'cover', note: 'Half cover; crawl over it or squeeze under it',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(h);
+      for (const fy of [0.32, 0.66]) {
+        pfRect(ctx, x, y + h * (fy - 0.11), w, h * 0.22, '#7E8794', h * 0.1, lw);
+        pfLines(ctx, [[x, y + h * (fy - 0.05), x + w, y + h * (fy - 0.05)]], 'rgba(255,255,255,0.22)', lw * 0.8);
+      }
+      for (const fx of [0.24, 0.74]) {
+        pfRect(ctx, x + w * fx, y + h * 0.14, w * 0.05, h * 0.72, '#5A626E', 0, 0);
+      }
+    },
+  },
+  {
+    key: 'fountain', label: 'Fountain', cat: 'Scatter', w: 2, h: 2,
+    terrain: 'water', note: 'Ankle-deep water; the basin wall is half cover',
+    draw(ctx, x, y, w, h) {
+      const s = Math.min(w, h), lw = pfInkW(s);
+      const cx = x + w / 2, cy = y + h / 2;
+      pfCircle(ctx, cx, cy, s * 0.46, '#8F96A1', lw * 1.4);
+      pfCircle(ctx, cx, cy, s * 0.36, 'rgba(37,99,235,0.55)', lw * 0.7);
+      pfCircle(ctx, cx, cy, s * 0.12, '#C3C8CF', lw * 0.6);
+      const segs = [];
+      for (let i = 0; i < 6; i++) {
+        const a = (i / 6) * Math.PI * 2;
+        segs.push([cx + Math.cos(a) * s * 0.14, cy + Math.sin(a) * s * 0.14,
+                   cx + Math.cos(a) * s * 0.30, cy + Math.sin(a) * s * 0.30]);
+      }
+      pfLines(ctx, segs, 'rgba(220,240,255,0.6)', lw * 0.9);
+    },
+  },
+  {
+    key: 'scaffold', label: 'Scaffold', cat: 'Scatter', w: 2, h: 2,
+    terrain: 'difficult', note: 'Difficult terrain; climbable, and it comes down',
+    draw(ctx, x, y, w, h) {
+      const lw = pfInkW(Math.min(w, h));
+      pfRect(ctx, x + w * 0.06, y + h * 0.06, w * 0.88, h * 0.88, 'rgba(120,128,140,0.22)', 0, lw);
+      const segs = [];
+      for (let i = 0; i <= 3; i++) {
+        const f = 0.06 + i * 0.293;
+        segs.push([x + w * 0.06, y + h * f, x + w * 0.94, y + h * f]);
+        segs.push([x + w * f, y + h * 0.06, x + w * f, y + h * 0.94]);
+      }
+      pfLines(ctx, segs, '#A8AFB9', lw * 1.1);
+      pfRect(ctx, x + w * 0.06, y + h * 0.40, w * 0.88, h * 0.14, '#A5793F', 0, lw * 0.6);
+    },
+  },
+
 ];
 
 const BOARD_PREFABS_BY_KEY = Object.fromEntries(BOARD_PREFABS.map(p => [p.key, p]));
@@ -593,6 +792,45 @@ function pfRuin(m, c, r, w, h) {
   }
   m.prop('rubble', c + 1, r + 1);
   m.prop('rubble', c + w - 2, r + h - 2);
+}
+
+// A row of frontages laid left to right from (c,r), cycling the kinds so no
+// two neighbours match and stopping before one would overhang c+w. The
+// single-square gaps it leaves between them are the alley mouths.
+function pfFrontage(m, c, r, w, start) {
+  const kinds = ['building', 'house', 'highrise', 'warehouse', 'house', 'highrise'];
+  let x = c, i = start || 0;
+  while (x < c + w) {
+    const key = kinds[i % kinds.length];
+    const pf = BOARD_PREFABS_BY_KEY[key];
+    if (x + pf.w > c + w) break;
+    m.prop(key, x, r);
+    x += pf.w + 1;
+    i++;
+  }
+}
+
+// A whole city block: frontages every four rows, so the block is a mass of
+// buildings with one-square lanes between them rather than two rows and a
+// field, plus bins down the service lane in the middle. `seed` shifts which
+// building each row starts on, so neighbouring blocks don't come out
+// identical. Blocks read best 4n+3 rows deep (15, 19) — a shallower
+// remainder is left as pavement.
+function pfBlockDense(m, c, r, w, h, seed) {
+  const rows = [];
+  for (let dr = 0; dr + 3 <= h; dr += 4) rows.push(dr);
+  rows.forEach((dr, i) => pfFrontage(m, c, r + dr, w, seed + i * 3));
+  const lane = r + rows[Math.max(0, Math.ceil(rows.length / 2) - 1)] + 3;
+  const bins = ['dumpster', 'crate', 'barrel', 'rubble', 'vending'];
+  for (let i = 0; i * 4 + 4 <= w; i++) m.prop(bins[(i + seed) % bins.length], c + 1 + i * 4, lane);
+}
+
+// Container stacks in a grid, one square of aisle between them — the aisles
+// are the whole point, so this takes a count rather than a rect.
+function pfContainerYard(m, c, r, cols, rows) {
+  for (let j = 0; j < rows; j++) {
+    for (let i = 0; i < cols; i++) m.prop('container', c + i * 4, r + j * 3);
+  }
 }
 
 const BOARD_MAPS = [
@@ -762,19 +1000,388 @@ const BOARD_MAPS = [
   }),
 
   pfMap('arena', 'Festival Arena', 'A walled bowl with four cover clusters and four gates. Nowhere to hide in the middle.', 26, 26, m => {
-    m.ring(13, 13, 12, 'wall', 2);
+    // Radius 11, not 12: at 12 the ring runs right off the edge of the map on
+    // all four gate axes, so the gates opened into the boundary and the bowl
+    // was a sealed box. One square in, and they open onto a ring road.
+    m.ring(13, 13, 11, 'wall', 2);
     m.repeat('boulder', [[7, 7], [18, 7], [7, 18], [18, 18]]);
     m.repeat('crate', [[8, 8], [17, 8], [8, 17], [17, 17]]);
     m.prop('statue', 12, 12);
     m.repeat('barricade', [[11, 5], [11, 20]]);
     m.prop('barricade', 5, 12, 90);
     m.prop('barricade', 20, 12, 90);
-    // gates, last — they open the wall ring
-    m.prop('door', 12, 1);  m.prop('door', 13, 1);
-    m.prop('door', 12, 24); m.prop('door', 13, 24);
-    m.prop('door', 1, 12);  m.prop('door', 1, 13);
-    m.prop('door', 24, 12); m.prop('door', 24, 13);
+    // Gates, last — they open the wall ring. The ring is two squares thick,
+    // so each gate needs both of them: cutting only the inner layer left the
+    // bowl sealed and the four corners outside it sealed from each other.
+    m.repeat('door', [[12, 1], [13, 1], [12, 2], [13, 2],
+                      [12, 23], [13, 23], [12, 24], [13, 24],
+                      [1, 12], [1, 13], [2, 12], [2, 13],
+                      [23, 12], [23, 13], [24, 12], [24, 13]]);
   }),
+  /* ── the big ones ──────────────────────────────────────
+     Everything above is a single location you can take in at a glance. The
+     maps below are two to three times the area — a district rather than a
+     street, a building with rooms rather than one room — for fights that
+     move, chases, and sessions where the party splits up. They cost a bit
+     of zooming out; that's the trade. */
+
+  pfMap('hosu-district', 'Hosu District', 'Six city blocks around a crossroads \u2014 four built up, a park, and a building site. Sight lines down every street.', 48, 35, m => {
+    // Blocks sit at columns 0-12 / 17-30 / 35-47 and rows 0-14 / 20-34; the
+    // avenues are the gaps left between them.
+    pfBlockDense(m, 0, 0, 13, 15, 0);
+    pfBlockDense(m, 17, 0, 14, 15, 2);
+    pfBlockDense(m, 0, 20, 13, 15, 1);
+    pfBlockDense(m, 35, 20, 13, 15, 4);
+
+    // north-east block: the park
+    m.repeat('tree', [[36, 1], [39, 0], [43, 1], [46, 2], [36, 6], [46, 7], [37, 13], [41, 14], [45, 13]]);
+    m.prop('bigtree', 42, 3);
+    m.prop('pond', 39, 8);
+    m.repeat('bench', [[36, 4], [44, 10], [40, 12]]);
+    m.prop('hedge', 43, 6);
+    m.prop('statue', 38, 5);
+    m.prop('streetlight', 41, 2);
+
+    // south-centre block: half-built, hoarded off
+    for (let i = 0; i < 4; i++) m.prop('scaffold', 18 + i * 3, 22);
+    m.repeat('pillar', [[19, 27], [23, 27], [27, 27], [19, 31], [23, 31], [27, 31]]);
+    m.repeat('rubble', [[21, 29], [25, 33], [18, 34]]);
+    m.prop('crate', 29, 28);
+    m.prop('barrel', 29, 32);
+    m.propOnly('truck', 21, 33);
+    m.repeat('cone', [[17, 26], [20, 26], [24, 26], [28, 26]]);
+    m.prop('barricade', 17, 25);
+
+    // the avenues \u2014 traffic placed with propOnly so the road stays open ground
+    m.repeat('streetlight', [[13, 2], [16, 8], [13, 25], [16, 32], [31, 3], [34, 10],
+                             [31, 27], [34, 33], [2, 17], [9, 15], [27, 18], [38, 16], [45, 19]]);
+    m.propOnly('bus', 14, 5, 90);
+    m.propOnly('car', 15, 12, 90);
+    m.propOnly('van', 32, 7, 90);
+    m.propOnly('car', 33, 23, 90);
+    m.propOnly('car', 4, 18);
+    m.propOnly('van', 21, 16);
+    m.propOnly('bus', 39, 17);
+    m.propOnly('bike', 30, 19);
+    m.repeat('cone', [[12, 16], [12, 17]]);
+    m.prop('barricade', 43, 17);
+    m.prop('crater', 15, 16);
+  }),
+
+  pfMap('ua-campus', 'U.A. Campus Grounds', 'The main building, the plaza, Gym Gamma and the training field, all inside the perimeter wall.', 50, 40, m => {
+    m.outline(0, 0, 50, 40, 'wall');
+
+    // main building: three north rooms off a corridor that runs the width
+    m.outline(13, 1, 24, 12, 'wall');
+    for (let r = 1; r <= 8; r++) { m.cell(21, r, 'wall'); m.cell(29, r, 'wall'); }
+    for (let c = 13; c <= 36; c++) m.cell(c, 8, 'wall');
+    m.prop('counter', 15, 10);
+    m.repeat('crate', [[18, 3], [26, 5], [33, 3]]);
+    m.repeat('bench', [[24, 11], [31, 11]]);
+    m.prop('vending', 34, 10);
+    m.prop('stairs', 19, 11);
+
+    // the plaza in front of it
+    m.prop('fountain', 23, 17);
+    m.prop('statue', 20, 18);
+    m.repeat('bench', [[17, 15], [28, 15], [17, 21], [28, 21]]);
+    m.repeat('tree', [[15, 14], [31, 14], [15, 22], [31, 22]]);
+    m.repeat('streetlight', [[19, 14], [27, 14], [19, 22], [27, 22]]);
+    m.prop('hedge', 21, 23);
+
+    // Gym Gamma — a round shell with four doors, cut in after the ring
+    m.ring(7, 29, 6, 'wall', 1);
+    m.repeat('crate', [[5, 27], [9, 31]]);
+    m.repeat('pillar', [[4, 29], [10, 29]]);
+    m.prop('boulder', 7, 28);
+
+    // the training field, east and south
+    m.repeat('boulder', [[22, 26], [29, 30], [36, 25], [43, 31], [26, 36], [40, 36]]);
+    m.repeat('rubble', [[24, 31], [33, 34], [45, 27], [20, 34]]);
+    m.prop('crater', 30, 26);
+    m.repeat('barricade', [[24, 28], [38, 33]]);
+    m.prop('scaffold', 34, 29);
+    m.repeat('bigtree', [[46, 34], [44, 22]]);
+
+    // grounds: the pond and the tree lines either side of the approach
+    m.prop('pond', 43, 6);
+    m.repeat('tree', [[39, 3], [41, 9], [46, 3], [47, 10], [40, 12],
+                      [2, 2], [6, 4], [10, 2], [3, 8], [9, 9], [5, 12], [11, 14], [2, 17]]);
+    m.prop('bigtree', 45, 13);
+    m.repeat('hedge', [[39, 16], [44, 18], [8, 21]]);
+    m.prop('bigtree', 7, 18);
+    m.prop('bench', 4, 20);
+
+    // doors and gates, last — they cut back through everything above
+    m.repeat('door', [[24, 12], [25, 12], [17, 8], [25, 8], [33, 8], [21, 5], [29, 5]]);
+    m.repeat('door', [[7, 23], [7, 35], [1, 29], [13, 29]]);
+    m.repeat('door', [[24, 39], [25, 39], [0, 20], [0, 21], [49, 19], [49, 20]]);
+  }),
+
+  pfMap('mall', 'Kiyashi Ward Mall', 'Eight shop units, a food court and a stockroom around a fountain atrium. No outside to run to \u2014 only four exits.', 44, 34, m => {
+    m.outline(0, 0, 44, 34, 'wall');
+    // Units share their side walls with each other and with the perimeter,
+    // so the shop walls are one square thick rather than two.
+    for (let i = 0; i < 4; i++) {
+      m.outline(i * 8, 0, 9, 9, 'wall');     // north row, interior rows 1-7
+      m.outline(i * 8, 25, 9, 9, 'wall');    // south row, interior rows 26-32
+    }
+    m.outline(32, 0, 12, 14, 'wall');        // food court
+    m.outline(32, 21, 12, 13, 'wall');       // stockroom and loading bay
+
+    // inside the units
+    for (let i = 0; i < 4; i++) {
+      m.prop('counter', i * 8 + 2, 6);
+      m.prop('crate', i * 8 + 1, 2);
+      m.prop('counter', i * 8 + 2, 27);
+      m.prop('crate', i * 8 + 6, 31);
+    }
+    // food court: two serveries and the tables
+    m.repeat('counter', [[35, 2], [39, 2]]);
+    m.repeat('bench', [[35, 6], [39, 6], [35, 9], [39, 9], [35, 12], [39, 12]]);
+    m.prop('vending', 41, 4);
+    // stockroom
+    m.repeat('crate', [[33, 22], [35, 22], [37, 22], [33, 25], [35, 25]]);
+    m.repeat('barrel', [[41, 23], [33, 31]]);
+    m.prop('container', 37, 29);
+    m.prop('dumpster', 40, 31);
+
+    // the concourse
+    m.prop('fountain', 15, 16);
+    m.repeat('railing', [[13, 14], [15, 14], [17, 14], [13, 19], [15, 19], [17, 19]]);
+    m.repeat('stairs', [[10, 12], [20, 20]]);
+    m.repeat('bench', [[6, 12], [24, 12], [6, 21], [24, 21], [15, 11], [15, 22]]);
+    m.repeat('stall', [[3, 11], [3, 21], [28, 11], [28, 21]]);
+    m.repeat('vending', [[9, 16], [26, 16]]);
+    m.repeat('tree', [[8, 13], [8, 19], [27, 13], [27, 19]]);
+    m.repeat('pillar', [[12, 10], [23, 10], [12, 23], [23, 23], [30, 15], [30, 18]]);
+    m.prop('counter', 29, 16);
+
+    // every doorway, last
+    for (let i = 0; i < 4; i++) {
+      m.prop('door', i * 8 + 3, 8);  m.prop('door', i * 8 + 4, 8);
+      m.prop('door', i * 8 + 3, 25); m.prop('door', i * 8 + 4, 25);
+    }
+    m.repeat('door', [[32, 10], [32, 11], [36, 21], [37, 21]]);
+    m.repeat('door', [[0, 16], [0, 17], [43, 17], [43, 18], [43, 28], [43, 29]]);
+  }),
+
+  pfMap('overpass', 'Expressway Overpass', 'Four lanes above the city: a pileup, a span that came down, and a very long drop off either side.', 56, 26, m => {
+    m.fill(0, 0, 56, 6, 'hazard');    // open air, north
+    m.fill(0, 20, 56, 6, 'hazard');   // and south
+    m.fill(27, 6, 3, 14, 'hazard');   // the missing span
+    // crash barriers along both edges, and none where the deck is gone
+    for (let c = 0; c < 56; c += 4) {
+      if (c + 1 >= 26 && c <= 30) continue;
+      m.prop('railing', c, 6);
+      m.prop('railing', c, 19);
+    }
+    // central reservation
+    for (let c = 2; c < 54; c += 8) {
+      if (c + 1 >= 26 && c <= 30) continue;
+      m.prop('barricade', c, 12);
+    }
+    // the pileup, west of the gap — vehicles left as cover, not as walls
+    m.propOnly('bus', 8, 9);
+    m.repeat('cone', [[25, 8], [25, 11], [25, 15], [25, 18]]);
+    m.propOnly('car', 13, 8);
+    m.propOnly('car', 6, 16);
+    m.propOnly('van', 15, 15);
+    m.propOnly('truck', 18, 9);
+    m.propOnly('car', 22, 17, 90);
+    m.repeat('fire', [[14, 12], [20, 16]]);
+    m.repeat('rubble', [[12, 14], [17, 7], [23, 13], [33, 10], [36, 17]]);
+    m.prop('barricade', 23, 9);
+    m.prop('crater', 33, 14);
+    // east of the gap: the jackknifed truck and the gantry legs
+    m.propOnly('truck', 44, 12, 90);
+    m.repeat('pillar', [[40, 6], [40, 19]]);
+    m.repeat('streetlight', [[4, 7], [16, 7], [36, 7], [48, 7], [10, 18], [32, 18], [44, 18]]);
+    m.prop('stairs', 52, 7);
+    m.prop('stairs', 2, 18);
+    // the planks somebody has already thrown across, last
+    m.prop('bridge', 27, 9);
+    m.prop('bridge', 27, 16);
+  }),
+
+  pfMap('factory', 'Abandoned Factory', 'A pillared main hall, flooded vats, two offices and a loading dock. Corners everywhere and one way out the back.', 46, 34, m => {
+    m.outline(0, 0, 46, 34, 'wall');
+    for (let r = 1; r < 33; r++) m.cell(30, r, 'wall');   // hall / east wing
+    for (let c = 1; c < 30; c++) m.cell(c, 23, 'wall');   // hall / loading dock
+    // The offices borrow the divider and the outside wall for two of their
+    // own sides, so the east wing isn't two squares of wall thick.
+    m.outline(30, 0, 16, 10, 'wall');    // office, upper — interior rows 1-8
+    m.outline(30, 12, 16, 10, 'wall');   // office, lower — interior rows 13-20
+
+    // the hall: a pillar grid, the vats, and the plant around them
+    for (let r = 5; r <= 19; r += 7) for (let c = 5; c <= 26; c += 7) m.prop('pillar', c, r);
+    m.fill(14, 15, 7, 5, 'water');
+    m.repeat('railing', [[14, 14], [16, 14], [18, 14], [14, 20], [16, 20], [18, 20]]);
+    m.repeat('tank', [[2, 18], [6, 18], [2, 2], [25, 2]]);
+    m.repeat('pipes', [[9, 3], [9, 8], [22, 8], [22, 19]]);
+    m.repeat('crate', [[12, 2], [17, 3], [27, 11], [4, 11], [8, 21]]);
+    m.repeat('barrel', [[13, 10], [19, 11], [24, 15], [3, 15]]);
+    m.repeat('fire', [[20, 5], [11, 18]]);
+    m.repeat('rubble', [[16, 7], [23, 12], [7, 14], [26, 20]]);
+    m.prop('stairs', 28, 21);
+    m.prop('crater', 10, 12);
+
+    // east wing: two offices off a cross corridor, stairwell below
+    m.repeat('counter', [[33, 3], [38, 3], [33, 14], [38, 14]]);
+    m.repeat('crate', [[32, 7], [43, 7], [32, 18], [43, 18]]);
+    m.prop('vending', 43, 2);
+    m.prop('bench', 36, 17);
+    m.prop('stairs', 32, 24);
+    m.repeat('rubble', [[36, 26], [41, 30]]);
+    m.prop('barrel', 43, 25);
+    m.prop('pipes', 40, 28);
+
+    // loading dock
+    m.propOnly('truck', 4, 26);
+    m.propOnly('van', 12, 30);
+    m.repeat('crate', [[2, 25], [3, 31], [10, 25], [17, 26], [18, 30], [25, 25]]);
+    m.repeat('barrel', [[16, 32], [27, 31]]);
+    m.prop('dumpster', 21, 32);
+    m.prop('container', 24, 28);
+    m.prop('pipes', 6, 32);
+
+    // doors, last
+    m.repeat('door', [[30, 10], [30, 11], [30, 28], [30, 29]]);
+    m.repeat('door', [[33, 9], [34, 9], [33, 12], [34, 12], [38, 21]]);
+    m.repeat('door', [[14, 23], [15, 23], [24, 23], [25, 23]]);
+    m.repeat('door', [[0, 11], [0, 12], [12, 33], [13, 33], [45, 26], [45, 27]]);
+  }),
+
+  pfMap('harbor', 'Dockside Container Yard', 'Container stacks with aisles between them, two piers over open water, and the sheds behind the fence.', 52, 36, m => {
+    m.fill(0, 0, 52, 9, 'water');
+    m.fill(0, 9, 52, 1, 'difficult');   // the quay edge, wet and slick
+    // piers — planked last-but-not-least so they clear the water beneath
+    for (let r = 1; r < 9; r++) { m.prop('bridge', 9, r); m.prop('bridge', 33, r); }
+    m.repeat('crate', [[9, 2], [35, 5]]);
+    m.repeat('barrel', [[11, 6], [33, 2]]);
+
+    // the yard
+    pfContainerYard(m, 2, 12, 5, 3);
+    pfContainerYard(m, 24, 12, 6, 2);
+    m.repeat('crate', [[22, 13], [22, 18], [48, 14], [1, 21], [19, 21]]);
+    m.repeat('barrel', [[21, 15], [49, 19], [12, 22]]);
+    m.prop('container', 47, 22);
+    m.prop('crater', 36, 21);
+    m.prop('fire', 31, 20);
+    m.propOnly('truck', 27, 24);
+    m.propOnly('van', 4, 23);
+    m.propOnly('car', 44, 23);
+
+    // chain-link across the back of the yard, with the gate left open
+    for (let c = 1; c < 51; c += 2) { if (c >= 23 && c <= 26) continue; m.prop('railing', c, 26); }
+
+    // the sheds behind it
+    m.prop('warehouse', 2, 29);
+    m.prop('warehouse', 8, 29);
+    m.prop('building', 14, 29);
+    m.prop('warehouse', 20, 29);
+    m.prop('highrise', 26, 29);
+    m.prop('warehouse', 30, 29);
+    m.prop('building', 36, 29);
+    m.prop('house', 41, 29);
+    m.prop('highrise', 45, 29);
+    m.prop('watertower', 24, 32);
+    m.prop('dumpster', 34, 33);
+    m.prop('stall', 44, 33);
+    m.prop('pipes', 13, 33);
+    m.repeat('rubble', [[16, 24], [38, 25], [8, 33]]);
+    m.repeat('streetlight', [[0, 11], [17, 11], [30, 11], [51, 11], [10, 27], [40, 27]]);
+  }),
+
+  pfMap('station', 'Station Platforms', 'Two tracks, the island platform between them, and the concourse behind the gates. Trains for cover, rails for danger.', 50, 28, m => {
+    m.fill(0, 0, 50, 4, 'difficult');    // track bed, north
+    m.fill(0, 13, 50, 4, 'difficult');   // track bed, south
+    m.prop('train', 3, 1);
+    m.prop('train', 10, 1);
+    m.prop('train', 31, 1);
+    m.prop('train', 6, 14);
+    m.prop('train', 20, 14);
+    m.prop('train', 38, 14);
+
+    // the island platform, rows 4-12
+    m.repeat('pillar', [[6, 5], [14, 5], [22, 5], [30, 5], [38, 5], [46, 5],
+                        [6, 11], [14, 11], [22, 11], [30, 11], [38, 11], [46, 11]]);
+    m.repeat('bench', [[9, 8], [18, 8], [27, 8], [36, 8], [43, 8]]);
+    m.repeat('vending', [[12, 7], [33, 9]]);
+    m.repeat('railing', [[2, 4], [16, 4], [24, 4], [40, 4], [2, 12], [24, 12], [40, 12]]);
+    m.prop('stall', 20, 6);
+    m.prop('counter', 25, 10);
+
+    // the concourse below the platform
+    m.outline(0, 17, 50, 11, 'wall');
+    m.repeat('counter', [[4, 20], [10, 20], [40, 24]]);
+    m.repeat('bench', [[6, 24], [14, 24], [22, 25], [30, 24]]);
+    m.repeat('stall', [[18, 19], [27, 19], [35, 19]]);
+    m.repeat('pillar', [[8, 22], [16, 22], [24, 22], [32, 22], [41, 22]]);
+    m.prop('vending', 3, 25);
+    m.prop('fountain', 45, 19);
+    m.repeat('rubble', [[12, 26], [37, 26]]);
+
+    // the stairs down and the gates, last
+    m.repeat('stairs', [[10, 12], [36, 12], [10, 18], [36, 18]]);
+    m.repeat('door', [[10, 17], [11, 17], [36, 17], [37, 17]]);
+    m.repeat('door', [[0, 21], [0, 22], [49, 21], [49, 22], [20, 27], [21, 27], [29, 27], [30, 27]]);
+  }),
+
+  pfMap('hideout', 'Underground Hideout', 'A front bar, a back office, a storeroom and the sewer the crew leaves by. Four rooms, two ways out.', 40, 30, m => {
+    m.outline(0, 0, 40, 30, 'wall');
+    for (let r = 1; r <= 17; r++) m.cell(18, r, 'wall');   // bar, east wall
+    for (let c = 1; c <= 18; c++) m.cell(c, 17, 'wall');   // bar, south wall
+    for (let c = 19; c <= 31; c++) m.cell(c, 11, 'wall');  // office, south wall
+    for (let r = 1; r <= 16; r++) m.cell(31, r, 'wall');   // storeroom, west wall
+    for (let c = 32; c <= 38; c++) m.cell(c, 17, 'wall');  // storeroom, south wall
+    for (let c = 1; c < 39; c++) m.cell(c, 22, 'wall');    // corridor / sewer
+
+    // the bar
+    m.repeat('counter', [[2, 3], [5, 3], [8, 3]]);
+    m.repeat('barrel', [[2, 1], [11, 2]]);
+    m.repeat('bench', [[3, 7], [8, 7], [13, 7], [3, 11], [8, 11], [13, 11]]);
+    m.repeat('stall', [[15, 2], [15, 14]]);
+    m.prop('vending', 1, 15);
+    m.prop('dumpster', 11, 15);
+    m.prop('fire', 16, 9);
+    m.prop('pillar', 9, 9);
+
+    // the office, and the back room under it
+    m.prop('counter', 22, 2);
+    m.prop('crate', 29, 2);
+    m.prop('bench', 26, 8);
+    m.prop('vending', 29, 9);
+    m.repeat('crate', [[20, 13], [28, 15]]);
+    m.prop('pipes', 24, 13);
+
+    // the storeroom
+    m.repeat('crate', [[32, 2], [34, 2], [36, 2], [32, 5], [34, 5], [36, 5], [33, 9], [36, 9]]);
+    m.repeat('barrel', [[38, 3], [38, 12], [32, 13]]);
+    m.prop('container', 34, 13);
+    m.prop('pipes', 32, 16);
+
+    // the corridor
+    m.repeat('crate', [[20, 19], [28, 20], [35, 19]]);
+    m.repeat('rubble', [[5, 20], [13, 19]]);
+    m.prop('vending', 24, 18);
+    m.prop('bench', 9, 21);
+
+    // the sewer out the bottom
+    m.fill(1, 25, 38, 3, 'water');
+    m.repeat('pipes', [[2, 23], [30, 23], [10, 29], [34, 29]]);
+    m.repeat('rubble', [[6, 24], [25, 24], [14, 28], [33, 28]]);
+    m.repeat('barrel', [[4, 29], [22, 29]]);
+    m.prop('fire', 28, 24);
+    m.prop('stairs', 36, 23);
+    for (let r = 25; r <= 27; r++) m.prop('bridge', 18, r);
+
+    // doors, last — including the two hatches down to the water
+    m.repeat('door', [[18, 8], [18, 9], [12, 17], [13, 17], [25, 11], [26, 11], [31, 6], [31, 14], [34, 17]]);
+    m.repeat('door', [[18, 22], [19, 22], [33, 22]]);
+    m.repeat('door', [[0, 10], [20, 0], [21, 0]]);
+  }),
+
 ];
 
 const BOARD_MAPS_BY_KEY = Object.fromEntries(BOARD_MAPS.map(mp => [mp.key, mp]));

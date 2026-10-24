@@ -195,6 +195,43 @@ const B = boot();
   check('there are preset maps to load', B.BOARD_MAPS.length >= 6, B.BOARD_MAPS.length + ' found');
   check('every preset map builds inside its own bounds with known prefabs and terrain',
     problems.length === 0, problems.join('\n        '));
+
+  const keys = B.BOARD_MAPS.map(mp => mp.key);
+  check('every preset map has a unique key', new Set(keys).size === keys.length,
+    'duplicates: ' + keys.filter((k, i) => keys.indexOf(k) !== i).join(', '));
+
+  // The big interior maps live or die on this one: a room walled in on all
+  // four sides, or a doorway cut through only one layer of a two-thick wall,
+  // looks completely fine in the builder and is obvious the moment a DM tries
+  // to walk a token into it. Flood the non-wall squares — hazard and water
+  // included, since a token can fall into those — and insist the whole map
+  // comes out as a single region.
+  const split = [];
+  for (const mp of B.BOARD_MAPS) {
+    const walls = new Set();
+    for (const t of mp.build().terrain) if (t.type === 'wall') walls.add(t.id);
+    const open = (c, r) => c >= 0 && r >= 0 && c < mp.w && r < mp.h && !walls.has(c + ',' + r);
+    const seen = new Set();
+    const regions = [];
+    for (let r0 = 0; r0 < mp.h; r0++) for (let c0 = 0; c0 < mp.w; c0++) {
+      if (!open(c0, r0) || seen.has(c0 + ',' + r0)) continue;
+      const stack = [[c0, r0]];
+      seen.add(c0 + ',' + r0);
+      let size = 0;
+      while (stack.length) {
+        const [c, r] = stack.pop();
+        size++;
+        for (const [dc, dr] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const id = (c + dc) + ',' + (r + dr);
+          if (open(c + dc, r + dr) && !seen.has(id)) { seen.add(id); stack.push([c + dc, r + dr]); }
+        }
+      }
+      regions.push(size + ' squares from ' + c0 + ',' + r0);
+    }
+    if (regions.length !== 1) split.push(`${mp.key}: ${regions.length} separate spaces — ${regions.join('; ')}`);
+  }
+  check('every preset map is one connected space — no sealed rooms, no door that opens into a wall',
+    split.length === 0, split.join('\n        '));
 }
 
 /* ── 3. loading a map lands on the grid ── */

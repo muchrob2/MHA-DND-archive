@@ -586,11 +586,18 @@ function updateBoardHint() {
 
 /* ── preset maps (encounter.html only) ── */
 
+// Split into two groups by area rather than by a hand-kept flag on each map:
+// the list is long enough now that a DM after somewhere big shouldn't have to
+// read every label's dimensions to find one.
 function boardPopulateMapSelect() {
   const sel = document.getElementById('board-map-select');
   if (!sel || typeof BOARD_MAPS === 'undefined') return;
+  const opt = mp => `<option value="${mp.key}" title="${mp.desc}">${mp.label} · ${mp.w}×${mp.h}</option>`;
+  const group = (label, maps) => (maps.length
+    ? `<optgroup label="${label}">${maps.map(opt).join('')}</optgroup>` : '');
   sel.innerHTML = '<option value="">— preset map —</option>'
-    + BOARD_MAPS.map(m => `<option value="${m.key}" title="${m.desc}">${m.label} · ${m.w}×${m.h}</option>`).join('');
+    + group('One location', BOARD_MAPS.filter(mp => mp.w * mp.h < 1000))
+    + group('Big maps', BOARD_MAPS.filter(mp => mp.w * mp.h >= 1000));
 }
 
 function boardLoadPresetMap() {

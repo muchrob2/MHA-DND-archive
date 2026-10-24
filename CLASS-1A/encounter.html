@@ -61,6 +61,10 @@
         <input type="number" id="enc-enemy-qty" value="1" min="1" max="10" title="Quantity" style="width:44px;padding:5px 4px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:12px;">
         <button class="enc-btn" onclick="encAddEnemy()">Add</button>
         <div class="add-sep"></div>
+        <span style="font-size:11px;color:var(--text-dim);font-weight:600;">Group:</span>
+        <select id="enc-group-select" style="max-width:260px" title="A whole line-up at once, with the map it was written for"><option value="">— choose —</option></select>
+        <button class="enc-btn" onclick="encAddGroup()">Add</button>
+        <div class="add-sep"></div>
         <span style="font-size:11px;color:var(--text-dim);font-weight:600;">Custom:</span>
         <input type="text" id="enc-custom-name" placeholder="Name">
         <input type="number" id="enc-custom-hp" placeholder="HP" min="1">
@@ -196,13 +200,39 @@
           <button class="board-tool-btn" data-tool="hazard" onclick="boardSetTool('hazard')" title="Mark a hazard">⚠ Hazard</button>
           <button class="board-tool-btn" data-tool="water" onclick="boardSetTool('water')" title="Mark water">〰 Water</button>
           <button class="board-tool-btn" data-tool="cover" onclick="boardSetTool('cover')" title="Mark cover">⛊ Cover</button>
-          <button class="board-tool-btn eraser" data-tool="eraser" onclick="boardSetTool('eraser')" title="Erase drawings &amp; terrain">⌫ Erase</button>
-          <button class="enc-btn danger" style="margin-left:auto;" onclick="boardClearArt()" title="Clear all drawings, terrain markings and props">Clear Art</button>
+          <button class="board-tool-btn" data-tool="fog" onclick="boardSetTool('fog')" title="Hide squares from the players — you still see what is under them">✦ Fog</button>
+          <div class="board-draw-sep"></div>
+          <button class="board-tool-btn" data-tool="note" onclick="boardSetTool('note')" title="Label a square — EXIT, ALARM, whose room this is. Players see labels.">⌨ Label</button>
+          <button class="board-tool-btn" data-tool="elev" onclick="boardSetTool('elev')" title="Mark how many squares up (or down) a square is">⇕ Elev</button>
+          <input id="board-elev-level" class="board-mini-input" type="number" value="1" min="-9" max="9" step="1" title="Squares up, or down if negative. Zero clears the mark." aria-label="Elevation level">
+          <div class="board-draw-sep"></div>
+          <button class="board-tool-btn" data-tool="template" onclick="boardSetTool('template')" title="Drop an area shape — click inside one to take it away">◓ Area</button>
+          <select id="board-template-kind" class="board-mini-select" title="Shape of the area" aria-label="Area shape">
+            <option value="burst">Burst</option>
+            <option value="cone">Cone</option>
+            <option value="line">Line</option>
+          </select>
+          <input id="board-template-size" class="board-mini-input" type="number" value="2" min="1" max="30" step="1" title="Radius or length, in squares (1 square = 5 ft)" aria-label="Area size in squares">
+          <select id="board-template-rot" class="board-mini-select" title="Which way a cone or line points" aria-label="Area facing">
+            <option value="0">→ East</option>
+            <option value="90">↓ South</option>
+            <option value="180">← West</option>
+            <option value="270">↑ North</option>
+          </select>
+          <button class="board-tool-btn" onclick="boardClearTemplates()" title="Remove every area shape on the board">⌫ Shapes</button>
+          <div class="board-draw-sep"></div>
+          <button class="board-tool-btn eraser" data-tool="eraser" onclick="boardSetTool('eraser')" title="Erase drawings, terrain, labels, elevation &amp; scenery">⌫ Erase</button>
+          <button class="enc-btn danger" style="margin-left:auto;" onclick="boardClearArt()" title="Clear everything on the board — terrain, fog, scenery, drawings, labels, elevation and area shapes">Clear Art</button>
         </div>
         <div id="board-map-bar">
           <span id="board-map-label">Map:</span>
           <select id="board-map-select" title="Preset battlefields"><option value="">— preset map —</option></select>
-          <button class="board-tool-btn" onclick="boardLoadPresetMap()" title="Replace the board's terrain, props and drawings with this map">⤓ Load</button>
+          <button class="board-tool-btn" onclick="boardLoadPresetMap()" title="Replace everything on the board with this map">⤓ Load</button>
+          <button class="board-tool-btn" onclick="boardSaveCurrentMap()" title="Save the board as it stands as your own map. Kept in this browser only — use Export to move your maps to another machine.">💾 Save</button>
+          <button class="board-tool-btn eraser" onclick="boardDeleteSavedMap()" title="Delete the selected saved map of your own">🗑</button>
+          <button class="board-tool-btn" onclick="boardExportSavedMaps()" title="Download your saved maps as a file">⤒ Export</button>
+          <button class="board-tool-btn" onclick="document.getElementById('board-map-import').click()" title="Load a board-maps file saved from another browser">⤓ Import</button>
+          <input type="file" id="board-map-import" accept="application/json,.json" style="display:none" onchange="boardImportSavedMaps(this)">
           <span id="board-map-note"></span>
           <div class="board-draw-sep"></div>
           <label id="board-autoterrain-wrap" title="Placed props also mark the squares they cover — buildings become walls, trees become cover, fire becomes a hazard">

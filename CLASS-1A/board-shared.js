@@ -136,6 +136,10 @@ const TERRAIN_STYLES = {
   hazard:    { fill: 'rgba(239,68,68,0.38)',   label: '⚠' },
   water:     { fill: 'rgba(37,99,235,0.34)',   label: '〰' },
   cover:     { fill: 'rgba(34,197,94,0.34)',   label: '⛊' },
+  // Fog is terrain so it paints, erases and saves like the rest of it; what
+  // makes it fog is that the players' board redraws these squares opaque at
+  // the very end of the frame. See paintFogLayer.
+  fog:       { fill: 'rgba(104,78,152,0.45)',  label: '✦' },
 };
 
 const BOARD_TOOL_HINTS = {
@@ -146,8 +150,16 @@ const BOARD_TOOL_HINTS = {
   hazard: 'Click or drag across squares to mark a hazard.',
   water: 'Click or drag across squares to mark water.',
   cover: 'Click or drag across squares to mark cover.',
-  eraser: 'Click drawings or terrain to erase them.',
+  fog: 'Click or drag to hide squares from the players. You still see what is under them; they see nothing.',
+  note: 'Click a square to label it. Click a label again to change it, or clear the text to remove it.',
+  template: 'Click to drop the area shape set above. Click inside one to take it away.',
+  elev: 'Click or drag to mark squares as that many squares up (or down, with a negative number). Zero clears.',
+  eraser: 'Click drawings, terrain, labels, elevation or scenery to erase them.',
 };
+
+// Tools that paint a terrain type of the same name, as opposed to the ones
+// with their own behaviour (pen, eraser, note, template, elev).
+const BOARD_TERRAIN_TOOLS = ['wall', 'difficult', 'hazard', 'water', 'cover', 'fog'];
 
 // Only encounter.html renders the .board-tool-btn toolbar, so this is a
 // no-op (and boardState.tool never leaves 'move') on board.html.
@@ -167,12 +179,9 @@ function boardSetTool(tool) {
 }
 
 function boardClearArt() {
-  if (!(encounter.boardStrokes || []).length && !(encounter.boardTerrain || []).length
-      && !(encounter.boardProps || []).length) return;
-  if (!confirm('Clear all drawings, terrain markings and props from the board?')) return;
-  encounter.boardStrokes = [];
-  encounter.boardTerrain = [];
-  encounter.boardProps = [];
+  if (!BOARD_LAYERS.some(k => (encounter[k] || []).length)) return;
+  if (!confirm('Clear everything on the board — drawings, terrain, fog, scenery, labels, elevation and area shapes? Unit positions are kept.')) return;
+  for (const k of BOARD_LAYERS) encounter[k] = [];
   boardState.selectedPropId = null;
   boardState.propPreview = null;
   boardBumpArtVersion();
@@ -595,24 +604,44 @@ function boardPopulateMapSelect() {
   const opt = mp => `<option value="${mp.key}" title="${mp.desc}">${mp.label} · ${mp.w}×${mp.h}</option>`;
   const group = (label, maps) => (maps.length
     ? `<optgroup label="${label}">${maps.map(opt).join('')}</optgroup>` : '');
+  // Repopulating must not drop a selection: this runs on board-mode init and
+  // again after saving or deleting one of the DM's own maps, and adding an
+  // encounter group pre-selects the map it was written for before the board
+  // has ever been opened.
+  const previous = sel.value;
+  const saved = Object.entries(boardReadSavedMaps())
+    .map(([name, data]) => boardSavedMapAsPreset(name, data))
+    .sort((a, b) => a.label.localeCompare(b.label));
   sel.innerHTML = '<option value="">— preset map —</option>'
     + group('One location', BOARD_MAPS.filter(mp => mp.w * mp.h < 1000))
-    + group('Big maps', BOARD_MAPS.filter(mp => mp.w * mp.h >= 1000));
+    + group('Big maps', BOARD_MAPS.filter(mp => mp.w * mp.h >= 1000))
+    + group('Saved in this browser', saved);
+  if (previous) sel.value = previous;
+}
+
+// Resolves both halves of the picker: a built-in key, or 'saved:<name>' for
+// one of the DM's own.
+function boardMapByKey(key) {
+  if (!key) return null;
+  if (key.startsWith('saved:')) {
+    const name = key.slice(6);
+    const data = boardReadSavedMaps()[name];
+    return data ? boardSavedMapAsPreset(name, data) : null;
+  }
+  return (typeof BOARD_MAPS_BY_KEY !== 'undefined' && BOARD_MAPS_BY_KEY[key]) || null;
 }
 
 function boardLoadPresetMap() {
   if (!boardCanEdit) return;
   const sel = document.getElementById('board-map-select');
   const note = document.getElementById('board-map-note');
-  const mp = sel && typeof BOARD_MAPS_BY_KEY !== 'undefined' ? BOARD_MAPS_BY_KEY[sel.value] : null;
+  const mp = sel ? boardMapByKey(sel.value) : null;
   if (!mp) {
     if (note) note.textContent = 'Pick a map first.';
     return;
   }
-  const hasArt = (encounter.boardTerrain || []).length
-    || (encounter.boardProps || []).length
-    || (encounter.boardStrokes || []).length;
-  if (hasArt && !confirm(`Load "${mp.label}"?\n\nThis replaces the terrain, props and drawings on the board. Unit positions are kept.`)) return;
+  const hasArt = BOARD_LAYERS.some(k => (encounter[k] || []).length);
+  if (hasArt && !confirm(`Load "${mp.label}"?\n\nThis replaces everything on the board — terrain, fog, scenery, drawings, labels, elevation and area shapes. Unit positions are kept.`)) return;
   boardApplyPresetMap(mp);
   if (note) note.textContent = `${mp.label} loaded.`;
 }
@@ -634,6 +663,15 @@ function boardApplyPresetMap(mp) {
     id: boardNextArtId(), type: p.type,
     col: p.col + offC, row: p.row + offR, rot: p.rot || 0, t: 1,
   }));
+  // Preset builders produce neither of these; a map the DM saved does.
+  encounter.boardNotes = (built.notes || []).map(n => ({
+    id: boardNextArtId(), col: n.col + offC, row: n.row + offR, text: n.text,
+  }));
+  encounter.boardElev = (built.elev || []).map(e => {
+    const parts = e.id.split(',');
+    return { id: (+parts[0] + offC) + ',' + (+parts[1] + offR), level: e.level };
+  });
+  encounter.boardTemplates = [];
   encounter.boardStrokes = [];
   boardState.pendingProp = null;
   boardState.selectedPropId = null;
@@ -643,6 +681,440 @@ function boardApplyPresetMap(mp) {
   boardFitZoom();
   renderBoard();
   updateBoardHint();
+}
+
+/* ── Board layers ──────────────────────────────────────────
+   Every piece of board state that is a flat, id-keyed array, in one list.
+   Both pages default these on load and merge them per item on save, and both
+   used to do it by hand: three identical lines per field at each of three
+   arrival points, in two files, which is how boardProps came to need a
+   regression test asking whether anybody had remembered. Adding a layer is
+   one entry here now.
+
+   Per-item merge matters for all of them for the same reason it mattered for
+   props: a player nudging a token writes the whole encounter document, and
+   without it their possibly-stale copy of a field overwrites whatever the DM
+   changed a second earlier. */
+const BOARD_LAYERS = ['boardStrokes', 'boardTerrain', 'boardProps',
+                      'boardNotes', 'boardElev', 'boardTemplates'];
+
+function boardEnsureLayers(enc) {
+  if (!enc) return enc;
+  for (const k of BOARD_LAYERS) if (!Array.isArray(enc[k])) enc[k] = [];
+  return enc;
+}
+
+// The fsMergeSave spec for the layers, spread into the call beside
+// combatants — so a layer listed above is merged per item without anyone
+// having to go and say so twice more.
+function boardLayerMergePaths() {
+  return BOARD_LAYERS.map(path => ({ path, idKey: 'id' }));
+}
+
+/* ── Fog of war ────────────────────────────────────────────
+   A terrain type rather than a layer of its own, because that is what it is:
+   a square the players cannot see into. The DM paints it and sees a
+   translucent veil along with the rest of the terrain. On the players' board
+   the same squares are painted *last* and opaque, over scenery and tokens
+   alike — so fog hides whatever is standing in it without any code having to
+   filter the token list, which is the only version of this that can't leak a
+   position through some other path that forgot to check.
+
+   This is why the art-layer cache key carries boardCanEdit: board.html opens
+   with it true and flips it when the admin check resolves, and the baked
+   layer has to be rebuilt when it does. */
+function paintFogLayer(ctx, SZ, isDark) {
+  const cells = (encounter.boardTerrain || []).filter(t => t.type === 'fog');
+  if (!cells.length) return;
+  ctx.save();
+  ctx.fillStyle = isDark ? '#10131a' : '#e9e9ec';
+  ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.10)';
+  ctx.lineWidth = 1;
+  for (const t of cells) {
+    const parts = t.id.split(',');
+    const c = +parts[0], r = +parts[1];
+    ctx.fillRect(c * SZ, r * SZ, SZ, SZ);
+    ctx.strokeRect(c * SZ + 0.5, r * SZ + 0.5, SZ - 1, SZ - 1);
+  }
+  ctx.restore();
+}
+
+/* ── Labels ────────────────────────────────────────────────
+   Text pinned to a square: EXIT, ALARM, WHOSE ROOM THIS IS. Public, because
+   a label only the DM can read is a note in their own file rather than a
+   thing on the map — fog still covers them, being painted after. */
+function boardNoteAt(col, row) {
+  return (encounter.boardNotes || []).find(n => n.col === col && n.row === row) || null;
+}
+
+function boardPlaceNote(col, row) {
+  if (!boardCanEdit) return;
+  if (col < 0 || col >= BOARD_COLS || row < 0 || row >= BOARD_ROWS) return;
+  encounter.boardNotes = encounter.boardNotes || [];
+  const existing = boardNoteAt(col, row);
+  const text = prompt(existing ? 'Label (blank to remove):' : 'Label for this square:',
+                      existing ? existing.text : '');
+  if (text === null) return;
+  const clean = text.trim().slice(0, 40);
+  if (!clean) {
+    if (existing) encounter.boardNotes = encounter.boardNotes.filter(n => n !== existing);
+  } else if (existing) {
+    existing.text = clean;
+  } else {
+    encounter.boardNotes.push({ id: boardNextArtId(), col, row, text: clean });
+  }
+  encSave();
+  renderBoardCanvas();
+}
+
+function paintNotesLayer(ctx, SZ) {
+  const notes = encounter.boardNotes || [];
+  if (!notes.length || SZ < 9) return;
+  const fontSize = Math.max(8, Math.min(13, SZ * 0.6));
+  ctx.save();
+  ctx.font = `700 ${fontSize}px system-ui, -apple-system, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (const n of notes) {
+    const text = String(n.text || '');
+    if (!text) continue;
+    const w = ctx.measureText(text).width + fontSize * 0.8;
+    const h = fontSize * 1.6;
+    const cx = n.col * SZ + SZ / 2, cy = n.row * SZ + SZ / 2;
+    pfRect(ctx, cx - w / 2, cy - h / 2, w, h, 'rgba(12,16,24,0.84)', h * 0.3, 1);
+    ctx.fillStyle = '#F2D08A';
+    ctx.fillText(text, cx, cy);
+  }
+  ctx.restore();
+}
+
+/* ── Measured templates ────────────────────────────────────
+   The shape of an area attack, left on the board so everybody can see who is
+   inside it instead of the DM counting squares out loud twice. Distance is
+   Chebyshev, matching the range overlay and the way the rest of this board
+   measures. A cone widens by one square either side per square of length,
+   which is the usual grid approximation and, more to the point, the one a
+   table can check by eye. */
+const BOARD_TEMPLATE_KINDS = ['burst', 'cone', 'line'];
+
+function boardTemplateCells(t) {
+  const out = new Set();
+  const size = Math.max(1, Math.min(30, t.size || 2));
+  const rot = (((t.rot || 0) % 360) + 360) % 360;
+  const fwd = rot === 90 ? [0, 1] : rot === 180 ? [-1, 0] : rot === 270 ? [0, -1] : [1, 0];
+  const side = [-fwd[1], fwd[0]];
+  const add = (c, r) => {
+    if (c >= 0 && r >= 0 && c < BOARD_COLS && r < BOARD_ROWS) out.add(c + ',' + r);
+  };
+  if (t.kind === 'line') {
+    for (let d = 0; d < size; d++) add(t.col + fwd[0] * d, t.row + fwd[1] * d);
+  } else if (t.kind === 'cone') {
+    for (let d = 0; d < size; d++) {
+      for (let s = -d; s <= d; s++) {
+        add(t.col + fwd[0] * d + side[0] * s, t.row + fwd[1] * d + side[1] * s);
+      }
+    }
+  } else {
+    for (let dr = -size; dr <= size; dr++) {
+      for (let dc = -size; dc <= size; dc++) add(t.col + dc, t.row + dr);
+    }
+  }
+  return out;
+}
+
+// Topmost template covering a square, or null — the same last-one-wins rule
+// as props, so clicking takes away the one you just put down.
+function boardTemplateAt(col, row) {
+  const list = encounter.boardTemplates || [];
+  for (let i = list.length - 1; i >= 0; i--) {
+    if (boardTemplateCells(list[i]).has(col + ',' + row)) return list[i];
+  }
+  return null;
+}
+
+function boardTemplateOptions() {
+  const el = id => document.getElementById(id);
+  const kindEl = el('board-template-kind'), sizeEl = el('board-template-size'), rotEl = el('board-template-rot');
+  const kind = kindEl && BOARD_TEMPLATE_KINDS.includes(kindEl.value) ? kindEl.value : 'burst';
+  const size = Math.max(1, Math.min(30, parseInt((sizeEl && sizeEl.value) || '2', 10) || 2));
+  const rot = parseInt((rotEl && rotEl.value) || '0', 10) || 0;
+  return { kind, size, rot };
+}
+
+function boardPlaceTemplate(col, row) {
+  if (!boardCanEdit) return;
+  // The cells of a shape are clipped to the grid, but its anchor has to be on
+  // the grid too, or it saves a shape nobody can ever click to remove.
+  if (col < 0 || col >= BOARD_COLS || row < 0 || row >= BOARD_ROWS) return;
+  encounter.boardTemplates = encounter.boardTemplates || [];
+  const hit = boardTemplateAt(col, row);
+  if (hit) {
+    encounter.boardTemplates = encounter.boardTemplates.filter(t => t.id !== hit.id);
+  } else {
+    const { kind, size, rot } = boardTemplateOptions();
+    encounter.boardTemplates.push({ id: boardNextArtId(), kind, col, row, size, rot });
+  }
+  encSave();
+  renderBoardCanvas();
+}
+
+function boardClearTemplates() {
+  if (!boardCanEdit || !(encounter.boardTemplates || []).length) return;
+  encounter.boardTemplates = [];
+  encSave();
+  renderBoardCanvas();
+}
+
+function paintTemplatesLayer(ctx, SZ) {
+  for (const t of encounter.boardTemplates || []) {
+    const cells = boardTemplateCells(t);
+    if (!cells.size) continue;
+    ctx.save();
+    ctx.fillStyle = 'rgba(224,112,32,0.24)';
+    for (const id of cells) {
+      const parts = id.split(',');
+      ctx.fillRect(+parts[0] * SZ, +parts[1] * SZ, SZ, SZ);
+    }
+    // Outline only the edges facing out of the shape, so overlapping
+    // templates still read as two shapes rather than one blob.
+    ctx.strokeStyle = 'rgba(232,160,32,0.9)';
+    ctx.lineWidth = Math.max(1, SZ / 14);
+    ctx.beginPath();
+    for (const id of cells) {
+      const parts = id.split(',');
+      const c = +parts[0], r = +parts[1];
+      if (!cells.has((c - 1) + ',' + r)) { ctx.moveTo(c * SZ, r * SZ); ctx.lineTo(c * SZ, (r + 1) * SZ); }
+      if (!cells.has((c + 1) + ',' + r)) { ctx.moveTo((c + 1) * SZ, r * SZ); ctx.lineTo((c + 1) * SZ, (r + 1) * SZ); }
+      if (!cells.has(c + ',' + (r - 1))) { ctx.moveTo(c * SZ, r * SZ); ctx.lineTo((c + 1) * SZ, r * SZ); }
+      if (!cells.has(c + ',' + (r + 1))) { ctx.moveTo(c * SZ, (r + 1) * SZ); ctx.lineTo((c + 1) * SZ, (r + 1) * SZ); }
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+/* ── Elevation ─────────────────────────────────────────────
+   A signed number of squares up or down: rooftops, catwalks, the sunken
+   floor of a vat room. Nothing enforces it — it is a table aid, so the DM can
+   say "he's two above you" without everyone squinting at the scenery to work
+   out whether the roof counts. Baked into the cached art layer along with the
+   terrain, because it changes about as often. */
+function boardElevLevel(col, row) {
+  const e = (encounter.boardElev || []).find(x => x.id === col + ',' + row);
+  return e ? e.level : 0;
+}
+
+function boardElevOption() {
+  const el = document.getElementById('board-elev-level');
+  const n = parseInt((el && el.value) || '1', 10);
+  return Math.max(-9, Math.min(9, isNaN(n) ? 1 : n));
+}
+
+function boardPaintElevAt(p, level) {
+  if (!boardCanEdit) return;
+  if (p.col < 0 || p.col >= BOARD_COLS || p.row < 0 || p.row >= BOARD_ROWS) return;
+  encounter.boardElev = encounter.boardElev || [];
+  const id = p.col + ',' + p.row;
+  const existing = encounter.boardElev.find(e => e.id === id);
+  if (!level) {
+    if (!existing) return;
+    encounter.boardElev = encounter.boardElev.filter(e => e.id !== id);
+  } else if (existing) {
+    if (existing.level === level) return;
+    existing.level = level;
+  } else {
+    encounter.boardElev.push({ id, level });
+  }
+  boardBumpArtVersion();
+  encSave();
+}
+
+function paintElevLayer(ctx, SZ, elev) {
+  if (!elev.length) return;
+  const showNumber = SZ >= 12;
+  ctx.save();
+  if (showNumber) {
+    ctx.font = `700 ${Math.max(7, Math.min(11, SZ * 0.42))}px system-ui, sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+  }
+  for (const e of elev) {
+    const level = e.level || 0;
+    if (!level) continue;
+    const parts = e.id.split(',');
+    const c = +parts[0], r = +parts[1];
+    const strength = Math.min(0.34, 0.1 + Math.abs(level) * 0.07);
+    ctx.fillStyle = level > 0 ? `rgba(232,160,32,${strength})` : `rgba(80,140,220,${strength})`;
+    ctx.fillRect(c * SZ, r * SZ, SZ, SZ);
+    if (showNumber) {
+      ctx.fillStyle = 'rgba(255,255,255,0.78)';
+      ctx.fillText((level > 0 ? '+' : '') + level, c * SZ + SZ * 0.1, r * SZ + SZ * 0.06);
+    }
+  }
+  ctx.restore();
+}
+
+/* ── The DM's own maps ─────────────────────────────────────
+   A board built by hand, kept so it can be used again next week. Stored in
+   this browser, not in the encounter document: that document is the live
+   battle, every player's board reads it on every change, and a map library
+   living in there would sit growing against the 1 MiB document limit for the
+   benefit of exactly one person. The cost is that the library is per-browser,
+   which is what Export is for — and why the button says so rather than
+   leaving the DM to find out in the middle of a session on a different
+   laptop. */
+const BOARD_SAVED_MAPS_KEY = 'mha_board_maps_v1';
+
+function boardReadSavedMaps() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(BOARD_SAVED_MAPS_KEY) || '{}');
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  } catch { return {}; }
+}
+
+function boardWriteSavedMaps(maps) {
+  try {
+    localStorage.setItem(BOARD_SAVED_MAPS_KEY, JSON.stringify(maps));
+    return true;
+  } catch {
+    // Quota, or storage blocked outright in a private window. Saying so beats
+    // a button that looks like it worked.
+    alert('Could not save: this browser refused to store the map (storage full or blocked).');
+    return false;
+  }
+}
+
+// The board as it stands, in map coordinates: everything shifted so the
+// top-left of what's actually on the board becomes 0,0, exactly like a preset
+// builder's output, so loading one back goes through the same path.
+function boardSerializeCurrent() {
+  const terrain = encounter.boardTerrain || [];
+  const props = encounter.boardProps || [];
+  const notes = encounter.boardNotes || [];
+  const elev = encounter.boardElev || [];
+  let minC = Infinity, minR = Infinity, maxC = -Infinity, maxR = -Infinity;
+  const stretch = (c, r, w, h) => {
+    minC = Math.min(minC, c); minR = Math.min(minR, r);
+    maxC = Math.max(maxC, c + (w || 1) - 1); maxR = Math.max(maxR, r + (h || 1) - 1);
+  };
+  const cellOf = (id) => id.split(',').map(Number);
+  for (const t of terrain) { const [c, r] = cellOf(t.id); stretch(c, r); }
+  for (const e of elev) { const [c, r] = cellOf(e.id); stretch(c, r); }
+  for (const n of notes) stretch(n.col, n.row);
+  for (const p of props) { const fp = boardPropFootprint(p); stretch(p.col, p.row, fp.w, fp.h); }
+  if (!isFinite(minC)) return null;
+  const shift = (c, r) => (c - minC) + ',' + (r - minR);
+  return {
+    w: maxC - minC + 1,
+    h: maxR - minR + 1,
+    terrain: terrain.map(t => { const [c, r] = cellOf(t.id); return { id: shift(c, r), type: t.type }; }),
+    props: props.map(p => ({ type: p.type, col: p.col - minC, row: p.row - minR, rot: p.rot || 0 })),
+    notes: notes.map(n => ({ col: n.col - minC, row: n.row - minR, text: n.text })),
+    elev: elev.map(e => { const [c, r] = cellOf(e.id); return { id: shift(c, r), level: e.level }; }),
+  };
+}
+
+// A saved map dressed as a preset, so boardApplyPresetMap doesn't need to
+// know the difference.
+function boardSavedMapAsPreset(name, data) {
+  return {
+    key: 'saved:' + name,
+    label: name,
+    desc: `Your own map — ${data.w}×${data.h}, saved in this browser.`,
+    w: data.w, h: data.h,
+    build() { return data; },
+  };
+}
+
+function boardSaveCurrentMap() {
+  if (!boardCanEdit) return;
+  const note = document.getElementById('board-map-note');
+  const data = boardSerializeCurrent();
+  if (!data) {
+    if (note) note.textContent = 'Nothing on the board to save yet.';
+    return;
+  }
+  const name = (prompt('Save this board as:', '') || '').trim().slice(0, 40);
+  if (!name) return;
+  const maps = boardReadSavedMaps();
+  if (maps[name] && !confirm(`"${name}" already exists. Replace it?`)) return;
+  maps[name] = data;
+  if (!boardWriteSavedMaps(maps)) return;
+  boardPopulateMapSelect();
+  const sel = document.getElementById('board-map-select');
+  if (sel) sel.value = 'saved:' + name;
+  if (note) note.textContent = `Saved "${name}" (${data.w}×${data.h}) in this browser.`;
+}
+
+function boardDeleteSavedMap() {
+  const sel = document.getElementById('board-map-select');
+  const note = document.getElementById('board-map-note');
+  const value = sel ? sel.value : '';
+  if (!value.startsWith('saved:')) {
+    if (note) note.textContent = 'Pick one of your own saved maps to delete.';
+    return;
+  }
+  const name = value.slice(6);
+  if (!confirm(`Delete your saved map "${name}"? This cannot be undone.`)) return;
+  const maps = boardReadSavedMaps();
+  delete maps[name];
+  if (!boardWriteSavedMaps(maps)) return;
+  boardPopulateMapSelect();
+  if (note) note.textContent = `Deleted "${name}".`;
+}
+
+function boardExportSavedMaps() {
+  const maps = boardReadSavedMaps();
+  const note = document.getElementById('board-map-note');
+  const names = Object.keys(maps);
+  if (!names.length) {
+    if (note) note.textContent = 'No saved maps in this browser to export.';
+    return;
+  }
+  const blob = new Blob([JSON.stringify(maps, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'board-maps.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  // Revoking immediately can race the download in some browsers; a tick is enough.
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  if (note) note.textContent = `Exported ${names.length} map(s).`;
+}
+
+function boardImportSavedMaps(input) {
+  const file = input && input.files && input.files[0];
+  const note = document.getElementById('board-map-note');
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    input.value = '';
+    let incoming;
+    try { incoming = JSON.parse(String(reader.result)); } catch { incoming = null; }
+    if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) {
+      if (note) note.textContent = 'That file is not a board-maps export.';
+      return;
+    }
+    const maps = boardReadSavedMaps();
+    let added = 0;
+    for (const [name, data] of Object.entries(incoming)) {
+      // Only shapes this page can actually load — a file that is JSON but
+      // not a map library shouldn't half-import.
+      if (!data || !Array.isArray(data.terrain) || !Array.isArray(data.props)) continue;
+      maps[name] = data;
+      added++;
+    }
+    if (!added) {
+      if (note) note.textContent = 'Nothing in that file looked like a saved map.';
+      return;
+    }
+    if (!boardWriteSavedMaps(maps)) return;
+    boardPopulateMapSelect();
+    if (note) note.textContent = `Imported ${added} map(s).`;
+  };
+  reader.readAsText(file);
 }
 
 function boardCanvasPoint(e) {
@@ -689,6 +1161,22 @@ function boardEraseAt(p) {
   encounter.boardTerrain = encounter.boardTerrain.filter(t => t.id !== cellId);
   if (encounter.boardTerrain.length !== beforeTerrainLen) changed = true;
 
+  // Labels, elevation and area shapes come up under the eraser as well —
+  // anything the DM can put on a square, they can take off it the same way.
+  const beforeNotes = (encounter.boardNotes || []).length;
+  encounter.boardNotes = (encounter.boardNotes || []).filter(n => !(n.col === p.col && n.row === p.row));
+  if (encounter.boardNotes.length !== beforeNotes) changed = true;
+
+  const beforeElev = (encounter.boardElev || []).length;
+  encounter.boardElev = (encounter.boardElev || []).filter(e => e.id !== cellId);
+  if (encounter.boardElev.length !== beforeElev) changed = true;
+
+  const hitTemplate = boardTemplateAt(p.col, p.row);
+  if (hitTemplate) {
+    encounter.boardTemplates = (encounter.boardTemplates || []).filter(t => t.id !== hitTemplate.id);
+    changed = true;
+  }
+
   const nextStrokes = [];
   for (const s of encounter.boardStrokes) {
     const points = s.points.filter(pt => Math.hypot(pt.x - p.x, pt.y - p.y) > ERASE_RADIUS);
@@ -722,7 +1210,17 @@ function boardDrawStart(e) {
   } else if (boardState.tool === 'eraser') {
     _boardPainting = true;
     boardEraseAt(p);
-  } else {
+  } else if (boardState.tool === 'note') {
+    // One square at a time and a prompt to answer — nothing to drag.
+    boardPlaceNote(p.col, p.row);
+    return;
+  } else if (boardState.tool === 'template') {
+    boardPlaceTemplate(p.col, p.row);
+    return;
+  } else if (boardState.tool === 'elev') {
+    _boardPainting = true;
+    boardPaintElevAt(p, boardElevOption());
+  } else if (BOARD_TERRAIN_TOOLS.includes(boardState.tool)) {
     _boardPainting = true;
     boardPaintTerrainAt(p, boardState.tool);
   }
@@ -739,7 +1237,11 @@ function boardDrawMove(e) {
     if (!_boardPainting) return;
     boardEraseAt(p);
     boardRequestRender();
-  } else if (_boardPainting) {
+  } else if (boardState.tool === 'elev') {
+    if (!_boardPainting) return;
+    boardPaintElevAt(p, boardElevOption());
+    boardRequestRender();
+  } else if (_boardPainting && BOARD_TERRAIN_TOOLS.includes(boardState.tool)) {
     boardPaintTerrainAt(p, boardState.tool);
     boardRequestRender();
   }
@@ -1034,6 +1536,9 @@ function paintTerrainLayer(ctx, SZ, terrain) {
   for (const t of terrain) {
     const style = TERRAIN_STYLES[t.type];
     if (!style) continue;
+    // Fog is painted opaque over everything at the end of the frame instead,
+    // on the boards that aren't allowed to see through it.
+    if (t.type === 'fog' && !boardCanEdit) continue;
     const parts = t.id.split(',');
     const c = +parts[0], r = +parts[1];
     ctx.fillStyle = style.fill;
@@ -1081,12 +1586,16 @@ function boardBuildArtLayer(width, height, SZ) {
   layer.width = width; layer.height = height;
   const ctx = layer.getContext('2d');
   paintTerrainLayer(ctx, SZ, encounter.boardTerrain || []);
+  paintElevLayer(ctx, SZ, encounter.boardElev || []);
   paintStrokesLayer(ctx, SZ, encounter.boardStrokes || []);
   return layer;
 }
 
 function boardGetArtLayer(width, height, SZ) {
-  const key = [width, height, SZ, _boardArtVersion].join('|');
+  // boardCanEdit is in the key because fog renders differently either side of
+  // it, and board.html flips it from true to false once the admin check comes
+  // back — a layer baked before that must not be reused after.
+  const key = [width, height, SZ, _boardArtVersion, boardCanEdit].join('|');
   if (_boardArtCache.key !== key) {
     _boardArtCache = { key, canvas: boardBuildArtLayer(width, height, SZ) };
   }
@@ -1105,6 +1614,10 @@ function renderBoardCanvas() {
   if (boardState.drawingStroke) paintStrokesLayer(ctx, SZ, [boardState.drawingStroke]);
   // Above terrain and drawings, below tokens — units stand on the scenery.
   paintPropsLayer(ctx, SZ);
+  // Area shapes go over the scenery and under the tokens, so you can see who
+  // is caught in one; labels go over the scenery so they stay readable.
+  paintTemplatesLayer(ctx, SZ);
+  paintNotesLayer(ctx, SZ);
 
   // Range overlay
   if (boardState.rangeFt > 0 && boardState.selectedIds.length >= 1) {
@@ -1319,6 +1832,10 @@ function renderBoardCanvas() {
     });
     ctx.restore();
   }
+
+  // Last of all, and only where it applies: the fog closes over tokens,
+  // scenery, labels and terrain alike.
+  if (!boardCanEdit) paintFogLayer(ctx, SZ, isDark);
 
   if (boardState.pendingId !== null) {
     const hint = document.getElementById('board-hint');
@@ -1812,7 +2329,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (mapSelect) {
     mapSelect.addEventListener('change', () => {
       const note = document.getElementById('board-map-note');
-      const mp = BOARD_MAPS_BY_KEY[mapSelect.value];
+      const mp = boardMapByKey(mapSelect.value);
       if (note) note.textContent = mp ? mp.desc : '';
     });
   }

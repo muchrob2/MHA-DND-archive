@@ -1465,6 +1465,29 @@ function boardHiddenCells() {
 
 function boardLosEnabled() { return !!encounter.boardLos; }
 
+// A square this viewer cannot see into. Always false for the DM, who sees
+// everything with the hidden squares merely shaded.
+function boardSquareHidden(col, row) {
+  if (boardCanEdit) return false;
+  return boardSightState().hidden.has(col + ',' + row);
+}
+
+/* The hit test a board without edit rights is allowed to use: a token on a
+   hidden square is not there as far as that board is concerned.
+
+   Fog covered the drawing and nothing else. The hover tooltip still named the
+   creature and printed its HP and conditions; the cursor still turned into a
+   grab hand over it, so a player could sweep the mouse across the dark and
+   find every hidden enemy by watching the pointer; and clicking one still
+   selected it, which drew a glow around a square that was supposed to be
+   empty. Hiding a monster has to mean the board stops answering questions
+   about it, not only that it stops drawing it. */
+function boardVisibleHitTest(col, row) {
+  const hit = boardHitTest(col, row);
+  if (!hit) return null;
+  return boardSquareHidden(col, row) ? null : hit;
+}
+
 function boardToggleLos(on) {
   if (!boardCanEdit) return;
   encounter.boardLos = !!on;
@@ -2356,7 +2379,11 @@ function renderBoardCanvas() {
   if (sel.length === 2) {
     const a = encounter.combatants.find(c => c.id === sel[0]);
     const b = encounter.combatants.find(c => c.id === sel[1]);
-    if (a && b && a.boardX != null && b.boardX != null) {
+    // Never to a token this viewer cannot see: a measured line into an
+    // empty-looking square gives away the position it was drawn to hide.
+    const bothSeen = a && b && a.boardX != null && b.boardX != null
+      && !boardSquareHidden(a.boardX, a.boardY) && !boardSquareHidden(b.boardX, b.boardY);
+    if (bothSeen) {
       const ax = a.boardX * SZ + SZ / 2, ay = a.boardY * SZ + SZ / 2;
       const bx = b.boardX * SZ + SZ / 2, by = b.boardY * SZ + SZ / 2;
       ctx.save();
@@ -2622,7 +2649,7 @@ function boardHandleMouseMove(e) {
       boardRequestRender();
     }
     const hit = col >= 0 && col < BOARD_COLS && row >= 0 && row < BOARD_ROWS
-      ? encounter.combatants.find(c => c.boardX != null && boardTokenCovers(c, col, row)) : null;
+      ? boardVisibleHitTest(col, row) : null;
     canvas.style.cursor = hit ? 'grab' : 'crosshair';
     const prev = boardHoverInfo;
     boardHoverInfo = hit ? { combatant: hit, col, row } : null;
@@ -2720,7 +2747,7 @@ function boardHandleCanvasClick(e) {
     return;
   }
 
-  const hit = boardHitTest(col, row);
+  const hit = boardVisibleHitTest(col, row);
   if (hit) {
     // Select / deselect token for distance measurement
     const idx = boardState.selectedIds.indexOf(hit.id);

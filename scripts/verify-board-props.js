@@ -140,6 +140,10 @@ function boot({ autoTerrain = true } = {}) {
       boardNoteAt, boardPlaceNote, boardElevLevel, boardPaintElevAt,
       paintTerrainLayer, paintFogLayer, paintNotesLayer, paintTemplatesLayer, paintElevLayer,
       boardSerializeCurrent, boardSaveCurrentMap, boardReadSavedMaps, boardMapByKey,
+      boardPaintTintAt, paintTintLayer, boardTintColor, boardPaintTerrainAt, BOARD_SETTINGS, BOARD_MAP_CELL_KEYS,
+      boardRayBlocked, boardVisibleCells, boardHiddenCells,
+      boardSightViewers, boardSightBlockerGrid, boardSightState, paintSightShadow,
+      boardLosEnabled, boardToggleLos, boardMarkVisibleFrom,
       boardPopulateMapSelect, boardSetTool, boardDrawStart,
       get boardPan() { return boardPan; },
       set canEdit(v) { boardCanEdit = v; },
@@ -693,6 +697,7 @@ const B = boot();
   env.boardPaintElevAt({ col: 3, row: 3 }, 1);
   env.boardPlaceTemplate(12, 12);
   env.boardPlaceProp('crate', 15, 15);
+  env.boardPaintTintAt({ col: 2, row: 2 }, '#ff0000');
   env.encounter.boardTerrain.push({ id: '1,1', type: 'wall' });
   env.encounter.boardStrokes.push({ id: 's', color: '#fff', width: 3, points: [{ x: 1, y: 1 }, { x: 2, y: 2 }] });
   check('every layer has something on it before Clear Art',
@@ -852,6 +857,223 @@ const B = boot();
     /ENEMY_GROUPS = ed\.groups/.test(encSrc) && /buildGroupSelect\(\)/.test(encSrc));
   check('and the DM page has somewhere to pick one',
     read('CLASS-1A/encounter.html').includes('id="enc-group-select"'));
+}
+
+/* ── 10. the colour layer ── */
+{
+  const env = boot();
+  env.boardPaintTintAt({ col: 4, row: 4 }, '#ff0000');
+  check('the colour tool colours a square',
+    env.encounter.boardTint.length === 1 && env.encounter.boardTint[0].color === '#ff0000',
+    JSON.stringify(env.encounter.boardTint));
+  const savesBefore = env.saves;
+  env.boardPaintTintAt({ col: 4, row: 4 }, '#ff0000');
+  check('painting the same colour on the same square writes nothing',
+    env.saves === savesBefore, `${env.saves} vs ${savesBefore}`);
+  env.boardPaintTintAt({ col: 4, row: 4 }, '#00ff00');
+  check('a different colour replaces it rather than stacking',
+    env.encounter.boardTint.length === 1 && env.encounter.boardTint[0].color === '#00ff00');
+  env.boardPaintTintAt({ col: 120, row: 4 }, '#00ff00');
+  check('colour painted off the grid is ignored', env.encounter.boardTint.length === 1);
+  env.boardEraseAt({ x: 4.5, y: 4.5, col: 4, row: 4 });
+  check('and the eraser takes it off', env.encounter.boardTint.length === 0);
+
+  // With no picker on the page (the players' board has none) the colour has to
+  // come out as something valid rather than as "undefined" in a fillStyle.
+  check('the colour falls back to a valid hex when there is no picker to read',
+    /^#[0-9a-f]{6}$/i.test(env.boardTintColor()), env.boardTintColor());
+}
+
+/* ── 11. line of sight ──
+   The switch the DM flips instead of painting fog by hand. What matters is
+   that it hides the right squares on the players' board and nothing at all on
+   the DM's, and that it is cheap enough to run behind a 60fps pan. */
+{
+  const env = boot();
+  const grid = (...cells) => {
+    const g = new Uint8Array(env.BOARD_COLS * env.BOARD_ROWS);
+    for (const id of cells) { const [c, r] = id.split(',').map(Number); g[c * env.BOARD_ROWS + r] = 1; }
+    return g;
+  };
+  const blockers = grid('52,50');
+  check('a wall between two points blocks the line',
+    env.boardRayBlocked(50.5, 50.5, 54.5, 50.5, blockers) === true);
+  check('an empty line is not blocked',
+    env.boardRayBlocked(50.5, 50.5, 54.5, 50.5, grid()) === false);
+  check('the square at the far end does not block itself — you can see the wall',
+    env.boardRayBlocked(50.5, 50.5, 52.5, 50.5, blockers) === false);
+  check('nor does the square you are standing in',
+    env.boardRayBlocked(52.5, 50.5, 54.5, 50.5, blockers) === false);
+  check('a wall one square off the line does not block it',
+    env.boardRayBlocked(50.5, 50.5, 54.5, 50.5, grid('52,49')) === true
+      ? false : true, 'wall at 52,49 should not block a horizontal ray along row 50');
+}
+
+{
+  const env = boot();
+  // A player character, and a wall standing between them and the far side.
+  env.encounter.combatants.push({ id: 1, name: 'Deku', hp: 30, maxHp: 30, ac: 15, isPC: true, boardX: 50, boardY: 50 });
+  for (let r = 45; r <= 55; r++) env.encounter.boardTerrain.push({ id: '52,' + r, type: 'wall' });
+
+  check('with the switch off, nothing is hidden',
+    env.boardVisibleCells() === null && env.boardHiddenCells().size === 0);
+
+  env.encounter.boardLos = true;
+  const vis = env.boardVisibleCells();
+  const seen = (c, r) => !!vis[c * env.BOARD_ROWS + r];
+  check('the square the character stands on is visible', seen(50, 50));
+  check('the near side of the wall is visible', seen(51, 50));
+  check('the wall itself is visible — you can see what is blocking you', seen(52, 50));
+  check('and the square behind it is not', !seen(54, 50));
+  const hidden = env.boardHiddenCells();
+  check('the hidden set covers what is out of sight', hidden.has('54,50') && !hidden.has('51,50'),
+    `54,50 hidden=${hidden.has('54,50')} 51,50 hidden=${hidden.has('51,50')}`);
+
+  // Painted fog still applies on top of whatever sight says. Painted through
+  // the brush, not pushed onto the array: every real terrain change bumps the
+  // art version, which is what the sight cache keys on, and a test that
+  // sidesteps that is testing a state the app can't reach.
+  env.boardPaintTerrainAt({ col: 51, row: 50 }, 'fog');
+  check('painted fog hides a square sight would have shown',
+    env.boardHiddenCells().has('51,50'));
+
+  // An enemy is not a vantage point — fog is drawn for the players.
+  const env2 = boot();
+  env2.encounter.boardLos = true;
+  env2.encounter.combatants.push({ id: 2, name: 'Thug', hp: 10, maxHp: 10, ac: 10, isPC: false, boardX: 50, boardY: 50 });
+  check('an enemy token is not something the players see with',
+    env2.boardVisibleCells() === null);
+  check('and with nobody to see, sight hides nothing rather than everything',
+    env2.boardHiddenCells().size === 0);
+}
+
+{
+  // The computation runs over every square for every character, and the board
+  // re-renders on every frame of a pan. It has to be cached, and the cache has
+  // to notice a character moving or a wall going up.
+  const env = boot();
+  env.encounter.boardLos = true;
+  const pc = { id: 1, name: 'Deku', hp: 30, maxHp: 30, ac: 15, isPC: true, boardX: 50, boardY: 50 };
+  env.encounter.combatants.push(pc);
+  for (let r = 45; r <= 55; r++) env.encounter.boardTerrain.push({ id: '52,' + r, type: 'wall' });
+  const first = env.boardVisibleCells();
+  check('asking twice with nothing changed returns the same computed set',
+    env.boardVisibleCells() === first);
+  pc.boardX = 54;
+  const moved = env.boardVisibleCells();
+  check('moving a character recomputes it', moved !== first);
+  const movedSeen = (c, r) => !!moved[c * env.BOARD_ROWS + r];
+  check('and from the far side of the wall the other side is now hidden',
+    movedSeen(54, 50) && !movedSeen(50, 50),
+    `54,50=${movedSeen(54, 50)} 50,50=${movedSeen(50, 50)}`);
+  pc.boardX = 50;
+  env.boardPaintTerrainAt({ col: 60, row: 60 }, 'wall');
+  check('and so does building a wall', env.boardVisibleCells() !== moved);
+}
+
+{
+  // Which board paints what: the players get an opaque cover, the DM a shade.
+  const env = boot();
+  env.encounter.boardLos = true;
+  env.encounter.combatants.push({ id: 1, name: 'Deku', hp: 30, maxHp: 30, ac: 15, isPC: true, boardX: 50, boardY: 50 });
+  for (let r = 45; r <= 55; r++) env.encounter.boardTerrain.push({ id: '52,' + r, type: 'wall' });
+  const shade = [];
+  env.paintSightShadow(makeCtx(shade), 20);
+  check('the DM board shades the squares the players cannot see',
+    shade.some(([m]) => m === 'fillRect'));
+  const covered = [];
+  env.canEdit = false;
+  env.paintFogLayer(makeCtx(covered), 20, true);
+  check('and the players board covers them opaquely',
+    covered.some(([m]) => m === 'fillRect'));
+
+  // The one thing a sight system must never do.
+  const hidden = env.boardHiddenCells();
+  const enemyCell = '56,50';
+  check('an enemy standing behind a wall is on a hidden square, so the fog covers it',
+    hidden.has(enemyCell), [...hidden].slice(0, 6).join(' '));
+}
+
+{
+  // A colour-washed, labelled, raised board, saved and loaded back.
+  const env = boot();
+  env.encounter.boardTerrain.push({ id: '60,60', type: 'wall' });
+  env.boardPaintTintAt({ col: 61, row: 60 }, '#ff00ff');
+  env.encounter.boardElev.push({ id: '62,60', level: -2 });
+  env._setPrompt('Full house');
+  env.boardSaveCurrentMap();
+  const data = env.boardReadSavedMaps()['Full house'];
+  check('a saved map carries the colour layer with everything else',
+    data && Array.isArray(data.tint) && data.tint.length === 1 && data.tint[0].color === '#ff00ff',
+    JSON.stringify(data && data.tint));
+  env.boardApplyPresetMap(env.boardMapByKey('saved:Full house'));
+  const wall = env.encounter.boardTerrain.find(t => t.type === 'wall');
+  const wc = wall ? +wall.id.split(',')[0] : null;
+  check('and loading it puts the colour back one square right of the wall',
+    env.encounter.boardTint.length === 1 && +env.encounter.boardTint[0].id.split(',')[0] === wc + 1,
+    `wall ${wall && wall.id}, tint ${env.encounter.boardTint[0] && env.encounter.boardTint[0].id}`);
+  env.boardApplyPresetMap(env.BOARD_MAPS_BY_KEY['warehouse']);
+  check('loading a preset clears the colour from the last map',
+    env.encounter.boardTint.length === 0);
+}
+
+{
+  /* Sight is recomputed whenever a wall changes or a character takes a step,
+     and asked for on every frame of every pan, hover and token drag. The
+     ratio between those two is the thing worth guarding — the first version
+     of this keyed its wall lookups on "c,r" strings and took 70ms a
+     computation, which is fine cached and ruinous if anything ever stops
+     caching it. */
+  const env = boot();
+  env.boardApplyPresetMap(env.BOARD_MAPS_BY_KEY['ua-campus']);
+  const bb = env.boardComputeBBox();
+  for (let i = 0; i < 5; i++) {
+    env.encounter.combatants.push({ id: i + 1, name: 'PC' + i, hp: 30, maxHp: 30, ac: 15,
+      isPC: true, boardX: bb.minC + 6 + i * 3, boardY: bb.minR + 8 + i * 2 });
+  }
+  env.encounter.boardLos = true;
+  const ms = (fn) => { const t = process.hrtime.bigint(); fn(); return Number(process.hrtime.bigint() - t) / 1e6; };
+  const once = ms(() => env.boardSightState());
+  const sixty = ms(() => { for (let i = 0; i < 60; i++) env.boardSightState(); });
+  check('sixty frames of sight cost less than one computation of it — the cache is doing its job',
+    sixty < once, `one ${once.toFixed(2)}ms, sixty ${sixty.toFixed(2)}ms`);
+  check('and one computation over the biggest map with a full party stays inside a few frames',
+    once < 120, once.toFixed(1) + 'ms');
+
+  // One character stepping must not cost the whole party's sight again.
+  env.encounter.combatants[0].boardX += 1;
+  const afterStep = ms(() => env.boardSightState());
+  check('one character moving recomputes one character, not five',
+    afterStep < once, `all five ${once.toFixed(2)}ms, one step ${afterStep.toFixed(2)}ms`);
+}
+
+{
+  /* The markup and the stylesheet drift apart silently. Both of these caught
+     something real: the board bars were regrouped and every id the engine
+     reaches for had to survive it, and the turn modal's "skip downed" label
+     had been styled as #tm-skip-dead while the markup used it as a class, so
+     the rule had never once applied. */
+  const pages = ['CLASS-1A/encounter.html', 'CLASS-1A/board.html'].map(read);
+  const scripts = ['CLASS-1A/encounter.js', 'CLASS-1A/board.js', 'CLASS-1A/board-shared.js'].map(read);
+  const ids = new Set();
+  for (const page of pages) for (const m of page.matchAll(/id="([^"${]+)"/g)) ids.add(m[1]);
+  // Ids that only ever exist because some innerHTML wrote them.
+  for (const src2 of scripts) for (const m of src2.matchAll(/id="([a-zA-Z][\w-]*)"/g)) ids.add(m[1]);
+
+  const reached = [];
+  for (const src2 of scripts) {
+    for (const m of src2.matchAll(/getElementById\('([^'${]+)'\)/g)) {
+      if (!ids.has(m[1])) reached.push('#' + m[1]);
+    }
+  }
+  check('every element the board and encounter scripts look up exists in the markup',
+    reached.length === 0, [...new Set(reached)].join(', '));
+
+  const css = read('css/pages/encounter.css').replace(/\/\*[\s\S]*?\*\//g, '');
+  const dead = [...new Set([...css.matchAll(/#([a-zA-Z][\w-]*)/g)].map(m => m[1]))]
+    .filter(id => !ids.has(id));
+  check('every id the encounter stylesheet targets is an id that exists',
+    dead.length === 0, dead.join(', '));
 }
 
 console.log(failures ? `\n>>> board props FAILED (${failures})` : '\n>>> board props OK');

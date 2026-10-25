@@ -52,20 +52,20 @@
         <button class="enc-btn danger" onclick="encReset()">Reset Encounter</button>
       </div>
       <div id="enc-add-bar">
-        <span style="font-size:11px;color:var(--text-dim);font-weight:600;">Roster:</span>
+        <span class="enc-add-label">Roster</span>
         <select id="enc-roster-select"><option value="">— choose —</option></select>
         <button class="enc-btn" onclick="encAddFromRoster()">Add</button>
         <div class="add-sep"></div>
-        <span style="font-size:11px;color:var(--text-dim);font-weight:600;">Enemy:</span>
+        <span class="enc-add-label">Enemy</span>
         <select id="enc-enemy-select" style="max-width:240px"><option value="">— choose —</option></select>
-        <input type="number" id="enc-enemy-qty" value="1" min="1" max="10" title="Quantity" style="width:44px;padding:5px 4px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:12px;">
+        <input type="number" id="enc-enemy-qty" class="enc-qty" value="1" min="1" max="10" title="How many" aria-label="Quantity">
         <button class="enc-btn" onclick="encAddEnemy()">Add</button>
         <div class="add-sep"></div>
-        <span style="font-size:11px;color:var(--text-dim);font-weight:600;">Group:</span>
+        <span class="enc-add-label">Group</span>
         <select id="enc-group-select" style="max-width:260px" title="A whole line-up at once, with the map it was written for"><option value="">— choose —</option></select>
         <button class="enc-btn" onclick="encAddGroup()">Add</button>
         <div class="add-sep"></div>
-        <span style="font-size:11px;color:var(--text-dim);font-weight:600;">Custom:</span>
+        <span class="enc-add-label">Custom</span>
         <input type="text" id="enc-custom-name" placeholder="Name">
         <input type="number" id="enc-custom-hp" placeholder="HP" min="1">
         <input type="number" id="enc-custom-ac" placeholder="AC" min="1">
@@ -185,67 +185,92 @@
             <button class="board-zoom-btn" onclick="boardZoomIn()" title="Zoom in" aria-label="Zoom in">+</button>
             <button class="board-zoom-btn" onclick="boardFitZoom()" title="Fit grid to window">Fit</button>
           </div>
-          <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+          <div class="board-header-end">
             <button id="board-close-btn" onclick="closeBoardMode()" title="Close" aria-label="Close">✕</button>
           </div>
         </div>
+        <!-- Three rows rather than two, grouped by the question each
+             answers: what am I drawing with, which map, and how is the scene
+             lit. Twenty-odd controls in one wrapping row was a wall of
+             buttons you had to read end to end to find anything. -->
         <div id="board-draw-bar">
-          <span id="board-draw-label">Tools:</span>
-          <button class="board-tool-btn active" data-tool="move" onclick="boardSetTool('move')" title="Move &amp; select tokens">✥ Move</button>
-          <button class="board-tool-btn" data-tool="pen" onclick="boardSetTool('pen')" title="Freehand draw">✏ Pen</button>
-          <input id="board-pen-color" type="color" value="#E8A020" title="Pen color" oninput="boardState.penColor=this.value">
-          <div class="board-draw-sep"></div>
-          <button class="board-tool-btn" data-tool="wall" onclick="boardSetTool('wall')" title="Mark a wall">▦ Wall</button>
-          <button class="board-tool-btn" data-tool="difficult" onclick="boardSetTool('difficult')" title="Mark difficult terrain">≋ Difficult</button>
-          <button class="board-tool-btn" data-tool="hazard" onclick="boardSetTool('hazard')" title="Mark a hazard">⚠ Hazard</button>
-          <button class="board-tool-btn" data-tool="water" onclick="boardSetTool('water')" title="Mark water">〰 Water</button>
-          <button class="board-tool-btn" data-tool="cover" onclick="boardSetTool('cover')" title="Mark cover">⛊ Cover</button>
-          <button class="board-tool-btn" data-tool="fog" onclick="boardSetTool('fog')" title="Hide squares from the players — you still see what is under them">✦ Fog</button>
-          <div class="board-draw-sep"></div>
-          <button class="board-tool-btn" data-tool="note" onclick="boardSetTool('note')" title="Label a square — EXIT, ALARM, whose room this is. Players see labels.">⌨ Label</button>
-          <button class="board-tool-btn" data-tool="elev" onclick="boardSetTool('elev')" title="Mark how many squares up (or down) a square is">⇕ Elev</button>
-          <input id="board-elev-level" class="board-mini-input" type="number" value="1" min="-9" max="9" step="1" title="Squares up, or down if negative. Zero clears the mark." aria-label="Elevation level">
-          <div class="board-draw-sep"></div>
-          <button class="board-tool-btn" data-tool="template" onclick="boardSetTool('template')" title="Drop an area shape — click inside one to take it away">◓ Area</button>
-          <select id="board-template-kind" class="board-mini-select" title="Shape of the area" aria-label="Area shape">
-            <option value="burst">Burst</option>
-            <option value="cone">Cone</option>
-            <option value="line">Line</option>
-          </select>
-          <input id="board-template-size" class="board-mini-input" type="number" value="2" min="1" max="30" step="1" title="Radius or length, in squares (1 square = 5 ft)" aria-label="Area size in squares">
-          <select id="board-template-rot" class="board-mini-select" title="Which way a cone or line points" aria-label="Area facing">
-            <option value="0">→ East</option>
-            <option value="90">↓ South</option>
-            <option value="180">← West</option>
-            <option value="270">↑ North</option>
-          </select>
-          <button class="board-tool-btn" onclick="boardClearTemplates()" title="Remove every area shape on the board">⌫ Shapes</button>
-          <div class="board-draw-sep"></div>
-          <button class="board-tool-btn eraser" data-tool="eraser" onclick="boardSetTool('eraser')" title="Erase drawings, terrain, labels, elevation &amp; scenery">⌫ Erase</button>
-          <button class="enc-btn danger" style="margin-left:auto;" onclick="boardClearArt()" title="Clear everything on the board — terrain, fog, scenery, drawings, labels, elevation and area shapes">Clear Art</button>
+          <span class="board-bar-label">Draw</span>
+          <div class="board-tool-group">
+            <button class="board-tool-btn active" data-tool="move" onclick="boardSetTool('move')" title="Move &amp; select tokens">✥ Move</button>
+            <button class="board-tool-btn" data-tool="pen" onclick="boardSetTool('pen')" title="Freehand draw">✏ Pen</button>
+            <input id="board-pen-color" class="board-swatch" type="color" value="#E8A020" title="Pen colour" aria-label="Pen colour" oninput="boardState.penColor=this.value">
+          </div>
+          <div class="board-tool-group" title="Terrain brushes — what a square is">
+            <button class="board-tool-btn" data-tool="wall" onclick="boardSetTool('wall')" title="Mark a wall — impassable, and it blocks line of sight">▦ Wall</button>
+            <button class="board-tool-btn" data-tool="difficult" onclick="boardSetTool('difficult')" title="Mark difficult terrain">≋ Difficult</button>
+            <button class="board-tool-btn" data-tool="hazard" onclick="boardSetTool('hazard')" title="Mark a hazard">⚠ Hazard</button>
+            <button class="board-tool-btn" data-tool="water" onclick="boardSetTool('water')" title="Mark water">〰 Water</button>
+            <button class="board-tool-btn" data-tool="cover" onclick="boardSetTool('cover')" title="Mark cover">⛊ Cover</button>
+          </div>
+          <div class="board-tool-group">
+            <button class="board-tool-btn" data-tool="tint" onclick="boardSetTool('tint')" title="Colour squares in — any colour, no rules attached">▩ Colour</button>
+            <input id="board-tint-color" class="board-swatch" type="color" value="#3B82F6" title="Colour to paint with" aria-label="Grid colour">
+            <button class="board-tool-btn" data-tool="elev" onclick="boardSetTool('elev')" title="Mark how many squares up (or down) a square is">⇕ Elev</button>
+            <input id="board-elev-level" class="board-mini-input" type="number" value="1" min="-9" max="9" step="1" title="Squares up, or down if negative. Zero clears the mark." aria-label="Elevation level">
+            <button class="board-tool-btn" data-tool="note" onclick="boardSetTool('note')" title="Label a square — EXIT, ALARM, whose room this is. Players see labels.">⌨ Label</button>
+          </div>
+          <div class="board-tool-group">
+            <button class="board-tool-btn" data-tool="template" onclick="boardSetTool('template')" title="Drop an area shape — click inside one to take it away">◓ Area</button>
+            <select id="board-template-kind" class="board-mini-select" title="Shape of the area" aria-label="Area shape">
+              <option value="burst">Burst</option>
+              <option value="cone">Cone</option>
+              <option value="line">Line</option>
+            </select>
+            <input id="board-template-size" class="board-mini-input" type="number" value="2" min="1" max="30" step="1" title="Radius or length, in squares (1 square = 5 ft)" aria-label="Area size in squares">
+            <select id="board-template-rot" class="board-mini-select" title="Which way a cone or line points" aria-label="Area facing">
+              <option value="0">→ E</option>
+              <option value="90">↓ S</option>
+              <option value="180">← W</option>
+              <option value="270">↑ N</option>
+            </select>
+          </div>
+          <div class="board-tool-group">
+            <button class="board-tool-btn eraser" data-tool="eraser" onclick="boardSetTool('eraser')" title="Erase drawings, terrain, colour, labels, elevation &amp; scenery">⌫ Erase</button>
+          </div>
         </div>
         <div id="board-map-bar">
-          <span id="board-map-label">Map:</span>
-          <select id="board-map-select" title="Preset battlefields"><option value="">— preset map —</option></select>
-          <button class="board-tool-btn" onclick="boardLoadPresetMap()" title="Replace everything on the board with this map">⤓ Load</button>
-          <button class="board-tool-btn" onclick="boardSaveCurrentMap()" title="Save the board as it stands as your own map. Kept in this browser only — use Export to move your maps to another machine.">💾 Save</button>
-          <button class="board-tool-btn eraser" onclick="boardDeleteSavedMap()" title="Delete the selected saved map of your own">🗑</button>
-          <button class="board-tool-btn" onclick="boardExportSavedMaps()" title="Download your saved maps as a file">⤒ Export</button>
-          <button class="board-tool-btn" onclick="document.getElementById('board-map-import').click()" title="Load a board-maps file saved from another browser">⤓ Import</button>
+          <span class="board-bar-label">Map</span>
+          <select id="board-map-select" title="Preset battlefields, and your own saved maps"><option value="">— preset map —</option></select>
+          <div class="board-tool-group">
+            <button class="board-tool-btn" onclick="boardLoadPresetMap()" title="Replace everything on the board with this map">⤓ Load</button>
+            <button class="board-tool-btn" onclick="boardSaveCurrentMap()" title="Save the board as it stands as your own map. Kept in this browser only — use Export to move your maps to another machine.">⌸ Save</button>
+            <button class="board-tool-btn eraser" onclick="boardDeleteSavedMap()" title="Delete the selected saved map of your own">🗑</button>
+          </div>
+          <div class="board-tool-group">
+            <button class="board-tool-btn" onclick="boardExportSavedMaps()" title="Download your saved maps as a file">⤒ Export</button>
+            <button class="board-tool-btn" onclick="document.getElementById('board-map-import').click()" title="Load a board-maps file saved from another browser">⤓ Import</button>
+          </div>
           <input type="file" id="board-map-import" accept="application/json,.json" style="display:none" onchange="boardImportSavedMaps(this)">
           <span id="board-map-note"></span>
+        </div>
+        <div id="board-scene-bar">
+          <span class="board-bar-label">Scene</span>
+          <label class="board-switch" id="board-los-wrap" title="Hide every square the players' own characters can't see, and keep up as they move. Walls block sight; cover does not. Your board shades the hidden squares instead of covering them.">
+            <input type="checkbox" id="board-los" onchange="boardToggleLos(this.checked)">
+            👁 Line of sight
+          </label>
+          <button class="board-tool-btn" data-tool="fog" onclick="boardSetTool('fog')" title="Paint fog by hand, on top of whatever line of sight decides — a dark room, a floor they haven't been told about">✦ Fog brush</button>
+          <span id="board-los-note"></span>
           <div class="board-draw-sep"></div>
-          <label id="board-autoterrain-wrap" title="Placed props also mark the squares they cover — buildings become walls, trees become cover, fire becomes a hazard">
+          <label class="board-switch" id="board-autoterrain-wrap" title="Placed props also mark the squares they cover — buildings become walls, trees become cover, fire becomes a hazard">
             <input type="checkbox" id="board-autoterrain" checked>
             Auto-terrain
           </label>
           <div class="board-draw-sep"></div>
           <span id="board-prop-actions" style="display:none;">
-            <span id="board-prop-selected-label">Selected:</span>
+            <span id="board-prop-selected-label">Selected</span>
             <b id="board-prop-name"></b>
             <button class="board-tool-btn" onclick="boardRotateSelectedProp()" title="Rotate 90° (R)">↻ Rotate</button>
             <button class="board-tool-btn eraser" onclick="boardDeleteSelectedProp()" title="Remove this prop (Delete)">🗑 Remove</button>
           </span>
+          <div class="board-bar-spacer"></div>
+          <button class="board-tool-btn" onclick="boardClearTemplates()" title="Remove every area shape on the board">⌫ Shapes</button>
+          <button class="enc-btn danger" onclick="boardClearArt()" title="Clear everything on the board — terrain, colour, fog, scenery, drawings, labels, elevation and area shapes">Clear Art</button>
         </div>
         <div id="board-body">
           <div id="board-tray">

@@ -154,6 +154,7 @@ const BOARD_TOOL_HINTS = {
   note: 'Click a square to label it. Click a label again to change it, or clear the text to remove it.',
   template: 'Click to drop the area shape set above. Click inside one to take it away.',
   elev: 'Click or drag to mark squares as that many squares up (or down, with a negative number). Zero clears.',
+  tint: 'Click or drag to colour squares in. Pick the colour next to the tool; the eraser takes it off again.',
   eraser: 'Click drawings, terrain, labels, elevation or scenery to erase them.',
 };
 
@@ -655,22 +656,23 @@ function boardApplyPresetMap(mp) {
   const built = mp.build();
   const offC = Math.max(0, Math.floor((BOARD_COLS - built.w) / 2));
   const offR = Math.max(0, Math.floor((BOARD_ROWS - built.h) / 2));
-  encounter.boardTerrain = built.terrain.map(t => {
-    const parts = t.id.split(',');
-    return { id: (+parts[0] + offC) + ',' + (+parts[1] + offR), type: t.type };
-  });
   encounter.boardProps = built.props.map(p => ({
     id: boardNextArtId(), type: p.type,
     col: p.col + offC, row: p.row + offR, rot: p.rot || 0, t: 1,
   }));
-  // Preset builders produce neither of these; a map the DM saved does.
   encounter.boardNotes = (built.notes || []).map(n => ({
     id: boardNextArtId(), col: n.col + offC, row: n.row + offR, text: n.text,
   }));
-  encounter.boardElev = (built.elev || []).map(e => {
-    const parts = e.id.split(',');
-    return { id: (+parts[0] + offC) + ',' + (+parts[1] + offR), level: e.level };
-  });
+  // Terrain, elevation and colour are all cell-keyed, so one loop shifts all
+  // three onto the grid. A preset builder emits only terrain and a map the DM
+  // saved emits all of them; a layer missing from the file comes out empty,
+  // which is also what clears the last map's off the board.
+  for (const [key, layer] of Object.entries(BOARD_MAP_CELL_KEYS)) {
+    encounter[layer] = (built[key] || []).map(e => {
+      const parts = String(e.id).split(',');
+      return Object.assign({}, e, { id: (+parts[0] + offC) + ',' + (+parts[1] + offR) });
+    });
+  }
   encounter.boardTemplates = [];
   encounter.boardStrokes = [];
   boardState.pendingProp = null;
@@ -696,7 +698,18 @@ function boardApplyPresetMap(mp) {
    without it their possibly-stale copy of a field overwrites whatever the DM
    changed a second earlier. */
 const BOARD_LAYERS = ['boardStrokes', 'boardTerrain', 'boardProps',
-                      'boardNotes', 'boardElev', 'boardTemplates'];
+                      'boardNotes', 'boardElev', 'boardTemplates', 'boardTint'];
+
+// Scene state that isn't a layer: a switch rather than a thing on a square.
+// Kept by a reset along with the layers, because the map surviving a reset is
+// the point and how the map is lit is part of the map.
+const BOARD_SETTINGS = ['boardLos'];
+
+// Map-file key → the layer it loads into, for the layers keyed by a "c,r"
+// cell id. Preset builders emit the short names; so does a map the DM saves.
+// Listing them keeps save, load and the preset builders speaking one
+// vocabulary instead of three copies of the same three lines.
+const BOARD_MAP_CELL_KEYS = { terrain: 'boardTerrain', elev: 'boardElev', tint: 'boardTint' };
 
 function boardEnsureLayers(enc) {
   if (!enc) return enc;
@@ -724,15 +737,15 @@ function boardLayerMergePaths() {
    with it true and flips it when the admin check resolves, and the baked
    layer has to be rebuilt when it does. */
 function paintFogLayer(ctx, SZ, isDark) {
-  const cells = (encounter.boardTerrain || []).filter(t => t.type === 'fog');
+  // The cell list rather than the id set: this runs on every frame of a pan,
+  // and splitting a thousand "c,r" strings per frame is work for nothing.
+  const cells = boardSightState().cells;
   if (!cells.length) return;
   ctx.save();
   ctx.fillStyle = isDark ? '#10131a' : '#e9e9ec';
   ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.10)';
   ctx.lineWidth = 1;
-  for (const t of cells) {
-    const parts = t.id.split(',');
-    const c = +parts[0], r = +parts[1];
+  for (const [c, r] of cells) {
     ctx.fillRect(c * SZ, r * SZ, SZ, SZ);
     ctx.strokeRect(c * SZ + 0.5, r * SZ + 0.5, SZ - 1, SZ - 1);
   }
@@ -954,6 +967,262 @@ function paintElevLayer(ctx, SZ, elev) {
   ctx.restore();
 }
 
+/* ── Grid colour ───────────────────────────────────────────
+   Any colour on any square, painted like a terrain brush. Its own layer
+   rather than another terrain type because terrain types carry a ruling —
+   wall, difficult, cover all mean something at the table — and this means
+   nothing except what the DM says it means: the red team's half, the inside
+   of the barrier, where the gas has got to. Painted underneath the terrain
+   markers so a wall still reads as a wall on top of it. */
+function boardTintColor() {
+  const el = document.getElementById('board-tint-color');
+  const raw = (el && el.value) || '#3B82F6';
+  // A colour that came from anywhere but the picker gets dropped rather than
+  // written into the document and then into every player's canvas.
+  return /^#[0-9a-fA-F]{6}$/.test(raw) ? raw : '#3B82F6';
+}
+
+function boardPaintTintAt(p, color) {
+  if (!boardCanEdit) return;
+  if (p.col < 0 || p.col >= BOARD_COLS || p.row < 0 || p.row >= BOARD_ROWS) return;
+  encounter.boardTint = encounter.boardTint || [];
+  const id = p.col + ',' + p.row;
+  const existing = encounter.boardTint.find(t => t.id === id);
+  if (existing) {
+    if (existing.color === color) return;
+    existing.color = color;
+  } else {
+    encounter.boardTint.push({ id, color });
+  }
+  boardBumpArtVersion();
+  encSave();
+}
+
+function paintTintLayer(ctx, SZ, tint) {
+  if (!tint.length) return;
+  ctx.save();
+  // Not solid: the grid lines and the alternating squares have to stay
+  // readable through it, or a coloured area stops being part of the board.
+  ctx.globalAlpha = 0.5;
+  for (const t of tint) {
+    const parts = t.id.split(',');
+    ctx.fillStyle = t.color || '#3B82F6';
+    ctx.fillRect(+parts[0] * SZ, +parts[1] * SZ, SZ, SZ);
+  }
+  ctx.restore();
+}
+
+/* ── Line of sight ─────────────────────────────────────────
+   One switch instead of painting fog by hand: with it on, the players' board
+   hides every square none of their own characters can see, and keeps up as
+   they move. Manual fog still applies on top, for the things sight has no
+   opinion about — a dark room, a floor they haven't been told exists.
+
+   WHAT BLOCKS IT. Wall squares, which is the terrain every impassable
+   prefab stamps under itself, so buildings, containers, trains, lockers and
+   anything else solid block sight by being what they are. Cover
+   deliberately does not: crates, railings, cars and hedges are half cover
+   you can see over, and a DM who wants a sight blocker paints a wall. One
+   source of truth, and it is the one already on the board.
+
+   WHO SEES. The placed player characters. With none of them on the board
+   there is no vantage point to compute from, and blacking out the whole map
+   would read as a bug rather than as darkness, so sight simply does nothing
+   until a PC is standing somewhere.
+
+   The honest limitation: rays run centre-to-corner on a square grid, so two
+   walls meeting at a diagonal leak a sliver of vision between them. Every
+   grid implementation of this has to pick something; this one errs towards
+   showing a square rather than hiding it, which is the error you can see and
+   correct with the fog brush rather than the one that hides a monster you
+   meant the players to be looking at. */
+// Walls, as a flat grid indexed by cell rather than a set of "c,r" strings.
+// The ray walker below touches a few hundred thousand cells per computation,
+// and at that volume building a string per step to look it up was most of the
+// cost — this is the same data, five times faster to ask.
+const BOARD_SIGHT_STRIDE = BOARD_ROWS;
+function boardSightBlockerGrid() {
+  const grid = new Uint8Array(BOARD_COLS * BOARD_ROWS);
+  for (const t of encounter.boardTerrain || []) {
+    if (t.type !== 'wall') continue;
+    const parts = t.id.split(',');
+    const c = +parts[0], r = +parts[1];
+    if (c >= 0 && c < BOARD_COLS && r >= 0 && r < BOARD_ROWS) grid[c * BOARD_SIGHT_STRIDE + r] = 1;
+  }
+  return grid;
+}
+
+function boardSightViewers() {
+  return (encounter.combatants || []).filter(c => c.isPC && c.boardX != null);
+}
+
+// Exact cell-by-cell traversal of the segment (Amanatides & Woo): steps from
+// cell to cell rather than sampling points along the line, so a one-square
+// wall can never be stepped over however the ray is angled. Returns true if
+// something solid stands strictly between the two ends.
+function boardRayBlocked(x0, y0, x1, y1, blocked) {
+  let cx = Math.floor(x0), cy = Math.floor(y0);
+  const ex = Math.floor(x1), ey = Math.floor(y1);
+  if (cx === ex && cy === ey) return false;
+  const dx = x1 - x0, dy = y1 - y0;
+  const stepX = dx > 0 ? 1 : -1, stepY = dy > 0 ? 1 : -1;
+  const invX = dx === 0 ? Infinity : Math.abs(1 / dx);
+  const invY = dy === 0 ? Infinity : Math.abs(1 / dy);
+  let tx = dx === 0 ? Infinity : (dx > 0 ? (cx + 1 - x0) : (x0 - cx)) * invX;
+  let ty = dy === 0 ? Infinity : (dy > 0 ? (cy + 1 - y0) : (y0 - cy)) * invY;
+  for (let guard = 0; guard < 512; guard++) {
+    if (tx < ty) { cx += stepX; tx += invX; } else { cy += stepY; ty += invY; }
+    if (cx === ex && cy === ey) return false;     // got there
+    if (tx > 1 && ty > 1) return false;           // ran off the end of the segment
+    if (blocked[cx * BOARD_SIGHT_STRIDE + cy]) return true;
+  }
+  return true;
+}
+
+// Everything one viewer can see, within the box given, written into `out`.
+// Pulled in off the corners: a square you can only see the very edge of is
+// still a square you can see, but a ray through the exact corner point where
+// two walls touch is ambiguous, and this picks a side.
+function boardMarkVisibleFrom(vx, vy, blocked, bb, out) {
+  const IN = 0.08;
+  const ox = vx + 0.5, oy = vy + 0.5;
+  out[vx * BOARD_SIGHT_STRIDE + vy] = 1;
+  for (let r = bb.minR; r <= bb.maxR; r++) {
+    for (let c = bb.minC; c <= bb.maxC; c++) {
+      const i = c * BOARD_SIGHT_STRIDE + r;
+      if (out[i]) continue;
+      if (!boardRayBlocked(ox, oy, c + 0.5, r + 0.5, blocked)
+        || !boardRayBlocked(ox, oy, c + IN, r + IN, blocked)
+        || !boardRayBlocked(ox, oy, c + 1 - IN, r + IN, blocked)
+        || !boardRayBlocked(ox, oy, c + IN, r + 1 - IN, blocked)
+        || !boardRayBlocked(ox, oy, c + 1 - IN, r + 1 - IN, blocked)) out[i] = 1;
+    }
+  }
+}
+
+/* Cached in two tiers, because the two things that invalidate it cost very
+   different amounts:
+
+   · per viewer, keyed on where that viewer stands — so one character moving
+     recomputes one character's sight and not the whole party's;
+   · per scene, the union of those plus the painted fog, which is what the
+     renderer asks for every frame of every pan, hover and drag.
+
+   Walls changing clears both, since every ray has to be re-walked. That is
+   also why nothing recomputes while a brush is down: painting a wall bumps
+   the art version on every square the cursor crosses, and recomputing sight
+   per square would make the wall brush crawl. The stale shading stands until
+   the mouse comes up, which is one frame of being slightly wrong about a
+   square the DM is in the middle of drawing anyway. */
+let _boardSightViewerCache = new Map();
+let _boardSightVersion = -1;
+let _boardSightCache = { key: '', state: null };
+
+function boardSightState() {
+  const fogOnly = () => {
+    const hidden = new Set();
+    for (const t of encounter.boardTerrain || []) if (t.type === 'fog') hidden.add(t.id);
+    return { vis: null, hidden, cells: [...hidden].map(id => id.split(',').map(Number)) };
+  };
+  if (!encounter.boardLos) {
+    // Fog alone is cheap enough to build on demand, and the common case is
+    // that there isn't any.
+    return fogOnly();
+  }
+  const viewers = boardSightViewers();
+  if (!viewers.length) return fogOnly();
+
+  const key = _boardArtVersion + '|' + viewers.map(v => v.boardX + ',' + v.boardY).join(';');
+  if (_boardSightCache.key === key && _boardSightCache.state) return _boardSightCache.state;
+  // Mid-brush: hold the last answer rather than recompute per painted square.
+  if (_boardPainting && _boardSightCache.state) return _boardSightCache.state;
+
+  if (_boardSightVersion !== _boardArtVersion) {
+    _boardSightViewerCache.clear();
+    _boardSightVersion = _boardArtVersion;
+  }
+  const blocked = boardSightBlockerGrid();
+  const bb = boardComputeBBox();
+  const vis = new Uint8Array(BOARD_COLS * BOARD_ROWS);
+  for (const v of viewers) {
+    const vk = v.boardX + ',' + v.boardY;
+    let own = _boardSightViewerCache.get(vk);
+    if (!own) {
+      own = new Uint8Array(BOARD_COLS * BOARD_ROWS);
+      boardMarkVisibleFrom(v.boardX, v.boardY, blocked, bb, own);
+      _boardSightViewerCache.set(vk, own);
+    }
+    for (let i = 0; i < vis.length; i++) if (own[i]) vis[i] = 1;
+  }
+  const hidden = new Set();
+  const cells = [];
+  for (let r = bb.minR; r <= bb.maxR; r++) {
+    for (let c = bb.minC; c <= bb.maxC; c++) {
+      if (vis[c * BOARD_SIGHT_STRIDE + r]) continue;
+      hidden.add(c + ',' + r);
+      cells.push([c, r]);
+    }
+  }
+  // Painted fog on top, wherever it falls — including outside the box sight
+  // was computed over.
+  for (const t of encounter.boardTerrain || []) {
+    if (t.type !== 'fog' || hidden.has(t.id)) continue;
+    hidden.add(t.id);
+    cells.push(t.id.split(',').map(Number));
+  }
+  const state = { vis, hidden, cells };
+  _boardSightCache = { key, state };
+  return state;
+}
+
+// Every square at least one player character can see, or null when sight
+// isn't being applied at all — switched off, or nobody to see with — which
+// the callers read as "hide nothing" rather than "hide everything".
+function boardVisibleCells() {
+  return boardSightState().vis;
+}
+
+// Squares hidden from the players: painted fog, plus everything out of sight
+// when the switch is on.
+function boardHiddenCells() {
+  return boardSightState().hidden;
+}
+
+function boardLosEnabled() { return !!encounter.boardLos; }
+
+function boardToggleLos(on) {
+  if (!boardCanEdit) return;
+  encounter.boardLos = !!on;
+  encSave();
+  renderBoardCanvas();
+  updateBoardHint();
+}
+
+// The switch is shared state, not a local preference — it governs what every
+// player's board draws — so it has to follow a remote change as well as a
+// local click.
+function boardSyncLosToggle() {
+  const el = document.getElementById('board-los');
+  if (el) el.checked = !!encounter.boardLos;
+  const note = document.getElementById('board-los-note');
+  if (note) {
+    note.textContent = !encounter.boardLos ? ''
+      : boardSightViewers().length ? `Hiding what the players can't see from ${boardSightViewers().length} PC${boardSightViewers().length === 1 ? '' : 's'}.`
+      : 'No player characters placed yet — nothing is hidden until there are.';
+  }
+}
+
+// On the DM's own board the hidden squares are only shaded, so they can see
+// both what is there and what the players are missing.
+function paintSightShadow(ctx, SZ) {
+  const cells = boardSightState().cells;
+  if (!cells.length) return;
+  ctx.save();
+  ctx.fillStyle = 'rgba(104,78,152,0.26)';
+  for (const [c, r] of cells) ctx.fillRect(c * SZ, r * SZ, SZ, SZ);
+  ctx.restore();
+}
+
 /* ── The DM's own maps ─────────────────────────────────────
    A board built by hand, kept so it can be used again next week. Stored in
    this browser, not in the encounter document: that document is the live
@@ -988,30 +1257,33 @@ function boardWriteSavedMaps(maps) {
 // top-left of what's actually on the board becomes 0,0, exactly like a preset
 // builder's output, so loading one back goes through the same path.
 function boardSerializeCurrent() {
-  const terrain = encounter.boardTerrain || [];
   const props = encounter.boardProps || [];
   const notes = encounter.boardNotes || [];
-  const elev = encounter.boardElev || [];
   let minC = Infinity, minR = Infinity, maxC = -Infinity, maxR = -Infinity;
   const stretch = (c, r, w, h) => {
     minC = Math.min(minC, c); minR = Math.min(minR, r);
     maxC = Math.max(maxC, c + (w || 1) - 1); maxR = Math.max(maxR, r + (h || 1) - 1);
   };
-  const cellOf = (id) => id.split(',').map(Number);
-  for (const t of terrain) { const [c, r] = cellOf(t.id); stretch(c, r); }
-  for (const e of elev) { const [c, r] = cellOf(e.id); stretch(c, r); }
+  const cellOf = (id) => String(id).split(',').map(Number);
+  for (const layer of Object.values(BOARD_MAP_CELL_KEYS)) {
+    for (const e of encounter[layer] || []) { const [c, r] = cellOf(e.id); stretch(c, r); }
+  }
   for (const n of notes) stretch(n.col, n.row);
   for (const p of props) { const fp = boardPropFootprint(p); stretch(p.col, p.row, fp.w, fp.h); }
   if (!isFinite(minC)) return null;
-  const shift = (c, r) => (c - minC) + ',' + (r - minR);
-  return {
+  const out = {
     w: maxC - minC + 1,
     h: maxR - minR + 1,
-    terrain: terrain.map(t => { const [c, r] = cellOf(t.id); return { id: shift(c, r), type: t.type }; }),
     props: props.map(p => ({ type: p.type, col: p.col - minC, row: p.row - minR, rot: p.rot || 0 })),
     notes: notes.map(n => ({ col: n.col - minC, row: n.row - minR, text: n.text })),
-    elev: elev.map(e => { const [c, r] = cellOf(e.id); return { id: shift(c, r), level: e.level }; }),
   };
+  for (const [key, layer] of Object.entries(BOARD_MAP_CELL_KEYS)) {
+    out[key] = (encounter[layer] || []).map(e => {
+      const [c, r] = cellOf(e.id);
+      return Object.assign({}, e, { id: (c - minC) + ',' + (r - minR) });
+    });
+  }
+  return out;
 }
 
 // A saved map dressed as a preset, so boardApplyPresetMap doesn't need to
@@ -1103,6 +1375,8 @@ function boardImportSavedMaps(input) {
       // Only shapes this page can actually load — a file that is JSON but
       // not a map library shouldn't half-import.
       if (!data || !Array.isArray(data.terrain) || !Array.isArray(data.props)) continue;
+      // Older exports predate the colour and elevation layers; the loader
+      // treats a missing one as empty, so they import as what they were.
       maps[name] = data;
       added++;
     }
@@ -1171,6 +1445,10 @@ function boardEraseAt(p) {
   encounter.boardElev = (encounter.boardElev || []).filter(e => e.id !== cellId);
   if (encounter.boardElev.length !== beforeElev) changed = true;
 
+  const beforeTint = (encounter.boardTint || []).length;
+  encounter.boardTint = (encounter.boardTint || []).filter(t => t.id !== cellId);
+  if (encounter.boardTint.length !== beforeTint) changed = true;
+
   const hitTemplate = boardTemplateAt(p.col, p.row);
   if (hitTemplate) {
     encounter.boardTemplates = (encounter.boardTemplates || []).filter(t => t.id !== hitTemplate.id);
@@ -1220,6 +1498,9 @@ function boardDrawStart(e) {
   } else if (boardState.tool === 'elev') {
     _boardPainting = true;
     boardPaintElevAt(p, boardElevOption());
+  } else if (boardState.tool === 'tint') {
+    _boardPainting = true;
+    boardPaintTintAt(p, boardTintColor());
   } else if (BOARD_TERRAIN_TOOLS.includes(boardState.tool)) {
     _boardPainting = true;
     boardPaintTerrainAt(p, boardState.tool);
@@ -1240,6 +1521,10 @@ function boardDrawMove(e) {
   } else if (boardState.tool === 'elev') {
     if (!_boardPainting) return;
     boardPaintElevAt(p, boardElevOption());
+    boardRequestRender();
+  } else if (boardState.tool === 'tint') {
+    if (!_boardPainting) return;
+    boardPaintTintAt(p, boardTintColor());
     boardRequestRender();
   } else if (_boardPainting && BOARD_TERRAIN_TOOLS.includes(boardState.tool)) {
     boardPaintTerrainAt(p, boardState.tool);
@@ -1415,6 +1700,9 @@ function renderBoard() {
   renderBoardCanvas();
   renderBoardDistance();
   renderBoardPropActions();
+  // The sight switch is shared state, so the checkbox has to follow a remote
+  // change as well as a local click — this is the one place both paths meet.
+  boardSyncLosToggle();
 }
 
 function renderBoardTray() {
@@ -1585,6 +1873,7 @@ function boardBuildArtLayer(width, height, SZ) {
   const layer = document.createElement('canvas');
   layer.width = width; layer.height = height;
   const ctx = layer.getContext('2d');
+  paintTintLayer(ctx, SZ, encounter.boardTint || []);
   paintTerrainLayer(ctx, SZ, encounter.boardTerrain || []);
   paintElevLayer(ctx, SZ, encounter.boardElev || []);
   paintStrokesLayer(ctx, SZ, encounter.boardStrokes || []);
@@ -1833,9 +2122,11 @@ function renderBoardCanvas() {
     ctx.restore();
   }
 
-  // Last of all, and only where it applies: the fog closes over tokens,
-  // scenery, labels and terrain alike.
+  // Last of all: on a board that can't edit, the fog closes over tokens,
+  // scenery, labels and terrain alike. On the DM's it is only shaded, so they
+  // can see both what is there and what the players are missing.
   if (!boardCanEdit) paintFogLayer(ctx, SZ, isDark);
+  else if (boardLosEnabled()) paintSightShadow(ctx, SZ);
 
   if (boardState.pendingId !== null) {
     const hint = document.getElementById('board-hint');

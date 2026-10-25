@@ -868,6 +868,40 @@ const B = boot();
   check('and the encounter manager passes it through to the token',
     /size: e\.grid_size \|\| 1/.test(read('CLASS-1A/encounter.js')));
 
+  /* ── the running orders ──
+     A group can sit on a named arc at a numbered step. The arc is written up
+     in the campaign, and the two have to agree: a step the appendix tells the
+     DM to load that has no group is a dead instruction, and a group on an arc
+     the appendix never mentions is a fight nobody will find. */
+  const arcs = {};
+  for (const g of groups) {
+    if (!g.arc && g.step === undefined) continue;
+    check(`group ${g.id} on an arc has both an arc and a step`,
+      typeof g.arc === 'string' && Number.isInteger(g.step) && g.step > 0,
+      JSON.stringify({ arc: g.arc, step: g.step }));
+    (arcs[g.arc] = arcs[g.arc] || []).push(g);
+  }
+  check('there is at least one running order to follow', Object.keys(arcs).length >= 1,
+    Object.keys(arcs).join(', '));
+
+  const campaignText = JSON.parse(read('CAMPAIGN/campaigns.json')).campaigns
+    .flatMap(c => (c.appendix || []).map(a => a.body))
+    .concat(JSON.parse(read('CAMPAIGN/campaigns.json')).campaigns
+      .flatMap(c => (c.chapters || []).flatMap(ch => (ch.sections || []).map(s => s.body || ''))))
+    .join('\n');
+  const unmentioned = [];
+  for (const [arc, list] of Object.entries(arcs)) {
+    const steps = list.map(g => g.step).sort((a, b) => a - b);
+    check(`${arc} starts at step 1 or later and never goes backwards`,
+      steps[0] >= 1 && steps.every((s, i) => i === 0 || s >= steps[i - 1]), steps.join(','));
+    for (const g of list) {
+      // The appendix tells the DM to load these by name, in quotes.
+      if (!campaignText.includes(g.name)) unmentioned.push(`${g.id} ("${g.name}")`);
+    }
+  }
+  check('every group on a running order is named in the campaign text that walks it',
+    unmentioned.length === 0, unmentioned.join('\n        '));
+
   const missingMaps = groups.filter(g => g.map && !B.BOARD_MAPS_BY_KEY[g.map])
                             .map(g => `${g.id} → ${g.map}`);
   check('every group\'s suggested map is a preset that still exists',

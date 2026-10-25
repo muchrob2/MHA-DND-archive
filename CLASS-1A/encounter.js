@@ -741,12 +741,17 @@ function buildGroupSelect() {
   for (const cat of [...new Set(ENEMY_GROUPS.map(g => g.category))]) {
     const grp = document.createElement('optgroup');
     grp.label = cat;
-    for (const g of ENEMY_GROUPS.filter(x => x.category === cat)) {
+    // Groups on a running order come first and in order, because a DM working
+    // down an arc reads it as a ladder; everything else keeps file order.
+    const inCat = ENEMY_GROUPS.filter(x => x.category === cat).sort((a, b) =>
+      (a.arc ? 0 : 1) - (b.arc ? 0 : 1) || (a.step || 0) - (b.step || 0));
+    for (const g of inCat) {
       const units = g.members.reduce((n, m) => n + (m.count || 1), 0);
       const mp = typeof BOARD_MAPS_BY_KEY !== 'undefined' ? BOARD_MAPS_BY_KEY[g.map] : null;
       const opt = document.createElement('option');
       opt.value = g.id;
-      opt.textContent = `${g.name} (${units} units${mp ? ' · ' + mp.label : ''})`;
+      const step = g.arc && g.step ? `${g.step}. ` : '';
+      opt.textContent = `${step}${g.name} (${units} units${mp ? ' · ' + mp.label : ''})`;
       opt.title = g.note || '';
       grp.appendChild(opt);
     }

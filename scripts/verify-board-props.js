@@ -149,7 +149,9 @@ function boot({ autoTerrain = true } = {}) {
       boardTokenSize, boardTokenCovers, boardTokenAnchor, boardTokenOverlap,
       boardSetSelectedTokenSize, paintTokensLayer, BOARD_COND_MARKS, BOARD_TOKEN_SIZES,
       boardToggleDoor, boardPropIsDoor, boardSightRadius, boardSetSightRadius, boardHitTest,
-      boardUndo, boardPushUndo, boardSnapshotLayers, boardExportPng, boardDrawEnd, boardPaintProp, BOARD_SETTINGS, BOARD_MAP_CELL_KEYS,
+      boardUndo, boardPushUndo, boardSnapshotLayers, boardExportPng, boardDrawEnd, boardPaintProp,
+      boardSquareHidden, boardVisibleHitTest, renderBoardCanvas,
+      get boardHoverInfo() { return boardHoverInfo; }, BOARD_SETTINGS, BOARD_MAP_CELL_KEYS,
       boardRayBlocked, boardVisibleCells, boardHiddenCells,
       boardSightViewers, boardSightBlockerGrid, boardSightState, paintSightShadow,
       boardLosEnabled, boardToggleLos, boardMarkVisibleFrom,
@@ -1372,6 +1374,77 @@ const B = boot();
   check('and it draws tokens through the same layer the screen uses',
     (read('CLASS-1A/board-shared.js').match(/paintTokensLayer\(/g) || []).length >= 3,
     'paintTokensLayer call sites');
+}
+
+/* ── 18. a hidden token answers no questions ──
+   Fog hid the drawing and nothing else. The hover tooltip still named the
+   creature and printed its HP and conditions, the cursor still turned into a
+   grab hand over it — so a player could sweep the mouse across the dark and
+   find every hidden enemy by watching the pointer — and clicking one still
+   selected it, drawing a glow around a square that was meant to be empty.
+   These are the three ways the board can be asked "is something there?". */
+{
+  const env = boot();
+  env.encounter.boardLos = true;
+  env.encounter.combatants.push({ id: 1, name: 'Deku', hp: 30, maxHp: 30, ac: 15, isPC: true, boardX: 50, boardY: 50 });
+  // A wall, and something standing behind it.
+  for (let r = 45; r <= 55; r++) env.boardPaintTerrainAt({ col: 52, row: r }, 'wall');
+  env.encounter.combatants.push({ id: 2, name: 'Kuze Asagi', hp: 125, maxHp: 125, ac: 17,
+    isPC: false, boardX: 56, boardY: 50, conditions: ['Frightened'] });
+
+  check('the DM, who sees everything, finds the hidden token with a hit test',
+    env.boardVisibleHitTest(56, 50) !== null);
+  check('and the square is not hidden from them', env.boardSquareHidden(56, 50) === false);
+
+  env.canEdit = false;
+  check('for the players that square is hidden', env.boardSquareHidden(56, 50) === true);
+  check('and the token on it is not there as far as their board is concerned',
+    env.boardVisibleHitTest(56, 50) === null);
+  check('while the character they can see is still found',
+    env.boardVisibleHitTest(50, 50) !== null);
+
+  // Through the gesture a player actually makes: moving the mouse over the
+  // dark must not set the hover, which is what draws the tooltip and turns
+  // the cursor into a grab hand. Rendered once first — the canvas has no
+  // pixel size until something paints it, and boardCanvasCell maps clicks
+  // through that size, so an unrendered board reads every click as 0,0.
+  env.renderBoardCanvas();
+  const SZ = env.boardCell(), scale = 1600 / (100 * SZ);
+  const at = (col, row) => ({ clientX: (col + 0.5) * SZ * scale, clientY: (row + 0.5) * SZ * scale,
+    button: 0, preventDefault() {} });
+  env.boardHandleMouseMove(at(56, 50));
+  check('hovering a hidden token tells the player nothing about it',
+    env.boardHoverInfo === null, JSON.stringify(env.boardHoverInfo));
+  env.boardHandleMouseMove(at(50, 50));
+  check('and hovering one they can see still works',
+    env.boardHoverInfo !== null && env.boardHoverInfo.combatant.id === 1);
+
+  // And clicking it must not select it, because a selection is a glow.
+  env.boardState.selectedIds = [];
+  env.boardHandleCanvasClick(at(56, 50));
+  check('clicking a hidden token does not select it', env.boardState.selectedIds.length === 0,
+    JSON.stringify(env.boardState.selectedIds));
+  env.boardHandleCanvasClick(at(50, 50));
+  check('clicking a visible one does', env.boardState.selectedIds.length === 1);
+
+  // A line between two selected tokens, one of which has since gone dark.
+  const env2 = boot();
+  env2.encounter.boardLos = true;
+  env2.encounter.combatants.push({ id: 1, name: 'Deku', hp: 30, maxHp: 30, ac: 15, isPC: true, boardX: 50, boardY: 50 });
+  for (let r = 45; r <= 55; r++) env2.boardPaintTerrainAt({ col: 52, row: r }, 'wall');
+  env2.encounter.combatants.push({ id: 2, name: 'Kuze Asagi', hp: 125, maxHp: 125, ac: 17, boardX: 56, boardY: 50 });
+  env2.boardState.selectedIds = [1, 2];
+  env2.canEdit = false;
+  const dashes = [];
+  env2.renderBoardCanvas();
+  const calls = env2._calls.filter(([m]) => m === 'setLineDash');
+  check('no measured line is drawn to a token the viewer cannot see',
+    calls.length === 0, calls.length + ' dashed lines drawn');
+  env2.canEdit = true;
+  env2._calls.length = 0;
+  env2.renderBoardCanvas();
+  check('and the DM still gets their measuring line',
+    env2._calls.some(([m]) => m === 'setLineDash'));
 }
 
 console.log(failures ? `\n>>> board props FAILED (${failures})` : '\n>>> board props OK');

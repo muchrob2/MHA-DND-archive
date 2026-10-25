@@ -1340,6 +1340,29 @@ function sortedRecaps() {
   });
 }
 
+/* The session log grew: a session now records which chapter it covered, who
+   was at the table, the NPCs they met and the places they went — and a "next
+   time" line, which is the DM's note to themselves and stays on the DM's page
+   where it was written. The pad shows the first four and never the fifth;
+   session-log.html sits behind the DM block for exactly that reason.
+
+   Attendance is stored as roster ids, so it is resolved against the roster
+   this page already loads, and the pad's own owner is marked in their own
+   list — "was I there?" being the question a player actually has. */
+function recapNames(ids) {
+  return (Array.isArray(ids) ? ids : []).map(id => {
+    const s = ROSTER.find(x => String(x.id) === String(id));
+    return { name: s ? s.name : '#' + id, isOwner: !!(s && s.file === activeFile) };
+  });
+}
+
+function recapChips(label, value, kind) {
+  const items = String(value || '').split(',').map(x => x.trim()).filter(Boolean);
+  if (!items.length) return '';
+  return `<div class="rc-chiprow"><span class="rc-chiplabel">${escHtml(label)}</span>
+    ${items.map(i => `<span class="rc-chip ${kind}">${escHtml(i)}</span>`).join('')}</div>`;
+}
+
 function renderRecapsApp() {
   if (!recaps) return '<p class="bk-empty">Fetching the log…</p>';
   const list = sortedRecaps();
@@ -1356,7 +1379,20 @@ function renderRecapsApp() {
       </header>
       ${r.date ? `<div class="rc-date">${escHtml(new Date(r.date).toLocaleDateString([], {
         weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }))}</div>` : ''}
+      ${r.arc ? `<div class="rc-arc">${escHtml(r.arc)}</div>` : ''}
+      ${(() => {
+        const who = recapNames(r.present);
+        if (!who.length) return '';
+        const mine = who.some(w => w.isOwner);
+        return `<div class="rc-chiprow">
+          <span class="rc-chiplabel">There</span>
+          ${who.map(w => `<span class="rc-chip who${w.isOwner ? ' me' : ''}">${escHtml(w.name)}${w.isOwner ? ' · you' : ''}</span>`).join('')}
+          ${mine ? '' : '<span class="rc-chip missed">you weren\u2019t there</span>'}
+        </div>`;
+      })()}
       ${r.recap ? `<p class="rc-text">${escHtml(r.recap)}</p>` : ''}
+      ${recapChips('Met', r.npcs, 'npc')}
+      ${recapChips('Went', r.places, 'place')}
       <div class="rc-meta">
         ${r.xp ? `<span class="rc-xp">+${escHtml(String(r.xp))} XP</span>` : ''}
         ${r.loot ? `<span class="rc-loot">${escHtml(r.loot)}</span>` : ''}

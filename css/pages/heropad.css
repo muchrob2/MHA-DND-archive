@@ -2078,3 +2078,53 @@
   .bd-swatch { width: 28px; height: 28px; }
   .msg-send { width: 46px; }
 }
+
+/* ── recaps: the richer session entry ──
+   The session log records the chapter, who was at the table, who they met and
+   where they went. Chips, because they are names you scan rather than read —
+   and the pad's own owner is marked in the attendance row. */
+.rc-arc {
+  margin: 2px 0 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--pad-dim, rgba(255,255,255,0.55));
+}
+.rc-chiprow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 6px 0;
+}
+.rc-chiplabel {
+  margin-right: 2px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--pad-dim, rgba(255,255,255,0.45));
+}
+.rc-chip {
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--pad-text, #fff);
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 999px;
+}
+.rc-chip.who.me {
+  color: #10131a;
+  background: var(--pad-accent, #E8A020);
+  border-color: transparent;
+}
+/* A session the owner missed says so quietly — it is the reason they are
+   reading the recap at all. */
+.rc-chip.missed {
+  color: rgba(255,255,255,0.75);
+  background: transparent;
+  border-style: dashed;
+  font-style: italic;
+}

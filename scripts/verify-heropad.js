@@ -225,6 +225,34 @@ for (const f of ['admin.js', 'characters.js', 'heropad.js']) {
     'one definition, in auth.js');
 }
 
+/* ── Recaps shows the session log, minus the DM's own note ──────── */
+// The log grew five fields this week. Four of them belong on a player's
+// phone and one does not: "next time" is the DM's note to themselves and
+// routinely a spoiler, which is why session-log.html sits behind the DM block
+// in the first place. A page that renders every field it is handed would have
+// published it without anybody deciding to.
+{
+  const recapsFn = js.slice(js.indexOf('function renderRecapsApp'), js.indexOf('function renderQuirksApp'));
+  const helpers = js.slice(js.indexOf('function recapNames'), js.indexOf('function renderRecapsApp'));
+  for (const field of ['arc', 'npcs', 'places', 'present']) {
+    check(`Recaps shows a session's ${field}`,
+      new RegExp('r\\.' + field + '\\b').test(recapsFn) || new RegExp('\\b' + field + '\\b').test(helpers),
+      field + ' never read');
+  }
+  check('Recaps never shows the DM\'s "next time" note',
+    !/\br\.next\b/.test(recapsFn) && !/Next time/i.test(recapsFn),
+    'the one field on a session that is not the players\' to read');
+  check('attendance is resolved through the roster rather than printed as ids',
+    /ROSTER\.find/.test(helpers));
+  check('and the pad\'s own owner is marked in it', /activeFile/.test(helpers));
+  check('everything the card prints is escaped',
+    (recapsFn.match(/escHtml\(/g) || []).length >= 6,
+    (recapsFn.match(/escHtml\(/g) || []).length + ' escaped interpolations');
+  for (const sel of ['.rc-chip', '.rc-chiprow', '.rc-arc', '.rc-chip.missed']) {
+    check(`${sel} is styled`, css.includes(sel));
+  }
+}
+
 /* ── CSS covers what gets rendered ──────────────────────────────── */
 // The device is one styled object; these are the pieces the illusion needs.
 for (const sel of ['#pad-device', '#pad-wallpaper', '#pad-screen', '#pad-grid',

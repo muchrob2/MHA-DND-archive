@@ -64,8 +64,8 @@
       "id": "byakko_cage_night",
       "name": "Byakko cage night",
       "category": "Byakko",
-      "map": "arena",
-      "note": "A card of four, in a bowl with nowhere to hide in the middle. Sandbag and Half-Step first, the Stripe last.",
+      "map": "swing-town",
+      "note": "Friday night in Swing Town's back cage: a circle of witnesses, a purse for the winner, Imai quoting odds from a trestle table, and quirk use an offence every person in the room is committing. A card of four — Sandbag and Half-Step first, the Stripe last. A PC who wins here takes a rank whether they meant to or not.",
       "members": [
         {
           "id": "byakko_imai_sandbag",

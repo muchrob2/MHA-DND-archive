@@ -904,6 +904,18 @@ const B = boot();
   check('every group on a running order is named in the campaign text that walks it',
     unmentioned.length === 0, unmentioned.join('\n        '));
 
+  // A location written up in the campaign and given its own preset map: the
+  // map's label is what the appendix tells the DM to load, so the two names
+  // have to be the same string.
+  const named = [['Swing Town', 'swing-town']];
+  for (const [label, key] of named) {
+    const mp = B.BOARD_MAPS_BY_KEY[key];
+    check(`the ${label} preset map exists and is labelled "${label}"`,
+      mp && mp.label === label, mp ? mp.label : 'no such map');
+    check(`and the campaign text tells the DM to load it by that name`,
+      campaignText.includes(label), label + ' is not mentioned');
+  }
+
   const missingMaps = groups.filter(g => g.map && !B.BOARD_MAPS_BY_KEY[g.map])
                             .map(g => `${g.id} → ${g.map}`);
   check('every group\'s suggested map is a preset that still exists',

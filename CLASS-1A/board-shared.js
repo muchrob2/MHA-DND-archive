@@ -181,7 +181,8 @@ function boardSetTool(tool) {
 
 function boardClearArt() {
   if (!BOARD_LAYERS.some(k => (encounter[k] || []).length)) return;
-  if (!confirm('Clear everything on the board — drawings, terrain, fog, scenery, labels, elevation and area shapes? Unit positions are kept.')) return;
+  if (!confirm('Clear everything on the board — drawings, terrain, colour, fog, scenery, labels, elevation and area shapes? Unit positions are kept.\n\nUndo (Ctrl+Z) will bring it back.')) return;
+  boardPushUndo();
   for (const k of BOARD_LAYERS) encounter[k] = [];
   boardState.selectedPropId = null;
   boardState.propPreview = null;
@@ -305,6 +306,7 @@ function boardPlaceProp(type, col, row, rot) {
   if (!boardCanEdit) return null;
   const pf = boardPrefab(type);
   if (!pf) return null;
+  boardPushUndo();
   rot = rot || 0;
   const fp = (rot === 90 || rot === 270) ? { w: pf.h, h: pf.w } : { w: pf.w, h: pf.h };
   const at = boardClampPropPos(fp, col - Math.floor((fp.w - 1) / 2), row - Math.floor((fp.h - 1) / 2));
@@ -322,6 +324,7 @@ function boardRemoveProp(id) {
   const props = encounter.boardProps || [];
   const p = props.find(x => x.id === id);
   if (!p) return false;
+  boardPushUndo();
   if (p.t) boardStripPropTerrain(p);
   encounter.boardProps = props.filter(x => x.id !== id);
   if (boardState.selectedPropId === id) boardState.selectedPropId = null;
@@ -334,6 +337,7 @@ function boardMoveProp(p, col, row) {
   const fp = boardPropFootprint(p);
   const at = boardClampPropPos(fp, col, row);
   if (at.col === p.col && at.row === p.row) return false;
+  boardPushUndo();
   if (p.t) boardStripPropTerrain(p);
   p.col = at.col; p.row = at.row;
   if (p.t) boardApplyPropTerrain(p);
@@ -345,6 +349,7 @@ function boardMoveProp(p, col, row) {
 function boardRotateSelectedProp() {
   const p = boardSelectedProp();
   if (!p || !boardCanEdit) return;
+  boardPushUndo();
   if (p.t) boardStripPropTerrain(p);
   p.rot = ((p.rot || 0) + 90) % 360;
   const fp = boardPropFootprint(p);
@@ -424,7 +429,10 @@ function boardPaintProp(ctx, p, SZ, col, row) {
   if (p.rot) ctx.rotate((p.rot * Math.PI) / 180);
   if (pf) {
     const dw = pf.w * SZ, dh = pf.h * SZ;
-    pf.draw(ctx, -dw / 2, -dh / 2, dw, dh);
+    // The prop itself goes to draw() as a fifth argument. Every prefab but
+    // the doorway ignores it; the palette chip passes nothing, which is why
+    // the door's draw treats "no prop" as open.
+    pf.draw(ctx, -dw / 2, -dh / 2, dw, dh, p);
   } else {
     // A prop whose prefab no longer exists still has to render as something.
     pfRect(ctx, -SZ / 2 + 1, -SZ / 2 + 1, SZ - 2, SZ - 2, 'rgba(148,152,164,0.5)', 0, 1);
@@ -566,6 +574,14 @@ function renderBoardPropActions() {
   const pf = boardPrefab(p.type);
   const name = document.getElementById('board-prop-name');
   if (name) name.textContent = pf ? pf.label : p.type;
+  const door = document.getElementById('board-door-btn');
+  if (door) {
+    door.style.display = boardPropIsDoor(p) ? '' : 'none';
+    door.textContent = p.shut ? '⇄ Open' : '⇄ Shut';
+    door.title = p.shut
+      ? 'Open this door — the squares under it stop being a wall'
+      : 'Shut this door — it becomes a wall, which also blocks line of sight';
+  }
 }
 
 // One place that decides what the footer says, instead of six call sites
@@ -653,6 +669,7 @@ function boardLoadPresetMap() {
 // without having to go hunting for it.
 function boardApplyPresetMap(mp) {
   if (!boardCanEdit) return;
+  boardPushUndo();   // loading a map replaces everything; undo puts it back
   const built = mp.build();
   const offC = Math.max(0, Math.floor((BOARD_COLS - built.w) / 2));
   const offR = Math.max(0, Math.floor((BOARD_ROWS - built.h) / 2));
@@ -703,7 +720,7 @@ const BOARD_LAYERS = ['boardStrokes', 'boardTerrain', 'boardProps',
 // Scene state that isn't a layer: a switch rather than a thing on a square.
 // Kept by a reset along with the layers, because the map surviving a reset is
 // the point and how the map is lit is part of the map.
-const BOARD_SETTINGS = ['boardLos'];
+const BOARD_SETTINGS = ['boardLos', 'boardSightRadius'];
 
 // Map-file key → the layer it loads into, for the layers keyed by a "c,r"
 // cell id. Preset builders emit the short names; so does a map the DM saves.
@@ -967,6 +984,231 @@ function paintElevLayer(ctx, SZ, elev) {
   ctx.restore();
 }
 
+/* ── Token size ────────────────────────────────────────────
+   Everything on this board was one square until now, which is fine until
+   Kuma turns up. A combatant's `size` is how many squares across it stands,
+   and boardX/boardY stay the top-left of that footprint — the same contract
+   props use, so the drag, the hit test and the bounding box all work the way
+   they already did for a 4x3 warehouse.
+
+   Distances are still measured from a token's anchor square rather than from
+   its nearest edge. Edge-to-edge is the stricter reading of the rules; anchor
+   is what the range overlay and the two-token line already do, and having
+   those three disagree would be worse than having all three be approximate. */
+const BOARD_TOKEN_SIZES = [1, 2, 3, 4];
+
+function boardTokenSize(c) {
+  const n = Math.round(Number(c && c.size) || 1);
+  return Math.max(1, Math.min(4, n));
+}
+
+function boardTokenCovers(c, col, row) {
+  const s = boardTokenSize(c);
+  return col >= c.boardX && col < c.boardX + s && row >= c.boardY && row < c.boardY + s;
+}
+
+// The square a large token measures and sees from: its middle, rounded down.
+function boardTokenAnchor(c) {
+  const s = boardTokenSize(c);
+  return { col: c.boardX + ((s - 1) >> 1), row: c.boardY + ((s - 1) >> 1) };
+}
+
+function boardSetSelectedTokenSize(size) {
+  if (!boardCanEdit) return;
+  const ids = boardState.selectedIds;
+  if (!ids.length) return;
+  const n = Math.max(1, Math.min(4, Math.round(Number(size) || 1)));
+  let changed = false;
+  for (const id of ids) {
+    const c = encounter.combatants.find(x => x.id === id);
+    if (!c || boardTokenSize(c) === n) continue;
+    boardPushUndo();
+    c.size = n;
+    // A footprint that would hang off the grid is pulled back on rather than
+    // refused: the DM asked for a bigger creature, not for an error.
+    if (c.boardX != null) {
+      c.boardX = Math.max(0, Math.min(BOARD_COLS - n, c.boardX));
+      c.boardY = Math.max(0, Math.min(BOARD_ROWS - n, c.boardY));
+    }
+    changed = true;
+  }
+  if (!changed) return;
+  encSave();
+  renderBoard();
+}
+
+function renderBoardTokenActions() {
+  const wrap = document.getElementById('board-token-actions');
+  if (!wrap) return;
+  const ids = boardState.selectedIds;
+  const sel = ids.map(id => encounter.combatants.find(c => c.id === id)).filter(Boolean);
+  wrap.style.display = sel.length && boardCanEdit ? '' : 'none';
+  if (!sel.length) return;
+  const name = document.getElementById('board-token-name');
+  if (name) name.textContent = sel.length === 1 ? sel[0].name : `${sel.length} units`;
+  const input = document.getElementById('board-token-size');
+  if (input) input.value = String(boardTokenSize(sel[0]));
+}
+
+/* ── Doors ─────────────────────────────────────────────────
+   A doorway used to be a hole and nothing else: the prefab's terrain is
+   'clear', so placing one deletes the wall under it for good. Now it has a
+   state. Shut, it stamps a wall — which blocks movement and, since line of
+   sight reads the same wall squares, blocks sight as well, so shutting a door
+   in front of the party is a thing that happens on the board rather than a
+   thing the DM has to describe and then paint.
+
+   Preset maps still place their doors open, because a map full of shut doors
+   is a map with no way through it. */
+function boardPropIsDoor(p) { return p && p.type === 'door'; }
+
+function boardToggleDoor(id) {
+  if (!boardCanEdit) return;
+  const p = (encounter.boardProps || []).find(x => x.id === (id === undefined ? boardState.selectedPropId : id));
+  if (!boardPropIsDoor(p)) return;
+  boardPushUndo();
+  p.shut = p.shut ? 0 : 1;
+  const fp = boardPropFootprint(p);
+  if (p.shut) boardFillTerrainRect(p.col, p.row, fp.w, fp.h, 'wall');
+  else boardClearTerrainRect(p.col, p.row, fp.w, fp.h);
+  boardBumpArtVersion();
+  encSave();
+  renderBoard();
+}
+
+// Both of these write terrain the way the map builders do — the brush paints
+// one square at a time and a door is up to three.
+function boardFillTerrainRect(col, row, w, h, type) {
+  encounter.boardTerrain = encounter.boardTerrain || [];
+  for (let r = row; r < row + h; r++) {
+    for (let c = col; c < col + w; c++) {
+      if (c < 0 || r < 0 || c >= BOARD_COLS || r >= BOARD_ROWS) continue;
+      const id = c + ',' + r;
+      const existing = encounter.boardTerrain.find(t => t.id === id);
+      if (existing) existing.type = type;
+      else encounter.boardTerrain.push({ id, type });
+    }
+  }
+}
+
+function boardClearTerrainRect(col, row, w, h) {
+  const gone = new Set();
+  for (let r = row; r < row + h; r++) for (let c = col; c < col + w; c++) gone.add(c + ',' + r);
+  encounter.boardTerrain = (encounter.boardTerrain || []).filter(t => !gone.has(t.id));
+}
+
+/* ── Undo ──────────────────────────────────────────────────
+   Everything on this board is one click from gone: Clear Art empties it, Load
+   Map replaces it, the eraser eats a building you meant to drag. The layers
+   are small enough to snapshot whole — a full map is tens of kilobytes — so
+   undo is a stack of those rather than a log of operations that each need
+   their own inverse written and tested.
+
+   One snapshot per gesture, not per square: the brush pushes on mousedown and
+   nothing while it drags, so one undo takes back one stroke. Local to this
+   browser and this sitting, like a scratch pad — the document is shared, the
+   history is not. */
+const BOARD_UNDO_LIMIT = 24;
+let _boardUndo = [];
+
+function boardSnapshotLayers() {
+  const snap = {};
+  for (const k of BOARD_LAYERS) snap[k] = JSON.parse(JSON.stringify(encounter[k] || []));
+  return snap;
+}
+
+function boardPushUndo() {
+  if (!boardCanEdit) return;
+  _boardUndo.push(boardSnapshotLayers());
+  if (_boardUndo.length > BOARD_UNDO_LIMIT) _boardUndo.shift();
+  updateBoardUndoButton();
+}
+
+function boardUndo() {
+  if (!boardCanEdit || !_boardUndo.length) return;
+  const snap = _boardUndo.pop();
+  for (const k of BOARD_LAYERS) encounter[k] = snap[k];
+  boardState.selectedPropId = null;
+  boardState.propPreview = null;
+  boardBumpArtVersion();
+  encSave();
+  updateBoardUndoButton();
+  renderPrefabPaletteSelection();
+  renderBoard();
+}
+
+// A gesture that changed nothing shouldn't cost a step: pressing undo and
+// watching nothing happen is worse than not having had the step.
+function boardDiscardUndoIfUnchanged() {
+  if (!_boardUndo.length) return;
+  const top = _boardUndo[_boardUndo.length - 1];
+  const same = BOARD_LAYERS.every(k => JSON.stringify(top[k]) === JSON.stringify(encounter[k] || []));
+  if (same) { _boardUndo.pop(); updateBoardUndoButton(); }
+}
+
+function updateBoardUndoButton() {
+  const btn = document.getElementById('board-undo-btn');
+  if (!btn) return;
+  btn.disabled = !_boardUndo.length;
+  btn.title = _boardUndo.length
+    ? `Undo the last change to the board (${_boardUndo.length} step${_boardUndo.length === 1 ? '' : 's'} kept) — Ctrl+Z`
+    : 'Nothing to undo yet — Ctrl+Z';
+}
+
+/* ── The board as a picture ────────────────────────────────
+   For session notes, or for a map the DM wants to hand round. Everything on
+   this board is drawn from vector paths with no external images in it, so the
+   canvas is clean and can be read back — which is the only reason this is
+   twenty lines instead of a server.
+
+   The DM's own view is what gets exported, fog shaded rather than solid: a
+   picture for the notes should show what happened, not what the players were
+   allowed to know at the time. */
+function boardExportPng() {
+  const bb = boardComputeBBox();
+  const SZ = 28;
+  const w = (bb.maxC - bb.minC + 1) * SZ;
+  const h = (bb.maxR - bb.minR + 1) * SZ;
+  const out = document.createElement('canvas');
+  out.width = w; out.height = h;
+  const ctx = out.getContext('2d');
+  const isDark = boardIsDarkScheme();
+  ctx.fillStyle = isDark ? '#141820' : '#f0f0f0';
+  ctx.fillRect(0, 0, w, h);
+  ctx.save();
+  ctx.translate(-bb.minC * SZ, -bb.minR * SZ);
+  ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.12)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let c = bb.minC; c <= bb.maxC + 1; c++) { ctx.moveTo(c * SZ, bb.minR * SZ); ctx.lineTo(c * SZ, (bb.maxR + 1) * SZ); }
+  for (let r = bb.minR; r <= bb.maxR + 1; r++) { ctx.moveTo(bb.minC * SZ, r * SZ); ctx.lineTo((bb.maxC + 1) * SZ, r * SZ); }
+  ctx.stroke();
+  paintTintLayer(ctx, SZ, encounter.boardTint || []);
+  paintTerrainLayer(ctx, SZ, encounter.boardTerrain || []);
+  paintElevLayer(ctx, SZ, encounter.boardElev || []);
+  paintStrokesLayer(ctx, SZ, encounter.boardStrokes || []);
+  paintPropsLayer(ctx, SZ);
+  paintTemplatesLayer(ctx, SZ);
+  paintNotesLayer(ctx, SZ);
+  paintTokensLayer(ctx, SZ);
+  if (boardLosEnabled()) paintSightShadow(ctx, SZ);
+  ctx.restore();
+
+  const note = document.getElementById('board-map-note');
+  out.toBlob(blob => {
+    if (!blob) { if (note) note.textContent = 'This browser would not render the board to a file.'; return; }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'board.png';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    if (note) note.textContent = `Exported the board as a ${w}×${h} image.`;
+  }, 'image/png');
+}
+
 /* ── Grid colour ───────────────────────────────────────────
    Any colour on any square, painted like a terrain brush. Its own layer
    rather than another terrain type because terrain types carry a ruling —
@@ -1056,6 +1298,25 @@ function boardSightViewers() {
   return (encounter.combatants || []).filter(c => c.isPC && c.boardX != null);
 }
 
+// How far the players can see, in squares; 0 is "as far as the map goes".
+// This is the difference between a daylight street and a corridor with one
+// torch in it, and it is per scene rather than per character because the
+// alternative is asking the DM to maintain a darkvision number on every PC.
+function boardSightRadius() {
+  const n = Math.round(Number(encounter.boardSightRadius) || 0);
+  return Math.max(0, Math.min(60, n));
+}
+
+function boardSetSightRadius(value) {
+  if (!boardCanEdit) return;
+  const n = Math.max(0, Math.min(60, Math.round(Number(value) || 0)));
+  if (n === boardSightRadius()) return;
+  encounter.boardSightRadius = n;
+  encSave();
+  renderBoardCanvas();
+  boardSyncLosToggle();
+}
+
 // Exact cell-by-cell traversal of the segment (Amanatides & Woo): steps from
 // cell to cell rather than sampling points along the line, so a one-square
 // wall can never be stepped over however the ray is angled. Returns true if
@@ -1083,12 +1344,18 @@ function boardRayBlocked(x0, y0, x1, y1, blocked) {
 // Pulled in off the corners: a square you can only see the very edge of is
 // still a square you can see, but a ray through the exact corner point where
 // two walls touch is ambiguous, and this picks a side.
-function boardMarkVisibleFrom(vx, vy, blocked, bb, out) {
+function boardMarkVisibleFrom(vx, vy, blocked, bb, out, radius) {
   const IN = 0.08;
   const ox = vx + 0.5, oy = vy + 0.5;
   out[vx * BOARD_SIGHT_STRIDE + vy] = 1;
-  for (let r = bb.minR; r <= bb.maxR; r++) {
-    for (let c = bb.minC; c <= bb.maxC; c++) {
+  // A radius also shrinks the work: everything beyond it is hidden without a
+  // ray being walked at all.
+  const rMin = radius ? Math.max(bb.minR, vy - radius) : bb.minR;
+  const rMax = radius ? Math.min(bb.maxR, vy + radius) : bb.maxR;
+  const cMin = radius ? Math.max(bb.minC, vx - radius) : bb.minC;
+  const cMax = radius ? Math.min(bb.maxC, vx + radius) : bb.maxC;
+  for (let r = rMin; r <= rMax; r++) {
+    for (let c = cMin; c <= cMax; c++) {
       const i = c * BOARD_SIGHT_STRIDE + r;
       if (out[i]) continue;
       if (!boardRayBlocked(ox, oy, c + 0.5, r + 0.5, blocked)
@@ -1132,7 +1399,9 @@ function boardSightState() {
   const viewers = boardSightViewers();
   if (!viewers.length) return fogOnly();
 
-  const key = _boardArtVersion + '|' + viewers.map(v => v.boardX + ',' + v.boardY).join(';');
+  const radius = boardSightRadius();
+  const key = _boardArtVersion + '|' + radius + '|'
+    + viewers.map(v => { const a = boardTokenAnchor(v); return a.col + ',' + a.row; }).join(';');
   if (_boardSightCache.key === key && _boardSightCache.state) return _boardSightCache.state;
   // Mid-brush: hold the last answer rather than recompute per painted square.
   if (_boardPainting && _boardSightCache.state) return _boardSightCache.state;
@@ -1145,11 +1414,17 @@ function boardSightState() {
   const bb = boardComputeBBox();
   const vis = new Uint8Array(BOARD_COLS * BOARD_ROWS);
   for (const v of viewers) {
-    const vk = v.boardX + ',' + v.boardY;
+    // A large creature sees from its middle square, the same one it measures
+    // range from — not from each square of its footprint, which would see
+    // round corners it has no business seeing round.
+    const a = boardTokenAnchor(v);
+    // The radius belongs in this key as much as the position does: without
+    // it, turning the lights down reused the sight computed with them up.
+    const vk = a.col + ',' + a.row + '@' + radius;
     let own = _boardSightViewerCache.get(vk);
     if (!own) {
       own = new Uint8Array(BOARD_COLS * BOARD_ROWS);
-      boardMarkVisibleFrom(v.boardX, v.boardY, blocked, bb, own);
+      boardMarkVisibleFrom(a.col, a.row, blocked, bb, own, radius);
       _boardSightViewerCache.set(vk, own);
     }
     for (let i = 0; i < vis.length; i++) if (own[i]) vis[i] = 1;
@@ -1204,10 +1479,15 @@ function boardToggleLos(on) {
 function boardSyncLosToggle() {
   const el = document.getElementById('board-los');
   if (el) el.checked = !!encounter.boardLos;
+  const rad = document.getElementById('board-sight-radius');
+  if (rad && document.activeElement !== rad) rad.value = String(boardSightRadius());
   const note = document.getElementById('board-los-note');
   if (note) {
+    const n = boardSightViewers().length;
+    const radius = boardSightRadius();
+    const reach = radius ? ` out to ${radius} squares (${radius * 5} ft)` : '';
     note.textContent = !encounter.boardLos ? ''
-      : boardSightViewers().length ? `Hiding what the players can't see from ${boardSightViewers().length} PC${boardSightViewers().length === 1 ? '' : 's'}.`
+      : n ? `Hiding what the players can't see from ${n} PC${n === 1 ? '' : 's'}${reach}.`
       : 'No player characters placed yet — nothing is hidden until there are.';
   }
 }
@@ -1483,6 +1763,10 @@ function boardEraseAt(p) {
 
 function boardDrawStart(e) {
   const p = boardCanvasPoint(e);
+  // Once per gesture, before anything changes — so one undo takes back one
+  // stroke rather than one square of one stroke. boardDrawEnd throws the
+  // snapshot away again if the gesture turned out to change nothing.
+  boardPushUndo();
   if (boardState.tool === 'pen') {
     boardState.drawingStroke = { id: boardNextArtId(), color: boardState.penColor, width: 3, points: [{ x: p.x, y: p.y }] };
   } else if (boardState.tool === 'eraser') {
@@ -1543,6 +1827,9 @@ function boardDrawEnd() {
     boardState.drawingStroke = null;
   }
   _boardPainting = false;
+  // After the stroke is committed, not before: the comparison is against the
+  // board as it now stands.
+  boardDiscardUndoIfUnchanged();
   renderBoardCanvas();
 }
 
@@ -1593,7 +1880,9 @@ function boardComputeBBox() {
     minR = Math.min(minR, r1); maxR = Math.max(maxR, r2);
   };
   for (const c of encounter.combatants) {
-    if (c.boardX != null) include(c.boardX, c.boardY, c.boardX, c.boardY);
+    if (c.boardX == null) continue;
+    const s = boardTokenSize(c);
+    include(c.boardX, c.boardY, c.boardX + s - 1, c.boardY + s - 1);
   }
   for (const p of encounter.boardProps || []) {
     const fp = boardPropFootprint(p);
@@ -1695,11 +1984,121 @@ function boardInitials(name) {
   return name.slice(0, 2).toUpperCase();
 }
 
+/* ── Tokens ────────────────────────────────────────────────
+   Lifted out of renderBoardCanvas so the PNG export can draw the same
+   tokens the screen does rather than a second, drifting copy of them. */
+
+// Condition pips: the ones that change what a creature can do get a mark on
+// its token, because a condition nobody can see from across the table is a
+// condition everybody forgets. Colour-coded by what it does to you, with the
+// initial on top at any size that can carry text.
+const BOARD_COND_MARKS = {
+  Blinded:       { ch: 'B', fill: '#6B7280' },
+  Charmed:       { ch: 'C', fill: '#C4438C' },
+  Deafened:      { ch: 'D', fill: '#6B7280' },
+  Exhausted:     { ch: 'E', fill: '#A16207' },
+  Frightened:    { ch: 'F', fill: '#8B47D4' },
+  Grappled:      { ch: 'G', fill: '#0E9E85' },
+  Incapacitated: { ch: 'I', fill: '#EF4444' },
+  Invisible:     { ch: 'V', fill: '#0891B2' },
+  Paralyzed:     { ch: 'P', fill: '#EF4444' },
+  Poisoned:      { ch: 'Z', fill: '#65A30D' },
+  Prone:         { ch: 'R', fill: '#C49A0A' },
+  Restrained:    { ch: 'T', fill: '#0E9E85' },
+  Stunned:       { ch: 'S', fill: '#EF4444' },
+  Unconscious:   { ch: 'U', fill: '#EF4444' },
+};
+
+function paintTokenConditions(ctx, c, cx, cy, r, SZ) {
+  const conds = (c.conditions || []).filter(n => BOARD_COND_MARKS[n]);
+  if (!conds.length || SZ < 12) return;
+  const shown = conds.slice(0, 4);
+  const pr = Math.max(2.5, r * 0.3);
+  // Along the bottom of the token, centred, so they never cover the initials.
+  const spread = pr * 1.9;
+  const x0 = cx - ((shown.length - 1) * spread) / 2;
+  ctx.save();
+  ctx.font = `bold ${Math.max(5, pr * 1.3)}px sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i < shown.length; i++) {
+    const mark = BOARD_COND_MARKS[shown[i]];
+    const px = x0 + i * spread, py = cy + r * 0.78;
+    ctx.beginPath(); ctx.arc(px, py, pr, 0, Math.PI * 2);
+    ctx.fillStyle = mark.fill; ctx.fill();
+    ctx.strokeStyle = 'rgba(5,6,10,0.65)'; ctx.lineWidth = 1; ctx.stroke();
+    if (pr >= 4) { ctx.fillStyle = '#fff'; ctx.fillText(mark.ch, px, py + 0.5); }
+  }
+  // More than four and the pips would be a smear, so the count says so.
+  if (conds.length > shown.length) {
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fillText('+' + (conds.length - shown.length), x0 + shown.length * spread, cy + r * 0.78);
+  }
+  ctx.restore();
+}
+
+function paintTokensLayer(ctx, SZ) {
+  const placed = encounter.combatants.filter(c => c.boardX != null);
+  for (const c of placed) {
+    const isDraggingThis = boardState.dragging?.id === c.id;
+    const size = boardTokenSize(c);
+    const cx = (c.boardX + size / 2) * SZ, cy = (c.boardY + size / 2) * SZ;
+    const r = Math.max(3, (size * SZ) / 2 - 3);
+    const isDead = c.hp === 0;
+    const color = boardTokenColor(c);
+    const isSelected = boardState.selectedIds.includes(c.id);
+
+    ctx.save();
+    if (isDraggingThis) ctx.globalAlpha = 0.25;
+    else if (isDead) ctx.globalAlpha = 0.35;
+
+    if (isSelected) {
+      // Glow is applied only to selected tokens — usually one, occasionally
+      // two. shadowBlur is the expensive part of a canvas fill, so it is
+      // deliberately not used for the token body below, which runs for every
+      // combatant on every frame of a drag.
+      ctx.save();
+      ctx.shadowColor = 'rgba(255,194,32,0.85)';
+      ctx.shadowBlur = Math.max(6, SZ / 2);
+      ctx.beginPath(); ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,194,32,0.30)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,194,32,0.95)';
+      ctx.lineWidth = 2; ctx.stroke();
+      ctx.restore();
+    }
+
+    // Dark rim under the body reads as a comic ink outline and lifts the
+    // token off the grid. A stroke costs far less than a shadow here.
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill();
+    ctx.strokeStyle = 'rgba(5,6,10,0.55)'; ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, r - 1, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 1; ctx.stroke();
+
+    const hpPct = c.maxHp > 0 ? c.hp / c.maxHp : 0;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r + 2, -Math.PI / 2, -Math.PI / 2 + hpPct * Math.PI * 2);
+    ctx.strokeStyle = hpPct > 0.5 ? '#2D9F4E' : hpPct > 0.25 ? '#C49A0A' : '#EF4444';
+    ctx.lineWidth = Math.max(2, SZ / 12); ctx.stroke();
+
+    if (SZ >= 10 || size > 1) {
+      ctx.fillStyle = '#fff';
+      ctx.font = `bold ${Math.max(6, size * (SZ <= 16 ? 7 : 9))}px sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(boardInitials(c.name), cx, cy);
+    }
+    paintTokenConditions(ctx, c, cx, cy, r, SZ * size);
+    ctx.restore();
+  }
+}
+
 function renderBoard() {
   renderBoardTray();
   renderBoardCanvas();
   renderBoardDistance();
   renderBoardPropActions();
+  renderBoardTokenActions();
+  updateBoardUndoButton();
   // The sight switch is shared state, so the checkbox has to follow a remote
   // change as well as a local click — this is the one place both paths meet.
   boardSyncLosToggle();
@@ -1975,13 +2374,14 @@ function renderBoardCanvas() {
     const dc = encounter.combatants.find(c => c.id === id);
     if (dc) {
       const color = boardTokenColor(dc);
-      const occupied = encounter.combatants.some(c => c.boardX === curCol && c.boardY === curRow && c.id !== id);
+      const ghostSize = boardTokenSize(dc);
+      const occupied = !!boardTokenOverlap(curCol, curRow, ghostSize, id);
       // Origin dashed outline
       ctx.save();
       ctx.setLineDash([4, 3]);
       ctx.strokeStyle = 'rgba(255,255,255,0.25)';
       ctx.lineWidth = 2;
-      ctx.strokeRect(originX * SZ + 2, originY * SZ + 2, SZ - 4, SZ - 4);
+      ctx.strokeRect(originX * SZ + 2, originY * SZ + 2, ghostSize * SZ - 4, ghostSize * SZ - 4);
       ctx.restore();
       // On touch, a fingertip sits right on top of (and hides) the cell being
       // targeted. Mark the real landing cell with an outline, but draw the
@@ -1991,12 +2391,12 @@ function renderBoardCanvas() {
         ctx.save();
         ctx.strokeStyle = occupied ? 'rgba(239,68,68,0.85)' : 'rgba(255,255,255,0.55)';
         ctx.lineWidth = 2;
-        ctx.strokeRect(curCol * SZ + 2, curRow * SZ + 2, SZ - 4, SZ - 4);
+        ctx.strokeRect(curCol * SZ + 2, curRow * SZ + 2, ghostSize * SZ - 4, ghostSize * SZ - 4);
         ctx.restore();
       }
       // Ghost circle
-      const cx = curCol * SZ + SZ / 2, cy = curRow * SZ + SZ / 2 - touchLift;
-      const tr = Math.max(3, SZ / 2 - 3);
+      const cx = (curCol + ghostSize / 2) * SZ, cy = (curRow + ghostSize / 2) * SZ - touchLift;
+      const tr = Math.max(3, (ghostSize * SZ) / 2 - 3);
       ctx.save();
       ctx.globalAlpha = occupied ? 0.3 : 0.65;
       ctx.beginPath(); ctx.arc(cx, cy, tr, 0, Math.PI * 2);
@@ -2032,57 +2432,7 @@ function renderBoardCanvas() {
     }
   }
 
-  // Tokens
-  const placed = encounter.combatants.filter(c => c.boardX != null);
-  for (const c of placed) {
-    const isDraggingThis = boardState.dragging?.id === c.id;
-    const cx = c.boardX * SZ + SZ / 2, cy = c.boardY * SZ + SZ / 2;
-    const r = Math.max(3, SZ / 2 - 3);
-    const isDead = c.hp === 0;
-    const color = boardTokenColor(c);
-    const isSelected = boardState.selectedIds.includes(c.id);
-
-    ctx.save();
-    if (isDraggingThis) ctx.globalAlpha = 0.25;
-    else if (isDead) ctx.globalAlpha = 0.35;
-
-    if (isSelected) {
-      // Glow is applied only to selected tokens — usually one, occasionally
-      // two. shadowBlur is the expensive part of a canvas fill, so it is
-      // deliberately not used for the token body below, which runs for every
-      // combatant on every frame of a drag.
-      ctx.save();
-      ctx.shadowColor = 'rgba(255,194,32,0.85)';
-      ctx.shadowBlur = Math.max(6, SZ / 2);
-      ctx.beginPath(); ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,194,32,0.30)'; ctx.fill();
-      ctx.strokeStyle = 'rgba(255,194,32,0.95)';
-      ctx.lineWidth = 2; ctx.stroke();
-      ctx.restore();
-    }
-
-    // Dark rim under the body reads as a comic ink outline and lifts the
-    // token off the grid. A stroke costs far less than a shadow here.
-    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle = color; ctx.fill();
-    ctx.strokeStyle = 'rgba(5,6,10,0.55)'; ctx.lineWidth = 2.5; ctx.stroke();
-    ctx.beginPath(); ctx.arc(cx, cy, r - 1, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 1; ctx.stroke();
-
-    const hpPct = c.maxHp > 0 ? c.hp / c.maxHp : 0;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r + 2, -Math.PI / 2, -Math.PI / 2 + hpPct * Math.PI * 2);
-    ctx.strokeStyle = hpPct > 0.5 ? '#2D9F4E' : hpPct > 0.25 ? '#C49A0A' : '#EF4444';
-    ctx.lineWidth = Math.max(2, SZ / 12); ctx.stroke();
-
-    if (SZ >= 10) {
-      ctx.fillStyle = '#fff';
-      ctx.font = `bold ${Math.max(6, SZ <= 16 ? 7 : 9)}px sans-serif`;
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(boardInitials(c.name), cx, cy);
-    }
-    ctx.restore();
-  }
+  paintTokensLayer(ctx, SZ);
 
   // Hover tooltip
   if (boardHoverInfo && !boardState.dragging) {
@@ -2203,7 +2553,13 @@ function boardHandleMouseDown(e) {
   // below exactly like empty ground.
   const propHit = hit ? null : boardPropAt(col, row);
   if (hit && boardCanEdit) {
-    boardState.dragging = { id: hit.id, originX: col, originY: row, curCol: col, curRow: row };
+    // grabC/grabR: which square of the footprint was taken hold of, so a
+    // large token follows the cursor instead of snapping its corner to it.
+    boardState.dragging = {
+      id: hit.id, originX: hit.boardX, originY: hit.boardY,
+      grabC: col - hit.boardX, grabR: row - hit.boardY,
+      curCol: hit.boardX, curRow: hit.boardY,
+    };
     document.getElementById('board-canvas').style.cursor = 'grabbing';
   } else if (propHit && boardCanEdit && propHit.id === boardState.selectedPropId) {
     boardState.draggingProp = {
@@ -2266,7 +2622,7 @@ function boardHandleMouseMove(e) {
       boardRequestRender();
     }
     const hit = col >= 0 && col < BOARD_COLS && row >= 0 && row < BOARD_ROWS
-      ? encounter.combatants.find(c => c.boardX === col && c.boardY === row) : null;
+      ? encounter.combatants.find(c => c.boardX != null && boardTokenCovers(c, col, row)) : null;
     canvas.style.cursor = hit ? 'grab' : 'crosshair';
     const prev = boardHoverInfo;
     boardHoverInfo = hit ? { combatant: hit, col, row } : null;
@@ -2276,8 +2632,10 @@ function boardHandleMouseMove(e) {
     return;
   }
   const { col, row } = boardCanvasCell(e);
-  const cc = Math.max(0, Math.min(BOARD_COLS - 1, col));
-  const cr = Math.max(0, Math.min(BOARD_ROWS - 1, row));
+  const dragged = encounter.combatants.find(x => x.id === boardState.dragging.id);
+  const dSize = dragged ? boardTokenSize(dragged) : 1;
+  const cc = Math.max(0, Math.min(BOARD_COLS - dSize, col - (boardState.dragging.grabC || 0)));
+  const cr = Math.max(0, Math.min(BOARD_ROWS - dSize, row - (boardState.dragging.grabR || 0)));
   if (cc !== boardState.dragging.curCol || cr !== boardState.dragging.curRow) {
     boardState.dragging.curCol = cc;
     boardState.dragging.curRow = cr;
@@ -2315,9 +2673,9 @@ function boardHandleMouseUp(e) {
   document.getElementById('board-canvas').style.cursor = 'crosshair';
   const moved = curCol !== originX || curRow !== originY;
   if (moved) {
-    const occupant = encounter.combatants.find(c => c.boardX === curCol && c.boardY === curRow && c.id !== id);
+    const c = encounter.combatants.find(x => x.id === id);
+    const occupant = boardTokenOverlap(curCol, curRow, c ? boardTokenSize(c) : 1, id);
     if (!occupant) {
-      const c = encounter.combatants.find(x => x.id === id);
       if (c) { c.boardX = curCol; c.boardY = curRow; }
       encSave();
     }
@@ -2342,16 +2700,19 @@ function boardHandleCanvasClick(e) {
     return;
   }
 
-  // Check if click lands on an existing placed token. Placement-occupancy
-  // must use the exact cell; selecting a token for measurement can use touch
-  // tolerance since that's just picking which token you meant to tap.
-  const exactHit = encounter.combatants.find(c => c.boardX === col && c.boardY === row);
-
   if (boardCanEdit && boardState.pendingId !== null) {
-    // Placing a tray item
-    if (exactHit && exactHit.id !== boardState.pendingId) return; // occupied
+    // Placing a tray item. Both the clamp and the overlap test only start to
+    // matter once a token can be bigger than the square that was clicked:
+    // a 3x3 dropped on the last column has to come back onto the grid, and
+    // "is this square taken" becomes "does this footprint touch another one".
     const c = encounter.combatants.find(x => x.id === boardState.pendingId);
-    if (c) { c.boardX = col; c.boardY = row; }
+    const size = c ? boardTokenSize(c) : 1;
+    const at = {
+      col: Math.max(0, Math.min(BOARD_COLS - size, col)),
+      row: Math.max(0, Math.min(BOARD_ROWS - size, row)),
+    };
+    if (boardTokenOverlap(at.col, at.row, size, boardState.pendingId)) return;
+    if (c) { c.boardX = at.col; c.boardY = at.row; }
     boardState.pendingId = null;
     encSave();
     document.getElementById('board-hint').textContent = BOARD_TOOL_HINTS.move;
@@ -2377,7 +2738,9 @@ function boardHandleCanvasClick(e) {
   if (boardCanEdit && boardState.selectedIds.length === 1) {
     const c = encounter.combatants.find(x => x.id === boardState.selectedIds[0]);
     if (c && c.boardX != null) {
-      c.boardX = col; c.boardY = row;
+      const size = boardTokenSize(c);
+      c.boardX = Math.max(0, Math.min(BOARD_COLS - size, col));
+      c.boardY = Math.max(0, Math.min(BOARD_ROWS - size, row));
       encSave();
       renderBoard();
       return;
@@ -2430,15 +2793,31 @@ function boardTouchMidpoint(t1, t2) { return { x: (t1.clientX + t2.clientX) / 2,
 // pixel-exact hit -- this is for "which token did they mean to touch", not
 // for placement-occupancy checks, which stay pixel-exact.
 function boardHitTest(col, row) {
-  const exact = encounter.combatants.find(c => c.boardX === col && c.boardY === row);
+  // A footprint test, not an anchor test: a large token covers squares its
+  // own boardX/boardY isn't on, and clicking its far corner has to find it.
+  const exact = encounter.combatants.find(c => c.boardX != null && boardTokenCovers(c, col, row));
   if (exact || !BOARD_IS_TOUCH) return exact || null;
   let best = null, bestDist = Infinity;
   for (const c of encounter.combatants) {
     if (c.boardX == null) continue;
-    const d = Math.max(Math.abs(c.boardX - col), Math.abs(c.boardY - row));
+    const a = boardTokenAnchor(c);
+    const d = Math.max(Math.abs(a.col - col), Math.abs(a.row - row));
     if (d <= 1 && d < bestDist) { best = c; bestDist = d; }
   }
   return best;
+}
+
+// Whether a token of this size, anchored here, would land on another one.
+// Two creatures can't share a square, and with footprints that question stops
+// being "same anchor?" and becomes an overlap test.
+function boardTokenOverlap(col, row, size, exceptId) {
+  for (const c of encounter.combatants) {
+    if (c.boardX == null || c.id === exceptId) continue;
+    const s = boardTokenSize(c);
+    if (col < c.boardX + s && col + size > c.boardX
+      && row < c.boardY + s && row + size > c.boardY) return c;
+  }
+  return null;
 }
 
 // Long-press on a placed token or prop = touch equivalent of desktop
@@ -2629,6 +3008,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // actually being on screen (the modal is display:none when closed) and on
   // nothing text-like having focus, so these never steal a keystroke from the
   // encounter list's inputs.
+  // Ctrl+Z / Cmd+Z, before the prop shortcuts below — it applies whether or
+  // not anything is selected, which is the whole point of it.
+  document.addEventListener('keydown', e => {
+    if (!boardCanEdit) return;
+    const canvas = document.getElementById('board-canvas');
+    if (!canvas || !canvas.offsetParent) return;
+    const tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && (e.key === 'z' || e.key === 'Z')) {
+      e.preventDefault();
+      boardUndo();
+    }
+  });
+
   document.addEventListener('keydown', e => {
     if (!boardCanEdit || !boardState.selectedPropId) return;
     const canvas = document.getElementById('board-canvas');

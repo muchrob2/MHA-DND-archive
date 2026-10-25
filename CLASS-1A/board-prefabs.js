@@ -179,9 +179,24 @@ const BOARD_PREFABS = [
   },
   {
     key: 'door', label: 'Doorway', cat: 'Structures', w: 1, h: 1,
-    terrain: 'clear', note: 'Clears the wall under it — a way through',
-    draw(ctx, x, y, w, h) {
+    terrain: 'clear', note: 'A way through. Select it on the board to shut it — a shut door is a wall, and blocks sight',
+    // The only prefab that reads the fifth argument: the prop itself, so a
+    // door that has been shut looks shut. Nothing (the palette chip, a map
+    // being built) means open, which is how every door starts.
+    draw(ctx, x, y, w, h, prop) {
       const lw = pfInkW(Math.min(w, h));
+      if (prop && prop.shut) {
+        // Filling the frame rather than leaning on the jamb: a shut door is
+        // the wall now, and it should read as one at a glance.
+        pfRect(ctx, x + w * 0.08, y + h * 0.04, w * 0.84, h * 0.92, '#A98B63', w * 0.06, lw * 1.4);
+        pfLines(ctx, [
+          [x + w * 0.22, y + h * 0.18, x + w * 0.22, y + h * 0.82],
+          [x + w * 0.5, y + h * 0.18, x + w * 0.5, y + h * 0.82],
+          [x + w * 0.78, y + h * 0.18, x + w * 0.78, y + h * 0.82],
+        ], 'rgba(0,0,0,0.30)', lw * 0.8);
+        pfCircle(ctx, x + w * 0.84, y + h * 0.5, Math.min(w, h) * 0.07, '#E8D9B8', lw * 0.6);
+        return;
+      }
       pfRect(ctx, x + w * 0.06, y + h * 0.52, w * 0.88, h * 0.22, '#A98B63', 0, lw);
       // Swing arc, kept inside the square — a door drawn overhanging its own
       // cell paints over the wall squares either side of it.

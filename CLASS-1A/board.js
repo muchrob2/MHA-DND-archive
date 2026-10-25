@@ -16,7 +16,7 @@ const db = firebase.firestore();
 
 // TEAM_COLORS / TERRAIN_STYLES are defined in board-shared.js (loaded above).
 
-let encounter = { round: 1, currentIndex: 0, combatants: [], attackLog: [], boardStrokes: [], boardTerrain: [], boardProps: [] };
+let encounter = boardEnsureLayers({ round: 1, currentIndex: 0, combatants: [], attackLog: [] });
 // Fail closed: nobody can move tokens here until the admin check below
 // resolves and says otherwise (see boardCanEdit's definition in
 // board-shared.js). Everyone can still pan/zoom/measure in the meantime.
@@ -38,15 +38,13 @@ function encSave() {
   clearTimeout(encSaveTimer);
   encSaveTimer = setTimeout(async () => {
     try {
-      // boardStrokes/boardTerrain/boardProps merge per-item (like combatants)
+      // Every board layer merges per-item (like combatants) — see BOARD_LAYERS
       // so moving a token here can't clobber terrain, drawings or scenery the
       // DM placed — this page never edits those arrays, so they always pass
       // through inert.
       const merged = await fsMergeSave(FS_ENCOUNTER_DOC, encounter, _lastSyncedEncounter, [
         { path: 'combatants', idKey: 'id' },
-        { path: 'boardStrokes', idKey: 'id' },
-        { path: 'boardTerrain', idKey: 'id' },
-        { path: 'boardProps', idKey: 'id' },
+        ...boardLayerMergePaths(),
       ]);
       _lastSyncedEncounter = merged;
     } catch (e) {
@@ -69,9 +67,7 @@ async function encLoad() {
     if (snap.exists) {
       encounter = snap.data();
       encounter.attackLog = encounter.attackLog || [];
-      encounter.boardStrokes = encounter.boardStrokes || [];
-      encounter.boardTerrain = encounter.boardTerrain || [];
-      encounter.boardProps = encounter.boardProps || [];
+      boardEnsureLayers(encounter);
       _lastSyncedEncounter = fsCloneDoc(encounter); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
       // After the baseline clone, never before: the baseline is what the server
       // holds, duplicates and all, until a save lands. The repair is left
@@ -86,9 +82,7 @@ async function encLoad() {
     if (raw) encounter = JSON.parse(raw);
   } catch {}
   encounter.attackLog = encounter.attackLog || [];
-  encounter.boardStrokes = encounter.boardStrokes || [];
-  encounter.boardTerrain = encounter.boardTerrain || [];
-  encounter.boardProps = encounter.boardProps || [];
+  boardEnsureLayers(encounter);
   encRepairDuplicateIds(encounter); // the local cache can hold duplicates too
 }
 
@@ -103,9 +97,7 @@ let _pendingRemoteEncounter = null;
 function applyRemoteEncounter(data) {
   encounter = data;
   encounter.attackLog = encounter.attackLog || [];
-  encounter.boardStrokes = encounter.boardStrokes || [];
-  encounter.boardTerrain = encounter.boardTerrain || [];
-  encounter.boardProps = encounter.boardProps || [];
+  boardEnsureLayers(encounter);
   _lastSyncedEncounter = fsCloneDoc(data); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
   encRepairDuplicateIds(encounter); // after the clone, unsaved — see encLoad
   boardBumpArtVersion(); // invalidate the cached terrain/drawing layer — `encounter` was just replaced wholesale

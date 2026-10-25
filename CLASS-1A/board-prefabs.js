@@ -1249,6 +1249,55 @@ const BOARD_MAPS = [
                       [1, 12], [1, 13], [2, 12], [2, 13],
                       [23, 12], [23, 13], [24, 12], [24, 13]]);
   }),
+  pfMap('swing-town', 'Swing Town', 'Byakko’s front door: six batting cages, the stands, the back cage where Friday’s fights happen, and Imai’s office behind it.', 30, 22, m => {
+    m.outline(0, 0, 30, 22, 'wall');
+    // The back cage and the back office share the south and east walls with
+    // the building, so the partitions are one square thick.
+    m.outline(12, 12, 10, 10, 'wall');   // the back cage — rows 13-20 inside
+    m.outline(21, 14, 9, 8, 'wall');     // the back office, sharing the cage's east wall
+
+    // Six cages along the front, netting between them. The dividers are
+    // railings turned on their side: half cover you can see through, which is
+    // what netting is.
+    for (const c of [5, 9, 13, 17, 21]) {
+      for (const r of [1, 3, 5]) m.prop('railing', c, r, 90);
+    }
+    // A pitching machine at the far end of each cage, and the taped-up speed
+    // dial is the DM's business rather than the board's.
+    for (const c of [2, 6, 10, 14, 18, 22]) m.prop('generator', c, 1);
+    m.repeat('crate', [[25, 1], [25, 4]]);
+
+    // The counter, the chalk wall behind it, and the vending wall everybody
+    // actually talks at.
+    m.prop('counter', 10, 9);
+    m.prop('counter', 14, 9);
+    m.repeat('vending', [[28, 2], [28, 3], [28, 4], [28, 6]]);
+    m.prop('bench', 26, 8);
+
+    // The stands: four rows of plastic seats facing the back cage.
+    m.repeat('bench', [[2, 13], [5, 13], [8, 13], [2, 15], [5, 15], [8, 15],
+                       [2, 17], [5, 17], [8, 17], [2, 19], [5, 19], [8, 19]]);
+    m.prop('dumpster', 1, 11);
+
+    // The back cage itself is bare — it is a cage with a ball machine in it
+    // nobody has plugged in since spring.
+    m.prop('generator', 19, 19);
+    m.prop('crate', 13, 13);
+
+    // The office: Imai's table, the safe, and the kettle's corner.
+    m.prop('counter', 24, 16);
+    m.prop('crate', 23, 19);
+    m.prop('desk', 27, 18);
+    m.prop('lockers', 26, 15);
+
+    // Doors last: the way in off the street, the STAFF door, the cage mouth
+    // and the fire exit nobody is supposed to use.
+    m.repeat('door', [[0, 9], [0, 10]]);
+    m.repeat('door', [[12, 16], [12, 17]]);
+    m.prop('door', 25, 14);
+    m.prop('door', 29, 20);
+  }),
+
   /* ── the big ones ──────────────────────────────────────
      Everything above is a single location you can take in at a glance. The
      maps below are two to three times the area — a district rather than a

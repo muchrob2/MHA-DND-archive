@@ -1011,3 +1011,60 @@ body { height: 100vh; overflow: hidden; }
   #board-map-select { max-width: 150px; }
   #board-map-note { flex-basis: 100%; }
 }
+
+/* ── conditions & cover reference ──
+   Opened from the Rules button. A reference, so it is dense on purpose: two
+   columns, no cards, nothing to scroll past. */
+#enc-rules-panel {
+  margin: 0 20px 12px;
+  padding: 4px 0 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.rules-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 6px;
+}
+.rules-title {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+#enc-rules-filter {
+  flex: 1;
+  min-width: 0;
+  padding: 5px 9px;
+  font-size: var(--fs-2xs);
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+#enc-rules-filter:focus { border-color: var(--accent); }
+.rules-grid { display: flex; flex-direction: column; }
+.rules-row {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 12px;
+  padding: 6px 16px;
+  border-top: 1px solid var(--border);
+}
+.rules-row:hover { background: var(--surface2); }
+.rules-row-name { font-size: var(--fs-xs); font-weight: 700; color: var(--text); }
+.rules-row-text { font-size: var(--fs-xs); color: var(--text-muted); }
+.rules-foot {
+  padding: 9px 16px 2px;
+  font-size: var(--fs-2xs);
+  font-style: italic;
+  color: var(--text-dim);
+}
+@media (max-width: 720px) {
+  .rules-row { grid-template-columns: 1fr; gap: 2px; }
+}

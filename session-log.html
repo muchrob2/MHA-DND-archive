@@ -38,7 +38,16 @@
 <div id="summary-bar">
   <div class="summary-stat"><div class="summary-stat-label">Sessions logged</div><div class="summary-stat-value" id="stat-count">0</div></div>
   <div class="summary-stat"><div class="summary-stat-label">Total XP awarded</div><div class="summary-stat-value" id="stat-xp">0</div></div>
+  <div class="summary-stat"><div class="summary-stat-label">Last played</div><div class="summary-stat-value" id="stat-last">—</div></div>
+  <div id="log-search-wrap">
+    <input id="log-search" type="search" placeholder="Search recaps, NPCs, places…" aria-label="Search the session log" oninput="onLogSearch()">
+    <span id="log-search-count"></span>
+  </div>
 </div>
+
+<!-- Derived from the attendance ticked on the cards; hidden until some
+     session actually records who was there. -->
+<div id="attendance-bar" style="display:none;"></div>
 
 <div id="panel">
   <div id="new-form-slot"></div>

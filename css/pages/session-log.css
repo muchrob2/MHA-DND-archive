@@ -123,3 +123,136 @@
   #panel, #summary-bar, #load-error-banner { padding-left: 16px; padding-right: 16px; }
   .form-row-pair { flex-direction: column; gap: 0; }
 }
+
+/* ── search, attendance, and the things a session touched ──
+   Added with the richer session entries: who was at the table, which arc it
+   was, who they met, where they went, and what opens the next one. The chips
+   are all the same object at different colours, because they are all the same
+   kind of thing — a short name you scan for rather than read. */
+#log-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 180px;
+  margin-left: auto;
+}
+#log-search {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 12px;
+  font-size: var(--fs-sm);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+}
+#log-search:focus { border-color: var(--accent); }
+#log-search-count {
+  flex-shrink: 0;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+#attendance-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.attendance-label {
+  margin-right: 4px;
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.attendance-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 3px 9px;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.attendance-chip b { font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--text); }
+.attendance-chip .attendance-of { font-size: 9px; color: var(--text-dim); }
+/* Nobody is at every session; a player at none of them shouldn't look like a
+   broken row, just a quieter one. */
+.attendance-chip.none { opacity: .55; }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.present-row { margin-top: 10px; }
+.log-chip {
+  padding: 2px 8px;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+.log-chip.present { color: var(--accent-text); background: var(--accent-light); }
+.log-chip.npc     { color: var(--teal-text, var(--text-muted)); background: var(--surface2); border-color: var(--border); }
+.log-chip.place   { color: var(--text-muted); background: var(--surface2); border-color: var(--border); }
+
+.session-arc {
+  padding: 2px 9px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+/* Where you left them. It reads as a note to the DM rather than as part of
+   the recap, because that is what it is. */
+.session-next {
+  margin-top: 12px;
+  padding: 10px 14px;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  background: var(--surface2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.session-next-label {
+  display: block;
+  margin-bottom: 3px;
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.present-picker { display: flex; flex-wrap: wrap; gap: 6px; }
+.present-opt {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.present-opt:has(input:checked) {
+  color: var(--accent-text);
+  background: var(--accent-light);
+  border-color: var(--accent);
+}

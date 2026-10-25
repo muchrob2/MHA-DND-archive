@@ -9,6 +9,10 @@
 const db = firebase.firestore();
 
 let data = { sessions: [] };
+// The players, from the class roster — whoever is marked is_pc there. Loaded
+// rather than listed here so adding a player to the roster adds them to the
+// attendance list and to the per-player counts without this file changing.
+let PLAYERS = [];
 let editingId = null;
 let draftNew = false;
 let canWrite = false;
@@ -32,8 +36,31 @@ document.addEventListener('auth-state-changed', (e) => {
   render();
 });
 
+async function loadPlayers() {
+  try {
+    const roster = await fetch('CLASS-1A/roster.json').then(r => r.json());
+    PLAYERS = (roster.students || []).filter(s => s.is_pc).map(s => ({ id: s.id, name: s.name }));
+  } catch {
+    // The log is readable and writable without the roster; attendance just
+    // has nobody to offer, which is better than the page failing to load.
+    PLAYERS = [];
+  }
+}
+
+function playerName(id) {
+  const p = PLAYERS.find(x => String(x.id) === String(id));
+  // Resolved at render time, so a character renamed in the roster reads
+  // correctly in every session they were ever at.
+  return p ? p.name : '#' + id;
+}
+
+function sessionPresent(s) {
+  return Array.isArray(s.present) ? s.present : [];
+}
+
 async function init() {
   try {
+    await loadPlayers();
     await fbAuthReady;
     const snap = await FS_DOC.get();
     data = snap.exists ? snap.data() : { sessions: [] };
@@ -111,31 +138,95 @@ function nextSessionNumber() {
   return data.sessions.reduce((max, s) => Math.max(max, Number(s.number) || 0), 0) + 1;
 }
 
+function sessionMatches(s, q) {
+  if (!q) return true;
+  const hay = [s.title, s.recap, s.arc, s.npcs, s.places, s.loot, s.next,
+    'session ' + (s.number ?? ''), formatDate(s.date),
+    ...sessionPresent(s).map(playerName)].join(' ').toLowerCase();
+  // Every word has to appear somewhere, in any order: "ginza byakko" finds
+  // the session those two things were both in.
+  return q.toLowerCase().split(/\s+/).filter(Boolean).every(w => hay.includes(w));
+}
+
 function render() {
   const sorted = [...data.sessions].sort((a, b) => (Number(b.number)||0) - (Number(a.number)||0));
+  const search = document.getElementById('log-search');
+  const q = search ? search.value.trim() : '';
+  const shown = sorted.filter(s => sessionMatches(s, q));
 
   document.getElementById('stat-count').textContent = data.sessions.length;
   document.getElementById('stat-xp').textContent = data.sessions.reduce((sum, s) => sum + (Number(s.xp) || 0), 0).toLocaleString();
+
+  // Last played: the latest date anybody actually wrote down, which is not
+  // necessarily the highest session number.
+  const dates = data.sessions.map(s => s.date).filter(Boolean).sort();
+  const lastEl = document.getElementById('stat-last');
+  if (lastEl) lastEl.textContent = dates.length ? formatDate(dates[dates.length - 1]) : '—';
+
+  renderAttendance();
 
   const slot = document.getElementById('new-form-slot');
   slot.innerHTML = draftNew ? formHtml(null) : '';
 
   const list = document.getElementById('sessions-list');
-  document.getElementById('empty-state').style.display = sorted.length ? 'none' : '';
-  list.innerHTML = sorted.map(s => editingId === s.id ? formHtml(s) : cardHtml(s)).join('');
+  const empty = document.getElementById('empty-state');
+  empty.style.display = shown.length ? 'none' : '';
+  // Always set, never only on the search branch: leaving the last message in
+  // place meant deleting every session showed "no session matches that".
+  empty.innerHTML = data.sessions.length
+    ? '<div class="es-icon">🔍</div>No session matches that.'
+    : '<div class="es-icon">📓</div>No sessions logged yet — recap your first session to start the log.';
+  list.innerHTML = shown.map(s => editingId === s.id ? formHtml(s) : cardHtml(s)).join('');
+  const count = document.getElementById('log-search-count');
+  if (count) count.textContent = q && data.sessions.length ? `${shown.length} of ${data.sessions.length}` : '';
+}
+
+// How many sessions each player has actually been at. Derived, never stored:
+// it is only ever a count of the attendance ticked on the cards below.
+function renderAttendance() {
+  const wrap = document.getElementById('attendance-bar');
+  if (!wrap) return;
+  const recorded = data.sessions.filter(s => sessionPresent(s).length);
+  if (!PLAYERS.length || !recorded.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  wrap.innerHTML = '<div class="attendance-label">Sessions attended</div>'
+    + PLAYERS.map(p => {
+      const n = recorded.filter(s => sessionPresent(s).some(id => String(id) === String(p.id))).length;
+      return `<span class="attendance-chip${n ? '' : ' none'}">${escHtml(p.name)}
+        <b>${n}</b><span class="attendance-of">/${recorded.length}</span></span>`;
+    }).join('');
+}
+
+function onLogSearch() { render(); }
+
+// Comma-separated in the form, chips on the card: the people and places a
+// session touched are a list, and a list you can see at a glance is the thing
+// you actually scan a log for six weeks later.
+function chipsHtml(label, value, kind) {
+  const items = String(value || '').split(',').map(x => x.trim()).filter(Boolean);
+  if (!items.length) return '';
+  return `<div class="session-meta-block"><div class="session-meta-label">${escHtml(label)}</div>
+    <div class="chip-row">${items.map(i => `<span class="log-chip ${kind}">${escHtml(i)}</span>`).join('')}</div></div>`;
 }
 
 function cardHtml(s) {
+  const present = sessionPresent(s);
   return `<div class="session-card">
     <div class="session-card-head">
       <span class="session-number">Session ${escHtml(s.number ?? '?')}</span>
       <span class="session-title">${escHtml(s.title || 'Untitled session')}</span>
+      ${s.arc ? `<span class="session-arc">${escHtml(s.arc)}</span>` : ''}
       <span class="session-date">${formatDate(s.date)}</span>
     </div>
+    ${present.length ? `<div class="chip-row present-row">${present.map(id =>
+      `<span class="log-chip present">${escHtml(playerName(id))}</span>`).join('')}</div>` : ''}
     ${s.recap ? `<div class="session-recap">${escHtml(s.recap)}</div>` : ''}
+    ${s.next ? `<div class="session-next"><span class="session-next-label">Next time</span>${escHtml(s.next)}</div>` : ''}
     <div class="session-meta-row">
       ${s.xp ? `<div class="session-meta-block"><div class="session-meta-label">XP awarded</div><div class="xp-value">${escHtml(String(s.xp))}</div></div>` : ''}
       ${s.loot ? `<div class="session-meta-block"><div class="session-meta-label">Loot &amp; rewards</div><div class="loot-text">${escHtml(s.loot)}</div></div>` : ''}
+      ${chipsHtml('Met', s.npcs, 'npc')}
+      ${chipsHtml('Went', s.places, 'place')}
     </div>
     ${canWrite ? `<div class="session-actions">
       <button class="action-btn" onclick="startEdit('${s.id}')">Edit</button>
@@ -154,11 +245,23 @@ function formHtml(s) {
       <div class="form-row"><label>Date</label><input class="edit-input" id="f-date-${idAttr}" type="date" value="${escHtml(s.date||'')}"></div>
     </div>
     <div class="form-row"><label>Title</label><input class="edit-input" id="f-title-${idAttr}" type="text" placeholder="e.g. Sports Festival — Prelims" value="${escHtml(s.title||'')}"></div>
+    <div class="form-row-pair">
+      <div class="form-row" style="flex:2;"><label>Chapter or arc</label><input class="edit-input" id="f-arc-${idAttr}" type="text" placeholder="e.g. After Hours — Chapter 3" value="${escHtml(s.arc||'')}"></div>
+    </div>
+    ${PLAYERS.length ? `<div class="form-row"><label>Who was there</label>
+      <div class="present-picker">${PLAYERS.map(pl => `<label class="present-opt">
+        <input type="checkbox" id="f-present-${idAttr}-${pl.id}" value="${pl.id}"${sessionPresent(s).some(id => String(id) === String(pl.id)) ? ' checked' : ''}>
+        ${escHtml(pl.name)}</label>`).join('')}</div></div>` : ''}
     <div class="form-row"><label>Recap</label><textarea class="edit-textarea" id="f-recap-${idAttr}" placeholder="What actually happened at the table…">${escHtml(s.recap||'')}</textarea></div>
+    <div class="form-row-pair">
+      <div class="form-row"><label>NPCs met</label><input class="edit-input" id="f-npcs-${idAttr}" type="text" placeholder="Comma separated" value="${escHtml(s.npcs||'')}"></div>
+      <div class="form-row"><label>Places</label><input class="edit-input" id="f-places-${idAttr}" type="text" placeholder="Comma separated" value="${escHtml(s.places||'')}"></div>
+    </div>
     <div class="form-row-pair">
       <div class="form-row"><label>XP awarded</label><input class="edit-input" id="f-xp-${idAttr}" type="number" placeholder="0" value="${escHtml(String(s.xp||''))}"></div>
       <div class="form-row" style="flex:2;"><label>Loot &amp; rewards</label><input class="edit-input" id="f-loot-${idAttr}" type="text" placeholder="Items, currency, favors gained" value="${escHtml(s.loot||'')}"></div>
     </div>
+    <div class="form-row"><label>Next time</label><input class="edit-input" id="f-next-${idAttr}" type="text" placeholder="Where you left them, and what opens the next one" value="${escHtml(s.next||'')}"></div>
     <div class="form-actions">
       <button class="action-btn primary" onclick="${isNew ? 'submitNewForm()' : `saveEdit('${s.id}')`}">${isNew ? 'Add Session' : 'Save Changes'}</button>
       <button class="action-btn" onclick="${isNew ? 'cancelNewForm()' : 'cancelEdit()'}">Cancel</button>
@@ -167,13 +270,27 @@ function formHtml(s) {
 }
 
 function readForm(idAttr) {
+  const val = (name) => {
+    const el = document.getElementById(`f-${name}-${idAttr}`);
+    return el ? el.value.trim() : '';
+  };
   return {
     number: Number(document.getElementById(`f-number-${idAttr}`).value) || 0,
     date: document.getElementById(`f-date-${idAttr}`).value,
-    title: document.getElementById(`f-title-${idAttr}`).value.trim(),
-    recap: document.getElementById(`f-recap-${idAttr}`).value.trim(),
+    title: val('title'),
+    arc: val('arc'),
+    // Ids rather than names: a character renamed in the roster still reads
+    // correctly on every session they were ever at.
+    present: PLAYERS.filter(pl => {
+      const box = document.getElementById(`f-present-${idAttr}-${pl.id}`);
+      return box && box.checked;
+    }).map(pl => pl.id),
+    recap: val('recap'),
+    npcs: val('npcs'),
+    places: val('places'),
     xp: Number(document.getElementById(`f-xp-${idAttr}`).value) || 0,
-    loot: document.getElementById(`f-loot-${idAttr}`).value.trim(),
+    loot: val('loot'),
+    next: val('next'),
   };
 }
 

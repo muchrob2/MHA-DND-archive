@@ -344,7 +344,7 @@ function renderCondPills(c) {
   return c.conditions.map(cond => {
     const dur = durations[cond];
     const durBadge = dur != null ? `<span style="font-size:9px;opacity:0.75;margin-left:1px;">(${dur})</span>` : '';
-    return `<span class="cond-pill" onclick="encToggleCondition(${c.id},'${cond}')">${cond}${durBadge} ×</span>`;
+    return `<span class="cond-pill" title="${escHtml(encConditionTooltip(cond))}" onclick="encToggleCondition(${c.id},'${cond}')">${cond}${durBadge} ×</span>`;
   }).join('');
 }
 
@@ -359,7 +359,7 @@ function renderCondOptions(c) {
     const durBtn = active
       ? `<span class="cond-dur-btn" onclick="event.stopPropagation();encSetCondDuration(${c.id},'${cond}')" title="Set round duration">⏱</span>`
       : '';
-    return `<span class="cond-option${active?' active':''}" onclick="encToggleCondition(${c.id},'${cond}')">${cond}${durPart}${durBtn}</span>`;
+    return `<span class="cond-option${active?' active':''}" title="${escHtml(encConditionTooltip(cond))}" onclick="encToggleCondition(${c.id},'${cond}')">${cond}${durPart}${durBtn}</span>`;
   }).join('');
 }
 
@@ -636,6 +636,92 @@ function encAddEnemy() {
   }
   sel.value = '';
   encSave(); renderEncounter();
+}
+
+/* ── What a condition actually does ────────────────────────
+   The list above is names only, which is fine for the DM who wrote them down
+   and no help to the player asking "so what can I do?". These are the
+   mechanics in one line each, in my own words, and they are used twice: as
+   the tooltip on every condition chip and option, and in the reference panel
+   the Rules button opens.
+
+   Conditions only. Anything campaign-specific — quirk saves, the three-tier
+   difficulty dials, how Byakko Heat works — lives in the handbook and in the
+   campaign's own appendices, and paraphrasing it here would be a second copy
+   to disagree with the first. */
+const CONDITION_RULES = {
+  Blinded: 'Can\'t see: attacks against you have advantage, yours have disadvantage, and you fail any check needing sight.',
+  Charmed: 'Can\'t attack the charmer or target them with harmful effects; the charmer has advantage on social checks against you.',
+  Deafened: 'Can\'t hear, and you fail any check needing hearing.',
+  Exhausted: 'Stacks in six levels, each worse than the last: disadvantage on checks, then half speed, then disadvantage on attacks and saves, then half HP, then speed 0, then dead.',
+  Frightened: 'Disadvantage on attacks and checks while you can see the source, and you can\'t willingly move closer to it.',
+  Grappled: 'Speed 0, no bonus to speed. Ends if the grappler is incapacitated or you are moved out of reach.',
+  Incapacitated: 'No actions and no reactions. Most of the heavier conditions include this one.',
+  Invisible: 'Can\'t be seen without special sense: attacks against you have disadvantage, yours have advantage. You can still be heard.',
+  Paralyzed: 'Incapacitated, can\'t move or speak, auto-fail STR and DEX saves. Attacks against you have advantage, and any hit from within 5 ft is a critical.',
+  Poisoned: 'Disadvantage on attack rolls and ability checks.',
+  Prone: 'Can only crawl until you stand (half your movement). Your attacks have disadvantage; attacks against you have advantage within 5 ft, disadvantage further out.',
+  Restrained: 'Speed 0. Attacks against you have advantage, yours have disadvantage, and you have disadvantage on DEX saves.',
+  Stunned: 'Incapacitated, can\'t move, can barely speak, auto-fail STR and DEX saves, and attacks against you have advantage.',
+  Unconscious: 'Incapacitated, prone, drops what it holds, unaware of everything, auto-fails STR and DEX saves, and any hit from within 5 ft is a critical.',
+};
+
+// Cover is the other thing asked at the table every fight, and the board's
+// own prefabs already state it per prop — a crate is half cover, a bus is
+// full — so this is the scale those notes are written against.
+const COVER_RULES = [
+  ['Half cover', '+2 AC and +2 DEX saves. A low wall, a crate, a railing, another creature.'],
+  ['Three-quarters cover', '+5 AC and +5 DEX saves. A portcullis, an arrow slit, a thick tree trunk.'],
+  ['Total cover', 'Can\'t be targeted directly at all — though an area effect may still reach it.'],
+];
+
+function encConditionTooltip(name) {
+  return CONDITION_RULES[name] ? `${name} — ${CONDITION_RULES[name]}` : name;
+}
+
+let _rulesOpen = false;
+function encToggleRules() {
+  _rulesOpen = !_rulesOpen;
+  const panel = document.getElementById('enc-rules-panel');
+  if (!panel) return;
+  panel.style.display = _rulesOpen ? '' : 'none';
+  if (_rulesOpen && !panel.innerHTML) encRenderRules();
+  const btn = document.getElementById('enc-rules-btn');
+  if (btn) btn.classList.toggle('active', _rulesOpen);
+}
+
+function encRenderRules() {
+  const panel = document.getElementById('enc-rules-panel');
+  if (!panel) return;
+  panel.innerHTML = `
+    <div class="rules-head">
+      <span class="rules-title">Conditions</span>
+      <input id="enc-rules-filter" type="search" placeholder="Filter…" aria-label="Filter conditions" oninput="encFilterRules()">
+      <button class="enc-btn" onclick="encToggleRules()">Close</button>
+    </div>
+    <div class="rules-grid" id="enc-rules-grid">
+      ${CONDITIONS.map(name => `<div class="rules-row" data-cond="${escHtml(name.toLowerCase())}">
+        <div class="rules-row-name">${escHtml(name)}</div>
+        <div class="rules-row-text">${escHtml(CONDITION_RULES[name] || '')}</div>
+      </div>`).join('')}
+    </div>
+    <div class="rules-head"><span class="rules-title">Cover</span></div>
+    <div class="rules-grid">
+      ${COVER_RULES.map(([name, text]) => `<div class="rules-row" data-cond="${escHtml(name.toLowerCase())}">
+        <div class="rules-row-name">${escHtml(name)}</div>
+        <div class="rules-row-text">${escHtml(text)}</div>
+      </div>`).join('')}
+    </div>
+    <div class="rules-foot">Everything else — quirks, the handbook's own tables — is in the two rulebooks on the dashboard.</div>`;
+}
+
+function encFilterRules() {
+  const input = document.getElementById('enc-rules-filter');
+  const q = (input ? input.value : '').trim().toLowerCase();
+  for (const row of document.querySelectorAll('#enc-rules-panel .rules-row')) {
+    const hay = (row.dataset.cond || '') + ' ' + row.textContent.toLowerCase();
+    row.style.display = !q || hay.includes(q) ? '' : 'none';
+  }
 }
 
 /* ── Encounter groups ─────────────────────────────────────

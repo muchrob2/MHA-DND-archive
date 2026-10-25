@@ -266,9 +266,10 @@ function encReset() {
   if (!confirm('Reset encounter? This will clear all combatants and round count.')) return;
   // The map survives a reset — terrain, drawings and scenery are the scene,
   // not the fight that happened in it.
-  const keptLayers = {};
-  for (const k of BOARD_LAYERS) keptLayers[k] = encounter[k] || [];
-  encounter = Object.assign({ round: 1, currentIndex: 0, combatants: [], attackLog: [] }, keptLayers);
+  const kept = {};
+  for (const k of BOARD_LAYERS) kept[k] = encounter[k] || [];
+  for (const k of BOARD_SETTINGS) kept[k] = encounter[k];
+  encounter = Object.assign({ round: 1, currentIndex: 0, combatants: [], attackLog: [] }, kept);
   encSave(); document.getElementById('enc-round-num').textContent = 1; renderEncounter(); renderAttackLog();
 }
 
@@ -422,7 +423,7 @@ function renderEncHpRow(id) {
   el.innerHTML = `
     <div class="hp-bar-wrap"><div class="hp-bar" style="width:${pct}%;background:${barColor}"></div></div>
     <div class="hp-controls">
-      <input id="enc-dmg-inp-${c.id}" type="number" min="1" placeholder="dmg" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
+      <input id="enc-dmg-inp-${c.id}" class="enc-dmg-inp" type="number" min="1" placeholder="dmg" title="Damage or healing amount"
         onkeydown="if(event.key==='Enter')encApplyDmg(${c.id})">
       <button class="hp-adj-btn dmg" onclick="encApplyDmg(${c.id})" title="Apply damage" aria-label="Apply damage">−</button>
       <span class="hp-display" onclick="this.style.display='none';document.getElementById('enc-hp-edit-${c.id}').style.display='flex'">
@@ -433,7 +434,7 @@ function renderEncHpRow(id) {
           onblur="encSetHpDirect(${c.id},this.value)" onkeydown="if(event.key==='Enter')encSetHpDirect(${c.id},this.value)">
       </span>
       <button class="hp-adj-btn heal" onclick="encApplyHeal(${c.id})" title="Apply healing" aria-label="Apply healing">+</button>
-      <input id="enc-heal-inp-${c.id}" type="number" min="1" placeholder="heal" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
+      <input id="enc-heal-inp-${c.id}" class="enc-dmg-inp" type="number" min="1" placeholder="heal" title="Healing amount"
         onkeydown="if(event.key==='Enter')encApplyHeal(${c.id})">
     </div>
     <div class="temp-hp-row">
@@ -486,7 +487,7 @@ function renderEncounter() {
       <div class="enc-hp-col" id="enc-hp-${c.id}">
         <div class="hp-bar-wrap"><div class="hp-bar" style="width:${pct}%;background:${barColor}"></div></div>
         <div class="hp-controls">
-          <input id="enc-dmg-inp-${c.id}" type="number" min="1" placeholder="dmg" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
+          <input id="enc-dmg-inp-${c.id}" class="enc-dmg-inp" type="number" min="1" placeholder="dmg" title="Damage or healing amount"
             onkeydown="if(event.key==='Enter')encApplyDmg(${c.id})">
           <button class="hp-adj-btn dmg" onclick="encApplyDmg(${c.id})" title="Apply damage" aria-label="Apply damage">−</button>
           <span class="hp-display" onclick="this.style.display='none';document.getElementById('enc-hp-edit-${c.id}').style.display='flex'">
@@ -497,7 +498,7 @@ function renderEncounter() {
               onblur="encSetHpDirect(${c.id},this.value)" onkeydown="if(event.key==='Enter')encSetHpDirect(${c.id},this.value)">
           </span>
           <button class="hp-adj-btn heal" onclick="encApplyHeal(${c.id})" title="Apply healing" aria-label="Apply healing">+</button>
-          <input id="enc-heal-inp-${c.id}" type="number" min="1" placeholder="heal" style="width:46px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font-size:11px;outline:none;"
+          <input id="enc-heal-inp-${c.id}" class="enc-dmg-inp" type="number" min="1" placeholder="heal" title="Healing amount"
             onkeydown="if(event.key==='Enter')encApplyHeal(${c.id})">
         </div>
         <div class="temp-hp-row">

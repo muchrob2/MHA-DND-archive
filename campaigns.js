@@ -157,6 +157,90 @@ function renderReadAloud(text) {
   return html;
 }
 
+/* ── Searching a module ────────────────────────────────────
+   Eight chapters, sixty-odd sections and a twenty-three-part appendix is a
+   lot of text to find one sentence in, and the contents rail only goes down
+   to chapter level. These two functions are pure and live up here with the
+   renderers so the verifier can run them over the real campaign file: the
+   index is built from the data, and the hits come back with the id of the
+   block they are in, which is also that block's DOM id — so a result is a
+   link to #id and nothing has to be scrolled for.
+
+   Every authored field is indexed, read-alouds included, because "what was
+   the line about the van" is exactly the question this is for. */
+function campaignSearchIndex(c) {
+  const out = [];
+  const add = (id, heading, where, text) => {
+    if (id && text) out.push({ id, heading: heading || '(untitled)', where, text: String(text) });
+  };
+  for (const b of c.background || []) add(b.id, b.heading, 'Background', b.body);
+  (c.chapters || []).forEach(ch => {
+    const where = ch.number ? `Chapter ${ch.number}` : 'Chapter';
+    for (const k of ['intro', 'dmNote', 'milestone']) add(ch.id, ch.title, where, ch[k]);
+    if (ch.closing) add(ch.id, ch.title, where, ch.closing.body);
+    for (const s of ch.sections || []) {
+      const label = `${where} — ${ch.title}`;
+      for (const k of ['body', 'developments', 'treasure', 'dmNote', 'readAloud']) add(s.id, s.heading, label, s[k]);
+      if (s.aside) add(s.id, s.heading, label, s.aside.body);
+    }
+    for (const q of ch.sidequests || []) {
+      for (const k of ['body', 'reward']) add(q.id, q.title, `${where} — side quests`, q[k]);
+    }
+  });
+  for (const a of c.appendix || []) add(a.id, a.heading, 'Appendix', a.body);
+  return out;
+}
+
+// Every word has to appear somewhere in the same block, in any order, so
+// "van scar" finds the one paragraph about the chop shop. One hit per block —
+// the second mention of a word in the same section is not a second answer.
+function campaignSearchHits(index, query, limit) {
+  const words = String(query || '').toLowerCase().split(/\s+/).filter(Boolean);
+  if (!words.length) return [];
+  const seen = new Set();
+  const hits = [];
+  for (const entry of index) {
+    if (seen.has(entry.id)) continue;
+    const hay = entry.text.toLowerCase();
+    if (!words.every(w => hay.includes(w))) continue;
+    seen.add(entry.id);
+    // Cut around the whole phrase if the block happens to contain it, and
+    // around the first word otherwise: matching is word-by-word in any order,
+    // but somebody who typed "noodle bar" wants to see "noodle bar" in the
+    // result and not the word "noodle" four sentences from the word "bar".
+    const phrase = words.length > 1 ? words.join(' ') : '';
+    const phraseAt = phrase ? hay.indexOf(phrase) : -1;
+    const at = phraseAt > -1 ? phraseAt : hay.indexOf(words[0]);
+    const anchorLen = phraseAt > -1 ? phrase.length : words[0].length;
+    // On word boundaries where it can be, because a snippet that starts
+    // mid-word reads as a typo.
+    let from = Math.max(0, at - 70);
+    let to = Math.min(entry.text.length, at + anchorLen + 110);
+    if (from > 0) { const sp = entry.text.indexOf(' ', from); if (sp > -1 && sp < at) from = sp + 1; }
+    if (to < entry.text.length) { const sp = entry.text.lastIndexOf(' ', to); if (sp > at) to = sp; }
+    hits.push({
+      id: entry.id,
+      heading: entry.heading,
+      where: entry.where,
+      snippet: (from > 0 ? '…' : '') + entry.text.slice(from, to).replace(/\s+/g, ' ').trim() + (to < entry.text.length ? '…' : ''),
+      words,
+    });
+    if (limit && hits.length >= limit) break;
+  }
+  return hits;
+}
+
+// Escaped first, then marked: the other order would let a query turn the
+// campaign's own text into markup.
+function campaignHighlight(snippet, words) {
+  let html = escHtml(snippet);
+  for (const w of words) {
+    const safe = escHtml(w).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (safe) html = html.replace(new RegExp('(' + safe + ')', 'gi'), '<mark>$1</mark>');
+  }
+  return html;
+}
+
 /* ─── State ──────────────────────────────────────────── */
 const FS_CAMPAIGNS_DOC = db.collection('mha-dnd').doc('campaigns');
 let campaignsData = null;
@@ -578,6 +662,7 @@ function renderCampaignView() {
 
   const editingClass = editMode ? ' editing' : '';
   let html = `<a class="module-back" href="#" onclick="location.hash='';return false;">← All Campaigns</a>`;
+  html += campaignSearchBoxHtml();
   // The rail is a second, sticky copy of the contents for wide screens. An
   // eight-chapter module is too long to navigate by scrolling back to the top.
   html += `<div class="module-layout">`;
@@ -593,6 +678,69 @@ function renderCampaignView() {
   html += `</div>`;
   view.innerHTML = html;
   syncRail();
+  // The query survives a re-render (an edit, a live update), so the results
+  // have to be put back with it.
+  renderCampaignSearch();
+}
+
+/* ── The search box ────────────────────────────────────────
+   Deliberately not part of render(): typing re-renders only the results
+   list, because a full re-render of an eight-chapter module would rebuild the
+   input the query is being typed into and take the caret with it. */
+let campaignQuery = '';
+const CAMPAIGN_SEARCH_LIMIT = 40;
+
+function campaignSearchBoxHtml() {
+  return `<div class="module-search">
+    <input id="camp-search" type="search" value="${escHtml(campaignQuery)}"
+      placeholder="Search this module — chapters, appendix, read-alouds…"
+      aria-label="Search this module" autocomplete="off"
+      oninput="onCampaignSearch(this.value)" onkeydown="if(event.key==='Escape')onCampaignSearch('')">
+    <span id="camp-search-count"></span>
+    <button class="module-search-clear" onclick="onCampaignSearch('')" title="Clear the search" aria-label="Clear the search">✕</button>
+  </div>
+  <div id="camp-search-results"></div>`;
+}
+
+function onCampaignSearch(value) {
+  campaignQuery = value;
+  const box = document.getElementById('camp-search');
+  if (box && box.value !== value) box.value = value;
+  renderCampaignSearch();
+}
+
+function renderCampaignSearch() {
+  const wrap = document.getElementById('camp-search-results');
+  const count = document.getElementById('camp-search-count');
+  if (!wrap) return;
+  const c = findCampaign(currentCampaignId);
+  const q = campaignQuery.trim();
+  if (!c || q.length < 2) {
+    wrap.innerHTML = '';
+    if (count) count.textContent = '';
+    return;
+  }
+  const hits = campaignSearchHits(campaignSearchIndex(c), q, CAMPAIGN_SEARCH_LIMIT);
+  if (count) count.textContent = hits.length ? `${hits.length}${hits.length === CAMPAIGN_SEARCH_LIMIT ? '+' : ''} found` : 'nothing';
+  if (!hits.length) {
+    wrap.innerHTML = `<div class="search-none">Nothing in this module matches “${escHtml(q)}”.</div>`;
+    return;
+  }
+  wrap.innerHTML = hits.map(h => `<a class="search-hit" href="#${encodeURIComponent(h.id)}" onclick="onCampaignSearchJump()">
+    <div class="search-hit-head"><span class="search-hit-where">${escHtml(h.where)}</span>
+      <span class="search-hit-heading">${escHtml(h.heading)}</span></div>
+    <div class="search-hit-snippet">${campaignHighlight(h.snippet, h.words)}</div>
+  </a>`).join('');
+}
+
+// Clicking a result leaves the search open — the DM is usually looking for
+// the second mention as well — but drops the results out of the way so the
+// section they jumped to is what they are looking at.
+function onCampaignSearchJump() {
+  const wrap = document.getElementById('camp-search-results');
+  if (wrap) wrap.innerHTML = '';
+  const count = document.getElementById('camp-search-count');
+  if (count) count.textContent = '';
 }
 
 /* The sticky rail. Chapters only — the inline contents carries the full

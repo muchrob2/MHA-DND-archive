@@ -691,3 +691,80 @@ body.reading #main { max-width: 1240px; }
 @media (max-width: 420px) {
   .camp-grid { grid-template-columns: 1fr; }
 }
+
+/* ── module search ──
+   Sits under the back link, above the banner: the first thing on the page
+   when you have opened a module to find one sentence in it. The results are
+   links to the block's own id, which the reader already renders. */
+.module-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+#camp-search {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  font-size: var(--fs-sm);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+}
+#camp-search:focus { border-color: var(--accent, var(--primary, #E8A020)); }
+#camp-search-count {
+  flex-shrink: 0;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-dim);
+}
+.module-search-clear {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.module-search-clear:hover { color: var(--text); border-color: var(--border-strong); }
+
+#camp-search-results { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.search-hit {
+  display: block;
+  padding: 10px 14px;
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: var(--radius);
+}
+.search-hit:hover { border-left-color: var(--accent, #E8A020); background: var(--surface2); }
+.search-hit-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; margin-bottom: 3px; }
+.search-hit-where {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xs);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.search-hit-heading { font-size: var(--fs-sm); font-weight: 700; color: var(--text); }
+.search-hit-snippet { font-size: var(--fs-xs); line-height: 1.55; color: var(--text-muted); }
+.search-hit-snippet mark {
+  padding: 0 2px;
+  color: var(--accent-text, #F2D08A);
+  background: rgba(232,160,32,0.22);
+  border-radius: 2px;
+}
+.search-none {
+  padding: 12px 14px;
+  font-size: var(--fs-xs);
+  font-style: italic;
+  color: var(--text-dim);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}

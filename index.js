@@ -192,3 +192,82 @@
     }
   }
   refreshVersion();
+  /* ── Where we left off ─────────────────────────────────────
+     The dashboard knew nothing about the campaign it is the front door to.
+     This reads the most recent session out of the session log and puts it at
+     the top of the DM's half of the page: the number, the date, the title,
+     and the "next time" line the log now carries.
+
+     Read over the Firestore REST API rather than with the SDK, because this
+     page deliberately loads no Firebase: three SDK scripts and auth.js to
+     render one sentence would be the slowest thing on the dashboard. The
+     mha-dnd documents are world-readable by rule (firestore.rules), which is
+     the same access the session log page itself has, so there is nothing to
+     authenticate for. If the request fails the strip stays hidden — a
+     dashboard that says "couldn't load" where a recap should be is worse
+     than a dashboard that says nothing.
+
+     It renders inside #dm-only, so a player's device never shows it: "next
+     time" is the DM's note to themselves and frequently a spoiler. */
+  const FS_REST = 'https://firestore.googleapis.com/v1/projects/mha-dnd-archive/databases/(default)/documents/mha-dnd/session-log';
+
+  // Firestore's REST shape wraps every value in its type. Only the four
+  // fields this strip shows are unwrapped; the rest is left alone.
+  function fsValue(v) {
+    if (!v || typeof v !== 'object') return undefined;
+    if ('stringValue' in v) return v.stringValue;
+    if ('integerValue' in v) return Number(v.integerValue);
+    if ('doubleValue' in v) return Number(v.doubleValue);
+    if ('booleanValue' in v) return v.booleanValue;
+    if ('nullValue' in v) return null;
+    if ('arrayValue' in v) return (v.arrayValue.values || []).map(fsValue);
+    if ('mapValue' in v) {
+      const out = {};
+      for (const [k, inner] of Object.entries(v.mapValue.fields || {})) out[k] = fsValue(inner);
+      return out;
+    }
+    return undefined;
+  }
+
+  function latestSession(sessions) {
+    // Highest session number wins, and a log with no numbers falls back to
+    // the latest date rather than to nothing.
+    let best = null;
+    for (const s of sessions) {
+      if (!s) continue;
+      if (!best) { best = s; continue; }
+      const a = Number(s.number) || 0, b = Number(best.number) || 0;
+      if (a > b || (a === b && String(s.date || '') > String(best.date || ''))) best = s;
+    }
+    return best;
+  }
+
+  function renderLastSession(s) {
+    const wrap = document.getElementById('last-session');
+    if (!wrap || !s) return;
+    const date = s.date ? new Date(s.date + 'T00:00:00') : null;
+    const when = date && !isNaN(date) ? date.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+    const esc = (t) => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    wrap.innerHTML = `<a class="last-session-inner" href="session-log.html">
+        <div class="last-session-label">Where you left off${s.number ? ' · Session ' + esc(s.number) : ''}${when ? ' · ' + esc(when) : ''}</div>
+        <div class="last-session-title">${esc(s.title || 'Untitled session')}</div>
+        ${s.next ? `<div class="last-session-next"><span>Next time</span>${esc(s.next)}</div>` : ''}
+      </a>`;
+    wrap.classList.remove('hidden');
+  }
+
+  async function loadLastSession() {
+    if (!document.getElementById('last-session')) return;
+    try {
+      const res = await fetch(FS_REST, { cache: 'no-cache' });
+      if (!res.ok) throw new Error('bad status');
+      const doc = await res.json();
+      const sessions = fsValue((doc.fields || {}).sessions) || [];
+      if (!Array.isArray(sessions) || !sessions.length) return;
+      renderLastSession(latestSession(sessions));
+    } catch {
+      // Stays hidden. The log itself is one click away either way.
+    }
+  }
+  loadLastSession();
+

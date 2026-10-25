@@ -39,12 +39,13 @@ const prefix = SRC.slice(0, cut)
 const ctx = { console };
 vm.createContext(ctx);
 try {
-  vm.runInContext(prefix + '\nthis.api = { escHtml, renderProse, renderReadAloud, enrich, classifyLine };', ctx);
+  vm.runInContext(prefix + '\nthis.api = { escHtml, renderProse, renderReadAloud, enrich, classifyLine,'
+    + ' campaignSearchIndex, campaignSearchHits, campaignHighlight };', ctx);
 } catch (e) {
   console.error('FAIL — the renderer prefix did not evaluate: ' + e.message);
   process.exit(1);
 }
-const { renderProse, renderReadAloud } = ctx.api;
+const { renderProse, renderReadAloud, campaignSearchIndex, campaignSearchHits, campaignHighlight } = ctx.api;
 
 console.log('\n>>> prose structure');
 
@@ -176,6 +177,68 @@ for (const [label, text, kind] of fields) {
 ok(threw.length === 0, 'no field throws in the renderer' + (threw.length ? ' — ' + threw.slice(0, 3).join('; ') : ''));
 ok(lost.length === 0, `all ${fields.length} authored fields round-trip without losing content` +
   (lost.length ? ' — ' + lost.slice(0, 5).join('; ') : ''));
+
+console.log('\n>>> searching a module');
+
+{
+  // Against the real file, not a fixture: the index is the thing that has to
+  // keep up with the data, and a fixture would always agree with itself.
+  const city = (doc.campaigns || []).find(c => c.id === 'after-hours-the-city');
+  const story = (doc.campaigns || []).find(c => c.id === 'the-shortlist-after-hours');
+  ok(!!city && !!story, 'the two After Hours modules are both in the file');
+
+  const index = campaignSearchIndex(city);
+  ok(index.length >= (city.appendix || []).length, 'the index covers at least every appendix section');
+  ok(index.every(e => e.id && e.heading && e.where && e.text),
+    'every indexed block knows its id, its heading and where it is');
+
+  // Every id in the index is a block the reader gives that id to in the DOM,
+  // which is what makes a result a working link rather than a dead anchor.
+  const rendered = new Set();
+  for (const b of city.background || []) rendered.add(b.id);
+  for (const a of city.appendix || []) rendered.add(a.id);
+  for (const ch of city.chapters || []) {
+    rendered.add(ch.id);
+    for (const s of ch.sections || []) rendered.add(s.id);
+    for (const q of ch.sidequests || []) rendered.add(q.id);
+  }
+  ok(index.every(e => rendered.has(e.id)), 'and every one of those ids is a block the reader renders with it');
+
+  const hits = (c, q) => campaignSearchHits(campaignSearchIndex(c), q, 40);
+
+  const ladder = hits(city, 'straight line through it');
+  ok(ladder.length >= 1 && ladder[0].heading.startsWith('Byakko'),
+    'searching a module finds a section by a phrase inside it');
+
+  const noodle = hits(city, 'noodle bar');
+  ok(noodle.length >= 2, 'a phrase in several sections returns several of them');
+  ok(new Set(noodle.map(h => h.id)).size === noodle.length, 'one hit per block, never the same block twice');
+  // Matching is word-by-word in any order, so a block can qualify with the
+  // words far apart; the snippet is centred on the phrase when the block has
+  // one and on the first word when it does not.
+  ok(noodle.every(h => /noodle/i.test(h.snippet)), 'every snippet contains what was searched for');
+  ok(noodle.some(h => /noodle bar/i.test(h.snippet)),
+    'and a block that has the whole phrase shows the whole phrase');
+  const apart = hits(city, 'noodle roof');
+  ok(apart.length === 0 || apart.every(h => /noodle|roof/i.test(h.snippet)),
+    'a block matched on words that are far apart still shows one of them');
+
+  ok(hits(city, 'van scar').length >= 1, 'two words in any order find the block that has both');
+  ok(hits(city, 'van helicopter').length === 0, 'and a word that is not there finds nothing');
+  ok(hits(city, '').length === 0, 'an empty search finds nothing rather than everything');
+  ok(hits(story, 'Hakuro').length >= 1, 'the other module is searchable too');
+  ok(campaignSearchHits(campaignSearchIndex(city), 'the', 5).length === 5, 'the result limit is honoured');
+
+  // The snippet is authored prose and the query comes from a person; both go
+  // through escaping before anything is marked.
+  const marked = campaignHighlight('a <b>bold</b> claim about rule four', ['rule four']);
+  ok(!marked.includes('<b>'), 'markup inside a snippet is escaped, not rendered');
+  ok(marked.includes('<mark>rule four</mark>'), 'and the match is marked');
+  ok(!campaignHighlight('plain text', ['<script>']).includes('<script>'),
+    'a query cannot inject markup through the highlighter');
+  ok(campaignHighlight('costs ¥5,000 (about right)', ['(about']).includes('<mark>'),
+    'a query with regex characters in it is matched literally');
+}
 
 console.log(`\n>>> campaign prose ${fail ? 'FAILED' : 'OK'} (${pass} passed, ${fail} failed, ${fields.length} fields checked)`);
 process.exit(fail ? 1 : 0);

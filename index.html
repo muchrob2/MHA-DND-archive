@@ -126,6 +126,10 @@
   </section>
 
   <div id="dm-only">
+    <!-- Filled from the session log over the REST API; stays hidden if that
+         fails or the log is empty. Inside #dm-only on purpose — "next time"
+         is the DM's note to themselves. -->
+    <div id="last-session" class="hidden"></div>
     <section class="hub-section">
       <p class="section-label">Campaign <span class="dm-flag">DM only</span></p>
       <div class="tile-grid">

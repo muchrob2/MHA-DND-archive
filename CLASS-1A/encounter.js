@@ -616,7 +616,11 @@ function encEnemyCombatant(e, suffix) {
     hp: e.hp, maxHp: e.hp, ac: e.ac, conditions: [],
     notes: '', rosterId: null, isPC: false,
     quirk: `CR ${e.cr} · ${e.category}`,
-    condOpen: false, editingHp: false, dexMod: e.dex_mod || 0, team: null, tempHp: 0
+    condOpen: false, editingHp: false, dexMod: e.dex_mod || 0, team: null, tempHp: 0,
+    // Squares across on the board. Only the entries whose own stat block says
+    // they are bigger than a person carry one; everything else is one square
+    // and the DM can change it from the board.
+    size: e.grid_size || 1
   };
 }
 

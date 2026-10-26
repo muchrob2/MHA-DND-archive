@@ -2170,3 +2170,58 @@
   background: rgba(255,255,255,0.07);
   border-radius: 999px;
 }
+
+/* ── Rules ──────────────────────────────────────────────────────
+   Search-first: the section buttons are the empty state, and typing
+   replaces them with hits grouped by where they came from. Reuses
+   .qk-search for the box and .cz-input for its look. */
+.rl-secs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.rl-sec-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 11px;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+}
+.rl-sec-btn:active { border-color: var(--pad-accent); }
+.rl-sec-icon { font-size: 15px; }
+.rl-sec-name { flex: 1; min-width: 0; font-size: var(--fs-2xs); font-weight: 700; }
+.rl-sec-n { font-size: 10px; font-weight: 700; color: var(--text-dim); }
+
+.rl-back {
+  margin-bottom: 10px;
+  padding: 6px 11px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.rl-group { margin-bottom: 14px; }
+.rl-group-head {
+  margin-bottom: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.rl-row {
+  padding: 9px 11px;
+  margin-bottom: 5px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--pad-accent);
+  border-radius: var(--radius);
+}
+.rl-row-name { font-size: var(--fs-2xs); font-weight: 800; color: var(--text); }
+.rl-row-text { margin-top: 3px; font-size: var(--fs-2xs); line-height: 1.5; color: var(--text-muted); }

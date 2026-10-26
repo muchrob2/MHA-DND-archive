@@ -25,20 +25,27 @@ function check(label, cond, detail) {
 }
 
 // encounter.js is a page script full of Firestore and DOM calls at load, so
-// the three tables are lifted out and evaluated on their own rather than the
-// whole page being booted. A declaration ends at the first "];" or "};" that
-// closes a line — which the nested rows of COVER_RULES ("],") do not.
+// the condition list is lifted out and evaluated on its own rather than the
+// whole page being booted. The two reference tables are no longer literals in
+// that file at all — they are derived from rules-data.js, which the page loads
+// as a script tag above itself — so the two files are evaluated TOGETHER here,
+// in the same order the page loads them. That means this check now fails if
+// either the shared data or the wiring to it breaks, which is the point.
+// A declaration ends at the first line-closing ";" that follows a brace, a
+// bracket or a call — the nested rows of a table ("],") never close a line,
+// and the derived one-liners (`= rulesConditionMap();`) end on a paren.
 function pull(src, name) {
   const start = src.indexOf('const ' + name + ' = ');
   if (start === -1) throw new Error('no ' + name + ' in encounter.js');
-  const m = /[}\]];\n/.exec(src.slice(start));
+  const m = /[}\])];\n/.exec(src.slice(start));
   if (!m) throw new Error(name + ' in encounter.js has no end');
-  return src.slice(start, start + m.index + 2);
+  return src.slice(start, start + m.index + m[0].length);
 }
 
 const encSrc = read('CLASS-1A/encounter.js');
 const env = new Function(
-  pull(encSrc, 'CONDITIONS') + '\n'
+  read('rules-data.js') + '\n'
+  + pull(encSrc, 'CONDITIONS') + '\n'
   + pull(encSrc, 'CONDITION_RULES') + '\n'
   + pull(encSrc, 'COVER_RULES') + '\n'
   + 'return { CONDITIONS, CONDITION_RULES, COVER_RULES };'
@@ -88,6 +95,14 @@ const env = new Function(
     (encSrc.match(/encConditionTooltip/g) || []).length + ' uses');
   check('and the reference escapes what it prints',
     /escHtml\(CONDITION_RULES\[name\]/.test(encSrc));
+  check('the page derives both tables from the shared reference rather than holding its own copy',
+    /const CONDITION_RULES = rulesConditionMap\(\);/.test(encSrc)
+    && /const COVER_RULES = rulesCoverRows\(\);/.test(encSrc)
+    && !/Can't see: attacks against you/.test(encSrc),
+    'encounter.js still has condition text of its own');
+  check('and the page loads that shared file before its own script',
+    page.indexOf('rules-data.js') > -1
+    && page.indexOf('rules-data.js') < page.indexOf('encounter.js'));
 }
 
 /* ── 4. mechanics, not quoted text ── */
@@ -100,7 +115,7 @@ const env = new Function(
   check('each rule is a one-line summary rather than a block of quoted text',
     longest.n <= 240, `${longest.c} is ${longest.n} characters`);
   check('the reference says where the rest of the rules actually live',
-    /rulebooks on the dashboard/i.test(encSrc));
+    /rulebooks on the dashboard/i.test(encSrc) && /rules\.html/.test(encSrc));
 }
 
 console.log(failures ? `\n>>> condition rules FAILED (${failures})` : '\n>>> condition rules OK');

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Quick rules reference for the MHA D&D table — conditions, cover, actions, death saves and the rest, all searchable in one place.">
+<meta name="theme-color" content="#08090D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Rules Reference — MHA D&D</title>
+<link rel="preload" href="css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/manga.css">
+<link rel="stylesheet" href="css/pages/rules.css">
+</head>
+<body>
+
+<!-- No Firebase and no fetch: rules-data.js is a script tag, so the reference
+     is in memory before rules.js runs. This page is for everyone — the
+     conditions list used to be reachable only from the DM's Encounter
+     Manager, which is the whole reason it exists. -->
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">Rules</span>
+  <div class="nav-right">
+    <span class="nav-count" id="rules-count"></span>
+  </div>
+</nav>
+
+<div id="panel">
+  <div class="page-heading">Rules Reference</div>
+  <div class="page-sub" id="rules-source"></div>
+
+  <div id="rules-controls">
+    <input id="rules-search" type="search" placeholder="Search every rule — try &quot;prone&quot;, &quot;death save&quot;, &quot;half cover&quot;…" aria-label="Search the rules reference" oninput="onRulesSearch(this.value)">
+    <button id="rules-clear" style="display:none;" onclick="clearRulesSearch()" title="Clear the search">Clear</button>
+    <span class="rules-kbd-hint">Press <kbd>/</kbd> to search</span>
+  </div>
+
+  <div id="rules-rail" aria-label="Jump to a section"></div>
+
+  <div id="rules-body"></div>
+  <div id="rules-empty" style="display:none;">
+    <div class="es-icon">🔍</div>
+    No rule in here matches that. The two rulebook PDFs on the dashboard have the full text.
+  </div>
+
+  <p class="rules-foot">
+    These are summaries for looking something up mid-turn, not the rulebook.
+    The full text lives in the
+    <a href="RULEBOOKS/-%20My%20Hero%20Academia_%20Offical%20Handbook%20-%20The%20Homebrewery.pdf" target="_blank" rel="noopener noreferrer">Official Handbook</a>
+    and the
+    <a href="RULEBOOKS/-%20My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf" target="_blank" rel="noopener noreferrer">Quirk Compendium</a>.
+    When a rule is not in here and the answer would change your turn, the DM rules on it now and looks it up later.
+  </p>
+</div>
+
+<script src="rules-data.js"></script>
+<script src="rules.js"></script>
+</body>
+</html>

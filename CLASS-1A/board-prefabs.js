@@ -1273,6 +1273,33 @@ const BOARD_MAPS = [
                       [1, 12], [1, 13], [2, 12], [2, 13],
                       [23, 12], [23, 13], [24, 12], [24, 13]]);
   }),
+  pfMap('gym', "Nakata's Gym", 'A ring, four bags, mats, and an office with the month’s protection in an envelope on the desk. Nobody has ever fought in here for real.', 24, 18, m => {
+    m.outline(0, 0, 24, 18, 'wall');
+    m.outline(17, 0, 7, 6, 'wall');      // the office, sharing the back and side walls
+
+    // The ring: ropes on four sides, which is railing, and the only square
+    // footage in the building anybody is supposed to fight on.
+    for (const c of [3, 5, 7, 9]) { m.prop('railing', c, 3); m.prop('railing', c, 11); }
+    for (const r of [4, 6, 8, 10]) { m.prop('railing', 2, r, 90); m.prop('railing', 11, r, 90); }
+
+    // Bags down the far wall, mats, and the bench nobody sits on.
+    m.repeat('generator', [[14, 2], [14, 5], [14, 8], [14, 11]]);
+    m.fill(14, 14, 8, 3, 'difficult');
+    m.repeat('bench', [[1, 15], [4, 15], [7, 15]]);
+    m.repeat('lockers', [[1, 1], [1, 13]]);
+    m.repeat('crate', [[12, 16], [22, 13]]);
+    m.prop('vending', 22, 8);
+
+    // The office: the desk, the kettle, and the envelope.
+    m.prop('desk', 19, 2);
+    m.prop('counter', 20, 4);
+    m.prop('crate', 22, 1);
+
+    m.repeat('door', [[11, 17], [12, 17]]);
+    m.repeat('door', [[17, 3], [17, 4]]);
+    m.prop('door', 0, 9);
+  }),
+
   pfMap('chop-shop', 'The Chop Shop', 'A two-bay lock-up: vans, plates, no questions. The counter a man with a scar bled on, the pit, and a shutter that is always open.', 24, 16, m => {
     m.outline(0, 0, 24, 16, 'wall');
     m.outline(16, 0, 8, 7, 'wall');      // the office, sharing the back and side walls

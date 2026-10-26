@@ -141,3 +141,39 @@
   .loot-row { grid-template-columns: 26px 1fr; gap: 8px; padding: 9px 10px; }
   .loot-table-name { font-size: var(--fs-lg); }
 }
+
+/* ── The table rail ──
+   Added when the file grew to twelve tables and 194 items: at that size the
+   page is a long scroll and a DM who wants the chop shop should not have to
+   find it. The number is how many rows are showing, so during a search the
+   rail doubles as "where does the thing I typed live". */
+#loot-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 10px 0 20px;
+}
+.loot-rail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.loot-rail-btn:hover { color: var(--text); border-color: var(--border-strong); }
+.loot-rail-btn.no-hits { opacity: .35; }
+.loot-rail-n {
+  min-width: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  text-align: center;
+  color: var(--text-dim);
+  background: var(--surface2);
+  border-radius: 999px;
+}

@@ -35,8 +35,8 @@ const allItems = tables.flatMap(t => (t.items || []).map(i => ({ ...i, table: t 
 
 /* ── 1. the shape ── */
 {
-  check('there are loot tables to roll on', tables.length >= 5, tables.length + ' tables');
-  check('and a good number of items in them', allItems.length >= 50, allItems.length + ' items');
+  check('there are loot tables to roll on', tables.length >= 10, tables.length + ' tables');
+  check('and a good number of items in them', allItems.length >= 150, allItems.length + ' items');
   check('the file declares its tiers', Array.isArray(doc.tiers) && doc.tiers.length >= 3);
 
   const badTable = tables.filter(t => !t.id || !t.name || !t.die || !Array.isArray(t.items) || !t.items.length);
@@ -72,6 +72,38 @@ const allItems = tables.flatMap(t => (t.items || []).map(i => ({ ...i, table: t 
   const longEffect = allItems.filter(i => i.effect.length > 420);
   check('an effect is a ruling a DM can say out loud, not a stat block',
     longEffect.length === 0, longEffect.map(i => i.name).join(', '));
+
+  // Every table says where its contents come from and how to use it. A table
+  // with no note is a table the next DM has to guess the purpose of.
+  const noSource = tables.filter(t => !t.source || t.source.length < 30);
+  check('every table says where its contents come from',
+    noSource.length === 0, noSource.map(t => t.id).join(', '));
+  const noNote = tables.filter(t => !t.note || t.note.length < 60);
+  check('and how it is meant to be used at the table',
+    noNote.length === 0, noNote.map(t => t.id).join(', '));
+
+  // Names are what a DM scans, so two items sharing one is a table that
+  // cannot be read at speed.
+  const dupeNames = allItems.map(i => i.name)
+    .filter((n, idx, all) => all.indexOf(n) !== idx);
+  check('no two items anywhere share a name',
+    dupeNames.length === 0, [...new Set(dupeNames)].join(', '));
+
+  // Every table should have a spread of tiers rather than being all one
+  // thing — a table of twenty uniques is not a table, it is a wish list.
+  const flat = tables.filter(t => new Set(t.items.map(i => i.tier)).size < 2);
+  check('every table has more than one tier in it',
+    flat.length === 0, flat.map(t => t.id).join(', '));
+  // The appetite table is exempt and says why in its own rule field: it is
+  // not loot, it is the story's own objects handed over at the end of a
+  // chapter, so being unique-heavy is its nature rather than inflation.
+  const tooManyUniques = tables.filter(t => t.id !== 'appetite'
+    && t.items.filter(i => i.tier === 'unique').length > Math.ceil(t.items.length / 4));
+  check('and no table is mostly uniques',
+    tooManyUniques.length === 0,
+    tooManyUniques.map(t => `${t.id}: ${t.items.filter(i => i.tier === 'unique').length} of ${t.items.length}`).join(', '));
+  check('the one table that is unique-heavy says in its rule why it is different',
+    /end of a chapter/i.test((tables.find(t => t.id === 'appetite') || {}).rule || ''));
 }
 
 /* ── 2. grounded in the campaign ── */
@@ -88,7 +120,13 @@ const allItems = tables.flatMap(t => (t.items || []).map(i => ({ ...i, table: t 
         ...(ch.sidequests || []).flatMap(q => [q.body, q.reward])]),
     ]).filter(Boolean).join('\n');
 
-  const names = ['Brick', 'Imai', 'Tobe Miyu', 'Kōno Sae', 'Madame Tsuru', 'Yanagi Daichi', 'Fukami',
+  const names = [
+    // The Byakko rooms, which now have four tables of their own.
+    'Dōmeki Daigo', 'Genda Tetsuo', 'Hazama Ritsu', 'Ōkawachi Jin', 'Echo Twins', 'Nagira Sou',
+    'Three-Stripe Kō', 'Hinge', 'Ricochet', 'Dropkick', 'Stripe Law', 'Heat track',
+    'turf economy', 'Swing Town', 'The Cage', 'Kurogane Wharf', 'Ikebukuro West', 'Anchor',
+    'Centurion', 'Zenith', 'Legate', 'Kurama Rite School', 'Odd Nights',
+    'Brick', 'Imai', 'Tobe Miyu', 'Kōno Sae', 'Madame Tsuru', 'Yanagi Daichi', 'Fukami',
     'Alucard', 'Hiruma Clinic', 'Crimson Room', 'Akabane', 'Legionary', 'Thrall',
     'Sunbreath', 'Envoy', 'arrowhead', 'Hōshō Kaito', 'Hinata', 'Joestar', 'Throne',
     'Sumi', 'Veil', 'Kegare', 'Kurama Rite School', 'Shirasagi Rei', 'Pact',
@@ -105,6 +143,50 @@ const allItems = tables.flatMap(t => (t.items || []).map(i => ({ ...i, table: t 
   const thinHook = allItems.filter(i => i.hook.length < 40);
   check('every hook actually says where the thing comes from',
     thinHook.length === 0, thinHook.map(i => i.name).join(', '));
+
+  // A hook that quotes the campaign has to quote it exactly. The apostrophe
+  // is the trap — a curly one against a straight one reads identically on
+  // screen and matches nothing, and this repo has been caught by it before.
+  // Not the `see "Heading."` citations — those are checked against the
+  // campaign's actual headings below, and matching them here is what made
+  // the first version of this fail on every correctly-cited section.
+  const quoted = allItems.flatMap(i =>
+    [...i.hook.matchAll(/(see\s+)?"([^"]{25,})"/gi)]
+      .filter(m => !m[1])
+      .map(m => ({ item: i.name, text: m[2] })));
+  const notFound = quoted.filter(q => !campaignText.includes(q.text));
+  check('every line of campaign text a hook quotes appears in the campaign verbatim',
+    notFound.length === 0,
+    notFound.map(q => `${q.item}: "${q.text}"`).join('\n        '));
+  check('and the hooks do quote it — the tables are not floating free of the text',
+    quoted.length >= 3, quoted.length + ' quoted lines');
+
+  // A section heading named in a hook has to be a heading that exists, which
+  // is the other way a hook can point at nothing.
+  // Every heading in the library, not just the appendix ones: a hook can
+  // cite a chapter, a section or a side quest, and "The Rank You Didn't Ask
+  // For" — cited by two items — is a side-quest title.
+  const headings = [...new Set(JSON.parse(read('CAMPAIGN/campaigns.json')).campaigns
+    .flatMap(c => [
+      ...(c.appendix || []).map(a => a.heading),
+      ...(c.chapters || []).map(ch => ch.title),
+      ...(c.chapters || []).flatMap(ch => (ch.sections || []).map(s => s.heading || s.title)),
+      ...(c.chapters || []).flatMap(ch => (ch.sidequests || []).map(q => q.title)),
+    ]).filter(Boolean))];
+  const cited = allItems.flatMap(i =>
+    [...i.hook.matchAll(/see "([^"]+)\.?"/gi)].map(m => ({ item: i.name, heading: m[1].replace(/\.$/, '') })));
+  // `includes` both ways: a citation may name the tail of a longer heading
+  // ("the Stripe Law and the Heat track" sits inside "Byakko — the Stripe
+  // Law and the Heat track"), which startsWith could never match.
+  const noSuchHeading = cited.filter(c =>
+    !headings.some(h => h.includes(c.heading) || c.heading.includes(h)));
+  check('every appendix section a hook points at exists',
+    noSuchHeading.length === 0,
+    noSuchHeading.map(c => `${c.item} → "${c.heading}"`).join('\n        '));
+  // Both checks above would pass with nothing to check, which is the way a
+  // verifier quietly stops verifying. These are floors, not targets.
+  check('and the hooks really do cite the campaign\'s own sections',
+    cited.length >= 20, cited.length + ' citations across ' + allItems.length + ' items');
 }
 
 /* ── 3. the Underground stays off the shop ── */

@@ -782,6 +782,114 @@ function encAddGroup() {
   sel.value = '';
   encSave(); renderEncounter();
 }
+/* ── Running an arc ───────────────────────────────────────
+   A group that sits on a named running order is a step in something, and
+   until now the only sign of that was a number in front of its name in the
+   picker. This is the strip that makes it a thing you move through: which
+   arc, which step, what the step is, and the one button that does the whole
+   job — add the line-up and load its map.
+
+   Where the table has got to is remembered in this browser rather than in
+   the encounter document. It is a DM's bookmark, not shared state: the
+   players' board has no opinion about which step of a gang's ladder the
+   campaign is on, and two DMs are not a thing this toolkit has. */
+const ENC_ARC_STEP_KEY = 'mha-enc-arc-step';
+
+function arcGroups(arc) {
+  return ENEMY_GROUPS.filter(g => g.arc === arc).sort((a, b) => (a.step || 0) - (b.step || 0));
+}
+
+function arcOfGroup(id) {
+  const g = ENEMY_GROUPS.find(x => x.id === id);
+  return g && g.arc ? g.arc : null;
+}
+
+function encReadArcStep(arc) {
+  try { return JSON.parse(localStorage.getItem(ENC_ARC_STEP_KEY) || '{}')[arc] || null; } catch { return null; }
+}
+
+function encWriteArcStep(arc, groupId) {
+  try {
+    const all = JSON.parse(localStorage.getItem(ENC_ARC_STEP_KEY) || '{}');
+    all[arc] = groupId;
+    localStorage.setItem(ENC_ARC_STEP_KEY, JSON.stringify(all));
+  } catch { /* a browser with storage blocked just forgets between sessions */ }
+}
+
+// The group the strip is showing: whatever is picked, or where this browser
+// got to last time, or the first step.
+function encCurrentArcGroup() {
+  const sel = document.getElementById('enc-group-select');
+  const picked = sel && sel.value ? ENEMY_GROUPS.find(g => g.id === sel.value) : null;
+  if (picked && picked.arc) return picked;
+  const arcs = [...new Set(ENEMY_GROUPS.filter(g => g.arc).map(g => g.arc))];
+  if (!arcs.length) return null;
+  const arc = (picked && picked.arc) || arcs[0];
+  const steps = arcGroups(arc);
+  const remembered = steps.find(g => g.id === encReadArcStep(arc));
+  return remembered || steps[0] || null;
+}
+
+function renderArcStrip() {
+  const wrap = document.getElementById('enc-arc-strip');
+  if (!wrap) return;
+  const g = encCurrentArcGroup();
+  if (!g) { wrap.style.display = 'none'; return; }
+  const steps = arcGroups(g.arc);
+  const i = steps.findIndex(x => x.id === g.id);
+  const mp = typeof BOARD_MAPS_BY_KEY !== 'undefined' ? BOARD_MAPS_BY_KEY[g.map] : null;
+  const units = g.members.reduce((n, m) => n + (m.count || 1), 0);
+  wrap.style.display = '';
+  wrap.innerHTML = `
+    <span class="enc-add-label">Arc</span>
+    <span class="arc-name">${escHtml(g.arc.replace(/-/g, ' '))}</span>
+    <div class="arc-dots">${steps.map((s, n) => `<button class="arc-dot${n === i ? ' sel' : ''}"
+        title="${escHtml(s.name)}" onclick="encGoToArcStep('${escHtml(s.id)}')">${escHtml(s.step)}</button>`).join('')}</div>
+    <b class="arc-step-name">${escHtml(g.name)}</b>
+    <span class="arc-step-meta">${units} units${mp ? ' · ' + escHtml(mp.label) : ''}</span>
+    <button class="enc-btn" onclick="encRunArcStep()" title="Add this step's units and load its map in one go">▶ Run this step</button>
+    <button class="enc-btn" onclick="encStepArc(-1)"${i <= 0 ? ' disabled' : ''} title="Previous step">←</button>
+    <button class="enc-btn" onclick="encStepArc(1)"${i >= steps.length - 1 ? ' disabled' : ''} title="Next step">→</button>`;
+}
+
+function encGoToArcStep(groupId) {
+  const g = ENEMY_GROUPS.find(x => x.id === groupId);
+  if (!g) return;
+  encWriteArcStep(g.arc, g.id);
+  const sel = document.getElementById('enc-group-select');
+  if (sel) sel.value = g.id;
+  renderArcStrip();
+}
+
+function encStepArc(delta) {
+  const g = encCurrentArcGroup();
+  if (!g) return;
+  const steps = arcGroups(g.arc);
+  const next = steps[steps.findIndex(x => x.id === g.id) + delta];
+  if (next) encGoToArcStep(next.id);
+}
+
+/* The one button. Adds the line-up and loads the map it was written for —
+   which is two trips through two different bars otherwise, with the map
+   picker living inside Board Mode. Loading replaces the board, so it asks
+   first if there is anything on it, which is boardLoadPresetMap's own
+   confirm rather than a second one written here. */
+function encRunArcStep() {
+  const g = encCurrentArcGroup();
+  if (!g) return;
+  const sel = document.getElementById('enc-group-select');
+  if (sel) sel.value = g.id;
+  encAddGroup();
+  encWriteArcStep(g.arc, g.id);
+  const mapSel = document.getElementById('board-map-select');
+  if (mapSel && typeof BOARD_MAPS_BY_KEY !== 'undefined' && BOARD_MAPS_BY_KEY[g.map]) {
+    mapSel.value = g.map;
+    if (typeof boardLoadPresetMap === 'function') boardLoadPresetMap();
+  }
+  renderArcStrip();
+}
+
+
 /* ── Init ──────────────────────────────────────────────── */
 (async () => {
   const [rosterRes, enemiesRes] = await Promise.all([
@@ -829,6 +937,9 @@ function encAddGroup() {
   populateRosterSelect();
   buildEnemySelect();
   buildGroupSelect();
+  renderArcStrip();
+  const groupSel = document.getElementById('enc-group-select');
+  if (groupSel) groupSel.addEventListener('change', renderArcStrip);
   renderEncounter();
 })();
 

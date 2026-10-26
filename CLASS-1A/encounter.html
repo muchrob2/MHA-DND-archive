@@ -72,6 +72,9 @@
         <input type="number" id="enc-custom-ac" placeholder="AC" min="1">
         <button class="enc-btn" onclick="encAddCustom()">Add</button>
       </div>
+      <!-- Shown only when some group sits on a named running order; hidden
+           entirely otherwise, so a table not running an arc never sees it. -->
+      <div id="enc-arc-strip" style="display:none;"></div>
       <div id="enc-rules-panel" style="display:none;"></div>
       <div id="enc-log"><div class="log-none">No attacks yet this encounter.</div></div>
       <div id="enc-list"><div class="enc-empty">No combatants. Add characters from the roster or add custom enemies above.</div></div>

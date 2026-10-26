@@ -1068,3 +1068,53 @@ body { height: 100vh; overflow: hidden; }
 @media (max-width: 720px) {
   .rules-row { grid-template-columns: 1fr; gap: 2px; }
 }
+
+/* ── the arc strip ──
+   A running order as something you move through: which step, what is in it,
+   and one button that adds the line-up and loads its map. Hidden unless a
+   group actually sits on an arc. */
+#enc-arc-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 20px 10px;
+  padding: 8px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+}
+.arc-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+.arc-dots { display: flex; gap: 3px; }
+.arc-dot {
+  width: 22px;
+  height: 22px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-dim);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.arc-dot:hover { color: var(--text); border-color: var(--border-strong); }
+.arc-dot.sel {
+  color: var(--accent-text);
+  background: var(--accent-light);
+  border-color: var(--accent);
+}
+.arc-step-name { font-size: var(--fs-sm); color: var(--text); }
+.arc-step-meta { font-size: var(--fs-2xs); color: var(--text-dim); }
+#enc-arc-strip .enc-btn:disabled { opacity: .4; cursor: default; }
+@media (max-width: 720px) {
+  #enc-arc-strip { margin: 0 12px 8px; }
+  .arc-step-meta { flex-basis: 100%; }
+}

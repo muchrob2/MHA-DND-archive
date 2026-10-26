@@ -1521,5 +1521,60 @@ const B = boot();
     env2._calls.some(([m]) => m === 'setLineDash'));
 }
 
+{
+  /* The arc strip: a running order the DM moves through rather than reads.
+     It is encounter-page UI over the same `arc`/`step` data the groups
+     carry, so what is worth checking is the wiring — that the strip exists,
+     that the one button does both halves of the job, and that where the
+     table has got to is a local bookmark rather than something written into
+     the shared encounter document, which every player's board reads. */
+  const encSrc = read('CLASS-1A/encounter.js');
+  const page = read('CLASS-1A/encounter.html');
+
+  check('the page has somewhere to show a running order', page.includes('id="enc-arc-strip"'));
+  check('and it is hidden until a group actually sits on one',
+    /id="enc-arc-strip" style="display:none;"/.test(page)
+      && /if \(!g\) \{ wrap\.style\.display = 'none'; return; \}/.test(encSrc));
+
+  check('the strip is built from the groups that carry an arc',
+    /function arcGroups\(arc\)[\s\S]{0,160}g\.arc === arc/.test(encSrc));
+  check('and its steps are shown in step order',
+    /sort\(\(a, b\) => \(a\.step \|\| 0\) - \(b\.step \|\| 0\)\)/.test(encSrc));
+
+  check('one button both adds the line-up and loads the map',
+    /function encRunArcStep[\s\S]{0,700}encAddGroup\(\)[\s\S]{0,400}boardLoadPresetMap\(\)/.test(encSrc),
+    'the map picker lives inside Board Mode, so doing it by hand is two trips');
+  check('and it goes through the loader that warns before replacing a board',
+    !/boardApplyPresetMap\(/.test(encSrc),
+    'boardLoadPresetMap asks first; boardApplyPresetMap would replace the board silently');
+
+  check('where the table has got to is kept in this browser, not in the shared document',
+    /localStorage/.test(encSrc.slice(encSrc.indexOf('ENC_ARC_STEP_KEY')))
+      && !/encounter\.arcStep/.test(encSrc),
+    'the players\' board has no opinion about which step of a gang ladder the campaign is on');
+  check('and storage being blocked loses the bookmark rather than throwing',
+    /catch \{ \/\* a browser with storage blocked/.test(encSrc));
+
+  check('the strip is rebuilt when the picker changes',
+    /addEventListener\('change', renderArcStrip\)/.test(encSrc));
+
+  const css = read('css/pages/encounter.css');
+  for (const sel of ['#enc-arc-strip', '.arc-dot', '.arc-dot.sel', '.arc-step-name']) {
+    check(`${sel} is styled`, css.includes(sel));
+  }
+
+  // Every step of every arc has to be reachable from the strip, which means
+  // the steps have to be contiguous enough to walk: no arc may have a gap
+  // the arrows cannot cross, which they cannot, because they move by index.
+  const groups = JSON.parse(read('CAMPAIGN/enemies.json')).groups || [];
+  const arcs = {};
+  for (const g of groups) if (g.arc) (arcs[g.arc] = arcs[g.arc] || []).push(g);
+  for (const [arc, list] of Object.entries(arcs)) {
+    const steps = list.map(g => g.step).sort((a, b) => a - b);
+    check(`every step of ${arc} is reachable by walking the strip`,
+      steps.length >= 2 && steps[0] >= 1, steps.join(','));
+  }
+}
+
 console.log(failures ? `\n>>> board props FAILED (${failures})` : '\n>>> board props OK');
 process.exit(failures ? 1 : 0);

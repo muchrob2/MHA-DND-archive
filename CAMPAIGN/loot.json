@@ -1,5 +1,5 @@
 {
-  "_note": "DM-side loot tables for The Shortlist: After Hours, rendered by loot.html, which is linked from the DM block on the dashboard. Eight tables, rollable, grouped by where the thing comes from. Four of them are the Underground's, and those carry a rule field repeating what the campaign's shop appendix already says: Underground items are handed out and never bought, because keeping them off the shop page is what keeps the Underground hidden. Nothing here invents a faction, a rank or an NPC — every item hangs off something already written in CAMPAIGN/campaigns.json, and the hook field says which. Mechanics are deliberately light and in the campaign's own idiom (a pool per rest, advantage once, +1d6 against a named kind of thing) because a DM reading a table wants a ruling they can say out loud, not a stat block.",
+  "_note": "DM-side loot tables for The Shortlist: After Hours, rendered by loot.html, which is linked from the DM block on the dashboard. Twelve tables, rollable, grouped by where the thing comes from — five of them are Byakko rooms the campaign writes up in detail, four are the Underground societies, and those four carry a rule field repeating what the campaign's shop appendix already says: Underground items are handed out and never bought, because keeping them off the shop page is what keeps the Underground hidden. Nothing here invents a faction, a rank or an NPC — every item hangs off something already written in CAMPAIGN/campaigns.json, and the hook field says which. Mechanics are deliberately light and in the campaign's own idiom (a pool per rest, advantage once, +1d6 against a named kind of thing) because a DM reading a table wants a ruling they can say out loud, not a stat block.",
   "tiers": [
     "minor",
     "notable",
@@ -10,7 +10,7 @@
     {
       "id": "byakko",
       "name": "Byakko — street trophies",
-      "die": "d10",
+      "die": "d20",
       "source": "The backstreets. Won, given, or taken off somebody who had stopped needing it.",
       "note": "Nothing here is magic and nothing here is worth money. All of it is worth something in two wards, which is the point: Byakko pay in rank and standing, and these are what standing looks like when you can hold it.",
       "items": [
@@ -83,13 +83,413 @@
           "tier": "unique",
           "effect": "A full white pelt down the back, which is the White Tiger's mark and has had six owners in sixty years. Whoever wears it holds ninety shops, the Ring, Lucky Seven's rake and Fukami's recruiting.",
           "hook": "Off the roof of the Cage. The campaign has no opinion about what a sixteen-year-old should do with a gang, and neither should the table."
+        },
+        {
+          "roll": 11,
+          "name": "Brick's handwriting on the chalk wall",
+          "tier": "notable",
+          "effect": "Your name and a machine speed, in Dōmeki Daigo's hand, on the wall by the Swing Town counter. It does not come off. Any Byakko below three stripes who has seen it treats you as a known quantity: no fight starts with you over nothing, and nobody searches your bag.",
+          "hook": "Clear the top machine in the front of house at Swing Town. Brick writes it up himself, and it stays there for years — see \"Swing Town — the hub, room by room.\""
+        },
+        {
+          "roll": 12,
+          "name": "A seat in the stands that stays yours",
+          "tier": "minor",
+          "effect": "Fourth row, end of the row, facing the back cage. Nobody sits in it on a Friday if you have been coming. Worth nothing and impossible to buy: it means the room has decided you are a regular rather than a visitor.",
+          "hook": "Attend three Fridays at the Ring without fighting. Imai Tatsuhiko will have noticed before anybody else and will mention it, which is how you find out."
+        },
+        {
+          "roll": 13,
+          "name": "Dropkick's rematch, standing",
+          "tier": "minor",
+          "effect": "Ōkawachi Jin will fight you again any Friday you ask, no purse, no stripe at stake, and will tell you honestly what you did wrong last time. The best free training in the backstreets, from a man who has lost every week for a year and learned from all of it.",
+          "hook": "Beat him in the back cage. He asks on the spot and then every Friday after — see \"The Ring at Swing Town.\""
+        },
+        {
+          "roll": 14,
+          "name": "Ricochet's gloves",
+          "tier": "notable",
+          "effect": "Hazama Ritsu's first pair, worn through at the knuckle, handed over with both hands. While you carry them, once per session, you may take the hit meant for somebody younger than you and describe it as deliberate. The table will let you.",
+          "hook": "Given after you beat him and he turned up at Nakata's gym on a Monday in a new pair. He explains the significance at length and gets it slightly wrong."
+        },
+        {
+          "roll": 15,
+          "name": "The Echo Twins' two-on-two",
+          "tier": "rare",
+          "effect": "An agreement, not an object: the Twins will fight as a pair against your pair, any Friday, and will afterwards tell you how your pair reads from the outside. Once per arc, that conversation gives both members of a pair advantage on their first roll of a fight they enter together.",
+          "hook": "Fight them as a pair in the back cage. They want to know who taught the class to do it — Nobara Forge's whole argument, handed back by a street gang."
+        },
+        {
+          "roll": 16,
+          "name": "Yanagi's footwork, properly taught",
+          "tier": "rare",
+          "effect": "Six weeks of Mondays on the second floor of the Cage, at one in the morning, with twenty Claws. Permanently: you no longer have disadvantage for fighting in a space too small to swing in, and you know it the moment the room gets tight.",
+          "hook": "Spar him on the teaching floor instead of fighting him, and come back. He failed the U.A. entrance exam twice and is better than the class expect — see \"The Cage — floor by floor.\""
+        },
+        {
+          "roll": 17,
+          "name": "A takoyaki cart's standing order",
+          "tier": "minor",
+          "effect": "Genda Tetsuo's cart, outside the Cage, remembers what you order. Six portions, paid for in advance by somebody who is not you. Mostly it is a joke; once per arc it is also the reason the Black Corner is already talking to you when something starts.",
+          "hook": "Talk your way past the front door rather than fighting through it — he is open to both, and prefers discussing load-bearing with Kazama, Setaka or Hiro."
+        },
+        {
+          "roll": 18,
+          "name": "Tally's chair",
+          "tier": "notable",
+          "effect": "The actual chair. Tobe Miyu hit a Stray with it and got a stripe for it, and she will give it to a PC who makes her laugh. Improvised, 1d6, breaks on a critical hit, and every Byakko in the room recognises it and will not shut up about it.",
+          "hook": "Earned at the Ring, where she holds a stripe and cannot fight at all — see \"The Ring at Swing Town.\""
+        },
+        {
+          "roll": 19,
+          "name": "Hinge's word on a lock",
+          "tier": "rare",
+          "effect": "Kōno Sae will come and open one thing for you, once, anywhere in Tokyo, and ask nothing about it. She will not come armed and she will not stay. Spend it and it is gone, and she will want to know afterwards what was behind the door.",
+          "hook": "Ask her properly at the chop shop — once, politely, without making it an interrogation. The same manner that gets the description of the man with the scar."
+        },
+        {
+          "roll": 20,
+          "name": "Fukami's invitation, unspoken",
+          "tier": "unique",
+          "effect": "Nothing written, nothing said. The Fang who runs the recruitment the class will not recognise as one begins treating a PC as staff: doors open, the back office is not closed to them, and nobody checks whether they should be there. It is also a decision, and the table should feel it being made.",
+          "hook": "Earned by refereeing, coaching or stopping a fight at the Ring rather than winning one. Fukami Ryōta notices, says so, and means it as a compliment."
+        }
+      ]
+    },
+    {
+      "id": "ring",
+      "name": "The Ring at Swing Town — won in the back cage",
+      "die": "d12",
+      "source": "Friday night, one on one, a circle of witnesses and a purse. Doors at nine, finished by one.",
+      "note": "Roll this after a fight, not before. Half of it is money and half of it is standing, and the standing is what the players will remember — a purse is spent and a stripe is permanent. A PC who beats a ranked member holds that rank under the Law whether they wanted it or not, so every good night here is also a decision.",
+      "items": [
+        {
+          "roll": 1,
+          "name": "The purse, in a paper envelope",
+          "tier": "minor",
+          "effect": "¥18,000 to ¥40,000 depending on the card and the crowd, counted out at the counter by Brick, who will say the number out loud so everybody hears it was paid properly.",
+          "hook": "Standard for winning a fight on the card — see \"The Ring at Swing Town — a Friday night, in detail.\""
+        },
+        {
+          "roll": 2,
+          "name": "A stripe you did not ask for",
+          "tier": "notable",
+          "effect": "Beat a ranked member in front of witnesses and the rank is yours under the Stripe Law. Free food in every shop the street protects, the gang's gossip, and orders on your own street at three or more. The school finds out inside a week.",
+          "hook": "The rule that makes the Ring work, and the reason every opponent on the card is a decision — see \"The Rank You Didn't Ask For.\""
+        },
+        {
+          "roll": 3,
+          "name": "Imai's odds, written on your hand",
+          "tier": "minor",
+          "effect": "What the book had you at, in biro, on the back of your hand. Keep it and Imai Tatsuhiko will quote you honestly from then on rather than quoting you high, which over a season is worth more than any single purse.",
+          "hook": "Imai will find you in the stands and quote odds on the class to their faces. This is what being quoted fairly looks like afterwards."
+        },
+        {
+          "roll": 4,
+          "name": "The crowd's name for you",
+          "tier": "notable",
+          "effect": "The backstreets give you a two-word name that night and it sticks in two wards. The player chooses it with the table, the DM decides whether it is affectionate, and from then on NPCs in Ikebukuro use it instead of the PC's own.",
+          "hook": "Happens on a fight the room enjoyed rather than a fight the PC won well. The chalk wall in the front of house is where it gets written down."
+        },
+        {
+          "roll": 5,
+          "name": "A loser's good word",
+          "tier": "notable",
+          "effect": "Whoever you beat says, in the room, that you fought fairly. It costs them something to say. One Byakko who was present will later do you a favour they were not asked for, and will not explain why.",
+          "hook": "Ōkawachi Jin does this every time he loses, which is weekly; from anybody else in the gang it is rare — see \"The Ring at Swing Town.\""
+        },
+        {
+          "roll": 6,
+          "name": "Madame Tsuru's side bet",
+          "tier": "rare",
+          "effect": "She backed you when the room did not, and she is paying you a cut she did not have to pay. ¥60,000 and an invitation to her table, which is the part that matters and the part nobody should accept lightly.",
+          "hook": "Madame Tsuru's dice are already on the Byakko table. The side bet is what happens when she decides a PC is interesting."
+        },
+        {
+          "roll": 7,
+          "name": "A thrown-in bout nobody booked",
+          "tier": "minor",
+          "effect": "Somebody steps out of the circle and asks for one more, right now, no purse. Accepting is free standing and free damage; refusing costs nothing except that the room notices which you did.",
+          "hook": "Standard on a Friday the card finishes early. Hazama Ritsu will volunteer instantly, cheerfully, against anybody."
+        },
+        {
+          "roll": 8,
+          "name": "A stolen hour of the back cage",
+          "tier": "minor",
+          "effect": "Thursdays, while the chop shop is working, the back cage is free and the unranked kids get it for an hour. You are now one of the people allowed in during that hour, which means training with fourteen-year-olds who idolise you.",
+          "hook": "Thursday is the chop shop's night, which is why the cage is free — see \"The chop shop — vans, plates, no questions.\""
+        },
+        {
+          "roll": 9,
+          "name": "The broken machine's record",
+          "tier": "minor",
+          "effect": "The ball machine that throws one in five at something absurd, cleared properly. No mechanical effect and the single most popular thing anybody can do in that building. Brick will stop what he is doing to watch the last five.",
+          "hook": "The broken machine is the opener for any PC who walks into Swing Town cold: \"the slow machine, or the one that's broken?\""
+        },
+        {
+          "roll": 10,
+          "name": "A warning, delivered kindly",
+          "tier": "rare",
+          "effect": "Brick takes you outside with one hand on your shoulder and no raised voice and tells you exactly which fight on next week's card you should not take. He is right. Taking it anyway is the player's to choose.",
+          "hook": "Nobody fights in the front of house, and that is Brick rather than the Law. He has never had to say it twice to the same person."
+        },
+        {
+          "roll": 11,
+          "name": "Fukami in the stands, watching",
+          "tier": "rare",
+          "effect": "Not an object. The Fang who runs the recruitment the class will not recognise as one was in the fourth row, and from the next session onward the DM should have him turn up wherever the PC is doing something well.",
+          "hook": "The first move in a recruitment nobody names. Refereeing or stopping a fight gets his attention faster than winning one."
+        },
+        {
+          "roll": 12,
+          "name": "The card, with your name top of it",
+          "tier": "unique",
+          "effect": "Next Friday's card, chalked up, main event, your name against somebody the room actually wants to see you fight. It is an honour, it is a trap, and the whole of Ikebukuro will be in that building.",
+          "hook": "Only after a PC has won three Fridays. Who the opponent is should be whoever the campaign has been building toward — see the Heat track."
+        }
+      ]
+    },
+    {
+      "id": "cage",
+      "name": "The Cage — what a floor is worth",
+      "die": "d10",
+      "source": "Six storeys of dead batting centre in the Ikebukuro backstreets, lit like a stadium at one in the morning.",
+      "note": "One fight per floor, a stairwell's breathing between each, Heat +1 per floor cleared. Nobody has climbed it in one night in six years. Roll or pick one per floor the class actually clear — the climb is the reward and these are the proof of it.",
+      "items": [
+        {
+          "roll": 1,
+          "name": "A takoyaki, bought for you",
+          "tier": "minor",
+          "effect": "Genda Tetsuo gets up out of the folding chair, buys you one off the cart, and goes back to his paperback. It means he has decided you are coming in. It is also the best takoyaki in the ward.",
+          "hook": "The front door decides who comes in, and he can be beaten or talked past — he is open to both — see \"The Cage — floor by floor.\""
+        },
+        {
+          "roll": 2,
+          "name": "The Stripe Law, photographed",
+          "tier": "minor",
+          "effect": "Six rules in white paint by the ground-floor door, the sixth in a different hand. The photograph is worth nothing to Byakko and a great deal to a PC who wants to understand how this gang governs itself.",
+          "hook": "On the wall by the door on the ground floor. The sixth rule being in another hand is the thing a careful player will ask about."
+        },
+        {
+          "roll": 3,
+          "name": "A Claw's apology, sincere",
+          "tier": "minor",
+          "effect": "Nagira Sou apologises before the fight and after it, and means both. He will then answer any question about the Cage honestly, because it has not occurred to him not to.",
+          "hook": "Ground floor, the Claws' ring — three fights available and all of them children."
+        },
+        {
+          "roll": 4,
+          "name": "A page torn out of Imai's book",
+          "tier": "notable",
+          "effect": "The odds on the class, on a trestle table on the first floor, in his own hand. Keeping it is mildly insulting; he finds it funny and raises your odds next week on purpose.",
+          "hook": "First floor is Swing Town's overflow and Imai's betting book is set up on a trestle table — see \"The Cage — floor by floor.\""
+        },
+        {
+          "roll": 5,
+          "name": "A drill, learned at one in the morning",
+          "tier": "rare",
+          "effect": "Yanagi Daichi's footwork, taught properly on the floor where nobody wants to fight the class. Once per rest, move five feet without it counting against your movement, and know exactly why it works.",
+          "hook": "Second floor, the teaching floor. He will offer to spar instead, and he will be better than they expect."
+        },
+        {
+          "roll": 6,
+          "name": "Three-Stripe Kō's notebook page",
+          "tier": "rare",
+          "effect": "What a Stripe writes down about the class, in a Stripe's hand: strengths, the obvious weakness, and one line of grudging respect. Reading it is useful and unflattering in roughly equal measure.",
+          "hook": "Third floor, the Stripes, which is as far as the class get at Heat 7 or below — see the Heat track."
+        },
+        {
+          "roll": 7,
+          "name": "An hour on the fourth-floor sofa",
+          "tier": "minor",
+          "effect": "Nobody holds the fourth floor and it is not a trick: broken machines, a sofa, and three or four off-duty Fangs who will share whatever they are drinking and talk about anything except the gang.",
+          "hook": "Fourth floor, empty, and the campaign says outright that this is not a trap. The best scene in the building for a PC who wants to just sit down."
+        },
+        {
+          "roll": 8,
+          "name": "Heat, and everybody knowing",
+          "tier": "notable",
+          "effect": "Not a reward: +1 Heat per floor cleared, and the crowd follows you upward. At the top of a climb the whole ward knows by morning, and the Heat track decides who is home next time.",
+          "hook": "How the ladder works. Worth printing on the table because players treat Heat as a score rather than a consequence — see \"the Stripe Law and the Heat track.\""
+        },
+        {
+          "roll": 9,
+          "name": "The floodlights, turned on for you",
+          "tier": "rare",
+          "effect": "Somebody puts the stadium lights up for a fight that did not need them. Every Byakko in the building stops to watch. Win and the room is yours for the night; lose and it is the loss everyone remembers.",
+          "hook": "Happens above the third floor, when the climb stops being a curiosity and becomes the thing the building is doing that night."
+        },
+        {
+          "roll": 10,
+          "name": "The climb, in one night",
+          "tier": "unique",
+          "effect": "Six floors, one night, which nobody has done in six years. Permanent standing in two wards, a line on the chalk wall at Swing Town in Brick's handwriting, and a problem at school that the class have no plan for.",
+          "hook": "The whole ladder, run in one night, which the campaign offers outright if the table wants it — see \"The Cage — floor by floor.\""
+        }
+      ]
+    },
+    {
+      "id": "wharf",
+      "name": "Kurogane Wharf — the gym, the café, the docks",
+      "die": "d12",
+      "source": "The class's half of the map. Three things in a hundred metres, and after midnight the third one is not theirs.",
+      "note": "The party will have been here in daylight first, which is the entire trick of the place. Nothing on this table is dangerous and several things on it are the most useful objects in the campaign, because this is where the class go to train, to hear something, or to sit on a bollard with a line in the water.",
+      "items": [
+        {
+          "roll": 1,
+          "name": "Nakata's hand wraps, fitted",
+          "tier": "notable",
+          "effect": "Not the pair already on the ordinary table — your own, wrapped by him once so you can see how, then yours to do. While you wrap your own hands properly you take no damage from your own unarmed strikes, which matters more than players expect.",
+          "hook": "Nakata Isamu is already taping his hands when you walk in. \"D'you want to know why, or d'you want to hit something first?\""
+        },
+        {
+          "roll": 2,
+          "name": "The cleaning shift, and the key",
+          "tier": "minor",
+          "effect": "¥3,000 and half a training slot, and after a month he stops locking up behind you. The key is the real item: a PC with somewhere to go at two in the morning that is not the dorms.",
+          "hook": "One of three things a PC can do at the gym, alongside sparring and asking the honest question — see \"Kurogane Wharf.\""
+        },
+        {
+          "roll": 3,
+          "name": "The honest answer about the racket",
+          "tier": "rare",
+          "effect": "Ten thousand a month, he pays it, and taking Byakko off those ninety shops puts something worse on them inside a month. The real fix is the police, slowly, with witnesses, and years. No mechanics. It reframes the arc.",
+          "hook": "Ask him the honest question and get the honest answer, with no self-pity anywhere in it — see \"Kurogane Wharf.\""
+        },
+        {
+          "roll": 4,
+          "name": "A Monday morning with Ricochet",
+          "tier": "notable",
+          "effect": "Hazama Ritsu, in gloves, being taught properly by a man who pays protection to the gang that boy belongs to, and neither of them finds this strange. Join in and you get a full training slot and an unanswerable question.",
+          "hook": "If one scene in this campaign explains the backstreets it is that one, and it is already on the little-things table."
+        },
+        {
+          "roll": 5,
+          "name": "The end seat at the Anchor",
+          "tier": "minor",
+          "effect": "\"Sit at the end. You hear more from the end.\" It is true: a PC in that seat hears one thing per visit they were not told, and Okabe Fumi will not acknowledge having arranged it.",
+          "hook": "The opener at the Anchor, the ward's early warning system — see \"Kurogane Wharf.\""
+        },
+        {
+          "roll": 6,
+          "name": "The rumour she was saving",
+          "tier": "notable",
+          "effect": "Okabe Fumi has one saved for whoever walks in, and it is the one she thought they would want. Always true, always incomplete, and always about something the class were going to find out three sessions later.",
+          "hook": "Her whole function. A rumour she has been saving is already on the ordinary table; this is the table to roll when the class come to her."
+        },
+        {
+          "roll": 7,
+          "name": "A tab at the Anchor",
+          "tier": "minor",
+          "effect": "Coffee, indefinitely, settled whenever. It is not generosity — a PC with a tab comes back weekly, and she would rather know where they are than wonder.",
+          "hook": "Offered after a PC has been in three times and been decent to her about something. She will say it is for her benefit, and she means it."
+        },
+        {
+          "roll": 8,
+          "name": "A line, a bollard, and two hours",
+          "tier": "minor",
+          "effect": "Fishing tackle left against the wall by somebody who is not coming back for it. Two hours on the dock with it counts as a rest for anything the DM is tracking that is not hit points.",
+          "hook": "The stretch of dock in daylight, which is where the class go to sit down — and which after midnight belongs to the Scarlet Legion."
+        },
+        {
+          "roll": 9,
+          "name": "What the docks are like at one",
+          "tier": "rare",
+          "effect": "Not an object: having been there in the dark, once, and come away. The PC can now describe the Legion's half of the wharf accurately, which is the first rung of a discovery ladder and cannot be un-climbed.",
+          "hook": "The entire trick of the place is that the party will have been here in daylight first — see \"The Underground — Odd Nights and the discovery ladder.\""
+        },
+        {
+          "roll": 10,
+          "name": "The month's envelope, on the desk",
+          "tier": "rare",
+          "effect": "Ten thousand yen in an envelope in a gym office, which a PC can take, return, replace or photograph. Every one of those is a different arc and the DM should let the player sit with the choice.",
+          "hook": "There is a preset map, \"Nakata's Gym,\" and the envelope is on the office desk on it — see the board's preset maps."
+        },
+        {
+          "roll": 11,
+          "name": "A spar he does not go easy in",
+          "tier": "rare",
+          "effect": "Nakata fights a PC properly, once, because they asked properly. He wins. Afterwards he tells them the one thing they do that will get them hurt, and he is the adult who is not staff, so they believe him.",
+          "hook": "An open sparring session is half a training slot; this is what it becomes for a PC who has stopped performing — see \"Kurogane Wharf.\""
+        },
+        {
+          "roll": 12,
+          "name": "The gym's payment, ended",
+          "tier": "unique",
+          "effect": "A PC holds the street and the ninety-shop payment stops for that one building. He does not thank them. He points out it lasts exactly as long as they hold the rank, and he is right. Then he tapes his hands.",
+          "hook": "What happens if a PC holds rank under the Stripe Law and uses it here. The rank section says the same thing he does."
+        }
+      ]
+    },
+    {
+      "id": "chopshop",
+      "name": "The chop shop — vans, plates, no questions",
+      "die": "d8",
+      "source": "A two-bay lock-up in Ikebukuro West. Roller shutter, a pit, a bench down the back wall, ¥250,000 a month and extremely occasional.",
+      "note": "The only room in the turf economy that is straightforwardly a crime, and the one with the Appetite connection in it. Everything here is Kōno Sae's, and she will give a PC almost anything on this table for asking once, politely, without making it an interrogation.",
+      "items": [
+        {
+          "roll": 1,
+          "name": "A plate off a van that is still running",
+          "tier": "notable",
+          "effect": "Not the white van's plate — a different one, current, on a vehicle somewhere in Tokyo right now. Carrying it is evidence of a crime and the start of a thread the DM can pull whenever they want.",
+          "hook": "The plate off a white van is already on the Byakko table and is the important one. This is the ordinary business of the room."
+        },
+        {
+          "roll": 2,
+          "name": "The description of the man with the scar",
+          "tier": "unique",
+          "effect": "Exact, unhurried, from somebody who watched him buy a van for cash in the spring and had to clean the blood off the counter afterwards. It confirms only what the spine has already told the class, and it should never grow into more.",
+          "hook": "Ask her properly, once, politely. If a player pushes for more she has no more — see \"The chop shop — vans, plates, no questions.\""
+        },
+        {
+          "roll": 3,
+          "name": "A lock-up key, cut badly",
+          "tier": "minor",
+          "effect": "It opens the shutter on the third try, which is how all of her keys work because she has never needed one. A PC with it has somewhere in Ikebukuro West to put something.",
+          "hook": "\"Door's open. It's always open. That's the joke.\" She cuts a key for people who clearly want one anyway."
+        },
+        {
+          "roll": 4,
+          "name": "An hour under a van",
+          "tier": "minor",
+          "effect": "Her legs sticking out from under the chassis, yours next to them, and a conversation about joints and load that is also somehow about the gang. Half a training slot for anybody whose quirk is mechanical.",
+          "hook": "How she talks to people: not coming out, not looking up, and entirely present — see \"The chop shop.\""
+        },
+        {
+          "roll": 5,
+          "name": "A restraint that will not hold her",
+          "tier": "notable",
+          "effect": "Standard police cuffs, and she has touched them. They will never close properly again. Useless as restraints and perfect as a demonstration of the only interesting thing anybody in this gang does with a quirk.",
+          "hook": "No cell holds her and no handcuffs stay on, and her stat block says so in as many words — see \"Stat blocks — Byakko, the middle ranks.\""
+        },
+        {
+          "roll": 6,
+          "name": "A Thursday's worth of nothing",
+          "tier": "minor",
+          "effect": "Thursday is the chop shop's night, so a PC who wants to be unobserved in Ikebukuro West on a Thursday simply is: everybody who would notice is here, with the shutter down.",
+          "hook": "Thursday is why Swing Town's back cage is free and the unranked kids get it for an hour."
+        },
+        {
+          "roll": 7,
+          "name": "Her promise about the arrest",
+          "tier": "rare",
+          "effect": "She will not resist. When the police finally come for the shop she will put her hands out and go, and the backstreets will know she did. Telling a PC this in advance is the most trust she has to give.",
+          "hook": "One of the two facts that are the whole character, and the campaign says it outright — see \"The chop shop.\""
+        },
+        {
+          "roll": 8,
+          "name": "The shop, closed, by you",
+          "tier": "unique",
+          "effect": "The one disruption in the turf economy a PC can actually cause. ¥250,000 a month off Byakko's books, Heat consequences the track will handle, and Kōno Sae walking out with her hands in front of her.",
+          "hook": "Closing it is written up in the campaign as the turf economy's single biggest lever — see \"Byakko — Heat events, and the turf economy.\""
         }
       ]
     },
     {
       "id": "legion",
       "name": "The Scarlet Legion — blood and courtesy",
-      "die": "d10",
+      "die": "d20",
       "source": "Vampires, after Hellsing. The Crimson Room in Ginza, the Hiruma Clinic in Minato, the night shipping at Kurogane Wharf.",
       "rule": "Never purchasable. Keeping the Underground off the shop page is what keeps the Underground hidden.",
       "note": "A hundred and fifty years of a kept code, and lately a nervous one. Legion gifts are courteous, conditional and faintly insulting, and every one of them is a hook with the hook showing.",
@@ -163,13 +563,83 @@
           "tier": "rare",
           "effect": "A hand-copied page of the Legion's own law: feed nowhere it will be noticed, turn nobody without the Legate's leave, touch nobody on the hero register. A hundred and fifty years kept.",
           "hook": "The most dangerous item on this table. It tells the class exactly which rule the Legion has started breaking, and on whom: Byakko, because nobody misses gang members."
+        },
+        {
+          "roll": 11,
+          "name": "A photograph off the Crimson Room stairs",
+          "tier": "rare",
+          "effect": "One frame, 1920s, four people on a balcony, and two of them were in the room last night and have not aged. Showing it to somebody who was also in that room is a threat. Showing it to anybody else gets you a polite correction about costume parties.",
+          "hook": "Taken off the stairwell wall on the way out. The photographs go back to 1901, and that is the detail that gives the building away — see \"The Underground — four rooms you can walk into.\""
+        },
+        {
+          "roll": 12,
+          "name": "A Centurion's courtesy",
+          "tier": "notable",
+          "effect": "An agreement that you will be shown out rather than stopped. Once, in Legion territory, you may leave a situation you should not be able to leave, walking, with your things, and nobody touches you. It does not work twice and the Legion will mention that it worked once.",
+          "hook": "Granted after the class break a rule in the Crimson Room and are shown out courteously rather than otherwise. The Legion remembers both the breach and the manners."
+        },
+        {
+          "roll": 13,
+          "name": "A bag of the wrong type",
+          "tier": "notable",
+          "effect": "O-negative, Hiruma Clinic label, cold. Worth a great deal to exactly one kind of person and worth nothing to anybody else. Carrying it into a Legion room is either an offering or an insult depending on how you hold it.",
+          "hook": "Out of the Clinic's fridge in Minato, where any Class 1-A student hurt in the wrong ward ends up — the innocent way into that room."
+        },
+        {
+          "roll": 14,
+          "name": "Akabane's rate",
+          "tier": "rare",
+          "effect": "A figure, in writing, for a job the class have not been offered yet. The number is low and the terms are the problem. Keeping it is a record of being considered; using it is the start of something the campaign has not agreed to.",
+          "hook": "Passed over at the Crimson Room by somebody who assumed the class already knew what they were being quoted for."
+        },
+        {
+          "roll": 15,
+          "name": "A silvered needle, cased",
+          "tier": "notable",
+          "effect": "Clinic issue, one use. Against a creature the Legion considers its own business, a hit with it ends any regeneration for a minute. Against anything else it is a needle, and using it in front of a Legionary is a declaration.",
+          "hook": "From the Hiruma Clinic's locked drawer. The silvered blade on this table came from the same room and the same reason it exists."
+        },
+        {
+          "roll": 16,
+          "name": "The Legate's second letter",
+          "tier": "unique",
+          "effect": "Shorter than the first, and it does not ask for anything. It states, in two sentences, what the Legion will do if a named person is harmed, and it is signed. It is the single most useful piece of paper in the Underground and it can be spent exactly once.",
+          "hook": "Only ever arrives after the first letter has been answered. The first is already on this table; this is what answering it well produces."
+        },
+        {
+          "roll": 17,
+          "name": "A Thrall's release",
+          "tier": "rare",
+          "effect": "A name, a date, and a line through the arrangement, countersigned. The person named is free of it. They will not thank you, because the arrangement was the only structure they had, and the campaign should let that sit.",
+          "hook": "Negotiated, not found. A Thrall's name written down is already on this table, and this is what a PC can do with one."
+        },
+        {
+          "roll": 18,
+          "name": "An invitation addressed to somebody else",
+          "tier": "minor",
+          "effect": "Heavy card, the Crimson Room, a name that is not yours, eleven till dawn. It will get you through the door once and the mistake will be noticed inside ten minutes, which may be long enough.",
+          "hook": "Lifted from the tailor's two doors down, where the Legion's post is held for discretion — see the four rooms appendix."
+        },
+        {
+          "roll": 19,
+          "name": "A ledger of debts, two wards wide",
+          "tier": "rare",
+          "effect": "Who owes the Legion a favour across Minato and Ginza: forty names, several of them respectable, two of them teachers. Reading it is the moment the class understand how much of the city is already arranged.",
+          "hook": "The Crimson Room keeps it on the bar, because nobody in the room would ever take it. A PC taking it is itself the hook."
+        },
+        {
+          "roll": 20,
+          "name": "A seat at the table, for one night",
+          "tier": "unique",
+          "effect": "The Legion will have a PC in the room as a guest rather than a curiosity: every question answered honestly for one evening, including the ones about what the Legion is. The price is that from then on they consider the matter discussed.",
+          "hook": "Earned by returning something the Legion assumed was gone. The standing invitation on this table gets you in the door; this gets you a chair."
         }
       ]
     },
     {
       "id": "court",
       "name": "The Astral Court — sunlight and style",
-      "die": "d10",
+      "die": "d20",
       "source": "Sun-priests, after JoJo's Bizarre Adventure. Kōenji, any public bathhouse, and a court that traces itself to the Heian period.",
       "rule": "Never purchasable. Sunbreath is a skill and an Envoy is a second self; neither is stock.",
       "note": "The Court gives beautifully and expects to be imitated. Everything here is a lesson wrapped in an object, and the arrowheads are the exception that the whole faction is currently frightened of.",
@@ -243,13 +713,83 @@
           "tier": "unique",
           "effect": "The Throne has been empty since 1945. This is a standing invitation to sit at it, which the Court has not offered anybody in eighty years and does not expect to be accepted.",
           "hook": "An endgame hand-out. Offer it to a PC who has been better than the Court, and let the player decide what that means."
+        },
+        {
+          "roll": 11,
+          "name": "A second Sunbreath form",
+          "tier": "rare",
+          "effect": "Taught over a month of mornings, and it is harder than the first because the first was chosen to be learnable. Once per rest, when you would be knocked prone, you are not, and you may move five feet. Grandmother Hinata will ask you to show her yearly.",
+          "hook": "Only offered to somebody who kept practising the first one without being checked on — see \"The Astral Court.\""
+        },
+        {
+          "roll": 12,
+          "name": "A Zenith's invitation to breakfast",
+          "tier": "notable",
+          "effect": "Eight in the morning, a private room, and nothing will be asked of you. What happens is a conversation with somebody who has been doing this for a very long time, and afterwards you have advantage on one social check against anyone who knows who they are.",
+          "hook": "Arrives on paper the day after a PC does something publicly graceful. A Zenith's name to drop is already on this table; this is being given the name in person."
+        },
+        {
+          "roll": 13,
+          "name": "An Envoy's full gesture",
+          "tier": "unique",
+          "effect": "Not the first gesture — the whole thing. A second self, for one scene, that can carry, speak, open and stand in a doorway, and which the PC experiences from both sides at once. Using it is disorienting and the player should be told so before they decide.",
+          "hook": "Taught only after the first gesture has been used for something that was not an advantage. The Court is watching for exactly that."
+        },
+        {
+          "roll": 14,
+          "name": "Sunlight in a hallway, arranged",
+          "tier": "notable",
+          "effect": "A promise that one specified room will have the curtains open at a specified hour, and that somebody will be standing in the light. It sounds like nothing and it is a venue a PC can choose, which against the Legion is everything.",
+          "hook": "The Court's favourite kind of favour: free to grant, devastating in context. Ask a courtier for it rather than for help."
+        },
+        {
+          "roll": 15,
+          "name": "A courtier's wardrobe, lent",
+          "tier": "minor",
+          "effect": "Cut properly, for one evening, and returned cleaned. While wearing it you are assumed to belong wherever old money gathers, and a PC who is visibly a teenager is assumed to be somebody's guest rather than somebody's problem.",
+          "hook": "From the same tailor the Legion uses, which is a small Underground joke the class may notice twice before understanding."
+        },
+        {
+          "roll": 16,
+          "name": "The arrowhead's match",
+          "tier": "unique",
+          "effect": "The second one, which the Court has never admitted exists. It does what the first does and the Court would prefer the class did not know the count. Holding both is a piece of leverage against the Throne itself.",
+          "hook": "The arrowhead in a cloth is already on this table. This is what happens if a PC asks the obvious question about how many there were."
+        },
+        {
+          "roll": 17,
+          "name": "A letter of introduction, unsealed",
+          "tier": "rare",
+          "effect": "Addressed to nobody, signed by a Zenith, and deliberately left open so the bearer can read what is said about them. It is more generous than they expected. It will open one door in old Tokyo and the reading of it is the actual gift.",
+          "hook": "Given at a parting rather than a meeting. The Court does this to people it has decided to be fond of."
+        },
+        {
+          "roll": 18,
+          "name": "Mr Joestar's standing apology",
+          "tier": "notable",
+          "effect": "Not the written one — the man himself, turning up once, at a moment of your choosing, to say out loud and in front of witnesses that he was wrong. Spend it well. He will do it properly and it will cost him.",
+          "hook": "The written apology is already on this table. This is what a PC gets for not having used it to embarrass him."
+        },
+        {
+          "roll": 19,
+          "name": "A breathing bead, strung for two",
+          "tier": "minor",
+          "effect": "Two beads on one cord, which is not how they are made. Both wearers know when the other has stopped breathing steadily, through a wall, which is either a training aid or an early warning depending on the week.",
+          "hook": "A courtier's breathing bead is already on this table; a Court tutor strings a second one for a pair who train together, which is the only comment the Court makes on Forge's pair rule."
+        },
+        {
+          "roll": 20,
+          "name": "A place at the Throne's table, declined",
+          "tier": "unique",
+          "effect": "The invitation, and the PC's written refusal, and the Court's acknowledgement of it — all three kept together. The Court respects a refusal far more than an acceptance, and every courtier in Tokyo now knows the name of somebody who said no politely.",
+          "hook": "A place at the Throne's table is already on this table. This is the other thing a PC can do with it, and it is the stronger move."
         }
       ]
     },
     {
       "id": "kuroshiki",
       "name": "Kuroshiki — ink, veils and pacts",
-      "die": "d10",
+      "die": "d20",
       "source": "The black rite, after Jujutsu Kaisen. The Kurama Rite School above Hachiōji, a few miles from U.A.",
       "rule": "Never purchasable. A Pact is an agreement, not a purchase, and the price is the point.",
       "note": "Kuroshiki gear is grim, practical and faintly bureaucratic — a craft school's kit list rather than a treasure hoard. Everything on this table costs something, and the sorcerers will tell you what before you take it.",
@@ -323,13 +863,83 @@
           "tier": "unique",
           "effect": "One person in the Commission knows about Kuroshiki. This is their name, on paper, and it is the single most dangerous piece of paper in the campaign.",
           "hook": "The campaign never says who. If you hand this over, you have decided — so decide it with the table, and late."
+        },
+        {
+          "roll": 11,
+          "name": "A veil for somebody else",
+          "tier": "notable",
+          "effect": "Paper, one use, and it is cut for a person who is not you. Put it on them and they are not noticed for a minute — including by the thing that is looking for them. You cannot use it yourself and the cutting took somebody an evening.",
+          "hook": "A paper veil is already on this table. Kuroshiki will cut a second one to measure for a PC who asked on behalf of a third party."
+        },
+        {
+          "roll": 12,
+          "name": "A page of the Kurama Rite School's drills",
+          "tier": "rare",
+          "effect": "Brush exercises that are also footwork, copied out by hand. Six weeks of them and you can write one sign correctly under pressure, which is the whole of what the school teaches in its first year.",
+          "hook": "Copied for a PC who kept turning up — see \"Kuroshiki.\" The school does not take students; it does occasionally leave things where somebody will find them."
+        },
+        {
+          "roll": 13,
+          "name": "A jar of something that should not be jarred",
+          "tier": "rare",
+          "effect": "Kegare, contained, and the container is paper and ink rather than glass. It will hold for a month. Opening it deliberately in the right place solves a problem; opening it anywhere else is the problem.",
+          "hook": "The jar of the Adachi car park is already on this table and it is the harmless version. This one is not, and nobody handed it over gladly."
+        },
+        {
+          "roll": 14,
+          "name": "Ink that stays wet",
+          "tier": "minor",
+          "effect": "A stone's worth that does not dry, which means a sign can be unmade as fast as it was made. Any Kuroshiki who sees you using it knows you were given it rather than sold it, and treats you accordingly.",
+          "hook": "From the Sumi brush and stone on this table, after somebody decided the PC was careful enough for the version that undoes itself."
+        },
+        {
+          "roll": 15,
+          "name": "A Pact somebody else signed",
+          "tier": "rare",
+          "effect": "Not yours: a completed agreement with a name on it you recognise. You now know what they gave up and what they got, and they do not know you know. The campaign should make the PC decide what to do with that before anything else happens.",
+          "hook": "A Pact written and signed is already on this table. This is what it is like to be holding one that is not about you."
+        },
+        {
+          "roll": 16,
+          "name": "A grading you did not sit",
+          "tier": "notable",
+          "effect": "Paperwork saying you hold a rank in a tradition you have barely touched, issued because it was administratively convenient for somebody. It will be honoured and it is a lie, and at least one person who sat the real grading knows.",
+          "hook": "A grading, officially, is already on this table — honestly earned. This is the other way that document gets issued."
+        },
+        {
+          "roll": 17,
+          "name": "Shirasagi Rei's second \"huh\"",
+          "tier": "unique",
+          "effect": "The first one meant she had noticed. This one means she has thought about it since. Nothing is promised, nothing is given, and every Kuroshiki who hears about it adjusts. Once per campaign, name a Kuroshiki and they will hear you out.",
+          "hook": "Shirasagi Rei's \"huh\" is already on this table. The second one takes considerably longer to earn and arrives without warning."
+        },
+        {
+          "roll": 18,
+          "name": "A mask that is only paper",
+          "tier": "minor",
+          "effect": "Plain, unpainted, no ink on it at all, and it does absolutely nothing. It is what an apprentice is given before they are given anything, and wearing it in the right room is a statement that you know you are at the beginning.",
+          "hook": "Handed over without comment by somebody who was given one once. Kuroshiki say less than any other society and this is how they say it."
+        },
+        {
+          "roll": 19,
+          "name": "The name of the one in the Commission, written",
+          "tier": "unique",
+          "effect": "The spoken version is already the most dangerous thing on this table. Written down, it can be left somewhere, which is worse. The DM should treat a PC writing it as an act with consequences in a later chapter.",
+          "hook": "The name of the one in the Commission is already on this table as something said aloud. This is a PC choosing to make a record."
+        },
+        {
+          "roll": 20,
+          "name": "A thumb of ink, on somebody else's eyelids",
+          "tier": "notable",
+          "effect": "You may do for one other person what was done for you: for an hour they see what the ink shows. They will not be ready for it, and what they do in that hour is their own.",
+          "hook": "A thumb of ink on your eyelids is already on this table, and being taught to apply it is a separate and later thing."
         }
       ]
     },
     {
       "id": "ledger",
       "name": "The Ledger — paperwork that collects",
-      "die": "d10",
+      "die": "d20",
       "source": "A civil service of death-gods, after Bleach. Yanaka, any hospital's back entrance, any level crossing after midnight, and every Case 9 site.",
       "rule": "Never purchasable. Everything here is issued, countersigned, or stolen from a department that notices.",
       "note": "The Ledger does not reward people. It processes them. Every item here is a form with teeth, and the department is in arrears, which is the only reason any of it ends up in a student's hands.",
@@ -403,13 +1013,83 @@
           "tier": "unique",
           "effect": "The document that would raise four hundred wardens to a number that works, needing one countersignature from a vacant Desk. The entire backlog is this piece of paper.",
           "hook": "Hand this over and the class are holding the Ledger's whole problem. Fixing a civil service is the least heroic and most useful thing in the campaign."
+        },
+        {
+          "roll": 11,
+          "name": "A second Mark, for somebody else",
+          "tier": "rare",
+          "effect": "Issued in a name the PC supplies, with no questions asked about why. The person marked is now in the Ledger's system and will be processed correctly, which is sometimes protection and sometimes the opposite.",
+          "hook": "A Mark is already on this table. The Ledger will issue a second one as a courtesy and will not explain the courtesy — see \"The Ledger.\""
+        },
+        {
+          "roll": 12,
+          "name": "A Writ that has agreed with you",
+          "tier": "unique",
+          "effect": "The other outcome. One instrument, on one named matter, that finds in a PC's favour and is binding on the department that issued it. It will be obeyed. It will also be remembered as a precedent, by people who dislike precedents.",
+          "hook": "A Writ that has not agreed with you is already on this table. This is the same object after an argument was won properly."
+        },
+        {
+          "roll": 13,
+          "name": "A date moved",
+          "tier": "notable",
+          "effect": "An Arrear's date, shifted by three weeks, in the correct hand, countersigned. Three weeks is enough to do something about it. Nobody will notice until the filing is reconciled, and then somebody will notice precisely.",
+          "hook": "An Arrear's date is already on this table. Moving one is a favour from somebody at a desk who has decided the class deserve the time."
+        },
+        {
+          "roll": 14,
+          "name": "A round's schedule, next month's",
+          "tier": "notable",
+          "effect": "Where the black uniforms will be, and when, for four weeks ahead. Accurate, and it stops being accurate the moment anybody acts on it twice.",
+          "hook": "A round's schedule is already on this table for the current month. Next month's is held at the First Desk and does not leave."
+        },
+        {
+          "roll": 15,
+          "name": "Yanaka's margin note",
+          "tier": "rare",
+          "effect": "Three words in pencil against a line of a file, and they change what the file means. The note is not signed and the hand is recognisable to anybody at the First Desk, which is the risk and also the point.",
+          "hook": "Found in paperwork the class were given legitimately. Yanaka annotates and does not expect the annotations to be read by students."
+        },
+        {
+          "roll": 16,
+          "name": "A departmental stamp, borrowed",
+          "tier": "rare",
+          "effect": "The real one. Anything stamped with it is treated as issued until a human being checks, which takes between a day and a decade depending on the department. Returning it before it is missed is the hard part.",
+          "hook": "The forged countersignature in a sweet shop is already on this table, and it exists because the stamp is usually unavailable. This is the stamp."
+        },
+        {
+          "roll": 17,
+          "name": "An establishment revision, signed",
+          "tier": "unique",
+          "effect": "The unsigned one is already the most dangerous document in this file. Signed, it is in force: a named thing about how the school or the Commission is constituted is now different. The campaign should not resolve what that means quickly.",
+          "hook": "The establishment revision, unsigned, is already on this table. Getting it signed is an arc, not an acquisition."
+        },
+        {
+          "roll": 18,
+          "name": "A warden's round, walked with",
+          "tier": "minor",
+          "effect": "Two hours beside somebody in a black uniform doing their actual job, which is mostly paperwork and standing. You learn more about the Ledger from it than from any document, and they will answer questions while walking.",
+          "hook": "Offered rather than asked for, usually to a PC who was polite to a warden on a bad night — see \"The Ledger.\""
+        },
+        {
+          "roll": 19,
+          "name": "One true answer, in writing",
+          "tier": "unique",
+          "effect": "The spoken version is already on this table and is denied the moment it is repeated. In writing, it can be shown to somebody else, and that is a different kind of object entirely. It will be the only copy.",
+          "hook": "One true answer is already on this table. The written version is granted roughly once, to somebody the First Desk has decided to take seriously."
+        },
+        {
+          "roll": 20,
+          "name": "A file with your own name on it",
+          "tier": "rare",
+          "effect": "Everything the Ledger has recorded about a PC, handed to that PC. It is longer than they expected, it starts earlier than they expected, and two entries in it are about things they have not told anybody.",
+          "hook": "Requested correctly, on the correct form, which almost nobody does. The Ledger is obliged to comply and finds the request faintly admirable."
         }
       ]
     },
     {
       "id": "support",
       "name": "U.A. support lab — gear nobody is meant to have yet",
-      "die": "d12",
+      "die": "d20",
       "source": "Nobara Forge's bench, the support lab on a Thursday, and whatever Hiro has been building.",
       "note": "Provisional students are not licensed and most of this is signed out rather than owned. Forge designs for pairs on purpose, so half of this table only works properly with somebody standing next to you.",
       "items": [
@@ -496,13 +1176,69 @@
           "tier": "unique",
           "effect": "Ninety minutes of training and four words in total. All four are useful. The PC may, once per session, take an extra action on the first round of a fight.",
           "hook": "Do not give him a fifth. The scene is the reward and the mechanic is a souvenir of it."
+        },
+        {
+          "roll": 13,
+          "name": "A second-year's rejected gauntlet",
+          "tier": "notable",
+          "effect": "Built for a quirk that works nothing like yours, failed its sign-off, and is far too good to throw away. +1 to unarmed damage and it will seize up at the worst possible moment once per session, exactly as its rejection note said it would.",
+          "hook": "Off the rejects shelf in the support lab, which Nobara Forge does not police as carefully as she thinks — see the support lab appendix."
+        },
+        {
+          "roll": 14,
+          "name": "A grip that holds anything for ten seconds",
+          "tier": "rare",
+          "effect": "A palm clamp, Forge pattern, that will not let go of what it has closed on for ten full seconds — including when the thing it has closed on is moving, and including when you have changed your mind. Ten seconds, every time, no override.",
+          "hook": "A prototype that is not signed off, and the reason it is not signed off is the part with no override. Forge will ask for it back by name."
+        },
+        {
+          "roll": 15,
+          "name": "Hiro's wiring diagram, annotated",
+          "tier": "notable",
+          "effect": "Four pages in two hands: the original, and Hiro's corrections. Anybody who reads it has advantage on one check to understand a piece of support gear, ever, and may keep the pages.",
+          "hook": "Given rather than found. Hiro annotates other people's work when nobody asks him to, and hands the result over without explanation."
+        },
+        {
+          "roll": 16,
+          "name": "A costume with the damage logged",
+          "tier": "minor",
+          "effect": "Somebody else's, repaired four times, with every repair dated and initialled inside the seam. It fits well enough. Reading the log tells you exactly what that student kept doing wrong, which is sobering.",
+          "hook": "From the tailor two doors down from the Crimson Room, who does costume repairs and keeps records — see \"The Underground — four rooms you can walk into.\""
+        },
+        {
+          "roll": 17,
+          "name": "A spool of tape that holds a door",
+          "tier": "minor",
+          "effect": "Capture tape, but the industrial roll: enough to hold one door, one window or one person who is not strong for an hour. Single use and unmistakable — anybody who finds it knows it came out of a hero school.",
+          "hook": "Signed out of the support lab on a Thursday pass and not signed back in, which is the only way anything leaves that room."
+        },
+        {
+          "roll": 18,
+          "name": "Bose's teardown of your own gear",
+          "tier": "rare",
+          "effect": "Your costume, your weapon or your brace, taken apart on a bench and explained back to you in order of how it will fail. Rebuild it on that advice and it never breaks on a critical miss again. Hearing it is not a pleasant experience.",
+          "hook": "Earned by asking Bose a question you have already tried to answer yourself. He can tell, and that is the whole gate."
+        },
+        {
+          "roll": 19,
+          "name": "A mask that filters the docks",
+          "tier": "notable",
+          "effect": "Built for a student with a breathing problem who left. Immunity to the kind of airborne nothing-much that makes a warehouse unpleasant, and it muffles your voice enough that people ask you to repeat yourself.",
+          "hook": "Found in the lost property crate under the support lab bench. The name tape inside has been cut out, and Forge will not say by whom."
+        },
+        {
+          "roll": 20,
+          "name": "The pairing rig, taken home",
+          "tier": "unique",
+          "effect": "The actual rig, not a copy, signed out overnight and never collected. Two people wearing it know where the other one is through a wall. It is also the single most persuasive object in Forge's argument about pairs, and she will want it back for a lesson.",
+          "hook": "The rig has its own entry on this table and this is what happens when nobody returns it — see the support lab appendix on the pairing rig."
         }
       ]
     },
     {
       "id": "appetite",
       "name": "Appetite and Clean Read — what the archive leaves behind",
-      "die": "d8",
+      "die": "d12",
       "source": "The spine. Five dead heroes, one man's appetite, and a company that worked out how to do it legally.",
       "rule": "Hand these out at the end of a chapter, never as a find. Every one of them is evidence of something.",
       "note": "These are not treasure and the table should not cheer. They are what is left on the floor after the first season and what is on sale during the second, and the campaign's whole argument is that the second is worse.",
@@ -562,13 +1298,41 @@
           "tier": "unique",
           "effect": "One narrow concession, in writing, from a hearing the class otherwise lost: when the archive is next used, they speak about their own footage before anybody else does.",
           "hook": "Not a magic item. The only answer the campaign ever offers to the thing it opened with, and the players earned it by losing."
+        },
+        {
+          "roll": 9,
+          "name": "The teaching copy, annotated",
+          "tier": "unique",
+          "effect": "A print-out of the Clean Read teardown with corrections in a teacher's hand down the margin — where it is wrong, where it is merely unkind, and where it is accurate and should be read twice. Hand it over at the end of the chapter it belongs to and say nothing.",
+          "hook": "Chapter 7 is called \"The Teaching Copy.\" This is it, and it should arrive from staff rather than be found."
+        },
+        {
+          "roll": 10,
+          "name": "A viewing figure",
+          "tier": "notable",
+          "effect": "One number on a screenshot: how many people watched the eleven seconds. It is larger than anybody at the table expected and it is still going up. No mechanical effect and it will change how a player plays their character for an arc.",
+          "hook": "Sent, unasked, by somebody who thought they were being helpful. The thumbnail algorithm's output has its own entry; this is the consequence of it."
+        },
+        {
+          "roll": 11,
+          "name": "A name on a list, crossed off",
+          "tier": "rare",
+          "effect": "A shortlist with a line through one name, and the line was drawn before the class ever heard the word. Proof of the order things happened in, which is the one thing nobody has been able to establish.",
+          "hook": "From the archive at the end of an arc, never as a find. Chapter 3 is \"The Shortlist\" and this is its paperwork."
+        },
+        {
+          "roll": 12,
+          "name": "The right of reply, in writing",
+          "tier": "unique",
+          "effect": "A letter confirming that a named student may answer, on the record, in their own words, with nothing cut. Spend it once. What they say with it is the scene, and the DM should give it the whole table.",
+          "hook": "Chapter 8 is \"Right of Reply.\" This is the instrument, and it is worth more than any object in this file."
         }
       ]
     },
     {
       "id": "ordinary",
       "name": "Ordinary things worth more than they look",
-      "die": "d12",
+      "die": "d20",
       "source": "Free time. Shops, hangouts, somebody's kitchen, a vending wall.",
       "note": "The campaign's own register: small, cheap, specific, and remembered for a year. Hand one of these out when a player does something kind and you want to mark it without making a speech.",
       "items": [
@@ -655,6 +1419,62 @@
           "tier": "rare",
           "effect": "Twelve minutes. Ask him anything and he answers it honestly, which the player may regret.",
           "hook": "One of the answers will keep somebody awake. Decide which before the session, not during it."
+        },
+        {
+          "roll": 13,
+          "name": "A photograph nobody posed for",
+          "tier": "notable",
+          "effect": "Four of the class in a doorway, taken from across the street by somebody who was waiting for a bus. It is a better photograph than any of them have of each other. Whoever is holding it may name one person in it and ask them one question they will answer honestly.",
+          "hook": "Handed over at the Anchor by Okabe Fumi, who was given it by the man who took it and thought one of them should have it."
+        },
+        {
+          "roll": 14,
+          "name": "A library book, three years overdue",
+          "tier": "minor",
+          "effect": "U.A. stamp, somebody else's name on the card, and twenty pages of margin notes in a hand that got steadily angrier. The notes are the point: whoever reads them learns something true about a hero course student who is no longer here.",
+          "hook": "Found at the back of a dorm shelf. The name on the card appears nowhere in this year's roster, and staff change the subject."
+        },
+        {
+          "roll": 15,
+          "name": "A bus pass with four weeks left",
+          "tier": "minor",
+          "effect": "Somebody has paid for a month of getting across Tokyo and then stopped needing to. Four weeks of travel anywhere in the wards, and a small ongoing question about why it was abandoned.",
+          "hook": "In the lost property at Kurogane Wharf station, which Okabe Fumi empties on a Sunday and does not hand in."
+        },
+        {
+          "roll": 16,
+          "name": "A receipt for a van, paid in cash",
+          "tier": "rare",
+          "effect": "The chop shop's copy, in the spring, for cash, with a thumbprint in the corner that is not ink. It confirms what the class already know and it is the first piece of it they can hold.",
+          "hook": "Kōno Sae kept it because she had to clean the counter. Ask her properly once and she will go and get it — see \"The chop shop.\""
+        },
+        {
+          "roll": 17,
+          "name": "A kettle, and the rota for it",
+          "tier": "minor",
+          "effect": "The dorm kettle, and a laminated list of who descales it. Entirely mundane; the list has every name in the class on it in a hand that is clearly Samitsu's, and being on it means something to people who have not been on a list before.",
+          "hook": "Appeared in the common room overnight. The rota table already has an entry for a rota nobody asked for; this is the kettle it is about."
+        },
+        {
+          "roll": 18,
+          "name": "Four tickets to something ordinary",
+          "tier": "notable",
+          "effect": "A baseball game, a Saturday, four seats together, nothing heroic anywhere near it. Spend them and the four who go get a full training slot's worth of benefit from having done nothing at all.",
+          "hook": "From Nakata Isamu, who had them, cannot go, and will not accept money for them. On the free-time hangouts list as its own scene."
+        },
+        {
+          "roll": 19,
+          "name": "A hand-written apology that took three drafts",
+          "tier": "notable",
+          "effect": "The two discarded drafts are folded inside the one that was finished, which was not meant to happen. Reading all three in order is the most information anybody at the table will ever get about the person who wrote it.",
+          "hook": "Delivered to a PC's pigeonhole. Which three drafts and whose hand is the DM's choice from whoever most recently got something badly wrong."
+        },
+        {
+          "roll": 20,
+          "name": "One honest answer from a teacher",
+          "tier": "rare",
+          "effect": "Not a favour and not a reward: a member of staff has decided a student has earned a straight answer to one question, including a question about the school. Ask it and the DM answers truthfully, in character, at whatever length the truth takes.",
+          "hook": "The Sugitsu entry on this table is the same instrument from a different direction. Any teacher can give this one, and should, once."
         }
       ]
     }

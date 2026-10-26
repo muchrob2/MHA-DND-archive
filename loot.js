@@ -96,6 +96,36 @@ function tableHtml(table) {
   </section>`;
 }
 
+// A rail of every table, with its die and how many rows are showing. Added
+// when the file went from eight tables to twelve and 82 items to 194: at that
+// size the page is a long scroll, and a DM who wants the chop shop should not
+// have to find it. During a search the counts become hit counts, which is the
+// fastest way to see WHERE the thing you typed lives.
+function renderRail() {
+  const wrap = document.getElementById('loot-rail');
+  if (!wrap) return;
+  wrap.innerHTML = (lootDoc.tables || []).map(t => {
+    const shown = visibleItems(t).length;
+    return `<button class="loot-rail-btn${shown ? '' : ' no-hits'}"
+      onclick="jumpToTable('${escHtml(t.id)}')" title="${escHtml(t.name)}">
+      ${escHtml(railLabel(t.name))}
+      <span class="loot-rail-n">${shown}</span>
+    </button>`;
+  }).join('');
+}
+
+// "Place — what it is" becomes "Place". A name with no dash is trimmed to
+// something a pill can hold, with the full version left in the tooltip.
+function railLabel(name) {
+  const head = String(name).split(' — ')[0];
+  return head.length <= 22 ? head : head.slice(0, 21).trimEnd() + '…';
+}
+
+function jumpToTable(id) {
+  const el = document.getElementById('loot-table-' + id);
+  if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function renderTiers() {
   const wrap = document.getElementById('loot-tiers');
   if (!wrap) return;
@@ -109,6 +139,7 @@ function renderTiers() {
 
 function render() {
   renderTiers();
+  renderRail();
   const wrap = document.getElementById('loot-tables');
   const empty = document.getElementById('loot-empty');
   const html = (lootDoc.tables || []).map(tableHtml).join('');

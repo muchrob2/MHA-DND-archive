@@ -852,6 +852,184 @@
       "levelRange": ""
     },
     {
+      "id": "after-hours-the-spine",
+      "title": "After Hours — The Story, Short",
+      "tagline": "The plot of The Shortlist: After Hours from end to end, in a fifteen-minute read.",
+      "icon": "🧵",
+      "levelRange": "Levels 1-12",
+      "estimate": "A read, not a module",
+      "tone": "A summary, written to be read in one sitting by somebody who has to run the thing. It is the spine and only the spine: what happens, in what order, and what each chapter is for. No stat blocks, no read-aloud, no rulings, nothing to look up mid-session. Every line in it is compressed out of The Shortlist: After Hours — where this and the full module disagree, the module is right.",
+      "background": [
+        {
+          "id": "bg-essnhl",
+          "heading": "What this is",
+          "body": "Eight chapters of The Shortlist: After Hours, each one reduced to what happens and what turns. It exists because the full module is thirty to forty sessions of material and a DM who needs to know where the story is going should not have to read all of it to find out.\n\nWHAT IT IS NOT — a module. There is nothing here to run from: no stat blocks, no read-aloud text, no encounter tables, no rulings, no side quests, no free-time structure. Read it once to get your bearings, then go and run the real one.\n\nTHE TWO REAL MODULES — \"The Shortlist: After Hours\" is the spine, chapters 1 to 8. \"After Hours: The City\" is everything the class do on their days off: Byakko, the four Underground societies, the shop, free time, and the rooms the backstreets happen in. Neither one needs the other to make sense, and the city never touches the spine."
+        },
+        {
+          "id": "bg-y2szoi",
+          "heading": "The whole plot in one paragraph",
+          "body": "Twenty fifteen-year-olds get into U.A. Their teacher assesses them in pairs, the Sports Festival committee likes the idea enough to run its own tournament in pairs, and the result is eleven hours of free, searchable, permanent footage in which professional commentators explain — accurately, helpfully, at length — exactly how each of forty first-years works and exactly where they fail. A man called Sylar has been eating brains to take quirks for a year, and he does not select for power. He selects for documentation. Class 1-A spent two chapters becoming the best-documented quirks in Japan, so he comes for them, with four people who are not his equals and are not pretending to be. The class survive it and do not get everybody back. Then they are fifteen, nationally famous, and have weekends — so a street gang invites them to climb and three societies older than quirks get found by accident. A year later the archive that got them hunted is the syllabus, a company is lawfully selling teardowns of them for four thousand yen, and the class go to a government committee room to ask for the record to be changed."
+        },
+        {
+          "id": "bg-774l60",
+          "heading": "The three things to hold on to",
+          "body": "• THE ARCHIVE IS THE ENGINE. Not a villain, not a syndicate — a free, well-made, publicly funded catalogue of how children fail. Everything in both seasons comes out of it: Appetite reads it, Clean Read sells it, the class end up arguing in front of a committee about who gets to speak first about it.\n• APPETITE IS ONE MAN AND FOUR PEOPLE SERVICING HIM. No manifesto, no territory, no faction war, and nobody makes a speech about hero society. It works on Class 1-A specifically because Class 1-A spent two chapters becoming worth eating.\n• THE CITY NEVER TOUCHES THE SPINE. Byakko and the Underground do not know what Appetite is and will not solve it. They are what the class find when nobody is hunting them. Run the spine as a school story that a horror film walks into halfway through, and the city as the place those fifteen-year-olds live on their days off."
+        }
+      ],
+      "chapters": [
+        {
+          "id": "ch-w8q2m9",
+          "number": 1,
+          "title": "Provisional",
+          "levels": "Level 1",
+          "estimate": "1 session",
+          "intro": "The six weeks between an entrance exam and a first morning. An envelope that turns out to contain a very small principal, a kit list that gives away more about U.A. than it means to, and twenty fifteen-year-olds each privately certain they were the admissions mistake. No combat and no antagonist, on purpose: the chapter exists so that the class the campaign spends four chapters assembling has something to have been assembled out of. It ends at a classroom door, on the last morning these twenty are twenty separate people.",
+          "sections": [
+            {
+              "id": "sec-lih6dj",
+              "heading": "What turns: nothing, and that is the point",
+              "body": "The only fact any of them owns is that they got in. They have not met each other, they have not been in a room with a member of staff, and not one of them has been told what provisional standing does not permit.\n\nFive professional heroes have died in twelve months and it has been on television for a year. Nobody in this class has any reason to care yet, and nobody should make them.",
+              "dmNote": "Hiro is not a robot. Read \"The student who is not in the room\" in the full module once, before session one, and then put it away until Chapter 4."
+            }
+          ]
+        },
+        {
+          "id": "ch-6zsa0s",
+          "number": 2,
+          "title": "Ten Pairs",
+          "levels": "Levels 1-3",
+          "estimate": "4–5 sessions",
+          "intro": "Nobara Forge writes twenty names on a board in ten pairs and refuses to explain herself. The chapter is that bracket: full contact, Battle Centre III, a scoreboard, and a printed ranking chart on the Heights Alliance fridge that nobody asked for. It is a school story and it is meant to be fun — twenty students become twenty legible people and learn to fight as twos.\n\nOn a television nobody is watching, five professional heroes have been found dead with the tops of their skulls removed, and the strictest teacher on staff keeps not showing up to lessons. It ends at a school open day, with a polite man on the public side of the gate asking a student a question and putting them on the floor for thirty seconds without touching them.",
+          "sections": [
+            {
+              "id": "sec-x4yyhv",
+              "heading": "What turns: the pairs",
+              "body": "Forge's stated reason is equipment; her real one is that she has read the entrance exam footage as a materials problem and concluded the class is twenty excellent components that have never been assembled. The 1-B staff argue about the bracket for a fortnight and push the festival committee to run its tournament in pairs too. The committee agrees because it will look good on television.\n\nNobody in that decision knows they have just made the catalogue twice as informative."
+            }
+          ]
+        },
+        {
+          "id": "ch-u4ypzk",
+          "number": 3,
+          "title": "The Shortlist",
+          "levels": "Levels 3-5",
+          "estimate": "5 sessions",
+          "intro": "Six weeks of training, then three days of the biggest broadcast in Japan: the obstacle course, the cavalry battle, and — for the first time in the competition's history — a paired tournament. Forty thousand people in the stands, eleven million watching a professional commentary team explain, accurately and at length, exactly how every student's quirk works and exactly where it fails.\n\nHalfway through the third day a nine-foot man starts growing in the north concourse and the class beat him in front of the entire country. Nobody dies. It reads as a triumph on every channel that evening.",
+          "sections": [
+            {
+              "id": "sec-gdo5ob",
+              "heading": "What turns: the archive goes live on Monday",
+              "body": "Eleven hours of footage. Forty first-years. Every quirk demonstrated repeatedly, under pressure, at range, against varied opposition, with commentary explaining the mechanism and the weakness — because good commentary explains the weakness. Free, searchable by student and by quirk, archived indefinitely.\n\nFour of the five Case 9 victims are in an archive exactly like it."
+            }
+          ]
+        },
+        {
+          "id": "ch-20ugh0",
+          "number": 4,
+          "title": "Question One",
+          "levels": "Levels 5-7",
+          "estimate": "4–5 sessions",
+          "intro": "A sixth hero is found in a stairwell in Ota, and this time somebody in the common room says the quiet thing: wasn't he at ours? Twenty minutes later the class have the archive open and are listening to a warm, admiring, professional voice explain to eleven million people exactly how each of them fails.\n\nThe campus goes into lockdown. The principal puts all ten of his permanent Search slots on students and tells them so. A man with no nose comes over the fence at nine at night to find out which of them answers a question. Students start disappearing. The class fight a man who tears off his own hand to throw at them and a woman who quietly puts him back together, and they spend an entire session attacking the wrong one of the two.",
+          "sections": [
+            {
+              "id": "sec-jc6b7z",
+              "heading": "What turns: a name comes off the roll",
+              "body": "Powder is dead and the crater in the loading yard will be fenced off for a year. A teacher is out of hit dice and in a bed he will not stay in. Three students were taken; one came home and cannot say what happened.\n\nAnd Moshita Maro is not on the roll any more — which means Copy, a quirk that borrowed other people's, is now somewhere else."
+            }
+          ]
+        },
+        {
+          "id": "ch-prpslz",
+          "number": 5,
+          "title": "Keepsake",
+          "levels": "Levels 7-8",
+          "estimate": "4 sessions",
+          "intro": "Nine days of nothing, with Class 1-B still coming to school every morning because the alternative is sitting at home. Rawagi Chiso burns himself down to nothing running Foresight over surveillance footage frame by frame and finds eleven seconds the principal's quirk was never going to catch. The Commission finally wins the argument and tells Class 1-A they are not part of what happens next.\n\nThen a man with no nose asks two last questions in a corridor, and behind him is a tall thin man with a permanent headache who is wearing a classmate's quirk and does not know he is wearing it badly. The finale is the 2v2 bracket with the safety off. It ends with a song, a dice roll and a teacher in a sombrero, and it does not get everybody back.",
+          "sections": [
+            {
+              "id": "sec-a7vo7v",
+              "heading": "What turns: the question, and who answers it",
+              "body": "Sylar is dead or in a cell. Riddle bled out asking questions. Kuma is doing eleven years and complaining about the food.\n\nThe archive is still online, because taking it down would be an admission, and nobody is going to make one. That is the fact the second season is built on."
+            }
+          ]
+        },
+        {
+          "id": "ch-iwr9iv",
+          "number": 6,
+          "title": "After Hours",
+          "levels": "Levels 8-10",
+          "estimate": "4–8 sessions, plus free time",
+          "intro": "Summer term. The man in the Commission jacket has gone from the gate, the fridge chart is back up, and for the first time all year nobody is hunting Class 1-A. They are nationally famous, they are fifteen, and they have weekends.\n\nTwo kinds of people in Tokyo noticed them at the festival. A street gang called Byakko, who rank each other by who beat whom, have painted every 1-A name on a wall opposite the school as an invitation to climb. And three societies older than quirks — vampires, sun-priests and sorcerers — have been hiding in plain sight for a century and are about to be found by accident.",
+          "sections": [
+            {
+              "id": "sec-myw33n",
+              "heading": "What turns: the class are given a city and no instructions",
+              "body": "This is the sandbox chapter, and the only one where the campaign stops pushing. Byakko's ladder runs from a fourteen-year-old on a crash barrier to the roof of the Cage; each Underground faction gets one first-contact scene; everything else is free time.\n\nIt ends with a choice on a roof at one in the morning, and the choice is the encounter rather than the fight. All of the detail — the gang, its rules, its rooms, its week, the four societies — is in \"After Hours: The City.\""
+            }
+          ]
+        },
+        {
+          "id": "ch-ua8k5i",
+          "number": 7,
+          "title": "The Teaching Copy",
+          "levels": "Levels 10-11",
+          "estimate": "4–5 sessions, plus free time",
+          "intro": "April. The class are second-years, there are forty new first-years in the building, and the Sports Festival archive is now the syllabus. Somebody in the new cohort has watched a PC's footage four hundred times and built herself out of it, frame by frame, down to the footwork. That is flattering for about a week.\n\nThen a company called Clean Read turns out to have been selling quirk teardowns off the back of the same archive for two years — legal, cheap, searchable, with the class's faces on the thumbnails — and a first-year is taken apart in a car park in Nerima by a man who paid four thousand yen to know exactly how.",
+          "sections": [
+            {
+              "id": "sec-p0hvmx",
+              "heading": "What turns: nobody has broken the law",
+              "body": "Everything Sylar did by appetite, done instead by homework, on an invoice. There is no villain to beat here and that is the chapter: the thing that hunted them in the first season is now a subscription product with a customer service line, and it is operating entirely within the rules."
+            }
+          ]
+        },
+        {
+          "id": "ch-a5t4l6",
+          "number": 8,
+          "title": "Right of Reply",
+          "levels": "Levels 11-12",
+          "estimate": "4–5 sessions",
+          "intro": "The class ask, formally and in writing, for the record to be changed — and get a hearing in a committee room in Kasumigaseki, in front of three people who signed the 2019 licence and one who did not.\n\nMeanwhile a man in a karaoke booth in Shinjuku has been selling a way to beat a U.A. student to anybody with a grudge and four thousand yen, and his customers arrive over a fortnight in ascending order of how much they paid. And at a level crossing in Yanaka, two people in black who have been filing paperwork on this city since before the registry existed finally have a reason to speak to Class 2-A.",
+          "sections": [
+            {
+              "id": "sec-hjrazs",
+              "heading": "What turns: they lose the big ask and win a small one",
+              "body": "The class do not get the record changed. They lose that on the merits, in front of people who explain why, and the campaign does not rescue them from it.\n\nWhat they win is one narrow thing nobody had asked for: the right to speak first about their own footage. The chapter ends with them choosing, on purpose and in front of cameras, to put something into the archive themselves — which is the only answer the campaign ever offers to the thing it opened with."
+            }
+          ]
+        }
+      ],
+      "appendix": [
+        {
+          "id": "apx-oc86it",
+          "heading": "Where the detail is",
+          "body": "Everything compressed out of this summary is in the two real modules, and they are both in this library.\n\n• THE SHORTLIST: AFTER HOURS — the spine in full. Chapters 1 to 8 with read-aloud text, stat blocks, rulings, developments, side quests and the staff appendices. Run from this one.\n• AFTER HOURS: THE CITY — the other half. Byakko from the Stripe Law to the White Tiger, with their four rooms written up and a nine-step ladder through them; the Scarlet Legion, the Astral Court, Kuroshiki and the Ledger with their discovery ladders; free time, odd jobs, hangouts, the wards, and the shop.\n\nAND WHEN YOU ARE ACTUALLY RUNNING IT — the encounter manager has every stat block in both modules as a preset, with twenty named line-ups and the maps they were written for; the Characters tab has the full cast; and the session log is where what the table did goes."
+        }
+      ],
+      "links": [
+        {
+          "id": "lnk-ryo20c",
+          "label": "The Shortlist: After Hours — the full spine",
+          "href": "campaigns.html#/campaign/the-shortlist-after-hours"
+        },
+        {
+          "id": "lnk-m9arvn",
+          "label": "After Hours: The City — Byakko, the Underground, free time",
+          "href": "campaigns.html#/campaign/after-hours-the-city"
+        },
+        {
+          "id": "lnk-h3qug4",
+          "label": "Full character sheets — students, teachers, villains",
+          "href": "characters.html"
+        },
+        {
+          "id": "lnk-l3hx18",
+          "label": "Encounter manager — every preset and line-up",
+          "href": "CLASS-1A/encounter.html"
+        }
+      ]
+    },
+    {
       "id": "the-shortlist-after-hours",
       "title": "The Shortlist: After Hours",
       "tagline": "Win the Sports Festival and the whole country learns your name. So does he. So do the backstreets.",

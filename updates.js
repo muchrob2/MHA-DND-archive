@@ -116,6 +116,12 @@ async function init() {
   }
   render();
   showLiveVersion();
+  // Reading the page is what marks them read — the same key the dashboard's
+  // dot is driven by, so opening this clears it.
+  try {
+    const newest = Number((updatesDoc.updates[0] || {}).build) || 0;
+    if (newest) localStorage.setItem('mha-updates-seen', String(newest));
+  } catch { /* a browser with storage blocked just keeps showing the dot */ }
 }
 
 init();

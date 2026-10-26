@@ -184,3 +184,27 @@
   text-align: center;
   color: var(--text-muted);
 }
+
+/* ── Condition badges ──
+   Only the conditions carry these: the same CONDITION_ATTACK_EFFECTS table
+   the Encounter Manager rolls against, printed as chips because "does this
+   give advantage, and to whom" is the question actually asked mid-turn. */
+.rules-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 7px;
+}
+.rules-badge {
+  padding: 1px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+.rb-adv    { color: var(--green-text); border-color: var(--green); }
+.rb-dis    { color: var(--red-text);   border-color: var(--red); }
+.rb-cannot { color: var(--text);       border-color: var(--border-strong); background: var(--surface2); }
+.rb-ask    { color: var(--amber-text); border-color: var(--amber); }

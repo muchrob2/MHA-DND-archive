@@ -16,6 +16,27 @@
   ],
   "updates": [
     {
+      "version": "1.0.253",
+      "build": 253,
+      "date": "2026-10-26",
+      "commit": "f9fcfab",
+      "title": "Conditions that do something",
+      "tags": [
+        "encounter",
+        "toolkit",
+        "fix"
+      ],
+      "items": [
+        "The Encounter Manager now works out advantage and disadvantage from the conditions already on the row. Mark a target Restrained and the attack rolls with advantage, with the reason shown under the result.",
+        "One advantage and one disadvantage cancel, and the log says so instead of looking like a plain roll.",
+        "An attacker who is stunned, paralyzed or unconscious gets \"no attack\" with the reason, rather than a roll it should never have made.",
+        "Dropping to 0 HP now applies Unconscious, and healing takes it back off — unless you applied it yourself, in which case it stays.",
+        "Fixed: initiative was capped at 20, so a high-DEX character rolling well was squashed into a tie. It is d20 + DEX now, uncapped.",
+        "Fixed: the Unconscious entry in the rules reference never said attacks against it have advantage — only that melee hits crit.",
+        "The DM's quick roller gained advantage and disadvantage, and every die in the Encounter Manager now rolls through the shared engine."
+      ]
+    },
+    {
       "version": "1.0.252",
       "build": 252,
       "date": "2026-10-26",

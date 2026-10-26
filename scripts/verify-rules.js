@@ -46,7 +46,8 @@ function check(label, cond, detail) {
 const dataSrc = read('rules-data.js');
 const env = new Function(dataSrc + `
   return { RULES_REFERENCE, rulesSection, rulesConditionMap, rulesCoverRows,
-           rulesEntryCount, rulesEntryMatches };`)();
+           rulesEntryCount, rulesEntryMatches,
+           CONDITION_ATTACK_EFFECTS, rulesAttackMode };`)();
 const SECTIONS = env.RULES_REFERENCE.sections;
 const ENTRIES = SECTIONS.flatMap(s => s.entries.map(e => ({ e, s })));
 
@@ -105,6 +106,85 @@ const ENTRIES = SECTIONS.flatMap(s => s.entries.map(e => ({ e, s })));
   check('the house section exists and is about the toolkit, not the rulebook',
     table && table.entries.filter(e =>
       /board|pad|shop|session log|toolkit|dm/i.test(e.name + ' ' + e.text)).length >= 5);
+}
+
+/* ── 2b. the conditions, as mechanics ── */
+{
+  const EFFECTS = env.CONDITION_ATTACK_EFFECTS;
+  const conditions = env.rulesSection('conditions').entries;
+  const names = conditions.map(e => e.name);
+
+  check('every condition has a line in the machine-readable table',
+    names.filter(n => !EFFECTS[n]).length === 0,
+    names.filter(n => !EFFECTS[n]).join(', '));
+  check('and the table describes no condition that does not exist',
+    Object.keys(EFFECTS).filter(n => !names.includes(n)).length === 0,
+    Object.keys(EFFECTS).filter(n => !names.includes(n)).join(', '));
+
+  const VALUES = ['adv', 'dis', 'none', 'cannot', 'ask'];
+  const badValue = Object.entries(EFFECTS).filter(([, e]) =>
+    !VALUES.includes(e.attacking) || !VALUES.includes(e.attacked) || e.attacked === 'cannot');
+  check('every entry uses a value the resolver understands',
+    badValue.length === 0, badValue.map(([n]) => n).join(', '));
+  check('and every "ask" says what the question is',
+    Object.entries(EFFECTS).filter(([, e]) =>
+      (e.attacking === 'ask' || e.attacked === 'ask') && !e.note).length === 0);
+
+  // The cross-check that is the whole point of having both forms: the table a
+  // tracker acts on and the prose a player reads describe the same mechanic,
+  // so one cannot be corrected without the other.
+  const byName = {};
+  for (const e of conditions) byName[e.name] = e.text.toLowerCase();
+  const disagree = [];
+  for (const [name, e] of Object.entries(EFFECTS)) {
+    const text = byName[name];
+    if (e.attacked === 'adv' && !/attacks against (you|it) have advantage/.test(text)) {
+      disagree.push(`${name}: table says advantage against it, prose does not`);
+    }
+    if (e.attacked === 'dis' && !/attacks against (you|it) have disadvantage/.test(text)) {
+      disagree.push(`${name}: table says disadvantage against it, prose does not`);
+    }
+    // "yours have disadvantage" is how three of the fourteen are worded —
+    // the first version of this pattern missed all three.
+    if (e.attacking === 'dis' && !/(your|its|yours) have disadvantage|attacks have disadvantage|disadvantage on attack/.test(text)) {
+      disagree.push(`${name}: table says its attacks suffer, prose does not`);
+    }
+    if (e.attacking === 'adv' && !/yours have advantage|advantage on attack/.test(text)) {
+      disagree.push(`${name}: table says its attacks benefit, prose does not`);
+    }
+    if (e.attacking === 'cannot' && !/incapacitated|no actions/.test(text)) {
+      disagree.push(`${name}: table says it cannot attack, prose does not say why`);
+    }
+  }
+  check('the machine-readable table and the prose agree about every condition',
+    disagree.length === 0, disagree.join(' | '));
+
+  // And the resolver.
+  const M = env.rulesAttackMode;
+  check('a clean attack has neither advantage nor disadvantage',
+    M([], []).mode === 'none' && M([], []).reasons.length === 0);
+  check('a condition on the target can give advantage',
+    M([], ['Restrained']).mode === 'adv');
+  check('a condition on the attacker can give disadvantage',
+    M(['Poisoned'], []).mode === 'dis');
+  check('one of each cancels completely — the half people forget',
+    M(['Poisoned'], ['Restrained']).mode === 'none'
+    && M(['Poisoned'], ['Restrained']).cancelled === true);
+  check('two advantages are still just advantage',
+    M(['Invisible'], ['Unconscious']).mode === 'adv');
+  check('an attacker who cannot act beats everything else',
+    M(['Stunned'], ['Restrained']).mode === 'cannot'
+    && /stunned/.test(M(['Stunned'], ['Restrained']).reasons[0]));
+  check('and the reasons are reported, so a roll is never unexplained',
+    M([], ['Restrained']).reasons.join() === 'target is restrained');
+  check('a condition whose answer depends on distance is asked, not guessed',
+    M([], ['Prone']).mode === 'none' && M([], ['Prone']).asks.length === 1
+    && /within 5 ft/.test(M([], ['Prone']).asks[0]),
+    JSON.stringify(M([], ['Prone'])));
+  check('an unknown condition is ignored rather than throwing',
+    M(['Soggy'], ['Nonsense']).mode === 'none');
+  check('and so is a missing condition list',
+    M(null, undefined).mode === 'none');
 }
 
 /* ── 3. the three readers ── */
@@ -171,6 +251,61 @@ const ENTRIES = SECTIONS.flatMap(s => s.entries.map(e => ({ e, s })));
   check('the number of rules the dashboard card advertises is the number there are',
     advertised && Number(advertised[1]) === env.rulesEntryCount(),
     advertised ? `card says ${advertised[1]}, data has ${env.rulesEntryCount()}` : 'no count on the card');
+}
+
+/* ── 3b. the page prints the mechanics beside the prose ── */
+{
+  const els = {};
+  const mk = (id) => ({ id, innerHTML: '', textContent: '', value: '', style: {},
+    focus() {}, select() {}, blur() {}, scrollIntoView() {} });
+  for (const id of ['rules-rail', 'rules-body', 'rules-empty', 'rules-count',
+    'rules-clear', 'rules-search', 'rules-source']) els[id] = mk(id);
+  const app = new Function('sandbox', `
+    const { document, location, console } = sandbox;
+    ${dataSrc}
+    ${read('rules.js')}
+    return { pickSection };
+  `)({
+    document: { getElementById: (i) => els[i] || null, addEventListener() {},
+      activeElement: null, querySelectorAll: () => [] },
+    location: { hash: '' },
+    console,
+  });
+
+  app.pickSection('conditions');
+  // Split on the entry boundary rather than a fixed window: reading 900
+  // characters after a name ran into the NEXT condition, so a condition with
+  // no badges appeared to have its neighbour's.
+  const entries = els['rules-body'].innerHTML.split('<div class="rules-entry">').slice(1);
+  check('the conditions section renders one entry per condition',
+    entries.length === SECTIONS.find(s => s.id === 'conditions').entries.length,
+    entries.length + ' entries');
+
+  const LABEL = { adv: 'advantage', dis: 'disadvantage', cannot: 'cannot attack', ask: 'depends' };
+  const mismatched = [];
+  for (const block of entries) {
+    const name = (block.match(/rules-entry-name">([^<]+)/) || [])[1];
+    const chips = [...block.matchAll(/rb-\w+"[^>]*>([^<]+)</g)].map(m => m[1].trim());
+    const e = env.CONDITION_ATTACK_EFFECTS[name];
+    const want = [];
+    if (LABEL[e.attacking]) want.push('its attacks: ' + LABEL[e.attacking]);
+    if (LABEL[e.attacked]) want.push('against it: ' + LABEL[e.attacked]);
+    if (chips.join('|') !== want.join('|')) {
+      mismatched.push(`${name}: shows [${chips}], table says [${want}]`);
+    }
+  }
+  check('and every condition\'s badges say exactly what the table says',
+    mismatched.length === 0, mismatched.join(' | '));
+  check('a condition that changes no attack roll gets no badge at all',
+    (() => {
+      const deaf = entries.find(b => /rules-entry-name">Deafened/.test(b));
+      return deaf && !/rules-badge/.test(deaf);
+    })(), 'silence is the default case, not an empty chip');
+
+  app.pickSection('conditions'); // toggles the section back off
+  app.pickSection('the-d20');
+  check('no other section carries them',
+    !/rules-badge/.test(els['rules-body'].innerHTML));
 }
 
 /* ── 4. the search ── */

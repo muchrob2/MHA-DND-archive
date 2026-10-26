@@ -30,6 +30,7 @@
 <!-- The conditions/cover reference, shared with rules.html and the
      Heropad. A script tag, not a fetch: the condition chips carry the rule
      as their tooltip and are rendered the moment the page paints. -->
+<script src="../dice.js"></script>
 <script src="../rules-data.js"></script>
 <script src="board-prefabs.js"></script>
 <script src="board-shared.js"></script>
@@ -130,6 +131,10 @@
                 <button onclick="tmAdjQty(1)"  style="width:20px;height:20px;border:none;background:none;color:var(--text-muted);font-size:14px;cursor:pointer;line-height:1;padding:0;">+</button>
               </div>
               <input class="tm-mod-input" id="tm-qr-mod" type="number" value="0" placeholder="mod" title="Modifier">
+              <!-- Only mean anything on a single d20; tmQuickRoll ignores them
+                   otherwise, and tmSelectDie/tmAdjQty clear the selection. -->
+              <button class="tm-die tm-adv" data-mode="adv" onclick="tmSetQuickAdv('adv')" title="Advantage — one d20 only">Adv</button>
+              <button class="tm-die tm-adv" data-mode="dis" onclick="tmSetQuickAdv('dis')" title="Disadvantage — one d20 only">Dis</button>
               <button class="tm-go-btn" id="tm-qr-btn" onclick="tmQuickRoll()" disabled>Roll</button>
               <span id="tm-quick-result">—</span>
             </div>

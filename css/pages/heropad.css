@@ -1686,6 +1686,69 @@
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
 }
+/* Advantage, the expression box, and the crit/fumble states — added when the
+   app moved onto the shared dice engine, which is what gave it a notion of a
+   critical in the first place. */
+.dc-adv { display: flex; gap: 6px; margin-top: 8px; }
+.dc-adv-btn {
+  flex: 1;
+  padding: 8px 6px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.dc-adv-btn.sel {
+  color: var(--ink);
+  background: var(--pad-accent);
+  border-color: var(--pad-accent);
+}
+.dc-label {
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.dc-result.is-crit   { border-color: var(--green); }
+.dc-result.is-fumble { border-color: var(--red); }
+.dc-result.is-crit .dc-total   { color: var(--green-text); }
+.dc-result.is-fumble .dc-total { color: var(--red-text); }
+.dc-badge {
+  display: inline-block;
+  margin-top: 7px;
+  padding: 2px 9px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  border-radius: 999px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+.dc-result.is-crit .dc-badge   { color: var(--green-text); border-color: var(--green); }
+.dc-result.is-fumble .dc-badge { color: var(--red-text); border-color: var(--red); }
+
+.dc-expr { display: flex; gap: 6px; margin-top: 12px; }
+.dc-expr .cz-input { flex: 1; min-width: 0; }
+.dc-expr-btn {
+  padding: 0 14px;
+  font-size: var(--fs-2xs);
+  font-weight: 800;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  white-space: nowrap;
+}
+.dc-expr-error {
+  margin: 7px 0 0;
+  font-size: var(--fs-2xs);
+  color: var(--red-text);
+}
+
 .dc-history-label {
   margin: 14px 0 6px;
   font-size: 9px;

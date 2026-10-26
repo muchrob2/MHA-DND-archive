@@ -237,6 +237,8 @@ const RULES_REFERENCE = {
       { name: 'Doors', text: 'A door on the board is open or shut, and a shut one blocks sight and movement like a wall. Opening one is your free object interaction.', tags: 'board door shut open blocks' },
       { name: 'The dark on your board', text: 'Squares your character cannot see are hidden on the player board — not greyed out but genuinely absent, tokens and all. If you cannot see it, you cannot click it.', tags: 'board fog dark hidden vision' },
       { name: 'Yen', text: 'Money is tracked per character and spent in the Shop and on the Heropad. The DM hands it out through the session log, so the number on your pad is the real one.', tags: 'money cash shop bank spend' },
+      { name: 'Dice notation', text: 'The roll boxes read 2d6+3, d20 (one is assumed), several terms like 2d6+1d4+3, "d20 adv" or "dis" for advantage, and 4d6kh3 to keep the highest three.', tags: 'roller expression notation adv kh type box' },
+      { name: 'What the roller shows you', text: 'Dice that were rolled and dropped — the low one under advantage, the fourth of 4d6kh3 — are struck through rather than hidden, so you can always see what the other die said.', tags: 'roller dropped struck advantage show' },
       { name: 'Asking instead of looking', text: 'If a rule is not in here and the answer would change what you do this turn, the DM rules on it now and looks it up afterwards. Momentum beats precision.', tags: 'ruling dm fiat house rule' },
     ],
   },

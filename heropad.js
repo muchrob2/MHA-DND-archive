@@ -236,6 +236,21 @@ const APPS = [
     onOpen: markRecapsRead,
   },
   {
+    id: 'updates',
+    name: 'Updates',
+    icon: '🆕',
+    accent: '#8B9BF5',
+    render: renderUpdatesApp,
+    // Counted against the build this pad last showed rather than a
+    // timestamp: a changelog is versioned, so "two you have not read" is a
+    // number that means something.
+    badge: () => {
+      const n = unreadUpdateCount();
+      return n || null;
+    },
+    onOpen: markUpdatesRead,
+  },
+  {
     id: 'quirks',
     name: 'Quirks',
     icon: '📖',
@@ -1290,6 +1305,76 @@ function startBankLiveSync() {
     if (openAppId === 'eats') $('pad-app-body').innerHTML = renderEatsApp();
   }, err => console.error('[heropad] inventory sync stopped:', err));
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   UPDATES — what has been added to the toolkit
+   The same notes as updates.html, on the phone, because the dashboard
+   header is a thing the DM looks at and the players never see. A static
+   fetch of updates.json: no Firestore, nothing to sign in for, and it
+   works on a pad that has never been online since the page loaded.
+
+   The badge counts entries newer than the version this pad last showed,
+   not entries newer than a timestamp — a changelog is versioned, and "two
+   updates you have not read" is the honest number.
+   ═══════════════════════════════════════════════════════════════════ */
+let padUpdates = null;
+
+// Per browser rather than per pad: the toolkit's updates are the same for
+// everybody holding a phone, unlike a session recap or a bank balance.
+const PAD_UPDATES_SEEN_KEY = 'mha-heropad-updatesseen';
+
+async function loadPadUpdates() {
+  try {
+    const res = await fetch('updates.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('bad status');
+    const doc = await res.json();
+    padUpdates = Array.isArray(doc.updates) ? doc.updates : [];
+  } catch {
+    padUpdates = [];
+  }
+}
+
+function padUpdatesSeenBuild() {
+  try { return Number(localStorage.getItem(PAD_UPDATES_SEEN_KEY)) || 0; } catch { return 0; }
+}
+
+function unreadUpdateCount() {
+  if (!padUpdates || !padUpdates.length) return 0;
+  const seen = padUpdatesSeenBuild();
+  // First time: nothing is unread. Opening a phone to "28 new" is noise, not
+  // news, and the notes are not urgent.
+  if (!seen) {
+    try { localStorage.setItem(PAD_UPDATES_SEEN_KEY, String(padUpdates[0].build || 0)); } catch {}
+    return 0;
+  }
+  return padUpdates.filter(u => Number(u.build) > seen).length;
+}
+
+function markUpdatesRead() {
+  if (padUpdates && padUpdates.length) {
+    try { localStorage.setItem(PAD_UPDATES_SEEN_KEY, String(padUpdates[0].build || 0)); } catch {}
+  }
+  if (locked) renderLock(); else renderHome();
+}
+
+function renderUpdatesApp() {
+  if (!padUpdates) return '<p class="bk-empty">Fetching the notes…</p>';
+  if (!padUpdates.length) {
+    return '<p class="bk-empty">The update notes could not be loaded.</p>';
+  }
+  const seen = padUpdatesSeenBuild();
+  const cards = padUpdates.map(u => `
+    <article class="up-card${Number(u.build) > seen ? ' is-new' : ''}">
+      <header class="up-head">
+        <span class="up-version">${escHtml(u.version)}</span>
+        <span class="up-title">${escHtml(u.title)}</span>
+      </header>
+      <ul class="up-items">${(u.items || []).map(i => `<li>${escHtml(i)}</li>`).join('')}</ul>
+      <div class="up-tags">${(u.tags || []).map(t => `<span class="up-tag">${escHtml(t)}</span>`).join('')}</div>
+    </article>`).join('');
+  return `<p class="fx-note">Everything added to the toolkit, newest first.</p>${cards}`;
+}
+
 
 /* ══ App: Recaps ════════════════════════════════════════════════════
    What happened last session, in the players' pockets.
@@ -2763,6 +2848,11 @@ document.addEventListener('auth-state-changed', e => {
     ROSTER = [];
     setSyncNote('The class roster could not be loaded.');
   }
+
+  // The update notes are a static file and want nothing from Firebase, so
+  // they are fetched alongside the roster rather than behind the auth gate —
+  // the app is then warm on a pad that never gets a connection.
+  loadPadUpdates().then(() => { if (!locked) renderHome(); });
 
   renderHome();
 

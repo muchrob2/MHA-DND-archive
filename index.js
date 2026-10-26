@@ -194,6 +194,41 @@
     }
   }
   refreshVersion();
+
+  /* ── Something new to read ─────────────────────────────────
+     The badge links to the notes; this says whether there is anything in
+     them you have not seen. The last version this browser looked at is
+     remembered, and the dot appears when the notes have moved past it —
+     which means it is the notes being written that lights it up, not a
+     deploy, because a deploy with nothing written up yet is not news.
+
+     First visit sets the mark and shows nothing: arriving at a dashboard
+     with "28 new" on it is noise. */
+  const UPDATES_SEEN_KEY = 'mha-updates-seen';
+
+  async function markUnreadUpdates() {
+    const badge = document.getElementById('version-badge');
+    if (!badge) return;
+    let entries;
+    try {
+      const doc = await (await fetch('updates.json', { cache: 'no-cache' })).json();
+      entries = doc.updates || [];
+    } catch { return; }
+    const newest = Number((entries[0] || {}).build) || 0;
+    if (!newest) return;
+    let seen = 0;
+    try { seen = Number(localStorage.getItem(UPDATES_SEEN_KEY)) || 0; } catch { return; }
+    if (!seen) {
+      try { localStorage.setItem(UPDATES_SEEN_KEY, String(newest)); } catch {}
+      return;
+    }
+    if (newest <= seen) return;
+    const n = entries.filter(u => Number(u.build) > seen).length;
+    badge.classList.add('has-unread');
+    badge.dataset.unread = String(n);
+    badge.title = `${n} update${n === 1 ? '' : 's'} you have not read · ` + badge.title;
+  }
+  markUnreadUpdates();
   /* ── Where we left off ─────────────────────────────────────
      The dashboard knew nothing about the campaign it is the front door to.
      This reads the most recent session out of the session log and puts it at

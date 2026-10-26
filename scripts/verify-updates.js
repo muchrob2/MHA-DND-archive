@@ -127,6 +127,77 @@ const updates = doc.updates || [];
   }
 }
 
+/* ── 4. the notes on the players' phone ──
+   The dashboard header is a thing the DM looks at; the players never see it.
+   The pad shows the same file through its own app, and the badge contract
+   that page documents — badge() returns a count or null, onOpen marks read. */
+{
+  const pad = read('heropad.js');
+  check('the heropad registers an Updates app', /id: 'updates'/.test(pad));
+  check('which renders the same notes file',
+    /fetch\('updates\.json'/.test(pad) && /function renderUpdatesApp/.test(pad));
+  // Inside the init block specifically: there are several `await fbAuthReady`
+  // in the file, so comparing against the first one anywhere says nothing.
+  const init = pad.slice(pad.lastIndexOf('(async () => {'));
+  check('and fetches it outside the auth gate, since it needs no account',
+    init.indexOf('loadPadUpdates()') !== -1
+      && init.indexOf('loadPadUpdates()') < init.indexOf('await fbAuthReady'),
+    'a static file should not wait on Firebase to load');
+  check('its badge is a count or nothing, never a permanent dot',
+    /badge: \(\) => \{\s*const n = unreadUpdateCount\(\);\s*return n \|\| null;/.test(pad));
+  check('opening it marks them read', /onOpen: markUpdatesRead/.test(pad));
+  check('a first visit shows nothing unread rather than twenty-eight',
+    /if \(!seen\) \{[\s\S]{0,220}return 0;/.test(pad),
+    'arriving at a phone with "28 new" on it is noise, not news');
+  check('the unread count is measured in builds, not timestamps',
+    /Number\(u\.build\) > seen/.test(pad));
+  // Each of the four fields it prints, named rather than counted — a count
+  // passes just as well when one field is escaped twice and another not at all.
+  const app = pad.slice(pad.indexOf('function renderUpdatesApp'), pad.indexOf('function renderUpdatesApp') + 1600);
+  for (const field of ['u.version', 'u.title', 'i', 't']) {
+    check(`the app escapes ${field === 'i' ? 'each line' : field === 't' ? 'each tag' : field}`,
+      app.includes(`escHtml(${field})`), app.slice(0, 80));
+  }
+  const padCss = read('css/pages/heropad.css');
+  for (const sel of ['.up-card', '.up-card.is-new', '.up-items', '.up-tag']) {
+    check(`${sel} is styled on the pad`, padCss.includes(sel));
+  }
+}
+
+/* ── 5. the unread dot, and marking them read ── */
+{
+  const idx = read('index.js');
+  const upd = read('updates.js');
+  check('the dashboard checks whether there is anything unread',
+    /mha-updates-seen/.test(idx) && /has-unread/.test(idx));
+  check('it reads the notes once rather than twice',
+    (idx.match(/fetch\('updates\.json'/g) || []).length === 1);
+  check('a first visit sets the mark and shows no dot',
+    /if \(!seen\) \{[\s\S]{0,160}return;/.test(idx));
+  check('the dot is driven by the notes moving, not by a deploy',
+    /newest <= seen/.test(idx),
+    'a deploy with nothing written up yet is not news');
+  check('reading the page is what clears it',
+    /mha-updates-seen/.test(upd) && /localStorage\.setItem\('mha-updates-seen'/.test(upd));
+  check('and storage being blocked keeps the dot rather than throwing',
+    /catch \{ \/\* a browser with storage blocked/.test(upd));
+  check('the dot is styled', /\.version-badge\.has-unread/.test(read('css/pages/index.css')));
+}
+
+/* ── 6. adding the next entry ──
+   The helper exists so the four git lookups an entry needs are not done by
+   hand; it refuses the two mistakes that would get past a careless author. */
+{
+  const add = read('scripts/add-update.js');
+  check('there is a script to add an entry', fs.existsSync(path.join(repoRoot, 'scripts/add-update.js')));
+  check('it reads the version, build, date and commit out of git',
+    /rev-list', '--count'/.test(add) && /rev-parse', '--short'/.test(add) && /--date=short/.test(add));
+  check('it refuses a tag the file does not declare', /unknown tag\(s\)/.test(add));
+  check('and refuses a second entry for a release that already has one',
+    /already has an entry/.test(add));
+  check('and writes nothing without --write', /DRY RUN — nothing written/.test(add));
+}
+
 /* ── 4. somebody can find it ── */
 {
   const index = read('index.html');

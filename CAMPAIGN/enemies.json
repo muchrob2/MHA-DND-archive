@@ -89,10 +89,10 @@
     },
     {
       "id": "byakko_corner_table",
-      "name": "Byakko at the corner table",
+      "name": "Byakko at Lucky Seven",
       "category": "Byakko",
-      "map": "hideout",
-      "note": "A Stripe holding court in a bar with one back door and a sewer under it. Madame Tsuru does not get up; Hinge decides which door works.",
+      "map": "noodle-bar",
+      "note": "Madame Tsuru's dice floor, up the stairs behind the noodle bar's kitchen. Her own trait is the room: every Byakko member present fights for her without being asked, including the ones who are losing. She is not a fight unless the class make her one, and thirty-one years say they will regret it.",
       "members": [
         {
           "id": "byakko_tsuru",
@@ -110,9 +110,34 @@
           "id": "byakko_claw",
           "count": 2
         }
-      ],
+      ]
+    },
+    {
+      "id": "byakko_chop_shop",
+      "name": "Byakko at the chop shop",
+      "category": "Byakko",
+      "map": "chop-shop",
       "arc": "byakko-ladder",
-      "step": 6
+      "step": 6,
+      "note": "Kōno Sae in a two-bay lock-up she can open every door of by touching it, with a Fang on the bench and whoever is working that night. She will not resist arrest and does not need to — Hinge takes handcuffs off the way it takes shutters up. The fight is optional and the conversation is the point.",
+      "members": [
+        {
+          "id": "byakko_kono_hinge",
+          "count": 1
+        },
+        {
+          "id": "byakko_fang",
+          "count": 1
+        },
+        {
+          "id": "byakko_claw",
+          "count": 2
+        },
+        {
+          "id": "byakko_stray",
+          "count": 2
+        }
+      ]
     },
     {
       "id": "byakko_cage_claws",

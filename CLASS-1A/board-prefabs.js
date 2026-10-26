@@ -1273,6 +1273,40 @@ const BOARD_MAPS = [
                       [1, 12], [1, 13], [2, 12], [2, 13],
                       [23, 12], [23, 13], [24, 12], [24, 13]]);
   }),
+  pfMap('chop-shop', 'The Chop Shop', 'A two-bay lock-up: vans, plates, no questions. The counter a man with a scar bled on, the pit, and a shutter that is always open.', 24, 16, m => {
+    m.outline(0, 0, 24, 16, 'wall');
+    m.outline(16, 0, 8, 7, 'wall');      // the office, sharing the back and side walls
+
+    // Two bays. The pit is between them — difficult going, and a place to be
+    // shoved into.
+    m.fill(7, 9, 2, 5, 'difficult');
+    m.propOnly('van', 2, 4);
+    m.propOnly('van', 11, 4);
+    m.propOnly('car', 11, 12);
+    m.repeat('railing', [[6, 8], [6, 14]]);
+
+    // The bench down the back wall, the parts, and the counter at the front
+    // that a man with a scar bled on in the spring.
+    m.repeat('counter', [[1, 1], [4, 1]]);
+    m.prop('counter', 12, 14);
+    m.repeat('lockers', [[14, 1], [14, 3]]);
+    m.repeat('crate', [[1, 7], [4, 7], [14, 8], [14, 11]]);
+    m.repeat('barrel', [[1, 13], [3, 13]]);
+    m.prop('generator', 14, 6);
+    m.prop('pipes', 9, 1);
+
+    // The office: her desk, the plates nobody asks about, the kettle.
+    m.prop('desk', 18, 2);
+    m.prop('counter', 20, 4);
+    m.prop('crate', 22, 2);
+
+    // The shutter is always open, which is the joke; the side door into the
+    // alley and the office door are the other two ways through.
+    m.repeat('door', [[10, 15], [11, 15], [12, 15]]);
+    m.prop('door', 0, 10);
+    m.repeat('door', [[16, 4], [16, 5]]);
+  }),
+
   pfMap('noodle-bar', 'The Noodle Bar & Lucky Seven', 'Neutral ground downstairs, the house upstairs. Two floors side by side, the stairwell between them, and the upper room marked +1.', 28, 14, m => {
     // Two floors on one grid, which is how a board does height: the rooms are
     // laid out beside each other, the stairwell between them is the actual

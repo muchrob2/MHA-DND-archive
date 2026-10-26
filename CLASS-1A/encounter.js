@@ -649,31 +649,14 @@ function encAddEnemy() {
    difficulty dials, how Byakko Heat works — lives in the handbook and in the
    campaign's own appendices, and paraphrasing it here would be a second copy
    to disagree with the first. */
-const CONDITION_RULES = {
-  Blinded: 'Can\'t see: attacks against you have advantage, yours have disadvantage, and you fail any check needing sight.',
-  Charmed: 'Can\'t attack the charmer or target them with harmful effects; the charmer has advantage on social checks against you.',
-  Deafened: 'Can\'t hear, and you fail any check needing hearing.',
-  Exhausted: 'Stacks in six levels, each worse than the last: disadvantage on checks, then half speed, then disadvantage on attacks and saves, then half HP, then speed 0, then dead.',
-  Frightened: 'Disadvantage on attacks and checks while you can see the source, and you can\'t willingly move closer to it.',
-  Grappled: 'Speed 0, no bonus to speed. Ends if the grappler is incapacitated or you are moved out of reach.',
-  Incapacitated: 'No actions and no reactions. Most of the heavier conditions include this one.',
-  Invisible: 'Can\'t be seen without special sense: attacks against you have disadvantage, yours have advantage. You can still be heard.',
-  Paralyzed: 'Incapacitated, can\'t move or speak, auto-fail STR and DEX saves. Attacks against you have advantage, and any hit from within 5 ft is a critical.',
-  Poisoned: 'Disadvantage on attack rolls and ability checks.',
-  Prone: 'Can only crawl until you stand (half your movement). Your attacks have disadvantage; attacks against you have advantage within 5 ft, disadvantage further out.',
-  Restrained: 'Speed 0. Attacks against you have advantage, yours have disadvantage, and you have disadvantage on DEX saves.',
-  Stunned: 'Incapacitated, can\'t move, can barely speak, auto-fail STR and DEX saves, and attacks against you have advantage.',
-  Unconscious: 'Incapacitated, prone, drops what it holds, unaware of everything, auto-fails STR and DEX saves, and any hit from within 5 ft is a critical.',
-};
-
-// Cover is the other thing asked at the table every fight, and the board's
-// own prefabs already state it per prop — a crate is half cover, a bus is
-// full — so this is the scale those notes are written against.
-const COVER_RULES = [
-  ['Half cover', '+2 AC and +2 DEX saves. A low wall, a crate, a railing, another creature.'],
-  ['Three-quarters cover', '+5 AC and +5 DEX saves. A portcullis, an arrow slit, a thick tree trunk.'],
-  ['Total cover', 'Can\'t be targeted directly at all — though an area effect may still reach it.'],
-];
+// The conditions and cover lines live in rules-data.js now, loaded as a
+// script tag above this one, and are shared with rules.html (the reference
+// page every player can open) and the Heropad's Rules app. They used to be
+// two literals right here, and a second copy of the same fourteen lines is
+// exactly the kind of thing that drifts: scripts/verify-rules.js now holds
+// this page, that page and the board's pip map to one list.
+const CONDITION_RULES = rulesConditionMap();
+const COVER_RULES = rulesCoverRows();
 
 function encConditionTooltip(name) {
   return CONDITION_RULES[name] ? `${name} — ${CONDITION_RULES[name]}` : name;
@@ -712,7 +695,9 @@ function encRenderRules() {
         <div class="rules-row-text">${escHtml(text)}</div>
       </div>`).join('')}
     </div>
-    <div class="rules-foot">Everything else — quirks, the handbook's own tables — is in the two rulebooks on the dashboard.</div>`;
+    <div class="rules-foot">Ten more sections — your turn, moving, areas, death saves — are on the
+      <a href="../rules.html" target="_blank" rel="noopener">full rules reference</a>, which the players can open too.
+      Everything past that is in the two rulebooks on the dashboard.</div>`;
 }
 
 function encFilterRules() {

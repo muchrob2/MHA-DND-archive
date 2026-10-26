@@ -1,0 +1,186 @@
+/* ── Rules reference ──
+   Built for looking one thing up mid-turn: a search box, a rail of sections,
+   and a name/text pair per rule with nothing else competing for the eye.
+   Shares #panel, .page-heading, #topnav and .es-icon with the other pages in
+   components.css. */
+
+#panel { max-width: 1040px; margin: 0 auto; padding: 24px 20px 60px; }
+.nav-count { font-size: var(--fs-2xs); font-weight: 700; color: var(--text-dim); }
+
+/* ── Search ── */
+#rules-controls {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 14px;
+  padding: 10px 0;
+  background: var(--bg);
+}
+#rules-search {
+  flex: 1;
+  min-width: 220px;
+  padding: 11px 15px;
+  font-size: var(--fs-sm);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+}
+#rules-search:focus { border-color: var(--accent); }
+#rules-clear {
+  padding: 9px 14px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+#rules-clear:hover { color: var(--text); border-color: var(--border-strong); }
+.rules-kbd-hint { font-size: var(--fs-2xs); color: var(--text-dim); }
+.rules-kbd-hint kbd {
+  padding: 1px 5px;
+  font-family: inherit;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+@media (max-width: 620px) { .rules-kbd-hint { display: none; } }
+
+/* ── The section rail ── */
+#rules-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+.rules-rail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.rules-rail-btn:hover { color: var(--text); border-color: var(--border-strong); }
+.rules-rail-btn.sel {
+  color: var(--accent-text);
+  background: var(--accent-light);
+  border-color: var(--accent);
+}
+/* While a search is live the rail reports hits instead of filtering. */
+.rules-rail-btn:disabled { cursor: default; }
+.rules-rail-btn.has-hits { color: var(--accent-text); border-color: var(--border-strong); }
+.rules-rail-btn.no-hits { opacity: .38; }
+.rr-icon { font-size: 13px; }
+.rr-count {
+  min-width: 17px;
+  padding: 0 4px;
+  font-size: 10px;
+  text-align: center;
+  color: var(--text-dim);
+  background: var(--surface2);
+  border-radius: 999px;
+}
+.rules-rail-btn.sel .rr-count,
+.rules-rail-btn.has-hits .rr-count { color: var(--accent-text); }
+
+/* ── A section ── */
+.rules-sec { margin-bottom: 34px; scroll-margin-top: 84px; }
+.rules-sec-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.rules-sec-icon { font-size: 22px; line-height: 1.2; }
+.rules-sec-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 400;
+  letter-spacing: .02em;
+  color: var(--text);
+}
+.rules-sec-blurb {
+  margin: 3px 0 0;
+  font-size: var(--fs-2xs);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+.rules-sec-link {
+  margin-left: auto;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text-dim);
+  text-decoration: none;
+  opacity: 0;
+}
+.rules-sec:hover .rules-sec-link { opacity: 1; }
+.rules-sec-link:hover { color: var(--accent); }
+
+/* ── A rule ── */
+.rules-entries {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 9px;
+}
+.rules-entry {
+  padding: 11px 13px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--border-strong);
+  border-radius: var(--radius);
+}
+.rules-entry:hover { border-left-color: var(--accent); }
+.rules-entry-name {
+  margin-bottom: 4px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: .01em;
+  color: var(--text);
+}
+.rules-entry-text {
+  font-size: var(--fs-2xs);
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+.rules-entry mark {
+  padding: 0 1px;
+  color: var(--ink);
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* ── Foot ── */
+.rules-foot {
+  margin-top: 30px;
+  padding-top: 16px;
+  font-size: var(--fs-2xs);
+  line-height: 1.6;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+}
+.rules-foot a { color: var(--accent-text); }
+
+#rules-empty {
+  padding: 46px 20px;
+  font-size: var(--fs-sm);
+  text-align: center;
+  color: var(--text-muted);
+}

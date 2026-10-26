@@ -259,6 +259,14 @@ const APPS = [
     onOpen: loadQuirks,
   },
   {
+    id: 'rules',
+    name: 'Rules',
+    icon: '📐',
+    accent: '#2F6BFF',
+    render: renderRulesApp,
+    onOpen: focusRulesSearch,
+  },
+  {
     id: 'masaranking',
     name: 'Masaranking',
     icon: '🧲',
@@ -1615,6 +1623,86 @@ function renderQuirksApp() {
            value="${escHtml(quirkQuery)}" oninput="setQuirkQuery(this.value)" aria-label="Search quirks">
     <div id="qk-list">${quirkListHtml()}</div>`;
 }
+
+/* ══ App: Rules ═════════════════════════════════════════════════════
+   The quick reference, in the player's pocket.
+
+   The same rules-data.js that feeds rules.html and the DM's Encounter
+   Manager, so there is one copy of "what does Prone do" in the repo and
+   three places to read it. Loaded as a script tag by heropad.html rather
+   than fetched: a rule you look up mid-turn should already be there.
+
+   Deliberately search-first. A phone screen is too small for ten sections
+   of browsing, and nobody opens this app to read — they open it with a
+   word in mind. Empty query shows the section list as buttons; typing
+   replaces it with the hits, wherever they are.
+   ═══════════════════════════════════════════════════════════════════ */
+let padRulesQuery = '';
+let padRulesSection = null;
+
+// Typing releases the picked section — same reasoning as rules.html: a search
+// has to look everywhere, and clearing the box should not drop you back into
+// one section looking like the app had broken.
+function setPadRulesQuery(value) {
+  padRulesQuery = value;
+  if (value.trim()) padRulesSection = null;
+  const list = $('rl-list');
+  if (list) list.innerHTML = padRulesListHtml();
+}
+
+function padRulesPick(id) {
+  padRulesSection = padRulesSection === id ? null : id;
+  padRulesQuery = '';
+  const input = $('rl-search');
+  if (input) input.value = '';
+  const list = $('rl-list');
+  if (list) { list.innerHTML = padRulesListHtml(); list.scrollTop = 0; }
+}
+
+function padRulesListHtml() {
+  const q = padRulesQuery.trim();
+  const sections = RULES_REFERENCE.sections
+    .map(s => ({ s, hits: s.entries.filter(e => rulesEntryMatches(e, s, q)) }))
+    .filter(({ s, hits }) => hits.length && (!padRulesSection || s.id === padRulesSection));
+
+  if (!q && !padRulesSection) {
+    return `<p class="cz-lead">${RULES_REFERENCE.sections.length} sections, ${rulesEntryCount()} rules. Search, or pick one.</p>
+      <div class="rl-secs">${RULES_REFERENCE.sections.map(s => `
+        <button class="rl-sec-btn" onclick="padRulesPick('${escHtml(s.id)}')">
+          <span class="rl-sec-icon">${escHtml(s.icon)}</span>
+          <span class="rl-sec-name">${escHtml(s.name)}</span>
+          <span class="rl-sec-n">${s.entries.length}</span>
+        </button>`).join('')}</div>`;
+  }
+
+  if (!sections.length) {
+    return `<p class="bk-empty">No rule in here matches that. The handbook PDFs are on the dashboard.</p>`;
+  }
+
+  const back = padRulesSection && !q
+    ? `<button class="rl-back" onclick="padRulesPick(null)">← All sections</button>` : '';
+  return back + sections.map(({ s, hits }) => `
+    <div class="rl-group">
+      <div class="rl-group-head">${escHtml(s.icon)} ${escHtml(s.name)}</div>
+      ${hits.map(e => `<div class="rl-row">
+        <div class="rl-row-name">${escHtml(e.name)}</div>
+        <div class="rl-row-text">${escHtml(e.text)}</div>
+      </div>`).join('')}
+    </div>`).join('');
+}
+
+function renderRulesApp() {
+  return `
+    <input type="search" id="rl-search" class="cz-input qk-search" placeholder="Search the rules — prone, death save, cover…"
+           value="${escHtml(padRulesQuery)}" oninput="setPadRulesQuery(this.value)" aria-label="Search the rules">
+    <div id="rl-list">${padRulesListHtml()}</div>`;
+}
+
+function focusRulesSearch() {
+  const el = $('rl-search');
+  if (el && el.focus) el.focus();
+}
+
 
 /* ══ App: Notes ═════════════════════════════════════════════════════
    A private notepad per character, stored in that character's pad

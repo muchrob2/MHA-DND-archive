@@ -475,9 +475,11 @@ main { max-width: 1120px; margin: 0 auto; padding: 30px 32px 72px; }
 .accent-gold .card-sm-title { color: var(--accent-text); }
 .accent-teal .card-sm-title { color: var(--teal-text); }
 .accent-red  .card-sm-title { color: var(--red-text); }
+.accent-blue .card-sm-title { color: var(--primary-text); }
 .accent-gold:hover { border-color: var(--accent); }
 .accent-teal:hover { border-color: var(--teal); }
 .accent-red:hover  { border-color: var(--red); }
+.accent-blue:hover { border-color: var(--primary); }
 
 /* ════════════════════════════════════════════════════════════
    RESPONSIVE

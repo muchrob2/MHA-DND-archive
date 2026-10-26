@@ -240,6 +240,19 @@
       "step": 9
     },
     {
+      "id": "legion_wharf",
+      "name": "Thralls on the wharf",
+      "category": "Underground",
+      "map": "harbor",
+      "note": "Six at a time, out of the dark, at Kurogane Wharf — which is what the stat block says to do with them. The horror is not the numbers: they are slow, and they do not stop. One figure in a good coat watching from the containers is the Legion's witness rung and is worth saving for later.",
+      "members": [
+        {
+          "id": "legion_thrall",
+          "count": 6
+        }
+      ]
+    },
+    {
       "id": "legion_patrol",
       "name": "Scarlet Legion patrol",
       "category": "Underground",

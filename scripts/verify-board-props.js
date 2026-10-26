@@ -953,7 +953,8 @@ const B = boot();
   // map's label is what the appendix tells the DM to load, so the two names
   // have to be the same string.
   const named = [['Swing Town', 'swing-town'], ['The Noodle Bar & Lucky Seven', 'noodle-bar'],
-                 ['The Chop Shop', 'chop-shop']];
+                 ['The Chop Shop', 'chop-shop'], ["Nakata's Gym", 'gym'],
+                 ['Dockside Container Yard', 'harbor']];
   for (const [label, key] of named) {
     const mp = B.BOARD_MAPS_BY_KEY[key];
     check(`the ${label} preset map exists and is labelled "${label}"`,

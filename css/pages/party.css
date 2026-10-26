@@ -1,0 +1,159 @@
+/* ── Party at a glance ──
+   A dense table of numbers, read at speed during a session. Everything here
+   serves scanning: tabular figures so columns line up, a sticky header so the
+   labels survive scrolling, and the sorted column tinted so the eye knows
+   which one it is reading.
+
+   Prints black on white, same approach as css/pages/sheet.css. */
+
+#party-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  max-width: 1240px;
+  margin: 18px auto 12px;
+  padding: 0 20px;
+}
+#party-bar button {
+  padding: 8px 13px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+#party-bar button:hover { color: var(--text); border-color: var(--border-strong); }
+#party-bar button.sel { color: var(--accent-text); border-color: var(--accent); }
+#party-bar .party-print { color: var(--ink); background: var(--accent); border-color: var(--accent); }
+.party-bar-hint { font-size: var(--fs-2xs); color: var(--text-dim); }
+.party-source { font-size: var(--fs-2xs); font-weight: 700; color: var(--text-dim); }
+.party-source.firestore { color: var(--green-text); }
+.party-source.local { color: var(--amber-text); }
+.nav-count { font-size: var(--fs-2xs); font-weight: 700; color: var(--text-dim); }
+
+/* The table scrolls inside its own box rather than the page going wide. */
+#party-wrap {
+  max-width: 1240px;
+  margin: 0 auto 10px;
+  padding: 0 20px;
+  overflow-x: auto;
+}
+#party-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-2xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.pt-th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 7px 6px;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-strong);
+  cursor: pointer;
+  user-select: none;
+}
+.pt-th:hover { color: var(--text); }
+.pt-th.pt-sorted { color: var(--accent-text); }
+.pt-arrow { margin-left: 3px; font-size: 8px; }
+.pt-left { text-align: left; }
+
+#party-table td {
+  padding: 6px;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+#party-table tbody tr:hover td { background: var(--surface); }
+td.pt-sorted { color: var(--text); background: var(--accent-light); }
+#party-table tbody tr:hover td.pt-sorted { background: var(--accent-light); }
+
+.pt-name { font-weight: 700; color: var(--text); }
+.pt-name a { color: var(--text); text-decoration: none; }
+.pt-name a:hover { color: var(--accent-text); text-decoration: underline; }
+.pt-pc {
+  margin-left: 6px;
+  padding: 0 5px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  color: var(--accent-text);
+  background: var(--accent-light);
+  border-radius: 999px;
+}
+.pt-mod { color: var(--text); }
+
+/* The spread row: low · average · high, per column. */
+.pt-spread {
+  padding: 7px 6px !important;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-dim) !important;
+  background: var(--surface) !important;
+  border-top: 1px solid var(--border-strong);
+  border-bottom: none !important;
+}
+
+.party-foot {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 14px 20px 60px;
+  font-size: var(--fs-2xs);
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.party-foot strong { color: var(--text-muted); font-weight: 700; }
+
+#party-empty {
+  padding: 46px 20px;
+  font-size: var(--fs-sm);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ══ Print ══════════════════════════════════════════════════════════
+   Landscape, because the table is wide. Colours stated outright rather than
+   left to the tokens: a token redefined for a future theme must not be able
+   to print white on white. */
+@media print {
+  @page { size: A4 landscape; margin: 10mm; }
+
+  #topnav,
+  #party-bar,
+  #auth-widget,
+  #auth-overlay { display: none !important; }
+
+  html, body { background: #fff !important; color: #000 !important; }
+
+  #party-wrap, .party-foot { max-width: none; padding: 0; overflow: visible; }
+  #party-table { font-size: 9px; }
+  .pt-th {
+    position: static;
+    color: #000 !important;
+    background: #fff !important;
+    border-bottom: 1.5px solid #000 !important;
+  }
+  #party-table td { color: #1a1a1a !important; border-color: #ccc !important; }
+  .pt-name, .pt-name a, .pt-mod, td.pt-sorted { color: #000 !important; background: #fff !important; }
+  .pt-pc { color: #000 !important; background: #eee !important; }
+  .pt-spread {
+    color: #555 !important;
+    background: #f4f4f4 !important;
+    border-top: 1px solid #000 !important;
+  }
+  .party-foot { color: #555 !important; font-size: 8px; padding-top: 8px; }
+  #party-table tr { break-inside: avoid; page-break-inside: avoid; }
+}

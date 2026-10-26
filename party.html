@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The party as one table of numbers — AC, HP, passive scores and every modifier, sortable, for the MHA D&D campaign.">
+<meta name="theme-color" content="#08090D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Party at a Glance — MHA D&D</title>
+<link rel="preload" href="css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/auth-widget.css">
+<link rel="stylesheet" href="css/pages/party.css">
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+</head>
+<body>
+
+<!-- Read-only: no save path of any kind. Linked from the DM block on the
+     dashboard, which is a UI convenience rather than access control, exactly
+     as it is for the session log and the loot tables. -->
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">Party</span>
+  <div class="nav-right">
+    <span class="party-source" id="party-source">Loading…</span>
+    <span class="nav-count" id="party-count"></span>
+  </div>
+</nav>
+
+<div id="party-bar">
+  <button type="button" id="party-pc-btn" onclick="togglePcs()" title="Show only the characters marked as players">Everyone</button>
+  <button type="button" class="party-print" onclick="printParty()">🖨 Print</button>
+  <span class="party-bar-hint">Tap a column to sort by it. Tap a name for that character's printable sheet.</span>
+</div>
+
+<div id="party-wrap">
+  <table id="party-table"></table>
+</div>
+<div id="party-empty" style="display:none;">
+  <div class="es-icon">👥</div>
+  Nobody matches that.
+</div>
+
+<p class="party-foot">
+  <strong>Passive</strong> is 10 + WIS with no proficiency added, because the character
+  data records no skill proficiencies — read it as the floor, not the number.
+  <strong>Prof</strong> is taken from the record where there is one and derived from the
+  level otherwise. <strong>HP</strong> is the character's recorded total, not whatever
+  they are on right now — the Encounter Manager has that.
+  A dash means the record has nothing in that field; those rows sort last either way.
+</p>
+
+<!-- Reading a character: the live-bundle-first loader and the number helpers,
+     shared with sheet.html. -->
+<script src="char-data.js"></script>
+<script src="party.js"></script>
+</body>
+</html>

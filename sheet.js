@@ -17,31 +17,17 @@
 // layout in the site's colours, so what you see is what comes out.
 //
 // ── Where the data comes from ───────────────────────────────────────
-// The same places the Class 1-A toolkit reads, in the same order, because a
-// sheet printed from stale data is worse than no sheet:
-//
-//   1. mha-dnd/relationships-bundle — the live character bundle. This is
-//      authoritative: several characters have been edited in the browser and
-//      exist in Firestore in a form the repo files do not match.
-//   2. The bundled CLASS-1A/*.json files, if Firestore is unreachable. The
-//      page says so on screen when it falls back, so nobody prints a sheet
-//      believing it is current when it isn't.
-//   3. The `inventories` collection for the purse and the carried items,
-//      which the Shop and the admin page write and the bundle does not hold.
+// charLoadAll in char-data.js — a script tag above this one, shared with the
+// party table. It reads the live character bundle first and the bundled JSON
+// files only as a fallback, and reports which it used, because a sheet
+// printed from stale data is worse than no sheet. The same file carries the
+// number helpers (charModifier, charProfBonus, charSigned), so the sheet and
+// the party table cannot disagree about a character's modifier.
 //
 // Read-only throughout. This page has no save path of any kind.
 
 const db = firebase.firestore();
-const FS_BUNDLE = db.collection('mha-dnd').doc('relationships-bundle');
-const FS_INVENTORIES = db.collection('inventories');
 
-const ABILITY_ORDER = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA', 'TECH'];
-const ABILITY_NAMES = {
-  STR: 'Strength', DEX: 'Dexterity', CON: 'Constitution', INT: 'Intelligence',
-  WIS: 'Wisdom', CHA: 'Charisma', TECH: 'Tech',
-};
-
-let ROSTER = [];
 let CHARS = [];
 let current = null;
 let dataSource = 'loading'; // 'firestore' | 'local' — printed on the sheet
@@ -52,80 +38,46 @@ function escHtml(s) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-// Scores and modifiers are strings in some records and numbers in others —
-// both forms are in the repo right now — so everything is read through this.
-function num(v) {
-  const raw = String(v == null ? '' : v).trim();
-  // The empty-string guard is not decoration: Number('') is 0, not NaN, so
-  // without it a missing field read as a real zero. Every character whose
-  // record had no `modifiers` block printed +0 across all seven abilities,
-  // and a level with no proficiency_bonus printed +0 instead of deriving one.
-  if (raw === '') return null;
-  const n = Number(raw);
-  return Number.isFinite(n) ? n : null;
-}
-
-function signed(n) {
-  if (n == null) return '—';
-  return (n >= 0 ? '+' : '−') + Math.abs(n);
-}
-
-// A modifier is taken from the record when it has one and derived when it
-// does not, rather than left blank: floor((score - 10) / 2) is the rule, and
-// a sheet with an empty modifier column is useless at the table.
-function modifierFor(c, key) {
-  const given = num((c.modifiers || {})[key]);
-  if (given != null) return given;
-  const score = num((c.ability_scores || {})[key]);
-  return score == null ? null : Math.floor((score - 10) / 2);
-}
+// charNum, charSigned, charModifier, charProfBonus and charLabel come from
+// char-data.js. They were written here first and moved there when the party
+// table needed the same four decisions — the empty-string guard in charNum
+// especially, which is the one that stops a missing field reading as zero.
 
 // A save bonus is the modifier plus proficiency where the character is
 // proficient. Nothing in the data records save proficiencies, so this prints
 // the plain modifier and the sheet leaves a box to tick — honest about what
 // the toolkit knows rather than inventing proficiencies it doesn't.
 function saveFor(c, key) {
-  return modifierFor(c, key);
-}
-
-function profBonus(c) {
-  const given = num(c.proficiency_bonus);
-  if (given != null) return given;
-  const level = num(c.level) || 1;
-  return 2 + Math.floor((level - 1) / 4);
-}
-
-function charLabel(c) {
-  return c.name || c._file || 'Unnamed';
+  return charModifier(c, key);
 }
 
 /* ── The sheet ── */
 
 function scoreGridHtml(c) {
-  return ABILITY_ORDER.map(key => {
-    const score = num((c.ability_scores || {})[key]);
-    const mod = modifierFor(c, key);
+  return CHAR_ABILITIES.map(key => {
+    const score = charNum((c.ability_scores || {})[key]);
+    const mod = charModifier(c, key);
     return `<div class="sh-score">
       <div class="sh-score-key">${escHtml(key)}</div>
       <div class="sh-score-num">${score == null ? '—' : score}</div>
-      <div class="sh-score-mod">${signed(mod)}</div>
-      <div class="sh-score-name">${escHtml(ABILITY_NAMES[key] || key)}</div>
+      <div class="sh-score-mod">${charSigned(mod)}</div>
+      <div class="sh-score-name">${escHtml(CHAR_ABILITY_NAMES[key] || key)}</div>
     </div>`;
   }).join('');
 }
 
 function savesHtml(c) {
-  return ABILITY_ORDER.map(key => `<div class="sh-save">
+  return CHAR_ABILITIES.map(key => `<div class="sh-save">
       <span class="sh-save-box" aria-hidden="true"></span>
       <span class="sh-save-key">${escHtml(key)}</span>
-      <span class="sh-save-val">${signed(saveFor(c, key))}</span>
+      <span class="sh-save-val">${charSigned(saveFor(c, key))}</span>
     </div>`).join('');
 }
 
 function statsHtml(c) {
   const stats = [
     ['HP', c.HP], ['AC', c.AC], ['Speed', c.speed],
-    ['Prof.', signed(profBonus(c))],
+    ['Prof.', charSigned(charProfBonus(c))],
     ['Quirk DC', c.quirk_save_DC], ['Quirk save', c.quirk_ability],
     ['Level', c.level],
   ];
@@ -156,9 +108,9 @@ function inventoryHtml(c) {
   const inv = c.inventory || {};
   const items = Array.isArray(inv.items) ? inv.items : [];
   const purse = inv.currency || {};
-  const yen = num(purse.yen);
+  const yen = charNum(purse.yen);
   const coins = ['pp', 'gp', 'ep', 'sp', 'cp']
-    .map(k => [k, num(purse[k])]).filter(([, v]) => v);
+    .map(k => [k, charNum(purse[k])]).filter(([, v]) => v);
 
   const rows = items.length
     ? items.map(it => `<tr>
@@ -212,7 +164,7 @@ function renderSheet() {
     <section class="sh-block">
       <h2 class="sh-h2">Ability scores</h2>
       <div class="sh-scores">${scoreGridHtml(c)}</div>
-      <h2 class="sh-h2">Saving throws <span class="sh-h2-note">tick where proficient and add ${escHtml(signed(profBonus(c)))}</span></h2>
+      <h2 class="sh-h2">Saving throws <span class="sh-h2-note">tick where proficient and add ${escHtml(charSigned(charProfBonus(c)))}</span></h2>
       <div class="sh-saves">${savesHtml(c)}</div>
     </section>
 
@@ -289,55 +241,14 @@ function renderPicker() {
 
 /* ── Load ── */
 
-// The live bundle first, the repo files second — the same order and the same
-// reasoning as the Class 1-A toolkit. A character edited in the browser
-// exists in Firestore in a form the repo file does not match, and printing
-// the repo copy of one of those would be printing a different character.
+// The whole of this used to live here — the live-bundle-first order, the
+// roster name fallback, the inventories merge. It is charLoadAll in
+// char-data.js now, shared with the party table, so the two pages cannot come
+// to different conclusions about who is in the class or what they are worth.
 async function loadChars() {
-  const roster = await fetch('CLASS-1A/roster.json').then(r => r.json()).catch(() => null);
-  ROSTER = (roster && roster.students || []).filter(s => s.file);
-
-  let bundle = null;
-  try {
-    await fbAuthReady;
-    const snap = await FS_BUNDLE.get();
-    const data = snap.exists ? snap.data() : null;
-    if (data && data.version === 1 && data.characters) bundle = data;
-  } catch {}
-
-  if (bundle) {
-    dataSource = 'firestore';
-    CHARS = ROSTER.map(s => {
-      const c = Object.assign({}, bundle.characters[s.file] || {});
-      c._file = s.file;
-      c.name = c.name || s.name;
-      c.quirk = c.quirk || s.quirk;
-      return c;
-    }).filter(c => c.name);
-  } else {
-    dataSource = 'local';
-    const loaded = await Promise.all(ROSTER.map(s =>
-      fetch('CLASS-1A/' + s.file).then(r => r.json())
-        .then(c => { c._file = s.file; return c; })
-        .catch(() => null)));
-    CHARS = loaded.filter(Boolean);
-  }
-
-  // The purse and the carried items live in their own collection, written by
-  // the Shop and the admin page — the bundle's copy of them goes stale the
-  // first time anyone buys anything.
-  try {
-    const snap = await FS_INVENTORIES.get();
-    const byFile = {};
-    snap.forEach(d => { byFile[d.id] = d.data(); });
-    for (const c of CHARS) {
-      const live = byFile[c._file];
-      if (!live) continue;
-      c.inventory = Object.assign({}, c.inventory, live);
-    }
-  } catch {}
-
-  CHARS.sort((a, b) => charLabel(a).localeCompare(charLabel(b)));
+  const { chars, source } = await charLoadAll(db, { authReady: fbAuthReady });
+  CHARS = chars;
+  dataSource = source;
 }
 
 async function init() {

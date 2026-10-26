@@ -16,6 +16,25 @@
   ],
   "updates": [
     {
+      "version": "1.0.254",
+      "build": 254,
+      "date": "2026-10-26",
+      "commit": "bfbb82d",
+      "title": "Party at a glance",
+      "tags": [
+        "toolkit",
+        "dashboard",
+        "fix"
+      ],
+      "items": [
+        "A new DM page showing every character as one sortable table — level, HP, AC, speed, proficiency, quirk DC, passive score and all seven modifiers.",
+        "Under it, the low, average and high of every column, which is the row you actually want when setting a DC.",
+        "Tap any column to sort by it, tap again to reverse, tap a name for that character's printable sheet. Prints landscape.",
+        "The passive column is 10 + WIS with no proficiency added, because the character data records none — the page says so rather than quietly printing a number that's too low.",
+        "The printable sheet and the party table now share one loader, so they can never disagree about who's in the class or what someone's modifier is."
+      ]
+    },
+    {
       "version": "1.0.253",
       "build": 253,
       "date": "2026-10-26",

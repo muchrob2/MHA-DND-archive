@@ -923,6 +923,8 @@ function pfMap(key, label, desc, w, h, build) {
     key, label, desc, w, h,
     build() {
       const cells = new Map();
+      const elevCells = new Map();
+      const notes = [];
       const props = [];
       const inBounds = (c, r) => c >= 0 && r >= 0 && c < w && r < h;
       const api = {
@@ -951,6 +953,23 @@ function pfMap(key, label, desc, w, h, build) {
             if (Math.hypot(c2 + 0.5 - cx, r2 + 0.5 - cy) <= rad) api.cell(c2, r2, type);
           }
         },
+        // A label pinned to a square — the same layer the DM's Label tool
+        // writes to, so a preset can hand over a board that already says
+        // which room is which. That is the difference between a two-floor map
+        // and two rooms drawn next to each other for no stated reason.
+        note(c, r, text) {
+          if (inBounds(c, r) && text) notes.push({ col: c, row: r, text: String(text).slice(0, 40) });
+        },
+        // Elevation, for a map with more than one floor on it. A building
+        // whose upstairs matters is laid out beside its downstairs on the
+        // same grid with the upper rooms marked, which is how this board
+        // expresses height: a number per square and the DM's judgement.
+        elev(c, r, level) {
+          if (inBounds(c, r) && level) elevCells.set(c + ',' + r, level);
+        },
+        elevRect(c, r, cw, ch, level) {
+          for (let r2 = r; r2 < r + ch; r2++) for (let c2 = c; c2 < c + cw; c2++) api.elev(c2, r2, level);
+        },
         // Places a prop and stamps whatever terrain the prefab implies, so a
         // building laid down by a map is impassable without the builder
         // having to say so twice.
@@ -972,6 +991,11 @@ function pfMap(key, label, desc, w, h, build) {
       return {
         w, h,
         terrain: [...cells].map(([id, type]) => ({ id, type })),
+        // Only present when a map actually has a second floor; boardApplyPresetMap
+        // reads a missing layer as empty, which is also what clears the last
+        // map's elevation off the board.
+        elev: [...elevCells].map(([id, level]) => ({ id, level })),
+        notes,
         props,
       };
     },
@@ -1249,6 +1273,45 @@ const BOARD_MAPS = [
                       [1, 12], [1, 13], [2, 12], [2, 13],
                       [23, 12], [23, 13], [24, 12], [24, 13]]);
   }),
+  pfMap('noodle-bar', 'The Noodle Bar & Lucky Seven', 'Neutral ground downstairs, the house upstairs. Two floors side by side, the stairwell between them, and the upper room marked +1.', 28, 14, m => {
+    // Two floors on one grid, which is how a board does height: the rooms are
+    // laid out beside each other, the stairwell between them is the actual
+    // connection, and the upper floor carries its elevation and a label so
+    // nobody has to be told which is which.
+    m.outline(0, 0, 13, 14, 'wall');     // the shop
+    m.outline(15, 0, 13, 14, 'wall');    // the room above it
+    m.fill(13, 0, 2, 14, 'wall');        // between them
+    m.clearRect(13, 1, 2, 2);            // except the stairwell
+    m.elevRect(16, 1, 11, 12, 1);        // upstairs is one floor up
+
+    // DOWNSTAIRS — a counter, six stools, and the kitchen behind it.
+    m.prop('counter', 2, 5);
+    m.prop('counter', 6, 5);
+    m.repeat('desk', [[2, 7], [4, 7], [6, 7], [8, 7], [3, 9], [7, 9]]);
+    m.repeat('crate', [[1, 1], [3, 1], [11, 8]]);
+    m.repeat('barrel', [[5, 1], [7, 1]]);
+    m.prop('vending', 11, 11);
+    m.prop('bench', 9, 11);
+    m.note(6, 12, 'NOODLE BAR — neutral');
+
+    // UPSTAIRS — the dice floor. The table in the middle, Madame Tsuru's
+    // corner, benches round the walls, and the window nobody uses.
+    m.prop('table', 20, 6);
+    m.prop('counter', 24, 3);
+    m.repeat('bench', [[17, 2], [17, 5], [17, 8], [17, 11], [25, 8], [25, 11]]);
+    m.repeat('desk', [[19, 3], [22, 3], [19, 10], [22, 10]]);
+    m.prop('crate', 25, 6);
+    m.prop('lockers', 23, 12);
+    m.note(21, 12, 'LUCKY SEVEN — the house');
+
+    // The stairs themselves, and the ways in: the street door, the stair
+    // mouth at each end, and the window at the back of the upper room.
+    m.repeat('stairs', [[13, 1], [13, 2]]);
+    m.repeat('door', [[6, 13], [7, 13]]);
+    m.repeat('door', [[12, 1], [12, 2], [15, 1], [15, 2]]);
+    m.prop('door', 27, 9);
+  }),
+
   pfMap('swing-town', 'Swing Town', 'Byakko’s front door: six batting cages, the stands, the back cage where Friday’s fights happen, and Imai’s office behind it.', 30, 22, m => {
     m.outline(0, 0, 30, 22, 'wall');
     // The back cage and the back office share the south and east walls with

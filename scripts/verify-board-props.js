@@ -305,6 +305,51 @@ const B = boot();
     idle.length === 0, idle.join('\n        '));
 }
 
+/* ── 2c. a map with more than one floor on it ──
+   The builder can mark elevation and pin labels, which is how a two-floor
+   building is drawn: both floors side by side, the stairwell between them as
+   the actual connection, and the upper rooms marked so nobody has to be told.
+   Those two layers are only useful if loading the map actually carries them,
+   and a preset that emits neither must still clear whatever the last map
+   left behind. */
+{
+  const twoFloor = B.BOARD_MAPS.filter(mp => (mp.build().elev || []).length);
+  check('at least one preset map has a second floor on it',
+    twoFloor.length >= 1, 'none carry elevation');
+
+  for (const mp of twoFloor) {
+    const built = mp.build();
+    const bad = built.elev.filter(e => {
+      const [c, r] = String(e.id).split(',').map(Number);
+      return !(c >= 0 && r >= 0 && c < mp.w && r < mp.h && Number.isInteger(e.level) && e.level !== 0);
+    });
+    check(`${mp.key}'s elevation is on the map and is a real number of floors`,
+      bad.length === 0, JSON.stringify(bad.slice(0, 3)));
+    const labels = built.notes || [];
+    check(`${mp.key} labels its floors rather than leaving two rooms unexplained`,
+      labels.length >= 2, labels.length + ' labels');
+    const offMap = labels.filter(n => !(n.col >= 0 && n.row >= 0 && n.col < mp.w && n.row < mp.h));
+    check(`and every label is on the map`, offMap.length === 0, JSON.stringify(offMap));
+
+    const env = boot();
+    env.boardApplyPresetMap(mp);
+    check(`loading ${mp.key} carries its elevation and labels onto the board`,
+      env.encounter.boardElev.length === built.elev.length
+      && env.encounter.boardNotes.length === labels.length,
+      `${env.encounter.boardElev.length}/${built.elev.length} elev, ${env.encounter.boardNotes.length}/${labels.length} labels`);
+    // And the geometry survives the offset: the labelled square keeps the
+    // elevation it had relative to the terrain around it.
+    const raised = env.encounter.boardElev.every(e => e.level === 1);
+    check(`and the floors stay the height they were built at`, raised,
+      JSON.stringify(env.encounter.boardElev.slice(0, 3)));
+
+    env.boardApplyPresetMap(B.BOARD_MAPS_BY_KEY['warehouse']);
+    check(`and a single-floor map loaded after it clears both`,
+      env.encounter.boardElev.length === 0 && env.encounter.boardNotes.length === 0,
+      `${env.encounter.boardElev.length} elev, ${env.encounter.boardNotes.length} labels`);
+  }
+}
+
 /* ── 3. loading a map lands on the grid ── */
 {
   const offGrid = [];
@@ -907,7 +952,7 @@ const B = boot();
   // A location written up in the campaign and given its own preset map: the
   // map's label is what the appendix tells the DM to load, so the two names
   // have to be the same string.
-  const named = [['Swing Town', 'swing-town']];
+  const named = [['Swing Town', 'swing-town'], ['The Noodle Bar & Lucky Seven', 'noodle-bar']];
   for (const [label, key] of named) {
     const mp = B.BOARD_MAPS_BY_KEY[key];
     check(`the ${label} preset map exists and is labelled "${label}"`,

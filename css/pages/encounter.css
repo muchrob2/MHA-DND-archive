@@ -313,6 +313,7 @@ body { height: 100vh; overflow: hidden; }
 }
 .log-entry {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   padding: 4px 0;
@@ -333,6 +334,14 @@ body { height: 100vh; overflow: hidden; }
 .log-miss { background: var(--red-light);   color: var(--red-text); }
 .log-crit { background: var(--amber-light); color: var(--amber-text); }
 .log-none { padding: 6px 0; font-size: var(--fs-2xs); font-style: italic; color: var(--text-dim); }
+/* Why a roll had advantage, or what the tracker could not decide for itself.
+   Its own line so it never pushes the result off the row. */
+.log-why {
+  flex-basis: 100%;
+  font-size: 10px;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
 
 /* ════════════════════════════════════════════════════════════
    TURN MODAL — shell from components.css
@@ -539,6 +548,8 @@ body { height: 100vh; overflow: hidden; }
 }
 .tm-die:hover    { border-color: var(--accent); color: var(--accent-text); background: var(--accent-light); }
 .tm-die.selected { border-color: var(--accent); color: var(--accent-text); background: var(--accent-light); box-shadow: 0 0 8px var(--gold-glow); }
+/* The advantage pair share .tm-die's shape but sit apart from the faces. */
+.tm-adv { font-size: 10px; letter-spacing: .04em; }
 
 .tm-roll-row  { display: flex; align-items: center; gap: 6px; }
 .tm-mod-input {

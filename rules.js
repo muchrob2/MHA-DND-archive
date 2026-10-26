@@ -40,6 +40,32 @@ function rulesHighlight(text, query) {
   return safe.replace(new RegExp('(' + pattern + ')', 'gi'), '<mark>$1</mark>');
 }
 
+// The conditions section carries the machine-readable table as well as the
+// prose (CONDITION_ATTACK_EFFECTS in rules-data.js — the same table the DM's
+// Encounter Manager rolls against). Printed as two small badges, because
+// "does this give advantage, and to whom" is the question actually asked
+// mid-turn, and finding it inside a sentence is slower than reading a chip.
+const ATTACK_BADGE = {
+  adv: { label: 'advantage', cls: 'adv' },
+  dis: { label: 'disadvantage', cls: 'dis' },
+  cannot: { label: 'cannot attack', cls: 'cannot' },
+  ask: { label: 'depends', cls: 'ask' },
+};
+
+function attackBadgesHtml(entry) {
+  const e = typeof CONDITION_ATTACK_EFFECTS === 'object' && CONDITION_ATTACK_EFFECTS[entry.name];
+  if (!e) return '';
+  const chips = [];
+  const push = (side, prefix) => {
+    const b = ATTACK_BADGE[e[side]];
+    if (!b) return; // 'none' has no badge: silence is the default case
+    chips.push(`<span class="rules-badge rb-${b.cls}" title="${escHtml(e.note || '')}">${prefix} ${b.label}</span>`);
+  };
+  push('attacking', 'its attacks:');
+  push('attacked', 'against it:');
+  return chips.length ? `<div class="rules-badges">${chips.join('')}</div>` : '';
+}
+
 function visibleEntries(section) {
   return section.entries.filter(e => rulesEntryMatches(e, section, rulesQuery));
 }
@@ -110,6 +136,7 @@ function sectionHtml(section) {
       ${entries.map(e => `<div class="rules-entry">
         <div class="rules-entry-name">${rulesHighlight(e.name, rulesQuery)}</div>
         <div class="rules-entry-text">${rulesHighlight(e.text, rulesQuery)}</div>
+        ${attackBadgesHtml(e)}
       </div>`).join('')}
     </div>
   </section>`;

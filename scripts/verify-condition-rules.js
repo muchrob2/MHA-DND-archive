@@ -118,5 +118,88 @@ const env = new Function(
     /rulebooks on the dashboard/i.test(encSrc) && /rules\.html/.test(encSrc));
 }
 
+/* ── 5. the tracker acts on the conditions it displays ── */
+{
+  const page = read('CLASS-1A/encounter.html');
+  // The conditions used to be decoration: the page showed them on the row and
+  // then rolled a bare d20 anyway, so a DM who had carefully marked a target
+  // Restrained got a flat roll and had to remember the advantage themselves.
+  check('an attack roll is worked out from the conditions on both sides',
+    /function encRollAttack\(/.test(encSrc) && /rulesAttackMode\(/.test(encSrc));
+  check('and both attack paths go through it rather than rolling their own d20',
+    (encSrc.match(/encRollAttack\(/g) || []).length === 3,
+    (encSrc.match(/encRollAttack\(/g) || []).length + ' uses — want the definition plus both paths');
+  check('no dice are rolled by hand in the page any more',
+    !/Math\.floor\(Math\.random\(\) \* 20\)/.test(encSrc)
+    && !/Math\.random\(\) \* tmSelectedDie/.test(encSrc),
+    'the four hand-rolled dice are now diceRoll calls');
+  check('the page loads the shared dice engine before its own script',
+    page.indexOf('src="../dice.js"') !== -1
+    && page.indexOf('src="../dice.js"') < page.indexOf('src="encounter.js"'));
+
+  check('an attacker who cannot act is reported rather than rolled for',
+    (encSrc.match(/e\.cannot/g) || []).length >= 2
+    && (encSrc.match(/>no attack</g) || []).length === 2,
+    'the log and the turn modal both have to handle it');
+  check('the reason for an advantage is shown next to the roll',
+    /function encWhyHtml\(/.test(encSrc)
+    && (encSrc.match(/\$\{encWhyHtml\(e\)\}/g) || []).length === 2,
+    'the log and the turn modal both have to print it');
+  check('and a cancelled pair says so rather than looking like a plain roll',
+    /they cancel/.test(encSrc));
+
+  // Initiative is d20 + DEX and can exceed 20. It used to be clamped there,
+  // which squashed every high-DEX character into a tie on a good roll.
+  check('initiative is no longer capped at 20',
+    !/Math\.min\(20, Math\.floor\(Math\.random\(\) \* 20\)/.test(encSrc)
+    && /Math\.max\(1, roll\.total \+ \(c\.dexMod \|\| 0\)\)/.test(encSrc),
+    'a +4 DEX rolling 18 has to be able to go on 22');
+}
+
+/* ── 6. dropping to 0 applies the condition ── */
+{
+  // Nothing used to apply Unconscious at 0 HP. It was a note the DM had to
+  // remember; now that conditions drive the attack roll it is a mechanical
+  // fact, so it is applied — and only the one this rule applied is ever
+  // removed again, so a creature put to sleep at full health keeps it.
+  const sync = new Function(
+    encSrc.slice(encSrc.indexOf('function encSyncUnconscious'),
+      encSrc.indexOf('function encSetHpDirect')) + '; return encSyncUnconscious;')();
+
+  const run = (c) => { sync(c); return c; };
+  let c = run({ hp: 0, maxHp: 10, conditions: [] });
+  check('dropping to 0 applies Unconscious',
+    c.conditions.join() === 'Unconscious' && c.autoUnconscious === true, JSON.stringify(c));
+  sync(c);
+  check('and syncing again does not apply it twice',
+    c.conditions.filter(n => n === 'Unconscious').length === 1);
+  c.hp = 1; sync(c);
+  check('healing above 0 takes it back off',
+    !c.conditions.includes('Unconscious') && c.autoUnconscious === false);
+
+  const asleep = run({ hp: 10, maxHp: 10, conditions: ['Unconscious'] });
+  check('a creature unconscious at full health is left alone, not claimed',
+    asleep.conditions.includes('Unconscious') && asleep.autoUnconscious === false);
+  asleep.hp = 4; sync(asleep);
+  check('and keeps it when healed, because the DM applied it rather than the rule',
+    asleep.conditions.includes('Unconscious'),
+    'only the condition this rule applied may be removed by it');
+
+  const other = run({ hp: 0, maxHp: 10, conditions: ['Prone', 'Poisoned'] });
+  other.hp = 5; sync(other);
+  check('every other condition survives the round trip',
+    other.conditions.join() === 'Prone,Poisoned', other.conditions.join());
+
+  check('a record with no conditions array at all is handled',
+    run({ hp: 0, maxHp: 10 }).conditions.join() === 'Unconscious');
+
+  // Every place HP changes has to call it, or a combatant can be downed
+  // without the condition — which is now a wrong attack roll, not a note.
+  const hpWrites = (encSrc.match(/\b[ct]\.hp = /g) || []).length;
+  const syncs = (encSrc.match(/encSyncUnconscious\([ct]\);/g) || []).length;
+  check('and every HP write in the page is followed by a sync',
+    hpWrites > 0 && syncs === hpWrites, `${hpWrites} HP writes, ${syncs} syncs`);
+}
+
 console.log(failures ? `\n>>> condition rules FAILED (${failures})` : '\n>>> condition rules OK');
 process.exit(failures ? 1 : 0);

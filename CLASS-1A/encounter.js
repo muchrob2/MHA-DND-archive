@@ -234,9 +234,18 @@ function encSortByInit() {
   encSave(); renderEncounter();
 }
 
+// Initiative is d20 + DEX, through the shared engine.
+//
+// It used to be clamped to a maximum of 20, which is not the rule and had a
+// visible cost at the table: a +4 DEX character rolling an 18 should go on 22
+// and went on 20 instead, so the fastest people in the room were squashed
+// into a tie with anyone who rolled high. The floor of 1 is kept — an
+// initiative of 0 or less sorts oddly against the default of 0 a combatant
+// starts with.
 function encRollAllInit() {
   for (const c of encounter.combatants) {
-    c.initiative = Math.max(1, Math.min(20, Math.floor(Math.random() * 20) + 1 + c.dexMod));
+    const roll = diceRoll(diceParse('1d20'));
+    c.initiative = Math.max(1, roll.total + (c.dexMod || 0));
   }
   encSortByInit();
 }
@@ -277,6 +286,7 @@ function encAdjustHp(id, delta) {
   const c = encounter.combatants.find(x => x.id === id);
   if (!c) return;
   c.hp = Math.max(0, Math.min(c.maxHp, c.hp + delta));
+  encSyncUnconscious(c);
   encSave(); renderEncHpRow(id);
 }
 
@@ -291,11 +301,41 @@ function encApplyHeal(id) {
   if (!isNaN(val) && val > 0) { encAdjustHp(id, val); if (inp) inp.value = ''; }
 }
 
+/* Keeps the Unconscious condition in step with a combatant's hit points.
+ *
+ * Dropping to 0 makes a creature Unconscious — that is the rule — and now
+ * that conditions actually drive the attack roll it is a mechanical fact
+ * rather than a note: a downed combatant should be giving its attackers
+ * advantage and should not be attacking at all. Nothing applied it before, so
+ * every HP change ran through here instead of being remembered.
+ *
+ * `autoUnconscious` records that THIS rule applied it, so a creature put to
+ * sleep at full health keeps its condition when it takes a scratch. Only the
+ * one this function added is ever taken away again.
+ */
+function encSyncUnconscious(c) {
+  if (!c) return;
+  c.conditions = c.conditions || [];
+  const has = c.conditions.includes('Unconscious');
+  if (c.hp === 0 && !has) {
+    c.conditions.push('Unconscious');
+    c.autoUnconscious = true;
+  } else if (c.hp > 0 && has && c.autoUnconscious) {
+    c.conditions = c.conditions.filter(n => n !== 'Unconscious');
+    c.autoUnconscious = false;
+  } else if (c.hp > 0) {
+    // Healed, but the condition was somebody's deliberate choice — leave it,
+    // and stop claiming ownership of it either way.
+    c.autoUnconscious = false;
+  }
+}
+
 function encSetHpDirect(id, val) {
   const c = encounter.combatants.find(x => x.id === id);
   if (!c) return;
   const num = parseInt(val);
   if (!isNaN(num)) c.hp = Math.max(0, Math.min(c.maxHp, num));
+  encSyncUnconscious(c);
   c.editingHp = false;
   encSave(); renderEncHpRow(id);
 }
@@ -552,8 +592,42 @@ function encRandomAttack(attackerId) {
   }
 
   const target = targets[Math.floor(Math.random() * targets.length)];
-  const roll = Math.floor(Math.random() * 20) + 1;
-  addAttackLog({ attacker: attacker.name, target: target.name, roll, ac: target.ac });
+  addAttackLog(Object.assign(
+    { attacker: attacker.name, target: target.name },
+    encRollAttack(attacker, target)));
+}
+
+/* Rolls one attack, with advantage or disadvantage worked out from the
+ * conditions on both sides.
+ *
+ * Before this, both attack paths rolled a bare d20 and compared it to AC,
+ * ignoring the conditions the tracker was already displaying on the very same
+ * row — so a DM who had carefully marked a target Restrained got a flat roll
+ * and had to remember the advantage themselves. rulesAttackMode in
+ * rules-data.js is the same table the reference page prints, so what the
+ * tracker does and what the rules page says can't come apart.
+ *
+ * Attacks here are still a plain d20 against AC with no attack bonus: no
+ * combatant record carries one, and inventing a number would be worse than
+ * the DM adding theirs. The advantage, though, is derivable, so it is derived.
+ */
+function encRollAttack(attacker, target) {
+  const mode = rulesAttackMode(attacker.conditions || [], target.conditions || []);
+  if (mode.mode === 'cannot') {
+    return { roll: null, ac: target.ac, cannot: mode.reasons[0], asks: mode.asks };
+  }
+  const expr = mode.mode === 'adv' ? '1d20 adv' : mode.mode === 'dis' ? '1d20 dis' : '1d20';
+  const result = diceRoll(diceParse(expr));
+  const part = result.parts[0];
+  return {
+    roll: result.total,
+    ac: target.ac,
+    advMode: mode.mode === 'none' ? null : mode.mode,
+    dropped: part.dropped.length ? part.dropped[0] : null,
+    reasons: mode.reasons,
+    asks: mode.asks,
+    cancelled: !!mode.cancelled,
+  };
 }
 
 function addAttackLog(entry) {
@@ -562,6 +636,21 @@ function addAttackLog(entry) {
   if (encounter.attackLog.length > 8) encounter.attackLog.pop();
   encSave();
   renderAttackLog();
+}
+
+// Why the roll was what it was, and what the tracker could not decide for
+// itself. Printed small, after the result: the number is what the DM came for,
+// the reason is what stops them wondering whether the tracker got it wrong.
+function encWhyHtml(e) {
+  const bits = [];
+  if (e.reasons && e.reasons.length) {
+    bits.push(e.cancelled
+      ? `${e.reasons.join(' and ')} — they cancel`
+      : e.reasons.join(' and '));
+  }
+  if (e.asks && e.asks.length) bits.push(...e.asks);
+  if (!bits.length) return '';
+  return `<span class="log-why">${escHtml(bits.join(' · '))}</span>`;
 }
 
 function renderAttackLog() {
@@ -575,18 +664,33 @@ function renderAttackLog() {
     if (!e.target) {
       return `<div class="log-entry"><span class="log-name">${escHtml(e.attacker)}</span> — no valid targets</div>`;
     }
+    // An attacker who cannot act at all. Logged rather than silently skipped:
+    // the DM pressed the button, and "nothing happened" is not an answer.
+    if (e.cannot) {
+      return `<div class="log-entry">
+        <span class="log-name">${escHtml(e.attacker)}</span>
+        <span style="color:var(--text-dim)">→</span>
+        <span class="log-name">${escHtml(e.target)}</span>
+        <span class="log-roll log-miss">no attack</span>
+        <span style="color:var(--text-dim)">${escHtml(e.cannot)}</span>
+      </div>`;
+    }
     const hit = e.roll >= e.ac;
     const crit = e.roll === 20;
     const fumble = e.roll === 1;
     const rollClass = crit ? 'log-roll log-crit' : fumble ? 'log-roll log-miss' : hit ? 'log-roll log-hit' : 'log-roll log-miss';
     const label = crit ? '★ CRIT' : fumble ? '☠ FUMBLE' : hit ? 'HIT' : 'MISS';
     const outcome = crit ? 'Critical hit!' : fumble ? 'Fumble!' : hit ? `hits (AC ${e.ac})` : `misses (AC ${e.ac})`;
+    const die = e.advMode
+      ? `${e.advMode === 'adv' ? 'adv' : 'dis'} ${e.roll}${e.dropped == null ? '' : ' / ' + e.dropped}`
+      : `d20: ${e.roll}`;
     return `<div class="log-entry">
       <span class="log-name">${escHtml(e.attacker)}</span>
       <span style="color:var(--text-dim)">→</span>
       <span class="log-name">${escHtml(e.target)}</span>
-      <span class="${rollClass}">d20: ${e.roll} — ${label}</span>
+      <span class="${rollClass}">${escHtml(die)} — ${label}</span>
       <span style="color:var(--text-dim)">${outcome}</span>
+      ${encWhyHtml(e)}
     </div>`;
   }).join('');
 }
@@ -955,6 +1059,7 @@ function modalNextTurn() {
   modalAttackResult = null;
   tmSelectedDie = null;
   tmDiceQty = 1;
+  tmQuickAdv = null;
   document.querySelectorAll('.tm-die').forEach(b => b.classList.remove('selected'));
   document.getElementById('tm-qr-btn').disabled = true;
   document.getElementById('tm-quick-result').textContent = '—';
@@ -1094,8 +1199,9 @@ function modalRollAttack() {
     const target = selectedId
       ? targets.find(t => t.id === selectedId) || targets[Math.floor(Math.random() * targets.length)]
       : targets[Math.floor(Math.random() * targets.length)];
-    const roll = Math.floor(Math.random() * 20) + 1;
-    modalAttackResult = { attacker: c.name, target: target.name, targetId: target.id, roll, ac: target.ac };
+    modalAttackResult = Object.assign(
+      { attacker: c.name, target: target.name, targetId: target.id },
+      encRollAttack(c, target));
     addAttackLog(modalAttackResult);
   }
   renderModalAttackResult();
@@ -1109,16 +1215,31 @@ function renderModalAttackResult() {
     el.innerHTML = `<div class="tm-result-row" style="color:var(--text-dim);font-size:12px;">No valid targets</div>`;
     return;
   }
+  // Same "cannot act" case the log handles — the attacker is stunned, or
+  // paralyzed, or unconscious, and there is no roll to show.
+  if (e.cannot) {
+    el.innerHTML = `<div class="tm-result-row" style="margin-top:4px;">
+      <span class="tm-result-arrow">→</span>
+      <span class="tm-result-target">${escHtml(e.target)}</span>
+      <span class="log-roll log-miss">no attack</span>
+      <span style="font-size:11px;color:var(--text-dim);">${escHtml(e.cannot)}</span>
+    </div>`;
+    return;
+  }
   const hit = e.roll >= e.ac;
   const crit = e.roll === 20;
   const fumble = e.roll === 1;
   const rollClass = crit ? 'log-roll log-crit' : fumble ? 'log-roll log-miss' : hit ? 'log-roll log-hit' : 'log-roll log-miss';
   const label = crit ? '★ CRIT' : fumble ? '☠ FUMBLE' : hit ? 'HIT' : 'MISS';
+  const die = e.advMode
+    ? `${e.advMode === 'adv' ? 'adv' : 'dis'} ${e.roll}${e.dropped == null ? '' : ' / ' + e.dropped}`
+    : `d20: ${e.roll}`;
   el.innerHTML = `<div class="tm-result-row" style="margin-top:4px;">
     <span class="tm-result-arrow">→</span>
     <span class="tm-result-target">${escHtml(e.target)}</span>
-    <span class="${rollClass}">d20: ${e.roll} — ${label}</span>
+    <span class="${rollClass}">${escHtml(die)} — ${label}</span>
     <span style="font-size:11px;color:var(--text-dim);">${crit?'Critical hit!':fumble?'Fumble!':hit?`hits (AC ${e.ac})`:`misses (AC ${e.ac})`}</span>
+    ${encWhyHtml(e)}
   </div>
   <div class="tm-target-hp-row" style="margin-top:6px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
     <span style="font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:0.07em;text-transform:uppercase;">Apply to ${escHtml(e.target)}:</span>
@@ -1134,31 +1255,43 @@ let tmDiceQty = 1;
 
 function tmAdjQty(delta) {
   tmDiceQty = Math.max(1, Math.min(20, tmDiceQty + delta));
+  if (tmDiceQty !== 1 && tmQuickAdv) tmSetQuickAdv(tmQuickAdv); // clears it
   document.getElementById('tm-qr-qty').textContent = tmDiceQty;
 }
 
 function tmSelectDie(sides, btn) {
   tmSelectedDie = sides;
+  if (sides !== 20 && tmQuickAdv) tmSetQuickAdv(tmQuickAdv); // clears it
   document.querySelectorAll('.tm-die').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   document.getElementById('tm-qr-btn').disabled = false;
+}
+
+// Advantage on the quick roller, for the d20 rolls where it means something.
+// Cleared when the die or the count changes, same as the Heropad's app.
+let tmQuickAdv = null; // null | 'adv' | 'dis'
+function tmSetQuickAdv(mode) {
+  tmQuickAdv = tmQuickAdv === mode ? null : mode;
+  for (const b of document.querySelectorAll('.tm-adv')) {
+    b.classList.toggle('selected', b.dataset.mode === tmQuickAdv);
+  }
 }
 
 function tmQuickRoll() {
   if (!tmSelectedDie) return;
   const qty = tmDiceQty;
   const mod = parseInt(document.getElementById('tm-qr-mod').value) || 0;
-  const rolls = Array.from({ length: qty }, () => Math.floor(Math.random() * tmSelectedDie) + 1);
-  const sum = rolls.reduce((a, b) => a + b, 0);
-  const total = sum + mod;
-  const isCrit = tmSelectedDie === 20 && qty === 1 && rolls[0] === 20;
-  const isFumble = tmSelectedDie === 20 && qty === 1 && rolls[0] === 1;
-  const modStr = mod > 0 ? `+${mod}` : mod < 0 ? `${mod}` : '';
-  const breakdown = qty > 1 ? `[${rolls.join('+')}]${modStr}` : `${rolls[0]}${modStr}`;
+  // Through the shared engine, which is where crit detection and the
+  // advantage rule live — this used to be a fourth hand-written roller, and
+  // it had no notion of advantage at all.
+  const adv = tmQuickAdv && tmSelectedDie === 20 && qty === 1 ? ' ' + tmQuickAdv : '';
+  const parsed = diceParse(`${qty}d${tmSelectedDie}${mod ? (mod > 0 ? '+' : '') + mod : ''}${adv}`);
+  if (!parsed) return;
+  const result = diceRoll(parsed);
   const el = document.getElementById('tm-quick-result');
-  el.className = isCrit ? 'tm-quick-crit' : isFumble ? 'tm-quick-fumble' : '';
-  const label = isCrit ? ' ★ CRIT' : isFumble ? ' ☠ FUMBLE' : '';
-  el.textContent = `${total} (${breakdown})${label}`;
+  el.className = result.crit ? 'tm-quick-crit' : result.fumble ? 'tm-quick-fumble' : '';
+  const label = result.crit ? ' ★ CRIT' : result.fumble ? ' ☠ FUMBLE' : '';
+  el.textContent = `${result.total} (${result.breakdown})${label}`;
 }
 
 /* ── HP Editor (modal) ────────────────────────────────── */
@@ -1171,8 +1304,10 @@ function tmApplyHp(mode) {
   const before = c.hp;
   if (mode === 'dmg') {
     c.hp = Math.max(0, c.hp - val);
+    encSyncUnconscious(c);
   } else {
     c.hp = Math.min(c.maxHp, c.hp + val);
+    encSyncUnconscious(c);
   }
   const delta = c.hp - before;
   encSave();
@@ -1206,8 +1341,10 @@ function tmApplyHpToTarget(mode) {
   const before = t.hp;
   if (mode === 'dmg') {
     t.hp = Math.max(0, t.hp - val);
+    encSyncUnconscious(t);
   } else {
     t.hp = Math.min(t.maxHp, t.hp + val);
+    encSyncUnconscious(t);
   }
   const delta = t.hp - before;
   encSave();
@@ -1267,10 +1404,13 @@ function tmRollDeathSave() {
   if (!c || c.hp > 0) return;
   if (!c.deathSuccesses) c.deathSuccesses = 0;
   if (!c.deathFails) c.deathFails = 0;
-  const roll = Math.floor(Math.random() * 20) + 1;
+  // A plain d20: no modifiers, no proficiency. Through the engine so there is
+  // one place a die is rolled, not five.
+  const roll = diceRoll(diceParse('1d20')).total;
   const res = document.getElementById('tm-ds-result');
   if (roll === 20) {
     c.hp = 1; c.deathSuccesses = 0; c.deathFails = 0;
+    encSyncUnconscious(c);
     encSave(); renderEncHpRow(c.id); updateTurnModal();
     if (res) res.innerHTML = `<span style="color:var(--green-text)">★ Natural 20 — ${c.name} stabilises at 1 HP!</span>`;
     return;

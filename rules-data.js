@@ -203,7 +203,7 @@ const RULES_REFERENCE = {
       { name: 'Prone', text: 'Can only crawl until you stand (half your movement). Your attacks have disadvantage; attacks against you have advantage within 5 ft, disadvantage further out.' },
       { name: 'Restrained', text: 'Speed 0. Attacks against you have advantage, yours have disadvantage, and you have disadvantage on DEX saves.' },
       { name: 'Stunned', text: 'Incapacitated, can\'t move, can barely speak, auto-fail STR and DEX saves, and attacks against you have advantage.' },
-      { name: 'Unconscious', text: 'Incapacitated, prone, drops what it holds, unaware of everything, auto-fails STR and DEX saves, and any hit from within 5 ft is a critical.' },
+      { name: 'Unconscious', text: 'Incapacitated, prone, drops what it holds, unaware of everything, auto-fails STR and DEX saves. Attacks against you have advantage, and any hit from within 5 ft is a critical.' },
     ],
   },
 
@@ -245,6 +245,87 @@ const RULES_REFERENCE = {
 
   ],
 };
+
+/* ── Conditions, as mechanics rather than prose ─────────────────────
+   The condition text above is for reading. This is the same information in a
+   form code can act on, and the Encounter Manager uses it to work out whether
+   an attack roll has advantage or disadvantage before anyone has to remember.
+
+   Per condition:
+     attacking  what happens to a roll made BY a creature with it
+     attacked   what happens to a roll made AGAINST it
+   each one 'adv', 'dis', 'none', 'cannot' (attacking only), or 'ask' —
+   'ask' meaning the answer depends on something the tracker cannot see, so it
+   reports the question instead of inventing an answer.
+
+   Deliberately only the parts that do not depend on distance or position.
+   Prone turns an attack into advantage within 5 ft and disadvantage beyond,
+   and the initiative tracker does not know how far apart two combatants are —
+   so it is 'ask', and the DM is told the rule rather than handed a guess.
+
+   scripts/verify-rules.js checks every line here against the prose above —
+   a condition marked 'adv' against must SAY attacks against it have
+   advantage — so the reference page and the tracker cannot drift.
+   ─────────────────────────────────────────────────────────────────── */
+const CONDITION_ATTACK_EFFECTS = {
+  Blinded:       { attacking: 'dis',    attacked: 'adv'  },
+  Charmed:       { attacking: 'none',   attacked: 'none' },
+  Deafened:      { attacking: 'none',   attacked: 'none' },
+  // Exhaustion only touches attacks from level 3, and the tracker does not
+  // record a level — so it asks rather than assuming.
+  Exhausted:     { attacking: 'ask',    attacked: 'none', note: 'disadvantage on attacks from exhaustion level 3' },
+  Frightened:    { attacking: 'ask',    attacked: 'none', note: 'disadvantage while it can see the source of the fear' },
+  Grappled:      { attacking: 'none',   attacked: 'none' },
+  Incapacitated: { attacking: 'cannot', attacked: 'none' },
+  Invisible:     { attacking: 'adv',    attacked: 'dis'  },
+  Paralyzed:     { attacking: 'cannot', attacked: 'adv'  },
+  Poisoned:      { attacking: 'dis',    attacked: 'none' },
+  // 'ask' rather than 'none': the tracker does not know how far apart they
+  // are, and "advantage within 5 ft, disadvantage beyond" is a useful thing to
+  // be told. Recording it as 'none' silently dropped the most common condition
+  // at the table out of the explanation entirely.
+  Prone:         { attacking: 'dis',    attacked: 'ask',  note: 'advantage against it within 5 ft, disadvantage beyond' },
+  Restrained:    { attacking: 'dis',    attacked: 'adv'  },
+  Stunned:       { attacking: 'cannot', attacked: 'adv'  },
+  Unconscious:   { attacking: 'cannot', attacked: 'adv'  },
+};
+
+/* Works out what an attack roll should be, given the conditions on both
+ * sides. Returns
+ *   { mode: 'adv' | 'dis' | 'none' | 'cannot', reasons: [...], asks: [...] }
+ *
+ * One advantage and one disadvantage cancel completely, however many of each
+ * there are — that is the rule, and it is the half of it people forget.
+ * `asks` carries the conditions whose answer depends on something the tracker
+ * cannot know (which way a frightened creature is looking, what level of
+ * exhaustion it is on), so a caller can say so instead of deciding silently.
+ */
+function rulesAttackMode(attackerConditions, targetConditions) {
+  const reasons = [];
+  const asks = [];
+  let adv = 0;
+  let dis = 0;
+  let cannot = null;
+
+  const consider = (name, side, who) => {
+    const e = CONDITION_ATTACK_EFFECTS[name];
+    if (!e) return;
+    const v = e[side];
+    if (v === 'cannot') { cannot = cannot || `${who} is ${name.toLowerCase()}`; return; }
+    if (v === 'ask') { asks.push(`${who} is ${name.toLowerCase()} — ${e.note}`); return; }
+    if (v === 'adv') { adv++; reasons.push(`${who} is ${name.toLowerCase()}`); }
+    if (v === 'dis') { dis++; reasons.push(`${who} is ${name.toLowerCase()}`); }
+  };
+
+  for (const name of attackerConditions || []) consider(name, 'attacking', 'attacker');
+  for (const name of targetConditions || []) consider(name, 'attacked', 'target');
+
+  if (cannot) return { mode: 'cannot', reasons: [cannot], asks };
+  const mode = adv && dis ? 'none' : adv ? 'adv' : dis ? 'dis' : 'none';
+  // When they cancel, the reasons are still worth showing — "these two
+  // cancelled" is more use than a bare roll with no explanation.
+  return { mode, reasons, asks, cancelled: !!(adv && dis) };
+}
 
 /* ── Helpers ────────────────────────────────────────────────────────
    The other pages reach for the data through these rather than walking

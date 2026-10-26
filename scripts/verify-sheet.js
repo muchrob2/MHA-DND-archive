@@ -49,13 +49,19 @@ const mk = () => ({ innerHTML: '', textContent: '', className: '',
   classList: { add() {}, remove() {}, toggle() {} } });
 for (const id of ['sheet', 'sheet-picker', 'sheet-notes-btn', 'sheet-source']) els[id] = mk();
 
+// char-data.js first, exactly as the page loads it: the number helpers and
+// the loader live there now, shared with the party table.
+const dataJs = read('char-data.js');
+
 const env = new Function('sandbox', `
   const { document, localStorage, history, location } = sandbox;
   function escHtml(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  ${pageJs.slice(pageJs.indexOf('const ABILITY_ORDER'), pageJs.indexOf('/* ── Load ── */'))}
+  ${dataJs}
+  ${pageJs.slice(pageJs.indexOf('let CHARS = [];'), pageJs.indexOf('/* ── Load ── */'))}
   return { setChars(c, s){ CHARS = c; current = c[0]; dataSource = s; },
-           pick: pickChar, toggleNotes, renderSheet, renderPicker,
-           modifierFor, profBonus, signed, num, saveFor };
+           pick: pickChar, toggleNotes, renderSheet, renderPicker, saveFor,
+           modifierFor: charModifier, profBonus: charProfBonus,
+           signed: charSigned, num: charNum };
 `)({
   document: { getElementById: (i) => els[i] || null },
   localStorage: { setItem() {}, getItem: () => null },
@@ -136,8 +142,9 @@ const characters = (roster.students || []).filter(s => s.file).map(s => {
     JSON.stringify([env.num(''), env.num('   '), env.num(null)]));
   check('but a real zero still reads as zero',
     env.num(0) === 0 && env.num('0') === 0);
-  check('and the page keeps the guard that makes that true',
-    /if \(raw === ''\) return null;/.test(pageJs));
+  check('and the shared helper keeps the guard that makes that true',
+    /if \(raw === ''\) return null;/.test(dataJs),
+    'charNum in char-data.js — the sheet and the party table both read through it');
 }
 
 /* ── 4. escaping ── */
@@ -169,12 +176,17 @@ const characters = (roster.students || []).filter(s => s.file).map(s => {
 
 /* ── 5. the source of the data ── */
 {
-  check('the page reads the live character bundle',
-    /doc\('relationships-bundle'\)/.test(pageJs),
+  check('the shared loader reads the live character bundle',
+    /doc\('relationships-bundle'\)/.test(dataJs),
     'the same document the Class 1-A toolkit writes');
   check('and the inventories collection for the purse and the carried items',
-    /collection\('inventories'\)/.test(pageJs),
+    /collection\('inventories'\)/.test(dataJs),
     'the Shop writes there, not into the bundle');
+  check('and the page goes through it rather than keeping its own copy',
+    /charLoadAll\(db,/.test(pageJs) && !/collection\('inventories'\)/.test(pageJs));
+  check('the page loads the shared file before its own script',
+    pageHtml.indexOf('src="char-data.js"') !== -1
+    && pageHtml.indexOf('src="char-data.js"') < pageHtml.indexOf('src="sheet.js"'));
   // Driven, not read: comparing where two strings sit in the source was true
   // however the loader actually behaved, and stayed true with the bundle
   // forced to null. So loadChars is run against a stubbed Firestore and fetch
@@ -182,12 +194,12 @@ const characters = (roster.students || []).filter(s => s.file).map(s => {
   function runLoader({ bundleExists, bundleCharacters, inventories }) {
     const out = { fetched: [] };
     const loader = new Function('sandbox', `
-      const { fetch, fbAuthReady, FS_BUNDLE, FS_INVENTORIES, out } = sandbox;
-      let ROSTER = [], CHARS = [], dataSource = 'loading';
-      ${pageJs.slice(pageJs.indexOf('function num('), pageJs.indexOf('/* ── The sheet ── */'))}
-      function charLabel(c){ return c.name || c._file || 'Unnamed'; }
-      ${pageJs.slice(pageJs.indexOf('async function loadChars()'), pageJs.indexOf('async function init()'))}
-      return async () => { await loadChars(); return { CHARS, dataSource }; };
+      const { fetch, fbAuthReady, db, out } = sandbox;
+      ${dataJs}
+      return async () => {
+        const { chars, source } = await charLoadAll(db, { authReady: fbAuthReady });
+        return { CHARS: chars, dataSource: source };
+      };
     `)({
       out,
       fetch: (url) => {
@@ -198,8 +210,11 @@ const characters = (roster.students || []).filter(s => s.file).map(s => {
         return Promise.resolve({ json: () => Promise.resolve({ name: 'Repo Name', HP: '1' }) });
       },
       fbAuthReady: Promise.resolve(),
-      FS_BUNDLE: { get: () => Promise.resolve({ exists: bundleExists, data: () => bundleCharacters }) },
-      FS_INVENTORIES: { get: () => Promise.resolve({ forEach: (fn) => (inventories || []).forEach(fn) }) },
+      db: {
+        collection: (name) => name === 'inventories'
+          ? { get: () => Promise.resolve({ forEach: (fn) => (inventories || []).forEach(fn) }) }
+          : { doc: () => ({ get: () => Promise.resolve({ exists: bundleExists, data: () => bundleCharacters }) }) },
+      },
     });
     return loader();
   }

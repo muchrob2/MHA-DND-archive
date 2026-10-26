@@ -16,6 +16,24 @@
   ],
   "updates": [
     {
+      "version": "1.0.251",
+      "build": 251,
+      "date": "2026-10-26",
+      "commit": "ec227eb",
+      "title": "Rules reference",
+      "tags": [
+        "toolkit",
+        "dashboard",
+        "heropad"
+      ],
+      "items": [
+        "A new Rules page, open to everyone: 106 rules across ten sections — the d20, your turn, moving, cover, areas of effect, damage, death saves, conditions, resting, and how this toolkit handles the fiddly bits.",
+        "One search box across the lot, with the words you typed marked in the hits. Press / to search from anywhere on the page.",
+        "A Rules app on the Heropad, so the answer is in your pocket rather than on the DM's screen.",
+        "The conditions and cover reference in the Encounter Manager now reads the same file, so the DM's copy and the players' copy cannot drift apart."
+      ]
+    },
+    {
       "version": "1.0.248",
       "build": 248,
       "date": "2026-10-26",

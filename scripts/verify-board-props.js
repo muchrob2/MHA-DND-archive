@@ -952,7 +952,8 @@ const B = boot();
   // A location written up in the campaign and given its own preset map: the
   // map's label is what the appendix tells the DM to load, so the two names
   // have to be the same string.
-  const named = [['Swing Town', 'swing-town'], ['The Noodle Bar & Lucky Seven', 'noodle-bar']];
+  const named = [['Swing Town', 'swing-town'], ['The Noodle Bar & Lucky Seven', 'noodle-bar'],
+                 ['The Chop Shop', 'chop-shop']];
   for (const [label, key] of named) {
     const mp = B.BOARD_MAPS_BY_KEY[key];
     check(`the ${label} preset map exists and is labelled "${label}"`,
@@ -1155,11 +1156,26 @@ const B = boot();
   check('and one computation over the biggest map with a full party stays inside a few frames',
     once < 120, once.toFixed(1) + 'ms');
 
-  // One character stepping must not cost the whole party's sight again.
-  env.encounter.combatants[0].boardX += 1;
-  const afterStep = ms(() => env.boardSightState());
-  check('one character moving recomputes one character, not five',
-    afterStep < once, `all five ${once.toFixed(2)}ms, one step ${afterStep.toFixed(2)}ms`);
+  /* This used to compare two wall-clock numbers — "one character stepping
+     must cost less than the whole party's sight" — and it flaked, because it
+     was measuring the wrong thing. The per-viewer cache saves the ray
+     casting, but every recomputation still unions five arrays and rescans the
+     box, and on this map that floor is most of the five milliseconds. The
+     claim was true and unmeasurable at this scale.
+
+     What is worth asserting about a cache keyed on where each viewer stands
+     is that it does not go stale: step away, step back, and the answer has to
+     be identical to the one before the move. */
+  const before = Array.from(env.boardSightState().vis);
+  env.encounter.combatants[0].boardX += 3;
+  const moved = Array.from(env.boardSightState().vis);
+  env.encounter.combatants[0].boardX -= 3;
+  const back = Array.from(env.boardSightState().vis);
+  check('moving a character changes what the party can see',
+    JSON.stringify(moved) !== JSON.stringify(before));
+  check('and moving them back gives exactly the sight they had before, not a stale copy of it',
+    JSON.stringify(back) === JSON.stringify(before),
+    `${back.filter((v, i) => v !== before[i]).length} squares disagree`);
 }
 
 {

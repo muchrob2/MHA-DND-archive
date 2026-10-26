@@ -283,6 +283,19 @@ header h1 em {
   transition: border-color var(--dur-fast), background var(--dur-fast);
 }
 .version-badge:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+/* A dot, not a number: the count is in the tooltip, and the badge is small. */
+.version-badge.has-unread { position: relative; }
+.version-badge.has-unread::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 7px;
+  height: 7px;
+  background: var(--red, #EF4444);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--bg, #08090D);
+}
 .version-badge.hidden { display: none; }
 .last-updated.hidden { display: none; }
 .last-updated-dot {

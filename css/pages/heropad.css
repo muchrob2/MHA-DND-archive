@@ -2128,3 +2128,45 @@
   border-style: dashed;
   font-style: italic;
 }
+
+/* ── updates app ──
+   The toolkit's patch notes on the phone. Entries the pad has not shown
+   before are marked; everything else is plain, because a list where every
+   row is highlighted is a list with no highlight. */
+.up-card {
+  margin-bottom: 10px;
+  padding: 11px 13px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+}
+.up-card.is-new {
+  border-color: var(--pad-accent, #8B9BF5);
+  background: rgba(255,255,255,0.08);
+}
+.up-head { display: flex; align-items: baseline; gap: 7px; margin-bottom: 6px; }
+.up-version {
+  flex-shrink: 0;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--pad-accent, #8B9BF5);
+}
+.up-title { font-size: 13px; font-weight: 700; color: var(--pad-text, #fff); }
+.up-items { margin: 0; padding-left: 15px; }
+.up-items li {
+  margin-bottom: 4px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.72);
+}
+.up-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.up-tag {
+  padding: 1px 7px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.07);
+  border-radius: 999px;
+}

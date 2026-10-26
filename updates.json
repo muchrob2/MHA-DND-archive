@@ -16,6 +16,24 @@
   ],
   "updates": [
     {
+      "version": "1.0.252",
+      "build": 252,
+      "date": "2026-10-26",
+      "commit": "9ecfd6e",
+      "title": "Dice and paper",
+      "tags": [
+        "toolkit",
+        "heropad",
+        "fix"
+      ],
+      "items": [
+        "One dice engine behind every roller on the site. The notation now reads d20, 2d6+3, several terms at once like 2d6+1d4+3, \"d20 adv\" or \"dis\" for advantage, and 4d6kh3 to keep the highest three.",
+        "Dropped dice are shown struck through rather than hidden, so you can always see what the other die said.",
+        "The Heropad's Dice app gained advantage, disadvantage, critical hits and an expression box — it had none of them before.",
+        "A printable character sheet: one character to a page, black on white, with your scores, saves, quirk abilities, what you're carrying and lines to write on. Reads your live character, and says on the paper if it had to fall back to the bundled copy."
+      ]
+    },
+    {
       "version": "1.0.251",
       "build": 251,
       "date": "2026-10-26",

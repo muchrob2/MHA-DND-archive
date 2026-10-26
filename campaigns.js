@@ -241,6 +241,23 @@ function campaignHighlight(snippet, words) {
   return html;
 }
 
+// The same search across every module at once, for the question a DM actually
+// has mid-session — "which of these has the bit about the white van" — when
+// they do not yet know which module to open. Each hit carries the campaign it
+// came from, because that is the part that matters when the answer could be in
+// any of six.
+function campaignLibraryHits(campaigns, query, limit) {
+  const out = [];
+  for (const c of campaigns || []) {
+    const hits = campaignSearchHits(campaignSearchIndex(c), query, limit);
+    for (const h of hits) {
+      out.push(Object.assign({ campaignId: c.id, campaignTitle: c.title || c.id, campaignIcon: c.icon || '📘' }, h));
+      if (limit && out.length >= limit) return out;
+    }
+  }
+  return out;
+}
+
 /* ─── State ──────────────────────────────────────────── */
 const FS_CAMPAIGNS_DOC = db.collection('mha-dnd').doc('campaigns');
 let campaignsData = null;
@@ -599,6 +616,11 @@ function renderLibrary() {
   document.getElementById('view-campaign').style.display = 'none';
   document.getElementById('crumb-campaign').innerHTML = '';
 
+  // The search box lives outside the card grid so hiding the cards while
+  // results are up does not take the box with them.
+  const slot = document.getElementById('lib-search-slot');
+  if (slot && !document.getElementById('lib-search')) slot.innerHTML = librarySearchBoxHtml();
+
   const grid = document.getElementById('camp-grid');
   const camps = campaignsData.campaigns || [];
   let html = camps.map(c => `
@@ -622,6 +644,8 @@ function renderLibrary() {
     }
   }
   grid.innerHTML = html;
+  // A query typed before an edit or a live update has to survive the rerender.
+  renderLibrarySearch();
 }
 
 function newCampaignFormHtml() {
@@ -681,7 +705,114 @@ function renderCampaignView() {
   // The query survives a re-render (an edit, a live update), so the results
   // have to be put back with it.
   renderCampaignSearch();
+  // And a result clicked in the library asked for a block that only exists
+  // now that this has rendered.
+  consumePendingScroll();
 }
+
+/* ── Searching the whole library ───────────────────────────
+   The module search needs you to have opened the right module first. This one
+   does not: it runs over every campaign in the library and each result says
+   which one it came from, opens it, and scrolls to the block — so "which of
+   these has the bit about the white van" is one search rather than six. */
+let libraryQuery = '';
+const LIBRARY_SEARCH_LIMIT = 40;
+
+// Set by a result click and consumed once the campaign has rendered: the
+// router renders on hashchange, so the scroll target has to survive the gap
+// between asking for the campaign and the block existing in the DOM.
+let pendingScrollId = null;
+
+function librarySearchBoxHtml() {
+  return `<div class="library-search">
+    <input id="lib-search" type="search" value="${escHtml(libraryQuery)}"
+      placeholder="Search every module — press / to jump here"
+      aria-label="Search every campaign" autocomplete="off"
+      oninput="onLibrarySearch(this.value)" onkeydown="if(event.key==='Escape')onLibrarySearch('')">
+    <span id="lib-search-count"></span>
+  </div>
+  <div id="lib-search-results"></div>`;
+}
+
+function onLibrarySearch(value) {
+  libraryQuery = value;
+  const box = document.getElementById('lib-search');
+  if (box && box.value !== value) box.value = value;
+  renderLibrarySearch();
+}
+
+function renderLibrarySearch() {
+  const wrap = document.getElementById('lib-search-results');
+  const count = document.getElementById('lib-search-count');
+  const grid = document.getElementById('camp-grid');
+  if (!wrap) return;
+  const q = libraryQuery.trim();
+  if (q.length < 2) {
+    wrap.innerHTML = '';
+    if (count) count.textContent = '';
+    if (grid) grid.style.display = '';
+    return;
+  }
+  const hits = campaignLibraryHits(campaignsData.campaigns || [], q, LIBRARY_SEARCH_LIMIT);
+  // The cards are not useful while reading results, and leaving them under a
+  // long list means scrolling past the answer to get to them.
+  if (grid) grid.style.display = hits.length ? 'none' : '';
+  if (count) count.textContent = hits.length ? `${hits.length}${hits.length === LIBRARY_SEARCH_LIMIT ? '+' : ''} found` : 'nothing';
+  if (!hits.length) {
+    wrap.innerHTML = `<div class="search-none">Nothing in any module matches “${escHtml(q)}”.</div>`;
+    return;
+  }
+  wrap.innerHTML = hits.map(h => `<a class="search-hit" href="#/campaign/${encodeURIComponent(h.campaignId)}"
+      onclick="openCampaignAt('${escAttr(h.campaignId)}','${escAttr(h.id)}');return false;">
+    <div class="search-hit-head">
+      <span class="search-hit-campaign">${escHtml(h.campaignIcon)} ${escHtml(h.campaignTitle)}</span>
+      <span class="search-hit-where">${escHtml(h.where)}</span>
+      <span class="search-hit-heading">${escHtml(h.heading)}</span></div>
+    <div class="search-hit-snippet">${campaignHighlight(h.snippet, h.words)}</div>
+  </a>`).join('');
+}
+
+// Ids and titles both end up inside a single-quoted onclick attribute.
+function escAttr(s) { return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
+function openCampaignAt(campaignId, blockId) {
+  pendingScrollId = blockId;
+  if (currentCampaignId === campaignId) {
+    // Already here — no route change is coming, so do the scroll now.
+    consumePendingScroll();
+    return;
+  }
+  openCampaign(campaignId);
+}
+
+function consumePendingScroll() {
+  if (!pendingScrollId) return;
+  const id = pendingScrollId;
+  pendingScrollId = null;
+  // After paint: the campaign view is written in one innerHTML assignment, and
+  // the element has to exist before it can be scrolled to.
+  requestAnimationFrame(() => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // A flash, because a smooth scroll into the middle of an eight-chapter
+    // module leaves you unsure which paragraph you were sent to.
+    el.classList.add('search-target');
+    setTimeout(() => el.classList.remove('search-target'), 1800);
+  });
+}
+
+// Press / to search, from anywhere that is not already a text field.
+document.addEventListener('keydown', (e) => {
+  if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+  const tag = document.activeElement && document.activeElement.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  const box = document.getElementById(currentCampaignId ? 'camp-search' : 'lib-search');
+  if (!box) return;
+  e.preventDefault();
+  box.focus();
+  box.select();
+});
 
 /* ── The search box ────────────────────────────────────────
    Deliberately not part of render(): typing re-renders only the results

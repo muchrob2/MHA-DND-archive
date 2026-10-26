@@ -768,3 +768,55 @@ body.reading #main { max-width: 1240px; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
 }
+
+/* ── library-wide search ──
+   The same result rows as the module search, plus the campaign each hit came
+   from — which is the column that matters when the answer could be in any of
+   six modules. */
+.library-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+}
+#lib-search {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 15px;
+  font-size: var(--fs-sm);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+}
+#lib-search:focus { border-color: var(--accent, var(--primary, #E8A020)); }
+#lib-search-count {
+  flex-shrink: 0;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-dim);
+}
+#lib-search-results { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.search-hit-campaign {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--accent-text, #F2D08A);
+}
+
+/* Where a result sent you. A smooth scroll into the middle of an
+   eight-chapter module otherwise leaves you unsure which paragraph you were
+   aimed at. */
+.search-target {
+  animation: search-target-flash 1.8s ease-out 1;
+  border-radius: var(--radius);
+}
+@keyframes search-target-flash {
+  0%   { box-shadow: 0 0 0 3px var(--accent, #E8A020), 0 0 24px -4px var(--accent, #E8A020); }
+  70%  { box-shadow: 0 0 0 3px var(--accent, #E8A020), 0 0 24px -4px var(--accent, #E8A020); }
+  100% { box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Still mark it, just without the pulse. */
+  .search-target { animation: none; outline: 3px solid var(--accent, #E8A020); }
+}

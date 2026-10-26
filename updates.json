@@ -16,6 +16,104 @@
   ],
   "updates": [
     {
+      "version": "1.0.248",
+      "build": 248,
+      "date": "2026-10-26",
+      "commit": "557833e",
+      "pr": 151,
+      "title": "Loot tables",
+      "tags": [
+        "campaign",
+        "dashboard"
+      ],
+      "items": [
+        "Eight rollable tables of unique items behind the DM block: Byakko street trophies, the four Underground societies, the support lab, Appetite and Clean Read, and ordinary things worth more than they look.",
+        "Eighty-two items, each hanging off something already written — the hook on every row says what.",
+        "Underground items stay off the shop page, which is what keeps the Underground hidden, and the checks enforce it."
+      ]
+    },
+    {
+      "version": "1.0.247",
+      "build": 247,
+      "date": "2026-10-26",
+      "commit": "bc61c00",
+      "pr": 150,
+      "title": "A Friday night at the Ring",
+      "tags": [
+        "campaign"
+      ],
+      "items": [
+        "Swing Town's fight club in detail: two tables — who is on the card, banded by Heat, and what else is in the room.",
+        "All thirty-two rows end in where they lead, and every one points at something already in the campaign: Clean Read, the Scarlet Legion, the white van, the seventh rule."
+      ]
+    },
+    {
+      "version": "1.0.246",
+      "build": 246,
+      "date": "2026-10-26",
+      "commit": "c920efc",
+      "pr": 147,
+      "title": "The notes on the players' phone",
+      "tags": [
+        "heropad",
+        "dashboard"
+      ],
+      "items": [
+        "The Heropad has an Updates app, so the players see what changed too — the dashboard header is a thing only the DM looks at.",
+        "An unread dot on the dashboard's version badge, driven by the notes being written rather than by a deploy.",
+        "scripts/add-update.js adds the next entry without anybody hand-computing a version out of git."
+      ]
+    },
+    {
+      "version": "1.0.245",
+      "build": 245,
+      "date": "2026-10-26",
+      "commit": "47cbfb0",
+      "pr": 149,
+      "title": "Run the ladder",
+      "tags": [
+        "encounter",
+        "board"
+      ],
+      "items": [
+        "An encounter group that sits on a running order now shows the whole arc: which step you are on, what is in it, and one button that adds the line-up and loads its map.",
+        "Where your table has got to is remembered in your browser, not written into the shared encounter document."
+      ]
+    },
+    {
+      "version": "1.0.244",
+      "build": 244,
+      "date": "2026-10-26",
+      "commit": "8807f1b",
+      "pr": 148,
+      "title": "After Hours — The Story, Short",
+      "tags": [
+        "campaign",
+        "reader"
+      ],
+      "items": [
+        "A seventh campaign in the library that is a summary of the first one: eight chapters, one page each, what happens and what turns.",
+        "For getting a grip on the story without reading thirty sessions of material. Nothing in it is new, and it says so — where it and the full module disagree, the module is right."
+      ]
+    },
+    {
+      "version": "1.0.243",
+      "build": 243,
+      "date": "2026-10-26",
+      "commit": "31a01ff",
+      "pr": 146,
+      "title": "What's New",
+      "tags": [
+        "dashboard",
+        "toolkit"
+      ],
+      "items": [
+        "A page listing everything added to the toolkit, update by update, newest first — and this is the entry where it started.",
+        "Each entry's version, build, date and commit are read out of git rather than typed, so an entry cannot claim a release that never shipped.",
+        "The version badge in the dashboard header is a link to it now."
+      ]
+    },
+    {
       "version": "1.0.242",
       "build": 242,
       "date": "2026-10-26",

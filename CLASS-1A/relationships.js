@@ -1333,7 +1333,7 @@ function attackReadHtml(a) {
   if (a.hitMode === 'attack' && a.attackBonus && parseAttackBonus(a.attackBonus) !== null) {
     rolls.push(`<button class="atk-roll" onclick="rollAttackToHit('${id}')" title="Roll d20 to hit">⬡ To hit</button>`);
   }
-  if (a.damage && parseDiceExpr(a.damage)) {
+  if (a.damage && diceParse(a.damage)) {
     rolls.push(`<button class="atk-roll atk-roll-dmg" onclick="rollAttackDamage('${id}')" title="Roll damage">⬡ ${escHtml(a.damage)}</button>`);
   }
 
@@ -1377,18 +1377,16 @@ function onAttackEdit(id, field, value) {
    and the same tumble animation the manual roller uses.
    ───────────────────────────────────────────────────────────── */
 
-// "3d8", "2d6+3", "1d10 - 1" -> {count, sides, mod}, or null if unparseable.
-// Deliberately strict: anything it cannot read gets no Roll button at all,
-// rather than a button that silently rolls something wrong.
-function parseDiceExpr(raw) {
-  const m = String(raw || '').replace(/\s+/g, '').match(/^(\d{1,3})d(\d{1,3})([+-]\d{1,3})?$/i);
-  if (!m) return null;
-  const count = parseInt(m[1], 10), sides = parseInt(m[2], 10);
-  if (count < 1 || count > 100 || sides < 2) return null;
-  return { count, sides, mod: m[3] ? parseInt(m[3], 10) : 0 };
-}
+// Dice notation is parsed by diceParse in dice.js — a script tag above this
+// one — which this page's own parseDiceExpr used to do for "NdM±K" and
+// nothing else. The shared one also understands "d20", several terms in one
+// expression, advantage, and keep-highest/lowest, and it is the same engine
+// the Heropad rolls through. It stays strict in the same way: anything it
+// cannot read returns null, and a null gets no Roll button rather than a
+// button that silently rolls something wrong.
 
-// "+5", "5", "-1" -> number, or null.
+// "+5", "5", "-1" -> number, or null. Not dice notation — this reads the
+// attackBonus field on an ability, which is a flat number.
 function parseAttackBonus(raw) {
   const m = String(raw || '').replace(/\s+/g, '').match(/^([+-]?\d{1,3})$/);
   return m ? parseInt(m[1], 10) : null;
@@ -1397,12 +1395,21 @@ function parseAttackBonus(raw) {
 // Rolls a parsed expression through the shared result/history path.
 // `label` is what shows in the history row, so an attack roll reads as
 // "Laser Beam — damage" rather than an anonymous "1d8".
-function rollParsed({ count, sides, mod }, label) {
-  const rolls = Array.from({ length: count }, () => Math.floor(Math.random() * sides) + 1);
-  const total = rolls.reduce((a, b) => a + b, 0) + mod;
-  const isCrit   = sides === 20 && count === 1 && rolls[0] === 20;
-  const isFumble = sides === 20 && count === 1 && rolls[0] === 1;
-  const entry = { label, rolls, mod, total, isCrit, isFumble };
+//
+// The entry carries the whole diceRoll result rather than a flattened
+// {rolls, mod}: a roll can now drop dice (advantage, 4d6kh3), and the
+// renderers below show what was dropped instead of pretending it was never
+// rolled.
+function rollParsed(parsed, label) {
+  if (!parsed) return null;
+  const roll = diceRoll(parsed);
+  const entry = {
+    label: label || parsed.text,
+    total: roll.total,
+    isCrit: roll.crit,
+    isFumble: roll.fumble,
+    roll,
+  };
   diceHistory.unshift(entry);
   if (diceHistory.length > 12) diceHistory.pop();
   renderDiceResult(entry);
@@ -1416,13 +1423,13 @@ function rollAttackToHit(id) {
   const bonus = parseAttackBonus(a.attackBonus);
   if (bonus === null) return;
   setView('dice');
-  rollParsed({ count: 1, sides: 20, mod: bonus }, `${a.name || 'Attack'} — to hit`);
+  rollParsed(diceParse('1d20' + (bonus >= 0 ? '+' : '') + bonus), `${a.name || 'Attack'} — to hit`);
 }
 
 function rollAttackDamage(id) {
   const a = findAbility(id);
   if (!a) return;
-  const expr = parseDiceExpr(a.damage);
+  const expr = diceParse(a.damage);
   if (!expr) return;
   setView('dice');
   rollParsed(expr, `${a.name || 'Attack'} — damage`);
@@ -1852,82 +1859,64 @@ function updateRollBtn() {
   document.getElementById('roll-btn').textContent = label;
 }
 
+// The stepper's Roll button. Builds the expression the steppers describe and
+// hands it to the shared engine, so the stepper and the expression box below
+// it are the same code path — the advantage branch used to be a second
+// hand-written roller with its own crit detection.
 function rollDice() {
   const { count, sides, mod, advMode } = diceState;
-
-  if (advMode && sides === 20) {
-    const r1 = Math.floor(Math.random() * 20) + 1;
-    const r2 = Math.floor(Math.random() * 20) + 1;
-    const kept = advMode === 'adv' ? Math.max(r1, r2) : Math.min(r1, r2);
-    const dropped = advMode === 'adv' ? Math.min(r1, r2) : Math.max(r1, r2);
-    const total = kept + mod;
-    const isCrit = kept === 20;
-    const isFumble = kept === 1;
-    const modeLabel = advMode === 'adv' ? 'Advantage' : 'Disadvantage';
-    const modStr = mod !== 0 ? (mod > 0 ? ` +${mod}` : ` ${mod}`) : '';
-    const label = `d20 (${modeLabel})${modStr}`;
-    const entry = { label, rolls: [kept], mod, total, isCrit, isFumble, advRolls: [r1, r2], dropped, advMode };
-    diceHistory.unshift(entry);
-    if (diceHistory.length > 12) diceHistory.pop();
-    renderDiceResult(entry);
-    renderDiceHistory();
-    return;
-  }
-
-  const rolls = Array.from({ length: count }, () => Math.floor(Math.random() * sides) + 1);
-  const total = rolls.reduce((a, b) => a + b, 0) + mod;
-  const isCrit = sides === 20 && count === 1 && rolls[0] === 20;
-  const isFumble = sides === 20 && count === 1 && rolls[0] === 1;
-  const label = `${count}d${sides}${mod>=0?'+'+mod:mod!==0?mod:''}`.replace('+0','');
-
-  const entry = { label, rolls, mod, total, isCrit, isFumble };
-  diceHistory.unshift(entry);
-  if (diceHistory.length > 12) diceHistory.pop();
-
-  renderDiceResult(entry);
-  renderDiceHistory();
+  const adv = advMode && sides === 20 && count === 1 ? ' ' + advMode : '';
+  const parsed = diceParse(`${count}d${sides}${mod ? (mod > 0 ? '+' : '') + mod : ''}${adv}`);
+  if (!parsed) return;
+  const modeLabel = adv ? ` (${advMode === 'adv' ? 'Advantage' : 'Disadvantage'})` : '';
+  const modStr = mod !== 0 ? (mod > 0 ? ` +${mod}` : ` ${mod}`) : '';
+  rollParsed(parsed, `${count}d${sides}${modeLabel}${modStr}`);
 }
 
 function rollExpr() {
   const inp = document.getElementById('dice-expr-inp');
   const raw = (inp?.value || '').trim();
   if (!raw) return;
-  // Shares parseDiceExpr with the attack Roll buttons, so the two cannot
-  // drift on what counts as a valid expression.
-  const expr = parseDiceExpr(raw);
+  // Shares diceParse with the attack Roll buttons and the stepper, so none of
+  // the three can drift on what counts as a valid expression.
+  const expr = diceParse(raw);
   if (!expr) {
-    document.getElementById('dice-result').innerHTML = `<div style="color:var(--red-text);font-size:13px;">Invalid expression — try "2d6+3"</div>`;
+    document.getElementById('dice-result').innerHTML = `<div style="color:var(--red-text);font-size:13px;">Invalid expression — try "2d6+3", "d20 adv" or "4d6kh3"</div>`;
     return;
   }
-  const { count, sides, mod } = expr;
-  rollParsed(expr, `${count}d${sides}${mod > 0 ? '+' + mod : mod < 0 ? mod : ''}`);
+  // The canonical form, so "  d20+5 ADV " comes back in the history as
+  // "1d20+5 adv" rather than as whatever was typed.
+  rollParsed(expr, expr.text);
   inp.value = '';
 }
 
+// One breakdown renderer for every kind of roll. Dice that were rolled and
+// dropped — the low die under advantage, the fourth die of 4d6kh3 — are shown
+// struck through rather than omitted, because "what did the other one say" is
+// the first thing anyone asks.
+function diceBreakdownHtml(roll) {
+  const bits = roll.parts.map((p, i) => {
+    const kept = p.kept.map(v => `<span style="font-weight:700;color:var(--text)">${v}</span>`);
+    const gone = p.dropped.map(v => `<span style="text-decoration:line-through;color:var(--text-dim)">${v}</span>`);
+    const lead = i ? (p.sign < 0 ? ' − ' : ' + ') : (p.sign < 0 ? '−' : '');
+    return lead + kept.concat(gone).join(', ');
+  });
+  let out = bits.join('');
+  if (roll.flat) out += roll.flat > 0 ? ` + ${roll.flat}` : ` − ${Math.abs(roll.flat)}`;
+  return out;
+}
+
 function renderDiceResult(e) {
-  const modStr = e.mod > 0 ? ` + ${e.mod}` : e.mod < 0 ? ` − ${Math.abs(e.mod)}` : '';
   const numClass = e.isCrit ? 'crit' : e.isFumble ? 'fumble' : '';
   const badge = e.isCrit ? '<div class="crit-label">★ Critical!</div>' : e.isFumble ? '<div class="fumble-label">☠ Fumble!</div>' : '';
-  let rollStr;
-  if (e.advRolls) {
-    const [a, b] = e.advRolls;
-    const keptStr = `<span style="font-weight:700;color:var(--text)">${e.rolls[0]}</span>`;
-    const dropStr = `<span style="text-decoration:line-through;color:var(--text-dim)">${e.dropped}</span>`;
-    rollStr = e.advMode === 'adv'
-      ? (a >= b ? `${keptStr}, ${dropStr}` : `${dropStr}, ${keptStr}`)
-      : (a <= b ? `${keptStr}, ${dropStr}` : `${dropStr}, ${keptStr}`);
-    if (e.mod !== 0) rollStr += modStr;
-  } else {
-    rollStr = escHtml(e.rolls.join(', ') + modStr);
-  }
   // The crit/fumble class is applied AFTER the tumble settles rather than in
   // this markup, so the impact burst in css/manga.css fires on the landing
   // frame instead of playing against a number that is still changing.
   document.getElementById('dice-result').innerHTML = `
     <div class="result-number" data-final="${e.total}">${e.total}</div>
     <div class="result-detail">
-      <div class="result-label">${e.label}</div>
-      <div class="result-breakdown">${rollStr}</div>
+      <div class="result-label">${escHtml(e.label)}</div>
+      <div class="result-breakdown">${diceBreakdownHtml(e.roll)}</div>
       <div class="result-badge-slot">${badge}</div>
     </div>`;
   tumbleToResult(document.querySelector('#dice-result .result-number'), e.total, numClass);
@@ -1980,13 +1969,14 @@ function renderDiceHistory() {
   const el = document.getElementById('dice-history');
   if (!diceHistory.length) { el.innerHTML = ''; return; }
   el.innerHTML = diceHistory.map(e => {
-    const modStr = e.mod > 0 ? ` +${e.mod}` : e.mod < 0 ? ` ${e.mod}` : '';
-    const breakdown = e.rolls.join(', ') + modStr;
+    // The plain-text breakdown from the engine, which names the dropped dice
+    // in words ("6, 5 (dropped 2)") — the history rows are too small for the
+    // struck-through treatment the big result gets.
     const badge = e.isCrit ? '<span class="history-crit">★ Crit</span>' : e.isFumble ? '<span class="history-fumble">☠ Fumble</span>' : '';
     return `<div class="history-row">
-      <span class="history-die">${e.label}</span>
+      <span class="history-die">${escHtml(e.label)}</span>
       <span class="history-total">${e.total}</span>
-      <span class="history-breakdown">${escHtml(breakdown)}</span>
+      <span class="history-breakdown">${escHtml(e.roll.breakdown)}</span>
       ${badge}
     </div>`;
   }).join('');

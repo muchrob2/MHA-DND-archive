@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Printable character sheets for the MHA D&D campaign — one page per character, laid out for paper.">
+<meta name="theme-color" content="#08090D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Character Sheet — MHA D&D</title>
+<link rel="preload" href="css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/auth-widget.css">
+<link rel="stylesheet" href="css/pages/sheet.css">
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+</head>
+<body>
+
+<!-- Read-only: this page has no save path of any kind. It reads the live
+     character bundle, falls back to the bundled JSON files, and says on the
+     sheet itself which of the two it used — a sheet printed from stale data
+     is worse than no sheet. Everything in #sheet-bar is hidden when printing
+     (see css/pages/sheet.css), so the paper carries the sheet and nothing
+     else. -->
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">Character Sheet</span>
+  <div class="nav-right">
+    <span class="sheet-source" id="sheet-source">Loading…</span>
+  </div>
+</nav>
+
+<div id="sheet-bar">
+  <label class="sheet-bar-label" for="sheet-picker">Character</label>
+  <select id="sheet-picker" onchange="pickChar(this.value)" aria-label="Choose a character"></select>
+  <button type="button" id="sheet-notes-btn" onclick="toggleNotes()">Notes lines: on</button>
+  <button type="button" id="sheet-print-btn" class="sheet-print" onclick="printSheet()">🖨 Print this sheet</button>
+  <span class="sheet-bar-hint">One character to a page. Black on white when it prints.</span>
+</div>
+
+<div id="sheet"></div>
+
+<script src="sheet.js"></script>
+</body>
+</html>

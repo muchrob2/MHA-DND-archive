@@ -1,0 +1,338 @@
+/* ── Printable character sheet ──
+   Two renderings of one layout. On screen it is the site's dark palette so it
+   sits with everything else; under @media print it is black on white, the
+   controls are gone, and it fits one A4 or Letter page.
+
+   The print rules are the point of the page, so they are not an afterthought
+   at the bottom of the file — they are the second half of every block. */
+
+/* ── Controls (screen only) ── */
+#sheet-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  max-width: 860px;
+  margin: 18px auto 0;
+  padding: 0 20px;
+}
+.sheet-bar-label {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+#sheet-picker {
+  padding: 8px 12px;
+  font-size: var(--fs-sm);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+#sheet-bar button {
+  padding: 8px 13px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+#sheet-bar button:hover { color: var(--text); border-color: var(--border-strong); }
+#sheet-bar button.sel { color: var(--accent-text); border-color: var(--accent); }
+#sheet-bar .sheet-print {
+  color: var(--ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.sheet-bar-hint { font-size: var(--fs-2xs); color: var(--text-dim); }
+.sheet-source { font-size: var(--fs-2xs); font-weight: 700; color: var(--text-dim); }
+.sheet-source.firestore { color: var(--green-text); }
+.sheet-source.local { color: var(--amber-text); }
+
+/* ── The sheet ── */
+#sheet {
+  max-width: 860px;
+  margin: 18px auto 60px;
+  padding: 26px 28px 30px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.sh-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--accent);
+}
+.sh-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1.05;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.sh-sub { margin: 4px 0 0; font-size: var(--fs-xs); color: var(--text-muted); }
+.sh-head-meta {
+  font-size: 10px;
+  line-height: 1.6;
+  text-align: right;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* The headline numbers, across the top. */
+.sh-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+  gap: 7px;
+  margin: 14px 0 4px;
+}
+.sh-stat {
+  padding: 8px 6px;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.sh-stat-key {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.sh-stat-val {
+  margin-top: 2px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.1;
+  color: var(--accent-text);
+}
+
+.sh-block { margin-top: 18px; }
+.sh-h2 {
+  margin: 0 0 8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+}
+.sh-h2-note {
+  font-weight: 600;
+  letter-spacing: .02em;
+  text-transform: none;
+  color: var(--text-dim);
+}
+.sh-block .sh-h2:not(:first-child) { margin-top: 16px; }
+
+/* Ability scores: the score large, the modifier beside it. */
+.sh-scores {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.sh-score {
+  padding: 7px 4px 6px;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.sh-score-key {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  color: var(--text-dim);
+}
+.sh-score-num {
+  font-family: var(--font-display);
+  font-size: 23px;
+  line-height: 1.1;
+  color: var(--text);
+}
+.sh-score-mod {
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  color: var(--accent-text);
+  font-variant-numeric: tabular-nums;
+}
+.sh-score-name { margin-top: 2px; font-size: 8px; color: var(--text-dim); }
+@media (max-width: 620px) { .sh-scores { grid-template-columns: repeat(4, 1fr); } }
+
+/* Saves: a box to tick, because the toolkit does not record proficiencies. */
+.sh-saves {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.sh-save {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 4px;
+  font-size: var(--fs-2xs);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.sh-save-box {
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+}
+.sh-save-key { font-weight: 800; color: var(--text-dim); }
+.sh-save-val { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+@media (max-width: 620px) { .sh-saves { grid-template-columns: repeat(4, 1fr); } }
+
+.sh-weakness {
+  margin: 0 0 9px;
+  font-size: var(--fs-2xs);
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+.sh-ability { margin-bottom: 9px; }
+.sh-ability-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 7px;
+}
+.sh-ability-name { font-size: var(--fs-xs); font-weight: 800; color: var(--text); }
+.sh-ability-type,
+.sh-ability-stat {
+  padding: 1px 6px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.sh-ability-text {
+  margin: 3px 0 0;
+  font-size: var(--fs-2xs);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.sh-items { width: 100%; border-collapse: collapse; font-size: var(--fs-2xs); }
+.sh-items th {
+  padding: 3px 6px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+}
+.sh-items td {
+  padding: 4px 6px;
+  vertical-align: top;
+  line-height: 1.45;
+  border-bottom: 1px solid var(--border);
+}
+.sh-item-qty { width: 28px; font-weight: 800; color: var(--text-dim); }
+.sh-item-name { width: 30%; font-weight: 700; color: var(--text); }
+.sh-item-notes { color: var(--text-muted); }
+.sh-purse {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: var(--fs-2xs);
+}
+.sh-purse-yen {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--accent-text);
+}
+.sh-coin { color: var(--text-dim); }
+
+.sh-para { margin: 0; font-size: var(--fs-2xs); line-height: 1.55; color: var(--text-muted); }
+.sh-empty { font-size: var(--fs-2xs); color: var(--text-dim); }
+
+.sh-rules { display: block; }
+.sh-rule {
+  display: block;
+  height: 19px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sh-foot {
+  margin-top: 18px;
+  padding-top: 8px;
+  font-size: 9px;
+  letter-spacing: .04em;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+}
+
+/* ══ Print ══════════════════════════════════════════════════════════
+   The reason the page exists. Everything interactive goes, the palette
+   inverts to ink on paper, and the sheet is sized to one page.
+
+   Colours are stated outright rather than left to the tokens: a token
+   redefined for a future theme must not be able to print white on white. */
+@media print {
+  @page { size: A4 portrait; margin: 11mm; }
+
+  #topnav,
+  #sheet-bar,
+  #auth-widget,
+  #auth-overlay { display: none !important; }
+
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  #sheet {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+    border: 0;
+    border-radius: 0;
+  }
+
+  /* Ink on paper. Grey for the quiet text, black for everything read at a
+     glance — printed at 11px, a mid-grey body is genuinely hard to read. */
+  .sh-name, .sh-score-num, .sh-ability-name, .sh-item-name, .sh-save-val { color: #000 !important; }
+  .sh-sub, .sh-ability-text, .sh-item-notes, .sh-weakness, .sh-para { color: #1a1a1a !important; }
+  .sh-head-meta, .sh-stat-key, .sh-score-key, .sh-score-name, .sh-h2,
+  .sh-h2-note, .sh-save-key, .sh-ability-type, .sh-ability-stat, .sh-coin,
+  .sh-items th, .sh-item-qty, .sh-foot, .sh-empty { color: #555 !important; }
+  .sh-stat-val, .sh-score-mod, .sh-purse-yen { color: #000 !important; }
+
+  .sh-head { border-bottom: 2px solid #000 !important; }
+  .sh-stat, .sh-score, .sh-save, .sh-save-box { border-color: #999 !important; }
+  .sh-h2, .sh-items th, .sh-items td, .sh-foot, .sh-rule { border-color: #bbb !important; }
+
+  /* Nothing may be split across a page break mid-thought. */
+  .sh-block, .sh-ability, .sh-stats, .sh-scores, .sh-saves {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .sh-head { break-after: avoid; }
+
+  /* Tightened so a full character lands on one sheet of paper. */
+  .sh-name { font-size: 26px; }
+  .sh-block { margin-top: 13px; }
+  .sh-ability { margin-bottom: 7px; }
+  .sh-rule { height: 17px; }
+}

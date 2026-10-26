@@ -1972,15 +1972,32 @@ function removePasskey() {
 
 /* ══ App: Dice ══════════════════════════════════════════════════════
    A roller on the phone, because the phone is what is already in their
-   hand. Deliberately its own thing rather than a link to the toolkit's
-   roller: history is per-session and lives nowhere.
+   hand. History is per-session and lives nowhere.
+
+   Rolls through dice.js, the shared engine, so this app, the Class 1-A
+   toolkit's roller and anything else that rolls agree on what a crit is
+   and what "advantage" means. Before that this app had a stepper and no
+   notion of either, and the toolkit's roller had both — the same roll
+   gave you different information depending on which screen you were on.
+
+   The steppers stay: they are the right control for a phone. The
+   expression box underneath is for everything a stepper cannot say —
+   "d20 adv", "4d6kh3", "2d6+1d4+3".
    ═══════════════════════════════════════════════════════════════════ */
 const DICE_FACES = [4, 6, 8, 10, 12, 20, 100];
 let diceSides = 20;
 let diceCount = 1;
 let diceMod = 0;
+let diceAdv = null;      // null | 'adv' | 'dis'
 let diceHistory = [];
-let diceLast = null;
+let diceLast = null;     // { label, roll } — roll is a diceRoll result
+let diceExprError = '';
+
+// The expression the steppers currently describe, in the engine's notation.
+function padDiceExpr() {
+  const adv = diceAdv && diceSides === 20 && diceCount === 1 ? ' ' + diceAdv : '';
+  return `${diceCount}d${diceSides}${diceMod ? (diceMod > 0 ? '+' : '') + diceMod : ''}${adv}`;
+}
 
 function renderDiceApp() {
   const faces = DICE_FACES.map(n =>
@@ -1988,11 +2005,18 @@ function renderDiceApp() {
              onclick="setDie(${n})">d${n}</button>`).join('');
 
   const result = diceLast
-    ? `<div class="dc-result">
-         <div class="dc-total">${diceLast.total}</div>
-         <div class="dc-breakdown">${escHtml(diceLast.detail)}</div>
+    ? `<div class="dc-result${diceLast.roll.crit ? ' is-crit' : diceLast.roll.fumble ? ' is-fumble' : ''}">
+         <div class="dc-total">${diceLast.roll.total}</div>
+         <div class="dc-breakdown">${escHtml(diceLast.roll.breakdown)}</div>
+         <div class="dc-label">${escHtml(diceLast.label)}</div>
+         ${diceLast.roll.crit ? '<div class="dc-badge">★ Critical</div>'
+           : diceLast.roll.fumble ? '<div class="dc-badge">☠ Fumble</div>' : ''}
        </div>`
     : '<div class="dc-result empty">Pick a die and roll</div>';
+
+  // Advantage is a d20 thing and only on one die, which is what the engine
+  // accepts — so the buttons are only offered when they would mean something.
+  const advAvailable = diceSides === 20 && diceCount === 1;
 
   return `
     <div class="dc-dice">${faces}</div>
@@ -2010,29 +2034,67 @@ function renderDiceApp() {
         <button type="button" onclick="adjustMod(1)" aria-label="Raise the modifier">+</button>
       </div>
     </div>
-    <button type="button" class="dc-roll" onclick="rollDice()">Roll ${diceCount}d${diceSides}${
-      diceMod ? (diceMod > 0 ? '+' : '') + diceMod : ''}</button>
+    ${advAvailable ? `<div class="dc-adv">
+      <button type="button" class="dc-adv-btn${diceAdv === 'adv' ? ' sel' : ''}" onclick="setDiceAdv('adv')">Advantage</button>
+      <button type="button" class="dc-adv-btn${diceAdv === 'dis' ? ' sel' : ''}" onclick="setDiceAdv('dis')">Disadvantage</button>
+    </div>` : ''}
+    <button type="button" class="dc-roll" onclick="rollDice()">Roll ${escHtml(padDiceExpr())}</button>
     ${result}
+    <div class="dc-expr">
+      <input type="text" id="dc-expr-inp" class="cz-input" placeholder="or type: 2d6+1d4+3, d20 adv, 4d6kh3"
+             aria-label="Dice expression" onkeydown="if(event.key==='Enter')rollDiceExpr()">
+      <button type="button" class="dc-expr-btn" onclick="rollDiceExpr()">Roll</button>
+    </div>
+    ${diceExprError ? `<p class="dc-expr-error">${escHtml(diceExprError)}</p>` : ''}
     ${diceHistory.length ? `<p class="dc-history-label">Recent</p>
       <div class="dc-history">${diceHistory.map(h =>
         `<span class="dc-chip"><em>${escHtml(h.label)}</em>${h.total}</span>`).join('')}</div>` : ''}`;
 }
 
-function setDie(n) { diceSides = n; $('pad-app-body').innerHTML = renderDiceApp(); }
-function adjustDice(d) { diceCount = Math.min(12, Math.max(1, diceCount + d)); $('pad-app-body').innerHTML = renderDiceApp(); }
-function adjustMod(d) { diceMod = Math.min(50, Math.max(-50, diceMod + d)); $('pad-app-body').innerHTML = renderDiceApp(); }
+function repaintDice() { $('pad-app-body').innerHTML = renderDiceApp(); }
+
+function setDie(n) {
+  diceSides = n;
+  if (n !== 20) diceAdv = null; // advantage is a d20 thing
+  repaintDice();
+}
+function adjustDice(d) {
+  diceCount = Math.min(12, Math.max(1, diceCount + d));
+  if (diceCount !== 1) diceAdv = null; // and only on one die
+  repaintDice();
+}
+function adjustMod(d) { diceMod = Math.min(50, Math.max(-50, diceMod + d)); repaintDice(); }
+function setDiceAdv(mode) { diceAdv = diceAdv === mode ? null : mode; repaintDice(); }
+
+// Both roll paths end here, so the result card and the history are built once.
+function padCommitRoll(parsed, label) {
+  const roll = diceRoll(parsed);
+  diceLast = { label: label || parsed.text, roll };
+  diceHistory = [{ label: diceLast.label, total: roll.total }].concat(diceHistory).slice(0, 8);
+  diceExprError = '';
+  repaintDice();
+}
 
 function rollDice() {
-  const rolls = [];
-  for (let i = 0; i < diceCount; i++) rolls.push(1 + Math.floor(Math.random() * diceSides));
-  const sum = rolls.reduce((a, b) => a + b, 0);
-  const label = `${diceCount}d${diceSides}${diceMod ? (diceMod > 0 ? '+' : '') + diceMod : ''}`;
-  diceLast = {
-    total: sum + diceMod,
-    detail: rolls.join(' + ') + (diceMod ? ` ${diceMod > 0 ? '+' : '−'} ${Math.abs(diceMod)}` : ''),
-  };
-  diceHistory = [{ label, total: sum + diceMod }].concat(diceHistory).slice(0, 8);
-  $('pad-app-body').innerHTML = renderDiceApp();
+  const parsed = diceParse(padDiceExpr());
+  if (!parsed) return;
+  const modeLabel = diceAdv && diceSides === 20 && diceCount === 1
+    ? ` (${diceAdv === 'adv' ? 'Advantage' : 'Disadvantage'})` : '';
+  padCommitRoll(parsed, `${diceCount}d${diceSides}${modeLabel}${
+    diceMod ? (diceMod > 0 ? '+' : '') + diceMod : ''}`);
+}
+
+function rollDiceExpr() {
+  const inp = $('dc-expr-inp');
+  const raw = inp ? String(inp.value || '').trim() : '';
+  if (!raw) return;
+  const parsed = diceParse(raw);
+  if (!parsed) {
+    diceExprError = `Can't read "${raw}". Try 2d6+3, d20 adv, or 4d6kh3.`;
+    repaintDice();
+    return;
+  }
+  padCommitRoll(parsed, parsed.text);
 }
 
 /* ══ App: Messages ══════════════════════════════════════════════════

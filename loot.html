@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DM-side loot tables for the MHA D&D campaign — unique items from Byakko, the four Underground societies, the support lab and free time.">
+<meta name="theme-color" content="#08090D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Loot Tables — MHA D&D</title>
+<link rel="preload" href="css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/manga.css">
+<link rel="stylesheet" href="css/pages/loot.css">
+</head>
+<body>
+
+<!-- No Firebase: the tables ship with the site as a static file. This page is
+     linked from the DM block on the dashboard and is DM-side material — the
+     role split there is a UI convenience, not access control, exactly as it is
+     for the session log and the campaign pages. -->
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">Loot Tables</span>
+  <div class="nav-right">
+    <span class="nav-count" id="loot-count"></span>
+  </div>
+</nav>
+
+<div id="load-error-banner" style="display:none;">
+  <div class="banner-inner">Couldn't load the loot tables. Reload to try again.</div>
+</div>
+
+<div id="panel">
+  <div class="page-heading">Loot Tables</div>
+  <div class="page-sub">Unique items for The Shortlist: After Hours — the backstreets, the four Underground societies, the support lab, and the small things worth more than they look. DM side.</div>
+
+  <div id="loot-controls">
+    <input id="loot-search" type="search" placeholder="Search every item, effect and hook…" aria-label="Search the loot tables" oninput="onLootSearch(this.value)">
+    <div id="loot-tiers"></div>
+  </div>
+
+  <div id="loot-tables"></div>
+  <div id="loot-empty" style="display:none;">
+    <div class="es-icon">🔍</div>
+    Nothing in the tables matches that.
+  </div>
+</div>
+
+<script src="loot.js"></script>
+</body>
+</html>

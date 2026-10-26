@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="What has been added to the MHA D&D toolkit, update by update, newest first.">
+<meta name="theme-color" content="#08090D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>What's New — MHA D&D</title>
+<link rel="preload" href="css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/manga.css">
+<link rel="stylesheet" href="css/pages/updates.css">
+</head>
+<body>
+
+<!-- No Firebase on this page on purpose: the notes ship with the site as a
+     static file, so there is nothing to sign in for and nothing to load. -->
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">What's New</span>
+  <div class="nav-right">
+    <span class="nav-version" id="live-version"></span>
+  </div>
+</nav>
+
+<div id="load-error-banner" style="display:none;">
+  <div class="banner-inner">Couldn't load the update notes. Reload to try again.</div>
+</div>
+
+<div id="panel">
+  <div class="page-heading">What's New</div>
+  <div class="page-sub">Everything added to the toolkit, newest first. One entry per update that went live.</div>
+
+  <div id="upd-filters"></div>
+  <div id="upd-list"></div>
+  <div id="upd-empty" style="display:none;">
+    <div class="es-icon">🔍</div>
+    No update touched that.
+  </div>
+</div>
+
+<script src="updates.js"></script>
+</body>
+</html>

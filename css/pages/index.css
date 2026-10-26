@@ -277,8 +277,12 @@ header h1 em {
   background: var(--accent-light);
   border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
-  cursor: default;
+  /* It is a link to the update notes now, not a label. */
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color var(--dur-fast), background var(--dur-fast);
 }
+.version-badge:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
 .version-badge.hidden { display: none; }
 .last-updated.hidden { display: none; }
 .last-updated-dot {

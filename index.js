@@ -181,10 +181,12 @@
       if (!v || !v.version) throw new Error('no version field');
       el.textContent = 'v' + v.version;
       const built = v.built ? new Date(v.built) : null;
+      // The badge is a link to the notes now, so say where it goes.
       el.title = [
         'Version ' + v.version,
         v.commit ? 'commit ' + v.commit : null,
         built && !isNaN(built) ? 'built ' + built.toLocaleString() : null,
+        'Click for what changed',
       ].filter(Boolean).join(' · ');
       el.classList.remove('hidden');
     } catch {

@@ -1,0 +1,464 @@
+{
+  "_note": "What shipped, newest first, one entry per update that went live. version/build/date/commit are read out of git rather than typed — the deploy stamps version.json as 1.0.<commit count>, so an entry's version is the release it actually shipped in and scripts/verify-updates.js checks every one of them against the history. The titles and lines are written by hand, for somebody who wants to know what changed rather than what the diff was.",
+  "tags": [
+    "board",
+    "campaign",
+    "reader",
+    "encounter",
+    "characters",
+    "log",
+    "heropad",
+    "dashboard",
+    "toolkit",
+    "shop",
+    "data",
+    "fix"
+  ],
+  "updates": [
+    {
+      "version": "1.0.242",
+      "build": 242,
+      "date": "2026-10-26",
+      "commit": "cc3ecc1",
+      "pr": 145,
+      "title": "Search every module at once",
+      "tags": [
+        "reader"
+      ],
+      "items": [
+        "The Campaigns library has a search box that runs over every module at once, so you don't have to know which one holds the answer.",
+        "Each result says which module it came from, and clicking it opens that module and flashes the paragraph it sent you to.",
+        "Press / to jump to the search box from anywhere on the page."
+      ]
+    },
+    {
+      "version": "1.0.241",
+      "build": 241,
+      "date": "2026-10-26",
+      "commit": "f092609",
+      "pr": 144,
+      "title": "Kurogane Wharf",
+      "tags": [
+        "campaign",
+        "board"
+      ],
+      "items": [
+        "Nakata's gym, the Anchor café and the docks after midnight, written up as one place with three uses — and the Legion underneath it after dark.",
+        "A preset map for Nakata's Gym, and a \"Thralls on the wharf\" encounter group pointed at the container yard.",
+        "The Legion's discovery ladder now names the group its witness rung is built on."
+      ]
+    },
+    {
+      "version": "1.0.240",
+      "build": 240,
+      "date": "2026-10-26",
+      "commit": "394db3b",
+      "pr": 143,
+      "title": "The chop shop",
+      "tags": [
+        "campaign",
+        "board",
+        "fix"
+      ],
+      "items": [
+        "Kōno Sae's lock-up written up: vans, plates, no questions, and the counter a man with a scar bled on.",
+        "The only disruption in the turf economy with no sting in it, now said plainly — and what it costs when the class take it.",
+        "A preset map, and a chop shop encounter group at step six of the Byakko ladder, which had been loading Madame Tsuru's group by mistake.",
+        "Madame Tsuru's group moved to her real room, Lucky Seven, on the noodle bar's own map."
+      ]
+    },
+    {
+      "version": "1.0.239",
+      "build": 239,
+      "date": "2026-10-26",
+      "commit": "881dcb3",
+      "pr": 142,
+      "title": "Every live campaign has a local copy",
+      "tags": [
+        "data"
+      ],
+      "items": [
+        "\"Robs handwritten\" existed only on the live Firestore document. It is in the repo now, verified field for field against live."
+      ]
+    },
+    {
+      "version": "1.0.238",
+      "build": 238,
+      "date": "2026-10-26",
+      "commit": "4af6915",
+      "pr": 141,
+      "title": "The noodle bar, and Lucky Seven above it",
+      "tags": [
+        "campaign",
+        "board"
+      ],
+      "items": [
+        "Rule four's building, which turned out to be two: the only neutral ground in the backstreets, and Madame Tsuru's dice den directly above it.",
+        "Lucky Seven's game written out so a player can sit down at it — 2d6 against the house, ties to the house, ¥100 off every pot.",
+        "Preset maps can now carry elevation and labels, so a two-floor building is one map with the stairwell between the floors."
+      ]
+    },
+    {
+      "version": "1.0.237",
+      "build": 237,
+      "date": "2026-10-25",
+      "commit": "053fb4a",
+      "pr": 140,
+      "title": "Swing Town, and Byakko in daylight",
+      "tags": [
+        "campaign",
+        "board"
+      ],
+      "items": [
+        "Swing Town written up room by room — the cages, the chalk wall, the vending wall, the back cage and the office — and it reads as the Heat barometer.",
+        "A d20 of things the gang is doing in public where anybody can see, none of them a fight.",
+        "The backstreets week: what is on Monday through Sunday, so \"what's happening tonight?\" has the same answer every time.",
+        "A preset map for Swing Town, which Friday's Ring fight now loads instead of the festival arena."
+      ]
+    },
+    {
+      "version": "1.0.236",
+      "build": 236,
+      "date": "2026-10-25",
+      "commit": "206540d",
+      "pr": 139,
+      "title": "Fog that hides what it is hiding",
+      "tags": [
+        "board",
+        "heropad",
+        "fix"
+      ],
+      "items": [
+        "Fog hid the drawing and nothing else: hovering a hidden token named it, the cursor gave its position away, and clicking it drew a glow on an empty-looking square. Fixed.",
+        "The players' phone shows the richer session log — the chapter, who was there, who they met, where they went — and deliberately never the DM's \"next time\" note."
+      ]
+    },
+    {
+      "version": "1.0.235",
+      "build": 235,
+      "date": "2026-10-25",
+      "commit": "78fb85f",
+      "pr": 138,
+      "title": "Search inside a module, and where you left off",
+      "tags": [
+        "reader",
+        "dashboard"
+      ],
+      "items": [
+        "A search box inside an open campaign that indexes every authored field, including read-alouds, and jumps to the block.",
+        "The dashboard shows the last session you logged and its \"next time\" line, in the DM view only."
+      ]
+    },
+    {
+      "version": "1.0.234",
+      "build": 234,
+      "date": "2026-10-25",
+      "commit": "cb53672",
+      "pr": 137,
+      "title": "A straight line through Byakko",
+      "tags": [
+        "campaign"
+      ],
+      "items": [
+        "Nine steps from the kid on the crash barrier to the roof of the Cage, for tables that want the backstreets to be a story rather than a weather system.",
+        "Each step names the encounter preset to load and where to set Heat; the sandbox is still the default and the section says so."
+      ]
+    },
+    {
+      "version": "1.0.233",
+      "build": 233,
+      "date": "2026-10-25",
+      "commit": "a9d75dc",
+      "pr": 136,
+      "title": "A session log worth keeping",
+      "tags": [
+        "log",
+        "encounter"
+      ],
+      "items": [
+        "Sessions now record the chapter, who was at the table, the NPCs met and the places visited, plus a \"next time\" line.",
+        "Attendance is ticked from the roster and counted per player above the list; search runs across every field.",
+        "The encounter page gained a Rules button: what all fourteen conditions actually do, plus the cover scale, with the same lines as tooltips on every condition chip."
+      ]
+    },
+    {
+      "version": "1.0.232",
+      "build": 232,
+      "date": "2026-10-25",
+      "commit": "d582a42",
+      "pr": 135,
+      "title": "Big creatures, doors that shut, and undo",
+      "tags": [
+        "board"
+      ],
+      "items": [
+        "Tokens can be 1×1 to 4×4. Kuma arrives at 2×2, because his own stat block says 9'5\" at rest.",
+        "Doors can be shut, and a shut door is a wall — so it blocks line of sight too.",
+        "A sight radius for dark corridors, condition pips on tokens, undo on Ctrl+Z, and the board exportable as an image."
+      ]
+    },
+    {
+      "version": "1.0.231",
+      "build": 231,
+      "date": "2026-10-25",
+      "commit": "f8b6fe5",
+      "pr": 134,
+      "title": "Line of sight on a switch",
+      "tags": [
+        "board"
+      ],
+      "items": [
+        "One checkbox hides every square the players' own characters cannot see, and keeps up as they move. Walls block sight; cover does not.",
+        "A colour brush for painting squares any colour, with no rules attached.",
+        "The board's twenty-odd controls regrouped into three readable rows, and the combatant list reads as cards."
+      ]
+    },
+    {
+      "version": "1.0.230",
+      "build": 230,
+      "date": "2026-10-25",
+      "commit": "548b50f",
+      "pr": 133,
+      "title": "Nine more maps and five new board layers",
+      "tags": [
+        "board",
+        "encounter"
+      ],
+      "items": [
+        "Hospital, classroom block, apartments, night market, half-built high-rise, subway, holding wing, bathhouse and mountain road.",
+        "Fog of war, square labels, elevation, area shapes (burst, cone, line) and saved maps you build yourself.",
+        "Twenty encounter groups — a whole line-up in one click, with the map it was written for."
+      ]
+    },
+    {
+      "version": "1.0.229",
+      "build": 229,
+      "date": "2026-10-24",
+      "commit": "56a20d9",
+      "pr": 132,
+      "title": "Eight big preset maps",
+      "tags": [
+        "board"
+      ],
+      "items": [
+        "Maps two to three times the old size: Hosu District, U.A. campus, the mall, an expressway overpass, a factory, the docks, station platforms and an underground hideout.",
+        "Fourteen new prefabs to furnish them.",
+        "Festival Arena's four gates never actually opened — its wall ring is two squares thick and the doors only cut one layer. Fixed."
+      ]
+    },
+    {
+      "version": "1.0.228",
+      "build": 228,
+      "date": "2026-10-21",
+      "commit": "75ffee0",
+      "pr": 131,
+      "title": "Byakko and the Underground in folders",
+      "tags": [
+        "characters"
+      ],
+      "items": [
+        "The street gang and the three societies filed one folder per faction on the Characters tab."
+      ]
+    },
+    {
+      "version": "1.0.227",
+      "build": 227,
+      "date": "2026-10-21",
+      "commit": "52a4570",
+      "pr": 130,
+      "title": "Scenery on the battle board",
+      "tags": [
+        "board",
+        "encounter",
+        "fix"
+      ],
+      "items": [
+        "Twenty-nine prefabs — buildings, trees, vehicles, scatter — and ten preset battlefields.",
+        "Auto-terrain marks the squares a prop covers, and takes it back when the prop moves.",
+        "Duplicate combatant ids are repaired rather than reverting your edits, and a failed board save says so instead of silently undoing itself."
+      ]
+    },
+    {
+      "version": "1.0.226",
+      "build": 226,
+      "date": "2026-10-21",
+      "commit": "3437de8",
+      "pr": 129,
+      "title": "A second season, and a readable campaign",
+      "tags": [
+        "campaign",
+        "reader"
+      ],
+      "items": [
+        "Chapters 7 and 8 of After Hours, the Ledger as a fourth Underground faction, and Byakko's middle ranks, Heat events and turf economy.",
+        "The campaign reader rebuilt around the fact that campaign text is plain text: bullets, small-caps lead-ins and read-aloud cue cards instead of one wall of line breaks.",
+        "All fifty-seven read-alouds rewritten to be said rather than read."
+      ]
+    },
+    {
+      "version": "1.0.225",
+      "build": 225,
+      "date": "2026-10-16",
+      "commit": "161f783",
+      "pr": 128,
+      "title": "The gang on the Characters tab",
+      "tags": [
+        "characters"
+      ],
+      "items": [
+        "Thirty Byakko and Underground stat blocks existed in the encounter builder and nowhere else. They are on the Characters tab now."
+      ]
+    },
+    {
+      "version": "1.0.224",
+      "build": 224,
+      "date": "2026-10-15",
+      "commit": "e5f0a9f",
+      "pr": 127,
+      "title": "Supporting NPCs filed properly",
+      "tags": [
+        "characters"
+      ],
+      "items": [
+        "The thirteen supporting NPCs moved out of one \"AI made\" folder into category folders."
+      ]
+    },
+    {
+      "version": "1.0.223",
+      "build": 223,
+      "date": "2026-10-15",
+      "commit": "9f44f53",
+      "pr": 126,
+      "title": "The Shortlist: After Hours",
+      "tags": [
+        "campaign",
+        "encounter",
+        "shop"
+      ],
+      "items": [
+        "A new campaign alongside The Shortlist rather than over it, rewritten for the cast as the live sheets have them.",
+        "The Byakko street gang with its Heat track, three Underground societies, and new shop stock for students who are not allowed to hurt anybody."
+      ]
+    },
+    {
+      "version": "1.0.222",
+      "build": 222,
+      "date": "2026-09-25",
+      "commit": "8977a12",
+      "pr": 125,
+      "title": "Adding a combatant stopped eating another",
+      "tags": [
+        "encounter",
+        "fix"
+      ],
+      "items": [
+        "The id counter restarted on every page load, so a newly added character could be handed an id the server was already using, and a row would vanish a moment later."
+      ]
+    },
+    {
+      "version": "1.0.221",
+      "build": 221,
+      "date": "2026-09-05",
+      "commit": "232f311",
+      "pr": 124,
+      "title": "Editable kit, and encounter fixes",
+      "tags": [
+        "encounter",
+        "toolkit",
+        "fix"
+      ],
+      "items": [
+        "Players can edit their own item rows.",
+        "The encounter page's sort and End Turn behaviour fixed."
+      ]
+    },
+    {
+      "version": "1.0.220",
+      "build": 220,
+      "date": "2026-08-28",
+      "commit": "b8f49b2",
+      "pr": 123,
+      "title": "Inventory on a phone",
+      "tags": [
+        "toolkit",
+        "fix"
+      ],
+      "items": [
+        "Players keep their own kit, and the bottom of the Inventory tab is reachable on a short phone screen."
+      ]
+    },
+    {
+      "version": "1.0.219",
+      "build": 219,
+      "date": "2026-08-27",
+      "commit": "8f96158",
+      "pr": 122,
+      "title": "The Shortlist's opening chapter",
+      "tags": [
+        "campaign",
+        "encounter"
+      ],
+      "items": [
+        "Kinji Hamakida, the opening chapter, and the encounter presets to run it."
+      ]
+    },
+    {
+      "version": "1.0.218",
+      "build": 218,
+      "date": "2026-08-25",
+      "commit": "1f6dcb1",
+      "pr": 121,
+      "title": "Kinji Hamakida",
+      "tags": [
+        "characters"
+      ],
+      "items": [
+        "Smeet Nozoto renamed to Kinji Hamakida across all 122 references, including the older \"Kinosho Kochimiko\" fossil name still in campaign prose."
+      ]
+    },
+    {
+      "version": "1.0.217",
+      "build": 217,
+      "date": "2026-08-24",
+      "commit": "ae64602",
+      "pr": 120,
+      "title": "Typing in missing ability scores",
+      "tags": [
+        "toolkit",
+        "fix"
+      ],
+      "items": [
+        "A character built field by field through the page had no ability scores, so the stat boxes looked editable and were not. They are now."
+      ]
+    },
+    {
+      "version": "1.0.216",
+      "build": 216,
+      "date": "2026-08-24",
+      "commit": "86ea002",
+      "pr": 119,
+      "title": "Relationship categories",
+      "tags": [
+        "toolkit"
+      ],
+      "items": [
+        "People get a category instead of a true/false \"is this a PC\", so teachers, villains and rival classes have somewhere to be — and the sidebar can close the ones you are not using."
+      ]
+    },
+    {
+      "version": "1.0.215",
+      "build": 215,
+      "date": "2026-08-24",
+      "commit": "ace5c54",
+      "pr": 118,
+      "title": "The Shortlist filled out",
+      "tags": [
+        "campaign"
+      ],
+      "items": [
+        "Stat blocks for Sylar, Riddle, Powder, Touch Up and Kuma, a session map onto the sixteen to eighteen it claims, levelling guidance, and the nineteen classmates a DM has to voice.",
+        "Class 1-A's twentieth student."
+      ]
+    }
+  ]
+}

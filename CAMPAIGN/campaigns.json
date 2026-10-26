@@ -742,6 +742,116 @@
       ]
     },
     {
+      "tone": "",
+      "estimate": "",
+      "icon": "📘",
+      "links": [],
+      "id": "camp-tzh0jaz",
+      "background": [],
+      "tagline": "",
+      "chapters": [
+        {
+          "id": "ch-92qpsdf",
+          "intro": "this chapter should follow the 5 pc and how they interact with each npc they come across for the first time, at the beginning it may seem like they are there to fight robots, but they are really there to get to know their future classmates. start by asking the players explaining what their dreams are.",
+          "levels": "Levels 1-2",
+          "milestone": "",
+          "title": "Entrance exam",
+          "estimate": "1-2 Sessions",
+          "number": 1,
+          "sections": [
+            {
+              "id": "sec-6hhwlqf",
+              "type": "general",
+              "body": "reminder before playing \"remember guys, we are not playing to win, we are playing to find out what happens, therefore be your character and don't just do what you think would benefit you the most, there are some comedic elements of this campaign so before we start keep that in mind, another thing i would like to say is that this game is meant to be fun, however if we get to a point where you aren't having fun anymore just let me know and i will adapt my campaign, some of you may also know that I have made a campaign with AI, however this campaign I have personally handwritten myself on my own website.\"",
+              "developments": "",
+              "treasure": "",
+              "tag": "Pre-Entrance exam",
+              "readAloud": "UA high school is the most prestigious hero school in Japan, it would be weird to not want to go there. You as young aspiring heroes have all locked your eyes onto UA and are all participating in the dreaded entrance exam, you have all heard stories about it, not one makes it sound easy. However the reasons for the urge to be accepted into UA are unique for every individual, some honourable and some may sound stupid, this may sound unimportant but this dream will guide you to be who you truly want to be. In this hero society that is the most important thing.",
+              "heading": "Opening",
+              "aside": null,
+              "dmNote": ""
+            },
+            {
+              "treasure": "",
+              "id": "sec-4sezg2z",
+              "heading": "Lecture hall description",
+              "readAloud": "You are all sat in a HUGE lecture hall, the light is dim, you know no one. There is a stage at the front of the hall Illuminated by two bright spotlights, on the stage stands a familiar man, his muscular figure casts a massive shadow up the wall behind him, you may have seen him on tv, some of you recognise his as the pro hero \"Bad touch Bose\", a hero famous for only using his quirk when it is really necessary. He is wearing his classic green tank-top, camo trousers, black leather boots, and his famous silky blonde ponytail that stretches down his back. \"ATTENTION\", the slight whispers and creaking of chairs immediately stops. the room is dead silent. a large screen turns on behind Bose. \"Now that everyone is listening i can begin. You all know why you are here, this day has the potential to change your life so this MUST BE TAKEN SERIOUSLY\" He suddenly points to a random person in the crowd and two large security guards come and pick the child up by each arm and chuck him out the door at the back of the room. \"U.A. High's Entrance Exam consists of a written test and a practical test, with the latter being the more important of the two. During the practical exam, candidates conduct mock battles in replica urban settings. Examinees are given ten minutes to use their Quirks to immobilize robotic villains in order to score points depending on the individual robot's point value. The robots point value is determined by the large yellow number that is printed onto their exterior. The more points one examinee earns, the higher their chance is to get accepted into U.A. High. IS THAT CLEAR? (keep asking until at least 2 of the pcs answer), in just a moment you will be taken outside and loaded onto busses which will then take you to said replica urban settings, i expect only the best from future UA students so NO PUSHING\"",
+              "type": "general",
+              "developments": "",
+              "body": "All the students proceed to hustle and rush out the door, those that pushed were never seen again.",
+              "aside": null,
+              "tag": "",
+              "dmNote": ""
+            },
+            {
+              "readAloud": "\"the bus journey lasted around 20 seconds, you can see out of the bus windows that you have arrived at the replica urban settings that Bose was on about. for some it is really quite overwhelming. Infront of you there is large stone walls, the walls are obviously surrounding the arena, On the wall there is HUGE black text that reads \"GROUND BETA\". students gasp in awe and shock as everybody pools around the 20ft tall steel door. the bus creaks to a halt and small robots extend from the bottom of the bus to assist the passengers. now that you are closer the walls seem even bigger than what they looked like while you were in the bus. the wall is about 60ft tall, the buildings inside are double that. \"ITS TIME TO BEGIN\" Bose is stood on top of the wall with a megaphone, \"THERE IS NO COUNTDOWNS IN REAL BATTLES\". The door swings open with an explosive clang of metal on metal and the exam begins. there is an instant increase in noise as all 6000 applicants hastily rush to get started.",
+              "id": "sec-14nkckw",
+              "body": "",
+              "type": "general",
+              "heading": "Bus exit/arena exterior",
+              "dmNote": "",
+              "treasure": "",
+              "aside": null,
+              "developments": "",
+              "tag": ""
+            },
+            {
+              "type": "general",
+              "treasure": "",
+              "tag": "",
+              "heading": "Ground beta",
+              "body": "Road 1 (Forward)\n\ndown this path is 2 robots, each giving 2 points, after the battle they will encounter Masahata.\n\nRoad 2 (Right)\n\nto the right there is a applicant getting violently beaten by a group of 3, 1 point robots\n\nRoad 3 (left)\n\nto the left there is smeet is stuck under a rock, there is also a 3 point robot.",
+              "aside": null,
+              "developments": "",
+              "id": "sec-okd7ld5",
+              "dmNote": "",
+              "readAloud": "Inside the arena you can see thousands of huge buildings, all around 50ft tall. they are arranged in blocks and there is the occasional tree. from where you are stood there is three paths, one long road that goes through the middle of the entire arena, one road that goes to the right and looks a bit shady, and one road that goes to the left and leads to a big open area."
+            },
+            {
+              "type": "general",
+              "tag": "",
+              "body": "• Masahata sprays water at such a high pressure that he launches around the arena uncontrollably and somehow directly lands in-front of each player and demands to know their quirk and name.\n\n• On the right path, the person getting violently beat can either be Smeet if no-one takes the left path or Ando who try to act cool afterwards.\n\n•If any player gets close to dying then future COIs may step in (Rakuka may swoop in and lift them away from harm)",
+              "readAloud": "",
+              "dmNote": "",
+              "heading": "Other encounters",
+              "treasure": "",
+              "id": "sec-bufnszc",
+              "developments": "",
+              "aside": null
+            }
+          ],
+          "dmNote": "have notes of comedy, for example have Masahata flying around uncontrollably to each person and ask them what their name and quirk is"
+        },
+        {
+          "dmNote": "in this chapter the players will get to know each other and the school that they have enrolled in. there will be a 2v2 bracket tournament between class 1-A, 1-A will meet class 1-B, a quirk apprehension test.",
+          "number": 2,
+          "sections": [
+            {
+              "heading": "Introduction",
+              "readAloud": "",
+              "aside": null,
+              "id": "sec-eeci0x4",
+              "dmNote": "",
+              "tag": "",
+              "developments": "",
+              "treasure": "",
+              "type": "general",
+              "body": "it is the first day of school and everyone is rocking up to school for the first time, Each student is instructed to go up to the front of the class and state their name and some stuff about themselves."
+            }
+          ],
+          "id": "ch-lprbs07",
+          "estimate": "2-3 Sessions",
+          "levels": "Levels 3-4",
+          "intro": "",
+          "milestone": "",
+          "title": "Welcome to UA"
+        }
+      ],
+      "appendix": [],
+      "title": "Robs handwritten",
+      "levelRange": ""
+    },
+    {
       "id": "the-shortlist-after-hours",
       "title": "The Shortlist: After Hours",
       "tagline": "Win the Sports Festival and the whole country learns your name. So does he. So do the backstreets.",

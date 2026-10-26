@@ -16,6 +16,23 @@
   ],
   "updates": [
     {
+      "version": "1.0.255",
+      "build": 255,
+      "date": "2026-10-26",
+      "commit": "92879a0",
+      "title": "Loot, more than doubled",
+      "tags": [
+        "campaign",
+        "toolkit"
+      ],
+      "items": [
+        "The loot tables go from 82 items to 194, and from eight tables to twelve.",
+        "Four new tables for the rooms that had none: the Ring at Swing Town (what you win in the back cage on a Friday), the Cage (one entry per floor of the climb), Kurogane Wharf (the gym, the Anchor and the docks), and the chop shop.",
+        "Byakko, all four Underground societies and the ordinary-things table are d20s now; the support lab is a d20 and the archive a d12.",
+        "A rail of every table at the top of the page, with the number of rows showing — during a search those become hit counts, so you can see which table the thing you typed is in."
+      ]
+    },
+    {
       "version": "1.0.254",
       "build": 254,
       "date": "2026-10-26",

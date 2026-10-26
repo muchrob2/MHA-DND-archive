@@ -40,12 +40,13 @@ const ctx = { console };
 vm.createContext(ctx);
 try {
   vm.runInContext(prefix + '\nthis.api = { escHtml, renderProse, renderReadAloud, enrich, classifyLine,'
-    + ' campaignSearchIndex, campaignSearchHits, campaignHighlight };', ctx);
+    + ' campaignSearchIndex, campaignSearchHits, campaignHighlight, campaignLibraryHits };', ctx);
 } catch (e) {
   console.error('FAIL — the renderer prefix did not evaluate: ' + e.message);
   process.exit(1);
 }
-const { renderProse, renderReadAloud, campaignSearchIndex, campaignSearchHits, campaignHighlight } = ctx.api;
+const { renderProse, renderReadAloud, campaignSearchIndex, campaignSearchHits, campaignHighlight,
+        campaignLibraryHits } = ctx.api;
 
 console.log('\n>>> prose structure');
 
@@ -238,6 +239,64 @@ console.log('\n>>> searching a module');
     'a query cannot inject markup through the highlighter');
   ok(campaignHighlight('costs ¥5,000 (about right)', ['(about']).includes('<mark>'),
     'a query with regex characters in it is matched literally');
+}
+
+console.log('\n>>> searching the whole library');
+
+{
+  const camps = doc.campaigns || [];
+  const hits = (q, lim) => campaignLibraryHits(camps, q, lim || 40);
+
+  ok(camps.length >= 3, 'the library has several modules to search across');
+
+  // A phrase that only exists in the city module, found without opening it.
+  const wharf = hits('grey people at Kurogane Wharf');
+  ok(wharf.length >= 1, 'a phrase from one module is found from the library');
+  ok(wharf.every(h => h.campaignId && h.campaignTitle && h.campaignIcon),
+    'and every hit says which module it came from');
+
+  // A word that appears in more than one module must return more than one.
+  const across = hits('Byakko');
+  ok(new Set(across.map(h => h.campaignId)).size >= 2,
+    'a word in two modules returns hits from both');
+
+  ok(hits('').length === 0, 'an empty search finds nothing');
+  ok(hits('zzzznotathing').length === 0, 'and a word nobody wrote finds nothing');
+  ok(hits('the', 7).length === 7, 'the limit is honoured across modules, not per module');
+
+  // Every hit has to be a block the reader renders with that id, or the jump
+  // lands nowhere — the same property the module search is held to, now
+  // across campaigns.
+  const rendered = new Set();
+  for (const c of camps) {
+    for (const b of c.background || []) rendered.add(b.id);
+    for (const a of c.appendix || []) rendered.add(a.id);
+    for (const ch of c.chapters || []) {
+      rendered.add(ch.id);
+      for (const s of ch.sections || []) rendered.add(s.id);
+      for (const q of ch.sidequests || []) rendered.add(q.id);
+    }
+  }
+  const dead = hits('the').filter(h => !rendered.has(h.id));
+  ok(dead.length === 0, 'every library hit points at a block the reader renders');
+
+  // The id and the campaign id are written into a single-quoted onclick
+  // attribute, so an apostrophe in either has to survive the trip.
+  const src2 = SRC;
+  ok(/function escAttr\(/.test(src2), 'result links escape what they put in the onclick attribute');
+  ok(/onclick="openCampaignAt\('\$\{escAttr\(h\.campaignId\)\}','\$\{escAttr\(h\.id\)\}'\)/.test(src2),
+    'and both values go through it');
+  ok(/pendingScrollId/.test(src2) && /consumePendingScroll\(\)/.test(src2),
+    'a result opens the module and then scrolls to the block');
+  // The real property, not a proximity guess: inside renderCampaignView, the
+  // scroll has to come after the markup is written, because the block it
+  // scrolls to does not exist until then.
+  const fnStart = src2.indexOf('function renderCampaignView');
+  const fnBody = src2.slice(fnStart, src2.indexOf('\n}', fnStart));
+  ok(fnBody.indexOf('view.innerHTML = html') !== -1
+    && fnBody.indexOf('consumePendingScroll()') > fnBody.indexOf('view.innerHTML = html'),
+    'and it scrolls after the campaign has rendered, not before');
+  ok(/e\.key !== '\/'/.test(src2), 'and / focuses whichever search box is on screen');
 }
 
 console.log(`\n>>> campaign prose ${fail ? 'FAILED' : 'OK'} (${pass} passed, ${fail} failed, ${fields.length} fields checked)`);

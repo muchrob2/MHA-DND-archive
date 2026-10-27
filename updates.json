@@ -16,6 +16,25 @@
   ],
   "updates": [
     {
+      "version": "1.0.257",
+      "build": 257,
+      "date": "2026-10-27",
+      "commit": "0aa99f9",
+      "title": "The Lab and the Heat track",
+      "tags": [
+        "toolkit",
+        "dashboard",
+        "campaign"
+      ],
+      "items": [
+        "Two new tabs for players. The Lab builds an ability and tells you what it actually does — the range, the average, how often it hits an AC you pick, and what it's worth per use once misses are counted.",
+        "The Lab's other half is a quirk database: every quirk in the campaign, from all seven places a character can be hiding, searchable and filterable. An ability with a damage expression can be opened straight on the workbench.",
+        "The Heat track shows how much attention Byakko are paying, who shows up at this level, and what is coming — the next band is named before you are standing in it, and from Heat 6 it warns about the Corners.",
+        "It also keeps the record: all twenty-one named Byakko by rank, who you have beaten, and a win-loss line per character. The Law is on it, with room for a seventh rule.",
+        "Everybody can read the Heat track; only the DM can move it."
+      ]
+    },
+    {
       "version": "1.0.255",
       "build": 255,
       "date": "2026-10-26",

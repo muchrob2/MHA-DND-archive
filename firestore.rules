@@ -96,10 +96,18 @@ service cloud.firestore {
       // UI would not be enough: every player holds an 'editor' role, and the
       // rule below is the only thing standing between them and a console.
       //
+      // heat is the Byakko Heat track, and it joins them for the same reason
+      // with a sharper edge: Heat decides whether a Corner comes down and
+      // whether there is a note on the Heights Alliance doormat. A player who
+      // can set it to 10 can summon the White Tiger, which is the campaign's
+      // final encounter. Everybody reads it — that is the point of putting it
+      // where the players can see it — and only the DM moves it.
+      //
       // Every other mha-dnd doc (campaigns, dm-scripts, session-log, and the
       // per-player heropad-* pads) keeps the existing admin-or-editor policy.
       allow write: if isAdmin()
-        || (isEditor() && doc != 'encounter-state' && doc != 'masaranking');
+        || (isEditor() && doc != 'encounter-state' && doc != 'masaranking'
+            && doc != 'heat');
     }
   }
 }

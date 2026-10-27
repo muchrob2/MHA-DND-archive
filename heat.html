@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The Heat track for The Shortlist: After Hours — how much attention Byakko are paying, who shows up at this level, and what is coming.">
+<meta name="theme-color" content="#08090D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Heat — MHA D&D</title>
+<link rel="preload" href="css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/manga.css">
+<link rel="stylesheet" href="css/auth-widget.css">
+<link rel="stylesheet" href="css/pages/heat.css">
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+</head>
+<body>
+
+<!-- A player page: everybody reads it, only the DM moves it. That split is
+     enforced by firestore.rules (mha-dnd/heat is admin-only to write, the
+     same as masaranking and encounter-state) rather than by hiding the
+     buttons, because every player holds an editor role. -->
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">Heat</span>
+  <div class="nav-right">
+    <span class="heat-badge" id="heat-level-badge"></span>
+  </div>
+</nav>
+
+<div id="panel">
+  <div class="page-heading">The Heat Track</div>
+  <div class="page-sub">How much attention Byakko are paying. Nought to ten, and the campaign says to keep it where the players can see it — so here it is.</div>
+
+  <section class="ht-section">
+    <div id="heat-track"></div>
+    <div class="ht-split">
+      <div id="heat-who"></div>
+      <div id="heat-coming"></div>
+    </div>
+    <div id="heat-controls"></div>
+  </section>
+
+  <section class="ht-section">
+    <h2 class="ht-h2">Do they find you?</h2>
+    <div id="heat-d6"></div>
+  </section>
+
+  <section class="ht-section">
+    <h2 class="ht-h2">You are what you have beaten</h2>
+    <div id="heat-record"></div>
+    <div id="heat-fight-form"></div>
+  </section>
+
+  <section class="ht-section">
+    <h2 class="ht-h2">The gang, by rank</h2>
+    <p class="ht-section-sub">About three hundred people across two wards. These are the ones with names — roughly two hundred Strays, sixty-odd Claws, twenty Fangs, a dozen Stripes, four Corners and a Tiger. Beating a Stray moves nothing.</p>
+    <div id="heat-gang"></div>
+  </section>
+
+  <section class="ht-section">
+    <h2 class="ht-h2">The Law</h2>
+    <div id="heat-law"></div>
+  </section>
+
+  <section class="ht-section">
+    <h2 class="ht-h2">The record</h2>
+    <div id="heat-log"></div>
+  </section>
+</div>
+
+<!-- The Heat track, the ranks and the Law, transcribed from the campaign. -->
+<script src="byakko-data.js"></script>
+<!-- The d6 goes through the shared engine, like every other die on the site. -->
+<script src="dice.js"></script>
+<script src="heat.js"></script>
+</body>
+</html>

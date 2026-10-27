@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The Lab — build an ability and see what it actually does, and search every quirk in the MHA D&D campaign.">
+<meta name="theme-color" content="#08090D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>The Lab — MHA D&D</title>
+<link rel="preload" href="css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/auth-widget.css">
+<link rel="stylesheet" href="css/pages/lab.css">
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+</head>
+<body>
+
+<!-- A player page, and read-only as far as the campaign is concerned:
+     drafts live in this browser and nothing here writes a character. The
+     quirk database reads the live cast first and says which of its seven
+     sources answered — see quirk-data.js. -->
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">The Lab</span>
+  <div class="nav-right">
+    <span class="nav-count" id="lab-quirk-count"></span>
+  </div>
+</nav>
+
+<div id="panel">
+  <div class="page-heading">The Lab</div>
+  <div class="page-sub">Build something and see what it actually does before it reaches the table — then look up every quirk in the campaign to check you have not reinvented one.</div>
+
+  <div id="lab-tabs" class="lb-tabs"></div>
+  <div id="lab-body"></div>
+
+  <p class="lb-foot">
+    Nothing on this page changes a character. Drafts are kept in this browser only,
+    and <strong>Show as JSON</strong> hands over the ability in the exact shape a character
+    file takes, so your DM can paste it in if they agree with it.
+    The averages are measured by rolling the expression a few thousand times through the
+    toolkit's own dice engine, not worked out from a formula — which is why they wobble by
+    a tenth and why they are right for <code>4d6kh3</code>.
+  </p>
+</div>
+
+<!-- The dice engine does the notation and the rolling; quirk-data.js knows
+     the seven places a character can be hiding. -->
+<script src="dice.js"></script>
+<script src="quirk-data.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>

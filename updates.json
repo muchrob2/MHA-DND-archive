@@ -16,6 +16,23 @@
   ],
   "updates": [
     {
+      "version": "1.0.260",
+      "build": 260,
+      "date": "2026-10-29",
+      "commit": "935f4be",
+      "title": "At the Table",
+      "tags": [
+        "toolkit",
+        "encounter"
+      ],
+      "items": [
+        "A new player page showing the fight from your seat: whose turn it is, whether you are next, the order, everyone's conditions and a health bar — live, while the DM runs the encounter.",
+        "Enemy hit points show as a band rather than a number — Untouched, Grazed, Bloodied, Critical, Down. Your own side shows real numbers. The DM can toggle the rest on.",
+        "Where a condition changes an attack roll it says so for whoever is up now, and every condition carries its own rule as a tooltip.",
+        "The board shows where everybody is standing; this shows when."
+      ]
+    },
+    {
       "version": "1.0.259",
       "build": 259,
       "date": "2026-10-29",

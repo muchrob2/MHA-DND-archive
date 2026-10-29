@@ -10,6 +10,28 @@ const db = firebase.firestore();
 
 /* ─── Utilities ──────────────────────────────────────── */
 function escHtml(s) { return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ─── Line icons ─────────────────────────────────────────
+   The editing chrome only. Emoji until the dashboard rework replaced its
+   own; next to Inter and the module's serif they read as stickers.
+
+   NOT converted, deliberately:
+     c.icon          the campaign's own icon, which a DM types into a form
+                     (#f-icon, maxlength 4). That is their emoji, not ours.
+     SECTION_ICON    and the markers inside the prose. Those are the
+                     module's typography and verify-campaign-prose.js
+                     checks the shapes they belong to. */
+const ICO_PATH = {
+  pencil: '<path d="M4 20h4L19.4 8.6a2.05 2.05 0 0 0-2.9-2.9L5 17.2z"/><path d="M14.5 7.5l2.9 2.9"/>',
+  trash:  '<path d="M4 7h16"/><path d="M9 7V4.5h6V7"/><path d="M6 7l1 13.5h10L18 7"/><path d="M10.5 11v6M13.5 11v6"/>',
+  check:  '<path d="M4.5 12.5l5 5 10-11"/>',
+  eye:    '<path d="M2.5 12S6 6 12 6s9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.8"/>',
+  books:  '<path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H10a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H5.5A1.5 1.5 0 0 1 4 15.5z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H14a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h4.5A1.5 1.5 0 0 0 20 15.5z"/>',
+};
+function ico(name) {
+  return `<svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true">${ICO_PATH[name] || ''}</svg>`;
+}
+
 function uid(prefix) { return (prefix||'id') + '-' + Math.random().toString(36).slice(2, 9); }
 
 /* ─── Prose rendering ────────────────────────────────────
@@ -355,7 +377,7 @@ function toggleEditMode() {
   editMode = !editMode;
   openEditId = null;
   const btn = document.getElementById('edit-toggle-btn');
-  btn.textContent = editMode ? '👁 Done' : '✏️ Edit';
+  btn.innerHTML = editMode ? ico('eye') + 'Done' : ico('pencil') + 'Edit';
   btn.classList.toggle('active', editMode);
   render();
 }
@@ -630,7 +652,7 @@ function renderLibrary() {
       <div class="camp-card-tagline">${escHtml(c.tagline||'')}</div>
       <div class="camp-card-meta">${[c.levelRange, (c.chapters?.length ? c.chapters.length+' chapter'+(c.chapters.length===1?'':'s') : null)].filter(Boolean).map(escHtml).join(' · ')}</div>
       <div class="camp-card-actions edit-only">
-        <button class="mini-btn danger" onclick="event.stopPropagation();deleteCampaign('${c.id}')">🗑 Delete</button>
+        <button class="mini-btn danger" onclick="event.stopPropagation();deleteCampaign('${c.id}')">${ico('trash')}Delete</button>
       </div>
     </div>`).join('');
 
@@ -663,7 +685,7 @@ function newCampaignFormHtml() {
     <div class="edit-label">Premise / tone</div>
     <textarea class="edit-textarea" id="f-tone" placeholder="What this campaign is about, and how it should feel at the table."></textarea>
     <div class="form-actions">
-      <button class="mini-btn" onclick="submitNewCampaign()">✓ Create Campaign</button>
+      <button class="mini-btn" onclick="submitNewCampaign()">${ico('check')}Create Campaign</button>
       <button class="mini-btn ghost" onclick="closeEdit()">Cancel</button>
     </div>
   </div>`;
@@ -928,7 +950,7 @@ function renderBanner(c) {
       <div class="edit-label">Premise / tone</div>
       <textarea class="edit-textarea" id="f-tone">${escHtml(c.tone||'')}</textarea>
       <div class="form-actions">
-        <button class="mini-btn" onclick="updateCampaignMeta('${c.id}')">✓ Save</button>
+        <button class="mini-btn" onclick="updateCampaignMeta('${c.id}')">${ico('check')}Save</button>
         <button class="mini-btn ghost" onclick="closeEdit()">Cancel</button>
       </div>
     </div></div>`;
@@ -944,8 +966,8 @@ function renderBanner(c) {
     </div>
     ${c.tone ? `<div class="module-tone">${renderProse(c.tone)}</div>` : ''}
     <div class="mini-row edit-only">
-      <button class="mini-btn" onclick="openEdit('meta')">✏️ Edit Details</button>
-      <button class="mini-btn danger" onclick="deleteCampaign('${c.id}')">🗑 Delete Campaign</button>
+      <button class="mini-btn" onclick="openEdit('meta')">${ico('pencil')}Edit Details</button>
+      <button class="mini-btn danger" onclick="deleteCampaign('${c.id}')">${ico('trash')}Delete Campaign</button>
     </div>
   </div>`;
 }
@@ -1010,8 +1032,8 @@ function renderProseSection(c, key, title, dropcap) {
         <div class="mini-row edit-only">
           <button class="mini-btn ghost" ${i===0?'disabled':''} onclick="moveProse('${c.id}','${key}','${item.id}',-1)">▲</button>
           <button class="mini-btn ghost" ${i===items.length-1?'disabled':''} onclick="moveProse('${c.id}','${key}','${item.id}',1)">▼</button>
-          <button class="mini-btn" onclick="openEdit('${key}:${item.id}')">✏️ Edit</button>
-          <button class="mini-btn danger" onclick="deleteProse('${c.id}','${key}','${item.id}')">🗑 Delete</button>
+          <button class="mini-btn" onclick="openEdit('${key}:${item.id}')">${ico('pencil')}Edit</button>
+          <button class="mini-btn danger" onclick="deleteProse('${c.id}','${key}','${item.id}')">${ico('trash')}Delete</button>
         </div>
       </div>`;
     }
@@ -1035,7 +1057,7 @@ function proseEditFormHtml(campId, key, item) {
     <div class="edit-label">Text</div>
     <textarea class="edit-textarea" id="f-prose-body" style="min-height:120px;" placeholder="Separate paragraphs with a blank line.">${escHtml(item?.body||'')}</textarea>
     <div class="form-actions">
-      <button class="mini-btn" onclick="${action}">✓ Save</button>
+      <button class="mini-btn" onclick="${action}">${ico('check')}Save</button>
       <button class="mini-btn ghost" onclick="closeEdit()">Cancel</button>
     </div>
   </div>`;
@@ -1066,8 +1088,8 @@ function renderChapter(c, ch, idx, total) {
     <div class="mini-row edit-only">
       <button class="mini-btn ghost" ${idx===0?'disabled':''} onclick="moveChapter('${c.id}','${ch.id}',-1)">▲ Move Up</button>
       <button class="mini-btn ghost" ${idx===total-1?'disabled':''} onclick="moveChapter('${c.id}','${ch.id}',1)">▼ Move Down</button>
-      <button class="mini-btn" onclick="openEdit('ch:${ch.id}')">✏️ Edit Chapter</button>
-      <button class="mini-btn danger" onclick="deleteChapter('${c.id}','${ch.id}')">🗑 Delete Chapter</button>
+      <button class="mini-btn" onclick="openEdit('ch:${ch.id}')">${ico('pencil')}Edit Chapter</button>
+      <button class="mini-btn danger" onclick="deleteChapter('${c.id}','${ch.id}')">${ico('trash')}Delete Chapter</button>
     </div>`;
 
   (ch.sections||[]).forEach((s, i) => { html += renderSection(c, ch, s, i, ch.sections.length); });
@@ -1122,8 +1144,8 @@ function renderSideQuests(c, ch) {
       <div class="mini-row edit-only">
         <button class="mini-btn ghost" ${i===0?'disabled':''} onclick="moveQuest('${c.id}','${ch.id}','${q.id}',-1)">▲</button>
         <button class="mini-btn ghost" ${i===quests.length-1?'disabled':''} onclick="moveQuest('${c.id}','${ch.id}','${q.id}',1)">▼</button>
-        <button class="mini-btn" onclick="openEdit('sq:${q.id}')">✏️ Edit</button>
-        <button class="mini-btn danger" onclick="deleteQuest('${c.id}','${ch.id}','${q.id}')">🗑 Delete</button>
+        <button class="mini-btn" onclick="openEdit('sq:${q.id}')">${ico('pencil')}Edit</button>
+        <button class="mini-btn danger" onclick="deleteQuest('${c.id}','${ch.id}','${q.id}')">${ico('trash')}Delete</button>
       </div>
     </div>`;
   });
@@ -1261,8 +1283,8 @@ function renderSection(c, ch, s, idx, total) {
   html += `<div class="mini-row edit-only section-controls">
       <button class="mini-btn ghost" ${idx===0?'disabled':''} onclick="moveSection('${c.id}','${ch.id}','${s.id}',-1)">▲</button>
       <button class="mini-btn ghost" ${idx===total-1?'disabled':''} onclick="moveSection('${c.id}','${ch.id}','${s.id}',1)">▼</button>
-      <button class="mini-btn" onclick="openEdit('sec:${s.id}')">✏️ Edit</button>
-      <button class="mini-btn danger" onclick="deleteSection('${c.id}','${ch.id}','${s.id}')">🗑 Delete</button>
+      <button class="mini-btn" onclick="openEdit('sec:${s.id}')">${ico('pencil')}Edit</button>
+      <button class="mini-btn danger" onclick="deleteSection('${c.id}','${ch.id}','${s.id}')">${ico('trash')}Delete</button>
     </div>`;
   html += `</div>`;
   return html;

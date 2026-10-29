@@ -102,6 +102,11 @@
 }
 
 .nav-btn {
+  /* inline-flex so a .btn-ico sits on the text's centre line rather than on
+     its baseline — .btn and .chip were already flex, this one was not */
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   padding: 5px 11px;
   border-radius: var(--radius-sm);
   font-size: var(--fs-2xs);
@@ -575,7 +580,54 @@
   color: var(--text-dim);
   grid-column: 1 / -1;
 }
-.es-icon { display: block; margin-bottom: 12px; font-size: 34px; opacity: .55; }
+/* The icon above an empty state, and the small one inside a button. Both
+   were emoji until the dashboard rework replaced its own with line SVGs —
+   an emoji is whatever the platform's font decides, at whatever weight,
+   and next to Inter and Anton it reads as a sticker rather than as part of
+   the page. These are the same 1.5px stroke the dashboard tiles use.
+
+   .es-icon keeps its name because characters.js and session-log.js emit it.
+   The opacity stays: an empty state should be quiet. */
+.es-icon {
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .5;
+}
+
+/* Any control carrying a .btn-ico becomes a centred row. Eight of the
+   buttons that now have an icon are styled by a descendant rule on their
+   bar (#sheet-bar button, #party-bar button) or by an id with nothing but
+   padding (#rel-save-btn), so none of them were flex and an inline SVG
+   would have sat on the text's baseline rather than its centre line. One
+   rule here beats `display:flex` added to eight unrelated recipes.
+
+   A browser without :has() renders the icon slightly low and nothing else
+   changes, which is why this is a layout nicety rather than the sizing. */
+:is(button, a, span, div):has(> .btn-ico) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Inside a .btn / .nav-btn / .chip. Sized in em so it tracks the label it
+   sits beside rather than needing a value per button size. */
+.btn-ico {
+  flex-shrink: 0;
+  width: 1.15em;
+  height: 1.15em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
 #loading {
   display: flex;

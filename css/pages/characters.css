@@ -142,7 +142,16 @@
   cursor: pointer;
   border-left: 3px solid var(--folder-accent, var(--accent));
 }
-.folder-tile-icon  { font-size: 21px; }
+.folder-tile-icon  {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: var(--accent-text);
+}
 .folder-tile-name  {
   padding-right: 38px;
   font-family: var(--font-display);

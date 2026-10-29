@@ -496,7 +496,16 @@
 #basket-tab.empty { color: var(--text-muted); background: var(--surface2); border-color: var(--border-strong); }
 #basket-tab[hidden] { display: none; }
 
-.basket-tab-ico { font-size: 19px; line-height: 1; }
+.basket-tab-ico {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .basket-tab-meta { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15; }
 #basket-tab-count { font-size: var(--fs-lg); }
 #basket-tab-count::after { content: ' in basket'; font-size: 10px; opacity: .7; }

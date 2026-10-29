@@ -131,7 +131,7 @@ body.theme-doc {
   border-bottom: 2px solid transparent;
   transition: color var(--dur-fast), background var(--dur-fast);
 }
-.anchor-btn .anchor-icon { font-size: var(--fs-xs); opacity: .85; }
+.anchor-btn .anchor-icon { opacity: .85; }   /* an SVG now — sized in pages/campaign-overview.css */
 .anchor-btn:hover  { color: rgba(255,255,255,.95); background: rgba(255,255,255,.07); }
 .anchor-btn.active { color: #fff; background: rgba(255,255,255,.11); border-bottom-color: var(--gold); }
 

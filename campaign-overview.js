@@ -13,6 +13,35 @@ function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&
 function initials(name) { return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
 function uid() { return Math.random().toString(36).slice(2); }
 
+/* ─── Line icons ─────────────────────────────────────────
+   The buttons on this page and the five section marks. Emoji until the
+   dashboard rework replaced its own, and on the parchment surface they read
+   as colour photographs dropped on paper — this page is otherwise all one
+   ink. Same 24-unit grid and 1.5 stroke as the dashboard tiles.
+
+   Only CHROME is converted. The markers inside the prose — "DM notes",
+   "Session goal", the read-aloud cues — are part of the campaign's own
+   typography and are checked by scripts/verify-campaign-prose.js, so they
+   stay exactly as authored. */
+const ICO_PATH = {
+  book:     '<path d="M12 6.4C10.4 4.9 7.9 4.1 4 4.4v13c3.9-.3 6.4.5 8 2 1.6-1.5 4.1-2.3 8-2v-13c-3.9-.3-6.4.5-8 2z"/><path d="M12 6.4v13"/>',
+  globe:    '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.6 2.4 4 5.6 4 9s-1.4 6.6-4 9c-2.6-2.4-4-5.6-4-9s1.4-6.6 4-9z"/>',
+  skull:    '<path d="M4.8 10.8a7.2 7.2 0 0 1 14.4 0v2.6L17.6 16v3.2a1 1 0 0 1-1 1H7.4a1 1 0 0 1-1-1V16L4.8 13.4z"/><circle cx="9.2" cy="11.2" r="1.7"/><circle cx="14.8" cy="11.2" r="1.7"/><path d="M12 14.4v2"/>',
+  people:   '<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6M17.5 20a5.6 5.6 0 0 0-2-4.3"/>',
+  speech:   '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v8a1.5 1.5 0 0 1-1.5 1.5H9l-5 4z"/><path d="M8 8h8M8 11.2h5"/>',
+  bookmark: '<path d="M6.5 3h11v18L12 16.4 6.5 21z"/>',
+  pencil:   '<path d="M4 20h4L19.4 8.6a2.05 2.05 0 0 0-2.9-2.9L5 17.2z"/><path d="M14.5 7.5l2.9 2.9"/>',
+  eye:      '<path d="M2.5 12S6 6 12 6s9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.8"/>',
+  trash:    '<path d="M4 7h16"/><path d="M9 7V4.5h6V7"/><path d="M6 7l1 13.5h10L18 7"/><path d="M10.5 11v6M13.5 11v6"/>',
+  copy:     '<rect x="9" y="9" width="11" height="12" rx="2"/><path d="M15 9V5.5A1.5 1.5 0 0 0 13.5 4H5.5A1.5 1.5 0 0 0 4 5.5v8A1.5 1.5 0 0 0 5.5 15H9"/>',
+  pin:      '<path d="M12 21V13"/><path d="M8.5 3h7l-1 6.5 3 3.5H6.5l3-3.5z"/>',
+};
+/* `cls` names the sizing rule, so one path serves a 15px drawer mark and a
+   20px floating button without a second copy of the geometry. */
+function ico(name, cls) {
+  return `<svg class="${cls || 'btn-ico'}" viewBox="0 0 24 24" aria-hidden="true">${ICO_PATH[name] || ''}</svg>`;
+}
+
 /* ─── Section toggle ─────────────────────────────────── */
 const SECTION_STATE_KEY = 'campaignSectionState';
 function getSectionState() {
@@ -304,10 +333,10 @@ function renderBmList() {
   const bms   = loadBookmarks();
   if (!bms.length) { empty.style.display = ''; list.innerHTML = ''; list.appendChild(empty); return; }
   empty.style.display = 'none';
-  const icons = { 'sec-arc':'📖','sec-world':'🗺️','sec-villains':'💀','sec-npcs':'🧩','sec-scripts':'📜' };
+  const icons = { 'sec-arc':'book','sec-world':'globe','sec-villains':'skull','sec-npcs':'people','sec-scripts':'speech' };
   list.innerHTML = bms.map(b => `
     <div class="bm-item" onclick="jumpToBookmark('${escHtml(b.href)}','${escHtml(b.id)}')">
-      <span class="bm-item-icon">${icons[b.id]||'📌'}</span>
+      <span class="bm-item-icon">${ico(icons[b.id] || 'pin', 'bm-ico')}</span>
       <span class="bm-item-label">${escHtml(b.label)}</span>
       <button class="bm-item-remove" onclick="removeBookmark('${escHtml(b.id)}',event)" title="Remove" aria-label="Remove bookmark">×</button>
     </div>`).join('');
@@ -585,7 +614,7 @@ function renderArcsUnified(sources, el) {
           </div>
           <div class="arc-header-right">
             ${arc.sessions?`<span class="tag tag-primary" style="white-space:nowrap;">${escHtml(arc.sessions)} session${arc.sessions==='1'?'':arc.sessions?'s':''}</span>`:''}
-            <button class="arc-bm-btn" id="bm-${arcBmId}" onclick="event.stopPropagation();toggleBookmark('${arcBmId}','${escHtml(arc.name)}','#${arcBmId}')" title="Bookmark this arc">🔖</button>
+            <button class="arc-bm-btn" id="bm-${arcBmId}" onclick="event.stopPropagation();toggleBookmark('${arcBmId}','${escHtml(arc.name)}','#${arcBmId}')" title="Bookmark this arc">${ico('bookmark', 'bm-ico')}</button>
           </div>
         </div>
         ${arc.dm_goal?`<div class="dm-prep" style="margin-top:8px;"><div class="dm-prep-label">🎯 Session goal</div><div class="dm-prep-row">${escHtml(arc.dm_goal)}</div></div>`:''}
@@ -1285,9 +1314,9 @@ function buildScriptCard(sc) {
       <div class="script-card-header">
         <div class="script-card-title" id="script-title-disp-${escHtml(sc.id)}">${escHtml(sc.title)}</div>
         <div class="script-card-actions">
-          <span class="toggle-btn" onclick="copyScriptText('${escHtml(sc.id)}')">📋 Copy</span>
-          <span class="toggle-btn script-manage-only" onclick="applyScriptEditMode('${escHtml(sc.id)}')">✏️ Edit</span>
-          <span class="toggle-btn script-manage-only" style="color:var(--hero-red);" onclick="deleteScriptEntry('${escHtml(sc.id)}')">🗑 Delete</span>
+          <span class="toggle-btn" onclick="copyScriptText('${escHtml(sc.id)}')">${ico('copy')}Copy</span>
+          <span class="toggle-btn script-manage-only" onclick="applyScriptEditMode('${escHtml(sc.id)}')">${ico('pencil')}Edit</span>
+          <span class="toggle-btn script-manage-only" style="color:var(--hero-red);" onclick="deleteScriptEntry('${escHtml(sc.id)}')">${ico('trash')}Delete</span>
         </div>
       </div>
       <div class="script-when" id="script-when-disp-${escHtml(sc.id)}" style="${sc.when?'':'display:none;'}">${escHtml(sc.when||'')}</div>
@@ -1309,8 +1338,8 @@ function buildScriptCard(sc) {
         <div class="edit-hint">Write naturally — line breaks are preserved.</div>
       </div>
       <div class="manage-bar">
-        <span class="toggle-btn" onclick="applyScriptReadMode('${escHtml(sc.id)}')">👁 Done editing</span>
-        <span class="toggle-btn" style="color:var(--hero-red);" onclick="deleteScriptEntry('${escHtml(sc.id)}')">🗑 Delete this script</span>
+        <span class="toggle-btn" onclick="applyScriptReadMode('${escHtml(sc.id)}')">${ico('eye')}Done editing</span>
+        <span class="toggle-btn" style="color:var(--hero-red);" onclick="deleteScriptEntry('${escHtml(sc.id)}')">${ico('trash')}Delete this script</span>
       </div>
     </div>
   </div>`;
@@ -1482,7 +1511,7 @@ function toggleScriptEditMode() {
   const saveBtn = document.getElementById('scripts-save-btn');
   const addBtn  = document.getElementById('scripts-add-script-btn');
   const body    = document.getElementById('body-sec-scripts');
-  btn.textContent = scriptsManageMode ? '👁 Done' : '✏️ Edit';
+  btn.innerHTML = scriptsManageMode ? ico('eye') + 'Done' : ico('pencil') + 'Edit';
   btn.classList.toggle('active', scriptsManageMode);
   saveBtn.style.display = scriptsManageMode ? '' : 'none';
   addBtn.style.display  = scriptsManageMode ? '' : 'none';

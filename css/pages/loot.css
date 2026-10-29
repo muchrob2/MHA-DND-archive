@@ -134,7 +134,7 @@
 }
 
 #loot-empty { padding: 40px 0; text-align: center; font-size: var(--fs-sm); color: var(--text-dim); }
-#loot-empty .es-icon { font-size: 30px; margin-bottom: 8px; }
+#loot-empty .es-icon { width: 30px; height: 30px; margin-bottom: 8px; }
 
 @media (max-width: 640px) {
   #panel { padding: 16px 12px 40px; }

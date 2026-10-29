@@ -24,7 +24,11 @@
 <!-- A player page, and read-only as far as the campaign is concerned:
      drafts live in this browser and nothing here writes a character. The
      quirk database reads the live cast first and says which of its seven
-     sources answered — see quirk-data.js. -->
+     sources answered — see quirk-data.js.
+
+     No character is named in it. The cast it is assembled from includes the
+     gang, the Underground and the villains, so a name here would be a
+     spoiler — the entries are keyed by quirk and the prose is scrubbed. -->
 <nav id="topnav">
   <a id="back-btn" href="index.html">← Dashboard</a>
   <span class="nav-title">The Lab</span>
@@ -35,7 +39,7 @@
 
 <div id="panel">
   <div class="page-heading">The Lab</div>
-  <div class="page-sub">Build something and see what it actually does before it reaches the table — then look up every quirk in the campaign to check you have not reinvented one.</div>
+  <div class="page-sub">Build something and see what it actually does before it reaches the table — then look up every quirk in the campaign to check you have not reinvented one. The database names the quirks, never the people who have them.</div>
 
   <div id="lab-tabs" class="lb-tabs"></div>
   <div id="lab-body"></div>
@@ -47,6 +51,13 @@
     The averages are measured by rolling the expression a few thousand times through the
     toolkit's own dice engine, not worked out from a formula — which is why they wobble by
     a tenth and why they are right for <code>4d6kh3</code>.
+  </p>
+  <p class="lb-foot">
+    <strong>Nobody is named in the quirk database.</strong> It is assembled from every character
+    the campaign knows — which includes the gang, the Underground and the villains — so entries
+    are keyed by the quirk rather than by who has it, two people who share one are a single
+    entry, and the descriptions say <em>the user</em> where they used to say a name. Searching
+    for a person finds nothing. If you want the cast, that is the Characters tab, behind the DM block.
   </p>
 </div>
 

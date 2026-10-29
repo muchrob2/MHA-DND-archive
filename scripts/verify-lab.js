@@ -18,8 +18,13 @@
 //      invented one.
 //   4. The JSON it hands over is the shape a character file takes, and
 //      carries none of the workbench's own working-out fields.
-//   5. The quirk database reads every source it claims to, merges a
-//      character who appears in several, and says which ones failed.
+//   5. The quirk database reads every source it claims to, merges two people
+//      who share a quirk into one entry, and says which sources failed.
+//   5b. NOBODY IS NAMED IN IT. The cast it is assembled from includes the
+//      gang, the Underground and the villains, so a name on this page is a
+//      spoiler. Every rendered field is checked against every name the
+//      campaign knows — the headers are the easy half, and the prose, which
+//      is written about people, is the half that needs checking.
 //   6. Everything printed is escaped, and nothing on the page writes a
 //      character.
 
@@ -62,7 +67,7 @@ const env = new Function('sandbox', `
            labReset, hitChance, critChance, damageProfile, expectedDamage, abilityJson,
            abilityProse, benchFrom, setQuirkQuery, filterQuirkType, filterQuirkFrom,
            visibleQuirks, quirkMatches, quirkDedupe, quirkRecord, quirkUsable,
-           quirkNormaliseType, quirkFacets,
+           quirkNormaliseType, quirkFacets, quirkScrub,
            get a() { return ability; }, set a(v) { ability = v; },
            set quirks(q) { labQuirks = q; labQuirksLoaded = true; },
            get drafts() { return labDrafts; } };
@@ -263,28 +268,76 @@ const env = new Function('sandbox', `
   check('and a blank or N/A type is called Unrecorded rather than left empty',
     env.quirkNormaliseType('') === 'Unrecorded' && env.quirkNormaliseType('N/A') === 'Unrecorded');
 
-  check('a record with no name or no quirk is not usable',
-    env.quirkUsable({ name: '', quirk: 'x' }) === false
-    && env.quirkUsable({ name: 'y', quirk: '' }) === false
-    && env.quirkUsable({ name: 'y', quirk: 'x' }) === true);
+  check('a record needs a quirk to be about',
+    env.quirkUsable({ quirk: '' }) === false
+    && env.quirkUsable({ quirk: 'x' }) === true
+    && env.quirkUsable(null) === false);
+  check('and a record carries no name field at all',
+    (() => {
+      const r = env.quirkRecord({ name: 'Somebody Real', alias: 'Nickname',
+        hero_name: 'Hero', quirk: 'x' }, 's', ['Somebody Real']);
+      return !('name' in r) && !('alias' in r);
+    })(),
+    'a field that does not exist cannot be printed by mistake');
 
-  // The merge: the same person from several sources, live winning on every
-  // field it has, the repo filling gaps.
+  // The merge is by QUIRK now: two people who share one are one entry, and
+  // their abilities accumulate because they have found different things to
+  // do with it.
   const merged = env.quirkDedupe([
-    env.quirkRecord({ name: 'Test One', quirk: 'Live quirk', quirk_type: 'Emitter' }, 'live'),
-    env.quirkRecord({ name: 'test one', quirk: 'Repo quirk', quirk_type: 'Mutant',
+    env.quirkRecord({ name: 'One', quirk: 'Shared', quirk_type: 'Emitter',
+      quirk_mechanics: { abilities: [{ name: 'A', description: 'x' }] } }, 'live', []),
+    env.quirkRecord({ name: 'Two', quirk: 'shared', quirk_type: 'Mutant',
       quirk_rarity: 'Rare',
-      quirk_mechanics: { weakness: 'from the repo', abilities: [{ name: 'A', description: 'x' }] } }, 'repo'),
+      quirk_mechanics: { weakness: 'from the repo', abilities: [{ name: 'B', description: 'y' }] } }, 'repo', []),
   ]);
-  check('a character in two sources merges into one record',
-    merged.length === 1, merged.length + ' records');
-  check('the live copy wins on every field it has filled in',
-    merged[0].quirk === 'Live quirk' && merged[0].type === 'Emitter');
-  check('and the repo fills in the gaps rather than being discarded',
-    merged[0].weakness === 'from the repo' && merged[0].rarity === 'Rare'
-    && merged[0].abilities.length === 1);
-  check('the record says it was in both places',
+  check('two people with the same quirk become one entry',
+    merged.length === 1 && merged[0].held === 2, JSON.stringify(merged.map(m => m.quirk)));
+  check('the first source wins on every field it has filled in',
+    merged[0].quirk === 'Shared' && merged[0].type === 'Emitter');
+  check('the second fills in the gaps rather than being discarded',
+    merged[0].weakness === 'from the repo' && merged[0].rarity === 'Rare');
+  check('and their abilities accumulate rather than one replacing the other',
+    merged[0].abilities.map(a => a.name).join() === 'A,B',
+    merged[0].abilities.map(a => a.name).join());
+  const thrice = env.quirkDedupe([
+    env.quirkRecord({ name: 'One', quirk: 'Shared',
+      quirk_mechanics: { abilities: [{ name: 'A', description: 'x' }] } }, 'live', []),
+    env.quirkRecord({ name: 'Two', quirk: 'Shared',
+      quirk_mechanics: { abilities: [{ name: 'A', description: 'x' }, { name: 'B', description: 'y' }] } }, 'repo', []),
+  ]);
+  check('but an ability both of them have is listed once',
+    thrice[0].abilities.map(a => a.name).join() === 'A,B'
+    && thrice[0].abilities.length === 2,
+    thrice[0].abilities.map(a => a.name).join());
+  check('the entry says which sources it came from',
     merged[0].alsoFrom.join() === 'repo');
+
+  /* ── the scrub ── */
+  const scrubCases = [
+    ['Once Kakita has studied a target, anything she throws curves.',
+      ['Kakita Keiko', 'Kakita', 'Keiko'], 'Once the user has studied'],
+    ["Domoto's legs carry more force than her frame suggests.",
+      ['Domoto Fumiju', 'Domoto', 'Fumiju'], "The user's legs"],
+    ['Dōmeki Daigo runs it, and Daigo is gentle with the kids.',
+      ['Dōmeki Daigo', 'Dōmeki', 'Daigo'], 'The user runs it, and the user is gentle'],
+  ];
+  const scrubbed = scrubCases.filter(([text, names, want]) =>
+    !env.quirkScrub(text, [...names].sort((a, b) => b.length - a.length)).includes(want));
+  check('the scrub swaps a name for "the user", capitalised at a sentence start',
+    scrubbed.length === 0,
+    scrubbed.map(([t, n]) => env.quirkScrub(t, n)).join(' | '));
+  check('it will not eat a longer word that starts with a name',
+    env.quirkScrub('Kotoha holds the street.', ['Koto']) === 'Kotoha holds the street.',
+    'word-bounded, or "Koto" rewrites "Kotoha"');
+  check('and a fragment shorter than four letters is never used',
+    env.quirkScrub('The arm and the leg.', ['arm', 'leg']) === 'The arm and the leg.',
+    'a three-letter fragment of a name would rewrite ordinary words');
+  check('prose with no name in it comes through untouched',
+    env.quirkScrub('A concussive shock through the floor.', ['Kakita'])
+      === 'A concussive shock through the floor.');
+  check('and nothing is attempted with no names to go on',
+    env.quirkScrub('Kakita throws.', []) === 'Kakita throws.'
+    && env.quirkScrub(null, ['Kakita']) === '');
 
   // The repo, for real: every bundled source, read off disk.
   const repoEnv = new Function('sandbox', `
@@ -299,7 +352,7 @@ const env = new Function('sandbox', `
       : { doc: () => ({ get: () => Promise.resolve({ exists: false }) }) } },
   });
 
-  return repoEnv(null, {}).then(({ quirks, sources, failed }) => {
+  return repoEnv(null, {}).then(({ quirks, sources, failed, names }) => {
     check('the bundled files alone make a database worth searching',
       quirks.length >= 50, quirks.length + ' characters with a quirk');
     check('and it covers more than one class',
@@ -311,18 +364,43 @@ const env = new Function('sandbox', `
     check('and the page prints that report',
       /Could not reach/.test(pageJs) && /lab-sources/.test(pageJs));
 
-    check('every record carries what the page needs to show',
-      quirks.every(q => q.name && q.quirk && q.type && Array.isArray(q.abilities)));
+    check('every entry carries what the page needs to show',
+      quirks.every(q => q.quirk && q.type && Array.isArray(q.abilities) && q.held >= 1),
+      JSON.stringify(quirks.filter(q => !(q.quirk && q.type && Array.isArray(q.abilities) && q.held >= 1)).slice(0,2)));
     const withAbilities = quirks.filter(q => q.abilities.length);
     check('and a good number of them have abilities recorded',
       withAbilities.length >= 25, withAbilities.length + ' with abilities');
 
     const q = quirks[0];
-    check('search is an AND across every field of a record',
-      env.quirkMatches(q, q.name.split(' ')[0].toLowerCase()) === true
-      && env.quirkMatches(q, q.name + ' definitelynotinthere') === false);
+    check('search is an AND across every field of an entry',
+      env.quirkMatches(q, q.quirk.split(' ')[0].toLowerCase()) === true
+      && env.quirkMatches(q, q.quirk + ' definitelynotinthere') === false);
     check('and an empty query matches everything',
       quirks.every(x => env.quirkMatches(x, '')));
+
+    /* ── 5b. nobody is named ── */
+    // Every name the campaign knows, against every field the page renders.
+    // This is the check the whole no-names change exists for.
+    const everything = quirks.flatMap(x => [x.quirk, x.summary, x.weakness, x.source,
+      x.from, ...(x.alsoFrom || []), ...x.abilities.flatMap(a => [a.name, a.text])])
+      .filter(Boolean).join('\n');
+    const leaked = (names || []).filter(n => {
+      if (n.length < 4) return false;
+      return new RegExp('(^|[^A-Za-z\\u00c0-\\u024f])'
+        + n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        + '(?![A-Za-z\\u00c0-\\u024f])').test(everything);
+    });
+    check('no character name survives anywhere in the database',
+      leaked.length === 0, leaked.join(', '));
+    check('and the loader knew enough names for that to mean something',
+      (names || []).length >= 100, (names || []).length + ' names and name parts');
+    for (const who of ['Kakita', 'Domoto', 'Alucard', 'Suzuki']) {
+      check(`searching for "${who}" finds nothing`,
+        quirks.filter(x => env.quirkMatches(x, who)).length === 0);
+    }
+    check('while a quirk is still findable',
+      quirks.filter(x => env.quirkMatches(x, 'fire')).length > 0
+      && quirks.filter(x => env.quirkMatches(x, 'emitter')).length > 0);
 
     const f = env.quirkFacets(quirks);
     check('the facets count the types and the sources',
@@ -331,16 +409,19 @@ const env = new Function('sandbox', `
       JSON.stringify(f.types));
 
     /* ── 6. escaping, and taking one to the bench ── */
-    env.quirks = [{ name: 'Ren Suzuki', alias: '', quirk: 'Beams From His Eyes',
-      type: 'Transformation', rarity: 'Rare', summary: '', weakness: 'Burns stamina.',
-      source: '', from: 'Class 1-A (live)', role: '', alsoFrom: [],
+    env.quirks = [{ quirk: 'Beams From The Eyes', type: 'Transformation', rarity: 'Rare',
+      summary: '', weakness: 'Burns stamina.', source: '', from: 'Class 1-A (live)',
+      alsoFrom: [], held: 1,
       abilities: [{ name: 'Laser Beam', type: 'Action', text: 'Fires a beam.',
         damage: '3d8', attackBonus: '+6' }] }];
     env.setView('quirks');
-    check('the database renders a card per record',
-      /Beams From His Eyes/.test(els['lab-quirks-list'].innerHTML));
+    check('the database renders a card per entry',
+      /Beams From The Eyes/.test(els['lab-quirks-list'].innerHTML));
+    check('and the card header carries no name, only the quirk',
+      !/lb-quirk-who">[A-Z]/.test(els['lab-quirks-list'].innerHTML),
+      (els['lab-quirks-list'].innerHTML.match(/lb-quirk-who">[^<]*/) || [''])[0]);
 
-    env.benchFrom('Ren Suzuki', 'Laser Beam');
+    env.benchFrom('Beams From The Eyes', 'Laser Beam');
     check('a recorded ability can be taken onto the workbench',
       env.a.name === 'Laser Beam' && env.a.damage === '3d8'
       && env.a.attackBonus === '+6' && env.a.hitMode === 'attack',
@@ -348,7 +429,7 @@ const env = new Function('sandbox', `
     check('and it computes once it is there',
       env.expectedDamage().dmg.min === 3 && env.expectedDamage().dmg.max === 24);
     const held = env.a.name;
-    env.benchFrom('Nobody', 'Nothing');
+    env.benchFrom('No such quirk', 'Nothing');
     check('asking for one that does not exist changes nothing',
       env.a.name === held);
 

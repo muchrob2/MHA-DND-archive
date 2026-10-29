@@ -343,6 +343,8 @@
   border-top: 1px solid var(--border);
 }
 .lb-foot strong { color: var(--text-muted); }
+.lb-foot em { color: var(--accent-text); font-style: normal; }
+.lb-foot + .lb-foot { margin-top: 10px; padding-top: 0; border-top: none; }
 .lb-foot code {
   padding: 1px 4px;
   font-size: 10px;

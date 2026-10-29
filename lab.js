@@ -24,6 +24,13 @@
 // places a character can be hiding, searchable and filterable. See
 // quirk-data.js for why that is seven places and not one.
 //
+// Nobody is named in it. The cast it is assembled from includes the gang,
+// the Underground and the villains, so "Alucard Chosoji — BLACK" on a page
+// a player can open is a spoiler. Entries are keyed and merged by the quirk
+// instead, which also means a quirk two people share is one entry — and the
+// prose is scrubbed, because it is written about people. quirk-data.js has
+// the details.
+//
 // Nothing here is saved to the campaign. Drafts live in this browser only,
 // and the Copy button hands over JSON in the exact shape a character file's
 // quirk_mechanics.abilities takes, so the DM can paste it in if they agree.
@@ -434,12 +441,12 @@ function visibleQuirks() {
 }
 
 function quirkCardHtml(q) {
-  const open = labOpenQuirk === q.name;
+  const open = labOpenQuirk === q.quirk;
   return `<div class="lb-quirk${open ? ' is-open' : ''}">
-      <button class="lb-quirk-head" onclick="openQuirk('${escHtml(q.name)}')"
+      <button class="lb-quirk-head" onclick="openQuirk('${escHtml(q.quirk)}')"
         aria-expanded="${open ? 'true' : 'false'}">
         <span class="lb-quirk-name">${escHtml(q.quirk)}</span>
-        <span class="lb-quirk-who">${escHtml(q.name)}${q.alias ? ' — "' + escHtml(q.alias) + '"' : ''}</span>
+        <span class="lb-quirk-who">${q.held > 1 ? escHtml(q.held) + ' people have it' : ''}</span>
         <span class="lb-quirk-tags">
           <span class="lb-tag type-${escHtml(q.type.toLowerCase())}">${escHtml(q.type)}</span>
           ${q.rarity ? `<span class="lb-tag">${escHtml(q.rarity)}</span>` : ''}
@@ -455,12 +462,12 @@ function quirkCardHtml(q) {
               <span class="lb-qa-name">${escHtml(a.name)}</span>
               ${a.type ? `<span class="lb-tag">${escHtml(a.type)}</span>` : ''}
               ${a.damage ? `<span class="lb-tag">${escHtml(a.damage)}</span>` : ''}
-              ${a.damage && diceParse(a.damage) ? `<button class="lb-qa-bench" onclick="benchFrom('${escHtml(q.name)}','${escHtml(a.name)}')" title="Open this on the workbench">→ workbench</button>` : ''}
+              ${a.damage && diceParse(a.damage) ? `<button class="lb-qa-bench" onclick="benchFrom('${escHtml(q.quirk)}','${escHtml(a.name)}')" title="Open this on the workbench">→ workbench</button>` : ''}
             </div>
             ${a.text ? `<p class="lb-qa-text">${escHtml(a.text)}</p>` : ''}
           </div>`).join('')}
         </div>` : '<p class="lb-empty">No abilities recorded for this one.</p>'}
-        <div class="lb-quirk-from">From ${escHtml(q.from)}${(q.alsoFrom || []).length ? ', also in ' + escHtml(q.alsoFrom.join(', ')) : ''}${q.source ? ' · ' + escHtml(q.source) : ''}</div>
+        <div class="lb-quirk-from">Recorded in ${escHtml(q.from)}${(q.alsoFrom || []).length ? ' and ' + escHtml(q.alsoFrom.join(', ')) : ''}${q.source ? ' · ' + escHtml(q.source) : ''}</div>
       </div>` : ''}
     </div>`;
 }
@@ -469,7 +476,7 @@ function quirkCardHtml(q) {
 // having both halves on one page: the fastest way to build something
 // balanced is to start from something that already is.
 function benchFrom(quirkName, abilityName) {
-  const q = labQuirks.find(x => x.name === quirkName);
+  const q = labQuirks.find(x => x.quirk === quirkName);
   const a = q && q.abilities.find(x => x.name === abilityName);
   if (!a) return;
   ability = Object.assign({}, ability, {
@@ -529,7 +536,7 @@ function quirksHtml() {
   return `<div class="lb-quirks">
       <div class="lb-quirk-controls">
         <input id="lab-quirk-search" type="search" value="${escHtml(labQuirkQuery)}"
-          placeholder="Search every quirk, character, ability and weakness…"
+          placeholder="Search every quirk, ability and weakness…"
           oninput="setQuirkQuery(this.value)" aria-label="Search the quirk database">
       </div>
       <div id="lab-facets"></div>

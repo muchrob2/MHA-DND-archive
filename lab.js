@@ -797,7 +797,8 @@ function quirkCardHtml(q) {
       <button class="lb-quirk-head" onclick="openQuirk('${escHtml(q.quirk)}')"
         aria-expanded="${open ? 'true' : 'false'}">
         <span class="lb-quirk-name">${escHtml(q.quirk)}</span>
-        <span class="lb-quirk-who">${q.held > 1 ? escHtml(q.held) + ' people have it' : ''}</span>
+        <span class="lb-quirk-who">${q.held > 1 ? escHtml(q.held) + ' people have it'
+          : q.held === 0 ? 'from the book' : ''}</span>
         <span class="lb-quirk-tags">
           <span class="lb-tag type-${escHtml(q.type.toLowerCase())}">${escHtml(q.type)}</span>
           ${q.rarity ? `<span class="lb-tag">${escHtml(q.rarity)}</span>` : ''}
@@ -817,7 +818,15 @@ function quirkCardHtml(q) {
             </div>
             ${a.text ? `<p class="lb-qa-text">${escHtml(a.text)}</p>` : ''}
           </div>`).join('')}
-        </div>` : '<p class="lb-empty">No abilities recorded for this one.</p>'}
+        </div>` : `<p class="lb-empty">${q.page
+          ? 'No abilities are indexed for this one — the entry is on page ' + escHtml(q.page) + '.'
+          : 'No abilities recorded for this one.'}</p>`}
+        ${q.page ? `<p class="lb-quirk-page">
+          The full entry, with every ability written out, is on
+          <strong>page ${escHtml(q.page)}</strong> of the
+          <a href="RULEBOOKS/-%20My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf"
+             target="_blank" rel="noopener noreferrer">Quirk Compendium</a>.
+        </p>` : ''}
         <div class="lb-quirk-from">Recorded in ${escHtml(q.from)}${(q.alsoFrom || []).length ? ' and ' + escHtml(q.alsoFrom.join(', ')) : ''}${q.source ? ' · ' + escHtml(q.source) : ''}</div>
       </div>` : ''}
     </div>`;

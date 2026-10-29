@@ -794,3 +794,18 @@
 /* The turn sheet's two new sources. */
 .lb-do.from-move    { border-left-color: var(--purple, var(--accent)); }
 .lb-do.from-crafted { border-left-color: var(--teal); }
+
+/* Where the full entry actually lives. The database is an index into the
+   book, so the page number is the point of a compendium entry. */
+.lb-quirk-page {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.lb-quirk-page strong { color: var(--text); }
+.lb-quirk-page a { color: var(--accent-text); }

@@ -5,6 +5,10 @@
 // There is no single file listing the campaign's quirks, because quirks
 // belong to characters and the characters are in seven places:
 //
+//   REPO   CAMPAIGN/compendium.json       the Quirk Compendium, indexed —
+//                                         every quirk in the book, built
+//                                         from the PDF by
+//                                         scripts/build-compendium.js
 //   LIVE   mha-dnd/relationships-bundle   Class 1-A, hand-edited in the
 //                                         browser, authoritative for them
 //   LIVE   characters/{id}                the rest of the cast — the gang,
@@ -20,7 +24,9 @@
 //   REPO   CAMPAIGN/npcs.json             the supporting cast
 //
 // quirkLoadAll reads all of them, live first, and merges on the QUIRK — so
-// "Homing", held by two different people, is one entry. It reports which
+// "Homing", held by two different people, is one entry, and a quirk somebody
+// in the campaign has that is also in the book is one entry carrying both:
+// the book's rarity and page, and whatever the character's own record adds. It reports which
 // sources answered, and the page says so, because a database that quietly
 // lost two of its seven sources looks exactly like a database that is
 // complete.
@@ -135,6 +141,7 @@ async function quirkLoadAll(db, opts) {
    * build. Nothing between the two passes is rendered.
    */
   const raw = [];         // { character, from }
+  const compendium = [];  // the book's entries, which have no character behind them
   const names = new Set();
   const collect = (c, from) => {
     if (!c) return;
@@ -206,6 +213,41 @@ async function quirkLoadAll(db, opts) {
     } catch { failed.push(label); }
   }
 
+  /* The Quirk Compendium, read LAST so that everything the campaign knows
+   * about a quirk wins over the book's account of it — a character's own
+   * record is the one being played. The book then fills in what nobody in
+   * the campaign has: its rarity, its page, and the 130-odd quirks that
+   * belong to nobody at all.
+   *
+   * Its entries are not characters, so they are shaped here rather than
+   * going through quirkRecord — there is nobody to collect a name from, and
+   * that is the one source where that is a feature.
+   */
+  try {
+    const book = await getJson('CAMPAIGN/compendium.json');
+    for (const e of (book.entries || [])) {
+      if (!e.name) continue;
+      compendium.push({
+        quirk: e.name,
+        type: quirkNormaliseType(e.type),
+        rarity: e.rarity || '',
+        summary: e.description || '',
+        weakness: e.weakness || '',
+        source: book.source || 'Quirk Compendium',
+        page: e.page || null,
+        from: 'The Quirk Compendium',
+        abilities: (e.abilities || []).map(a => ({
+          name: a.name,
+          type: a.level ? 'Level ' + a.level : '',
+          text: '',
+          damage: '',
+          attackBonus: '',
+        })),
+      });
+    }
+    if (compendium.length) sources.push('the Quirk Compendium');
+  } catch { failed.push('the Quirk Compendium'); }
+
   // The bundled Class 1-A files, only for anybody the live bundle did not
   // already answer for — so a signed-out reader still gets the class.
   try {
@@ -229,7 +271,7 @@ async function quirkLoadAll(db, opts) {
     if (quirkUsable(r)) out.push(r);
   }
 
-  return { quirks: quirkDedupe(out), sources, failed, names: nameList };
+  return { quirks: quirkDedupe(out.concat(compendium)), sources, failed, names: nameList };
 }
 
 /* Merged on the QUIRK, which is what this database is about now that nobody
@@ -247,9 +289,12 @@ function quirkDedupe(records) {
   for (const r of records) {
     const key = r.quirk.trim().toLowerCase();
     const seen = byQuirk.get(key);
-    if (!seen) { byQuirk.set(key, { ...r, alsoFrom: [], held: 1 }); continue; }
-    seen.held++;
-    for (const field of ['rarity', 'summary', 'weakness', 'source']) {
+    if (!seen) {
+      byQuirk.set(key, { ...r, alsoFrom: [], held: r.from === 'The Quirk Compendium' ? 0 : 1 });
+      continue;
+    }
+    if (r.from !== 'The Quirk Compendium') seen.held++;
+    for (const field of ['rarity', 'summary', 'weakness', 'source', 'page']) {
       if (!seen[field] && r[field]) seen[field] = r[field];
     }
     if (seen.type === 'Unrecorded' && r.type !== 'Unrecorded') seen.type = r.type;

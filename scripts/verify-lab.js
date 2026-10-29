@@ -420,8 +420,22 @@ const env = new Function('sandbox', `
       /Could not reach/.test(pageJs) && /lab-sources/.test(pageJs));
 
     check('every entry carries what the page needs to show',
-      quirks.every(q => q.quirk && q.type && Array.isArray(q.abilities) && q.held >= 1),
-      JSON.stringify(quirks.filter(q => !(q.quirk && q.type && Array.isArray(q.abilities) && q.held >= 1)).slice(0,2)));
+      quirks.every(q => q.quirk && q.type && Array.isArray(q.abilities)
+        && Number.isInteger(q.held) && q.held >= 0),
+      JSON.stringify(quirks.filter(q => !(q.quirk && q.type && Array.isArray(q.abilities)
+        && Number.isInteger(q.held) && q.held >= 0)).slice(0, 2)));
+    check('a quirk somebody in the campaign has is counted as held',
+      quirks.filter(q => q.from !== 'The Quirk Compendium').every(q => q.held >= 1),
+      quirks.filter(q => q.from !== 'The Quirk Compendium' && q.held < 1)
+        .map(q => q.quirk).join(', '));
+    check('and one that is only in the book is held by nobody',
+      quirks.filter(q => q.from === 'The Quirk Compendium').every(q => q.held === 0),
+      '"1 person has it" would be wrong about a quirk nobody in the campaign has');
+    check('the book is one of the sources the page reports',
+      sources.includes('the Quirk Compendium'), sources.join(', '));
+    check('and it is most of the database now',
+      quirks.filter(q => q.page).length >= 150,
+      quirks.filter(q => q.page).length + ' entries cite a page in the Compendium');
     const withAbilities = quirks.filter(q => q.abilities.length);
     check('and a good number of them have abilities recorded',
       withAbilities.length >= 25, withAbilities.length + ' with abilities');

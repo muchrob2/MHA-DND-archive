@@ -31,6 +31,17 @@
 // prose is scrubbed, because it is written about people. quirk-data.js has
 // the details.
 //
+// YOUR CHARACTER — everything you can do, on one screen, grouped by what it
+// costs: actions, bonus actions, reactions, what is always on. Your quirk's
+// abilities, the gear you are carrying that states a die, and the standard
+// options every character has out of the rules reference, with the numbers
+// you roll for each one.
+//
+// "Yours" means the characters the DM has assigned you — canEdit in auth.js,
+// the same check the Class 1-A toolkit uses to decide what you may edit. An
+// admin sees the whole class. Signed out, the page says so rather than
+// showing a stranger's sheet.
+//
 // Nothing here is saved to the campaign. Drafts live in this browser only,
 // and the Copy button hands over JSON in the exact shape a character file's
 // quirk_mechanics.abilities takes, so the DM can paste it in if they agree.
@@ -42,7 +53,13 @@ const LS_LAB = 'mha-lab-drafts-v1';
 // page never visibly pauses. Measured at about 4ms for 4,000.
 const LAB_SAMPLES = 4000;
 
-let labView = 'bench';          // 'bench' | 'quirks'
+let labView = 'mine';           // 'mine' | 'bench' | 'quirks'
+let labChars = [];              // every character the loader found
+let labMine = [];               // the ones this viewer may see
+let labCharFile = null;         // which of them is on screen
+let labCharsLoaded = false;
+let labCharSource = '';
+let labRolls = {};              // row id -> the last roll shown beside it
 let labDrafts = [];
 let labQuirks = [];
 let labQuirkSources = { sources: [], failed: [] };
@@ -545,6 +562,186 @@ function quirksHtml() {
     </div>`;
 }
 
+/* ── Render: your character ─────────────────────────────────────────
+   A turn sheet. The question it answers is the one a player actually asks —
+   "what can I do right now" — so it is grouped by what a thing costs rather
+   than by where it came from, and every row that has a die has a button that
+   rolls it.
+   ─────────────────────────────────────────────────────────────────── */
+
+// The standard options every character has, lifted out of the rules
+// reference rather than written again here, so the Lab and the Rules page
+// cannot disagree about what Disengage does.
+const LAB_UNIVERSAL_NAMES = ['Attack action', 'Dash', 'Disengage', 'Dodge', 'Hide',
+  'Search', 'Ready', 'Grapple', 'Shove', 'Free interaction', 'Opportunity attack',
+  'Bonus action', 'Reaction', 'Movement'];
+
+function labUniversal() {
+  if (typeof rulesSection !== 'function') return [];
+  const turn = rulesSection('your-turn');
+  const moving = rulesSection('moving');
+  const entries = [...((turn && turn.entries) || []), ...((moving && moving.entries) || [])];
+  return entries
+    .filter(e => LAB_UNIVERSAL_NAMES.includes(e.name))
+    .map(e => ({
+      name: e.name,
+      // The cost is read off the rule's own name where it says one, and
+      // defaults to an action, which is what all the named ones cost.
+      cost: /^(Bonus action)$/.test(e.name) ? 'Bonus action'
+        : /^(Reaction|Opportunity attack)$/.test(e.name) ? 'Reaction'
+        : /^(Movement|Free interaction)$/.test(e.name) ? 'Other'
+        : 'Action',
+      costText: 'Everybody has this',
+      text: e.text,
+    }));
+}
+
+function labPickChar(file) {
+  labCharFile = file;
+  labRolls = {};
+  render();
+}
+
+function labCurrentChar() {
+  return labMine.find(c => c._file === labCharFile) || labMine[0] || null;
+}
+
+function rollRow(id, expr) {
+  const parsed = diceParse(expr);
+  if (!parsed) return;
+  const r = diceRoll(parsed);
+  labRolls[id] = { total: r.total, breakdown: r.breakdown, crit: r.crit, fumble: r.fumble };
+  renderMine();
+}
+
+function statStripHtml(c) {
+  const stats = [
+    ['HP', c.HP], ['AC', c.AC], ['Speed', c.speed],
+    ['Prof', charSigned(charProfBonus(c))],
+    ['Quirk DC', c.quirk_save_DC],
+    ['Passive', charPassive(c, 'WIS')],
+  ].filter(([, v]) => v != null && String(v).trim() !== '');
+  return `<div class="lb-stats">
+      ${stats.map(([k, v]) => `<div class="lb-cstat">
+        <div class="lb-cstat-num">${escHtml(v)}</div>
+        <div class="lb-cstat-label">${escHtml(k)}</div>
+      </div>`).join('')}
+    </div>
+    <div class="lb-mods">
+      ${CHAR_ABILITIES.map(k => {
+        const mod = charModifier(c, k);
+        const score = charNum((c.ability_scores || {})[k]);
+        return `<button class="lb-mod" onclick="rollRow('save-${escHtml(k)}', '1d20${charSigned(mod) === '—' ? '' : (mod >= 0 ? '+' : '-') + Math.abs(mod)}')"
+          title="Roll a d20 and add ${escHtml(charSigned(mod))} — a check or a save with ${escHtml(CHAR_ABILITY_NAMES[k])}">
+          <span class="lb-mod-key">${escHtml(k)}</span>
+          <span class="lb-mod-val">${escHtml(charSigned(mod))}</span>
+          <span class="lb-mod-score">${score == null ? '—' : score}</span>
+          ${labRolls['save-' + k] ? `<span class="lb-mod-roll">${labRolls['save-' + k].total}</span>
+            <span class="lb-mod-raw">${escHtml(labRolls['save-' + k].breakdown)}</span>` : ''}
+        </button>`;
+      }).join('')}
+    </div>
+    <p class="lb-mods-note">Tap an ability to roll a d20 against it. These are the plain modifiers — add your proficiency where you are proficient, which the sheet does not record.</p>`;
+}
+
+function rowHtml(r, i) {
+  const id = (r.from || 'r') + '-' + i + '-' + (r.id || r.name);
+  const rolled = labRolls[id];
+  return `<div class="lb-do from-${escHtml(r.from)}">
+      <div class="lb-do-head">
+        <span class="lb-do-name">${escHtml(r.name)}</span>
+        ${r.costText ? `<span class="lb-do-cost">${escHtml(r.costText)}</span>` : ''}
+        ${r.range ? `<span class="lb-do-tag">${escHtml(r.range)}</span>` : ''}
+        ${r.damage ? `<span class="lb-do-tag lb-do-dmg">${escHtml(r.damage)}</span>` : ''}
+        ${r.dice ? `<button class="lb-do-roll" onclick="rollRow('${escHtml(id)}','${escHtml(r.dice)}')"
+          title="Roll ${escHtml(r.dice)}">🎲</button>` : ''}
+        ${r.dice ? `<button class="lb-do-bench" onclick="benchRow('${escHtml(r.name)}','${escHtml(r.dice)}','${escHtml(r.costText)}')"
+          title="Open this on the workbench">→</button>` : ''}
+      </div>
+      ${rolled ? `<div class="lb-do-rolled${rolled.crit ? ' is-crit' : rolled.fumble ? ' is-fumble' : ''}">
+        <strong>${rolled.total}</strong>${escHtml(rolled.breakdown)}${rolled.crit ? ' ★' : rolled.fumble ? ' ☠' : ''}
+      </div>` : ''}
+      ${r.text ? `<p class="lb-do-text">${escHtml(r.text)}</p>` : ''}
+    </div>`;
+}
+
+// Takes a row onto the workbench. Separate from benchFrom, which comes from
+// the quirk database and has a quirk to look up — here the row is already in
+// hand.
+function benchRow(name, dice, costText) {
+  ability = Object.assign({}, ability, {
+    name,
+    type: ACTION_TYPES.includes(costText) ? costText : 'Action',
+    damage: dice,
+    hitMode: 'attack',
+    description: '',
+  });
+  labView = 'bench';
+  render();
+}
+
+function mineHtml() {
+  if (!labCharsLoaded) {
+    return '<p class="lb-empty">Looking up your character…</p>';
+  }
+  if (!labMine.length) {
+    return `<div class="lb-nochar">
+      <p><strong>No character is assigned to you yet.</strong></p>
+      <p>This tab shows the characters your DM has given you, the same ones you can edit
+      in the Class 1-A toolkit. If you are signed in and this is empty, ask them to add
+      you — it takes one checkbox on the admin page. If you are not signed in, sign in
+      with the button at the top of the page.</p>
+      <p class="lb-empty">Everything else in the Lab works without signing in: the
+      workbench, and the quirk database.</p>
+    </div>`;
+  }
+  const c = labCurrentChar();
+  if (!c) return '<p class="lb-empty">Pick a character.</p>';
+  const { grouped } = charCanDo(c, labUniversal());
+
+  return `
+    ${labMine.length > 1 ? `<div class="lb-char-tabs">
+      ${labMine.map(x => `<button class="lb-char-tab${x._file === c._file ? ' sel' : ''}"
+        onclick="labPickChar('${escHtml(x._file)}')">${escHtml(charLabel(x))}</button>`).join('')}
+    </div>` : ''}
+
+    <div class="lb-char-head">
+      <div>
+        <h2 class="lb-char-name">${escHtml(charLabel(c))}</h2>
+        <p class="lb-char-sub">${escHtml([c.quirk, c.suggested_class, c.level ? 'Level ' + c.level : '']
+          .filter(Boolean).join(' · '))}</p>
+      </div>
+      <a class="lb-char-sheet" href="sheet.html?c=${encodeURIComponent(c._file || '')}">Printable sheet →</a>
+    </div>
+
+    ${statStripHtml(c)}
+
+    ${(c.quirk_mechanics || {}).weakness ? `<p class="lb-char-weak">
+      <span>Your quirk's weakness</span>${escHtml(c.quirk_mechanics.weakness)}</p>` : ''}
+
+    ${CHAR_COSTS.map(cost => {
+      const rows = grouped[cost];
+      if (!rows.length) return '';
+      return `<section class="lb-do-group">
+        <h3 class="lb-h2">${escHtml(CHAR_COST_LABELS[cost])} <span class="lb-do-count">${rows.length}</span></h3>
+        ${rows.map((r, i) => rowHtml(r, i)).join('')}
+      </section>`;
+    }).join('')}
+
+    <p class="lb-foot">
+      Your quirk's abilities and your carried gear come from your character as the DM has
+      it; the rest are the standard options every character has, out of the
+      <a href="rules.html">rules reference</a>. ${escHtml(labCharSource === 'local'
+        ? 'Read from the bundled copy — the live one could not be reached, so this may be out of date.'
+        : 'Read from the live copy of your character.')}
+    </p>`;
+}
+
+function renderMine() {
+  const el = document.getElementById('lab-mine');
+  if (el) el.innerHTML = mineHtml();
+}
+
 /* ── Render ── */
 
 function setView(view) {
@@ -555,17 +752,55 @@ function setView(view) {
 function render() {
   const tabs = document.getElementById('lab-tabs');
   if (tabs) {
-    tabs.innerHTML = [['bench', 'Workbench'], ['quirks', 'Quirk database']].map(([id, label]) =>
-      `<button class="lb-tab${labView === id ? ' sel' : ''}" onclick="setView('${id}')">${label}</button>`).join('');
+    tabs.innerHTML = [['mine', 'Your character'], ['bench', 'Workbench'], ['quirks', 'Quirk database']]
+      .map(([id, label]) =>
+        `<button class="lb-tab${labView === id ? ' sel' : ''}" onclick="setView('${id}')">${label}</button>`).join('');
   }
   const body = document.getElementById('lab-body');
-  if (body) body.innerHTML = labView === 'bench' ? benchHtml() : quirksHtml();
+  if (body) {
+    body.innerHTML = labView === 'bench' ? benchHtml()
+      : labView === 'quirks' ? quirksHtml()
+      : '<div id="lab-mine"></div>';
+  }
   if (labView === 'quirks') {
     renderQuirks();
     if (!labQuirksLoaded) loadQuirkDatabase();
   }
+  if (labView === 'mine') {
+    renderMine();
+    if (!labCharsLoaded) loadMyCharacters();
+  }
   const count = document.getElementById('lab-quirk-count');
-  if (count && labView === 'bench') count.textContent = '';
+  if (count && labView !== 'quirks') {
+    count.textContent = labView === 'mine' && labMine.length
+      ? `${labMine.length} character${labMine.length === 1 ? '' : 's'}` : '';
+  }
+}
+
+/* Which characters are yours.
+ *
+ * canEdit in auth.js is the same check the Class 1-A toolkit uses to decide
+ * what you may edit, and fbCharacterKey is the one definition of the key it
+ * is checked against — three files spelling that key out separately is how
+ * the Heropad once silently matched nothing for months, so this file does
+ * not spell it out a fourth time.
+ *
+ * An admin gets the whole class, which is what a DM wants from this page.
+ */
+let _charLoadStarted = false;
+async function loadMyCharacters() {
+  if (_charLoadStarted) return;
+  _charLoadStarted = true;
+  const { chars, source } = await charLoadAll(db, { authReady: fbAuthReady });
+  labChars = chars;
+  labCharSource = source;
+  await fbAuthReady;
+  const admin = !!(window.isAdmin && window.isAdmin());
+  labMine = admin ? chars : chars.filter(c =>
+    window.canEdit && window.canEdit(fbCharacterKey('Student (1-A)', c.name)));
+  if (!labCharFile && labMine.length) labCharFile = labMine[0]._file;
+  labCharsLoaded = true;
+  render();
 }
 
 let _quirkLoadStarted = false;

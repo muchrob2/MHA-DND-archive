@@ -352,3 +352,219 @@
   background: var(--surface);
   border-radius: 3px;
 }
+
+/* ── Your character ──
+   A turn sheet, so it is grouped by what a thing costs and every row that
+   has a die has a button beside it. The left border says where a row came
+   from: your quirk, your gear, or a rule everybody has. */
+
+.lb-char-tabs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
+.lb-char-tab {
+  padding: 6px 12px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.lb-char-tab:hover { color: var(--text); border-color: var(--border-strong); }
+.lb-char-tab.sel { color: var(--accent-text); background: var(--accent-light); border-color: var(--accent); }
+
+.lb-char-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--accent);
+}
+.lb-char-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 27px;
+  line-height: 1.05;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.lb-char-sub { margin: 4px 0 0; font-size: var(--fs-xs); color: var(--text-muted); }
+.lb-char-sheet {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--accent-text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.lb-char-sheet:hover { text-decoration: underline; }
+
+.lb-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+  gap: 7px;
+  margin: 14px 0 8px;
+}
+.lb-cstat {
+  padding: 9px 6px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.lb-cstat-num {
+  font-family: var(--font-display);
+  font-size: 21px;
+  line-height: 1.05;
+  color: var(--accent-text);
+}
+.lb-cstat-label {
+  margin-top: 3px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.lb-mods { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+@media (max-width: 620px) { .lb-mods { grid-template-columns: repeat(4, 1fr); } }
+.lb-mod {
+  position: relative;
+  padding: 8px 4px 6px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.lb-mod:hover { border-color: var(--accent); }
+.lb-mod-key { display: block; font-size: 9px; font-weight: 800; letter-spacing: .08em; color: var(--text-dim); }
+.lb-mod-val {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.lb-mod-score { display: block; font-size: 9px; color: var(--text-dim); }
+.lb-mod-roll {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--accent-text);
+}
+.lb-mods-note { margin: 7px 0 0; font-size: 10px; line-height: 1.5; color: var(--text-dim); }
+
+.lb-char-weak {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  font-size: var(--fs-2xs);
+  line-height: 1.55;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--red);
+  border-radius: var(--radius);
+}
+.lb-char-weak span {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--red-text);
+}
+
+.lb-do-group { margin-top: 22px; }
+.lb-do-count {
+  margin-left: 5px;
+  padding: 0 5px;
+  font-size: 9px;
+  color: var(--text-dim);
+  background: var(--surface2);
+  border-radius: 999px;
+}
+.lb-do {
+  margin-bottom: 6px;
+  padding: 9px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--border);
+  border-radius: var(--radius);
+}
+/* Where the row came from. Your quirk and your gear are yours; a rule is
+   something everybody has, and they should not look the same. */
+.lb-do.from-quirk { border-left-color: var(--accent); }
+.lb-do.from-gear  { border-left-color: var(--teal); }
+.lb-do.from-rule  { border-left-color: var(--border-strong); opacity: .85; }
+.lb-do-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+.lb-do-name { font-size: var(--fs-xs); font-weight: 800; color: var(--text); }
+.lb-do-cost, .lb-do-tag {
+  padding: 1px 7px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.lb-do-dmg { color: var(--accent-text); border-color: var(--accent); }
+.lb-do-roll, .lb-do-bench {
+  padding: 0 7px;
+  font-size: 11px;
+  color: var(--text-dim);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.lb-do-roll { margin-left: auto; }
+.lb-do-roll:hover, .lb-do-bench:hover { color: var(--text); border-color: var(--accent); }
+.lb-do-rolled {
+  margin-top: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--fs-2xs);
+  color: var(--text-muted);
+}
+.lb-do-rolled strong {
+  display: inline-block;
+  min-width: 30px;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--accent-text);
+}
+.lb-do-rolled.is-crit strong   { color: var(--green-text); }
+.lb-do-rolled.is-fumble strong { color: var(--red-text); }
+.lb-do-text {
+  margin: 5px 0 0;
+  font-size: var(--fs-2xs);
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.lb-nochar {
+  padding: 22px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.lb-nochar p { margin: 0 0 9px; font-size: var(--fs-2xs); line-height: 1.65; color: var(--text-muted); }
+.lb-nochar p:last-child { margin-bottom: 0; }
+.lb-nochar strong { color: var(--text); }
+.lb-foot a { color: var(--accent-text); }
+/* The natural roll under an ability's total. A 24 could be a natural 20 or a
+   natural 16, and "did you roll a 1?" gets asked at the table. Not flagged as
+   a critical, because only attack rolls crit. */
+.lb-mod-raw {
+  display: block;
+  margin-top: 2px;
+  font-size: 9px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}

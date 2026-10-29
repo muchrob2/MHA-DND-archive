@@ -27,6 +27,10 @@
 //      is written about people, is the half that needs checking.
 //   6. Everything printed is escaped, and nothing on the page writes a
 //      character.
+//   7. The turn sheet: which characters count as yours, the free-text
+//      ability `type` read down to a cost bucket (the live bundle has
+//      fourteen distinct values in it), and the first rollable die pulled
+//      out of a damage string like "1d12 / 2 heat points".
 
 const fs = require('fs');
 const path = require('path');
@@ -49,32 +53,50 @@ const quirkJs = read('quirk-data.js');
 const els = {};
 const mk = () => ({ innerHTML: '', textContent: '', value: '', style: {}, dataset: {},
   focus() {}, select() {} });
-for (const id of ['lab-tabs', 'lab-body', 'lab-maths', 'lab-preview', 'lab-drafts', 'lab-json',
-  'lab-roll-out', 'lab-save-feedback', 'lab-quirk-count', 'lab-quirks-list', 'lab-facets',
-  'lab-sources', 'lab-quirk-search']) els[id] = mk();
+for (const id of ['lab-tabs', 'lab-body', 'lab-mine', 'lab-maths', 'lab-preview', 'lab-drafts',
+  'lab-json', 'lab-roll-out', 'lab-save-feedback', 'lab-quirk-count', 'lab-quirks-list',
+  'lab-facets', 'lab-sources', 'lab-quirk-search']) els[id] = mk();
 const store = {};
+
+const charJs = read('char-data.js');
+
+// Declared before the sandbox is built: its admin/owned getters are called
+// during the factory's own first render, and a const in the temporal dead
+// zone throws there.
+const ACCESS = { admin: false, owned: [] };
 
 const env = new Function('sandbox', `
   const { document, localStorage, console } = sandbox;
   ${read('dice.js')}
   ${quirkJs}
+  ${charJs}
+  ${read('rules-data.js')}
   const firebase = { firestore: () => ({ collection: () => ({
     doc: () => ({ get: () => Promise.resolve({ exists: false }) }),
     get: () => Promise.resolve({ forEach() {} }) }) }) };
   const fbAuthReady = Promise.resolve();
+  const window = { isAdmin: () => sandbox.admin(), canEdit: (k) => sandbox.owned().includes(k) };
+  function fbCharacterKey(t, n) { return t + '::' + n; }
   ${pageJs.slice(0, pageJs.lastIndexOf('(() => {'))}
   return { render, setView, setField, rollIt, saveDraft, loadDraft, deleteDraft, showJson,
            labReset, hitChance, critChance, damageProfile, expectedDamage, abilityJson,
            abilityProse, benchFrom, setQuirkQuery, filterQuirkType, filterQuirkFrom,
            visibleQuirks, quirkMatches, quirkDedupe, quirkRecord, quirkUsable,
            quirkNormaliseType, quirkFacets, quirkScrub,
+           charCostOf, charDiceIn, charCanDo, labUniversal, rollRow, benchRow,
+           labPickChar, mineHtml, CHAR_COSTS, CHAR_COST_LABELS,
            get a() { return ability; }, set a(v) { ability = v; },
            set quirks(q) { labQuirks = q; labQuirksLoaded = true; },
+           set mine(v) { labMine = v; labCharFile = v.length ? v[0]._file : null; },
+           set loaded(v) { labCharsLoaded = v; }, set src(v) { labCharSource = v; },
+           get view() { return labView; },
            get drafts() { return labDrafts; } };
 `)({
   document: { getElementById: (i) => els[i] || null },
   localStorage: { getItem: (k) => store[k] || null, setItem: (k, v) => { store[k] = v; } },
   console: { error() {}, log() {} },
+  admin: () => ACCESS.admin,
+  owned: () => ACCESS.owned,
 });
 
 /* ── 1. the probability ── */
@@ -453,10 +475,199 @@ const env = new Function('sandbox', `
       ['&lt;img src=x', '&lt;script&gt;', '&lt;b&gt;8', '&lt;u&gt;x', '&lt;i&gt;y']
         .filter(frag => !page.includes(frag)).join(' | '));
 
+    /* ── 7. the turn sheet ── */
+    // The cost bucket, against all fourteen distinct `type` values the live
+    // bundle actually contains. A turn sheet that files a reaction under
+    // actions is a turn sheet that gets somebody killed.
+    const costCases = [
+      ['Action', 'action'], ['Attack', 'action'], ['Full-turn Action', 'action'],
+      ['Action (unlocks at level 10)', 'action'],
+      ['Action (Dragon Form only, recharge 5-6)', 'action'],
+      ['Action (all 4 cannons, recharge long rest)', 'action'],
+      ['Attack (ranged, 60/120 ft)', 'action'],
+      ['Attack (requires Dragon Form or natural scale state)', 'action'],
+      ['Bonus Action', 'bonus'],
+      // Read as a bonus action before the bare "action" test can claim it.
+      ['Bonus Action / Reaction', 'bonus'],
+      ['Reaction', 'reaction'],
+      ['Passive', 'passive'], ['Passive / Unarmed Strike', 'passive'], ['Passive/Action', 'passive'],
+      ['', 'other'], [null, 'other'], [undefined, 'other'], ['Something else entirely', 'other'],
+    ];
+    const miscost = costCases.filter(([t, want]) => env.charCostOf(t) !== want);
+    check('every ability type the live bundle contains lands in the right bucket',
+      miscost.length === 0,
+      miscost.map(([t, w]) => `${JSON.stringify(t)} → ${env.charCostOf(t)}, want ${w}`).join(' | '));
+
+    // The first rollable die out of a damage string that is mostly prose.
+    const diceCases = [
+      ['1d12 / 2 heat points', '1d12'], ['8d6 / 10 heat points', '8d6'], ['2d6', '2d6'],
+      ['3d6 piercing, range 40/120', '3d6'],
+      ['2d6 slashing, two-handed, heavy, finesse. A traditional wrap.', '2d6'],
+      ['1d8+2 bludgeoning', '1d8+2'], ['d20', '1d20'], ['4d6kh3 somehow', '4d6kh3'],
+      // The first DICE expression, not the first number: "10 heat points" is
+      // a cost, and offering to roll it would be offering nonsense.
+      ['10 heat points then 2d6', '2d6'],
+      ['N/A', null], ['n/a', null], ['', null], ['ten damage', null],
+      ['2d', null], ['d0', null], [null, null],
+    ];
+    const misread = diceCases.filter(([t, want]) => env.charDiceIn(t) !== want);
+    check('the first rollable die is pulled out of a damage string that is mostly prose',
+      misread.length === 0,
+      misread.map(([t, w]) => `${JSON.stringify(t)} → ${JSON.stringify(env.charDiceIn(t))}, want ${JSON.stringify(w)}`).join(' | '));
+
+    // The universal options come from the rules reference rather than being
+    // written again, so the Lab and the Rules page cannot disagree.
+    const universal = env.labUniversal();
+    check('the standard options are lifted out of the rules reference',
+      universal.length >= 12 && universal.some(u => u.name === 'Disengage')
+      && universal.some(u => u.name === 'Opportunity attack'),
+      universal.length + ' options');
+    check('and each one carries the rule\'s own text rather than a retelling',
+      universal.every(u => u.text && u.text.length > 25));
+    check('an opportunity attack is filed as a reaction, not an action',
+      universal.find(u => u.name === 'Opportunity attack').cost === 'Reaction');
+
+    // A character shaped exactly like a live one, messy fields and all.
+    const sheet = {
+      _file: 'test.json', name: 'Test Character', quirk: 'Test Quirk', level: '1',
+      HP: '35', AC: '14', speed: '30 ft', quirk_save_DC: '13', proficiency_bonus: '2',
+      ability_scores: { STR: '14', DEX: '18', CON: '20', INT: '13', WIS: '10', CHA: '10', TECH: '4' },
+      modifiers: { STR: '2', DEX: '4', CON: '5', INT: '1', WIS: '0', CHA: '0', TECH: '-3' },
+      quirk_mechanics: { weakness: 'Burns stamina fast.', abilities: [
+        { name: 'Beam', type: 'Action', damage: '1d12 / 2 heat points', range: '80 feet', description: 'A beam.' },
+        { name: 'Charge', type: 'Full-turn Action', damage: 'N/A', description: 'Charges.' },
+        { name: 'Shields', type: 'Passive / Unarmed Strike', damage: '', description: 'Always on.' },
+        { name: 'Snap', type: 'Bonus Action / Reaction', damage: '2d6', description: 'Once a turn.' },
+        { name: 'Reflect', type: 'Reaction', damage: '', description: 'When hit.' },
+      ] },
+      inventory: { items: [
+        { id: 'i1', name: 'Katana', qty: 1, notes: '2d6 slashing, two-handed, heavy, finesse.' },
+        { id: 'i2', name: 'Rations', qty: 3, notes: 'Three days of food.' },
+      ], currency: { yen: 0 } },
+    };
+    const can = env.charCanDo(sheet, universal);
+    check('an ability with a real die is rollable and one with "N/A" is not',
+      can.rows.find(r => r.name === 'Beam').dice === '1d12'
+      && can.rows.find(r => r.name === 'Charge').dice === null
+      && can.rows.find(r => r.name === 'Charge').damage === '',
+      'the page must not offer to roll "N/A"');
+    check('carried gear that states a die becomes something you can do',
+      can.rows.some(r => r.from === 'gear' && r.name === 'Katana' && r.dice === '2d6'));
+    check('and gear that does not is left out rather than listed as an attack',
+      !can.rows.some(r => r.name === 'Rations'),
+      'three days of food is not an action');
+    check('the original type text is kept beside the bucket',
+      can.rows.find(r => r.name === 'Charge').costText === 'Full-turn Action',
+      '"recharge 5-6" and "Dragon Form only" are the half a bucket throws away');
+    check('every row says where it came from',
+      can.rows.every(r => ['quirk', 'gear', 'rule'].includes(r.from)));
+    check('and the groups cover every row with none lost',
+      env.CHAR_COSTS.reduce((n, c) => n + can.grouped[c].length, 0) === can.rows.length);
+    check('a character with nothing recorded still gets the standard options',
+      env.charCanDo({}, universal).rows.length === universal.length);
+    check('and no character at all does not throw',
+      env.charCanDo(null, universal).rows.length === universal.length);
+
+    /* which characters are yours */
+    env.loaded = true;
+    env.src = 'firestore';
+    ACCESS.admin = false;
+    ACCESS.owned = [];
+    env.mine = [];
+    env.setView('mine');
+    check('with nothing assigned the page says so and says what to ask for',
+      /No character is assigned to you yet/.test(els['lab-mine'].innerHTML)
+      && /admin page/.test(els['lab-mine'].innerHTML)
+      && /workbench, and the quirk database/.test(els['lab-mine'].innerHTML),
+      'and that the rest of the Lab works anyway');
+
+    ACCESS.owned = ['Student (1-A)::Test Character'];
+    env.mine = [sheet];
+    env.setView('mine');
+    const mine = () => els['lab-mine'].innerHTML.replace(/\s+/g, ' ');
+    check('one character assigned shows that character and no picker',
+      /Test Character/.test(mine()) && !/lb-char-tab"/.test(mine()));
+    check('grouped by what it costs, with a heading per group that has rows',
+      (mine().match(/lb-do-group/g) || []).length === 5,
+      (mine().match(/lb-do-group/g) || []).length + ' groups');
+    check('every row rendered',
+      (mine().match(/class="lb-do /g) || []).length === can.rows.length,
+      `${(mine().match(/class="lb-do /g) || []).length} of ${can.rows.length}`);
+    check('the seven abilities are there to roll a check or a save against',
+      (mine().match(/class="lb-mod"/g) || []).length === 7);
+    check('and the quirk\'s weakness is on it',
+      /Burns stamina fast/.test(mine()));
+    check('with a link to the printable sheet for the same character',
+      /sheet\.html\?c=test\.json/.test(mine()));
+
+    env.mine = [sheet, Object.assign({}, sheet, { _file: 'b.json', name: 'Second' })];
+    env.setView('mine');
+    const tabCount = (mine().match(/class="lb-char-tab[ "]/g) || []).length;
+    check('two assigned gets a picker', tabCount === 2,
+      tabCount + ' tabs — the container is lb-char-tabS, which a prefix match counts');
+    env.labPickChar('b.json');
+    check('and picking switches which one is on screen',
+      /lb-char-name">Second</.test(els['lab-mine'].innerHTML));
+
+    // An admin sees the class, which is what a DM wants from this page.
+    ACCESS.admin = true;
+    check('isAdmin is what decides an admin sees everybody',
+      /window\.isAdmin && window\.isAdmin\(\)/.test(pageJs)
+      && /labMine = admin \? chars/.test(pageJs));
+    check('and ownership otherwise goes through canEdit and the one key definition',
+      /window\.canEdit\(fbCharacterKey\(/.test(pageJs),
+      'three files spelling that key out separately is how the Heropad once matched nothing');
+
+    /* rolling a row */
+    env.mine = [sheet];
+    env.setView('mine');
+    env.rollRow('quirk-0-Beam', '1d12');
+    const rolled = els['lab-mine'].innerHTML.match(/lb-do-rolled[^>]*>\s*<strong>(\d+)<\/strong>/);
+    check('a row with a die rolls it and shows the result beside it',
+      rolled && Number(rolled[1]) >= 1 && Number(rolled[1]) <= 12, rolled ? rolled[1] : 'nothing shown');
+    const naturals = new Set();
+    for (let i = 0; i < 400; i++) {
+      env.rollRow('save-DEX', '1d20+4');
+      const m = els['lab-mine'].innerHTML.match(/lb-mod-roll">(\d+)<[\s\S]*?lb-mod-raw">([^<]*)</);
+      if (m) naturals.add(Number(String(m[2]).trim().split(' ')[0]));
+    }
+    check('a save shows the natural roll as well as the total, 1 through 20',
+      Math.min(...naturals) === 1 && Math.max(...naturals) === 20,
+      `${Math.min(...naturals)}–${Math.max(...naturals)}`);
+    check('and a 20 on a save is not called a critical, because only attacks crit',
+      !/is-crit/.test(els['lab-mine'].innerHTML.match(/lb-mods[\s\S]*?lb-mods-note/)[0]),
+      'the rules reference says so and this page does not disagree with it');
+    env.rollRow('quirk-0-Beam', 'not a die');
+    check('asking to roll something unreadable does nothing rather than throwing',
+      true);
+
+    env.benchRow('Katana', '2d6', 'Attack with it');
+    check('a row can be taken onto the workbench',
+      env.view === 'bench' && env.a.name === 'Katana' && env.a.damage === '2d6');
+
+    /* escaping, on the turn sheet too */
+    env.setView('mine');
+    env.mine = [Object.assign({}, sheet, {
+      name: '<img src=x onerror=alert(1)>', quirk: '<script>bad</script>', speed: '<b>30</b>',
+      quirk_mechanics: { weakness: '<u>w</u>',
+        abilities: [{ name: '<i>a</i>', type: 'Action', damage: '2d6', description: '<svg/>' }] },
+      inventory: { items: [{ id: 'x', name: '<iframe>', notes: '2d6 <script>x</script>' }], currency: {} },
+    })];
+    env.setView('mine');
+    const sheetTags = els['lab-mine'].innerHTML.match(/<(script|img|iframe|svg)[ >/]/g) || [];
+    check('nothing on a character can become a tag on the turn sheet',
+      sheetTags.length === 0, [...new Set(sheetTags)].join(' '));
+    check('and it comes back as entities',
+      els['lab-mine'].innerHTML.includes('&lt;img src=x')
+      && els['lab-mine'].innerHTML.includes('&lt;script&gt;'));
+
     /* the page */
-    check('the page loads the dice engine and the loader before its own script',
-      pageHtml.indexOf('src="dice.js"') < pageHtml.indexOf('src="lab.js"')
-      && pageHtml.indexOf('src="quirk-data.js"') < pageHtml.indexOf('src="lab.js"'));
+    check('the page loads every data file before its own script',
+      ['dice.js', 'quirk-data.js', 'char-data.js', 'rules-data.js'].every(f =>
+        pageHtml.indexOf('src="' + f + '"') !== -1
+        && pageHtml.indexOf('src="' + f + '"') < pageHtml.indexOf('src="lab.js"')),
+      ['dice.js', 'quirk-data.js', 'char-data.js', 'rules-data.js']
+        .filter(f => pageHtml.indexOf('src="' + f + '"') === -1).join(', '));
     const reachedFor = [...new Set([...pageJs.matchAll(/getElementById\('([^'${]+)'\)/g)].map(m => m[1]))];
     const nowhere = reachedFor.filter(id =>
       !pageHtml.includes(`id="${id}"`) && !pageJs.includes(`id="${id}"`));

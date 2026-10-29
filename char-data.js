@@ -138,3 +138,127 @@ async function charLoadAll(db, opts) {
   chars.sort((a, b) => charLabel(a).localeCompare(charLabel(b)));
   return { chars, source };
 }
+
+/* ── What a character can do ─────────────────────────────────────────
+   The Lab's turn sheet is assembled from four places, and three of them
+   need cleaning up first.
+
+   ── The cost of an ability ──
+   `type` on a recorded ability is free text, and the live bundle has
+   fourteen distinct values in it: "Action", "Bonus Action", "Passive",
+   "Reaction", "Attack", "Full-turn Action", "Action (unlocks at level 10)",
+   "Bonus Action / Reaction", "Passive / Unarmed Strike", and more. A turn
+   sheet has to group them, so each one is read down to a bucket — and the
+   original text is kept and shown, because "recharge 5-6" and "Dragon Form
+   only" are the half of it the bucket throws away.
+
+   ── The damage ──
+   Also free text: "1d12 / 2 heat points", "8d6 / 10 heat points", "2d6",
+   "N/A", "n/a". charDiceIn pulls the first real dice expression out and
+   leaves the rest alone, so the row can carry a Roll button without the
+   page pretending "N/A" is a number.
+   ─────────────────────────────────────────────────────────────────── */
+
+const CHAR_COSTS = ['action', 'bonus', 'reaction', 'passive', 'other'];
+const CHAR_COST_LABELS = {
+  action: 'Actions',
+  bonus: 'Bonus actions',
+  reaction: 'Reactions',
+  passive: 'Always on',
+  other: 'Everything else',
+};
+
+// Order matters: "Bonus Action / Reaction" has to be read as a bonus action
+// before the bare "action" test can claim it.
+function charCostOf(type) {
+  const t = String(type == null ? '' : type).toLowerCase();
+  if (!t) return 'other';
+  if (/bonus/.test(t)) return 'bonus';
+  if (/reaction/.test(t)) return 'reaction';
+  if (/passive|always|permanent/.test(t)) return 'passive';
+  if (/action|attack|strike/.test(t)) return 'action';
+  return 'other';
+}
+
+/* The first rollable dice expression in a string, or null.
+ *
+ * Deliberately only the FIRST: "8d6 / 10 heat points" is one roll and one
+ * cost, and a page that offered to roll the 10 would be offering nonsense.
+ * Everything it finds is handed to diceParse, so a string that looks like a
+ * die but is not one ("d0", "2d") comes back null rather than half-read.
+ */
+function charDiceIn(text, parse) {
+  const raw = String(text == null ? '' : text);
+  if (!raw) return null;
+  const parser = typeof parse === 'function' ? parse : (typeof diceParse === 'function' ? diceParse : null);
+  if (!parser) return null;
+  const match = raw.match(/\b\d{0,3}d\d{1,3}(?:k[hl]\d{0,3})?(?:\s*[+-]\s*\d{1,3})?/i);
+  if (!match) return null;
+  const parsed = parser(match[0].replace(/\s+/g, ''));
+  return parsed ? parsed.text : null;
+}
+
+/* Everything a character can do, grouped by what it costs.
+ *
+ * `universal` is the list every character has — the standard actions out of
+ * rules-data.js — passed in rather than imported so this file stays free of
+ * the rules reference. A row is { name, cost, costText, range, damage,
+ * dice, text, from } where `dice` is a rollable expression or null and
+ * `from` says where the row came from, because "this is your quirk" and
+ * "this is a rule everybody has" should not look the same.
+ */
+function charCanDo(c, universal) {
+  const rows = [];
+  const mech = (c || {}).quirk_mechanics || {};
+
+  for (const a of (Array.isArray(mech.abilities) ? mech.abilities : [])) {
+    rows.push({
+      name: a.name || 'Unnamed',
+      cost: charCostOf(a.type),
+      costText: a.type || '',
+      range: a.range || '',
+      damage: a.damage && !/^n\/?a$/i.test(String(a.damage).trim()) ? a.damage : '',
+      dice: charDiceIn(a.damage),
+      text: a.description || '',
+      from: 'quirk',
+      id: a.id || '',
+    });
+  }
+
+  // Carried gear that states a die in its notes. The notes are prose — "2d6
+  // slashing, two-handed, heavy, finesse" — so the die is extracted and the
+  // whole note kept as the description.
+  for (const it of (((c || {}).inventory || {}).items || [])) {
+    const dice = charDiceIn(it.notes) || charDiceIn(it.name);
+    if (!dice) continue;
+    rows.push({
+      name: it.name || 'Carried item',
+      cost: 'action',
+      costText: 'Attack with it',
+      range: '',
+      damage: dice,
+      dice,
+      text: it.notes || '',
+      from: 'gear',
+      id: it.id || '',
+    });
+  }
+
+  for (const u of (universal || [])) {
+    rows.push({
+      name: u.name,
+      cost: charCostOf(u.cost || u.name),
+      costText: u.costText || '',
+      range: '',
+      damage: '',
+      dice: null,
+      text: u.text || '',
+      from: 'rule',
+      id: '',
+    });
+  }
+
+  const grouped = {};
+  for (const cost of CHAR_COSTS) grouped[cost] = rows.filter(r => r.cost === cost);
+  return { rows, grouped };
+}

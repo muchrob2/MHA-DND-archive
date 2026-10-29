@@ -39,7 +39,7 @@
 
 <div id="panel">
   <div class="page-heading">The Lab</div>
-  <div class="page-sub">Build something and see what it actually does before it reaches the table — then look up every quirk in the campaign to check you have not reinvented one. The database names the quirks, never the people who have them.</div>
+  <div class="page-sub">Everything your character can do on one screen, a workbench for building something new, and every quirk in the campaign to check you have not reinvented one. The database names the quirks, never the people who have them.</div>
 
   <div id="lab-tabs" class="lb-tabs"></div>
   <div id="lab-body"></div>
@@ -62,9 +62,14 @@
 </div>
 
 <!-- The dice engine does the notation and the rolling; quirk-data.js knows
-     the seven places a character can be hiding. -->
+     the seven places a character can be hiding; char-data.js loads a
+     character and works out what it can do; rules-data.js supplies the
+     standard options every character has, so the Lab and the Rules page
+     cannot disagree about what Disengage does. -->
 <script src="dice.js"></script>
 <script src="quirk-data.js"></script>
+<script src="char-data.js"></script>
+<script src="rules-data.js"></script>
 <script src="lab.js"></script>
 </body>
 </html>

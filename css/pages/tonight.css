@@ -45,17 +45,9 @@
 }
 .rs-open:hover { text-decoration: underline; }
 
-.rs-section { margin-top: 28px; }
-.rs-h2 {
-  margin: 0 0 10px;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  padding-bottom: 5px;
-  border-bottom: 1px solid var(--border);
-}
+/* Sections and their headings are .page-section / .section-h2 in
+   components.css now — this page had its own copy of a recipe four pages
+   were each keeping separately. */
 .rs-empty { font-size: var(--fs-2xs); font-style: italic; color: var(--text-dim); }
 .rs-empty a, .rs-note a, .rs-foot a, .rs-heat-meta a { color: var(--accent-text); }
 .rs-note { margin: 12px 0 0; font-size: var(--fs-2xs); line-height: 1.6; color: var(--text-dim); }

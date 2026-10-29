@@ -189,6 +189,63 @@
 }
 
 /* ════════════════════════════════════════════════════════════
+   SECTION HEADING — one vocabulary for the levels inside a page.
+
+   Five pages each invented their own. .rs-h2, .ft-h2, .tb-h2 and
+   .sh-h2 were the same 10px uppercase eyebrow at four different
+   letter-spacings and margins, while .ht-h2 on the Heat page was
+   something else entirely — an Anton display heading. So the
+   SAME structural level ("The running order", "Do they find
+   you?", "The job board") rendered two completely different ways
+   depending on which page you had open.
+
+   The dashboard settled which one is right: .hub-group-name is a
+   display heading, so a section heading is a display heading.
+   The 10px eyebrow becomes what it always looked like — the
+   level BELOW it, for a column header inside a section.
+
+   .sh-h2 on the printable sheet keeps the eyebrow and is not
+   aliased here. That page is a dense one-page print document,
+   the same kind of deliberate second surface as the parchment
+   campaign reader, and Anton headings would eat its margins.
+   ════════════════════════════════════════════════════════════ */
+
+.page-section { margin-top: 30px; }
+
+.section-h2 {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 400;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+/* The level below a section heading — a column header, or a label over a
+   list. The .eyebrow recipe in base.css, with the rule under it that these
+   four pages had each added by hand. */
+.section-h3,
+.ht-h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* The sentence under a section heading that says what the section is for —
+   the page-level twin of .hub-group-hint on the dashboard. */
+.section-note {
+  margin: 0 0 14px;
+  font-size: var(--fs-2xs);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* ════════════════════════════════════════════════════════════
    BUTTON — was 6 independent vocabularies. The "green save
    button" alone had four different spellings.
    ════════════════════════════════════════════════════════════ */

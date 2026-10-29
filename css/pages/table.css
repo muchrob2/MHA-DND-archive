@@ -185,14 +185,10 @@
 #tb-exact-btn:hover { color: var(--text); border-color: var(--border-strong); }
 .tb-note { margin: 8px 0 0; font-size: 10px; line-height: 1.6; color: var(--text-dim); }
 
-.tb-h2 {
-  margin: 26px 0 8px;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
+/* The heading itself is .section-h2 in components.css. The only thing left
+   that is this page's is the gap above it: "Recent attacks" is a direct
+   child of #panel rather than sitting in a .page-section. */
+.tb-h2 { margin-top: 26px; }
 .tb-log {
   display: flex;
   flex-wrap: wrap;

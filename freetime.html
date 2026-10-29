@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free time — the job board, your training slots, and what you spent them on.">
+<meta name="theme-color" content="#08090D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Free Time — MHA D&D</title>
+<link rel="preload" href="css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/auth-widget.css">
+<link rel="stylesheet" href="css/pages/freetime.css">
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+</head>
+<body>
+
+<!-- A player page. The job board is parsed out of the campaign's own "Free
+     Time — odd jobs" appendix rather than retyped, so it cannot drift; the
+     slot count is the DM's to set, and the log is the player's.
+
+     It never pays anybody. firestore.rules refuses a write that increases a
+     purse, which is the rule that stops a player handing themselves ten
+     thousand yen — so this works out what a job owes and says to go and ask.
+     -->
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">Free Time</span>
+  <div class="nav-right">
+    <span class="ft-save-state" id="ft-save-state"></span>
+  </div>
+</nav>
+
+<div id="panel">
+  <div class="page-heading">Free Time</div>
+  <div class="page-sub">One slot, one check, one wage. What you do between sessions, and what it was worth.</div>
+
+  <div id="ft-chars"></div>
+  <div id="ft-slots"></div>
+  <div id="ft-roll"></div>
+  <p id="ft-flash" class="ft-flash"></p>
+
+  <section class="ft-section">
+    <h2 class="ft-h2">Training, hangouts, and whatever else</h2>
+    <div id="ft-extras"></div>
+  </section>
+
+  <section class="ft-section">
+    <h2 class="ft-h2">The job board</h2>
+    <p class="ft-section-sub">Provisional students cannot be paid for hero work. They can be paid for everything else. A failed check halves the pay.</p>
+    <div id="ft-jobs"></div>
+  </section>
+
+  <section class="ft-section">
+    <h2 class="ft-h2">What you spent</h2>
+    <div id="ft-log"></div>
+  </section>
+
+  <p class="ft-foot">
+    <span id="ft-source"></span>
+    The job board is the campaign's own, read straight out of it — if your DM adds a job, it
+    appears here. <strong>Nothing on this page pays you.</strong> It works out what a job owes
+    and writes it down; your DM hands it over. Your purse is on the
+    <a href="shop.html">Shop</a> and the <a href="heropad.html">Heropad</a>.
+  </p>
+</div>
+
+<!-- The dice engine rolls the job's check; char-data.js knows which
+     characters are yours and what your modifiers are. -->
+<script src="dice.js"></script>
+<script src="char-data.js"></script>
+<script src="freetime.js"></script>
+</body>
+</html>

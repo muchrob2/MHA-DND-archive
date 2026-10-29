@@ -16,6 +16,23 @@
   ],
   "updates": [
     {
+      "version": "1.0.262",
+      "build": 262,
+      "date": "2026-10-29",
+      "commit": "e8e7ffa",
+      "title": "Free time, counted",
+      "tags": [
+        "toolkit",
+        "campaign"
+      ],
+      "items": [
+        "A new player page for between sessions: the job board, your training slots, and what you spent them on.",
+        "The twenty-four odd jobs come straight out of the campaign's own appendix, so if the DM adds one it appears here. Spending a slot on a job rolls its check with your modifier — the better of the two where it offers a choice — and halves the pay on a failure, which is the campaign's own rule.",
+        "Training, half a training slot, a hangout, or something you write in yourself. The DM sets how many slots you have; the log is yours.",
+        "It never pays you. It works out what a job owes and writes it down, and your DM hands it over."
+      ]
+    },
+    {
       "version": "1.0.261",
       "build": 261,
       "date": "2026-10-29",

@@ -16,6 +16,22 @@
   ],
   "updates": [
     {
+      "version": "1.0.261",
+      "build": 261,
+      "date": "2026-10-29",
+      "commit": "e3ec1f8",
+      "title": "The run sheet",
+      "tags": [
+        "toolkit",
+        "dashboard"
+      ],
+      "items": [
+        "A new DM page: one screen to have open while running a session. Where you left off, the chapter's running order with how long each section should take, the side quests on offer, the current Heat and who turns up at it, and the encounter presets for the arc.",
+        "Plus a notes box that saves, because what you write at nine o'clock is what you need at the start of the next session.",
+        "Nothing on it is a second copy of anything — change the campaign, the session log, the Heat or the presets in their own place and this page follows."
+      ]
+    },
+    {
       "version": "1.0.260",
       "build": 260,
       "date": "2026-10-29",

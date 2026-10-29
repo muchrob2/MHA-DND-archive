@@ -568,3 +568,229 @@
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
 }
+
+/* ── The two benches ──
+   An ability or a piece of equipment. Two forms rather than one form with
+   half its fields hidden. */
+.lb-modes { display: flex; gap: 5px; margin-bottom: 16px; }
+.lb-mode {
+  padding: 6px 13px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.lb-mode.sel { color: var(--accent-text); background: var(--accent-light); border-color: var(--accent); }
+
+/* What a crafted thing should cost, from what the catalogue charges. */
+.lb-price {
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--teal);
+  border-radius: var(--radius);
+}
+.lb-price-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+.lb-price-num {
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1;
+  color: var(--teal-text);
+}
+.lb-price-label { font-size: 10px; line-height: 1.4; color: var(--text-dim); }
+.lb-price-list { margin-top: 9px; }
+.lb-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 4px 0;
+  font-size: var(--fs-2xs);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+.lb-price-name { flex: 1; min-width: 0; color: var(--text); }
+.lb-price-cost { font-weight: 700; font-variant-numeric: tabular-nums; }
+.lb-price a { color: var(--accent-text); }
+.lb-gear-made { margin: 7px 0 0; font-size: var(--fs-2xs); line-height: 1.5; color: var(--text-muted); }
+.lb-gear-made span, .lb-own-made span {
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ── Your record ── */
+.lb-record-lead {
+  margin: 0 0 20px;
+  font-size: var(--fs-2xs);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+.lb-record-lead strong { color: var(--text); }
+
+.lb-stats-table { margin-bottom: 4px; }
+.lb-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+.lb-stat-row.is-head {
+  padding-bottom: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-bottom-color: var(--border-strong);
+}
+.lb-stat-key {
+  flex: none;
+  width: 54px;
+  font-size: var(--fs-2xs);
+  font-weight: 800;
+  color: var(--text-dim);
+}
+.lb-stat-theirs {
+  flex: none;
+  width: 80px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.lb-stat-mine { flex: 1; }
+.lb-stat-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 5px 9px;
+  font-size: var(--fs-2xs);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+/* A disagreement is shown, never resolved. */
+.lb-stat-row.is-differs input { border-color: var(--amber); }
+.lb-stat-flag {
+  flex: none;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--amber-text);
+}
+.lb-x {
+  flex: none;
+  padding: 0 6px;
+  font-size: 11px;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.lb-x:hover { color: var(--red-text); }
+
+.lb-perks { display: flex; flex-direction: column; gap: 5px; margin-bottom: 9px; }
+.lb-perk {
+  padding: 9px 11px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--green);
+  border-radius: var(--radius);
+}
+.lb-perk-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 7px; }
+.lb-perk-name { font-size: var(--fs-xs); font-weight: 800; color: var(--text); }
+.lb-perk-text { margin: 4px 0 0; font-size: var(--fs-2xs); line-height: 1.55; color: var(--text-muted); }
+.lb-perk-form { display: flex; flex-wrap: wrap; gap: 5px; }
+.lb-perk-form input {
+  flex: 1;
+  min-width: 120px;
+  padding: 7px 10px;
+  font-size: var(--fs-2xs);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.lb-perk-form button {
+  padding: 7px 14px;
+  font-size: var(--fs-2xs);
+  font-weight: 800;
+  color: var(--ink);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+/* The moves and equipment a player authored. Coloured apart from the
+   handbook's own, deliberately: a thing you invented on Tuesday and a thing
+   in the rules must never look the same. */
+.lb-owned { display: flex; flex-direction: column; gap: 5px; }
+.lb-own {
+  padding: 9px 11px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--border);
+  border-radius: var(--radius);
+}
+.lb-own.from-move    { border-left-color: var(--purple, var(--accent)); }
+.lb-own.from-crafted { border-left-color: var(--teal); }
+.lb-own-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+.lb-own-name { font-size: var(--fs-xs); font-weight: 800; color: var(--text); }
+.lb-tag-dmg { color: var(--accent-text); border-color: var(--accent); }
+.lb-own-roll, .lb-own-edit {
+  padding: 0 7px;
+  font-size: 10px;
+  color: var(--text-dim);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.lb-own-roll { margin-left: auto; }
+.lb-own-roll:hover, .lb-own-edit:hover { color: var(--text); border-color: var(--accent); }
+.lb-own-roll-out {
+  margin-top: 5px;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--fs-2xs);
+  color: var(--accent-text);
+}
+.lb-own-text { margin: 4px 0 0; font-size: var(--fs-2xs); line-height: 1.55; color: var(--text-muted); }
+.lb-own-made { margin: 4px 0 0; font-size: 10px; color: var(--text-dim); }
+
+.lb-record-note {
+  width: 100%;
+  padding: 11px 13px;
+  font-family: inherit;
+  font-size: var(--fs-2xs);
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  resize: vertical;
+  outline: none;
+}
+.lb-record-note:focus { border-color: var(--accent); }
+.lb-link {
+  padding: 0;
+  font: inherit;
+  color: var(--accent-text);
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* The turn sheet's two new sources. */
+.lb-do.from-move    { border-left-color: var(--purple, var(--accent)); }
+.lb-do.from-crafted { border-left-color: var(--teal); }

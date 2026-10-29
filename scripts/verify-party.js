@@ -330,7 +330,7 @@ const bodyRows = () => html().split('<tbody>')[1].split('</tbody>')[0]
     (() => {
       const dash = read('index.html');
       const dm = dash.slice(dash.indexOf('<div id="dm-only">'),
-        dash.indexOf('<p class="section-label">Rulebooks'));
+        dash.indexOf('<!-- /dm-only'));
       return dash.includes('href="party.html"') && dm.includes('party.html');
     })());
 }

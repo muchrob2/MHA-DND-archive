@@ -236,8 +236,14 @@ const ENTRIES = SECTIONS.flatMap(s => s.entries.map(e => ({ e, s })));
   // that follows it IS the DM block. The reference has to be outside it: the
   // whole reason it exists is that players could not reach the conditions
   // list inside the DM's Encounter Manager.
+  // Anchored on the DM block's own closing structure rather than on the LABEL
+  // of the section that follows it. Renaming that section from "Rulebooks" to
+  // "Reference" made every indexOf on the old label return -1, and
+  // slice(start, -1) then ran to the end of the page — so the "DM block"
+  // swallowed the whole dashboard and three checks in three files broke at
+  // once. The id is structural; a label is prose.
   const dmBlock = dash.slice(dash.indexOf('<div id="dm-only">'),
-    dash.indexOf('<p class="section-label">Rulebooks'));
+    dash.indexOf('<!-- /dm-only'));
   check('the dashboard links to the reference',
     dash.includes('href="rules.html"'));
   check('and the link is outside the DM block — this page is for everyone',

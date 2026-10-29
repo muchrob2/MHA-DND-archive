@@ -166,7 +166,10 @@ const shortlist = repoCampaigns.find(c => c.id === 'the-shortlist-after-hours');
     'verify-heropad.js guards this too — two pages now have to keep it true');
   const index = read('index.html');
   const dmStart = index.indexOf('<div id="dm-only">');
-  const dmEnd = index.indexOf('<p class="section-label">Rulebooks');
+  // Structural, not the label of the next section: renaming that section
+  // broke this and two other files at once, because indexOf returned -1 and
+  // the slice then ran to the end of the page.
+  const dmEnd = index.indexOf('<!-- /dm-only');
   const link = index.indexOf('href="tonight.html"');
   check('the dashboard link is inside the DM block',
     link > dmStart && link < dmEnd, `link ${link}, block ${dmStart}–${dmEnd}`);

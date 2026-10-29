@@ -248,6 +248,11 @@
      time" is the DM's note to themselves and frequently a spoiler. */
   const FS_REST = 'https://firestore.googleapis.com/v1/projects/mha-dnd-archive/databases/(default)/documents/mha-dnd/session-log';
 
+  // Shared by both strips. It was declared inside renderLastSession, which
+  // was fine while that was the only thing printing live data.
+  const esc = (t) => String(t == null ? '' : t)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
   // Firestore's REST shape wraps every value in its type. Only the four
   // fields this strip shows are unwrapped; the rest is left alone.
   function fsValue(v) {
@@ -284,7 +289,6 @@
     if (!wrap || !s) return;
     const date = s.date ? new Date(s.date + 'T00:00:00') : null;
     const when = date && !isNaN(date) ? date.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : '';
-    const esc = (t) => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     wrap.innerHTML = `<a class="last-session-inner" href="session-log.html">
         <div class="last-session-label">Where you left off${s.number ? ' · Session ' + esc(s.number) : ''}${when ? ' · ' + esc(when) : ''}</div>
         <div class="last-session-title">${esc(s.title || 'Untitled session')}</div>
@@ -292,6 +296,85 @@
       </a>`;
     wrap.classList.remove('hidden');
   }
+
+  /* ── The glance strip ────────────────────────────────────────────
+     What the dashboard could not say until now: whether a fight is
+     running, and how much attention Byakko are paying. Both are live
+     documents that every other page already reads, and a menu that
+     knows neither is a menu rather than a dashboard.
+
+     Read over REST like the session strip above, for the same reason —
+     this page loads no Firebase SDK and is not going to start for two
+     numbers. Every row hides itself when there is nothing to say, so a
+     quiet strip means a quiet table rather than a failed load.
+
+     It is NOT inside #dm-only. Whose turn it is and what the Heat is
+     are the two things a player most wants to know before they open
+     anything, and both documents are world-readable by design.
+     ─────────────────────────────────────────────────────────────── */
+  const FS_DOC = (name) =>
+    'https://firestore.googleapis.com/v1/projects/mha-dnd-archive/databases/(default)/documents/mha-dnd/' + name;
+
+  // 0-1 quiet, 2-7 warming, 8-10 hot. The bands themselves live in
+  // byakko-data.js, which this page does not load — this is only picking a
+  // colour, and getting that wrong costs a shade rather than a fact.
+  function heatMood(level) {
+    return level >= 8 ? 'hot' : level >= 4 ? 'warm' : 'quiet';
+  }
+
+  async function readDoc(name) {
+    const res = await fetch(FS_DOC(name), { cache: 'no-cache' });
+    if (!res.ok) throw new Error('bad status');
+    const doc = await res.json();
+    return doc.fields || {};
+  }
+
+  function glanceRow(href, label, value, extra) {
+    return `<a class="glance-item${extra ? ' mood-' + extra : ''}" href="${href}">
+        <span class="glance-label">${esc(label)}</span>
+        <span class="glance-value">${esc(value)}</span>
+      </a>`;
+  }
+
+  async function loadGlance() {
+    const wrap = document.getElementById('glance');
+    if (!wrap) return;
+    const rows = [];
+
+    // A fight, if one is running. `currentIndex` points into the DM's own
+    // ordering, so the name is read out of that array rather than sorted
+    // here — see the note in table.js.
+    try {
+      const f = await readDoc('encounter-state');
+      const combatants = fsValue(f.combatants) || [];
+      if (Array.isArray(combatants) && combatants.length) {
+        const n = combatants.length;
+        const raw = Number(fsValue(f.currentIndex));
+        const i = Number.isFinite(raw) ? ((raw % n) + n) % n : 0;
+        const now = combatants[i] || {};
+        const round = fsValue(f.round);
+        rows.push(glanceRow('table.html',
+          'In the fight' + (round ? ' · round ' + round : ''),
+          (now.name || 'somebody') + '\u2019s turn', 'live'));
+      }
+    } catch {}
+
+    try {
+      const f = await readDoc('heat');
+      const level = Number(fsValue(f.heat));
+      if (Number.isFinite(level)) {
+        const beaten = fsValue(f.beaten) || {};
+        const count = beaten && typeof beaten === 'object' ? Object.keys(beaten).length : 0;
+        rows.push(glanceRow('heat.html', 'Byakko Heat',
+          level + ' of 10' + (count ? ' · ' + count + ' beaten' : ''), heatMood(level)));
+      }
+    } catch {}
+
+    if (!rows.length) return;      // nothing happening; the strip stays gone
+    wrap.innerHTML = rows.join('');
+    wrap.classList.remove('hidden');
+  }
+  loadGlance();
 
   async function loadLastSession() {
     if (!document.getElementById('last-session')) return;

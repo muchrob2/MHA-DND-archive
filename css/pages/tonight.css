@@ -1,0 +1,288 @@
+/* ── The run sheet ──
+   Read while running, so the order of the page is the order of the evening:
+   what happened last, what you wrote down, what is in the chapter, and the
+   two numbers you need to answer a question without opening another tab.
+
+   Everything is quiet except the three things that are not: the "next time"
+   note, the milestone, and the Heat level. */
+
+#panel { max-width: 920px; margin: 0 auto; padding: 24px 20px 70px; }
+
+.rs-pickers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  margin: 20px 0 6px;
+}
+.rs-pick { display: block; }
+.rs-pick span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.rs-pick select {
+  padding: 8px 11px;
+  font-size: var(--fs-xs);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-width: 320px;
+}
+.rs-open {
+  margin-left: auto;
+  padding-bottom: 9px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--accent-text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.rs-open:hover { text-decoration: underline; }
+
+.rs-section { margin-top: 28px; }
+.rs-h2 {
+  margin: 0 0 10px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border);
+}
+.rs-empty { font-size: var(--fs-2xs); font-style: italic; color: var(--text-dim); }
+.rs-empty a, .rs-note a, .rs-foot a, .rs-heat-meta a { color: var(--accent-text); }
+.rs-note { margin: 12px 0 0; font-size: var(--fs-2xs); line-height: 1.6; color: var(--text-dim); }
+.rs-tag {
+  padding: 1px 7px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+/* ── Last time ── */
+.rs-last {
+  padding: 13px 15px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.rs-last-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 7px; }
+.rs-last-title { font-size: var(--fs-sm); font-weight: 800; color: var(--text); }
+.rs-recap { margin: 9px 0 0; font-size: var(--fs-2xs); line-height: 1.65; color: var(--text-muted); }
+.rs-meta { margin: 7px 0 0; font-size: var(--fs-2xs); line-height: 1.5; color: var(--text-muted); }
+.rs-meta span {
+  display: inline-block;
+  min-width: 56px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+/* The note to yourself. Loud, because it is the one thing on this page you
+   wrote specifically so that tonight's you would read it. */
+.rs-next {
+  margin-top: 11px;
+  padding: 10px 12px;
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+}
+.rs-next span {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+/* ── Notes ── */
+#rs-notes-wrap textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: var(--fs-xs);
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  resize: vertical;
+  outline: none;
+}
+#rs-notes-wrap textarea:focus { border-color: var(--accent); }
+.rs-save-row { margin-top: 6px; text-align: right; }
+.rs-save-state { font-size: 10px; color: var(--text-dim); }
+
+/* ── The running order ── */
+.rs-dmnote {
+  padding: 11px 13px;
+  margin-bottom: 12px;
+  font-size: var(--fs-2xs);
+  line-height: 1.65;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--primary);
+  border-radius: var(--radius);
+}
+.rs-dmnote span, .rs-milestone span, .rs-quest-reward span {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.rs-chapter-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 11px; }
+
+.rs-order { margin: 0; padding-left: 26px; }
+.rs-step {
+  padding: 8px 0 8px 4px;
+  border-bottom: 1px solid var(--border);
+}
+.rs-step::marker { color: var(--text-dim); font-weight: 700; font-size: var(--fs-2xs); }
+.rs-step-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+.rs-step-name { font-size: var(--fs-xs); font-weight: 700; color: var(--text); }
+.rs-step-type {
+  padding: 0 7px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  color: var(--text-dim);
+  background: var(--surface2);
+}
+.rs-step.type-encounter .rs-step-type { color: var(--red-text); background: var(--red-light); }
+.rs-step.type-location .rs-step-type  { color: var(--teal-text); background: var(--teal-light); }
+.rs-step.type-npc .rs-step-type       { color: var(--primary-text); background: var(--primary-light); }
+.rs-step.type-dmnote .rs-step-type    { color: var(--amber-text); background: var(--amber-light); }
+.rs-step-tag { margin-top: 3px; font-size: 10px; color: var(--text-dim); }
+.rs-step-read {
+  margin-top: 5px;
+  font-size: 10px;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+.rs-milestone {
+  margin-top: 13px;
+  padding: 10px 12px;
+  font-size: var(--fs-2xs);
+  line-height: 1.6;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--green);
+  border-radius: var(--radius);
+}
+
+/* ── Side quests ── */
+.rs-quests { display: flex; flex-direction: column; gap: 7px; }
+.rs-quest {
+  padding: 11px 13px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.rs-quest-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 7px; }
+.rs-quest-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  letter-spacing: .02em;
+  color: var(--text);
+}
+.rs-quest-hook {
+  margin: 7px 0 0;
+  font-size: var(--fs-2xs);
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.rs-quest-body { margin: 6px 0 0; font-size: var(--fs-2xs); line-height: 1.6; color: var(--text-muted); }
+.rs-quest-reward { margin: 7px 0 0; font-size: var(--fs-2xs); line-height: 1.6; color: var(--text-muted); }
+
+/* ── Heat ── */
+.rs-heat {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: var(--radius);
+}
+.rs-heat.mood-warm { border-left-color: var(--amber); }
+.rs-heat.mood-hot  { border-left-color: var(--red); }
+.rs-heat-num {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 1;
+  color: var(--text);
+}
+.rs-heat-num span { font-size: 15px; color: var(--text-dim); }
+.rs-heat.mood-warm .rs-heat-num { color: var(--amber-text); }
+.rs-heat.mood-hot .rs-heat-num  { color: var(--red-text); }
+.rs-heat-body { min-width: 0; }
+.rs-heat-who { font-size: var(--fs-xs); line-height: 1.5; color: var(--text); }
+.rs-heat-next { margin-top: 4px; font-size: var(--fs-2xs); color: var(--text-muted); }
+.rs-heat-meta { margin-top: 5px; font-size: 10px; color: var(--text-dim); }
+
+/* ── Encounters ── */
+.rs-arc { margin-bottom: 14px; }
+.rs-arc-name {
+  margin-bottom: 6px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.rs-enc {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  font-size: var(--fs-2xs);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+.rs-enc-step {
+  flex: none;
+  width: 22px;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  text-align: center;
+  color: var(--text-dim);
+}
+.rs-enc-name { flex: 1; min-width: 140px; font-weight: 700; color: var(--text); }
+.rs-enc-n { flex: none; font-size: 10px; color: var(--text-dim); }
+
+.rs-foot {
+  margin-top: 34px;
+  padding-top: 16px;
+  font-size: var(--fs-2xs);
+  line-height: 1.7;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+}

@@ -85,7 +85,6 @@
    ════════════════════════════════════════════════════════════ */
 
 .mg-panel,
-.card-hero,
 .char-card,
 .folder-tile,
 .session-card,
@@ -105,7 +104,6 @@
               border-color var(--dur);
 }
 .mg-panel:hover,
-.card-hero:hover,
 .char-card:hover,
 .folder-tile:hover,
 .camp-card:hover,
@@ -119,12 +117,10 @@
    ════════════════════════════════════════════════════════════ */
 
 .mg-speed,
-.card-hero,
 .char-card,
 .shop-card { overflow: hidden; }
 
 .mg-speed::before,
-.card-hero::before,
 .char-card::before,
 .shop-card::before {
   content: '';
@@ -145,12 +141,11 @@
               opacity var(--dur-slow) var(--ease-out);
 }
 .mg-speed:hover::before,
-.card-hero:hover::before,
 .char-card:hover::before,
 .shop-card:hover::before { transform: translateX(0); opacity: 1; }
 
 /* keep real content above the streak layer */
-.card-hero > *, .char-card > *, .shop-card > * { position: relative; z-index: 1; }
+.char-card > *, .shop-card > * { position: relative; z-index: 1; }
 
 /* ════════════════════════════════════════════════════════════
    HEADINGS — Anton over a skewed accent slab

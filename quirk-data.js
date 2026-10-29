@@ -19,11 +19,27 @@
 //   REPO   CAMPAIGN/villains.json         the organisation and the solos
 //   REPO   CAMPAIGN/npcs.json             the supporting cast
 //
-// quirkLoadAll reads all of them, live first, and merges on the character's
-// name — so a character who exists both live and in the repo is counted
-// once, with the live copy winning. It reports which sources answered, and
-// the page says so, because a database that quietly lost two of its seven
-// sources looks exactly like a database that is complete.
+// quirkLoadAll reads all of them, live first, and merges on the QUIRK — so
+// "Homing", held by two different people, is one entry. It reports which
+// sources answered, and the page says so, because a database that quietly
+// lost two of its seven sources looks exactly like a database that is
+// complete.
+//
+// ── Nobody is named in it ───────────────────────────────────────────
+// This is a reference for players, and the cast it is assembled from
+// includes the gang, the Underground and the villains. "Alucard Chosoji —
+// BLACK" on a page a player can open is a spoiler, so no character name
+// reaches the records at all.
+//
+// Taking the names off the headers is the easy half. The hard half is that
+// the prose is written ABOUT people — "Once Kakita has studied a target",
+// "Domoto's legs carry more force than her frame suggests" — so every
+// summary, weakness and ability description is run through quirkScrub, which
+// swaps a known name for "the user". Dropping those fields instead would
+// have been simpler and would have thrown away most of what the database is
+// for. scripts/verify-lab.js then checks every rendered field against every
+// name the campaign knows, so a name that gets past the scrub fails the
+// suite rather than reaching a player.
 //
 // Read-only. Nothing in this file writes anything.
 
@@ -37,43 +53,71 @@ function quirkNormaliseType(t) {
   return QUIRK_TYPE_ALIASES[raw] || raw;
 }
 
-// One record per character who has a quirk. `abilities` is whatever the
-// source recorded — the shape differs between files, so it is normalised
-// here rather than in the page.
-function quirkRecord(c, source) {
+/* Swaps every known character name for "the user".
+ *
+ * Word-bounded and at least four characters, so "Koto" never eats the "Koto"
+ * inside "Kotoha" and a three-letter fragment of somebody's name cannot
+ * rewrite an ordinary word. Capitalised when it lands at the start of a
+ * sentence, because "Domoto's legs carry…" has to come out as "The user's
+ * legs carry…" rather than "the user's".
+ *
+ * It is not clever, and it does not need to be: the verifier checks the
+ * output against every name the campaign knows, so anything this misses is
+ * a failed build rather than a name on a player's screen.
+ */
+function quirkScrub(text, names) {
+  let out = String(text == null ? '' : text);
+  if (!out || !names || !names.length) return out;
+  for (const name of names) {
+    if (name.length < 4) continue;
+    const pattern = new RegExp('(^|[^A-Za-z\u00c0-\u024f])(' +
+      name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?![A-Za-z\u00c0-\u024f])', 'g');
+    out = out.replace(pattern, (m, before) => {
+      // Start of the string, or just after a full stop: capitalise.
+      const sentenceStart = before === '' || /[.!?]\s$/.test(out.slice(0, out.indexOf(m)) + before);
+      return before + (sentenceStart ? 'The user' : 'the user');
+    });
+  }
+  // "the user's own the user" and similar doubling, which a name written
+  // twice in one clause can produce.
+  return out.replace(/\b([Tt]he user) the user\b/g, '$1').replace(/\s{2,}/g, ' ').trim();
+}
+
+// One record per quirk-bearing character — with no character in it. The name
+// and the alias are not carried at all rather than carried and hidden: a
+// field that does not exist cannot be printed by mistake.
+function quirkRecord(c, source, names) {
   const mech = c.quirk_mechanics || {};
+  const scrub = (t) => quirkScrub(t, names);
   const abilities = []
     .concat(Array.isArray(mech.abilities) ? mech.abilities : [])
     .concat(Array.isArray(c.signature_moves) ? c.signature_moves : [])
     .map(a => ({
-      name: a.name || a.move || '',
+      name: scrub(a.name || a.move || ''),
       type: a.type || a.action || '',
-      text: a.description || a.effect || a.text || '',
+      text: scrub(a.description || a.effect || a.text || ''),
       damage: a.damage || '',
       attackBonus: a.attackBonus || '',
     }))
     .filter(a => a.name || a.text);
 
   return {
-    name: c.name || '',
-    alias: c.alias || c.hero_name || '',
     quirk: c.quirk || '',
     type: quirkNormaliseType(c.quirk_type || c.type),
     rarity: c.quirk_rarity || '',
-    summary: c.quirk_summary || mech.summary || '',
-    weakness: mech.weakness || '',
+    summary: scrub(c.quirk_summary || mech.summary || ''),
+    weakness: scrub(typeof mech === 'string' ? mech : mech.weakness || ''),
     source: mech.source || '',
     from: source,
-    role: c.role || c.category || '',
     abilities,
   };
 }
 
-// Named characters only. A record with no name is a half-finished row in
-// somebody's editor, and a database full of blanks is worse than a smaller
-// one that is all real.
+// A record needs a quirk to be about. Without one it is a half-finished row
+// in somebody's editor, and a database full of blanks is worse than a
+// smaller one that is all real.
 function quirkUsable(r) {
-  return !!(r.name && r.quirk);
+  return !!(r && r.quirk);
 }
 
 async function quirkLoadAll(db, opts) {
@@ -81,12 +125,31 @@ async function quirkLoadAll(db, opts) {
   const base = options.base || '';
   const sources = [];     // what answered, for the page to report
   const failed = [];
-  const out = [];
 
-  const push = (c, from) => {
-    const r = quirkRecord(c, from);
-    if (quirkUsable(r)) out.push(r);
+  /* Two passes, and the first one exists only so the second can scrub.
+   *
+   * A name cannot be removed from "Once Kakita has studied a target" until
+   * the loader knows "Kakita" is a name, and it only knows that after it has
+   * read every source — including the one the sentence did not come from,
+   * because the prose in one file names people in another. So: collect, then
+   * build. Nothing between the two passes is rendered.
+   */
+  const raw = [];         // { character, from }
+  const names = new Set();
+  const collect = (c, from) => {
+    if (!c) return;
+    raw.push({ c, from });
+    for (const field of [c.name, c.alias, c.hero_name]) {
+      if (!field) continue;
+      names.add(String(field).trim());
+      // Given name and surname separately: the prose uses one or the other
+      // ("Domoto's legs", "Once Kakita has studied") far more often than both.
+      for (const part of String(field).trim().split(/\s+/)) {
+        if (part.length >= 4) names.add(part);
+      }
+    }
   };
+  const push = collect;    // the repo jobs below read better with this name
 
   const getJson = (path) => fetch(base + path).then(r => {
     if (!r.ok) throw new Error('bad status');
@@ -157,38 +220,55 @@ async function quirkLoadAll(db, opts) {
     }
   } catch { failed.push('the bundled Class 1-A files'); }
 
-  return { quirks: quirkDedupe(out), sources, failed };
+  // Longest first, so "Dōmeki Daigo" is replaced as a whole before the pass
+  // that would otherwise leave "the user Daigo".
+  const nameList = [...names].sort((a, b) => b.length - a.length);
+  const out = [];
+  for (const { c, from } of raw) {
+    const r = quirkRecord(c, from, nameList);
+    if (quirkUsable(r)) out.push(r);
+  }
+
+  return { quirks: quirkDedupe(out), sources, failed, names: nameList };
 }
 
-/* Merged on the character's name, because the same person appears in up to
- * three sources and the only key they share is what they are called. The
- * first record wins on every field it has filled in, and later ones fill in
- * the gaps — so the live copy (loaded first) is authoritative, and a repo
+/* Merged on the QUIRK, which is what this database is about now that nobody
+ * is named in it: "Homing" is held by two different people and is one entry.
+ *
+ * The first record wins on every field it has filled in and later ones fill
+ * in the gaps, so the live copy (loaded first) is authoritative and a repo
  * file can still contribute a weakness or an ability list the live copy
- * never had.
+ * never had. Abilities accumulate rather than being replaced — two people
+ * with the same quirk have found different things to do with it, and both
+ * are worth reading.
  */
 function quirkDedupe(records) {
-  const byName = new Map();
+  const byQuirk = new Map();
   for (const r of records) {
-    const key = r.name.trim().toLowerCase();
-    const seen = byName.get(key);
-    if (!seen) { byName.set(key, { ...r, alsoFrom: [] }); continue; }
-    for (const field of ['alias', 'quirk', 'rarity', 'summary', 'weakness', 'source', 'role']) {
+    const key = r.quirk.trim().toLowerCase();
+    const seen = byQuirk.get(key);
+    if (!seen) { byQuirk.set(key, { ...r, alsoFrom: [], held: 1 }); continue; }
+    seen.held++;
+    for (const field of ['rarity', 'summary', 'weakness', 'source']) {
       if (!seen[field] && r[field]) seen[field] = r[field];
     }
     if (seen.type === 'Unrecorded' && r.type !== 'Unrecorded') seen.type = r.type;
-    if (!seen.abilities.length && r.abilities.length) seen.abilities = r.abilities;
+    for (const a of r.abilities) {
+      if (!seen.abilities.some(x => x.name === a.name)) seen.abilities.push(a);
+    }
     if (r.from !== seen.from && !seen.alsoFrom.includes(r.from)) seen.alsoFrom.push(r.from);
   }
-  return [...byName.values()].sort((a, b) => a.name.localeCompare(b.name));
+  return [...byQuirk.values()].sort((a, b) => a.quirk.localeCompare(b.quirk));
 }
 
 // Every word has to appear somewhere in the record, so "emitter fire skin"
-// finds it without knowing which field holds which part.
+// finds it without knowing which field holds which part. There is no name in
+// the haystack because there is no name in the record — searching a
+// character's name finds nothing, which is the point.
 function quirkMatches(r, query) {
   const q = String(query || '').trim().toLowerCase();
   if (!q) return true;
-  const hay = [r.name, r.alias, r.quirk, r.type, r.rarity, r.summary, r.weakness, r.role,
+  const hay = [r.quirk, r.type, r.rarity, r.summary, r.weakness,
     ...r.abilities.map(a => a.name + ' ' + a.text)].join(' ').toLowerCase();
   return q.split(/\s+/).filter(Boolean).every(w => hay.includes(w));
 }

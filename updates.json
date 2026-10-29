@@ -16,6 +16,22 @@
   ],
   "updates": [
     {
+      "version": "1.0.265",
+      "build": 265,
+      "date": "2026-10-29",
+      "commit": "015fbde",
+      "title": "A dashboard you can read",
+      "tags": [
+        "dashboard",
+        "toolkit"
+      ],
+      "items": [
+        "The dashboard's seventeen cards are grouped by when you use them — at the table, your character, between sessions, running a session, the campaign — and each group says what it is for.",
+        "Everything has room to breathe: sections are properly spaced, cards are roomier, and a description gets two clean lines instead of four cramped ones.",
+        "A new strip at the top says whether a fight is running and whose turn it is, and how much attention Byakko are paying — coloured by band, so you can read the evening before you read a word of it. Each row disappears when there is nothing to say."
+      ]
+    },
+    {
       "version": "1.0.263",
       "build": 263,
       "date": "2026-10-29",

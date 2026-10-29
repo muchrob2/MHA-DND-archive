@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The fight from a player's seat — whose turn it is, who is next, and what is wrong with everybody, live.">
+<meta name="theme-color" content="#08090D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>At the Table — MHA D&D</title>
+<link rel="preload" href="css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/auth-widget.css">
+<link rel="stylesheet" href="css/pages/table.css">
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+</head>
+<body>
+
+<!-- Read-only, and not by convention: encounter-state is admin-only to write
+     in firestore.rules, the same as masaranking and heat, so this page has no
+     write path and could not have one that worked. -->
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">At the Table</span>
+  <div class="nav-right">
+    <span class="nav-count" id="tb-count"></span>
+  </div>
+</nav>
+
+<div id="panel">
+  <div id="tb-header"></div>
+
+  <div id="tb-order"></div>
+
+  <div class="tb-controls">
+    <button type="button" id="tb-exact-btn" onclick="toggleExact()" style="display:none;"></button>
+    <p id="tb-hp-note" class="tb-note"></p>
+  </div>
+
+  <h2 class="tb-h2">Recent attacks</h2>
+  <div id="tb-log"></div>
+
+  <p class="tb-foot">
+    This updates itself while the DM runs the encounter — leave it open.
+    The board at <a href="CLASS-1A/board.html">Battle Board</a> shows where everybody
+    is standing; this shows the order. Conditions carry their rule as a tooltip, out of the
+    <a href="rules.html">rules reference</a>, and where one changes an attack roll the page
+    says so for whoever is up now.
+  </p>
+</div>
+
+<!-- The conditions, so the page can say what one means for an attack — the
+     same table the DM's tracker rolls against and the Rules page prints. -->
+<script src="rules-data.js"></script>
+<script src="table.js"></script>
+</body>
+</html>

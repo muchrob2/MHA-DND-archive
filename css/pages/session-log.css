@@ -12,15 +12,9 @@
    .session-actions, .form-row-pair — all styled here or upstream.
    ============================================================ */
 
-#load-error-banner { max-width: 820px; margin: 14px auto 0; padding: 0 24px; }
-#load-error-banner .banner-inner {
-  padding: 10px 14px;
-  font-size: var(--fs-xs);
-  color: var(--red-text);
-  background: var(--red-light);
-  border: 1px solid color-mix(in srgb, var(--red) 34%, transparent);
-  border-radius: var(--radius);
-}
+/* The banner itself is in components.css now — loot.html and updates.html
+   carry the same markup. Only the width is this page's. */
+#load-error-banner { max-width: 820px; padding: 0 24px; }
 
 /* ── summary bar ── */
 #summary-bar {

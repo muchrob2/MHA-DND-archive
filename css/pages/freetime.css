@@ -115,6 +115,10 @@
 .ft-roll.is-pass .ft-roll-word { color: var(--green-text); }
 .ft-roll.is-fail .ft-roll-word { color: var(--red-text); }
 .ft-roll-pay { font-weight: 800; color: var(--accent-text); }
+/* The dice behind the number — "2d6+3 against DC 12". The quietest thing in
+   the row, and the only span in it that had no rule, so it was rendering at
+   full body weight beside its own total. */
+.ft-roll-detail { font-size: var(--fs-2xs); color: var(--text-dim); }
 .ft-roll-note { flex-basis: 100%; font-size: 10px; color: var(--text-dim); }
 
 /* ── Sections ── */

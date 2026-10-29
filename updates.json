@@ -16,6 +16,23 @@
   ],
   "updates": [
     {
+      "version": "1.0.265",
+      "build": 265,
+      "date": "2026-10-29",
+      "commit": "f34335f",
+      "title": "The whole Quirk Compendium",
+      "tags": [
+        "toolkit",
+        "data"
+      ],
+      "items": [
+        "Every quirk in the Quirk Compendium is now in the Lab's quirk database — 160 of them, up from the 55 the campaign's own cast accounted for.",
+        "Each one gives the type, the rarity, what it does, its weakness, and the names and levels of its abilities, with the page the full entry is on and a link to the PDF. The rules themselves stay in the book.",
+        "A quirk somebody in the campaign has and the book's entry for it are one entry, so your characters' quirks now carry a rarity and a page number too.",
+        "Built straight from the PDF by a script, so it can be rebuilt if the book changes."
+      ]
+    },
+    {
       "version": "1.0.263",
       "build": 263,
       "date": "2026-10-29",

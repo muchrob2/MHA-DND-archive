@@ -16,6 +16,23 @@
   ],
   "updates": [
     {
+      "version": "1.0.259",
+      "build": 259,
+      "date": "2026-10-29",
+      "commit": "a802e50",
+      "title": "Your character in the Lab",
+      "tags": [
+        "toolkit",
+        "heropad"
+      ],
+      "items": [
+        "The Lab opens on your own character now: everything you can do on one screen, grouped by whether it costs an action, a bonus action or a reaction — your quirk's abilities, the gear you carry that states a die, and the standard options every character has.",
+        "Every row with a die has a button that rolls it, and an arrow that opens it on the workbench.",
+        "Your seven abilities are a strip at the top — tap one to roll a d20 against it. It shows the natural roll as well as the total, because a 24 could be a natural 20 or a natural 16.",
+        "It shows the characters your DM has assigned you, the same ones you can edit in the Class 1-A toolkit. The DM sees the whole class."
+      ]
+    },
+    {
       "version": "1.0.257",
       "build": 257,
       "date": "2026-10-27",

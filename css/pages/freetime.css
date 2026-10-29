@@ -1,0 +1,244 @@
+/* ── Free time ──
+   A job board and a slot counter. The counter is the loudest thing on the
+   page because it is the budget, and a spent slot is a spent slot. */
+
+#panel { max-width: 860px; margin: 0 auto; padding: 24px 20px 70px; }
+.ft-save-state { font-size: 10px; color: var(--text-dim); }
+.ft-empty { font-size: var(--fs-2xs); font-style: italic; color: var(--text-dim); }
+.ft-flash { margin: 8px 0 0; min-height: 1em; font-size: var(--fs-2xs); color: var(--amber-text); }
+
+.ft-char-tabs { display: flex; flex-wrap: wrap; gap: 5px; margin: 18px 0 0; }
+.ft-char-tab {
+  padding: 6px 12px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.ft-char-tab.sel { color: var(--accent-text); background: var(--accent-light); border-color: var(--accent); }
+
+.ft-nochar {
+  margin-top: 18px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.ft-nochar p { margin: 0 0 9px; font-size: var(--fs-2xs); line-height: 1.65; color: var(--text-muted); }
+.ft-nochar p:last-child { margin-bottom: 0; }
+.ft-nochar strong { color: var(--text); }
+
+/* ── The budget ── */
+.ft-slots {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 15px 17px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+}
+.ft-slots-num {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 1;
+  color: var(--accent-text);
+}
+.ft-slots-num span { display: block; margin-top: 3px; font-size: 11px; color: var(--text-dim); }
+.ft-slots-body { flex: 1; min-width: 140px; }
+.ft-pips { display: flex; flex-wrap: wrap; gap: 5px; }
+.ft-pip {
+  width: 26px;
+  height: 9px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+.ft-pip.is-spent { background: var(--surface3, var(--surface2)); }
+.ft-slots-meta { margin-top: 7px; font-size: var(--fs-2xs); color: var(--text-dim); }
+.ft-dm { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px; }
+.ft-dm label { font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-dim); }
+.ft-dm input {
+  display: block;
+  margin-top: 3px;
+  padding: 6px 9px;
+  font-size: var(--fs-2xs);
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.ft-dm input[type="number"] { width: 64px; }
+.ft-dm button {
+  padding: 7px 11px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+/* ── The roll that just happened ── */
+.ft-roll {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 15px;
+  font-size: var(--fs-2xs);
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.ft-roll.is-pass { border-color: var(--green); }
+.ft-roll.is-fail { border-color: var(--red); }
+.ft-roll strong { font-size: var(--fs-xs); color: var(--text); }
+.ft-roll-num {
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1;
+  color: var(--text);
+}
+.ft-roll.is-pass .ft-roll-num { color: var(--green-text); }
+.ft-roll.is-fail .ft-roll-num { color: var(--red-text); }
+.ft-roll-word { font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+.ft-roll.is-pass .ft-roll-word { color: var(--green-text); }
+.ft-roll.is-fail .ft-roll-word { color: var(--red-text); }
+.ft-roll-pay { font-weight: 800; color: var(--accent-text); }
+.ft-roll-note { flex-basis: 100%; font-size: 10px; color: var(--text-dim); }
+
+/* ── Sections ── */
+.ft-section { margin-top: 28px; }
+.ft-h2 {
+  margin: 0 0 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border);
+}
+.ft-section-sub { margin: 0 0 12px; font-size: var(--fs-2xs); line-height: 1.6; color: var(--text-dim); }
+
+.ft-block { margin-bottom: 18px; }
+.ft-block-name {
+  margin-bottom: 7px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.ft-job, .ft-extra {
+  margin-bottom: 6px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--border);
+  border-radius: var(--radius);
+}
+.ft-job.is-fame { border-left-color: var(--amber); }
+.ft-extra { border-left-color: var(--teal); }
+.ft-job-head, .ft-extra-head { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+.ft-job-name, .ft-extra-name { font-size: var(--fs-xs); font-weight: 800; color: var(--text); }
+.ft-star { color: var(--amber-text); cursor: help; }
+.ft-tag {
+  padding: 1px 7px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.ft-tag.ft-pay { color: var(--accent-text); border-color: var(--accent); }
+.ft-tag.ft-second { color: var(--primary-text); border-color: var(--primary); }
+.ft-tag.ft-failed { color: var(--red-text); border-color: var(--red); }
+.ft-do {
+  margin-left: auto;
+  padding: 5px 11px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  color: var(--ink);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ft-do:disabled {
+  color: var(--text-dim);
+  background: var(--surface2);
+  border-color: var(--border);
+  cursor: default;
+}
+.ft-job-line { margin: 6px 0 0; font-size: var(--fs-2xs); line-height: 1.6; color: var(--text-muted); }
+
+.ft-written-row { display: flex; gap: 6px; margin-top: 8px; }
+.ft-written-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 10px;
+  font-size: var(--fs-2xs);
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.ft-written-row .ft-do { margin-left: 0; }
+
+/* ── The log ── */
+.ft-log-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  font-size: var(--fs-2xs);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+.ft-log-cost {
+  flex: none;
+  width: 22px;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  text-align: center;
+  color: var(--text-dim);
+}
+.ft-log-name { flex: 1; min-width: 130px; font-weight: 700; color: var(--text); }
+.ft-log-row.kind-training .ft-log-cost { color: var(--teal-text); }
+.ft-log-row.kind-hangout .ft-log-cost  { color: var(--primary-text); }
+.ft-undo {
+  padding: 0 6px;
+  font-size: 11px;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.ft-undo:hover { color: var(--red-text); }
+
+.ft-foot {
+  margin-top: 32px;
+  padding-top: 16px;
+  font-size: var(--fs-2xs);
+  line-height: 1.7;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+}
+.ft-foot strong { color: var(--text-muted); }
+.ft-foot a { color: var(--accent-text); }

@@ -31,6 +31,13 @@
 //      ability `type` read down to a cost bucket (the live bundle has
 //      fourteen distinct values in it), and the first rollable die pulled
 //      out of a damage string like "1d12 / 2 heat points".
+//   8. The player's own record — the moves they wrote, the equipment they
+//      made, the perks they picked up, and the stats they are tracking.
+//      Three things matter here: it is a document of its OWN rather than a
+//      write into the character, a crafted thing is priced off the real
+//      catalogue rather than a number somebody invented, and the stats
+//      section records a disagreement with the DM's copy instead of
+//      resolving it in either direction.
 
 const fs = require('fs');
 const path = require('path');
@@ -53,17 +60,22 @@ const quirkJs = read('quirk-data.js');
 const els = {};
 const mk = () => ({ innerHTML: '', textContent: '', value: '', style: {}, dataset: {},
   focus() {}, select() {} });
-for (const id of ['lab-tabs', 'lab-body', 'lab-mine', 'lab-maths', 'lab-preview', 'lab-drafts',
-  'lab-json', 'lab-roll-out', 'lab-save-feedback', 'lab-quirk-count', 'lab-quirks-list',
-  'lab-facets', 'lab-sources', 'lab-quirk-search']) els[id] = mk();
+for (const id of ['lab-tabs', 'lab-body', 'lab-mine', 'lab-record', 'lab-maths', 'lab-preview',
+  'lab-drafts', 'lab-json', 'lab-roll-out', 'lab-save-feedback', 'lab-quirk-count',
+  'lab-quirks-list', 'lab-facets', 'lab-sources', 'lab-quirk-search', 'lab-gear-preview',
+  'lab-gear-price', 'lab-gear-roll', 'lab-record-state', 'lab-perk-name', 'lab-perk-from',
+  'lab-perk-text']) els[id] = mk();
 const store = {};
 
 const charJs = read('char-data.js');
+const recordJs = read('player-record.js');
+const shopCatalog = JSON.parse(read('CAMPAIGN/shop-catalog.json'));
 
 // Declared before the sandbox is built: its admin/owned getters are called
 // during the factory's own first render, and a const in the temporal dead
 // zone throws there.
 const ACCESS = { admin: false, owned: [] };
+const WRITES = [];
 
 const env = new Function('sandbox', `
   const { document, localStorage, console } = sandbox;
@@ -71,8 +83,10 @@ const env = new Function('sandbox', `
   ${quirkJs}
   ${charJs}
   ${read('rules-data.js')}
+  ${recordJs}
   const firebase = { firestore: () => ({ collection: () => ({
-    doc: () => ({ get: () => Promise.resolve({ exists: false }) }),
+    doc: (n) => ({ get: () => Promise.resolve({ exists: false }),
+      set: (d, o) => { sandbox.writes.push([n, JSON.parse(JSON.stringify(d)), o]); return Promise.resolve(); } }),
     get: () => Promise.resolve({ forEach() {} }) }) }) };
   const fbAuthReady = Promise.resolve();
   const window = { isAdmin: () => sandbox.admin(), canEdit: (k) => sandbox.owned().includes(k) };
@@ -85,6 +99,15 @@ const env = new Function('sandbox', `
            quirkNormaliseType, quirkFacets, quirkScrub,
            charCostOf, charDiceIn, charCanDo, labUniversal, rollRow, benchRow,
            labPickChar, mineHtml, CHAR_COSTS, CHAR_COST_LABELS,
+           setBenchMode, setGear, saveAsMove, saveAsGear, deleteMove, deleteGear,
+           editMove, editGear, addPerk, deletePerk, setStat, clearStat, setRecordNote,
+           rollOwn, rollGear, recordHtml, recordEmpty, recordMoveRows, recordGearRows,
+           recordComparables, recordSuggestedPrice, recordDiceAverage, recordRef,
+           recordKey, RECORD_GEAR_KINDS, kindLabel,
+           get record() { return record; }, set record(v) { record = v; },
+           set catalog(v) { shopCatalog = v; },
+           set canWrite(v) { labCanWrite = v; },
+           get gear() { return gear; }, get mode() { return benchMode; },
            get a() { return ability; }, set a(v) { ability = v; },
            set quirks(q) { labQuirks = q; labQuirksLoaded = true; },
            set mine(v) { labMine = v; labCharFile = v.length ? v[0]._file : null; },
@@ -97,6 +120,7 @@ const env = new Function('sandbox', `
   console: { error() {}, log() {} },
   admin: () => ACCESS.admin,
   owned: () => ACCESS.owned,
+  writes: WRITES,
 });
 
 /* ── 1. the probability ── */
@@ -266,10 +290,19 @@ const env = new Function('sandbox', `
   env.saveDraft();
   check('a nameless draft is refused with a reason',
     env.drafts.length === before && /name/i.test(els['lab-save-feedback'].textContent));
-  check('drafts live in this browser only — nothing here writes a character',
-    /localStorage\.setItem\(LS_LAB/.test(pageJs)
-    && !/\.set\(|\.update\(|fsMergeSave|\.add\(/.test(pageJs),
-    'the Copy button is the only way anything leaves this page');
+  check('workbench drafts stay in this browser',
+    /localStorage\.setItem\(LS_LAB/.test(pageJs));
+  check('and the only document the page writes is its own labsheet',
+    (() => {
+      const writes = [...pageJs.matchAll(/(\w+(?:\([^)]*\))?)\.set\(/g)].map(m => m[1]);
+      return writes.length > 0 && writes.every(w => /recordRef\(/.test(w));
+    })(),
+    [...pageJs.matchAll(/(\w+(?:\([^)]*\))?)\.set\(/g)].map(m => m[1]).join(', '));
+  check('never the character bundle and never an inventory',
+    !/relationships-bundle/.test(pageJs.replace(/\/\/[^\n]*/g, ''))
+    && !/collection\('inventories'\)/.test(pageJs)
+    && !/fsMergeSave/.test(pageJs),
+    'the character is the DM\'s, and the purse has a database rule of its own');
 }
 
 /* ── 5. the quirk database ── */
@@ -374,7 +407,7 @@ const env = new Function('sandbox', `
       : { doc: () => ({ get: () => Promise.resolve({ exists: false }) }) } },
   });
 
-  return repoEnv(null, {}).then(({ quirks, sources, failed, names }) => {
+  return repoEnv(null, {}).then(async ({ quirks, sources, failed, names }) => {
     check('the bundled files alone make a database worth searching',
       quirks.length >= 50, quirks.length + ' characters with a quirk');
     check('and it covers more than one class',
@@ -387,8 +420,22 @@ const env = new Function('sandbox', `
       /Could not reach/.test(pageJs) && /lab-sources/.test(pageJs));
 
     check('every entry carries what the page needs to show',
-      quirks.every(q => q.quirk && q.type && Array.isArray(q.abilities) && q.held >= 1),
-      JSON.stringify(quirks.filter(q => !(q.quirk && q.type && Array.isArray(q.abilities) && q.held >= 1)).slice(0,2)));
+      quirks.every(q => q.quirk && q.type && Array.isArray(q.abilities)
+        && Number.isInteger(q.held) && q.held >= 0),
+      JSON.stringify(quirks.filter(q => !(q.quirk && q.type && Array.isArray(q.abilities)
+        && Number.isInteger(q.held) && q.held >= 0)).slice(0, 2)));
+    check('a quirk somebody in the campaign has is counted as held',
+      quirks.filter(q => q.from !== 'The Quirk Compendium').every(q => q.held >= 1),
+      quirks.filter(q => q.from !== 'The Quirk Compendium' && q.held < 1)
+        .map(q => q.quirk).join(', '));
+    check('and one that is only in the book is held by nobody',
+      quirks.filter(q => q.from === 'The Quirk Compendium').every(q => q.held === 0),
+      '"1 person has it" would be wrong about a quirk nobody in the campaign has');
+    check('the book is one of the sources the page reports',
+      sources.includes('the Quirk Compendium'), sources.join(', '));
+    check('and it is most of the database now',
+      quirks.filter(q => q.page).length >= 150,
+      quirks.filter(q => q.page).length + ' entries cite a page in the Compendium');
     const withAbilities = quirks.filter(q => q.abilities.length);
     check('and a good number of them have abilities recorded',
       withAbilities.length >= 25, withAbilities.length + ' with abilities');
@@ -661,12 +708,281 @@ const env = new Function('sandbox', `
       els['lab-mine'].innerHTML.includes('&lt;img src=x')
       && els['lab-mine'].innerHTML.includes('&lt;script&gt;'));
 
+    /* ── 8. the player's own record ── */
+    const pcSheet = {
+      _file: 'test.json', name: 'Test Character', quirk: 'Test Quirk', level: '1',
+      HP: '35', AC: '14', speed: '30 ft',
+      ability_scores: { STR: '14', DEX: '18', CON: '20', INT: '13', WIS: '10', CHA: '10', TECH: '4' },
+      modifiers: { STR: '2', DEX: '4', CON: '5', INT: '1', WIS: '0', CHA: '0', TECH: '-3' },
+      quirk_mechanics: { abilities: [{ name: 'Beam', type: 'Action', damage: '1d12', description: 'A beam.' }] },
+      inventory: { items: [] },
+    };
+    ACCESS.admin = true;
+    env.mine = [pcSheet];
+    env.loaded = true;
+    env.canWrite = true;
+    env.record = env.recordEmpty();
+    env.catalog = shopCatalog;
+    env.render();
+
+    check('there are four tabs now, with the record among them',
+      [...els['lab-tabs'].innerHTML.matchAll(/>([^<]+)<\/button>/g)].map(m => m[1]).join('|')
+        === 'Your character|Workbench|Your record|Quirk database',
+      [...els['lab-tabs'].innerHTML.matchAll(/>([^<]+)<\/button>/g)].map(m => m[1]).join('|'));
+
+    /* the equipment bench, priced off the real catalogue */
+    check('the gear kinds are the shop\'s own categories',
+      env.RECORD_GEAR_KINDS.every(k =>
+        (shopCatalog.items || []).some(i => i.category === k.id)),
+      env.RECORD_GEAR_KINDS.filter(k =>
+        !(shopCatalog.items || []).some(i => i.category === k.id)).map(k => k.id).join(', '));
+
+    const avgCases = [['2d6', 7], ['2d6 piercing', 7], ['1d12', 6.5], ['3d6 piercing', 10.5],
+      ['1d8+2', 6.5], ['8d6', 28], ['N/A', null], ['', null], [null, null]];
+    const wrongAvg = avgCases.filter(([e, want]) => env.recordDiceAverage(e) !== want);
+    check('a damage string is averaged exactly, not sampled',
+      wrongAvg.length === 0,
+      wrongAvg.map(([e, w]) => `${JSON.stringify(e)} → ${env.recordDiceAverage(e)}, want ${w}`).join(' | '));
+
+    const comps = env.recordComparables(shopCatalog, '2d6', { category: 'melee' });
+    check('a crafted weapon is compared to real stock of the same size',
+      comps.length >= 2 && comps.every(x => Math.abs(x.avg - 7) <= 2)
+      && comps.every(x => x.item.price),
+      comps.map(x => `${x.item.name} ${x.item.damage} ¥${x.item.price}`).join(' | '));
+    check('cheapest first, so the comparison reads as a range',
+      comps.every((x, i, all) => i === 0 || Number(all[i - 1].item.price) <= Number(x.item.price)));
+    check('the suggested price is the real median of them',
+      (() => {
+        const prices = comps.map(x => Number(x.item.price)).sort((a, b) => a - b);
+        const half = Math.floor(prices.length / 2);
+        const median = prices.length % 2 ? prices[half] : (prices[half - 1] + prices[half]) / 2;
+        return env.recordSuggestedPrice(shopCatalog, '2d6', { category: 'melee' })
+          === Math.round(median / 1000) * 1000;
+      })(),
+      'with an even number of comparables the first version took the dearer '
+      + 'of the two middles, which quietly suggested the expensive half');
+    check('and something with no dice gets no price rather than an invented one',
+      env.recordComparables(shopCatalog, '', { category: 'suits-student' }).length === 0
+      && env.recordSuggestedPrice(shopCatalog, 'a costume part', {}) === null,
+      'not everything has a number');
+
+    env.setView('bench');
+    env.setBenchMode('gear');
+    check('the equipment bench is a form of its own, not the ability form with fields hidden',
+      env.mode === 'gear' && /Made of/.test(els['lab-body'].innerHTML)
+      && !/Resolved by/.test(els['lab-body'].innerHTML));
+    env.setGear('name', 'Reinforced tonfa');
+    env.setGear('damage', '2d6 bludgeoning');
+    env.setGear('kind', 'melee');
+    env.setGear('materials', 'Scrap and a bus handrail');
+    check('it prices what you are making as you type',
+      /¥27,000/.test(els['lab-gear-price'].innerHTML)
+      || /lb-price-num/.test(els['lab-gear-price'].innerHTML),
+      els['lab-gear-price'].innerHTML.replace(/\s+/g, ' ').slice(0, 90));
+    env.rollGear();
+    check('and rolls its damage',
+      /^\d+ /.test(els['lab-gear-roll'].textContent), els['lab-gear-roll'].textContent);
+    env.setGear('damage', 'no dice here');
+    env.rollGear();
+    check('with nothing rollable it says so rather than throwing',
+      /Nothing to roll/.test(els['lab-gear-roll'].textContent));
+    env.setGear('damage', '2d6 bludgeoning');
+
+    env.saveAsGear();
+    check('saving it records the shop\'s own field names',
+      env.record.gear.length === 1
+      && ['name', 'kind', 'damage', 'range', 'properties', 'materials', 'price', 'description']
+        .every(k => k in env.record.gear[0]),
+      Object.keys(env.record.gear[0]).join(', '));
+    env.setGear('properties', 'Light, Thrown');
+    env.saveAsGear();
+    check('and saving the same name again refines rather than duplicating',
+      env.record.gear.length === 1 && env.record.gear[0].properties === 'Light, Thrown');
+    env.setGear('name', '  ');
+    env.saveAsGear();
+    check('a nameless item is refused with a reason',
+      env.record.gear.length === 1 && /name/i.test(els['lab-record-state'].textContent));
+
+    /* a move, off the ability bench */
+    env.setBenchMode('ability');
+    env.a = Object.assign(env.a, { name: 'Snap shot', type: 'Bonus action', damage: '2d6',
+      range: '30 feet', description: 'Once a turn.', targetAc: '16', advantage: 'adv' });
+    env.saveAsMove();
+    check('an ability can be saved into your own move list',
+      env.record.moves.length === 1 && env.record.moves[0].name === 'Snap shot'
+      && env.record.moves[0].damage === '2d6');
+    check('and the workbench\'s own working-out does not go with it',
+      !('targetAc' in env.record.moves[0]) && !('advantage' in env.record.moves[0])
+      && !('hitMode' in env.record.moves[0]),
+      Object.keys(env.record.moves[0]).join(', '));
+    env.a = Object.assign(env.a, { description: 'Refined.' });
+    env.saveAsMove();
+    check('saving the same move name again refines rather than duplicating',
+      env.record.moves.length === 1 && /Refined/.test(env.record.moves[0].description),
+      `${env.record.moves.length} moves — the gear path was checked for this and `
+      + 'the move path was not');
+    // An expression the engine cannot read must not be stored: a move
+    // carrying "about two d6" is a Roll button that does nothing.
+    env.a = Object.assign(env.a, { name: 'Vague swing', damage: 'about two d6' });
+    env.saveAsMove();
+    check('and an unreadable damage expression is dropped rather than stored',
+      env.record.moves.find(m => m.name === 'Vague swing').damage === '',
+      JSON.stringify(env.record.moves.find(m => m.name === 'Vague swing')));
+    env.record.moves = env.record.moves.filter(m => m.name === 'Snap shot');
+    env.a = Object.assign(env.a, { name: 'Snap shot', damage: '2d6' });
+
+    /* the turn sheet carries both */
+    const own = env.recordMoveRows(env.record).concat(env.recordGearRows(env.record));
+    const grouped = env.charCanDo(pcSheet, env.labUniversal(), own).grouped;
+    check('a written move lands in the group its cost says',
+      grouped.bonus.some(r => r.name === 'Snap shot' && r.from === 'move'),
+      grouped.bonus.map(r => r.from + ':' + r.name).join(', '));
+    check('a crafted weapon is an action',
+      grouped.action.some(r => r.name === 'Reinforced tonfa' && r.from === 'crafted'));
+    check('and a crafted thing with no dice is not an attack',
+      (() => {
+        const rows = env.recordGearRows({ gear: [{ id: 'v', name: 'Visor', kind: 'suits-student' }] });
+        return rows[0].cost === 'passive' && rows[0].dice === null;
+      })(), 'a costume part costs nothing to have');
+    check('the quirk\'s own abilities still come first in their group',
+      grouped.action[0].from === 'quirk',
+      'a thing out of the handbook and a thing invented on Tuesday are both '
+      + 'listed, and the handbook goes first');
+    env.setView('mine');
+    check('and both are visibly marked as yours on the sheet',
+      /from-move/.test(els['lab-mine'].innerHTML)
+      && /from-crafted/.test(els['lab-mine'].innerHTML));
+    check('with a colour of their own in the stylesheet',
+      /\.lb-do\.from-move/.test(pageCss) && /\.lb-do\.from-crafted/.test(pageCss));
+
+    /* the stats, and a disagreement */
+    env.setView('record');
+    const rec = () => els['lab-record'].innerHTML.replace(/\s+/g, ' ');
+    check('the record shows the DM\'s copy of every number',
+      /lb-stat-theirs">35</.test(rec()) && /lb-stat-theirs">\+4</.test(rec()),
+      'four headline stats and all seven abilities');
+    env.setStat('HP', '42');
+    check('a disagreement is flagged rather than resolved',
+      /lb-stat-flag/.test(rec()) && rec().includes('>35<') && rec().includes('42'),
+      'both numbers stay visible — that is a conversation, not a bug');
+    env.setStat('HP', '35');
+    check('and agreeing clears the flag', !/lb-stat-flag/.test(rec()));
+    env.setStat('HP', '');
+    check('clearing your note drops it entirely rather than storing a blank',
+      !('HP' in env.record.stats));
+    env.setStat('modDEX', '6');
+    check('an ability modifier can disagree too', /lb-stat-flag/.test(rec()));
+    env.clearStat('modDEX');
+    check('nothing in the record is a write into the character',
+      !/relationships-bundle/.test(recordJs.replace(/\/\/[^\n]*/g, '').replace(/\/\*[\s\S]*?\*\//g, '')),
+      'it is a document of its own — see the note at the top of player-record.js');
+
+    /* perks */
+    els['lab-perk-name'].value = 'Iron Stomach';
+    els['lab-perk-from'].value = 'Samitsu';
+    els['lab-perk-text'].value = 'Advantage on saves against anything you ate.';
+    env.addPerk();
+    check('a perk records what it is, where it came from and what it does',
+      env.record.perks.length === 1 && env.record.perks[0].name === 'Iron Stomach'
+      && env.record.perks[0].from === 'Samitsu' && /anything you ate/.test(env.record.perks[0].text));
+    check('and the form clears so the next one is quick',
+      els['lab-perk-name'].value === '' && els['lab-perk-text'].value === '');
+    els['lab-perk-name'].value = '   ';
+    env.addPerk();
+    check('a nameless perk is refused',
+      env.record.perks.length === 1 && /name/i.test(els['lab-record-state'].textContent));
+    env.deletePerk(env.record.perks[0].id);
+    check('and one can be removed', env.record.perks.length === 0);
+
+    /* rolling and editing your own */
+    env.rollOwn('move-' + env.record.moves[0].id, '2d6');
+    check('a written move can be rolled from the record',
+      /lb-own-roll-out/.test(rec()));
+    env.editMove(env.record.moves[0].id);
+    check('and taken back to the ability bench to be refined',
+      env.view === 'bench' && env.mode === 'ability' && env.a.name === 'Snap shot');
+    env.setView('record');
+    env.editGear(env.record.gear[0].id);
+    check('a crafted item goes back to the equipment bench',
+      env.view === 'bench' && env.mode === 'gear' && env.gear.name === 'Reinforced tonfa');
+    const heldName = env.gear.name;
+    env.editGear('no-such-id');
+    check('editing something that does not exist changes nothing',
+      env.gear.name === heldName);
+
+    /* storage */
+    await new Promise(r => setTimeout(r, 800));
+    const sheets = WRITES.filter(w => /^labsheet-/.test(w[0]));
+    check('the record is one document per character, like the Heropad\'s pads',
+      sheets.length > 0 && sheets[0][0] === 'labsheet-test',
+      sheets.length ? sheets[0][0] : 'nothing written');
+    check('merged rather than replacing the document',
+      sheets.every(w => w[2] && w[2].merge === true));
+    check('and kept in this browser too',
+      Object.keys(store).some(k => /^mha-labsheet-v1-/.test(k)));
+    const beforeRead = WRITES.length;
+    env.canWrite = false;
+    env.setStat('AC', '18');
+    await new Promise(r => setTimeout(r, 800));
+    check('a reader sends nothing to the server',
+      WRITES.length === beforeRead, `${WRITES.length - beforeRead} writes`);
+    check('a failed save is said out loud rather than swallowed',
+      /could not save your record/.test(pageJs) && /console\.error/.test(pageJs));
+    env.canWrite = true;
+
+    /* a record half-written by an older version must not take the tab down */
+    {
+      const loader = new Function('sandbox', `
+        ${recordJs}
+        return (bad) => recordLoad(
+          { collection: () => ({ doc: () => ({ get: () => Promise.resolve({ exists: true, data: () => bad }) }) }) },
+          'x.json',
+          { getItem: () => null, setItem() {} });
+      `)({});
+      const repaired = await loader({ moves: 'not a list', gear: null, perks: 7, stats: 'nope' });
+      check('a document with the wrong shape in it is repaired on load',
+        Array.isArray(repaired.moves) && Array.isArray(repaired.gear)
+        && Array.isArray(repaired.perks)
+        && repaired.stats && typeof repaired.stats === 'object',
+        JSON.stringify({ moves: typeof repaired.moves, gear: typeof repaired.gear,
+          perks: typeof repaired.perks, stats: typeof repaired.stats }));
+      const empty = await loader({});
+      check('and a document with nothing in it loads as an empty record',
+        empty.moves.length === 0 && empty.gear.length === 0 && empty.perks.length === 0);
+    }
+
+    /* nobody assigned */
+    env.mine = [];
+    env.loaded = true;
+    env.setView('record');
+    check('with no character assigned the record says so',
+      /No character is assigned to you yet/.test(els['lab-record'].innerHTML)
+      && /admin page/.test(els['lab-record'].innerHTML));
+
+    /* escaping, on the record too */
+    env.mine = [pcSheet];
+    env.record = {
+      moves: [{ id: 'm', name: '<script>m</script>', type: 'Action', damage: '2d6', description: '<iframe>' }],
+      gear: [{ id: 'g', name: '<img src=x onerror=alert(1)>', kind: 'melee', damage: '<svg/>',
+        properties: '<b>p</b>', materials: '<u>u</u>' }],
+      perks: [{ id: 'p', name: '<script>p</script>', from: '<b>f</b>', text: '<iframe>' }],
+      stats: { HP: '<svg/>' }, note: '<script>n</script>',
+    };
+    env.setView('record');
+    const recordTags = els['lab-record'].innerHTML.match(/<(script|img|iframe|svg)[ >/]/g) || [];
+    check('nothing in your own record can become a tag',
+      recordTags.length === 0, [...new Set(recordTags)].join(' '));
+    check('and it comes back as entities',
+      els['lab-record'].innerHTML.includes('&lt;img src=x')
+      && els['lab-record'].innerHTML.includes('&lt;script&gt;'));
+    ACCESS.admin = false;
+
     /* the page */
     check('the page loads every data file before its own script',
-      ['dice.js', 'quirk-data.js', 'char-data.js', 'rules-data.js'].every(f =>
+      ['dice.js', 'quirk-data.js', 'char-data.js', 'rules-data.js', 'player-record.js'].every(f =>
         pageHtml.indexOf('src="' + f + '"') !== -1
         && pageHtml.indexOf('src="' + f + '"') < pageHtml.indexOf('src="lab.js"')),
-      ['dice.js', 'quirk-data.js', 'char-data.js', 'rules-data.js']
+      ['dice.js', 'quirk-data.js', 'char-data.js', 'rules-data.js', 'player-record.js']
         .filter(f => pageHtml.indexOf('src="' + f + '"') === -1).join(', '));
     const reachedFor = [...new Set([...pageJs.matchAll(/getElementById\('([^'${]+)'\)/g)].map(m => m[1]))];
     const nowhere = reachedFor.filter(id =>

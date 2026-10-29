@@ -16,6 +16,40 @@
   ],
   "updates": [
     {
+      "version": "1.0.265",
+      "build": 265,
+      "date": "2026-10-29",
+      "commit": "f34335f",
+      "title": "The whole Quirk Compendium",
+      "tags": [
+        "toolkit",
+        "data"
+      ],
+      "items": [
+        "Every quirk in the Quirk Compendium is now in the Lab's quirk database — 160 of them, up from the 55 the campaign's own cast accounted for.",
+        "Each one gives the type, the rarity, what it does, its weakness, and the names and levels of its abilities, with the page the full entry is on and a link to the PDF. The rules themselves stay in the book.",
+        "A quirk somebody in the campaign has and the book's entry for it are one entry, so your characters' quirks now carry a rarity and a page number too.",
+        "Built straight from the PDF by a script, so it can be rebuilt if the book changes."
+      ]
+    },
+    {
+      "version": "1.0.263",
+      "build": 263,
+      "date": "2026-10-29",
+      "commit": "a5d0bfa",
+      "title": "Craft, write, and keep a record",
+      "tags": [
+        "toolkit",
+        "heropad"
+      ],
+      "items": [
+        "The Lab's workbench now builds equipment as well as abilities — and prices what you make against the real shop catalogue, so a 2d6 weapon comes out somewhere between the Tomahawk and the Kanabo.",
+        "Save anything you build to your own move list: roll it, edit it, or delete it. Your moves and your crafted equipment show up on your turn sheet alongside your quirk's abilities, marked as yours.",
+        "A new Your Record tab: the stats you are tracking against the DM's copy, with a flag where they disagree rather than one quietly overwriting the other, plus perks and a free note.",
+        "None of it is written into your character — it is kept beside it, so nothing you write can overwrite what your DM has."
+      ]
+    },
+    {
       "version": "1.0.262",
       "build": 262,
       "date": "2026-10-29",

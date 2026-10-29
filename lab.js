@@ -33,9 +33,15 @@
 //
 // YOUR CHARACTER — everything you can do, on one screen, grouped by what it
 // costs: actions, bonus actions, reactions, what is always on. Your quirk's
-// abilities, the gear you are carrying that states a die, and the standard
-// options every character has out of the rules reference, with the numbers
-// you roll for each one.
+// abilities, the gear you are carrying that states a die, the moves you have
+// written and the equipment you have made, and the standard options every
+// character has out of the rules reference, with the numbers you roll for
+// each one. Every row says where it came from, so a thing out of the
+// handbook and a thing you invented on Tuesday never look the same.
+//
+// YOUR RECORD — the stats you are tracking against what the DM's copy says,
+// and the perks you have picked up. See player-record.js for why that is a
+// document of its own rather than a write into the character.
 //
 // "Yours" means the characters the DM has assigned you — canEdit in auth.js,
 // the same check the Class 1-A toolkit uses to decide what you may edit. An
@@ -53,13 +59,21 @@ const LS_LAB = 'mha-lab-drafts-v1';
 // page never visibly pauses. Measured at about 4ms for 4,000.
 const LAB_SAMPLES = 4000;
 
-let labView = 'mine';           // 'mine' | 'bench' | 'quirks'
+let labView = 'mine';           // 'mine' | 'bench' | 'record' | 'quirks'
+let benchMode = 'ability';      // 'ability' | 'gear'
+let record = null;              // the player's own moves, gear, perks and stats
+let shopCatalog = null;         // for pricing something crafted against real stock
+let gear = {                    // the equipment being made, in the shop's own fields
+  name: '', kind: 'melee', damage: '2d6', range: '', properties: '',
+  materials: '', price: '', description: '',
+};
 let labChars = [];              // every character the loader found
 let labMine = [];               // the ones this viewer may see
 let labCharFile = null;         // which of them is on screen
 let labCharsLoaded = false;
 let labCharSource = '';
 let labRolls = {};              // row id -> the last roll shown beside it
+let labCanWrite = false;        // fail closed until the ownership check resolves
 let labDrafts = [];
 let labQuirks = [];
 let labQuirkSources = { sources: [], failed: [] };
@@ -352,7 +366,32 @@ function draftsHtml() {
     </div>`).join('')}</div>`;
 }
 
+// The workbench is two benches behind one tab: an ability, or a piece of
+// equipment. They share the dice maths and nothing else, so they are two
+// forms rather than one form with half its fields hidden.
+function benchWrapHtml() {
+  return `<div class="lb-modes">
+      ${[['ability', 'An ability'], ['gear', 'A piece of equipment']].map(([id, label]) =>
+        `<button class="lb-mode${benchMode === id ? ' sel' : ''}" onclick="setBenchMode('${id}')">${label}</button>`).join('')}
+    </div>
+    ${benchMode === 'gear' ? gearHtml() : benchHtml()}`;
+}
+
+function setBenchMode(mode) {
+  benchMode = mode;
+  render();
+}
+
 function renderBench() {
+  if (benchMode === 'gear') {
+    const set = (id, html) => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = html;
+    };
+    set('lab-gear-preview', gearPreviewHtml());
+    set('lab-gear-price', pricingHtml());
+    return;
+  }
   const set = (id, html) => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = html;
@@ -371,6 +410,125 @@ function rollIt() {
   const r = diceRoll(parsed);
   out.textContent = `${r.total}  (${r.breakdown})`;
   out.dataset.held = '1';
+}
+
+function gearField(label, key, attrs) {
+  const a = attrs || {};
+  return `<label class="lb-field">
+      <span class="lb-label">${escHtml(label)}</span>
+      <input type="text" value="${escHtml(gear[key])}" placeholder="${escHtml(a.placeholder || '')}"
+        oninput="setGear('${escHtml(key)}', this.value)" aria-label="${escHtml(label)}">
+      ${a.hint ? `<span class="lb-hint">${escHtml(a.hint)}</span>` : ''}
+    </label>`;
+}
+
+/* What a crafted thing should cost, answered the only honest way: by what
+ * the catalogue charges for real items of the same size. A costume part with
+ * no dice on it gets no comparison, and the page says so rather than
+ * inventing a number.
+ */
+function pricingHtml() {
+  if (!shopCatalog) return '<p class="lb-empty">The catalogue has not loaded, so there is nothing to price it against.</p>';
+  const list = recordComparables(shopCatalog, gear.damage, { category: gear.kind });
+  if (!list.length) {
+    return `<p class="lb-empty">Nothing in the catalogue to compare it to — put a damage
+      expression on it, or price it with your DM. Not everything has a number.</p>`;
+  }
+  const suggested = recordSuggestedPrice(shopCatalog, gear.damage, { category: gear.kind });
+  return `<div class="lb-price">
+      <div class="lb-price-head">
+        <span class="lb-price-num">¥${Number(suggested).toLocaleString()}</span>
+        <span class="lb-price-label">what the shop charges for this much damage</span>
+      </div>
+      <div class="lb-price-list">
+        ${list.map(x => `<div class="lb-price-row">
+          <span class="lb-price-name">${escHtml(x.item.name)}</span>
+          <span class="lb-tag">${escHtml(x.item.damage)}</span>
+          <span class="lb-price-cost">¥${Number(x.item.price).toLocaleString()}</span>
+        </div>`).join('')}
+      </div>
+      <p class="lb-hint">The middle of what comparable stock costs. It is a suggestion for
+        your DM, not a price you can pay — the <a href="shop.html">Shop</a> sells what it sells.</p>
+    </div>`;
+}
+
+function gearPreviewHtml() {
+  const die = charDiceIn(gear.damage);
+  const profile = die ? damageProfile(die) : null;
+  return `<div class="lb-preview">
+      <div class="lb-preview-head">
+        <span class="lb-preview-name">${escHtml(gear.name || 'Unnamed item')}</span>
+        <span class="lb-preview-type">${escHtml(kindLabel(gear.kind) || gear.kind)}</span>
+        ${gear.damage ? `<span class="lb-preview-stat">${escHtml(gear.damage)}</span>` : ''}
+        ${gear.range ? `<span class="lb-preview-stat">${escHtml(gear.range)}</span>` : ''}
+      </div>
+      <p class="lb-preview-text">${escHtml([gear.properties, gear.description].filter(Boolean).join(' · '))
+        || '<span class="lb-preview-empty">Fill in the fields and this is what it will read like in the catalogue.</span>'}</p>
+      ${gear.materials ? `<p class="lb-gear-made"><span>Made of</span>${escHtml(gear.materials)}</p>` : ''}
+    </div>
+    ${profile ? `<div class="lb-maths">
+      <div class="lb-stat"><div class="lb-stat-num">${profile.min}–${profile.max}</div>
+        <div class="lb-stat-label">Range</div><div class="lb-stat-note">${escHtml(profile.text)}</div></div>
+      <div class="lb-stat"><div class="lb-stat-num">${profile.avg}</div>
+        <div class="lb-stat-label">Average hit</div>
+        <div class="lb-stat-note">measured over ${profile.samples.toLocaleString()} rolls</div></div>
+    </div>` : ''}`;
+}
+
+function gearHtml() {
+  return `<div class="lb-bench">
+      <div class="lb-form">
+        <div class="lb-row">
+          ${gearField('Name', 'name', { placeholder: 'Reinforced tonfa' })}
+          <label class="lb-field">
+            <span class="lb-label">What it is</span>
+            <select onchange="setGear('kind', this.value)" aria-label="What kind of thing it is">
+              ${RECORD_GEAR_KINDS.map(k => `<option value="${escHtml(k.id)}"${gear.kind === k.id ? ' selected' : ''}>${escHtml(k.label)}</option>`).join('')}
+            </select>
+          </label>
+        </div>
+        <div class="lb-row">
+          ${gearField('Damage', 'damage', { placeholder: '2d6 bludgeoning', hint: 'Leave it empty for something that is not a weapon' })}
+          ${gearField('Range', 'range', { placeholder: '20/60 ft' })}
+        </div>
+        <div class="lb-row">
+          ${gearField('Properties', 'properties', { placeholder: 'Light, Thrown', hint: 'The catalogue\'s own words — Light, Heavy, Two-handed, Thrown, Ammunition' })}
+        </div>
+        <div class="lb-row">
+          ${gearField('Made of', 'materials', { placeholder: 'Scrap from the support lab and a bus handrail' })}
+          ${gearField('What you think it cost', 'price', { placeholder: '¥20,000' })}
+        </div>
+        <label class="lb-field lb-wide">
+          <span class="lb-label">What it does and why</span>
+          <textarea rows="3" oninput="setGear('description', this.value)"
+            placeholder="The part the numbers cannot say."
+            aria-label="What it does">${escHtml(gear.description)}</textarea>
+        </label>
+      </div>
+
+      <div class="lb-side">
+        <h2 class="lb-h2">How it reads</h2>
+        <div id="lab-gear-preview">${gearPreviewHtml()}</div>
+        <h2 class="lb-h2">What it should cost</h2>
+        <div id="lab-gear-price">${pricingHtml()}</div>
+        <div class="lb-actions">
+          <button onclick="rollGear()">🎲 Roll its damage</button>
+          <button onclick="saveAsGear()">Save to my equipment</button>
+          <span id="lab-record-state" class="lb-feedback"></span>
+        </div>
+        <div id="lab-gear-roll" class="lb-roll-out"></div>
+      </div>
+    </div>`;
+}
+
+function rollGear() {
+  const out = document.getElementById('lab-gear-roll');
+  if (!out) return;
+  const die = charDiceIn(gear.damage);
+  const parsed = die ? diceParse(die) : null;
+  if (!parsed) { out.textContent = 'Nothing to roll — no dice in the damage.'; return; }
+  const r = diceRoll(parsed);
+  out.textContent = `${r.total}  (${r.breakdown})`;
 }
 
 function benchHtml() {
@@ -427,6 +585,7 @@ function benchHtml() {
         <div class="lb-actions">
           <button onclick="rollIt()">🎲 Roll the damage</button>
           <button onclick="saveDraft()">Save draft</button>
+          <button onclick="saveAsMove()">Save to my moves</button>
           <button onclick="showJson()">Show as JSON</button>
           <button onclick="labReset()">Clear</button>
           <span id="lab-save-feedback" class="lb-feedback"></span>
@@ -438,6 +597,181 @@ function benchHtml() {
         <div id="lab-drafts">${draftsHtml()}</div>
       </div>
     </div>`;
+}
+
+/* ── The record: saving what a player writes ────────────────────────
+   Everything here is the player's own, in a document of its own. See
+   player-record.js for why it is not a write into the character.
+   ─────────────────────────────────────────────────────────────────── */
+
+let recordSaveTimer = null;
+function saveRecord() {
+  if (!record || !labCharFile) return;
+  try { localStorage.setItem(recordKey(labCharFile), JSON.stringify(record)); } catch {}
+  if (!labCanWrite) return;
+  clearTimeout(recordSaveTimer);
+  recordSaveTimer = setTimeout(async () => {
+    try {
+      await recordRef(db, labCharFile).set(record, { merge: true });
+    } catch (e) {
+      // Said out loud: a failed write here loses a move somebody just
+      // invented, which is the worst thing this page could do quietly.
+      console.error('[lab] could not save your record — it is still in this browser:', e);
+      const el = document.getElementById('lab-record-state');
+      if (el) el.textContent = 'Could not save to the server. Still saved here.';
+    }
+  }, 600);
+}
+
+function recordFlash(message) {
+  const el = document.getElementById('lab-record-state');
+  if (el) el.textContent = message;
+}
+
+// The workbench's ability, written into the player's own move list. The
+// fields the workbench uses for working out the numbers do not go in — see
+// abilityJson, which has the same rule for the same reason.
+function saveAsMove() {
+  if (!record) { recordFlash('No character to save it to.'); return; }
+  if (!ability.name.trim()) { recordFlash('Give it a name first.'); return; }
+  const move = {
+    id: recordId(),
+    at: Date.now(),
+    name: ability.name.trim(),
+    type: ability.type,
+    range: ability.range,
+    damage: ability.damage && diceParse(ability.damage) ? diceParse(ability.damage).text : '',
+    description: abilityProse(),
+  };
+  // Same name replaces, so refining a move does not leave six of it.
+  record.moves = [move].concat((record.moves || []).filter(m => m.name !== move.name)).slice(0, 60);
+  saveRecord();
+  recordFlash('Saved to your moves.');
+  render();
+}
+
+function saveAsGear() {
+  if (!record) { recordFlash('No character to save it to.'); return; }
+  if (!gear.name.trim()) { recordFlash('Give it a name first.'); return; }
+  const item = {
+    id: recordId(),
+    at: Date.now(),
+    name: gear.name.trim(),
+    kind: gear.kind,
+    damage: gear.damage.trim(),
+    range: gear.range.trim(),
+    properties: gear.properties.trim(),
+    materials: gear.materials.trim(),
+    price: gear.price.trim(),
+    description: gear.description.trim(),
+  };
+  record.gear = [item].concat((record.gear || []).filter(g => g.name !== item.name)).slice(0, 60);
+  saveRecord();
+  recordFlash('Saved to your equipment.');
+  render();
+}
+
+function setGear(key, value) {
+  if (!Object.prototype.hasOwnProperty.call(gear, key)) return;
+  gear[key] = value;
+  renderBench();
+}
+
+function deleteMove(id) {
+  if (!record) return;
+  record.moves = (record.moves || []).filter(m => m.id !== id);
+  saveRecord();
+  render();
+}
+
+function deleteGear(id) {
+  if (!record) return;
+  record.gear = (record.gear || []).filter(g => g.id !== id);
+  saveRecord();
+  render();
+}
+
+// Back onto the workbench, so a move can be refined rather than rewritten.
+function editMove(id) {
+  const m = (record && record.moves || []).find(x => x.id === id);
+  if (!m) return;
+  ability = Object.assign({}, ability, {
+    name: m.name,
+    type: ACTION_TYPES.includes(m.type) ? m.type : 'Action',
+    range: m.range || '',
+    damage: m.damage || ability.damage,
+    description: m.description || '',
+  });
+  benchMode = 'ability';
+  labView = 'bench';
+  render();
+}
+
+function editGear(id) {
+  const g = (record && record.gear || []).find(x => x.id === id);
+  if (!g) return;
+  gear = Object.assign({}, gear, {
+    name: g.name, kind: g.kind || 'melee', damage: g.damage || '',
+    range: g.range || '', properties: g.properties || '',
+    materials: g.materials || '', price: g.price || '',
+    description: g.description || '',
+  });
+  benchMode = 'gear';
+  labView = 'bench';
+  render();
+}
+
+function addPerk() {
+  if (!record) { recordFlash('No character to save it to.'); return; }
+  const name = (document.getElementById('lab-perk-name') || {}).value || '';
+  const from = (document.getElementById('lab-perk-from') || {}).value || '';
+  const text = (document.getElementById('lab-perk-text') || {}).value || '';
+  if (!name.trim()) { recordFlash('A perk needs a name.'); return; }
+  record.perks = [{
+    id: recordId(), at: Date.now(),
+    name: name.trim(), from: from.trim(), text: text.trim(),
+  }].concat(record.perks || []).slice(0, 80);
+  saveRecord();
+  for (const id of ['lab-perk-name', 'lab-perk-from', 'lab-perk-text']) {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  }
+  render();
+}
+
+function deletePerk(id) {
+  if (!record) return;
+  record.perks = (record.perks || []).filter(p => p.id !== id);
+  saveRecord();
+  render();
+}
+
+/* The stats a player is tracking. Recorded ALONGSIDE the DM's copy rather
+ * than over it: the page shows both and marks a disagreement, because a
+ * player whose sheet says 42 HP and a DM whose sheet says 35 is a
+ * conversation, not a bug to be resolved silently in either direction.
+ */
+const RECORD_STAT_KEYS = ['level', 'HP', 'AC', 'speed'];
+
+function setStat(key, value) {
+  if (!record) return;
+  record.stats = record.stats || {};
+  const v = String(value == null ? '' : value).trim();
+  if (v === '') delete record.stats[key];
+  else record.stats[key] = v;
+  saveRecord();
+  renderRecord();
+}
+
+function setRecordNote(value) {
+  if (!record) return;
+  record.note = String(value == null ? '' : value).slice(0, 2000);
+  saveRecord();
+  recordFlash('Saved');
+}
+
+function clearStat(key) {
+  setStat(key, '');
 }
 
 /* ── Render: the quirk database ── */
@@ -463,7 +797,8 @@ function quirkCardHtml(q) {
       <button class="lb-quirk-head" onclick="openQuirk('${escHtml(q.quirk)}')"
         aria-expanded="${open ? 'true' : 'false'}">
         <span class="lb-quirk-name">${escHtml(q.quirk)}</span>
-        <span class="lb-quirk-who">${q.held > 1 ? escHtml(q.held) + ' people have it' : ''}</span>
+        <span class="lb-quirk-who">${q.held > 1 ? escHtml(q.held) + ' people have it'
+          : q.held === 0 ? 'from the book' : ''}</span>
         <span class="lb-quirk-tags">
           <span class="lb-tag type-${escHtml(q.type.toLowerCase())}">${escHtml(q.type)}</span>
           ${q.rarity ? `<span class="lb-tag">${escHtml(q.rarity)}</span>` : ''}
@@ -483,7 +818,15 @@ function quirkCardHtml(q) {
             </div>
             ${a.text ? `<p class="lb-qa-text">${escHtml(a.text)}</p>` : ''}
           </div>`).join('')}
-        </div>` : '<p class="lb-empty">No abilities recorded for this one.</p>'}
+        </div>` : `<p class="lb-empty">${q.page
+          ? 'No abilities are indexed for this one — the entry is on page ' + escHtml(q.page) + '.'
+          : 'No abilities recorded for this one.'}</p>`}
+        ${q.page ? `<p class="lb-quirk-page">
+          The full entry, with every ability written out, is on
+          <strong>page ${escHtml(q.page)}</strong> of the
+          <a href="RULEBOOKS/-%20My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf"
+             target="_blank" rel="noopener noreferrer">Quirk Compendium</a>.
+        </p>` : ''}
         <div class="lb-quirk-from">Recorded in ${escHtml(q.from)}${(q.alsoFrom || []).length ? ' and ' + escHtml(q.alsoFrom.join(', ')) : ''}${q.source ? ' · ' + escHtml(q.source) : ''}</div>
       </div>` : ''}
     </div>`;
@@ -599,6 +942,8 @@ function labUniversal() {
 function labPickChar(file) {
   labCharFile = file;
   labRolls = {};
+  // Each character has their own record, so switching has to load it.
+  recordLoad(db, file).then(r => { record = r; render(); });
   render();
 }
 
@@ -697,7 +1042,11 @@ function mineHtml() {
   }
   const c = labCurrentChar();
   if (!c) return '<p class="lb-empty">Pick a character.</p>';
-  const { grouped } = charCanDo(c, labUniversal());
+  // The player's own moves and crafted equipment join the quirk's abilities
+  // and the standard options, grouped by cost with everything else — which
+  // is the whole point of writing a move down.
+  const own = recordMoveRows(record).concat(recordGearRows(record));
+  const { grouped, rows } = charCanDo(c, labUniversal(), own);
 
   return `
     ${labMine.length > 1 ? `<div class="lb-char-tabs">
@@ -742,6 +1091,171 @@ function renderMine() {
   if (el) el.innerHTML = mineHtml();
 }
 
+/* ── Render: your record ────────────────────────────────────────────
+   The stats you are tracking against what the DM's copy says, the perks you
+   have picked up, the moves you have written and the equipment you have
+   made. Nothing here overwrites the character — the point of showing both
+   numbers is that a disagreement is a conversation.
+   ─────────────────────────────────────────────────────────────────── */
+
+function statRowHtml(c, key) {
+  const theirs = key === 'level' ? c.level : c[key];
+  const mine = (record.stats || {})[key];
+  const differs = mine != null && String(mine).trim() !== '' && String(mine) !== String(theirs == null ? '' : theirs);
+  return `<div class="lb-stat-row${differs ? ' is-differs' : ''}">
+      <span class="lb-stat-key">${escHtml(key === 'HP' ? 'HP' : key === 'AC' ? 'AC' : key)}</span>
+      <span class="lb-stat-theirs">${theirs == null || theirs === '' ? '—' : escHtml(theirs)}</span>
+      <input type="text" value="${escHtml(mine == null ? '' : mine)}" placeholder="yours"
+        oninput="setStat('${escHtml(key)}', this.value)" aria-label="What you have for ${escHtml(key)}">
+      ${differs ? `<span class="lb-stat-flag" title="Your note and the DM's copy disagree">differs</span>
+        <button class="lb-x" onclick="clearStat('${escHtml(key)}')" title="Drop your note and use the DM's">✕</button>` : ''}
+    </div>`;
+}
+
+function abilityRowsHtml(c) {
+  return CHAR_ABILITIES.map(k => {
+    const theirs = charModifier(c, k);
+    const mine = (record.stats || {})['mod' + k];
+    const differs = mine != null && String(mine).trim() !== '' && Number(mine) !== theirs;
+    return `<div class="lb-stat-row${differs ? ' is-differs' : ''}">
+      <span class="lb-stat-key">${escHtml(k)}</span>
+      <span class="lb-stat-theirs">${escHtml(charSigned(theirs))}</span>
+      <input type="text" value="${escHtml(mine == null ? '' : mine)}" placeholder="yours"
+        oninput="setStat('mod${escHtml(k)}', this.value)" aria-label="What you have for ${escHtml(k)}">
+      ${differs ? `<span class="lb-stat-flag">differs</span>
+        <button class="lb-x" onclick="clearStat('mod${escHtml(k)}')" title="Drop your note">✕</button>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function perksHtml() {
+  const perks = (record && record.perks) || [];
+  return `${perks.length ? `<div class="lb-perks">${perks.map(p => `<div class="lb-perk">
+      <div class="lb-perk-head">
+        <span class="lb-perk-name">${escHtml(p.name)}</span>
+        ${p.from ? `<span class="lb-tag">${escHtml(p.from)}</span>` : ''}
+        <button class="lb-x" onclick="deletePerk('${escHtml(p.id)}')" title="Remove it">✕</button>
+      </div>
+      ${p.text ? `<p class="lb-perk-text">${escHtml(p.text)}</p>` : ''}
+    </div>`).join('')}</div>` : '<p class="lb-empty">Nothing recorded yet.</p>'}
+    <div class="lb-perk-form">
+      <input type="text" id="lab-perk-name" placeholder="What it is" aria-label="Perk name">
+      <input type="text" id="lab-perk-from" placeholder="Where it came from" aria-label="Where the perk came from">
+      <input type="text" id="lab-perk-text" placeholder="What it does" aria-label="What the perk does">
+      <button onclick="addPerk()">Add</button>
+    </div>`;
+}
+
+function myMovesHtml() {
+  const moves = (record && record.moves) || [];
+  if (!moves.length) {
+    return `<p class="lb-empty">No moves written yet. Build one on the
+      <button class="lb-link" onclick="setView('bench')">workbench</button> and save it.</p>`;
+  }
+  return `<div class="lb-owned">${moves.map(m => `<div class="lb-own from-move">
+      <div class="lb-own-head">
+        <span class="lb-own-name">${escHtml(m.name)}</span>
+        ${m.type ? `<span class="lb-tag">${escHtml(m.type)}</span>` : ''}
+        ${m.damage ? `<span class="lb-tag lb-tag-dmg">${escHtml(m.damage)}</span>` : ''}
+        ${m.damage && diceParse(m.damage) ? `<button class="lb-own-roll" onclick="rollOwn('move-${escHtml(m.id)}','${escHtml(m.damage)}')" title="Roll it">🎲</button>` : ''}
+        <button class="lb-own-edit" onclick="editMove('${escHtml(m.id)}')" title="Back to the workbench">edit</button>
+        <button class="lb-x" onclick="deleteMove('${escHtml(m.id)}')" title="Delete it">✕</button>
+      </div>
+      ${ownRolls['move-' + m.id] ? `<div class="lb-own-roll-out">${escHtml(ownRolls['move-' + m.id])}</div>` : ''}
+      ${m.description ? `<p class="lb-own-text">${escHtml(m.description)}</p>` : ''}
+    </div>`).join('')}</div>`;
+}
+
+function myGearHtml() {
+  const items = (record && record.gear) || [];
+  if (!items.length) {
+    return `<p class="lb-empty">Nothing made yet. There is an equipment bench on the
+      <button class="lb-link" onclick="setView('bench')">workbench</button> tab.</p>`;
+  }
+  return `<div class="lb-owned">${items.map(g => `<div class="lb-own from-crafted">
+      <div class="lb-own-head">
+        <span class="lb-own-name">${escHtml(g.name)}</span>
+        <span class="lb-tag">${escHtml(kindLabel(g.kind) || g.kind)}</span>
+        ${g.damage ? `<span class="lb-tag lb-tag-dmg">${escHtml(g.damage)}</span>` : ''}
+        ${g.price ? `<span class="lb-tag">${escHtml(g.price)}</span>` : ''}
+        ${charDiceIn(g.damage) ? `<button class="lb-own-roll" onclick="rollOwn('gear-${escHtml(g.id)}','${escHtml(charDiceIn(g.damage))}')" title="Roll it">🎲</button>` : ''}
+        <button class="lb-own-edit" onclick="editGear('${escHtml(g.id)}')" title="Back to the bench">edit</button>
+        <button class="lb-x" onclick="deleteGear('${escHtml(g.id)}')" title="Delete it">✕</button>
+      </div>
+      ${ownRolls['gear-' + g.id] ? `<div class="lb-own-roll-out">${escHtml(ownRolls['gear-' + g.id])}</div>` : ''}
+      ${g.properties ? `<p class="lb-own-text">${escHtml(g.properties)}</p>` : ''}
+      ${g.description ? `<p class="lb-own-text">${escHtml(g.description)}</p>` : ''}
+      ${g.materials ? `<p class="lb-own-made"><span>Made of</span>${escHtml(g.materials)}</p>` : ''}
+    </div>`).join('')}</div>`;
+}
+
+const ownRolls = {};
+function rollOwn(id, expr) {
+  const die = charDiceIn(expr) || expr;
+  const parsed = diceParse(die);
+  if (!parsed) return;
+  const r = diceRoll(parsed);
+  ownRolls[id] = `${r.total}  (${r.breakdown})`;
+  renderRecord();
+}
+
+function recordHtml() {
+  if (!labCharsLoaded) return '<p class="lb-empty">Looking up your character…</p>';
+  if (!labMine.length) {
+    return `<div class="lb-nochar">
+      <p><strong>No character is assigned to you yet.</strong></p>
+      <p>This tab is your own record — the stats you are tracking, the perks you have picked
+      up, the moves you have written and the equipment you have made. It needs to know which
+      character is yours. Ask your DM; it is one checkbox on the admin page.</p>
+    </div>`;
+  }
+  const c = labCurrentChar();
+  if (!c || !record) return '<p class="lb-empty">Pick a character.</p>';
+
+  return `
+    ${labMine.length > 1 ? `<div class="lb-char-tabs">
+      ${labMine.map(x => `<button class="lb-char-tab${x._file === c._file ? ' sel' : ''}"
+        onclick="labPickChar('${escHtml(x._file)}')">${escHtml(charLabel(x))}</button>`).join('')}
+    </div>` : ''}
+
+    <p class="lb-record-lead">
+      Everything on this tab is <strong>yours</strong>. It is kept beside your character rather
+      than written into it, so nothing here can overwrite what your DM has — and where your
+      note and their copy disagree, the page says so instead of picking a winner.
+      <span id="lab-record-state" class="lb-feedback"></span>
+    </p>
+
+    <h2 class="lb-h2">The numbers</h2>
+    <div class="lb-stats-table">
+      <div class="lb-stat-row is-head">
+        <span class="lb-stat-key"></span>
+        <span class="lb-stat-theirs">DM's copy</span>
+        <span class="lb-stat-mine">Yours</span>
+      </div>
+      ${RECORD_STAT_KEYS.map(k => statRowHtml(c, k)).join('')}
+      ${abilityRowsHtml(c)}
+    </div>
+
+    <h2 class="lb-h2">Perks and features</h2>
+    ${perksHtml()}
+
+    <h2 class="lb-h2">Moves you have written</h2>
+    ${myMovesHtml()}
+
+    <h2 class="lb-h2">Equipment you have made</h2>
+    ${myGearHtml()}
+
+    <h2 class="lb-h2">Anything else</h2>
+    <textarea class="lb-record-note" rows="4" oninput="setRecordNote(this.value)"
+      placeholder="Whatever you want to remember about this character."
+      aria-label="Notes about this character">${escHtml((record && record.note) || '')}</textarea>`;
+}
+
+function renderRecord() {
+  const el = document.getElementById('lab-record');
+  if (el) el.innerHTML = recordHtml();
+}
+
 /* ── Render ── */
 
 function setView(view) {
@@ -752,14 +1266,16 @@ function setView(view) {
 function render() {
   const tabs = document.getElementById('lab-tabs');
   if (tabs) {
-    tabs.innerHTML = [['mine', 'Your character'], ['bench', 'Workbench'], ['quirks', 'Quirk database']]
+    tabs.innerHTML = [['mine', 'Your character'], ['bench', 'Workbench'],
+      ['record', 'Your record'], ['quirks', 'Quirk database']]
       .map(([id, label]) =>
         `<button class="lb-tab${labView === id ? ' sel' : ''}" onclick="setView('${id}')">${label}</button>`).join('');
   }
   const body = document.getElementById('lab-body');
   if (body) {
-    body.innerHTML = labView === 'bench' ? benchHtml()
+    body.innerHTML = labView === 'bench' ? benchWrapHtml()
       : labView === 'quirks' ? quirksHtml()
+      : labView === 'record' ? '<div id="lab-record"></div>'
       : '<div id="lab-mine"></div>';
   }
   if (labView === 'quirks') {
@@ -768,6 +1284,10 @@ function render() {
   }
   if (labView === 'mine') {
     renderMine();
+    if (!labCharsLoaded) loadMyCharacters();
+  }
+  if (labView === 'record') {
+    renderRecord();
     if (!labCharsLoaded) loadMyCharacters();
   }
   const count = document.getElementById('lab-quirk-count');
@@ -799,6 +1319,12 @@ async function loadMyCharacters() {
   labMine = admin ? chars : chars.filter(c =>
     window.canEdit && window.canEdit(fbCharacterKey('Student (1-A)', c.name)));
   if (!labCharFile && labMine.length) labCharFile = labMine[0]._file;
+  labCanWrite = admin || (!!window.canEdit && labMine.length > 0);
+  record = await recordLoad(db, labCharFile);
+  // The catalogue is a static file, and it is only needed for pricing
+  // something crafted — so a failure here costs the price comparison and
+  // nothing else.
+  try { shopCatalog = await fetch('CAMPAIGN/shop-catalog.json').then(r => r.json()); } catch {}
   labCharsLoaded = true;
   render();
 }

@@ -202,12 +202,14 @@ function charDiceIn(text, parse) {
  *
  * `universal` is the list every character has — the standard actions out of
  * rules-data.js — passed in rather than imported so this file stays free of
- * the rules reference. A row is { name, cost, costText, range, damage,
+ * the rules reference. `extra` is for rows a caller has already shaped: the
+ * Lab passes the player's own written moves and crafted equipment, which
+ * have to land in the same groups as everything else. A row is { name, cost, costText, range, damage,
  * dice, text, from } where `dice` is a rollable expression or null and
  * `from` says where the row came from, because "this is your quirk" and
  * "this is a rule everybody has" should not look the same.
  */
-function charCanDo(c, universal) {
+function charCanDo(c, universal, extra) {
   const rows = [];
   const mech = (c || {}).quirk_mechanics || {};
 
@@ -256,6 +258,13 @@ function charCanDo(c, universal) {
       from: 'rule',
       id: '',
     });
+  }
+
+  // Rows the caller has already shaped — the Lab's own moves and crafted
+  // equipment. Appended rather than merged in above, so a character's
+  // recorded abilities always come first in their group.
+  for (const r of (extra || [])) {
+    if (r && r.name) rows.push(Object.assign({ cost: 'other', from: 'own' }, r));
   }
 
   const grouped = {};

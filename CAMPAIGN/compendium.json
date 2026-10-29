@@ -1,0 +1,2738 @@
+{
+  "_note": "The Quirk Compendium, indexed — built by scripts/build-compendium.js from the PDF in RULEBOOKS. This is an INDEX, not the book: the name, rarity, type, a sentence or two of description, the weakness, and the names and levels of each ability, plus the page the full entry is on. The rules for each ability stay in the PDF, which is linked from the dashboard and from every entry in the Lab. Rebuild with: node scripts/build-compendium.js --write",
+  "source": "My Hero Academia: Quirk Compendium (The Homebrewery)",
+  "built": "2026-10-29",
+  "entries": [
+    {
+      "name": "2D-ify",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "The user can absorb people and objects into a two-dimensional space, transforming them into 2 D paintings. While trapped, those affected can still move within the confines of their new form, but they cannot escape.",
+      "weakness": "The paintings can be damaged. If the painting takes damage equal to triple the user’s Constitution modifier, the trapped individual is released and rendered unconscious for 1d4 rounds. Each time the user activates the Quirk, they must succeed on a Constitution saving throw (DC 15).",
+      "page": 52,
+      "abilities": [
+        {
+          "name": "Absorption",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Acid",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Acid allows the user to generate a corrosive liquid from their skin, with their own body being naturally resistant to the acid produced. Acid damage deals double damage against constructs and suits.",
+      "weakness": "Each time you use an acid-based ability in combat, you gain 1 Acid Pressure Point. As the pressure builds, your body begins to wear down. Your Acid Pressure resets to 0 after a short or long rest.",
+      "page": 6,
+      "abilities": [
+        {
+          "name": "Acid Shot",
+          "level": 1
+        },
+        {
+          "name": "AcidTwirl Dance",
+          "level": 1
+        },
+        {
+          "name": "Acid Layback",
+          "level": 1
+        },
+        {
+          "name": "Acidman",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "Air Cannon",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "The user can generate powerful shockwaves of air pressure from their palms, capable of causing significant damage and manipulation of the battlefield. The form and direction of the blast depend on the user’s arm movements.",
+      "weakness": "None",
+      "page": 52,
+      "abilities": [
+        {
+          "name": "Shockwave Blast",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Air Wall",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Air Wall lets the user create circular shields made of compressed air from their hands in order to shield themselves.",
+      "weakness": "Although extremely tough, the Air Walls are not indestructible. Airwall. You can harness compressed force and release it from your hands in a sweeping defensive burst. You gain one additional reaction each round that can only be used for this feature.",
+      "page": 46,
+      "abilities": []
+    },
+    {
+      "name": "Alchemy",
+      "rarity": "Legendary",
+      "type": "Emitter",
+      "description": "This Quirk grants the user absolute transmutation control through physical contact with gold, using a gold object as a catalyst for all conversions.",
+      "weakness": "",
+      "page": 62,
+      "abilities": [
+        {
+          "name": "Alchemical Resurgence",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "All For One",
+      "rarity": "Legendary",
+      "type": "Emitter",
+      "description": "All For One grants the ability to steal, store, and wield Quirks from others through direct touch. You can permanently retain a copy of any Quirk you steal, even if you later transfer it to another creature.",
+      "weakness": "None Born With Infulence. At 1st level, you gain the quirk All For One’s Control. Unless this quirk was passed on. Steal/Transfer. As an action, you can attempt to grapple a creature to steal one of their Quirks.",
+      "page": 42,
+      "abilities": [
+        {
+          "name": "BornWith Infulence",
+          "level": 1
+        },
+        {
+          "name": "Transfer",
+          "level": 1
+        },
+        {
+          "name": "Give",
+          "level": 1
+        },
+        {
+          "name": "Combine Quirks",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "All For One’s Control",
+      "rarity": "Legendary",
+      "type": "None",
+      "description": "All For One’s Control is the refined form of psychic domination. Instead of complex soul-weaving, this version works through simple mental pressure. The user pushes their will into another creature’s mind, slowly weakening their defenses.",
+      "weakness": "This Quirk only affects living creatures with thoughts. Strong-willed creatures resist longer. Each time the user attempts major control, they take 1d10 Psychic damage from mental strain.",
+      "page": 72,
+      "abilities": [
+        {
+          "name": "All ForOne’s Overwrite",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Amplivolt",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "This Quirk allows the user to conduct and amplify electricity within their body, storing electrical energy for later use. Once enough electricity is built up, the user can release powerful blasts of stored electricity from their hands.",
+      "weakness": "Unlike Electrification, Amplivolt cannot generate electricity on its own and requires an external source of energy to charge up.",
+      "page": 61,
+      "abilities": [
+        {
+          "name": "Electrification",
+          "level": 1
+        },
+        {
+          "name": "Electric Blast",
+          "level": 1
+        },
+        {
+          "name": "Conductive Discharge",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Animal Transformation",
+      "rarity": "Rare",
+      "type": "Transformation",
+      "description": "Animal Transformation allows the user to morph their body into various animals, blending human intellect with beastly instinct. Each transformation grants unique abilities based on the chosen creature — from the strength of predators to the agility of birds or the stealth of hunters.",
+      "weakness": "Repeated transformations or prolonged use can exhaust the user’s stamina. After reverting to human form, the user suffers Fatigue, causing disadvantage on Strength and Dexterity checks for 1d4 rounds.",
+      "page": 69,
+      "abilities": [
+        {
+          "name": "Animal Form",
+          "level": 1
+        },
+        {
+          "name": "Versatile Evolution",
+          "level": 5
+        },
+        {
+          "name": "Feral Charge",
+          "level": 9
+        },
+        {
+          "name": "Alpha Instinct",
+          "level": 13
+        }
+      ]
+    },
+    {
+      "name": "Anivoice",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Anivoice allows the user to communicate with and command animals through speech.",
+      "weakness": "Animals must be within the user’s vocal range which is a 100 ft radius to be influenced by Anivoice. Humans, despite being animals as well, are exempt from the effects of Anivoice. This Quirk is also ineffective against artificial creatures that have been shaped to resemble real animals. Anivoice.",
+      "page": 9,
+      "abilities": [
+        {
+          "name": "Hitchcock Birds",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Antigen Swap",
+      "rarity": "Uncommon",
+      "type": "Transformation",
+      "description": "Antigen Swap allows the user to instantly alter the antigen profile of their blood — effectively changing their blood type at will.",
+      "weakness": "The user’s body undergoes extreme internal stress when rapidly altering blood properties.",
+      "page": 71,
+      "abilities": []
+    },
+    {
+      "name": "Arbor",
+      "rarity": "Uncommon",
+      "type": "Transformation",
+      "description": "Arbor allows the user to grow and control durable wooden structures from their body. They can extend roots, branches, or hardened bark to attack, defend, or move across terrain. The wood can shift between rigid and flexible forms, offering both power and precision.",
+      "weakness": "The user’s wood is highly flammable. Fire and explosive damage against the user or their constructs deal double damage, and wooden creations instantly burn or collapse when exposed to open flame. Root Grasp. As an action, you extend wooden roots or vines toward a creature within 30 feet.",
+      "page": 41,
+      "abilities": [
+        {
+          "name": "Root Grasp",
+          "level": 1
+        },
+        {
+          "name": "Barkguard",
+          "level": 3
+        },
+        {
+          "name": "VerdantAscent",
+          "level": 5
+        },
+        {
+          "name": "Lacquered Confinement",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Attraction of Small Objects",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "This quirk allows the user to attract small non- living objects—typically weighing 10 pounds or less—toward themselves or a chosen point. It’s useful for utility, disarming opponents, or creating improvised attacks with environmental clutter.",
+      "weakness": "The quirk becomes unstable in environments with strong magnetic interference or electromagnetic pulses. While in such an area, roll a d20 at the start of each turn. On a 5 or lower, the quirk malfunctions, pulling nearby small objects randomly (DM’s discretion). Item Pull.",
+      "page": 70,
+      "abilities": [
+        {
+          "name": "Item Pull",
+          "level": 1
+        },
+        {
+          "name": "Clutter Burst",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Ballistic Ossification",
+      "rarity": "Rare",
+      "type": "Emitter / Mutant",
+      "description": "Ballistic Ossification allows the user to weaponize their own skeletal structure by generating and launching hardened bone fragments as high-velocity projectiles.",
+      "weakness": "Constant bone production rapidly drains calcium and nutrients from the body. After firing five bone projectiles without a short or long rest, the user must make a Constitution saving throw or gain 1 level of exhaustion.",
+      "page": 80,
+      "abilities": [
+        {
+          "name": "Bone Shot",
+          "level": 1
+        },
+        {
+          "name": "Volley Burst",
+          "level": 5
+        },
+        {
+          "name": "Impaling Spike",
+          "level": 8
+        },
+        {
+          "name": "Skeletal Overdrive",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Beams From His Eyes",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "This Quirk allows the user to emit devastating energy beams directly from their eyes. The beams can be adjusted in width and intensity—ranging from pinpoint blasts capable of melting steel to wide-area sweeps that scorch the battlefield.",
+      "weakness": "The Quirk places heavy strain on the user’s vision and concentration. Prolonged firing causes eye fatigue, tearing, and severe migraines.",
+      "page": 67,
+      "abilities": [
+        {
+          "name": "LaserBeam",
+          "level": 1
+        },
+        {
+          "name": "Meganetic Blaster",
+          "level": 7
+        },
+        {
+          "name": "Focused Precision",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Beast",
+      "rarity": "Uncommon",
+      "type": "Transformation",
+      "description": "Beast allows the user to transform into a large, monstrous creature. In this form, the user gains a furry, animalistic body, massive fangs, and thick fur. This transformation provides significant boosts to strength and speed, turning the user into a fearsome combatant.",
+      "weakness": "While transformed, the user becomes overly enthusiastic, which may lead to reckless actions. The enhanced sense of smell can be misled by masking natural scents. After 1 minute in Beast form, you must make a DC 15 Wisdom saving throw; on a failure, you become berserk.",
+      "page": 23,
+      "abilities": [
+        {
+          "name": "Beast Form",
+          "level": 1
+        },
+        {
+          "name": "Roaring Rage",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Beast Creation",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Beast Creation grants the user the terrifying ability to create and summon monstrous, Nomu-like entities born from their own biomass or surrounding matter. Each creature possesses its own abilities, appearance, and instincts, shaped by the user’s intent.",
+      "weakness": "If the user is incapacitated, all active creatures vanish immediately. Summoning too many monsters strains the user’s body and mind— for each beast beyond the fifth active one, the user takes 1d8 psychic damage perturn, ignoring resistances.",
+      "page": 65,
+      "abilities": [
+        {
+          "name": "Beast Creation",
+          "level": 1
+        },
+        {
+          "name": "Enhanced Strength",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Big Fist",
+      "rarity": "Common",
+      "type": "Transformation",
+      "description": "Big Fist allows the user to enlarge one or both of their hands to enormous sizes. The user is not affected by the increased weight of their gigantified hands.",
+      "weakness": "Prolonged use of Big Fist strains your muscles and joints. After using Big Fist a number of times equal to your level × proficiency bonus you must make a DC 13 Constitution saving throw. On a failure, you take 1d12 true damage. Giant Strength.* Your Strength score maximum becomes 22.",
+      "page": 22,
+      "abilities": [
+        {
+          "name": "Giant Punch",
+          "level": 1
+        },
+        {
+          "name": "Ground Pound",
+          "level": 6
+        }
+      ]
+    },
+    {
+      "name": "Black",
+      "rarity": "Uncommon",
+      "type": "Transformation",
+      "description": "Black allows the user to fuse with any dark- colored object or shadow, natural or artificial. While merged, the user becomes one with the darkness, able to move unseen and unhindered through shadows and solid objects alike.",
+      "weakness": "Exposure to bright light forcibly ejects the user from the shadow or object they inhabit. The user also cannot merge if no dark surface or shaded area exists nearby. Enemies aware of this can trap the user by destroying or exposing the darkness they occupy. Shadow Merge.",
+      "page": 26,
+      "abilities": [
+        {
+          "name": "Shadow Merge",
+          "level": 1
+        },
+        {
+          "name": "Dark Command",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Black Hole",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "You generate miniature black holes from your fingertips, creating gravitational fields that pull in matter, energy, and even light. Your presence on the battlefield feels like a collapsing star—unstable and inescapable.",
+      "weakness": "es:Your fingers must be exposed to use this Quirk. Prolonged use risks collateral damage. Any failed saving throw against Black Hole within 10 feet of fragile structures may cause collapse.",
+      "page": 33,
+      "abilities": [
+        {
+          "name": "Black Hole",
+          "level": 1
+        },
+        {
+          "name": "SingularityVortex",
+          "level": 6
+        }
+      ]
+    },
+    {
+      "name": "Blade-Tooth",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "The user can transform their teeth into sharp blades, which can vary in size and shape. These blade-teeth are effective for both close combat and intimidation. They can be used as versatile weapons, allowing the user to adapt to different combat situations.",
+      "weakness": "es: The blade-teeth can be shattered if they take damage equal to 25 + the user’s Constitution modifier (these count as a extension of the users arms or legs). If broken, the teeth revert to normal and require a full turn to regenerate.",
+      "page": 55,
+      "abilities": [
+        {
+          "name": "Blade Manipulation",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Blazing Hair",
+      "rarity": "Rare",
+      "type": "Mutant",
+      "description": "Blazing Hair allows the user to generate, control, and manipulate the flames on their head at will. The flames can be used offensively, defensively, or for enhanced mobility.",
+      "weakness": "Blazing Hair requires careful focus; losing concentration while using the flames for propulsion can cause the user to miscalculate speed or trajectory, risking injury. Flames can be extinguished by heavy rain, water-based Quirks, or environmental suppression.",
+      "page": 71,
+      "abilities": []
+    },
+    {
+      "name": "Blood Control",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Blood Control allows the user to manipulate their own blood once it has left their body, shaping it for offense, defense, or mobility.",
+      "weakness": "es: This quirk relies on the user’s own blood. To activate it, the user must be under the bleed condition, which can be induced on themselves as an action. While under this condition, the user takes 2 damage instead of 1d4 from bleed effects and can accumulate a maximum of three ranks of bleed.",
+      "page": 41,
+      "abilities": [
+        {
+          "name": "Blood Restrictions",
+          "level": 1
+        },
+        {
+          "name": "BloodWeapon",
+          "level": 1
+        },
+        {
+          "name": "Flowing Blood",
+          "level": 8
+        }
+      ]
+    },
+    {
+      "name": "Bloodcurdle",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Bloodcurdle allows the user to temporarily paralyze an opponent by ingesting their blood. This Quirk gives the user an exceptionally long tongue covered in numerous small papillae, enhancing their ability to collect and ingest blood samples.",
+      "weakness": "The duration of paralysis varies based on the target’s blood type:",
+      "page": 49,
+      "abilities": [
+        {
+          "name": "Paralyzing Lick",
+          "level": 1
+        },
+        {
+          "name": "Blade Spin",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Bloodlet",
+      "rarity": "Rare",
+      "type": "Transformation",
+      "description": "Bloodlet allows the user to freely expel and reabsorb theirown blood, turning injury into both a weapon and a resource.",
+      "weakness": "None Bleed Charge Whenever the user is underthe Bleed condition, each time they take bleed damage, they gain 1 Bloodlet Charge. As reaction, the user can release their accumulated blood charges. Each charge deals 1d10 Force damage to all targets within 30 foot radius.",
+      "page": 71,
+      "abilities": []
+    },
+    {
+      "name": "Brainwashing",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Brainwashing allows the user to place a target in a state of obedience, compelling them to follow the user’s verbal commands. To activate this power, the target must verbally respond to something the user says.",
+      "weakness": "The effect requires the target to verbally respond. If the target remains silent or uses nonverbal communication, the Quirk cannot be activated. The user can only control one creature at a time; if another target becomes Brainwashed, the previous effect immediately ends. Command.",
+      "page": 32,
+      "abilities": [
+        {
+          "name": "Command",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Bullet Laser",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Bullet Laser allows the user to fire purple lasers from their fingertips. These beams can be shot straight or curved around obstacles. They are powerful enough to pierce flesh, demolish large boulders, and destroy entire houses. Lasers can also explode on impact for added effects.",
+      "weakness": "None. Bullet Laser. As an action, you can fire 5 lasers, making 5 separate attacks. Each hit deals 1d8 piercing damage plus 1d8 radiant damage, ignores damage reduction and resistance, and treats immunity as resistance.",
+      "page": 47,
+      "abilities": [
+        {
+          "name": "Bullet Laser",
+          "level": 1
+        },
+        {
+          "name": "Curving Lasers",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Burst",
+      "rarity": "Legendary",
+      "type": "Emitter",
+      "description": "This Quirk allows the user to channel all of their remaining life force into a powerful, explosive self-detonation. Upon activation, the user’s body breaks down and discharges a devastating blast of energy, causing immense destruction in the surrounding area.",
+      "weakness": "The Quirk is fatal to the user, as it drains all life energy to fuel the explosion. Once activated, there is no way to survive the blast. The explosion is uncontrollable, and its aftermath will severely damage or destroy anything within its radius. This ability can only be used once per day.",
+      "page": 68,
+      "abilities": []
+    },
+    {
+      "name": "Cell Activation",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Cell Activation allows the user to stimulate and enhance the biological processes of living organisms through direct contact.",
+      "weakness": "The user’s own cells deteriorate each time they trigger this Quirk. Every time the user activates a target’s cells, they take 1d4 true damage. Overuse leads to intense fatigue, dizziness, and cellular burnout.",
+      "page": 51,
+      "abilities": [
+        {
+          "name": "CellularBoost",
+          "level": 1
+        },
+        {
+          "name": "CellularOverdrive",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "Cemedine",
+      "rarity": "Uncommon",
+      "type": "Mutant",
+      "description": "Cemedine allows the user to spray a glue-like liquid from the holes in their head. Once it hits something, the glue will either harden and trap whatever it contacts or make it sticky and dangerous to touch. The user can adjust the speed at which the glue dries.",
+      "weakness": "Cemedine is vunarable to acid, extreme heat, or prolonged dehydration. After using your Quirk a number of times equal to twice your proficiency bonus, you must make a DC 13 Constitution saving throw or gain 1 rank of Queasy as your body dries out.",
+      "page": 25,
+      "abilities": [
+        {
+          "name": "StickyTrap",
+          "level": 1
+        },
+        {
+          "name": "Hardened Bond",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Cement",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Cement gives the user the ability to manipulate cement-based material simply by being in contact with the surface.",
+      "weakness": "You can only use your quirk techniques a number of times equal to your Constitution modifier x 2. After you reach this limit, any attempt to use your Quirk again whenever you use Cement Wall your body absorbs part of the shock from manipulating the hardened material.",
+      "page": 30,
+      "abilities": [
+        {
+          "name": "CementWall",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Clean Bubbler",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "The user generates and manipulates soapy water from their body, forming high-pressure streams and durable soap bubbles.",
+      "weakness": "Your Quirk consumes your internal moisture reserves whenever it is used. To represent this, you track your hydration in cups of water. Hydration Pool:Afully hydrated person holds about 2 gallons of water. That equals 32 cups (16 cups per gallon).",
+      "page": 59,
+      "abilities": [
+        {
+          "name": "Soapy Stream",
+          "level": 1
+        },
+        {
+          "name": "Bubble Envelopment",
+          "level": 1
+        },
+        {
+          "name": "Restorative Bubble",
+          "level": 1
+        },
+        {
+          "name": "Aerial Lift",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "Clone",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "The user can exhale a fog-like substance from their mouth, forming clones of themselves. These clones can perform various actions, aiding in combat, reconnaissance, and support.",
+      "weakness": "You can create up to 36 clones at any time. Clones visually resemble you but have no free will and act only under your command. You can control a number of clones equal to your Constitution modifier individually. Clones beyond this limit must be grouped into units of eight or more.",
+      "page": 29,
+      "abilities": [
+        {
+          "name": "Clone",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Combo Star",
+      "rarity": "Very Rare",
+      "type": "Emitter",
+      "description": "The user builds overwhelming kinetic force through continuous, uninterrupted attacks. Each consecutive strike increases in power, adding an extra amount of force on top of the previous hit.",
+      "weakness": "This ability relies entirely on maintaining momentum. If your attack chain is interrupted in any way— whether you miss, hesitate, dodged, or otherwise prevented from a external continuing—the built-up force immediately collapses and resets to its base level.",
+      "page": 82,
+      "abilities": [
+        {
+          "name": "Evasive Pursuit",
+          "level": 4
+        }
+      ]
+    },
+    {
+      "name": "Comic",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Comic allows the user to manifest onomatopoeia and action words into tangible constructs that mimic the effects or sensations those words represent. When spoken aloud, these words burst into existence as giant stylized Japanese letters.",
+      "weakness": "Comic directly strains the user’s voice and vocal cords. Each time you use Comic, your Voice Meter increases by 1.",
+      "page": 25,
+      "abilities": []
+    },
+    {
+      "name": "Compress",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Compress allows you to shrink creatures or objects into small, marble-sized Blue Orbs. While inside, targets are suspended in stasis: they cannot act, take damage, or be affected by outside forces.",
+      "weakness": "If both arms are restrained, paralyzed, or severed, you cannot create or release Blue Orbs.",
+      "page": 45,
+      "abilities": [
+        {
+          "name": "Compress",
+          "level": 1
+        },
+        {
+          "name": "Release",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Confession",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "The user possesses the power to compel absolute truth and emotional transparency from anyone within range. By focusing their voice and intent, the user forces targets to expose their deepest secrets, memories, and motives.",
+      "weakness": "es: The Quirk requires verbal interaction to function — both the user and the target must be able to speak and hear each other. The user cannot control what information surfaces beyond the question asked.",
+      "page": 51,
+      "abilities": [
+        {
+          "name": "Truthful Revelation",
+          "level": 1
+        },
+        {
+          "name": "Invasive Read Enemy",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Copy",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Copy allows the user to replicate another Quirk through brief physical contact—even a touch of hair, skin, or blood is sufficient. Once copied, the user gains access to the Quirk’s full functionality, constrained only by their own skill and comprehension.",
+      "weakness": "Physical contact is required to copy a Quirk, and each copied power fades after two minutes, though this duration can be extended with training. Accumulation- or mutation-based Quirks cannot be properly replicated.",
+      "page": 26,
+      "abilities": [
+        {
+          "name": "Quirk lasts for two minutes",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "Creation",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Creation allows the user to materialize physical objects, such as weapons and tools, from any part of their body by transmuting the molecular structure of their fat cells. The user can create virtually any object they understand at a molecular level, excluding living beings.",
+      "weakness": "To sustain your Quirk, you must consume 10 pounds of food daily (about 35,000 calories). The calories you eat determine how much you can create—1 pound of food equals 1 pound of object weight (roughly 3,500 calories per pound).",
+      "page": 20,
+      "abilities": [
+        {
+          "name": "Create",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Cremation",
+      "rarity": "Very Rare",
+      "type": "Emitter",
+      "description": "Cremation is an extremely powerful Quirk that allows the user to generate and manipulate intense and powerful Blue Flames at will.",
+      "weakness": "Cremation will raise the users body temperature to extremly dangerous levels if overused due to successive powerful attacks or drawn-out battles, impairing there physical abilities. You gain a heat counter each move is worth a certain amount of heat points.",
+      "page": 36,
+      "abilities": [
+        {
+          "name": "Burned Form",
+          "level": 10
+        },
+        {
+          "name": "Flashfire Fist",
+          "level": 1
+        },
+        {
+          "name": "Jet Burn",
+          "level": 3
+        },
+        {
+          "name": "Vanishing Fist",
+          "level": 8
+        },
+        {
+          "name": "Prominence Burn",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Curse",
+      "rarity": "Rare",
+      "type": "Mutant",
+      "description": "Curse allows the user to manipulate paper as both a weapon and a means of creating combat clones. The paper can be launched as sharp strands towards foes or formed into clones of the user that fight independently.",
+      "weakness": "Controlling multiple clones is mentally exhausting. You can maintain and create a number of clones equal to your Proficiency Bonus.",
+      "page": 73,
+      "abilities": [
+        {
+          "name": "Paper Strike",
+          "level": 1
+        },
+        {
+          "name": "Paper Clone",
+          "level": 1
+        },
+        {
+          "name": "Paper Barrage",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Dark Shadow",
+      "rarity": "Very Rare",
+      "type": "Emitter",
+      "description": "Dark Shadow allows the user to manifest a shadowy, monster-like entity from within their body, which can be materialized or de-materialized at will.",
+      "weakness": "The strength and behavior of Dark Shadow shift based on the surrounding light. Bright Light. In bright light, Dark Shadow becomes small and docile. It is easier to control in this state but noticeably weaker, making it less effective in combat. Dim Light.",
+      "page": 12,
+      "abilities": [
+        {
+          "name": "Dark Shadow",
+          "level": 1
+        },
+        {
+          "name": "Dark Shadow Shield",
+          "level": 1
+        },
+        {
+          "name": "Covert Black-OpsArms",
+          "level": 1
+        },
+        {
+          "name": "PiercingTwilight Claws",
+          "level": 1
+        },
+        {
+          "name": "Black FallenAngel",
+          "level": 4
+        },
+        {
+          "name": "BlackAbyss",
+          "level": 6
+        },
+        {
+          "name": "Sabbath",
+          "level": 8
+        },
+        {
+          "name": "Womb",
+          "level": 11
+        },
+        {
+          "name": "Fleeting Blow",
+          "level": 15
+        },
+        {
+          "name": "Total Release",
+          "level": 20
+        }
+      ]
+    },
+    {
+      "name": "Day Dream",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "This Quirk allows the user to put any individual they make eye contact with into a deep, hypnotic state, causing them to fall unconscious or enter a dream-like world where they experience their deepest desires.",
+      "weakness": "es. The Quirk requires full visual contact to activate, making it ineffective against individuals who are blind or lack organic eyes. Additionally, if the user sustains more than 15 damage, the effects of the Quirk can be lifted from all targets and cannot use their quirk until 1 minute passes.",
+      "page": 63,
+      "abilities": []
+    },
+    {
+      "name": "Deadman’s Speed",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "This Quirk endows the user with incredible speed and agility, allowing them to navigate the battlefield with lightning-fast reflexes and movements. The user can evade attacks and close distances with ease, making them a difficult target to pin down in combat.",
+      "weakness": "The user must consume at least 5,000 calories per day to maintain their speed. Failing to meet this caloric intake results in their movement speed being halved until they replenish their energy.",
+      "page": 59,
+      "abilities": []
+    },
+    {
+      "name": "Deathly Endurance",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "This Quirk grants the user exceptional durability and stamina, allowing them to withstand significant physical damage and maintain their energy in prolonged situations.",
+      "weakness": "None Enhanced Vitality:Your maximum Hit Points increase by three for every level you gain. If you start at a higher level, calculate your Hit Points as if you had progressed through each level from the beginning.",
+      "page": 70,
+      "abilities": []
+    },
+    {
+      "name": "Decay",
+      "rarity": "Legendary",
+      "type": "Emitter",
+      "description": "Decay grants the user the ability to destroy anything or anyone they touch, reducing it to dust. The disintegration effect can spread beyond the initial contact, creating a chain reaction that disintegrates multiple targets.",
+      "weakness": "Decay requires physical touch to activate, making it ineffective against opponents who can avoid direct contact or manipulate substances that cannot be easily touched (such as fluids or particles Must be a solid surface as well).",
+      "page": 37,
+      "abilities": [
+        {
+          "name": "Chain Reaction",
+          "level": 8
+        },
+        {
+          "name": "Decay Counter",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Delay Bubble",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "This Quirk allows the user to create a semi- spherical bubble that envelops a designated area, causing everything within it to move at less than 50% of its normal speed.",
+      "weakness": "es. The Quirk’s effects are not uniform; extremely fast-moving objects can still breach the bubble and cause significant damage to the user if they make contact.",
+      "page": 64,
+      "abilities": []
+    },
+    {
+      "name": "Dog",
+      "rarity": "Common",
+      "type": "Mutant",
+      "description": "Your physiology mirrors that of a powerful hound, granting you heightened instincts, raw athleticism, and the feral might of a true predator. Hound Senses.",
+      "weakness": "",
+      "page": 28,
+      "abilities": []
+    },
+    {
+      "name": "Double",
+      "rarity": "Very Rare",
+      "type": "Emitter",
+      "description": "Double allows the user to create exact copies of anything they touch, including living creatures. By emitting a dark, viscous fluid from their hands, the user forms replicas that retain the original’s abilities, personality, and memories.",
+      "weakness": "Creating perfect clones requires precise measurements of the target. If measurements are inaccurate or the user fails a DC 14 History check after one hour of study, the clones are imperfect: they last only one minute, deal two fewer damage dice, and have -5 hit points (minimum 1).",
+      "page": 43,
+      "abilities": [
+        {
+          "name": "Duplicate",
+          "level": 1
+        },
+        {
+          "name": "Sad Man’s Parade",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Dragon",
+      "rarity": "Common",
+      "type": "Transformation",
+      "description": "Dragon allows the user to transform into a dragon, a powerful mythological creature. This form grants them abilities commonly associated with dragons, including flight, powerful jaws and claws.",
+      "weakness": "None. Dragon. You as a bonus action you turn into your Dragon Form. Dragon Form Armor Class 16 (base) Hit Points Your normal hit points + 25 Speed 35 ft. (walk), 45 ft. (fly) STR DEX CON INT WIS CHA 23 (+6) Your DEX 21 (+5) Your INT Your WIS Your CHA Saving Throws Add proficiency bonus to Strength…",
+      "page": 47,
+      "abilities": []
+    },
+    {
+      "name": "Dupli-Arms",
+      "rarity": "Uncommon",
+      "type": "Mutant",
+      "description": "Dupli-Arms grants the user a set of arm-like tentacles that can replicate other body parts, enhancing their versatility in combat.",
+      "weakness": "The tentacles and replicated body parts are susceptible to damage from enemy attacks. While the user can regrow any lost replicated body part, the process is painful and takes time. Regrowing a limb requires a full rest. Dupli-Arms.",
+      "page": 10,
+      "abilities": [
+        {
+          "name": "Dupli-Arms",
+          "level": 1
+        },
+        {
+          "name": "Octo-Blow",
+          "level": 1
+        },
+        {
+          "name": "Octospansion",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Dying Flight",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "This Quirk grants the user the ability to fly, providing unparalleled mobility and the capability to traverse terrain and obstacles with ease. The user can maneuver swiftly in the air, making them a difficult target in combat.",
+      "weakness": "None Flight and Hover:You gain a flight and hover speed of 60 feet, allowing you to soar through the air and maintain your position above ground. You can dash as a bonus action, enabling rapid repositioning during encounters.",
+      "page": 59,
+      "abilities": [
+        {
+          "name": "Dodge Reaction",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Earphone Jack",
+      "rarity": "Uncommon",
+      "type": "Mutant",
+      "description": "Earphone Jack grants the user long, controllable earlobes resembling headphone cables. These earlobes can plug into various objects, channeling the vibrations of the user’s heartbeat to deal internal damage.",
+      "weakness": "The Earphone Jacks count as yourears and are vulnerable to damage and can suffer from overuse. If you use your quirk more than your Level + Double Your Proficiency Bonus, each subsequent use after that you gain one rank of bleed (maximum of 3) each time you activate it until you take a short rest.",
+      "page": 10,
+      "abilities": [
+        {
+          "name": "ThunderStrike",
+          "level": 1
+        },
+        {
+          "name": "Heartbeat Distortion",
+          "level": 1
+        },
+        {
+          "name": "HeartbeatWall",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Elasticity",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Elasticity allows the user to grant the property of elasticity to anything they touch.",
+      "weakness": "The effects of this Quirk cannot be deactivated at will. Once activated, the effects last for 2 minutes and cannot be removed until that time has passed.",
+      "page": 46,
+      "abilities": [
+        {
+          "name": "Elasticity",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Electric Skin",
+      "rarity": "Uncommon",
+      "type": "Mutant",
+      "description": "Electric Skin allows the user to generate an electric field around their body, dealing damage to anyone who touches them.",
+      "weakness": "The user suffers muscle cramps after using the quirk too frequently, resulting in disadvantage on Dexterity checks for 1d4 rounds and movement is reduced to half. Electric Shock Skin. Any creature that touches you takes 3d6 Lightning Damage. Lightning Surge.",
+      "page": 58,
+      "abilities": [
+        {
+          "name": "Lightning Surge",
+          "level": 1
+        },
+        {
+          "name": "Thunderstorm",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Electrification",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Electrification allows the user to generate and emit electricity from their body, creating a protective aura that electrocutes anyone who makes contact.",
+      "weakness": "Your body stores up to 1,000,000 watts of electricity. As you use your Quirk, your wattage increases. If it gets too high, your brain starts to short-circuit. This affects your intelligence and ability to act: Watt Level Effect 0 – 250,000 watts Safe zone. No negative effects.",
+      "page": 8,
+      "abilities": [
+        {
+          "name": "Human Stun Gun",
+          "level": 1
+        },
+        {
+          "name": "Million Volts",
+          "level": 3
+        }
+      ]
+    },
+    {
+      "name": "Element",
+      "rarity": "Common",
+      "type": "Transformation",
+      "description": "This Quirk grants the user the ability to become or manipulate one of the basic elements, allowing them to shape their body or surroundings with the power of Fire, Energy, Ice, Water, Lightning, or Thunder.",
+      "weakness": "None",
+      "page": 49,
+      "abilities": [
+        {
+          "name": "Elemental Form",
+          "level": 1
+        },
+        {
+          "name": "Elemental Punch",
+          "level": 1
+        },
+        {
+          "name": "Elemental Shot",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Engine",
+      "rarity": "Rare",
+      "type": "Mutant",
+      "description": "Engine grants the user engine-like protrusions on their body, enabling them to move at extraordinary speeds.",
+      "weakness": "Your Quirk burns through your body’s natural fluids, which can only be replenished properly with juice. Afully hydrated person carries about two gallons of fluid in reserve— roughly 32 cups of juice. When your reserves drop to 8 cups or less, your body begins to strain under the pressure.",
+      "page": 7,
+      "abilities": [
+        {
+          "name": "Recipro Burst",
+          "level": 3
+        },
+        {
+          "name": "Recipro Extend",
+          "level": 7
+        },
+        {
+          "name": "Recipro Turbo",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Enhanced Durability",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "This Quirk allows the user to become vitrually indestructible.",
+      "weakness": "None Durable. You gain resistance to all damages EXECPT Psychic, Force and Necrotic. This cannot be bypassed by any means unless stated otherwise.",
+      "page": 37,
+      "abilities": []
+    },
+    {
+      "name": "Erasure",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Erasure allows the user to nullify the Quirk of anyone they directly observe. By focusing their gaze on a target, they can effectively disable that individual’s abilities for a limited time.",
+      "weakness": "es: To activate Erasure, the user must have a clear line of sight to the target’s physical body. Targets can evade the effect by hiding behind obstacles or otherwise obscuring the user’s view.",
+      "page": 39,
+      "abilities": [
+        {
+          "name": "Erase",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Erasure Field",
+      "rarity": "Legendary",
+      "type": "Emitter",
+      "description": "This Quirk allows the user to generate a large dome-shaped wave of energy that deactivates the Quirks of anyone within its range. All Quirks (minus mutations) are rendered inactive while inside this field, creating a significant tactical advantage.",
+      "weakness": "es. The Quirk requires the user to maintain concentration, whenever they take damage they must make a DC 13 Constitution check. if concentration is broken and any distraction disrupts the energy field, leading to a loss of control ending it.",
+      "page": 64,
+      "abilities": [
+        {
+          "name": "Erasure Field",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Explosion",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Explosion allows the user to excrete nitroglycerin- like sweat from their palms and ignite it at will to create explosions of various sizes.",
+      "weakness": "Repeated explosions place extreme strain on your body. Each time you use a Quirk ability other than Explosion or Stun Grenade, the limbs used suffer 2d4 true damage.",
+      "page": 16,
+      "abilities": [
+        {
+          "name": "EXPLODE",
+          "level": 1
+        },
+        {
+          "name": "X-Catapult-Pult",
+          "level": 3
+        },
+        {
+          "name": "Stun Grenade",
+          "level": 3
+        },
+        {
+          "name": "Howitzer Impact",
+          "level": 4
+        },
+        {
+          "name": "APShot",
+          "level": 6
+        },
+        {
+          "name": "Auto Cannon",
+          "level": 6
+        },
+        {
+          "name": "Cluster",
+          "level": 8
+        },
+        {
+          "name": "APShot Cluster",
+          "level": 18
+        }
+      ]
+    },
+    {
+      "name": "Extendo Hair",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Extendo Hair grants the user complete control over the growth, structure, and movement of their hair, turning it into a powerful multi-tool. The hair is preternaturally strong, incredibly flexible, and nearly indestructible—capable of offense, defense, mobility, and utility.",
+      "weakness": "While the user’s hair is virtually indestructible, its rapid growth and high-speed movement can cause it to become tangled, knotted, or overextended. If the user uses two ormore hair-based actions on the same turn, they risk losing control over their Quirk.",
+      "page": 69,
+      "abilities": [
+        {
+          "name": "HairManipulation",
+          "level": 1
+        },
+        {
+          "name": "HairArmor",
+          "level": 1
+        },
+        {
+          "name": "Whipstorm",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "Fat Absorption",
+      "rarity": "Uncommon",
+      "type": "Transformation",
+      "description": "Fat Absorption allows the user to absorb and store physical impacts and objects into their body fat, using their mass as both a shield and weapon. The absorbed energy can later be released in a devastating counterattack.",
+      "weakness": "This Quirk requires significant body fat to function. You must weigh at least 350 lbs and consume double the normal daily food intake to maintain its power.",
+      "page": 33,
+      "abilities": [
+        {
+          "name": "FatAbsorption",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Fiber Master",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Fiber Master grants the user the ability to control all types of cloth and fibers at will. The user can telekinetically manipulate the threads of fabrics, allowing them to control clothing worn by others, create restraints, or form protective barriers.",
+      "weakness": "The effectiveness of this quirk depends on the amount of fabric available nearby. The user must maintain focus, requiring a Concentration check (DC 15) at the end of each round. On a failed Concentration check, you automatically release any active restraints or fiber constructs.",
+      "page": 30,
+      "abilities": [
+        {
+          "name": "Cloth Manipulation",
+          "level": 4
+        },
+        {
+          "name": "Blackout Bind",
+          "level": 6
+        }
+      ]
+    },
+    {
+      "name": "Fierce Wings",
+      "rarity": "Rare",
+      "type": "Mutant",
+      "description": "Fierce Wings grants the user a pair of large, crimson wings made of numerous razor-sharp feathers. Each feather can be controlled telekinetically with precision, allowing the user to attack, defend, or carry objects weighing up to 200 pounds per group of feathers.",
+      "weakness": "Detaching too many feathers reduces flight capability and overall speed. The user starts with 100 feathers, divided into 10 groups of 10, each controlling a 5-foot radius of space. Feathers cannot move more than 120 feet away from the user. If all feathers are destroyed, they regrow after two days.",
+      "page": 31,
+      "abilities": [
+        {
+          "name": "Sword",
+          "level": 4
+        },
+        {
+          "name": "Save",
+          "level": 1
+        },
+        {
+          "name": "Boost",
+          "level": 1
+        },
+        {
+          "name": "Grappling Feathers",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Fire Skin",
+      "rarity": "Uncommon",
+      "type": "Mutant",
+      "description": "Fire Skin allows the user to generate fire around their body, dealing damage to anyone who touches them.",
+      "weakness": "The user suffers muscle cramps after taking cold damage, resulting in disadvantage on Dexterity checks for 1d4 rounds. Firery Burn Skin. Any creature that touches you takes 1d6 fire damage. Fire Surge.",
+      "page": 70,
+      "abilities": [
+        {
+          "name": "Fire Surge",
+          "level": 1
+        },
+        {
+          "name": "Firestorm",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Fold-A-Body",
+      "rarity": "Uncommon",
+      "type": "Transformation",
+      "description": "Fold-A-Body grants the user the ability to manipulate their body, enabling them to stretch, flatten, and contort in ways that enhance their stealth and evasiveness. This Quirk allows the user to hide in plain sight, slip through tight spaces, and maneuver in ways that defy conventional movement.",
+      "weakness": "Overuse of this Quirk can cause disorientation. After using it for three consecutive turns, the user must succeed on a Constitution saving throw (DC 14) or become incapacitated until the end of their next turn.",
+      "page": 50,
+      "abilities": [
+        {
+          "name": "Fold",
+          "level": 1
+        },
+        {
+          "name": "Precision Shot",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Foresight",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Foresight allows the user to glimpse several seconds into the future, perfectly predicting a target’s next sequence of actions. By first touching a target and making eye contact, the user gains a short vision of that creature’s immediate future from a detached, third-person perspective.",
+      "weakness": "Foresight requires uninterrupted vision. If the user is blinded, loses line of sight, or their view is obscured, the effect ends. Each use taxes the mind; after using Foresight, the user must succeed on a DC 14 Constitution saving throw or gain one level of Concussed.",
+      "page": 39,
+      "abilities": [
+        {
+          "name": "Foresight",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Frog",
+      "rarity": "Uncommon",
+      "type": "Mutant",
+      "description": "The user gains frog-like characteristics, including enhanced leg strength, wall-clinging abilities, a powerful extending tongue, natural camouflage, swift swimming, and the ability to secrete mucus with various effects, such as paralysis and scent concealment.",
+      "weakness": "Exposure to sudden cold can induce a hibernation- like state, rendering the user completely immobile until they warm up. In temperatures below 28°F, you fall asleep and cannot awaken until the temperature rises above this threshold. Amphibious Anatomy.",
+      "page": 6,
+      "abilities": [
+        {
+          "name": "Dexterity modifier on a hit",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Frost",
+      "rarity": "Very Rare",
+      "type": "Emitter",
+      "description": "Frost allows the user to generate ice, frost, and cold from their body. However, the user is unable to manipulate the ice that comes from an external source; they can only create them from their body.",
+      "weakness": "Frost will lower the user’s body temperature to dangerous levels if overused due to successive powerful attacks or drawn-out battles, impairing your physical abilities. You gain a cold counter each move is worth a certain amount of cold points.",
+      "page": 60,
+      "abilities": [
+        {
+          "name": "Ice Body",
+          "level": 5
+        },
+        {
+          "name": "Cold Restraints",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Gas",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "The user can produce a large volume of purple gas that induces sleep in anyone who inhales it. This gas fills the surrounding area, creating an environment that is difficult to navigate and allows the user to sense movement within it.",
+      "weakness": "The gas can be filtered through any sort of gas mask, rendering it ineffective against those who are prepared. Lighter concentrations of the gas are less potent and may not induce sleep.",
+      "page": 54,
+      "abilities": [
+        {
+          "name": "Sleep-Inducing Gas",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Gecko",
+      "rarity": "Common",
+      "type": "Mutant",
+      "description": "The user look and gains gecko-like anatomy with a super wall clinging power",
+      "weakness": "Exposure to sudden cold puts the user into a hibernation-like state, rendering them completely unable to do anything until they warms up. When you are put into a cold enviorment below survive temperatures as low as 28°F you become asleep and cannot wake up until it becomes above 28°F.",
+      "page": 40,
+      "abilities": []
+    },
+    {
+      "name": "Gigantification",
+      "rarity": "Uncommon",
+      "type": "Transformation",
+      "description": "Gigantification allows the user to expand to colossal proportions, towering over all around them. In this form, the user gains immense strength, durability, and reach, capable of overpowering smaller foes and confronting large enemies on equal footing.",
+      "weakness": "The user must fully commit to the transformation; size cannot be adjusted incrementally. Navigating tight or confined spaces becomes extremely difficult. Extreme stress, rage, or frustration may trigger the Quirk unintentionally.",
+      "page": 49,
+      "abilities": [
+        {
+          "name": "Growth Spurt",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Glamour",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Glamour allows the user to create vivid visual and auditory illusions that can deceive and manipulate others. By emitting a mist-like substance from their mouth, the user can form illusions large enough to fill a substantial area, distracting opponents and creating confusion.",
+      "weakness": "The illusions created by Glamour are primarily sensory and cannot cause physical harm unless specifically designed to affect the mind. They dissipate after a short duration, and the user must maintain concentration to keep them active.",
+      "page": 35,
+      "abilities": [
+        {
+          "name": "MajorIllusion",
+          "level": 3
+        },
+        {
+          "name": "Phantasmal Force",
+          "level": 5
+        },
+        {
+          "name": "IllusoryArmy",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Gyrate",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Gyrate allows the user to rotate any part of their body at high speeds, effectively turning their limbs into drill-like appendages. This enhances their hand-to-hand combat capabilities significantly.",
+      "weakness": "Rapidly gyrating at high speed places extreme strain on your muscles and joints. After a number of continuous rounds equal to your Proficiency bonus, you must make a DC 15 Constitution saving throw or take 1d8 true damage as tendons tighten and fibers tear and your movement is reduced by 15 feet.",
+      "page": 21,
+      "abilities": []
+    },
+    {
+      "name": "Half-Cold Half-Hot",
+      "rarity": "Very Rare",
+      "type": "Emitter",
+      "description": "Half-Cold Half-Hot allows the user to generate ice, frost, and cold from the right side of their body, and fire, flames, and heat from the left. However, the user is unable to manipulate either element that comes from an external source; they can only create them from their body.",
+      "weakness": "The user needs to constantly alternate the use of both elements, heating themselves with the left side after creating a great volume of ice or cooling with the right side after generating strong flames.",
+      "page": 14,
+      "abilities": [
+        {
+          "name": "Elemental Movement",
+          "level": 1
+        },
+        {
+          "name": "IcyTouch",
+          "level": 1
+        },
+        {
+          "name": "Elemental Defense",
+          "level": 1
+        },
+        {
+          "name": "Jet Kindling",
+          "level": 5
+        },
+        {
+          "name": "Heatwave",
+          "level": 8
+        },
+        {
+          "name": "Jet Burn",
+          "level": 11
+        },
+        {
+          "name": "Phosphor",
+          "level": 13
+        },
+        {
+          "name": "Great GlaicerAegir",
+          "level": 13
+        }
+      ]
+    },
+    {
+      "name": "Hardening",
+      "rarity": "Uncommon",
+      "type": "Transformation",
+      "description": "Hardening allows the user to solidify any part of their body, providing significant protection against physical threats.",
+      "weakness": "Your hardened form can only endure a limited amount of damage before it breaks apart. Once this limit is reached, the hardened shell shatters, ending the effect and returning you to your normal state. Harden Form Limits Level Damage Absorption",
+      "page": 9,
+      "abilities": [
+        {
+          "name": "Red Gut Turrent",
+          "level": 3
+        },
+        {
+          "name": "Re-Harden",
+          "level": 5
+        },
+        {
+          "name": "Unbreakable",
+          "level": 7
+        }
+      ]
+    },
+    {
+      "name": "Heal",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Heal allows the user to accelerate the body’s natural regeneration through direct contact — most effectively through a kiss. Once activated, the target’s biological processes quicken, knitting wounds, repairing tissue, and even restoring vitality over time.",
+      "weakness": "Continuous use of this quirk on a single target causes cellular fatigue. If a creature is healed 5 times within one minute, they gain 1 rank of exhaustion, plus 1 additional rank forevery 2 furtheruses, up to a maximum of 5 ranks. This exhaustion fades after a short rest. Healing Touch.",
+      "page": 28,
+      "abilities": [
+        {
+          "name": "HealingTouch",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Helical Scythe",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "This Quirk manifests as long, crimson, helical tendrils that sprout from both the user’s scalp and fingertips. These semi-organic appendages twist and spin like living drills or scythes, capable of slashing, drilling, and even manipulating elemental forces through rotational energy.",
+      "weakness": "Maintaining high rotational velocity rapidly drains the user’s stamina. After 10 consecutive rounds of keeping the tendrils active, the user must make a DC 14 Constitution saving throw at the end of each round or gain 1 level of exhaustion.",
+      "page": 52,
+      "abilities": []
+    },
+    {
+      "name": "Hellflame",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Hellflame is an extremely powerful Quirk that allows the user to generate and manipulate intense and powerful flames at will.",
+      "weakness": "Hellflame will raise the users body temperature to dangerous levels if overused due to successive powerful attacks or drawn-out battles, impairing physical abilities. You gain a heat counter each move is worth a certain amount of heat points.",
+      "page": 27,
+      "abilities": [
+        {
+          "name": "Fire Body",
+          "level": 10
+        },
+        {
+          "name": "Flashfire Fist",
+          "level": 1
+        },
+        {
+          "name": "Hells Curtain",
+          "level": 4
+        },
+        {
+          "name": "Vanishing Fist",
+          "level": 12
+        },
+        {
+          "name": "Prominence Burn",
+          "level": 15
+        }
+      ]
+    },
+    {
+      "name": "High Specs",
+      "rarity": "Common",
+      "type": "Mutant",
+      "description": "Your brain as been altered to hold more information and comprehend more information.",
+      "weakness": "Your too smart and your known to talk fast making hard for people to understand.",
+      "page": 28,
+      "abilities": []
+    },
+    {
+      "name": "Hologram",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "This Quirk allows the user to project convincing holograms of objects, creatures, or environments they imagine. These holograms can vary in size and detail, creating vivid illusions that can fool onlookers or confuse enemies.",
+      "weakness": "Holograms cannot interact with the environment and will dissipate if the user’s focus is broken. If the user moves more than 60 feet on their turn or takes more than their level + 10 in damage, all active holograms vanish.",
+      "page": 67,
+      "abilities": [
+        {
+          "name": "Hologram Creation",
+          "level": 1
+        },
+        {
+          "name": "Emergency Signal",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Homing",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Homing allows the user to lock onto any visible target within 600 meters (1,968 feet), causing any projectile they fire to automatically pursue that target. Once locked, the projectile adjusts its trajectory midair, curving around obstacles and ensuring pinpoint pursuit.",
+      "weakness": "The user cannot precisely control where the projectile strikes, and each attack deals reduced damage.",
+      "page": 38,
+      "abilities": [
+        {
+          "name": "Homing Lock",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Horn Cannon",
+      "rarity": "Uncommon",
+      "type": "Mutant",
+      "description": "Horn Cannon allows the user to detach and launch their horns as deadly projectiles. These horns regenerate almost instantly after being fired, and the user can control up to 4 simultaneously, redirecting them mid-flight to bypass obstacles or strike multiple targets.",
+      "weakness": "The horns are fragile and require regular consumption of keratin-rich foods to maintain their durability. If a horn is forcibly restrained or removed, it cannot be fired until it fully regenerates.",
+      "page": 23,
+      "abilities": [
+        {
+          "name": "Horn Shot",
+          "level": 1
+        },
+        {
+          "name": "Guided Horn",
+          "level": 1
+        },
+        {
+          "name": "Horn Barrage",
+          "level": 1
+        },
+        {
+          "name": "HornTransport",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "Hydra",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Hydra allows the user to summon multiple enormous, serpentine heads from their back, which they can control at will. These heads are highly versatile, able to attack, grapple, restrain, or assist in movement.",
+      "weakness": "Each Hydra head is limited in range and durability. Once all summoned heads are destroyed, the Quirk cannot be used again until you finish a short rest. Hydra. As a reaction when you are targeted by an attack, you can summon Hydra heads to strike the attacker.",
+      "page": 48,
+      "abilities": [
+        {
+          "name": "Hydra",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Impact Recoil",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Impact Recoil allows the user to take incoming physical force and reverse it in an instant, redirecting the kinetic energy back toward the source with devastating precision. The harder the strike, the greater the backlash — turning an enemy’s aggression into their own downfall.",
+      "weakness": "Impact Recoil only functions against direct physical attacks (such as melee, thrown weapons, or unarmed blows). Energy, elemental, psychic, or ranged projectile damage cannot be reflected.",
+      "page": 70,
+      "abilities": [
+        {
+          "name": "Kinetic Feedback",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Infinite Adaptation",
+      "rarity": "Legendary",
+      "type": "Mutant",
+      "description": "Infinite Adaptation grants the user a constantly evolving body capable of analyzing, adjusting, and overcoming any threat it experiences. When exposed to an attack, Quirk, mutation, environmental hazard, or condition, the user’s body begins an accelerated evolutionary process.",
+      "weakness": "Adaptation requires exposure and time. The user must experience an effect before their body can begin adapting to it. Completely new attacks or unknown Quirks can still harm them initially. Additionally, overwhelming damage can temporarily surpass the body’s evolutionary rate.",
+      "page": 81,
+      "abilities": [
+        {
+          "name": "Adaptive Evolution",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Invisibility",
+      "rarity": "Common",
+      "type": "Mutant",
+      "description": "Invisibility grants the user a completely invisible body, bending light perfectly around themselves. However, this optical warping also allows the user to manipulate light’s path and intensity in unique ways.",
+      "weakness": "Invisibility does not extend to clothing or objects, meaning that a user’s clothes need to constantly be stripped off for the Quirk to be useful. However, going fully naked also exposes your skin to the elements, leaving you vulnerable to heat, cold, and other environmental hazards.",
+      "page": 15,
+      "abilities": []
+    },
+    {
+      "name": "Iron Ball",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "The user can generate and launch iron balls from their knuckles, adjusting the size, density, and velocity of each shot. These balls can range from high-speed pellets to crushing boulders.",
+      "weakness": "Creating and launching larger balls puts strain on the user’s muscles and stamina. If the user launches three Large balls or one Massive ball in a single encounter, they must succeed on a DC 16 Constitution saving throw or gain 1 level of exhaustion.",
+      "page": 55,
+      "abilities": [
+        {
+          "name": "Iron Ball",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Iron Claws",
+      "rarity": "Common",
+      "type": "Mutant",
+      "description": "You were born with a pair of large iron claws that can be used for digging and effective slashing attacks.",
+      "weakness": "It’s hard to use your hands in normal ways. Tunnel. You use your claws to drill into the ground and move through it as high speeds. You gain a burrow speed equal to your movement speed. Iron Claws. Your hands transform into razor-edged weapons capable of rending steel and bone alike.",
+      "page": 28,
+      "abilities": []
+    },
+    {
+      "name": "Jet",
+      "rarity": "Uncommon",
+      "type": "Mutant",
+      "description": "Jet grants the user the ability to expel compressed air from vents located in the soles of their feet, allowing for rapid bursts of motion and limited flight.",
+      "weakness": "Jet propulsion relies on the user’s lung capacity and stamina. The user gains a flight speed equal to 10 × their Constitution modifier, but must land after a number of consecutive rounds of flight equal to their Constitution modifier before resting for one round to recover airflow.",
+      "page": 38,
+      "abilities": [
+        {
+          "name": "Jet Burst Dash",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Kinetic Booster",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Kinetic Booster amplifies the kinetic energy generated by the user, enhancing their movement and melee capabilities.",
+      "weakness": "None",
+      "page": 41,
+      "abilities": [
+        {
+          "name": "Kinetic Booster",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Landmine",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "This Quirk allows the user to charge objects with volatile energy, turning them into remote-controlled explosives. By touching a surface or item, the user infuses it with compressed force energy that can be detonated at will.",
+      "weakness": "The explosions alone are not immensely powerful but become deadly when used in numbers or strategically placed. The user can maintain a number of active explosives equal to theirlevel × proficiency bonus. Creating additional ones causes the oldest to lose their charge.",
+      "page": 68,
+      "abilities": [
+        {
+          "name": "Explosive Infusion",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Laser Eyes",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "This Quirk allows the user to shoot lasers out of their eyes.",
+      "weakness": "Due to your eys becoming lasers you deal 1d12 fire damage to yourself everytime you use your quirk. Optional Rule: Short Rest Recharge Your DMmayallowyoutoregainallquirkability featuresuponcompletingashortrest. Thiswould replacetheusualrechargeofabilitiesatthenextdawn orlongrest.",
+      "page": 83,
+      "abilities": [
+        {
+          "name": "Laser",
+          "level": 1
+        },
+        {
+          "name": "Laser Turn",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Life Force",
+      "rarity": "Rare",
+      "type": "Transformation",
+      "description": "Life Force allows the user to dramatically slow their aging process by doubling their natural lifespan. The user appears significantly younger than their chronological age.",
+      "weakness": "If Life Force is cancelled or suppressed, the user immediately experiences rapid aging. They gain one level of frailty perround for10 rounds, reducing Strength, Dexterity, and Constitution by one per level of frailty (minimum 1).",
+      "page": 43,
+      "abilities": []
+    },
+    {
+      "name": "Lizard Tail Splitter",
+      "rarity": "Uncommon",
+      "type": "Transformation",
+      "description": "Lizard Tail Splitter allows the user to split their body into several pieces, which they can control telekinetically. The user can detach parts from any area of their body, and these pieces can move independently, floating at the user’s command.",
+      "weakness": "Each detached segment can only remain away from the user’s body for a limited time. After 3 minutes, the segment stops functioning. The user can regenerate lost segments, but this process has limits, requiring them to regroup any scattered pieces that can no longer be regenerated.",
+      "page": 24,
+      "abilities": [
+        {
+          "name": "Split",
+          "level": 1
+        },
+        {
+          "name": "Perception checks",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Lock Down",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "The user can anchor objects, terrain, and even living creatures in place by locking them to a fixed point in space. This powerful spatial manipulation technique is ideal for stopping fast-moving threats, controlling the battlefield, and rendering enemies completely immobile.",
+      "weakness": "To initiate a lock, the user must make direct physical contact with the target.",
+      "page": 57,
+      "abilities": [
+        {
+          "name": "Lock Down",
+          "level": 1
+        },
+        {
+          "name": "Deadbolt",
+          "level": 4
+        }
+      ]
+    },
+    {
+      "name": "Love",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Love allows the user to empower a target by expressing their feelings toward them. The intensity of the user’s emotions directly strengthens the recipient, enhancing their physical capabilities and combat potential.",
+      "weakness": "Love can only be used once per 24 hours. Lover Mode. As an action, you can confess your love to one willing ally within 60 feet. For the next 5 minutes, the target gains the following benefits: Add a extra damage die to all damage rolls, and increase the damage dice one step (e.g., d6 → d8).",
+      "page": 48,
+      "abilities": [
+        {
+          "name": "LoverMode",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Luminescence",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Luminescence allows the user to emit bright light from their body at will, illuminating their surroundings and potentially blinding foes.",
+      "weakness": "Prolonged or excessive use may cause eye strain or temporary blindness to the user, imposing disadvantage on Wisdom (Perception) checks that rely on sight for 1d4 rounds. Glow. You can shed bright light in a 30-foot radius and dim light for an additional 30 feet.",
+      "page": 58,
+      "abilities": [
+        {
+          "name": "Flash Burst",
+          "level": 1
+        },
+        {
+          "name": "Beacon",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Magic",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "The user can generate glowing energy rings from their wrists that allow them to influence the movement of objects or creatures that enter them. Once a target is within a ring, the user can control its speed and trajectory with precision, as if manipulating its momentum through spatial distortion.",
+      "weakness": "The rings require concentration to maintain. If the user takes damage while concentrating, they must succeed on a Constitution saving throw DC 15 or immediately lose control of all active rings.",
+      "page": 57,
+      "abilities": [
+        {
+          "name": "Energy Rings",
+          "level": 1
+        },
+        {
+          "name": "Momentum Lock",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Manifest",
+      "rarity": "Rare",
+      "type": "Transformation",
+      "description": "Manifest allows the user to enhance their body with traits from anything they consume. For example, eating Takoyaki lets them transform their fingers into octopus tentacles, while consuming a clam hardens their hands into shells.",
+      "weakness": "Manifestations depend on the amount of the consumed material still in the user’s system. If it runs low, the user loses access to those traits. To sustain their abilities, they must regularly consume the required materials or foods.",
+      "page": 39,
+      "abilities": [
+        {
+          "name": "Devour",
+          "level": 1
+        },
+        {
+          "name": "Colossus Cannon",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Meatball",
+      "rarity": "Rare",
+      "type": "Transformation",
+      "description": "Meatball grants the user the ability to manipulate raw human flesh. They can separate their limbs and control them independently, expand and mold flesh for offensive and defensive purposes, and levitate flesh to use as projectiles.",
+      "weakness": "The user must maintain focus to keep their targets restricted. If they take significant physical damage or become sufficiently distracted, their hold on the targets can be released. Manipulating another person’s flesh is more challenging and requires additional concentration.",
+      "page": 35,
+      "abilities": [
+        {
+          "name": "Flesh Bullet",
+          "level": 1
+        },
+        {
+          "name": "MeatballTransformation",
+          "level": 1
+        },
+        {
+          "name": "Flesh Separation",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Metal Manipulation",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "This Quirk grants the user the ability to manipulate, reshape, and command metallic materials through touch and focused intent. The user can bend steel, form weapons or armor, create intricate constructs, or even levitate metal objects for offensive and defensive use.",
+      "weakness": "es. This Quirk requires nearby metal to function. Without available metal, the user can perform only minor movements and cannot use major features. Using the Quirk puts heavy strain on the body and nervous system.",
+      "page": 66,
+      "abilities": []
+    },
+    {
+      "name": "Minor Healing",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Minor Healing allows the user to emit a soft restorative energy through physical contact, encouraging the body’s natural recovery. This quirk is designed for support and stabilization, not major regeneration.",
+      "weakness": "Minor Healing cannot restore consciousness or counter incapacitation. Targets who are unconscious, stunned, paralyzed, orotherwise incapacitated gain no benefit until they naturally recover awareness. Overuse rapidly drains the user, causing muscle fatigue and dizziness.",
+      "page": 74,
+      "abilities": [
+        {
+          "name": "MinorHealing",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Mummification",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "The user can manipulate red bandages that extend from their body, wrapping around objects, clothing, and even environmental debris to reanimate and weaponize them.",
+      "weakness": "es: The bandages are durable but not indestructible —attacks dealing 15 ormore slashing orfire damage can sever a length of bandage. If the connection between the user and a servant is broken, the mummy immediately crumbles to dust.",
+      "page": 53,
+      "abilities": [
+        {
+          "name": "Crimson Bind",
+          "level": 1
+        },
+        {
+          "name": "Crimson Servant Creation",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Muscle Augmentation",
+      "rarity": "Uncommon",
+      "type": "Transformation",
+      "description": "Muscle Augmentation allows the user to amplify, manipulate, and enhance their muscle layers, granting them incredible strength, speed, and durability. By expanding their muscles both internally and externally, the user can significantly boost their physical capabilities.",
+      "weakness": "Prolonged use can strain muscle fibers, leaving the user vulnerable. If the user is struck by five or more attacks in a single turn, the Quirk is temporarily disabled. Muscle tears or overexertion require rest before reactivating the ability.",
+      "page": 38,
+      "abilities": [
+        {
+          "name": "Muscle Form",
+          "level": 1
+        },
+        {
+          "name": "Muscle Shield",
+          "level": 4
+        }
+      ]
+    },
+    {
+      "name": "Mushroom",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Mushroom allows the user to generate and manipulate spores that rapidly grow into fungal structures. These spores can spread from the user, other surfaces, or creatures. They thrive in damp environments, and the fungi can interfere with movement, vision, and physical function.",
+      "weakness": "Prolonged use of Mushroom overloads the user’s body with toxic spores. After using spore-based abilities for a number of rounds equal to your Proficiency bonus × 2, the user must succeed on a DC 13 Constitution saving throw or gain One rank of the Queasy condition. Spore Cloud.",
+      "page": 22,
+      "abilities": [
+        {
+          "name": "Spore Cloud",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Navel Laser",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Navel Laser grants the user the ability to unleash radiant, sparkling laser beams from their navel.",
+      "weakness": "Prolonged use of the Quirk can cause internal damage. If you use your quirk more than your Level + Double Your Proficiency Bonus, each subsequent use after that you gain One rank of the Queasy Condition (See The Offical Hanbook for details)",
+      "page": 6,
+      "abilities": [
+        {
+          "name": "Navel Laser",
+          "level": 1
+        },
+        {
+          "name": "SuperNova",
+          "level": 6
+        }
+      ]
+    },
+    {
+      "name": "Neutralization",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "This Quirk allows the user to forcibly suppress anotherindividual’s Quirk Factorto zero by making direct contact with their right arm. Upon contact, the target’s Quirk is nullified—rendering them completely Quirkless for a limited duration, disabling both passive and active abilities.",
+      "weakness": "es. The user must use their right arm for Quirk activation. If this arm is injured, restrained, or severed, they cannot use their Quirk unless it is cybernetically or biologically restored. Quirkless individuals are immune to the effect entirely.",
+      "page": 63,
+      "abilities": []
+    },
+    {
+      "name": "New Order",
+      "rarity": "Legendary",
+      "type": "Emitter",
+      "description": "New Order allows the user to impose temporary, reality-altering rules on targets by grappling them ormaking physical contact with objects or the surrounding area. Targets include creatures, objects, energy, ora defined environmental space.",
+      "weakness": "The user must grapple the target or touch the affected medium (air, floor, wall). Only two rules may be active at a time. Must say the users name they identify as. User must have 16+Wisdom or Charisma and remain mentally neutral. Cannot instantly kill a target.",
+      "page": 75,
+      "abilities": [
+        {
+          "name": "Rule Imposition",
+          "level": 1
+        },
+        {
+          "name": "Reactive Override",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Nine",
+      "rarity": "Legendary",
+      "type": "Emitter",
+      "description": "Nine grants the user the ability to steal and store up to nine different Quirks at once, making them a dangerously versatile combatant. With access to a wide array of abilities, the user can adapt to nearly any situation by drawing from their stolen Quirk arsenal.",
+      "weakness": "The power of Nine comes at a cost. Your body deteriorates with each activation: Every time you activate a stolen Quirk, you take 9 true damage no matterwhat due to extreme cellular stress.",
+      "page": 56,
+      "abilities": [
+        {
+          "name": "Steal Quirk",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "One For All",
+      "rarity": "Legendary Ancient",
+      "type": "Emitter",
+      "description": "One For All allows its user to stockpile immense power, granting superhuman strength, speed, agility, and durability capable of reshaping the battlefield with a single strike. It can only be passed on willingly through the transfer of DNA, and cannot be stolen.",
+      "weakness": "",
+      "page": 17,
+      "abilities": [
+        {
+          "name": "Smash",
+          "level": 1
+        },
+        {
+          "name": "Mode",
+          "level": 5
+        },
+        {
+          "name": "Mindscape Link",
+          "level": 2
+        },
+        {
+          "name": "Blackwhip Grasp",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Orcinus",
+      "rarity": "Rare",
+      "type": "Mutant",
+      "description": "The user possesses the traits and abilities of orcas, allowing them to command marine life and enhance their physical capabilities. They exhibit features such as a streamlined body, increased strength, and a powerful vocal ability that can affect creatures in or out of the water.",
+      "weakness": "If the user is more than 100 feet away from a body of water for over 10 hour, they begin to feel weak, taking disadvantage on all Strength and Dexterity checks, attacks, and saves until they can return to water.",
+      "page": 58,
+      "abilities": [
+        {
+          "name": "Sonic Pulse",
+          "level": 1
+        },
+        {
+          "name": "SonarCall",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Ossuary Exchange",
+      "rarity": "Rare",
+      "type": "Mutant / Emitter",
+      "description": "Ossuary Exchange grants the user a uniquely adaptive skeletal system capable of accepting and integrating foreign bones. When a bone from another person is surgically transplanted into the user’s body, the bone carries with it the Quirk Factorencoded in its DNA.",
+      "weakness": "The Quirk requires actual bone transplantation, which is painful, medically intensive, and dangerous without proper care.",
+      "page": 79,
+      "abilities": [
+        {
+          "name": "Quirk Cycling",
+          "level": 1
+        },
+        {
+          "name": "Legacy Ossification",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Overclock",
+      "rarity": "Very Rare",
+      "type": "Emitter",
+      "description": "Overclock allows the user to accelerate their perception, cognition, and body speed to superhuman levels, making the world appear nearly frozen in place.",
+      "weakness": "The Quirk’s extreme brain and muscle stimulation burns through neural energy and oxygen. When Overclock ends, the user must succeed on a DC 15 Constitution saving throw or gain one level of exhaustion.",
+      "page": 61,
+      "abilities": [
+        {
+          "name": "Instant Eight",
+          "level": 4
+        },
+        {
+          "name": "CrawlerStyle",
+          "level": 6
+        },
+        {
+          "name": "Hi-Crawler",
+          "level": 8
+        },
+        {
+          "name": "SniperStyle",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Overhaul",
+      "rarity": "Legendary",
+      "type": "Emitter",
+      "description": "Overhaul allows the user to disassemble and reassemble matter with their bare hands. By touching a creature, object, or terrain, the user can pull it apart, reshape it, or restore it. Living and non-living matter alike can be affected.",
+      "weakness": "Overhaul requires physical contact to function. If the user cannot use their hands, the Quirk is unusable. After using Disassemble or Reassemble, that ability cannot be used again until the start of the user’s next turn. Disassemble: The user can touch a target within five feet to pull it apart.",
+      "page": 44,
+      "abilities": [
+        {
+          "name": "Reassemble",
+          "level": 1
+        },
+        {
+          "name": "Fusion",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "Overmodification",
+      "rarity": "Legendary",
+      "type": "Emitter",
+      "description": "Overmodification is a dangerously powerful and always-active Quirk that allows the user to forcibly alter and supercharge the abilities of anyone they physically touch.",
+      "weakness": "Overmodification takes a toll on the user. Each time it activates, whether successful or not, the user suffers 2d12 true damage, bypassing all resistances. This Quirk is always active and cannot be turned off. When the user’s hit points fall below half, Overmodification enters a volatile state.",
+      "page": 77,
+      "abilities": []
+    },
+    {
+      "name": "Permeation",
+      "rarity": "Legendary",
+      "type": "Transformation",
+      "description": "Permeation allows the user to phase their body through any solid matter at will. They can choose to make either a specific part of their body or their entire body intangible, letting them pass through obstacles and avoid physical or energy-based attacks entirely.",
+      "weakness": "Controlling Permeation is extremely difficult and dangerous. While fully intangible, the user loses all sensory perception—light, sound, and air pass through them, leaving them with the blind and deaf condition, and breathless.",
+      "page": 34,
+      "abilities": [
+        {
+          "name": "Phase",
+          "level": 1
+        },
+        {
+          "name": "Eyeball Crush",
+          "level": 3
+        },
+        {
+          "name": "Phantom Menace",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "Poltergeist",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Poltergeist allows the user to telekinetically manipulate objects and people close to them. The user can move large swarms of objects to barrage a target. These objects do not need to be solid for Poltergist to work.",
+      "weakness": "The maximum limit of the user’s telekinetic control is approximately the weight of a single person (275 pounds). Also the user of this quirk uses up a lot of stamina and the number of objects that can be controlled simultaneously is equal your Proficeny Bonus.",
+      "page": 26,
+      "abilities": [
+        {
+          "name": "Object Barrage",
+          "level": 1
+        },
+        {
+          "name": "Telekinetic Push orPull",
+          "level": 1
+        },
+        {
+          "name": "Telekinetic Shield",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Pop Off",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Pop Off allows the user to generate sticky spheres from their head that can be plucked off painlessly. When one sphere is removed, another grows back almost instantly. These spheres adhere to any surface they touch (except the user), and their adhesive properties are unaffected by water.",
+      "weakness": "For every number of spheres removed equal to your Level × triple your Proficiency Bonus. This damage cannot be reduced or mitigated by any means. Additionally, your head suffers severe strain, imposing the Bleed condition, and your movement speed is reduced by 15 feet.",
+      "page": 20,
+      "abilities": [
+        {
+          "name": "StickyTrap",
+          "level": 1
+        },
+        {
+          "name": "Bounce Boost",
+          "level": 1
+        },
+        {
+          "name": "Grape Rush",
+          "level": 5
+        },
+        {
+          "name": "SuperGrape Rush",
+          "level": 6
+        }
+      ]
+    },
+    {
+      "name": "Rabbit",
+      "rarity": "Common",
+      "type": "Mutant",
+      "description": "The Rabbit Quirk endows the user with rabbit- like anatomy and abilities, enhancing their senses of hearing and smell.",
+      "weakness": "Each time you use a Luna Technique, you take 1d4 + half your proficiency bonus damage (rounded up) to your hp that cannot be reduced or prevented. If you use three or more Luna Techniques in the same round, you gain one level of Exhaustion at the end of your turn.",
+      "page": 40,
+      "abilities": [
+        {
+          "name": "Luna Fall",
+          "level": 1
+        },
+        {
+          "name": "LunaArc",
+          "level": 1
+        },
+        {
+          "name": "Rabbit Ring",
+          "level": 4
+        },
+        {
+          "name": "LunaTijeras",
+          "level": 7
+        },
+        {
+          "name": "Rabbit Rush",
+          "level": 11
+        }
+      ]
+    },
+    {
+      "name": "Radio Waves",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "This quirk allows the user to create a shockwave that can disable technology.",
+      "weakness": "None.",
+      "page": 44,
+      "abilities": [
+        {
+          "name": "Shockwave",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Razor Sharp",
+      "rarity": "Common",
+      "type": "Transformation",
+      "description": "Razor Sharp allows the user to produce large blades from their body.",
+      "weakness": "Prolonged use of Razor Sharp strains your muscles severely. After using the Quirk for more than one minute continuously, you must succeed on a DC 15 Constitution saving throw or take 1d12 true damage. Blade Strike.",
+      "page": 21,
+      "abilities": [
+        {
+          "name": "Blade Strike",
+          "level": 1
+        },
+        {
+          "name": "RazorSweep",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "Reflect",
+      "rarity": "Legendary",
+      "type": "Emitter",
+      "description": "Reflect allows the user to absorb incoming energy and redirect it back at the source. Whenever the user comes into contact with an attack, object, or creature, a spiraling wave of energy forms behind them, rebounding the attack.",
+      "weakness": "Sustained high-damage attacks are difficult to handle. If the user is hit by more than 5 attacks in a turn dealing 50 ormore damage each, the Quirk cannot reflect automatically. Along with this you cannot hold on to objects, creatures and weapons.",
+      "page": 46,
+      "abilities": []
+    },
+    {
+      "name": "Rewind",
+      "rarity": "Legendary",
+      "type": "Mutant",
+      "description": "Rewind grants you the power to reverse the state of a living being’s body to a previous point in time. This reversal manifests through a glowing horn that grows from your head when the Quirk is active. The horn’s size and light intensity increase with the strength and scope of your rewinding.",
+      "weakness": "Rewind can only affect living beings, and the user must consciously control the rate of reversal. Untrained or emotional use can cause catastrophic effects. When you activate your Rewind ability as an action or reaction, you must succeed on a DC 22 Wisdom saving throw.",
+      "page": 32,
+      "abilities": [
+        {
+          "name": "Hero",
+          "level": 8
+        }
+      ]
+    },
+    {
+      "name": "Rifle",
+      "rarity": "Uncommon",
+      "type": "Transformation",
+      "description": "Rifle allows the user to transform their arm into a semi-organic firearm. The weapon extends from the elbow, reinforced with sinew and bone, and generates bullets from the user’s own biological matter (hair, keratin, or similar).",
+      "weakness": "The rifle relies on the user’s body to generate ammunition. Using it too frequently can cause fatigue, and creating bullets consumes 1 inch of hair per shot. Maximum hair available at any time is 100 inches, regenerating 1 inch perhour, and fully restored on a long rest.",
+      "page": 43,
+      "abilities": []
+    },
+    {
+      "name": "Rivet Stab",
+      "rarity": "Very Rare",
+      "type": "Emitter",
+      "description": "Rivet Stab grants the user the ability to generate black tendrils marked with glowing red cracks. These tendrils can extend from the fingers, spine, or other parts of the body, allowing versatile offensive and defensive options.",
+      "weakness": "Tendrils that are hit become disabled and retract until the end of your next turn. Tendrils have limited durability and can be targeted instead of the user.",
+      "page": 42,
+      "abilities": [
+        {
+          "name": "Tendrils",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Scales",
+      "rarity": "Common",
+      "type": "Transformation",
+      "description": "Scales allows the user to form hard scales throughout their entire body, which they can either use as protective armor or fire off as projectiles. The generated scales resemble those of a reptile’s, being quite hard and sharp, capable of cutting through vines and damaging solid metal structures.",
+      "weakness": "The level of protection offered by the scales is inferior to the likes of Hardening or Steel, as the scales break off relatively easily after suffering a sufficiently strong impact.",
+      "page": 26,
+      "abilities": [
+        {
+          "name": "ScaleArmor",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Search allows the user to track multiple targets simultaneously, visualizing them as star-like vestiges that reveal locations, conditions, and weaknesses. This information is stored permanently, enabling the user to recognize individuals later by their Quirk Factor or DNA.",
+      "weakness": "Repeated use of Surveillance can mentally overwhelm you, making you susceptible to deception or false information.",
+      "page": 35,
+      "abilities": [
+        {
+          "name": "Surveillance",
+          "level": 1
+        },
+        {
+          "name": "MassTrack",
+          "level": 3
+        },
+        {
+          "name": "Persistent Insight",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "Size",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Size allows the user to change the dimensions of objects they touch.",
+      "weakness": "Size requires direct hand contact with all five fingers and cannot affect living creatures. Size Manipulation. You can alter the size of objects you touch. As an action, you can increase or decrease an object by one size category.",
+      "page": 22,
+      "abilities": []
+    },
+    {
+      "name": "Slice",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "The user of this quirk can manipulate their own hair, growing it at will, hardening it into blades, and shaping it into versatile forms for offense, defense, and mobility. Their hair is semi-sentient and acts as an extension of their will.",
+      "weakness": "",
+      "page": 54,
+      "abilities": [
+        {
+          "name": "Needle Storm",
+          "level": 1
+        },
+        {
+          "name": "HairBlades",
+          "level": 1
+        },
+        {
+          "name": "Defensive Shielding",
+          "level": 1
+        },
+        {
+          "name": "HairCage",
+          "level": 3
+        },
+        {
+          "name": "Grapple",
+          "level": 5
+        },
+        {
+          "name": "HairGuillotine",
+          "level": 8
+        }
+      ]
+    },
+    {
+      "name": "Softening",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "The Softening Quirk allows the user to alter the density of any solid material they touch, reducing it to a thick, fluid-like consistency similar to mud or liquid stone.",
+      "weakness": "Softening has no effect on living organisms or energy-based constructs. If the user is rendered unconscious or restrained, all softened terrain immediately reverts to its original solid form.",
+      "page": 25,
+      "abilities": [
+        {
+          "name": "Soften",
+          "level": 1
+        },
+        {
+          "name": "Softened Escape",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Solid Air",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Air Constructs allows the user to compress and shape air into tangible, invisible forms — barriers, platforms, and cages. These constructs are incredibly durable and versatile, capable of being shaped with precise focus and pressure control.",
+      "weakness": "The constructs are bound to the user’s focus and oxygen control. Each construct requires steady breathing and concentration — if the user takes damage while maintaining one, they must succeed on a Constitution saving throw (DC 10 + the number of damage dice rolled).",
+      "page": 24,
+      "abilities": [
+        {
+          "name": "Air Platform",
+          "level": 1
+        },
+        {
+          "name": "AirWall",
+          "level": 1
+        },
+        {
+          "name": "Air Cage",
+          "level": 6
+        }
+      ]
+    },
+    {
+      "name": "Somnambulist",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Somnambulist allows the user to emit a calming pheromone that lulls creatures into a deep, dreamlike sleep. Those affected drift helplessly into slumber, leaving them vulnerable and unaware of their surroundings.",
+      "weakness": "The aroma requires inhalation to take effect, making it ineffective against sealed helmets, filters, or creatures that don’t breathe. Overuse can dull the user’s senses, leaving them Stunned until the end of their next turn if they use this Quirk thrice in a row. Somnambulist.",
+      "page": 40,
+      "abilities": [
+        {
+          "name": "Somnambulist",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Soul",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Soul allows the user to manifest a small, bird-like creature (statblock below) that is deeply connected to their soul. This bird reflects the user’s inner emotions, making it difficult for the user to conceal their true feelings.",
+      "weakness": "If the bird is incapacitated or reduced to 0 hit points, the user feels a significant emotional burden. While the bird is down, the user suffers disadvantage on all saving throws and attack rolls until the bird is restored or the user completes a long rest.",
+      "page": 50,
+      "abilities": [
+        {
+          "name": "AssistiveActions",
+          "level": 1
+        },
+        {
+          "name": "Blinding",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Spatial Excursion",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Spatial Excursion allows the user to freely alter the position, orientation, and velocity of any object or creature within their line of sight.",
+      "weakness": "es. The Quirk requires direct line of sight to function —obstructions such as walls, smoke, or darkness prevent manipulation. Maintaining multiple targets taxes the user’s focus whenever they use Basic Control or take damage they must make a DC 13 Constitution check.",
+      "page": 63,
+      "abilities": [
+        {
+          "name": "Basic Control",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Spray Bottle Head",
+      "rarity": "Common",
+      "type": "Mutant",
+      "description": "Spray Bottle Head replaces the user’s head with a durable, nozzle-based container capable of producing and spraying stored liquids under pressure. The user may select one type of liquid to load into their head.",
+      "weakness": "The user can have no more than TWO Liquids stored at a time and cannot change the stored liquid until they complete a long rest, during which the reservoir fully flushes and refills. You have a limited number of sprays per rest equal to 3 + yourproficiency bonus + your Constitution modifier.",
+      "page": 74,
+      "abilities": [
+        {
+          "name": "Spray Bottle Head",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Spring Like Arms",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Spring Like Arms allow the user to store and release kinetic energy by coiling their muscles, functioning similarly to a coil spring. This ability enhances their physical attacks and provides a unique defensive mechanism.",
+      "weakness": "None Recoil:As you move 30 feet or more in a turn, you gain 1 charge. Each charge allows your next Kinetic Rebound attack to deal your normal unarmed damage plus 1d6 force damage per stored charge and adds 10 feet of knockback per charge.",
+      "page": 41,
+      "abilities": []
+    },
+    {
+      "name": "Steel",
+      "rarity": "Uncommon",
+      "type": "Transformation",
+      "description": "Steel gives the user the power to harden their body like steel. The Quirk protects them from most physical threats.",
+      "weakness": "Your Steel form can only endure a limited amount of damage before it breaks apart. Once this limit is reached, the Steel shell shatters, ending the effect and returning you to your normal state. Level Damage Absorption",
+      "page": 24,
+      "abilities": [
+        {
+          "name": "Re-Steel",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "Stress",
+      "rarity": "Very Rare",
+      "type": "Transformation",
+      "description": "Stress allows the user to convert anger, frustration, and tension into raw physical power. Black markings appear over enhanced areas of the body as strength and size increase. The user can focus on individual limbs or enhance their entire body simultaneously.",
+      "weakness": "This Quirk relies on negative emotions to function. Calm, peace, or relief reduces the user’s stress level, weakening its effects. To use Stress Build-Up as a bonus action, the user must roll a d20. On a 12 or higher, they can activate it; this DC decreases by 1 each level.",
+      "page": 48,
+      "abilities": []
+    },
+    {
+      "name": "Strong Arm",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Strong Arm allows the user to rotate and drive their shoulders explosively, delivering rapid, devastating punches in short bursts. Each strike generates enough force to knock opponents back, crush obstacles, and shatter barriers.",
+      "weakness": "Using this Quirk puts extreme strain on your muscles. It can only be used every other round. Repeated use without resting risks exhaustion. Each time you use Strong Arm without resting, make a DC 12 Constitution saving throw. On a failure, you gain 1 level of exhaustion.",
+      "page": 47,
+      "abilities": [
+        {
+          "name": "StrongArm",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Sugar Rush",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Sugar Rush allows the user to temporarily amplify their strength by consuming sugar. For every ten grams of sugar consumed, the user can enhance their strength for a short duration, becoming a powerhouse capable of devastating strikes and feats of strength.",
+      "weakness": "While Sugar Rush dramatically increases physical power, it also comes with severe drawbacks. After using the Quirk, the user suffers from hypoglycemia, reducing cognitive function and causing lethargy. Intelligence drops to 10, and you gain 3 levels of exhaustion.",
+      "page": 11,
+      "abilities": [
+        {
+          "name": "SugarKnuckle",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Super Regeneration",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Your body rapidly heals itself, recovering from injuries and restoring lost function with incredible speed.",
+      "weakness": "If you take more than 60 damage in a single round, your regeneration is partially suppressed reduced by 10. If you take over the Regenerative Burst damage within a single round, your regeneration is reduced by half per turn.",
+      "page": 45,
+      "abilities": [
+        {
+          "name": "Regenerative Burst",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Sword Kill",
+      "rarity": "Rare",
+      "type": "Transformation",
+      "description": "Sword Kill grants the user the ability to transform their arms into long, segmented, blade-like appendages that can extend, whip, and retract at incredible speed.",
+      "weakness": "The transformation puts immense strain on the user’s muscular and nervous systems. After using the extended swords for more than 5 consecutive turns, the user must succeed on a DC 13 Constitution saving throw at the end of each following turn or gain one level of exhaustion.",
+      "page": 56,
+      "abilities": [
+        {
+          "name": "Extendable Swords",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Tail",
+      "rarity": "Common",
+      "type": "Mutant",
+      "description": "Tail grants the user a prehensile appendage that extends from their lower back, enhancing their physical capabilities.",
+      "weakness": "The user’s tail is vulnerable to damage. Additionally, as a permanent mutation, it can make lying down or sitting comfortably challenging. Tail.",
+      "page": 8,
+      "abilities": [
+        {
+          "name": "Grapple",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Tape",
+      "rarity": "Uncommon",
+      "type": "Mutant",
+      "description": "Tape allows the user to eject strong adhesive tape from openings located on both elbows.",
+      "weakness": "While the tape is durable, it is not unbreakable. If the user expends too much tape, they risk suffering from dry skin. You can produce tape for up to 10 minutes; after this duration, you cannot generate more until you take a short rest to recover from the dryness.",
+      "page": 11,
+      "abilities": [
+        {
+          "name": "Grapple and Restrain",
+          "level": 1
+        },
+        {
+          "name": "Rescue Maneuver",
+          "level": 1
+        },
+        {
+          "name": "BarricadeTape",
+          "level": 1
+        },
+        {
+          "name": "TapeTrident",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Teleportaion",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "This Quirk enables the user to teleport themselves and any material or living being they are in contact with to a designated location within their line of sight.",
+      "weakness": "es. Teleportation requires line of sight. The user cannot teleport to areas they cannot directly see, including behind walls, inside objects, or into darkness that obscures vision. Additionally, to teleport another creature, physical contact is required at the moment of teleportation.",
+      "page": 64,
+      "abilities": []
+    },
+    {
+      "name": "Transform",
+      "rarity": "Rare",
+      "type": "Transformation",
+      "description": "Transform allows the user to perfectly replicate another person’s physical appearance and voice after consuming their blood. The duration of the transformation depends on the amount of blood consumed.",
+      "weakness": "Transform only replicates physical traits and voice, not knowledge, personality, or memories. Consuming blood tainted by Quirks or substances deals 1d6 necrotic damage per cup consumed.",
+      "page": 37,
+      "abilities": [
+        {
+          "name": "The user possesses two fangs",
+          "level": 1
+        },
+        {
+          "name": "Mimic",
+          "level": 3
+        },
+        {
+          "name": "True Mimic",
+          "level": 8
+        }
+      ]
+    },
+    {
+      "name": "Twin Impact",
+      "rarity": "Very Rare",
+      "type": "Emitter",
+      "description": "Twin Impact enables the user to unleash a second impact at the exact spot of any initial hit, significantly enhancing its force. This striking effect can be applied to both objects and living targets, creating a unique and powerful damage dynamic.",
+      "weakness": "To trigger the second impact, the user must have a clear line of sight to the initial impact site. Overuse of this quirk can lead to severe physical strain, causing exhaustion or injury. If the user is blind or otherwise unable to see the target, the quirk cannot be activated.",
+      "page": 23,
+      "abilities": [
+        {
+          "name": "Impact Echo",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Vibrate",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Vibrate grants the user the ability to generate and control vibrations or shockwaves that can travel through various mediums, including air, solids, and liquids. The user can manipulate the speed, strength, and frequency of these vibrations.",
+      "weakness": "The vibrations can affect allies as well as enemies. The user must be careful not to harm teammates in close proximity. Generating powerful vibrations requires physical exertion.",
+      "page": 57,
+      "abilities": [
+        {
+          "name": "Vibration Generation",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Vines",
+      "rarity": "Uncommon",
+      "type": "Mutant",
+      "description": "You can generate and control living vines from your body, manipulating them for offense, defense, and battlefield control.",
+      "weakness": "Your vines require water to grow effectively. You must remain wet for at least 4 hours per day if not their effectiveness is halved (range, damage, duration etc). Vines are vunarable to slashing, fire, or cold damage. Via Dolorosa.",
+      "page": 22,
+      "abilities": [
+        {
+          "name": "Via Dolorosa",
+          "level": 1
+        },
+        {
+          "name": "Crucifixion",
+          "level": 1
+        },
+        {
+          "name": "BigTree",
+          "level": 1
+        },
+        {
+          "name": "Faith Shield",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Voice",
+      "rarity": "Uncommon",
+      "type": "Emitter",
+      "description": "Voice allows the user to project their spoken words as tangible sonic phenomena, causing reality itself to respond to the meaning behind what is said. By vocalizing a single word or short phrase, the user manifests an effect tied to its intent.",
+      "weakness": "Every use places extreme strain on the vocal cords. You have Throat Hit Points = ½ yourmax HP. Throat damage scales with volume and ignores resistances.",
+      "page": 74,
+      "abilities": [
+        {
+          "name": "Volume Control",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Warp Gate",
+      "rarity": "Very Rare",
+      "type": "Emitter",
+      "description": "Warp Gate allows the user to create and manipulate a dark fog that serves as a portal. This fog can transport anything it touches to a designated nearby location. The user can also envelop themselves in the fog, obscuring their true form and using the portals for personal transport.",
+      "weakness": "To release the fog, a part of the user’s real body must be present, which exposes them to potential attacks. Additionally, the portals are coordinate-based, requiring the user to know the exact location where they wish to open them.",
+      "page": 38,
+      "abilities": [
+        {
+          "name": "Fog Shroud",
+          "level": 3
+        }
+      ]
+    },
+    {
+      "name": "Water Gun",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Water Gun allows the user to generate and fire pressurized streams of water from their hands or body. By compressing internal water output, the user can shift between light jets for control and extreme-pressure blasts capable of blasting through armor, launching enemies, or reshaping terrain.",
+      "weakness": "The Quirk depends on hydration. If the user is dehydrated, higher-pressure tiers become unstable or unavailable. Extreme cold can reduce output efficiency, while prolonged use risks internal strain and fatigue. Water Gun operates using Pressure Tiers.",
+      "page": 45,
+      "abilities": [
+        {
+          "name": "WaterGun",
+          "level": 1
+        },
+        {
+          "name": "Flow Control",
+          "level": 3
+        },
+        {
+          "name": "Pressure Regulation",
+          "level": 5
+        },
+        {
+          "name": "Hydro Burst",
+          "level": 10
+        }
+      ]
+    },
+    {
+      "name": "Wave Motion",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Wave Motion allows the user to convert their own vitality into energy and release it as powerful blast waves. The energy manifests as golden spiraling waves, and the user can control how much of their stamina to convert.",
+      "weakness": "The energy from this Quirk moves relatively slowly, making timing and positioning important. Overusing the Quirk by converting too much vitality can exhaust the user.",
+      "page": 34,
+      "abilities": [
+        {
+          "name": "Energy Boost",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Weather Manipulation",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "Weather Manipulation allows the user to control all forms of weather. They can summon storm clouds, lightning, and tornadoes, shaping the battlefield to their advantage.",
+      "weakness": "None.",
+      "page": 46,
+      "abilities": [
+        {
+          "name": "Thunder Strike",
+          "level": 1
+        },
+        {
+          "name": "Tornado",
+          "level": 1
+        },
+        {
+          "name": "Protective Barrier",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Weld",
+      "rarity": "Common",
+      "type": "Emitter",
+      "description": "Weld allows the user to merge objects—both organic and inorganic—at a subatomic level. When activated, two objects or creatures in contact with each other will become physically connected.",
+      "weakness": "Weld requires direct hand contact with at least two objects or creatures to activate. Weld Touch. As an action, you can touch two objects or creatures that are in contact with each other. Restrain and Fuse: The target must make a Strength saving throw against your Quirk save DC.",
+      "page": 21,
+      "abilities": [
+        {
+          "name": "WeldTouch",
+          "level": 1
+        },
+        {
+          "name": "Weldcraft",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "Whirlwind",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "You control intense winds and generate tornadoes at will. You can create spiraling gusts capable of tossing enemies, tearing structures apart, or sweeping entire battlefields.",
+      "weakness": "Requires focus and control. Strong winds may harm allies or destroy terrain. Using multiple tornadoes or extreme speeds in a single turn forces a DC 15 Constitution saving throw or you take 2d6 true damage from exhaustion. Gale Blast.",
+      "page": 33,
+      "abilities": [
+        {
+          "name": "Gale Blast",
+          "level": 1
+        },
+        {
+          "name": "Cyclone Reaction",
+          "level": 1
+        },
+        {
+          "name": "Tornado Formation",
+          "level": 5
+        },
+        {
+          "name": "HurricaneAssault",
+          "level": 8
+        }
+      ]
+    },
+    {
+      "name": "Zero Gravity",
+      "rarity": "Rare",
+      "type": "Emitter",
+      "description": "You can nullify gravity on solid objects by touching them with the pads of your fingertips. These objects become weightless, allowing you to manipulate them with ease. Despite losing weight, they retain their full mass and momentum.",
+      "weakness": "Your Quirk exerts tremendous pressure on your body each time you defy the pull of gravity. The longer you keep objects aloft—or the more weight you manipulate—the more your body begins to falter under the stress.",
+      "page": 7,
+      "abilities": [
+        {
+          "name": "Gravity Plus",
+          "level": 5
+        }
+      ]
+    }
+  ]
+}

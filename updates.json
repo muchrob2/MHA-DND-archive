@@ -16,6 +16,23 @@
   ],
   "updates": [
     {
+      "version": "1.0.263",
+      "build": 263,
+      "date": "2026-10-29",
+      "commit": "a5d0bfa",
+      "title": "Craft, write, and keep a record",
+      "tags": [
+        "toolkit",
+        "heropad"
+      ],
+      "items": [
+        "The Lab's workbench now builds equipment as well as abilities — and prices what you make against the real shop catalogue, so a 2d6 weapon comes out somewhere between the Tomahawk and the Kanabo.",
+        "Save anything you build to your own move list: roll it, edit it, or delete it. Your moves and your crafted equipment show up on your turn sheet alongside your quirk's abilities, marked as yours.",
+        "A new Your Record tab: the stats you are tracking against the DM's copy, with a flag where they disagree rather than one quietly overwriting the other, plus perks and a free note.",
+        "None of it is written into your character — it is kept beside it, so nothing you write can overwrite what your DM has."
+      ]
+    },
+    {
       "version": "1.0.262",
       "build": 262,
       "date": "2026-10-29",

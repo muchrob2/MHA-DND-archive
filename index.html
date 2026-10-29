@@ -87,82 +87,113 @@
 </header>
 
 <main>
+  <!-- A live glance at the table's state, filled over the REST API like the
+       session strip below it. Every row hides itself if there is nothing to
+       say, so a quiet dashboard is a dashboard with nothing happening rather
+       than one that failed to load. -->
+  <div id="glance" class="glance hidden"></div>
+
   <section class="hub-section">
-    <p class="section-label">Class 1-A</p>
-    <div class="tile-grid">
-      <a class="card-hero featured" data-accent="gold" href="CLASS-1A/relationships.html">
-        <div class="card-icon">🎓</div>
-        <div class="card-body">
-          <div class="card-title">Class 1-A Toolkit</div>
-          <div class="card-desc">Character profiles, stats, quirk mechanics, relationship tracker &amp; dice roller</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </a>
-      <a class="card-hero" data-accent="purple" href="CLASS-1A/board.html">
-        <div class="card-icon">⊞</div>
-        <div class="card-body">
-          <div class="card-title">Battle Board</div>
-          <div class="card-desc">Move your token on the tactical grid, measure range &amp; distance, and see terrain the DM has marked</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </a>
-      <a class="card-hero" data-accent="teal" href="shop.html">
-        <div class="card-icon">🛒</div>
-        <div class="card-body">
-          <div class="card-title">Shop</div>
-          <div class="card-desc">Every priced item in the handbook — weapons, gear, suits, parts &amp; services, bought with a character's Yen</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </a>
-      <a class="card-hero" data-accent="crimson" href="table.html">
-        <div class="card-icon">⚔</div>
-        <div class="card-body">
-          <div class="card-title">At the Table</div>
-          <div class="card-desc">The fight from your seat — whose turn it is, whether you are next, and what is wrong with everybody, live</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </a>
-      <a class="card-hero" data-accent="green" href="freetime.html">
-        <div class="card-icon">🗓</div>
-        <div class="card-body">
-          <div class="card-title">Free Time</div>
-          <div class="card-desc">The job board, your training slots, and what you spent them on — one slot, one check, one wage</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </a>
-      <a class="card-hero" data-accent="purple" href="lab.html">
-        <div class="card-icon">⚗</div>
-        <div class="card-body">
-          <div class="card-title">The Lab</div>
-          <div class="card-desc">Build an ability and see what it really does — range, average, hit chance, damage per use — and search every quirk in the campaign</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </a>
-      <a class="card-hero" data-accent="crimson" href="heat.html">
-        <div class="card-icon">🔥</div>
-        <div class="card-body">
-          <div class="card-title">Heat</div>
-          <div class="card-desc">How much attention Byakko are paying, who shows up at this level, what is coming — and who you have beaten</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </a>
-      <a class="card-hero" data-accent="teal" href="sheet.html">
-        <div class="card-icon">🖨</div>
-        <div class="card-body">
-          <div class="card-title">Character Sheet</div>
-          <div class="card-desc">Your character on one printable page — scores, saves, quirk abilities, what you're carrying and lines to write on</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </a>
-      <a class="card-hero" data-accent="blue" href="heropad.html">
-        <div class="card-icon">📱</div>
-        <div class="card-body">
-          <div class="card-title">Heropad</div>
-          <div class="card-desc">The phone your character carries — a home screen of apps, with a wallpaper and look that's yours alone</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </a>
+    <div class="hub-head">
+      <p class="section-label">Class 1-A</p>
+      <p class="section-sub">Everything a student can open.</p>
     </div>
+      <div class="hub-group">
+        <div class="hub-group-head">
+          <h3 class="hub-group-name">At the table</h3>
+          <p class="hub-group-hint">Open while you are playing.</p>
+        </div>
+        <div class="tile-grid">
+          <a class="card-hero" data-accent="crimson" href="table.html">
+                  <div class="card-icon">⚔</div>
+                  <div class="card-body">
+                    <div class="card-title">At the Table</div>
+                    <div class="card-desc">The fight from your seat — whose turn it is, whether you are next, and what is wrong with everybody, live</div>
+                  </div>
+                  <div class="card-arrow">→</div>
+                </a>
+          <a class="card-hero" data-accent="purple" href="CLASS-1A/board.html">
+                  <div class="card-icon">⊞</div>
+                  <div class="card-body">
+                    <div class="card-title">Battle Board</div>
+                    <div class="card-desc">Move your token on the tactical grid, measure range &amp; distance, and see terrain the DM has marked</div>
+                  </div>
+                  <div class="card-arrow">→</div>
+                </a>
+          <a class="card-hero" data-accent="purple" href="lab.html">
+                  <div class="card-icon">⚗</div>
+                  <div class="card-body">
+                    <div class="card-title">The Lab</div>
+                    <div class="card-desc">Build an ability and see what it really does — range, average, hit chance, damage per use — and search every quirk in the campaign</div>
+                  </div>
+                  <div class="card-arrow">→</div>
+                </a>
+        </div>
+      </div>
+      <div class="hub-group">
+        <div class="hub-group-head">
+          <h3 class="hub-group-name">Your character</h3>
+          <p class="hub-group-hint">Who they are, what they carry, what they can do.</p>
+        </div>
+        <div class="tile-grid">
+          <a class="card-hero featured" data-accent="gold" href="CLASS-1A/relationships.html">
+                  <div class="card-icon">🎓</div>
+                  <div class="card-body">
+                    <div class="card-title">Class 1-A Toolkit</div>
+                    <div class="card-desc">Character profiles, stats, quirk mechanics, relationship tracker &amp; dice roller</div>
+                  </div>
+                  <div class="card-arrow">→</div>
+                </a>
+          <a class="card-hero" data-accent="blue" href="heropad.html">
+                  <div class="card-icon">📱</div>
+                  <div class="card-body">
+                    <div class="card-title">Heropad</div>
+                    <div class="card-desc">The phone your character carries — a home screen of apps, with a wallpaper and look that's yours alone</div>
+                  </div>
+                  <div class="card-arrow">→</div>
+                </a>
+          <a class="card-hero" data-accent="teal" href="sheet.html">
+                  <div class="card-icon">🖨</div>
+                  <div class="card-body">
+                    <div class="card-title">Character Sheet</div>
+                    <div class="card-desc">Your character on one printable page — scores, saves, quirk abilities, what you're carrying and lines to write on</div>
+                  </div>
+                  <div class="card-arrow">→</div>
+                </a>
+          <a class="card-hero" data-accent="teal" href="shop.html">
+                  <div class="card-icon">🛒</div>
+                  <div class="card-body">
+                    <div class="card-title">Shop</div>
+                    <div class="card-desc">Every priced item in the handbook — weapons, gear, suits, parts &amp; services, bought with a character's Yen</div>
+                  </div>
+                  <div class="card-arrow">→</div>
+                </a>
+        </div>
+      </div>
+      <div class="hub-group">
+        <div class="hub-group-head">
+          <h3 class="hub-group-name">Between sessions</h3>
+          <p class="hub-group-hint">What you do with the time, and how much attention it earns you.</p>
+        </div>
+        <div class="tile-grid">
+          <a class="card-hero" data-accent="green" href="freetime.html">
+                  <div class="card-icon">🗓</div>
+                  <div class="card-body">
+                    <div class="card-title">Free Time</div>
+                    <div class="card-desc">The job board, your training slots, and what you spent them on — one slot, one check, one wage</div>
+                  </div>
+                  <div class="card-arrow">→</div>
+                </a>
+          <a class="card-hero" data-accent="crimson" href="heat.html">
+                  <div class="card-icon">🔥</div>
+                  <div class="card-body">
+                    <div class="card-title">Heat</div>
+                    <div class="card-desc">How much attention Byakko are paying, who shows up at this level, what is coming — and who you have beaten</div>
+                  </div>
+                  <div class="card-arrow">→</div>
+                </a>
+        </div>
+      </div>
   </section>
 
   <div id="dm-only">
@@ -171,78 +202,103 @@
          is the DM's note to themselves. -->
     <div id="last-session" class="hidden"></div>
     <section class="hub-section">
-      <p class="section-label">Campaign <span class="dm-flag">DM only</span></p>
-      <div class="tile-grid">
-        <a class="card-hero" data-accent="crimson" href="CLASS-1A/encounter.html">
-          <div class="card-icon">⚔</div>
-          <div class="card-body">
-            <div class="card-title">Encounter Manager</div>
-            <div class="card-desc">Initiative tracker, turn mode &amp; tactical board for running combat</div>
-          </div>
-          <div class="card-arrow">→</div>
-        </a>
-        <a class="card-hero" data-accent="green" href="characters.html">
-          <div class="card-icon">🗂</div>
-          <div class="card-body">
-            <div class="card-title">Characters</div>
-            <div class="card-desc">Browse every character — students, teachers &amp; villains — with search, filters &amp; a creator</div>
-          </div>
-          <div class="card-arrow">→</div>
-        </a>
-        <a class="card-hero" data-accent="blue" href="campaign-overview.html">
-          <div class="card-icon">🗺</div>
-          <div class="card-body">
-            <div class="card-title">Campaign Overview</div>
-            <div class="card-desc">Story arcs, session notes, world reference, teachers, villains &amp; DM scripts</div>
-          </div>
-          <div class="card-arrow">→</div>
-        </a>
-        <a class="card-hero" data-accent="gold" href="campaigns.html">
-          <div class="card-icon">📚</div>
-          <div class="card-body">
-            <div class="card-title">Campaigns</div>
-            <div class="card-desc">Every campaign laid out like a published adventure module — chapters, read-aloud text &amp; DM notes</div>
-          </div>
-          <div class="card-arrow">→</div>
-        </a>
-        <a class="card-hero" data-accent="purple" href="loot.html">
-          <div class="card-icon">💎</div>
-          <div class="card-body">
-            <div class="card-title">Loot Tables</div>
-            <div class="card-desc">Eight rollable tables of unique items — the backstreets, the four societies, the support lab &amp; free time</div>
-          </div>
-          <div class="card-arrow">→</div>
-        </a>
-        <a class="card-hero" data-accent="teal" href="party.html">
-          <div class="card-icon">👥</div>
-          <div class="card-body">
-            <div class="card-title">Party at a Glance</div>
-            <div class="card-desc">Every character as one sortable table — AC, HP, passive scores and all seven modifiers, with the party's spread</div>
-          </div>
-          <div class="card-arrow">→</div>
-        </a>
-        <a class="card-hero" data-accent="gold" href="tonight.html">
-          <div class="card-icon">🕘</div>
-          <div class="card-body">
-            <div class="card-title">Run Sheet</div>
-            <div class="card-desc">The one screen to have open while running — where you left off, the chapter's running order, the side quests, the Heat, and somewhere to write</div>
-          </div>
-          <div class="card-arrow">→</div>
-        </a>
-        <a class="card-hero" data-accent="amber" href="session-log.html">
-          <div class="card-icon">📓</div>
-          <div class="card-body">
-            <div class="card-title">Session Log</div>
-            <div class="card-desc">What actually happened at the table — recaps, XP awarded &amp; loot gained</div>
-          </div>
-          <div class="card-arrow">→</div>
-        </a>
+      <div class="hub-head">
+        <p class="section-label">Campaign <span class="dm-flag">DM only</span></p>
+        <p class="section-sub">Yours. Players see none of this.</p>
+      </div>
+      <div class="hub-group">
+        <div class="hub-group-head">
+          <h3 class="hub-group-name">Running a session</h3>
+          <p class="hub-group-hint">The screens you want open on the night.</p>
+        </div>
+        <div class="tile-grid">
+          <a class="card-hero" data-accent="gold" href="tonight.html">
+                    <div class="card-icon">🕘</div>
+                    <div class="card-body">
+                      <div class="card-title">Run Sheet</div>
+                      <div class="card-desc">The one screen to have open while running — where you left off, the chapter's running order, the side quests, the Heat, and somewhere to write</div>
+                    </div>
+                    <div class="card-arrow">→</div>
+                  </a>
+          <a class="card-hero" data-accent="crimson" href="CLASS-1A/encounter.html">
+                    <div class="card-icon">⚔</div>
+                    <div class="card-body">
+                      <div class="card-title">Encounter Manager</div>
+                      <div class="card-desc">Initiative tracker, turn mode &amp; tactical board for running combat</div>
+                    </div>
+                    <div class="card-arrow">→</div>
+                  </a>
+          <a class="card-hero" data-accent="teal" href="party.html">
+                    <div class="card-icon">👥</div>
+                    <div class="card-body">
+                      <div class="card-title">Party at a Glance</div>
+                      <div class="card-desc">Every character as one sortable table — AC, HP, passive scores and all seven modifiers, with the party's spread</div>
+                    </div>
+                    <div class="card-arrow">→</div>
+                  </a>
+          <a class="card-hero" data-accent="purple" href="loot.html">
+                    <div class="card-icon">💎</div>
+                    <div class="card-body">
+                      <div class="card-title">Loot Tables</div>
+                      <div class="card-desc">Eight rollable tables of unique items — the backstreets, the four societies, the support lab &amp; free time</div>
+                    </div>
+                    <div class="card-arrow">→</div>
+                  </a>
+        </div>
+      </div>
+      <div class="hub-group">
+        <div class="hub-group-head">
+          <h3 class="hub-group-name">The campaign</h3>
+          <p class="hub-group-hint">Everything written down, and everything that happened.</p>
+        </div>
+        <div class="tile-grid">
+          <a class="card-hero" data-accent="gold" href="campaigns.html">
+                    <div class="card-icon">📚</div>
+                    <div class="card-body">
+                      <div class="card-title">Campaigns</div>
+                      <div class="card-desc">Every campaign laid out like a published adventure module — chapters, read-aloud text &amp; DM notes</div>
+                    </div>
+                    <div class="card-arrow">→</div>
+                  </a>
+          <a class="card-hero" data-accent="blue" href="campaign-overview.html">
+                    <div class="card-icon">🗺</div>
+                    <div class="card-body">
+                      <div class="card-title">Campaign Overview</div>
+                      <div class="card-desc">Story arcs, session notes, world reference, teachers, villains &amp; DM scripts</div>
+                    </div>
+                    <div class="card-arrow">→</div>
+                  </a>
+          <a class="card-hero" data-accent="green" href="characters.html">
+                    <div class="card-icon">🗂</div>
+                    <div class="card-body">
+                      <div class="card-title">Characters</div>
+                      <div class="card-desc">Browse every character — students, teachers &amp; villains — with search, filters &amp; a creator</div>
+                    </div>
+                    <div class="card-arrow">→</div>
+                  </a>
+          <a class="card-hero" data-accent="amber" href="session-log.html">
+                    <div class="card-icon">📓</div>
+                    <div class="card-body">
+                      <div class="card-title">Session Log</div>
+                      <div class="card-desc">What actually happened at the table — recaps, XP awarded &amp; loot gained</div>
+                    </div>
+                    <div class="card-arrow">→</div>
+                  </a>
+        </div>
       </div>
     </section>
   </div>
+  <!-- /dm-only — the end of the DM block, marked so a check does not have to
+       guess it. Four verifiers slice the page here to prove a player card is
+       outside this block; two of them used to anchor on the LABEL of the
+       section below, and renaming it from "Rulebooks" to "Reference" broke
+       all of them at once. -->
 
   <section class="hub-section">
-    <p class="section-label">Rulebooks</p>
+    <div class="hub-head">
+      <p class="section-label">Reference</p>
+      <p class="section-sub">The rules, summarised and in full.</p>
+    </div>
     <div class="card-row">
       <a class="card-sm accent-blue" href="rules.html">
         <span class="card-sm-icon">📐</span>
@@ -263,7 +319,10 @@
   </section>
 
   <section class="hub-section">
-    <p class="section-label">This Toolkit</p>
+    <div class="hub-head">
+      <p class="section-label">This Toolkit</p>
+      <p class="section-sub">What has changed, and when.</p>
+    </div>
     <div class="card-row">
       <a class="card-sm" href="updates.html">
         <span class="card-sm-icon">🆕</span>

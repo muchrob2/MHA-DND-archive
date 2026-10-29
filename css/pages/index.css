@@ -322,9 +322,46 @@ header h1 em {
 }
 .switch-role-btn:hover { color: var(--accent-text); border-color: var(--accent); }
 
-main { max-width: 1120px; margin: 0 auto; padding: 30px 32px 72px; }
+main { max-width: 1180px; margin: 0 auto; padding: 34px 32px 90px; }
 
-.hub-section + .hub-section { margin-top: 8px; }
+.hub-section + .hub-section { margin-top: 52px; }
+
+/* ── Section and group headings ──
+   A section is "Class 1-A" or "Campaign". A group inside it is "At the
+   table" or "Between sessions" — the cards are grouped by WHEN you use
+   them, because that is how anybody actually reaches for them. */
+.hub-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 26px;
+  border-bottom: 1px solid var(--border);
+}
+.section-sub {
+  margin: 0;
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+}
+
+.hub-group + .hub-group { margin-top: 38px; }
+.hub-group-head { margin-bottom: 13px; }
+.hub-group-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 400;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.hub-group-hint {
+  margin: 3px 0 0;
+  font-size: var(--fs-2xs);
+  line-height: 1.5;
+  color: var(--text-dim);
+}
 
 /* the "DM only" marker sitting inside the section heading */
 .dm-flag {
@@ -350,8 +387,8 @@ main { max-width: 1120px; margin: 0 auto; padding: 30px 32px 72px; }
    ════════════════════════════════════════════════════════════ */
 .tile-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 16px;
 }
 
 /* Per-destination accent, consumed by the icon, title, spine, hover
@@ -374,8 +411,8 @@ main { max-width: 1120px; margin: 0 auto; padding: 30px 32px 72px; }
   --tile: var(--accent);
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 18px 20px;
+  gap: 16px;
+  padding: 20px 22px;
   text-decoration: none;
   color: inherit;
   background:
@@ -502,7 +539,11 @@ main { max-width: 1120px; margin: 0 auto; padding: 30px 32px 72px; }
   .header-inner { flex-wrap: wrap; }
   .switch-role-btn { order: 3; width: 100%; margin-left: 0; text-align: center; }
 
-  .tile-grid { gap: 9px; }
+  .tile-grid { gap: 10px; }
+  main { padding: 22px 18px 64px; }
+  .hub-section + .hub-section { margin-top: 36px; }
+  .hub-group + .hub-group { margin-top: 26px; }
+  .hub-head { margin-bottom: 20px; }
 
   /* Compact cards: the arrow is dead weight at this width, and the
      description earns more from two clean lines than from four cramped
@@ -589,4 +630,62 @@ main { max-width: 1120px; margin: 0 auto; padding: 30px 32px 72px; }
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--amber-text, #F2D08A);
+}
+
+/* ── The glance strip ──
+   Whether a fight is running and how much attention Byakko are paying,
+   above everything else, because those are the two things worth knowing
+   before you open anything. Each row hides itself when there is nothing
+   to say, so an empty strip is an absent strip. */
+.glance {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+  margin-bottom: 34px;
+}
+.glance.hidden { display: none; }
+.glance-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 14px 17px;
+  text-decoration: none;
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: var(--radius);
+  transition: border-color var(--dur-fast), background var(--dur-fast);
+}
+.glance-item:hover { background: var(--surface2); }
+.glance-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.glance-value {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  line-height: 1.1;
+  letter-spacing: .02em;
+  color: var(--text);
+}
+
+/* A fight in progress, and the three Heat bands. The colour is the whole
+   point of the strip: you should know the shape of the evening before you
+   have read a word of it. */
+.glance-item.mood-live  { border-left-color: var(--primary); }
+.glance-item.mood-live .glance-value { color: var(--primary-text); }
+.glance-item.mood-quiet { border-left-color: var(--border-strong); }
+.glance-item.mood-warm  { border-left-color: var(--amber); }
+.glance-item.mood-warm .glance-value { color: var(--amber-text); }
+.glance-item.mood-hot   { border-left-color: var(--red); }
+.glance-item.mood-hot .glance-value { color: var(--red-text); }
+.glance-item.mood-hot:hover { border-color: var(--red); }
+
+@media (max-width: 720px) {
+  .glance { gap: 8px; margin-bottom: 24px; }
+  .glance-item { padding: 11px 14px; }
 }

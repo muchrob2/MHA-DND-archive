@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The run sheet — one screen to have open while running a session of the MHA D&D campaign.">
+<meta name="theme-color" content="#08090D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Run Sheet — MHA D&D</title>
+<link rel="preload" href="css/fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/auth-widget.css">
+<link rel="stylesheet" href="css/pages/tonight.css">
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+</head>
+<body>
+
+<!-- DM side. Everything on it already existed somewhere on this site and was
+     in five different places; this is the one screen to have open while
+     actually running. The "next time" note from the session log appears here
+     and nowhere a player can reach — see scripts/verify-heropad.js. -->
+<nav id="topnav">
+  <a id="back-btn" href="index.html">← Dashboard</a>
+  <span class="nav-title">Run Sheet</span>
+  <div class="nav-right"></div>
+</nav>
+
+<div id="panel">
+  <div class="page-heading">Tonight</div>
+  <div class="page-sub">Where you left off, what is in this chapter, how hot the backstreets are, and somewhere to write.</div>
+
+  <div id="rs-pickers"></div>
+
+  <section class="rs-section">
+    <h2 class="rs-h2">Where you left off</h2>
+    <div id="rs-last"></div>
+  </section>
+
+  <section class="rs-section">
+    <h2 class="rs-h2">Notes for tonight</h2>
+    <div id="rs-notes-wrap"></div>
+  </section>
+
+  <section class="rs-section">
+    <h2 class="rs-h2">The running order</h2>
+    <div id="rs-order"></div>
+  </section>
+
+  <section class="rs-section">
+    <h2 class="rs-h2">Side quests on offer</h2>
+    <div id="rs-quests"></div>
+  </section>
+
+  <section class="rs-section">
+    <h2 class="rs-h2">Heat</h2>
+    <div id="rs-heat"></div>
+  </section>
+
+  <section class="rs-section">
+    <h2 class="rs-h2">Encounters built for this</h2>
+    <div id="rs-encounters"></div>
+  </section>
+
+  <p class="rs-foot">
+    <span id="rs-source"></span>
+    Nothing here is a second copy of anything: the running order and the side quests are the
+    campaign's own text, the recap is the session log, the Heat is the Heat track, and the
+    encounters are the presets the Encounter Manager loads. Change any of them in its own
+    place and this page follows.
+  </p>
+</div>
+
+<!-- The Heat bands, so this page can say who turns up without a second copy
+     of the table. board-prefabs.js is loaded for BOARD_MAPS alone — the
+     labels for the preset maps the encounter groups name. -->
+<script src="byakko-data.js"></script>
+<script src="CLASS-1A/board-prefabs.js"></script>
+<script src="tonight.js"></script>
+</body>
+</html>

@@ -165,61 +165,133 @@ function boot({ fetchImpl } = {}) {
     !/Authorization/i.test(src));
 }
 
-/* ── The grouping ───────────────────────────────────────────────────
-   The hub reached seventeen cards in two undifferentiated grids — nine in
-   one — and at that size a grid is a wall: nothing for the eye to land on,
-   and every card has to be read. They are grouped by WHEN you use them now,
-   and the thing worth guarding is that the grouping stays complete: a card
-   added to the page and not to a group would simply not appear.
+/* ── The tiles ──────────────────────────────────────────────────────
+   The hub has been through three shapes: one column of near-identical rows,
+   then a grid of horizontal cards with an emoji and twenty words each, and
+   now a vertical tile with a line icon and a few words. What is worth
+   guarding is the same each time — every destination reachable, grouped,
+   once, and pointing somewhere real — plus the two things this shape is
+   FOR: short copy, and one lead tile per group so the eye has a start.
    ─────────────────────────────────────────────────────────────────── */
 {
   const page = read('index.html');
+  const css = read('css/pages/index.css');
+
+  // Sliced on the group boundary. Matching a balanced </div></div> stopped
+  // at the first NESTED pair, inside a card, and reported twelve of
+  // seventeen as orphans.
   const groups = page.split('<div class="hub-group">').slice(1).map((chunk) => {
-    const end = chunk.indexOf('</section>');
-    return [null, end === -1 ? chunk : chunk.slice(0, end)];
+    const cut = chunk.indexOf('</section>');
+    return cut === -1 ? chunk : chunk.slice(0, cut);
   });
-  check('the cards are grouped rather than in one wall of a grid',
+  check('the tiles are grouped rather than in one wall of a grid',
     groups.length >= 5, groups.length + ' groups');
 
-  const named = [...page.matchAll(/hub-group-name">([^<]+)</g)].map(m => m[1]);
-  check('every group is named',
-    named.length === groups.length, named.join(', '));
-  check('and each one says what it is for, because a label alone is not a reason',
-    (page.match(/hub-group-hint">/g) || []).length === groups.length);
+  // A group is named unless it is a section's only group — Reference has
+  // four tiles under one heading and does not need a second one.
+  const named = groups.filter(g => /hub-group-name">/.test(g));
+  check('every group that needs a name has one',
+    named.length >= 5, named.length + ' named of ' + groups.length);
+  check('and every named group says what it is for',
+    named.every(g => /hub-group-hint">[^<]{10,}/.test(g)),
+    'a label on its own is not a reason to look');
+  const groupNames = [...page.matchAll(/hub-group-name">([^<]+)</g)].map(m => m[1]);
   check('the groups are the ones a player and a DM actually reach for',
     ['At the table', 'Your character', 'Between sessions',
-      'Running a session', 'The campaign'].every(n => named.includes(n)),
-    named.join(', '));
+      'Running a session', 'The campaign'].every(n => groupNames.includes(n)),
+    groupNames.join(', '));
 
-  // Every hero card has to be inside a group, or it is on the page and in
-  // no grid — which renders nothing.
-  const allCards = [...page.matchAll(/<a class="card-hero[^"]*"[^>]*?href="([^"]+)"/g)].map(m => m[1]);
-  const grouped = groups.flatMap(g =>
-    [...g[1].matchAll(/<a class="card-hero[^"]*"[^>]*?href="([^"]+)"/g)].map(m => m[1]));
-  const orphan = allCards.filter(h => !grouped.includes(h));
-  check('no card is on the page but outside every group',
-    orphan.length === 0, orphan.join(', '));
+  const TILE = /<a class="tile[^"]*"[^>]*?href="([^"]+)"/g;
+  const allTiles = [...page.matchAll(TILE)].map(m => m[1]);
+  const grouped = groups.flatMap(g => [...g.matchAll(TILE)].map(m => m[1]));
+  check('no tile is on the page but outside every group',
+    allTiles.filter(h => !grouped.includes(h)).length === 0,
+    allTiles.filter(h => !grouped.includes(h)).join(', '));
   check('and none is listed twice',
     new Set(grouped).size === grouped.length,
     grouped.filter((h, i) => grouped.indexOf(h) !== i).join(', '));
-  check('there are as many cards as there are pages to reach',
-    allCards.length >= 16, allCards.length + ' cards');
+  check('there are as many tiles as there are places to go',
+    allTiles.length >= 20, allTiles.length + ' tiles');
 
-  // Every destination has to exist. A card pointing at a page that is not
-  // there is the one dashboard fault a reader finds before the DM does.
-  const missing = allCards.concat(
-    [...page.matchAll(/<a class="card-sm[^"]*"[^>]*?href="([^"]+)"/g)].map(m => m[1]))
+  const missing = allTiles
     .map(h => decodeURIComponent(h.split('#')[0]))
     .filter(h => !/^https?:/.test(h))
     .filter(h => !fs.existsSync(path.join(repoRoot, h)));
-  check('every card points at a page that exists', missing.length === 0, missing.join(', '));
+  check('every tile points at a page that exists', missing.length === 0, missing.join(', '));
 
-  // The split that matters: a player must not see the DM's cards.
+  /* the shape of a tile */
+  const tiles = [...page.matchAll(/<a class="tile[^"]*"[^>]*?>([\s\S]*?)<\/a>/g)].map(m => m[0]);
+  check('every tile has an icon, a name and a blurb',
+    tiles.every(t => /class="tile-icon"/.test(t) && /tile-name">[^<]+</.test(t)
+      && /tile-blurb">[^<]+</.test(t)),
+    tiles.filter(t => !(/class="tile-icon"/.test(t) && /tile-name">[^<]+</.test(t)
+      && /tile-blurb">[^<]+</.test(t))).length + ' incomplete');
+
+  // The point of this shape. The old cards ran to twenty words each and
+  // seventeen of those read as a page of prose pretending to be a menu.
+  const blurbs = [...page.matchAll(/tile-blurb">([^<]+)</g)].map(m => m[1].trim());
+  const wordy = blurbs.filter(b => b.split(/\s+/).length > 7);
+  check('a blurb is a few words, not a sentence',
+    wordy.length === 0, wordy.join(' | '));
+  check('and every tile has one', blurbs.length === allTiles.length,
+    `${blurbs.length} blurbs for ${allTiles.length} tiles`);
+
+  // The hierarchy: without a lead, every tile had equal weight.
+  const leadsPerGroup = groups.map(g => (g.match(/class="tile is-lead"/g) || []).length);
+  check('each group of three or more has exactly one lead tile',
+    groups.every((g, i) => {
+      const n = [...g.matchAll(TILE)].length;
+      return n < 3 ? leadsPerGroup[i] <= 1 : leadsPerGroup[i] === 1;
+    }), JSON.stringify(leadsPerGroup));
+  check('and only the lead carries a second line',
+    (page.match(/tile-more">/g) || []).length === leadsPerGroup.reduce((a, b) => a + b, 0),
+    'everything else is a few words and nothing more');
+
+  /* icons, not emoji */
+  check('every icon is an inline SVG on one stroke weight',
+    (page.match(/class="tile-icon"/g) || []).length === allTiles.length
+    && /\.tile-icon[^}]*stroke-width: 1\.5/s.test(css));
+  check('and there is no emoji left anywhere on the dashboard',
+    !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(page),
+    (page.match(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu) || []).join(' ')
+    + ' — they were at wildly different weights and brought their own colours '
+    + 'into a frame that was already tinted');
+  check('the role screen and the header use the same set',
+    /<svg class="role-btn-icon"/.test(page) && /<svg class="header-icon"/.test(page),
+    'the role screen is the first thing anybody sees');
+  check('and their styles are written for an SVG rather than for text',
+    !/\.role-btn-icon[^}]*font-size/s.test(css) && !/\.header-icon[^}]*font-size/s.test(css));
+  const icons = [...page.matchAll(/<svg class="tile-icon"[^>]*>([\s\S]*?)<\/svg>/g)].map(m => m[1]);
+  check('no two tiles share an icon',
+    new Set(icons).size === icons.length,
+    (icons.length - new Set(icons).size) + ' duplicated');
+
+  /* contrast and room, which is what was asked for */
+  check('a tile sits two steps off the page, not one',
+    /\.tile \{[^}]*background: var\(--surface2\)/s.test(css),
+    'in a palette this dark a card needs contrast rather than a gradient');
+  check('and the decoration it used to need is gone',
+    !/\.tile \{[^}]*clip-path/s.test(css) && !/\.tile \{[^}]*drop-shadow/s.test(css));
+  check('the sections are given room rather than eight pixels',
+    (() => {
+      const m = css.match(/\.hub-section \+ \.hub-section \{ margin-top: (\d+)px/);
+      return m && Number(m[1]) >= 32;
+    })(), (css.match(/\.hub-section \+ \.hub-section \{ margin-top: (\d+)px/) || [])[1] + 'px');
+  for (const sel of ['.hub-head', '.hub-group-name', '.hub-group-hint', '.section-sub',
+    '.tile:hover', '.tile:focus-visible', '.tile.is-lead']) {
+    check(`${sel} is styled`, css.includes(sel));
+  }
+  check('a tile is reachable and visible from the keyboard',
+    /\.tile:focus-visible \{ outline:/.test(css));
+  check('no rule is left behind for a class the dashboard no longer has',
+    !/card-hero|card-sm/.test(css) && !/card-hero/.test(read('css/manga.css')),
+    'a selector that can never match is a stylesheet nobody can reason about');
+
+  /* the split that matters */
   const dmStart = page.indexOf('<div id="dm-only">');
-  // Structural, not a label — see the note in verify-rules.js.
   const dmEnd = page.indexOf('<!-- /dm-only');
   check('the DM block carries an explicit end marker',
-    dmEnd > page.indexOf('<div id="dm-only">'),
+    dmEnd > dmStart,
     'without it indexOf gives -1 and slice(start, -1) runs to the end of the '
     + 'page, so the "DM block" swallows the whole dashboard — which is how '
     + 'three checks in three files broke at once');
@@ -231,16 +303,6 @@ function boot({ fetchImpl } = {}) {
   for (const playerPage of ['table.html', 'lab.html', 'heat.html', 'freetime.html',
     'sheet.html', 'heropad.html', 'shop.html', 'CLASS-1A/board.html']) {
     check(`${playerPage} is not`, !dmBlock.includes('href="' + playerPage + '"'));
-  }
-
-  const css = read('css/pages/index.css');
-  check('the sections are given room rather than eight pixels',
-    (() => {
-      const m = css.match(/\.hub-section \+ \.hub-section \{ margin-top: (\d+)px/);
-      return m && Number(m[1]) >= 32;
-    })(), (css.match(/\.hub-section \+ \.hub-section \{ margin-top: (\d+)px/) || [])[1] + 'px');
-  for (const sel of ['.hub-head', '.hub-group-name', '.hub-group-hint', '.section-sub']) {
-    check(`${sel} is styled`, css.includes(sel));
   }
 }
 

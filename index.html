@@ -27,12 +27,12 @@
   <div class="role-sub">Who are you?</div>
   <div class="role-buttons">
     <button type="button" class="role-btn player" onclick="chooseRole('player')" aria-label="Continue as Player">
-      <span class="role-btn-icon">🎓</span>
+      <svg class="role-btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5z"/><path d="M6 10.5V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-5.5"/><path d="M22 8v6"/></svg>
       <span class="role-btn-label">Player</span>
       <span class="role-btn-desc">Access your character &amp; class tools</span>
     </button>
     <button type="button" class="role-btn dm" onclick="showPin()" aria-label="Continue as DM, requires PIN">
-      <span class="role-btn-icon">⚡</span>
+      <svg class="role-btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>
       <span class="role-btn-label">DM</span>
       <span class="role-btn-desc">Full dashboard including campaign</span>
     </button>
@@ -70,7 +70,7 @@
 <div id="app">
 <header>
   <div class="header-inner">
-    <div class="header-icon">⚡</div>
+    <svg class="header-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>
     <div class="header-text">
       <div class="header-label" id="header-label">U.A. High School</div>
       <h1>My Hero Academia <em>D&amp;D</em></h1>
@@ -98,102 +98,77 @@
       <p class="section-label">Class 1-A</p>
       <p class="section-sub">Everything a student can open.</p>
     </div>
-      <div class="hub-group">
-        <div class="hub-group-head">
-          <h3 class="hub-group-name">At the table</h3>
-          <p class="hub-group-hint">Open while you are playing.</p>
-        </div>
-        <div class="tile-grid">
-          <a class="card-hero" data-accent="crimson" href="table.html">
-                  <div class="card-icon">⚔</div>
-                  <div class="card-body">
-                    <div class="card-title">At the Table</div>
-                    <div class="card-desc">The fight from your seat — whose turn it is, whether you are next, and what is wrong with everybody, live</div>
-                  </div>
-                  <div class="card-arrow">→</div>
-                </a>
-          <a class="card-hero" data-accent="purple" href="CLASS-1A/board.html">
-                  <div class="card-icon">⊞</div>
-                  <div class="card-body">
-                    <div class="card-title">Battle Board</div>
-                    <div class="card-desc">Move your token on the tactical grid, measure range &amp; distance, and see terrain the DM has marked</div>
-                  </div>
-                  <div class="card-arrow">→</div>
-                </a>
-          <a class="card-hero" data-accent="purple" href="lab.html">
-                  <div class="card-icon">⚗</div>
-                  <div class="card-body">
-                    <div class="card-title">The Lab</div>
-                    <div class="card-desc">Build an ability and see what it really does — range, average, hit chance, damage per use — and search every quirk in the campaign</div>
-                  </div>
-                  <div class="card-arrow">→</div>
-                </a>
-        </div>
+    <div class="hub-group">
+    <div class="hub-group-head">
+      <h3 class="hub-group-name">At the table</h3>
+      <p class="hub-group-hint">Open while you are playing.</p>
+    </div>
+      <div class="tile-grid">
+        <a class="tile is-lead" data-accent="crimson" href="table.html">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3 3 5l8.5 8.5M19 3l2 2-8.5 8.5"/><path d="M3 19l4-4M21 19l-4-4M14 14l5 5-2 2-5-5"/><path d="M10 14l-5 5 2 2 5-5"/></svg>
+          <span class="tile-name">At the Table</span>
+          <span class="tile-blurb">Whose turn it is, live</span>
+          <span class="tile-more">The order, everyone’s conditions, and whether you are next.</span>
+        </a>
+        <a class="tile" data-accent="purple" href="CLASS-1A/board.html">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+          <span class="tile-name">Battle Board</span>
+          <span class="tile-blurb">Where everyone is standing</span>
+        </a>
+        <a class="tile" data-accent="teal" href="lab.html">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v5.5L4.8 18A2 2 0 0 0 6.6 21h10.8a2 2 0 0 0 1.8-3L14 8.5V3"/><path d="M7 15h10"/></svg>
+          <span class="tile-name">The Lab</span>
+          <span class="tile-blurb">Build, craft, look up</span>
+        </a>
       </div>
-      <div class="hub-group">
-        <div class="hub-group-head">
-          <h3 class="hub-group-name">Your character</h3>
-          <p class="hub-group-hint">Who they are, what they carry, what they can do.</p>
-        </div>
-        <div class="tile-grid">
-          <a class="card-hero featured" data-accent="gold" href="CLASS-1A/relationships.html">
-                  <div class="card-icon">🎓</div>
-                  <div class="card-body">
-                    <div class="card-title">Class 1-A Toolkit</div>
-                    <div class="card-desc">Character profiles, stats, quirk mechanics, relationship tracker &amp; dice roller</div>
-                  </div>
-                  <div class="card-arrow">→</div>
-                </a>
-          <a class="card-hero" data-accent="blue" href="heropad.html">
-                  <div class="card-icon">📱</div>
-                  <div class="card-body">
-                    <div class="card-title">Heropad</div>
-                    <div class="card-desc">The phone your character carries — a home screen of apps, with a wallpaper and look that's yours alone</div>
-                  </div>
-                  <div class="card-arrow">→</div>
-                </a>
-          <a class="card-hero" data-accent="teal" href="sheet.html">
-                  <div class="card-icon">🖨</div>
-                  <div class="card-body">
-                    <div class="card-title">Character Sheet</div>
-                    <div class="card-desc">Your character on one printable page — scores, saves, quirk abilities, what you're carrying and lines to write on</div>
-                  </div>
-                  <div class="card-arrow">→</div>
-                </a>
-          <a class="card-hero" data-accent="teal" href="shop.html">
-                  <div class="card-icon">🛒</div>
-                  <div class="card-body">
-                    <div class="card-title">Shop</div>
-                    <div class="card-desc">Every priced item in the handbook — weapons, gear, suits, parts &amp; services, bought with a character's Yen</div>
-                  </div>
-                  <div class="card-arrow">→</div>
-                </a>
-        </div>
+    </div>
+    <div class="hub-group">
+    <div class="hub-group-head">
+      <h3 class="hub-group-name">Your character</h3>
+      <p class="hub-group-hint">Who they are, what they carry, what they can do.</p>
+    </div>
+      <div class="tile-grid">
+        <a class="tile is-lead" data-accent="gold" href="CLASS-1A/relationships.html">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6M17.5 20a5.6 5.6 0 0 0-2-4.3"/></svg>
+          <span class="tile-name">Class 1-A</span>
+          <span class="tile-blurb">Profiles, stats and the roller</span>
+          <span class="tile-more">Every student, their quirk mechanics, and who gets on with whom.</span>
+        </a>
+        <a class="tile" data-accent="blue" href="heropad.html">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10.5 18.5h3"/></svg>
+          <span class="tile-name">Heropad</span>
+          <span class="tile-blurb">The phone they carry</span>
+        </a>
+        <a class="tile" data-accent="teal" href="sheet.html">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><path d="M7 17h10v4H7z"/></svg>
+          <span class="tile-name">Sheet</span>
+          <span class="tile-blurb">One page, printable</span>
+        </a>
+        <a class="tile" data-accent="green" href="shop.html">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l1.2 13a1.5 1.5 0 0 1-1.5 1.6H6.3A1.5 1.5 0 0 1 4.8 20z"/><path d="M9 7V5.5a3 3 0 0 1 6 0V7"/></svg>
+          <span class="tile-name">Shop</span>
+          <span class="tile-blurb">Spend their yen</span>
+        </a>
       </div>
-      <div class="hub-group">
-        <div class="hub-group-head">
-          <h3 class="hub-group-name">Between sessions</h3>
-          <p class="hub-group-hint">What you do with the time, and how much attention it earns you.</p>
-        </div>
-        <div class="tile-grid">
-          <a class="card-hero" data-accent="green" href="freetime.html">
-                  <div class="card-icon">🗓</div>
-                  <div class="card-body">
-                    <div class="card-title">Free Time</div>
-                    <div class="card-desc">The job board, your training slots, and what you spent them on — one slot, one check, one wage</div>
-                  </div>
-                  <div class="card-arrow">→</div>
-                </a>
-          <a class="card-hero" data-accent="crimson" href="heat.html">
-                  <div class="card-icon">🔥</div>
-                  <div class="card-body">
-                    <div class="card-title">Heat</div>
-                    <div class="card-desc">How much attention Byakko are paying, who shows up at this level, what is coming — and who you have beaten</div>
-                  </div>
-                  <div class="card-arrow">→</div>
-                </a>
-        </div>
+    </div>
+    <div class="hub-group">
+    <div class="hub-group-head">
+      <h3 class="hub-group-name">Between sessions</h3>
+      <p class="hub-group-hint">What you do with the time, and what it earns you.</p>
+    </div>
+      <div class="tile-grid">
+        <a class="tile" data-accent="green" href="freetime.html">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14h3M8 17.5h3"/></svg>
+          <span class="tile-name">Free Time</span>
+          <span class="tile-blurb">Jobs, training, slots</span>
+        </a>
+        <a class="tile" data-accent="crimson" href="heat.html">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5s5.5 4.3 5.5 9.5a5.5 5.5 0 0 1-11 0C6.5 9 9 7 9 7s-.5 2.5 1 3.5c0-3.5 2-6.5 2-8z"/></svg>
+          <span class="tile-name">Heat</span>
+          <span class="tile-blurb">How hard Byakko are looking</span>
+        </a>
       </div>
+    </div>
   </section>
 
   <div id="dm-only">
@@ -207,83 +182,61 @@
         <p class="section-sub">Yours. Players see none of this.</p>
       </div>
       <div class="hub-group">
-        <div class="hub-group-head">
-          <h3 class="hub-group-name">Running a session</h3>
-          <p class="hub-group-hint">The screens you want open on the night.</p>
-        </div>
+      <div class="hub-group-head">
+        <h3 class="hub-group-name">Running a session</h3>
+        <p class="hub-group-hint">The screens you want open on the night.</p>
+      </div>
         <div class="tile-grid">
-          <a class="card-hero" data-accent="gold" href="tonight.html">
-                    <div class="card-icon">🕘</div>
-                    <div class="card-body">
-                      <div class="card-title">Run Sheet</div>
-                      <div class="card-desc">The one screen to have open while running — where you left off, the chapter's running order, the side quests, the Heat, and somewhere to write</div>
-                    </div>
-                    <div class="card-arrow">→</div>
-                  </a>
-          <a class="card-hero" data-accent="crimson" href="CLASS-1A/encounter.html">
-                    <div class="card-icon">⚔</div>
-                    <div class="card-body">
-                      <div class="card-title">Encounter Manager</div>
-                      <div class="card-desc">Initiative tracker, turn mode &amp; tactical board for running combat</div>
-                    </div>
-                    <div class="card-arrow">→</div>
-                  </a>
-          <a class="card-hero" data-accent="teal" href="party.html">
-                    <div class="card-icon">👥</div>
-                    <div class="card-body">
-                      <div class="card-title">Party at a Glance</div>
-                      <div class="card-desc">Every character as one sortable table — AC, HP, passive scores and all seven modifiers, with the party's spread</div>
-                    </div>
-                    <div class="card-arrow">→</div>
-                  </a>
-          <a class="card-hero" data-accent="purple" href="loot.html">
-                    <div class="card-icon">💎</div>
-                    <div class="card-body">
-                      <div class="card-title">Loot Tables</div>
-                      <div class="card-desc">Eight rollable tables of unique items — the backstreets, the four societies, the support lab &amp; free time</div>
-                    </div>
-                    <div class="card-arrow">→</div>
-                  </a>
+          <a class="tile is-lead" data-accent="gold" href="tonight.html">
+            <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3.2 2"/></svg>
+            <span class="tile-name">Run Sheet</span>
+            <span class="tile-blurb">Tonight, on one screen</span>
+            <span class="tile-more">Where you left off, the running order, the Heat, and somewhere to write.</span>
+          </a>
+          <a class="tile" data-accent="crimson" href="CLASS-1A/encounter.html">
+            <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/></svg>
+            <span class="tile-name">Encounter</span>
+            <span class="tile-blurb">Initiative and the board</span>
+          </a>
+          <a class="tile" data-accent="teal" href="party.html">
+            <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14.5h18M9.5 9v11"/></svg>
+            <span class="tile-name">Party</span>
+            <span class="tile-blurb">Every number, side by side</span>
+          </a>
+          <a class="tile" data-accent="purple" href="loot.html">
+            <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18M9 3l3 18M15 3l-3 18"/></svg>
+            <span class="tile-name">Loot</span>
+            <span class="tile-blurb">194 things to hand out</span>
+          </a>
         </div>
       </div>
       <div class="hub-group">
-        <div class="hub-group-head">
-          <h3 class="hub-group-name">The campaign</h3>
-          <p class="hub-group-hint">Everything written down, and everything that happened.</p>
-        </div>
+      <div class="hub-group-head">
+        <h3 class="hub-group-name">The campaign</h3>
+        <p class="hub-group-hint">Everything written down, and everything that happened.</p>
+      </div>
         <div class="tile-grid">
-          <a class="card-hero" data-accent="gold" href="campaigns.html">
-                    <div class="card-icon">📚</div>
-                    <div class="card-body">
-                      <div class="card-title">Campaigns</div>
-                      <div class="card-desc">Every campaign laid out like a published adventure module — chapters, read-aloud text &amp; DM notes</div>
-                    </div>
-                    <div class="card-arrow">→</div>
-                  </a>
-          <a class="card-hero" data-accent="blue" href="campaign-overview.html">
-                    <div class="card-icon">🗺</div>
-                    <div class="card-body">
-                      <div class="card-title">Campaign Overview</div>
-                      <div class="card-desc">Story arcs, session notes, world reference, teachers, villains &amp; DM scripts</div>
-                    </div>
-                    <div class="card-arrow">→</div>
-                  </a>
-          <a class="card-hero" data-accent="green" href="characters.html">
-                    <div class="card-icon">🗂</div>
-                    <div class="card-body">
-                      <div class="card-title">Characters</div>
-                      <div class="card-desc">Browse every character — students, teachers &amp; villains — with search, filters &amp; a creator</div>
-                    </div>
-                    <div class="card-arrow">→</div>
-                  </a>
-          <a class="card-hero" data-accent="amber" href="session-log.html">
-                    <div class="card-icon">📓</div>
-                    <div class="card-body">
-                      <div class="card-title">Session Log</div>
-                      <div class="card-desc">What actually happened at the table — recaps, XP awarded &amp; loot gained</div>
-                    </div>
-                    <div class="card-arrow">→</div>
-                  </a>
+          <a class="tile is-lead" data-accent="gold" href="campaigns.html">
+            <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H10a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H5.5A1.5 1.5 0 0 1 4 15.5z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H14a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h4.5A1.5 1.5 0 0 0 20 15.5z"/></svg>
+            <span class="tile-name">Campaigns</span>
+            <span class="tile-blurb">The text, chapter by chapter</span>
+            <span class="tile-more">Laid out like a published module — read-aloud, DM notes, side quests.</span>
+          </a>
+          <a class="tile" data-accent="blue" href="campaign-overview.html">
+            <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3 3 5.5v15L9 18l6 3 6-2.5v-15L15 6z"/><path d="M9 3v15M15 6v15"/></svg>
+            <span class="tile-name">Overview</span>
+            <span class="tile-blurb">Arcs, world and scripts</span>
+          </a>
+          <a class="tile" data-accent="green" href="characters.html">
+            <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4L11 8.5h8.5A1.5 1.5 0 0 1 21 10v8.5A1.5 1.5 0 0 1 19.5 20h-15A1.5 1.5 0 0 1 3 18.5z"/></svg>
+            <span class="tile-name">Characters</span>
+            <span class="tile-blurb">The whole cast, filed</span>
+          </a>
+          <a class="tile" data-accent="amber" href="session-log.html">
+            <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 8h14M9 12h6M9 16h4"/><path d="M8 3v18"/></svg>
+            <span class="tile-name">Session Log</span>
+            <span class="tile-blurb">What actually happened</span>
+          </a>
         </div>
       </div>
     </section>
@@ -291,44 +244,37 @@
   <!-- /dm-only — the end of the DM block, marked so a check does not have to
        guess it. Four verifiers slice the page here to prove a player card is
        outside this block; two of them used to anchor on the LABEL of the
-       section below, and renaming it from "Rulebooks" to "Reference" broke
-       all of them at once. -->
+       section below, and renaming it broke all of them at once. -->
 
   <section class="hub-section">
     <div class="hub-head">
       <p class="section-label">Reference</p>
       <p class="section-sub">The rules, summarised and in full.</p>
     </div>
-    <div class="card-row">
-      <a class="card-sm accent-blue" href="rules.html">
-        <span class="card-sm-icon">📐</span>
-        <span class="card-sm-title">Rules Reference</span>
-        <span class="card-sm-desc">108 rules, searchable — conditions, cover, death saves</span>
-      </a>
-      <a class="card-sm accent-gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Offical%20Handbook%20-%20The%20Homebrewery.pdf" target="_blank" rel="noopener noreferrer">
-        <span class="card-sm-icon">📖</span>
-        <span class="card-sm-title">Official Handbook</span>
-        <span class="card-sm-desc">MHA5e core rules — PDF</span>
-      </a>
-      <a class="card-sm accent-gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf" target="_blank" rel="noopener noreferrer">
-        <span class="card-sm-icon">⚡</span>
-        <span class="card-sm-title">Quirk Compendium</span>
-        <span class="card-sm-desc">Full quirk mechanics — PDF</span>
-      </a>
-    </div>
-  </section>
-
-  <section class="hub-section">
-    <div class="hub-head">
-      <p class="section-label">This Toolkit</p>
-      <p class="section-sub">What has changed, and when.</p>
-    </div>
-    <div class="card-row">
-      <a class="card-sm" href="updates.html">
-        <span class="card-sm-icon">🆕</span>
-        <span class="card-sm-title">What's New</span>
-        <span class="card-sm-desc">Everything added, update by update</span>
-      </a>
+    <div class="hub-group">
+      <div class="tile-grid">
+        <a class="tile is-lead" data-accent="blue" href="rules.html">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M12 20V4"/><path d="M6 9h12M6 9l-2.5 5h5zM18 9l-2.5 5h5z"/></svg>
+          <span class="tile-name">Rules</span>
+          <span class="tile-blurb">108 rules, searchable</span>
+          <span class="tile-more">Conditions, cover, death saves — the lookups, not the whole book.</span>
+        </a>
+        <a class="tile" data-accent="gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Offical%20Handbook%20-%20The%20Homebrewery.pdf" target="_blank" rel="noopener noreferrer">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 16.5h4"/></svg>
+          <span class="tile-name">Handbook</span>
+          <span class="tile-blurb">MHA5e core · PDF</span>
+        </a>
+        <a class="tile" data-accent="gold" href="RULEBOOKS/-%20My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf" target="_blank" rel="noopener noreferrer">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.2 8.8 13.4 13.4 8.8 15.2l1.8-4.6z"/></svg>
+          <span class="tile-name">Compendium</span>
+          <span class="tile-blurb">160 quirks · PDF</span>
+        </a>
+        <a class="tile" data-accent="purple" href="updates.html">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z"/><path d="M18 17l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>
+          <span class="tile-name">What's New</span>
+          <span class="tile-blurb">Every change, dated</span>
+        </a>
+      </div>
     </div>
   </section>
 </main>

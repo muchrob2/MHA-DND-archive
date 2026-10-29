@@ -89,6 +89,21 @@
   text-overflow: ellipsis;
 }
 
+/* The mark some nav titles carry, matching the dashboard tile that links
+   here. .appnav__title / .nav-title are already flex rows. */
+.nav-title-ico {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  margin-right: 8px;
+  color: var(--accent-text);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 /* ⚠ auth.js:334 mounts the sign-in widget into `.nav-right`,
    falling back to document.body. This class must exist in every
    page's nav or the widget lands loose at the end of the page. */
@@ -154,6 +169,12 @@
    campaigns.html deliberately keeps a serif heading — its
    stylesheet loads after this one and overrides the family.
    ════════════════════════════════════════════════════════════ */
+
+/* The block the two sit in on a page whose content is not already inside a
+   centred container. Each page sets its own width below — they range from
+   720 to 1100px and the heading has to line up with the content under it,
+   not with the viewport. */
+#page-head { margin-top: 22px; }
 
 .page-heading {
   margin-bottom: 4px;

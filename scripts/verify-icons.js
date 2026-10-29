@@ -97,7 +97,7 @@ check('no element holding an inline icon is overwritten with textContent',
 
 /* ── 2. Icon holders are sized as boxes, not as type ─────────────────── */
 
-const ICON_CLASSES = ['es-icon', 'btn-ico', 'bm-ico', 'folder-tile-icon',
+const ICON_CLASSES = ['es-icon', 'btn-ico', 'bm-ico', 'nav-title-ico', 'folder-tile-icon',
                       'basket-tab-ico', 'anchor-icon', 'section-icon',
                       'tile-icon', 'role-btn-icon', 'header-icon'];
 

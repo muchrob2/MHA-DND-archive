@@ -16,6 +16,26 @@
   ],
   "updates": [
     {
+      "version": "1.0.272",
+      "build": 272,
+      "date": "2026-10-29",
+      "commit": "f3761d7",
+      "title": "The rest of the site catches up with the dashboard",
+      "tags": [
+        "toolkit",
+        "dashboard",
+        "fix"
+      ],
+      "items": [
+        "Seven pages were showing their own title as plain body text — Free Time, Heat, The Lab, Loot, Rules, the Run Sheet and What's New. The styling existed, on one page that none of them loaded. They all have a proper heading now.",
+        "The DM's \"where you left off\" recap on the dashboard had never been styled at all. It now reads as a panel you can click, at the top of the DM's half of the page.",
+        "\"Couldn't load the loot tables\" and the same message on What's New were appearing as a bare line of grey text. The one message on the page that needs to look like a problem now looks like one.",
+        "Every emoji in the chrome is a line icon drawn to match the dashboard — the empty states, Print, Filters, Edit, Save, Copy, Delete, the shop basket, the bookmark ribbons, and all five section marks on the Campaign Overview. Section headings are one style across the whole site instead of five.",
+        "Three pages never said what they were. Characters opened on a search box, the Session Log on three numbers and Admin on a table; all three now name themselves and say what you do there. The Lab's description was 75 words and is now 25.",
+        "Pages load faster. Every script now waits for the page to be drawn before it runs, instead of the browser stopping to fetch most of a megabyte of Firebase before it could show you anything — and seven pages were downloading a stylesheet that could not affect a single thing on them."
+      ]
+    },
+    {
       "version": "1.0.265",
       "build": 265,
       "date": "2026-10-29",

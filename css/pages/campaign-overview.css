@@ -55,7 +55,26 @@
   font-size: 21px;
   font-weight: 700;
 }
-.section-icon { font-size: 18px; }
+/* ── Line icons ──
+   The five section marks and the bookmark ribbon were emoji. On the
+   parchment surface especially they read as stickers dropped on paper —
+   a colour photograph next to type that is otherwise all one ink. These
+   stroke in currentColor, so they take the parchment's ink in light and
+   the warm off-white in dark without a second rule. */
+.section-icon,
+.anchor-icon,
+.bm-ico {
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.section-icon { width: 19px; height: 19px; color: var(--accent); }
+.anchor-icon  { width: 15px; height: 15px; }
+.bm-ico       { width: 15px; height: 15px; }
+#bm-toggle-btn .bm-ico { width: 20px; height: 20px; }
 .section-meta { font-size: var(--fs-xs); font-weight: 500; color: var(--text-dim); }
 .section-header-left { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
 .section-toggle {
@@ -70,8 +89,10 @@
 .section-body { padding-bottom: 24px; }
 
 .bm-btn, .arc-bm-btn {
+  display: inline-flex;
+  align-items: center;
   flex-shrink: 0;
-  padding: 2px 5px;
+  padding: 3px 5px;
   line-height: 1;
   font-size: var(--fs-sm);
   color: var(--text-dim);
@@ -645,7 +666,7 @@
   transition: background var(--dur-fast);
 }
 .bm-item:hover { background: var(--surface2); }
-.bm-item-icon  { flex-shrink: 0; font-size: var(--fs-sm); }
+.bm-item-icon  { display: flex; flex-shrink: 0; color: var(--accent); }
 .bm-item-label {
   flex: 1;
   min-width: 0;

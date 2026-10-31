@@ -19,6 +19,9 @@
    TOOLBAR
    ════════════════════════════════════════════════════════════ */
 
+/* The title block lines up with the toolbar and the grid under it. */
+#page-head { max-width: 1100px; margin: 22px auto 0; padding: 0 24px; }
+
 #toolbar {
   display: flex;
   align-items: center;
@@ -142,7 +145,16 @@
   cursor: pointer;
   border-left: 3px solid var(--folder-accent, var(--accent));
 }
-.folder-tile-icon  { font-size: 21px; }
+.folder-tile-icon  {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: var(--accent-text);
+}
 .folder-tile-name  {
   padding-right: 38px;
   font-family: var(--font-display);

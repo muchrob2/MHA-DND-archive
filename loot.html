@@ -12,7 +12,6 @@
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href="css/manga.css">
 <link rel="stylesheet" href="css/pages/loot.css">
 </head>
 <body>
@@ -35,7 +34,7 @@
 
 <div id="panel">
   <div class="page-heading">Loot Tables</div>
-  <div class="page-sub">Unique items for The Shortlist: After Hours — five Byakko rooms, the four Underground societies, the support lab, the archive, and the small things worth more than they look. DM side.</div>
+  <div class="page-sub">194 items across twelve tables, every one hanging off somewhere the party can actually go. Roll it or read it straight. DM side.</div>
 
   <div id="loot-controls">
     <input id="loot-search" type="search" placeholder="Search every item, effect and hook…" aria-label="Search the loot tables" oninput="onLootSearch(this.value)">
@@ -46,11 +45,11 @@
 
   <div id="loot-tables"></div>
   <div id="loot-empty" style="display:none;">
-    <div class="es-icon">🔍</div>
+    <svg class="es-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg>
     Nothing in the tables matches that.
   </div>
 </div>
 
-<script src="loot.js"></script>
+<script defer src="loot.js"></script>
 </body>
 </html>

@@ -241,7 +241,7 @@ function charCardHtml(c, showFolderBadge) {
       ${c.gender ? `<span>${escHtml(c.gender)}</span>` : ''}
       ${c.is_pc ? `<span class="badge pc">PC</span>` : ''}
       ${c.role ? `<span>${escHtml(c.role)}</span>` : ''}
-      ${folder ? `<span class="folder-badge" style="background:${fc.light};color:${fc.text};">🗂 ${escHtml(folder.name)}</span>` : ''}
+      ${folder ? `<span class="folder-badge" style="background:${fc.light};color:${fc.text};"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4L11 8.5h8.5A1.5 1.5 0 0 1 21 10v8.5A1.5 1.5 0 0 1 19.5 20h-15A1.5 1.5 0 0 1 3 18.5z"/></svg>${escHtml(folder.name)}</span>` : ''}
     </div>
     ${(c.tags||[]).length ? `<div class="char-meta">${c.tags.map(t => `<span class="tag-chip">${escHtml(t)}</span>`).join('')}</div>` : ''}
   </div>`;
@@ -255,14 +255,22 @@ function folderTileHtml(f) {
       <span role="button" tabindex="0" title="Edit folder" aria-label="Edit folder ${escHtml(f.name)}" onclick="event.stopPropagation(); openEditFolderModal('${f.id}')">✎</span>
       <span role="button" tabindex="0" title="Delete folder" aria-label="Delete folder ${escHtml(f.name)}" onclick="event.stopPropagation(); deleteFolder('${f.id}')">✕</span>
     </div>` : ''}
-    <div class="folder-tile-icon">🗂</div>
+    <svg class="folder-tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4L11 8.5h8.5A1.5 1.5 0 0 1 21 10v8.5A1.5 1.5 0 0 1 19.5 20h-15A1.5 1.5 0 0 1 3 18.5z"/></svg>
     <div class="folder-tile-name">${escHtml(f.name)}</div>
     <div class="folder-tile-count">${count} character${count === 1 ? '' : 's'}</div>
   </div>`;
 }
 
+/* The two line icons this page's empty states use. Named rather than passed
+   as emoji so the markup is written once and both callers stroke alike —
+   .es-icon in components.css does the sizing. */
+const ES_ICONS = {
+  search:  '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/>',
+  folders: '<path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4L11 8.5h8.5A1.5 1.5 0 0 1 21 10v8.5A1.5 1.5 0 0 1 19.5 20h-15A1.5 1.5 0 0 1 3 18.5z"/>',
+};
+
 function emptyStateHtml(icon, text) {
-  return `<div id="empty-state"><div class="es-icon">${icon}</div>${text}</div>`;
+  return `<div id="empty-state"><svg class="es-icon" viewBox="0 0 24 24" aria-hidden="true">${ES_ICONS[icon] || ES_ICONS.folders}</svg>${text}</div>`;
 }
 
 function renderGrid() {
@@ -277,7 +285,7 @@ function renderGrid() {
     const matchedFolders = allFolders.filter(f => (f.name||'').toLowerCase().includes(q));
     const matchedChars = allChars.filter(c => matchesQuery(c) && passesFilters(c));
     if (!matchedFolders.length && !matchedChars.length) {
-      grid.innerHTML = emptyStateHtml('🔍', 'No folders or characters match your search/filters.');
+      grid.innerHTML = emptyStateHtml('search', 'No folders or characters match your search/filters.');
       return;
     }
     grid.innerHTML = matchedFolders.map(folderTileHtml).join('') + matchedChars.map(c => charCardHtml(c, true)).join('');
@@ -287,7 +295,7 @@ function renderGrid() {
   if (currentFolderId === null) {
     const unfiled = allChars.filter(c => !c.folderId && passesFilters(c));
     if (!allFolders.length && !unfiled.length) {
-      grid.innerHTML = emptyStateHtml('🗂', 'No characters match your search/filters.');
+      grid.innerHTML = emptyStateHtml('folders', 'No characters match your search/filters.');
       return;
     }
     let html = allFolders.map(folderTileHtml).join('');
@@ -299,7 +307,7 @@ function renderGrid() {
 
   const members = allChars.filter(c => c.folderId === currentFolderId && passesFilters(c));
   if (!members.length) {
-    grid.innerHTML = emptyStateHtml('🗂', 'No characters in this folder yet.');
+    grid.innerHTML = emptyStateHtml('folders', 'No characters in this folder yet.');
     return;
   }
   grid.innerHTML = members.map(c => charCardHtml(c)).join('');
@@ -324,7 +332,7 @@ function renderBreadcrumb(qRaw) {
   el.innerHTML = `
     <span class="breadcrumb-link" role="button" tabindex="0" onclick="openFolder(null)">← All Folders</span>
     <span class="breadcrumb-sep">/</span>
-    <span class="breadcrumb-current" style="color:${fc.text};">🗂 ${escHtml(folder.name)}</span>
+    <span class="breadcrumb-current" style="color:${fc.text};"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4L11 8.5h8.5A1.5 1.5 0 0 1 21 10v8.5A1.5 1.5 0 0 1 19.5 20h-15A1.5 1.5 0 0 1 3 18.5z"/></svg>${escHtml(folder.name)}</span>
     <span class="breadcrumb-spacer"></span>
     ${canEditAnyUI ? `<button class="action-btn" onclick="openAddToFolderModal()">+ Add Existing Character</button>` : ''}
     ${isAdminUI ? `<button class="action-btn" onclick="openEditFolderModal('${folder.id}')">Rename / Recolor</button>` : ''}

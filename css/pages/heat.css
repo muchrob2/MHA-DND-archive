@@ -21,30 +21,9 @@
 .heat-badge.mood-warm  { color: var(--amber-text); border-color: var(--amber); }
 .heat-badge.mood-hot   { color: var(--red-text);   border-color: var(--red); }
 
-.ht-section { margin-top: 30px; }
-.ht-h2 {
-  margin: 0 0 4px;
-  font-family: var(--font-display);
-  font-size: var(--fs-lg);
-  font-weight: 400;
-  letter-spacing: .02em;
-  text-transform: uppercase;
-  color: var(--text);
-}
-.ht-h3 {
-  margin: 0 0 8px;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-.ht-section-sub {
-  margin: 0 0 14px;
-  font-size: var(--fs-2xs);
-  line-height: 1.6;
-  color: var(--text-muted);
-}
+/* This page's heading treatment is the one the whole site now uses, so it
+   moved to components.css as .section-h2 / .section-h3 / .section-note.
+   heat.js still emits .ht-h3, which is aliased there. */
 
 /* ── The strip ── */
 .ht-track {

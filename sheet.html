@@ -14,10 +14,10 @@
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/auth-widget.css">
 <link rel="stylesheet" href="css/pages/sheet.css">
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
-<script src="auth.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script defer src="auth.js"></script>
 </head>
 <body>
 
@@ -39,7 +39,7 @@
   <label class="sheet-bar-label" for="sheet-picker">Character</label>
   <select id="sheet-picker" onchange="pickChar(this.value)" aria-label="Choose a character"></select>
   <button type="button" id="sheet-notes-btn" onclick="toggleNotes()">Notes lines: on</button>
-  <button type="button" id="sheet-print-btn" class="sheet-print" onclick="printSheet()">🖨 Print this sheet</button>
+  <button type="button" id="sheet-print-btn" class="sheet-print" onclick="printSheet()"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><path d="M7 17h10v4H7z"/></svg>Print this sheet</button>
   <span class="sheet-bar-hint">One character to a page. Black on white when it prints.</span>
 </div>
 
@@ -47,7 +47,7 @@
 
 <!-- Reading a character: the live-bundle-first loader and the number
      helpers, shared with party.html. -->
-<script src="char-data.js"></script>
-<script src="sheet.js"></script>
+<script defer src="char-data.js"></script>
+<script defer src="sheet.js"></script>
 </body>
 </html>

@@ -89,6 +89,21 @@
   text-overflow: ellipsis;
 }
 
+/* The mark some nav titles carry, matching the dashboard tile that links
+   here. .appnav__title / .nav-title are already flex rows. */
+.nav-title-ico {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  margin-right: 8px;
+  color: var(--accent-text);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 /* ⚠ auth.js:334 mounts the sign-in widget into `.nav-right`,
    falling back to document.body. This class must exist in every
    page's nav or the widget lands loose at the end of the page. */
@@ -102,6 +117,11 @@
 }
 
 .nav-btn {
+  /* inline-flex so a .btn-ico sits on the text's centre line rather than on
+     its baseline — .btn and .chip were already flex, this one was not */
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   padding: 5px 11px;
   border-radius: var(--radius-sm);
   font-size: var(--fs-2xs);
@@ -124,6 +144,131 @@
   color: var(--teal-text);
   background: var(--teal-light);
   border-color: color-mix(in srgb, var(--teal) 40%, transparent);
+}
+
+/* ════════════════════════════════════════════════════════════
+   PAGE SHELL — the title block and load-failure banner that sit
+   under the nav on every tool page.
+
+   Both recipes were written once and then the MARKUP was copied
+   to other pages while the CSS stayed behind in the stylesheet
+   it was born in:
+
+     .page-heading / .page-sub  lived in pages/campaigns.css, and
+       was used unstyled by freetime, heat, lab, loot, rules,
+       tonight and updates — seven pages rendering their own
+       title as 14px body copy.
+     #load-error-banner         lived in pages/session-log.css,
+       and loot.html / updates.html carry the same markup, so
+       their "couldn't load" message had no red surface at all.
+
+   They are here now, which is the only place that serves every
+   page that has the markup. scripts/verify-css-coverage.js
+   fails the build if this happens again.
+
+   campaigns.html deliberately keeps a serif heading — its
+   stylesheet loads after this one and overrides the family.
+   ════════════════════════════════════════════════════════════ */
+
+/* The block the two sit in on a page whose content is not already inside a
+   centred container. Each page sets its own width below — they range from
+   720 to 1100px and the heading has to line up with the content under it,
+   not with the viewport. */
+#page-head { margin-top: 22px; }
+
+.page-heading {
+  margin-bottom: 4px;
+  font-family: var(--font-display);
+  font-size: clamp(var(--fs-xl), 3.4vw, var(--fs-2xl));
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.page-sub {
+  max-width: 62ch;
+  margin-bottom: 20px;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+#load-error-banner { max-width: 920px; margin: 14px auto 0; padding: 0 20px; }
+#load-error-banner .banner-inner {
+  padding: 10px 14px;
+  font-size: var(--fs-xs);
+  color: var(--red-text);
+  background: var(--red-light);
+  border: 1px solid color-mix(in srgb, var(--red) 34%, transparent);
+  border-radius: var(--radius);
+}
+
+/* An explanatory paragraph under a panel heading — admin.html had the
+   markup with no rule, so it read as body copy next to every other
+   note on the site. */
+.panel-note,
+.admin-section-note {
+  margin: 0 0 14px;
+  font-size: var(--fs-xs);
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+/* ════════════════════════════════════════════════════════════
+   SECTION HEADING — one vocabulary for the levels inside a page.
+
+   Five pages each invented their own. .rs-h2, .ft-h2, .tb-h2 and
+   .sh-h2 were the same 10px uppercase eyebrow at four different
+   letter-spacings and margins, while .ht-h2 on the Heat page was
+   something else entirely — an Anton display heading. So the
+   SAME structural level ("The running order", "Do they find
+   you?", "The job board") rendered two completely different ways
+   depending on which page you had open.
+
+   The dashboard settled which one is right: .hub-group-name is a
+   display heading, so a section heading is a display heading.
+   The 10px eyebrow becomes what it always looked like — the
+   level BELOW it, for a column header inside a section.
+
+   .sh-h2 on the printable sheet keeps the eyebrow and is not
+   aliased here. That page is a dense one-page print document,
+   the same kind of deliberate second surface as the parchment
+   campaign reader, and Anton headings would eat its margins.
+   ════════════════════════════════════════════════════════════ */
+
+.page-section { margin-top: 30px; }
+
+.section-h2 {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 400;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+/* The level below a section heading — a column header, or a label over a
+   list. The .eyebrow recipe in base.css, with the rule under it that these
+   four pages had each added by hand. */
+.section-h3,
+.ht-h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* The sentence under a section heading that says what the section is for —
+   the page-level twin of .hub-group-hint on the dashboard. */
+.section-note {
+  margin: 0 0 14px;
+  font-size: var(--fs-2xs);
+  line-height: 1.6;
+  color: var(--text-muted);
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -390,7 +535,7 @@
 }
 .edit-hint { margin-top: 4px; font-size: var(--fs-2xs); color: var(--text-dim); }
 .form-row { margin-bottom: 13px; }
-.form-actions, .mini-row { display: flex; gap: 8px; margin-top: 16px; }
+.form-actions, .mini-row, .modal-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 
 /* ════════════════════════════════════════════════════════════
    MODAL — was 4 implementations on 4 unrelated z-index tiers
@@ -456,7 +601,54 @@
   color: var(--text-dim);
   grid-column: 1 / -1;
 }
-.es-icon { display: block; margin-bottom: 12px; font-size: 34px; opacity: .55; }
+/* The icon above an empty state, and the small one inside a button. Both
+   were emoji until the dashboard rework replaced its own with line SVGs —
+   an emoji is whatever the platform's font decides, at whatever weight,
+   and next to Inter and Anton it reads as a sticker rather than as part of
+   the page. These are the same 1.5px stroke the dashboard tiles use.
+
+   .es-icon keeps its name because characters.js and session-log.js emit it.
+   The opacity stays: an empty state should be quiet. */
+.es-icon {
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .5;
+}
+
+/* Any control carrying a .btn-ico becomes a centred row. Eight of the
+   buttons that now have an icon are styled by a descendant rule on their
+   bar (#sheet-bar button, #party-bar button) or by an id with nothing but
+   padding (#rel-save-btn), so none of them were flex and an inline SVG
+   would have sat on the text's baseline rather than its centre line. One
+   rule here beats `display:flex` added to eight unrelated recipes.
+
+   A browser without :has() renders the icon slightly low and nothing else
+   changes, which is why this is a layout nicety rather than the sizing. */
+:is(button, a, span, div):has(> .btn-ico) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Inside a .btn / .nav-btn / .chip. Sized in em so it tracks the label it
+   sits beside rather than needing a value per button size. */
+.btn-ico {
+  flex-shrink: 0;
+  width: 1.15em;
+  height: 1.15em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
 #loading {
   display: flex;

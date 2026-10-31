@@ -570,3 +570,79 @@ main { max-width: 1180px; margin: 0 auto; padding: 34px 32px 90px; }
   .glance { gap: 8px; margin-bottom: 24px; }
   .glance-item { padding: 11px 14px; }
 }
+
+/* ── Where you left off ──
+   index.js:292 renders this from the session log, inside #dm-only. It had
+   markup and no rule of its own, so the DM's recap read as three lines of
+   unstyled 14px body copy stacked above the Campaign section. It is the
+   first thing on the DM's half of the page, so it gets the lead tile's
+   treatment: a wide gold-washed surface you can click.
+
+   The strip hides itself when the log is empty or the fetch fails, which is
+   why there is no empty state here. */
+#last-session { margin-bottom: 34px; }
+#last-session.hidden { display: none; }
+
+.last-session-inner {
+  display: block;
+  padding: 18px 20px;
+  text-decoration: none;
+  color: inherit;
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--accent) 8%, var(--surface2)) 0%,
+      var(--surface2) 72%);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  transition: border-color var(--dur-fast), background var(--dur-fast),
+              transform var(--dur-fast) var(--ease-out);
+}
+.last-session-inner:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  border-left-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.last-session-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+.last-session-title {
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  line-height: 1.1;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+/* The DM's note to themselves. Set apart from the title by a rule rather
+   than by another colour — the block already carries one accent. */
+.last-session-next {
+  margin-top: 11px;
+  padding-top: 10px;
+  font-size: var(--fs-xs);
+  line-height: 1.55;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+.last-session-next > span {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+@media (max-width: 720px) {
+  #last-session { margin-bottom: 24px; }
+  .last-session-inner { padding: 14px 16px; }
+  .last-session-title { font-size: var(--fs-lg); }
+}

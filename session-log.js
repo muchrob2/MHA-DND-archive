@@ -174,8 +174,8 @@ function render() {
   // Always set, never only on the search branch: leaving the last message in
   // place meant deleting every session showed "no session matches that".
   empty.innerHTML = data.sessions.length
-    ? '<div class="es-icon">🔍</div>No session matches that.'
-    : '<div class="es-icon">📓</div>No sessions logged yet — recap your first session to start the log.';
+    ? '<svg class="es-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg>No session matches that.'
+    : '<svg class="es-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 8h14M9 12h6M9 16h4"/><path d="M8 3v18"/></svg>No sessions logged yet — recap your first session to start the log.';
   list.innerHTML = shown.map(s => editingId === s.id ? formHtml(s) : cardHtml(s)).join('');
   const count = document.getElementById('log-search-count');
   if (count) count.textContent = q && data.sessions.length ? `${shown.length} of ${data.sessions.length}` : '';

@@ -115,21 +115,13 @@
 .ft-roll.is-pass .ft-roll-word { color: var(--green-text); }
 .ft-roll.is-fail .ft-roll-word { color: var(--red-text); }
 .ft-roll-pay { font-weight: 800; color: var(--accent-text); }
+/* The dice behind the number — "2d6+3 against DC 12". The quietest thing in
+   the row, and the only span in it that had no rule, so it was rendering at
+   full body weight beside its own total. */
+.ft-roll-detail { font-size: var(--fs-2xs); color: var(--text-dim); }
 .ft-roll-note { flex-basis: 100%; font-size: 10px; color: var(--text-dim); }
 
-/* ── Sections ── */
-.ft-section { margin-top: 28px; }
-.ft-h2 {
-  margin: 0 0 6px;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  padding-bottom: 5px;
-  border-bottom: 1px solid var(--border);
-}
-.ft-section-sub { margin: 0 0 12px; font-size: var(--fs-2xs); line-height: 1.6; color: var(--text-dim); }
+/* Sections and their headings are shared — see components.css. */
 
 .ft-block { margin-bottom: 18px; }
 .ft-block-name {

@@ -15,22 +15,22 @@
 <link rel="stylesheet" href="css/theme-doc.css">
 <link rel="stylesheet" href="css/pages/campaigns.css">
 <link rel="stylesheet" href="css/auth-widget.css">
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
-<script src="auth.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script defer src="auth.js"></script>
 </head>
 <body class="theme-doc">
 
 <nav id="topnav">
   <a id="back-btn" href="index.html">← Dashboard</a>
   <div class="crumb-bar">
-    <a class="crumb-link" href="#" onclick="location.hash='';return false;">📚 Campaign Library</a>
+    <a class="crumb-link" href="#" onclick="location.hash='';return false;"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H10a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H5.5A1.5 1.5 0 0 1 4 15.5z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H14a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h4.5A1.5 1.5 0 0 0 20 15.5z"/></svg>Campaign Library</a>
     <span id="crumb-campaign"></span>
   </div>
   <div class="nav-right">
     <span class="nav-saved" id="saved-notice">Saved ✓</span>
-    <button type="button" class="nav-btn" id="edit-toggle-btn" onclick="toggleEditMode()" style="display:none;">✏️ Edit</button>
+    <button type="button" class="nav-btn" id="edit-toggle-btn" onclick="toggleEditMode()" style="display:none;"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19.4 8.6a2.05 2.05 0 0 0-2.9-2.9L5 17.2z"/><path d="M14.5 7.5l2.9 2.9"/></svg>Edit</button>
   </div>
 </nav>
 
@@ -47,6 +47,6 @@
   <div id="view-campaign" style="display:none"></div>
 </div>
 
-<script src="campaigns.js"></script>
+<script defer src="campaigns.js"></script>
 </body>
 </html>

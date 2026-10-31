@@ -13,13 +13,12 @@
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href="css/manga.css">
 <link rel="stylesheet" href="css/pages/admin.css">
 <link rel="stylesheet" href="css/auth-widget.css">
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
-<script src="auth.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script defer src="auth.js"></script>
 </head>
 <body>
 
@@ -32,6 +31,11 @@
 <div id="content">
   <div id="gate-message" style="display:none;">Checking access…</div>
   <div id="admin-body" style="display:none;">
+    <div id="page-head">
+      <div class="page-heading">Admin</div>
+      <div class="page-sub">Who can sign in, what they are allowed to edit, and handing things out. Only an admin can open this.</div>
+    </div>
+
     <h2 class="admin-section-title">User roles</h2>
     <div id="table-wrap">
       <table id="users-table">
@@ -106,6 +110,6 @@
   <div id="migrate-status" class="row-saved show"></div>
 </section>
 
-<script src="admin.js"></script>
+<script defer src="admin.js"></script>
 </body>
 </html>

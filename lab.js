@@ -512,7 +512,7 @@ function gearHtml() {
         <h2 class="lb-h2">What it should cost</h2>
         <div id="lab-gear-price">${pricingHtml()}</div>
         <div class="lb-actions">
-          <button onclick="rollGear()">🎲 Roll its damage</button>
+          <button onclick="rollGear()"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/></svg>Roll its damage</button>
           <button onclick="saveAsGear()">Save to my equipment</button>
           <span id="lab-record-state" class="lb-feedback"></span>
         </div>
@@ -583,7 +583,7 @@ function benchHtml() {
         <h2 class="lb-h2">How it reads</h2>
         <div id="lab-preview">${previewHtml()}</div>
         <div class="lb-actions">
-          <button onclick="rollIt()">🎲 Roll the damage</button>
+          <button onclick="rollIt()"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/></svg>Roll the damage</button>
           <button onclick="saveDraft()">Save draft</button>
           <button onclick="saveAsMove()">Save to my moves</button>
           <button onclick="showJson()">Show as JSON</button>
@@ -999,7 +999,7 @@ function rowHtml(r, i) {
         ${r.range ? `<span class="lb-do-tag">${escHtml(r.range)}</span>` : ''}
         ${r.damage ? `<span class="lb-do-tag lb-do-dmg">${escHtml(r.damage)}</span>` : ''}
         ${r.dice ? `<button class="lb-do-roll" onclick="rollRow('${escHtml(id)}','${escHtml(r.dice)}')"
-          title="Roll ${escHtml(r.dice)}">🎲</button>` : ''}
+          title="Roll ${escHtml(r.dice)}"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/></svg></button>` : ''}
         ${r.dice ? `<button class="lb-do-bench" onclick="benchRow('${escHtml(r.name)}','${escHtml(r.dice)}','${escHtml(r.costText)}')"
           title="Open this on the workbench">→</button>` : ''}
       </div>
@@ -1157,7 +1157,7 @@ function myMovesHtml() {
         <span class="lb-own-name">${escHtml(m.name)}</span>
         ${m.type ? `<span class="lb-tag">${escHtml(m.type)}</span>` : ''}
         ${m.damage ? `<span class="lb-tag lb-tag-dmg">${escHtml(m.damage)}</span>` : ''}
-        ${m.damage && diceParse(m.damage) ? `<button class="lb-own-roll" onclick="rollOwn('move-${escHtml(m.id)}','${escHtml(m.damage)}')" title="Roll it">🎲</button>` : ''}
+        ${m.damage && diceParse(m.damage) ? `<button class="lb-own-roll" onclick="rollOwn('move-${escHtml(m.id)}','${escHtml(m.damage)}')" title="Roll it"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/></svg></button>` : ''}
         <button class="lb-own-edit" onclick="editMove('${escHtml(m.id)}')" title="Back to the workbench">edit</button>
         <button class="lb-x" onclick="deleteMove('${escHtml(m.id)}')" title="Delete it">✕</button>
       </div>
@@ -1178,7 +1178,7 @@ function myGearHtml() {
         <span class="lb-tag">${escHtml(kindLabel(g.kind) || g.kind)}</span>
         ${g.damage ? `<span class="lb-tag lb-tag-dmg">${escHtml(g.damage)}</span>` : ''}
         ${g.price ? `<span class="lb-tag">${escHtml(g.price)}</span>` : ''}
-        ${charDiceIn(g.damage) ? `<button class="lb-own-roll" onclick="rollOwn('gear-${escHtml(g.id)}','${escHtml(charDiceIn(g.damage))}')" title="Roll it">🎲</button>` : ''}
+        ${charDiceIn(g.damage) ? `<button class="lb-own-roll" onclick="rollOwn('gear-${escHtml(g.id)}','${escHtml(charDiceIn(g.damage))}')" title="Roll it"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/></svg></button>` : ''}
         <button class="lb-own-edit" onclick="editGear('${escHtml(g.id)}')" title="Back to the bench">edit</button>
         <button class="lb-x" onclick="deleteGear('${escHtml(g.id)}')" title="Delete it">✕</button>
       </div>

@@ -16,10 +16,10 @@
   ],
   "updates": [
     {
-      "version": "1.0.272",
-      "build": 272,
-      "date": "2026-10-29",
-      "commit": "f3761d7",
+      "version": "1.0.268",
+      "build": 268,
+      "date": "2026-10-31",
+      "commit": "7317a4b",
       "title": "The rest of the site catches up with the dashboard",
       "tags": [
         "toolkit",
@@ -77,7 +77,7 @@
       "version": "1.0.262",
       "build": 262,
       "date": "2026-10-29",
-      "commit": "e8e7ffa",
+      "commit": "c426798",
       "title": "Free time, counted",
       "tags": [
         "toolkit",
@@ -94,7 +94,7 @@
       "version": "1.0.261",
       "build": 261,
       "date": "2026-10-29",
-      "commit": "e3ec1f8",
+      "commit": "c50c489",
       "title": "The run sheet",
       "tags": [
         "toolkit",
@@ -110,7 +110,7 @@
       "version": "1.0.260",
       "build": 260,
       "date": "2026-10-29",
-      "commit": "935f4be",
+      "commit": "c2e4ca6",
       "title": "At the Table",
       "tags": [
         "toolkit",
@@ -127,7 +127,7 @@
       "version": "1.0.259",
       "build": 259,
       "date": "2026-10-29",
-      "commit": "a802e50",
+      "commit": "1b78fd6",
       "title": "Your character in the Lab",
       "tags": [
         "toolkit",
@@ -144,7 +144,7 @@
       "version": "1.0.257",
       "build": 257,
       "date": "2026-10-27",
-      "commit": "0aa99f9",
+      "commit": "31b2ee4",
       "title": "The Lab and the Heat track",
       "tags": [
         "toolkit",
@@ -180,7 +180,7 @@
       "version": "1.0.254",
       "build": 254,
       "date": "2026-10-26",
-      "commit": "bfbb82d",
+      "commit": "69b10a0",
       "title": "Party at a glance",
       "tags": [
         "toolkit",
@@ -199,7 +199,7 @@
       "version": "1.0.253",
       "build": 253,
       "date": "2026-10-26",
-      "commit": "f9fcfab",
+      "commit": "15ff00e",
       "title": "Conditions that do something",
       "tags": [
         "encounter",
@@ -220,7 +220,7 @@
       "version": "1.0.252",
       "build": 252,
       "date": "2026-10-26",
-      "commit": "9ecfd6e",
+      "commit": "95e0c45",
       "title": "Dice and paper",
       "tags": [
         "toolkit",
@@ -238,7 +238,7 @@
       "version": "1.0.251",
       "build": 251,
       "date": "2026-10-26",
-      "commit": "ec227eb",
+      "commit": "c85d5d5",
       "title": "Rules reference",
       "tags": [
         "toolkit",

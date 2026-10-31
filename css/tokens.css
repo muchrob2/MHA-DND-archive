@@ -63,7 +63,14 @@
   /* ── text ──────────────────────────────────────────────── */
   --text:       #F2F5FA;
   --text-muted: #93A3B8;
-  --text-dim:   #56687F;
+  /* Was #56687F, which is 2.91:1 on --surface2 and 3.49:1 on --bg — below
+     WCAG AA (4.5:1) on every surface it is actually set on, and this is the
+     tier used for the smallest text on the site: .tile-more at 11px,
+     .section-h3 and .glance-label at 10px, every .chip and .edit-hint.
+     #788799 clears 4.5:1 on all three (4.53 / 5.01 / 5.42) with the hue
+     unchanged — only lightness moves — and stays visibly quieter than
+     --text-muted, which is 6.46:1 on the same surface. */
+  --text-dim:   #788799;
   --text-on-accent: var(--ink);
 
   /* ── accent aliases (see contract above) ───────────────── */
@@ -204,7 +211,10 @@
 
   --text:       #241B10;
   --text-muted: #5E5140;
-  --text-dim:   #8A7C68;
+  /* Was #8A7C68 — 2.95:1 on --surface3, 3.78:1 on --surface. Darkened, not
+     lightened, because this surface is paper: 4.52:1 at worst, and still
+     the lightest of the three tiers (--text-muted is 7.15:1). */
+  --text-dim:   #6A5F50;
   --text-on-accent: #FBF6EC;
 
   --accent:       #A8761A;
@@ -287,7 +297,8 @@
 
     --text:       #EDE7DC;
     --text-muted: #ABA394;
-    --text-dim:   #7A7263;
+    /* Was #7A7263 — 2.88:1 on --surface3. Now 4.54:1 at worst. */
+    --text-dim:   #9A9488;
 
     --accent-light: #241A05;
     --accent-text:  #E8B94A;

@@ -3,6 +3,11 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # Without this, nothing was checked until AFTER a merge: the only trigger
+  # was a push to main, so every pull request reported no checks at all and
+  # validation happened on the way to production rather than before it.
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -11,14 +16,24 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  # Per-ref, not a single global 'pages' group: now that pull requests run
+  # this workflow, one global group with cancel-in-progress would let a PR's
+  # validate run cancel a deploy of main that was already under way.
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 for the same reason the deploy job needs it — git
+      # history is data here, not just provenance. verify-updates.js resolves
+      # every entry's commit and counts rev-list to check the build number it
+      # claims, so under the default depth-1 checkout it fails on all 47
+      # entries. Verified by running the suite against a --depth 1 clone.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Validate campaign/character JSON
         run: |
           python3 -c "
@@ -37,17 +52,27 @@ jobs:
               sys.exit(1)
           print(f'{len(files)} JSON files OK')
           "
-      - name: Verify page JavaScript parses
-        run: node scripts/verify-js-syntax.js
-
-      - name: Verify Firestore merge-save safety
-        run: node scripts/verify-merge-safety.js
-
-      - name: Verify relationship live-sync safety
-        run: node scripts/verify-relationship-sync.js
+      # `npm test` and not a list of scripts. This step used to name three
+      # of them by hand, and twenty-seven more were written afterwards — the
+      # heropad, the ledger, the dice, the sheet, the party table, Heat, the
+      # Lab, the run sheet, Free Time, the compendium, all 734 fields of
+      # campaign prose — so 1819 of the repo's assertions only ever ran if
+      # somebody remembered to type `npm test` on their own machine.
+      # package.json exists to be the single entry point; this uses it, and
+      # a new verifier is now covered the moment it is added to that script.
+      #
+      # No `npm ci` and no setup-node: package.json has no dependencies and
+      # every verifier is plain node against the repo, so the runner's own
+      # node is enough and there is nothing to install or cache.
+      - name: Verify everything
+        run: npm test
 
   deploy:
     needs: validate
+    # ⚠ LOAD-BEARING. The workflow now also runs on pull_request, and without
+    # this condition that would publish every unmerged branch straight to the
+    # live site. A pull request gets the validate job and stops there.
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

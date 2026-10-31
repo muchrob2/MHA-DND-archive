@@ -549,9 +549,9 @@ function renderEncounter() {
       </div>
       <div class="enc-actions">
         <div style="font-size:11px;font-weight:600;color:var(--text-dim);">AC ${c.ac}</div>
-        <button class="icon-btn" onclick="encRandomAttack(${c.id})" title="Random attack against an enemy">⚔</button>
-        <button class="icon-btn" onclick="encToggleCond(${c.id})" title="Conditions">⚡</button>
-        <button class="icon-btn${c.notes?'  note-active':''}" onclick="encToggleNotes(${c.id})" title="Combat note">📝</button>
+        <button class="icon-btn" onclick="encRandomAttack(${c.id})" title="Random attack against an enemy"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3 3 5l8.5 8.5M19 3l2 2-8.5 8.5"/><path d="M3 19l4-4M21 19l-4-4M14 14l5 5-2 2-5-5"/><path d="M10 14l-5 5 2 2 5-5"/></svg></button>
+        <button class="icon-btn" onclick="encToggleCond(${c.id})" title="Conditions"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></button>
+        <button class="icon-btn${c.notes?'  note-active':''}" onclick="encToggleNotes(${c.id})" title="Combat note"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3h8L19 7.5v12a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19.5z"/><path d="M14 3v5h5"/><path d="M8.5 12h7M8.5 15.5h4"/></svg></button>
         <button class="icon-btn remove" onclick="encRemove(${c.id})" title="Remove" aria-label="Remove">✕</button>
       </div>
     </div>`;

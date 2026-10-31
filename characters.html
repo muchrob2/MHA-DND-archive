@@ -26,7 +26,7 @@
   <a id="back-btn" href="index.html">← Dashboard</a>
   <span class="nav-title">Characters</span>
   <div class="nav-right">
-    <span class="nav-saved" id="saved-notice">Saved ✓</span>
+    <span class="nav-saved" id="saved-notice" role="status" aria-live="polite">Saved ✓</span>
     <button class="nav-btn save-btn" id="new-folder-btn" onclick="openCreateFolderModal()" style="display:none;">+ New Folder</button>
     <button class="nav-btn save-btn" id="new-char-btn" onclick="openCreateModal()" style="display:none;">+ New Character</button>
   </div>
@@ -66,7 +66,7 @@
   </div>
 </div>
 
-<div id="load-error-banner" style="display:none; max-width:1100px; margin:14px auto 0; padding:0 24px;">
+<div id="load-error-banner" role="alert" style="display:none; max-width:1100px; margin:14px auto 0; padding:0 24px;">
   <div style="background:var(--red-light); border:1px solid rgba(239,68,68,0.3); border-radius:var(--radius); padding:10px 14px; font-size:12px; color:var(--red-text);">
     Couldn't load saved edits or custom characters from the server — showing base data only. Reload to try again.
   </div>

@@ -84,7 +84,14 @@ const updates = doc.updates || [];
     if (date !== u.date) wrong.push(`${u.version}: date says ${u.date}, commit is ${date}`);
   }
   check('every entry matches the commit it claims to have shipped in',
-    wrong.length === 0, wrong.join('\n        '));
+    wrong.length === 0,
+    wrong.join('\n        ')
+    + (wrong.length
+      ? '\n        → almost always a squash merge: the commits an entry was '
+        + 'written against\n          became one, so the SHA is gone and the '
+        + 'count dropped. Run\n          `node scripts/restamp-updates.js` to '
+        + 'see the repair, --write to apply it.'
+      : ''));
 
   // The newest entry should be the tip, or the notes are behind the code.
   const head = Number(git('rev-list', '--count', 'HEAD'));

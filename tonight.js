@@ -348,7 +348,7 @@ function notesHtml() {
       placeholder="What you want to remember at nine o'clock tonight."
       aria-label="Notes for tonight">${escHtml(runDoc.notes || '')}</textarea>
     <div class="rs-save-row">
-      <span id="rs-save-state" class="rs-save-state">${canWrite ? '' : 'Signed out — notes stay in this browser'}</span>
+      <span id="rs-save-state" class="rs-save-state" role="status" aria-live="polite">${canWrite ? '' : 'Signed out — notes stay in this browser'}</span>
     </div>`;
 }
 

@@ -263,7 +263,7 @@
     const widget = document.createElement('div');
     widget.id = 'auth-widget';
     widget.innerHTML = `
-      <span id="auth-status"></span>
+      <span id="auth-status" role="status" aria-live="polite"></span>
       <a id="auth-admin-link" href="${BASE}admin.html" style="display:none;">Admin</a>
       <button id="auth-signin-btn" type="button">Sign in</button>
       <button id="auth-signout-btn" type="button" style="display:none;">Sign out</button>

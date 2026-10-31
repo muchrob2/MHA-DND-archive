@@ -86,7 +86,7 @@
           </select>
         </div>
         <button type="button" id="grant-apply-btn" class="save-row-btn" onclick="applyGrant()">Grant</button>
-        <div id="grant-status" role="status"></div>
+        <div id="grant-status" role="status" aria-live="polite" role="status"></div>
       </div>
     </div>
 
@@ -107,7 +107,7 @@
     is harmless.
   </p>
   <button id="migrate-btn" class="add-block-btn" onclick="migrateInventories()">Move inventories</button>
-  <div id="migrate-status" class="row-saved show"></div>
+  <div id="migrate-status" role="status" aria-live="polite" class="row-saved show"></div>
 </section>
 
 <script defer src="admin.js"></script>

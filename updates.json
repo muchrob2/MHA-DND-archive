@@ -16,10 +16,10 @@
   ],
   "updates": [
     {
-      "version": "1.0.272",
-      "build": 272,
-      "date": "2026-10-29",
-      "commit": "f3761d7",
+      "version": "1.0.268",
+      "build": 268,
+      "date": "2026-10-31",
+      "commit": "7317a4b",
       "title": "The rest of the site catches up with the dashboard",
       "tags": [
         "toolkit",

@@ -328,7 +328,12 @@ function boot({ fetchImpl } = {}) {
     'last-updated-text', 'header-label']) els[id] = mk();
   const DOCS = {};
   const strip = new Function('sandbox', `
-    const { document, fetch, console, localStorage } = sandbox;
+    // sessionStorage as well as localStorage: index.js:109 reads the saved
+    // role out of it. Left off the destructure it fell through to the host's
+    // global, which Node 26 happens to provide and Node 24 does not — so
+    // this passed locally and failed on CI with "sessionStorage is not
+    // defined". A sandbox that borrows a global is not a sandbox.
+    const { document, fetch, console, localStorage, sessionStorage } = sandbox;
     ${read('index.js').replace(/^\(function[\s\S]*?\{/, '').replace(/\}\)\(\);\s*$/, '')}
     return { loadGlance, heatMood };
   `)({
@@ -341,6 +346,7 @@ function boot({ fetchImpl } = {}) {
     },
     console: { error() {}, log() {} },
     localStorage: { getItem: () => null, setItem() {} },
+    sessionStorage: { getItem: () => null, setItem() {}, removeItem() {} },
   });
 
   const S = (v) => ({ stringValue: v });

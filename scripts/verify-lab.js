@@ -45,6 +45,14 @@ const path = require('path');
 const repoRoot = path.join(__dirname, '..');
 const read = (p) => fs.readFileSync(path.join(repoRoot, p), 'utf8');
 
+// The page's own line icons. Author markup, emitted by lab.js's templates on
+// every roll button — stripped before the three XSS scans below so that a
+// real injected <svg onload=…> still trips them. Same situation the comment
+// at the first scan already documents for <b>42</b>: a tag the page itself
+// renders is not a leak. Nothing a player types can survive as
+// `<svg class="…"`, because every field goes through escHtml first.
+const OWN_ICONS = /<svg class="(?:btn-ico|es-icon)"[^>]*>[\s\S]*?<\/svg>/g;
+
 let failures = 0;
 function check(label, cond, detail) {
   if (cond) { console.log('PASS — ' + label); return; }
@@ -513,7 +521,7 @@ const env = new Function('sandbox', `
     // Deliberately NOT <b> or <i>: the facet counts are rendered as <b>42</b>
     // by this page's own markup, and the first version of this check matched
     // that and reported a leak that was not one.
-    const tags = page.match(/<(script|img|iframe|svg)[ >/]/g) || [];
+    const tags = page.replace(OWN_ICONS, '').match(/<(script|img|iframe|svg)[ >/]/g) || [];
     check('nothing a field contains can become a tag',
       tags.length === 0, [...new Set(tags)].join(' '));
     check('and every injected field comes back as entities',
@@ -701,7 +709,8 @@ const env = new Function('sandbox', `
       inventory: { items: [{ id: 'x', name: '<iframe>', notes: '2d6 <script>x</script>' }], currency: {} },
     })];
     env.setView('mine');
-    const sheetTags = els['lab-mine'].innerHTML.match(/<(script|img|iframe|svg)[ >/]/g) || [];
+    const sheetTags = els['lab-mine'].innerHTML
+      .replace(OWN_ICONS, '').match(/<(script|img|iframe|svg)[ >/]/g) || [];
     check('nothing on a character can become a tag on the turn sheet',
       sheetTags.length === 0, [...new Set(sheetTags)].join(' '));
     check('and it comes back as entities',
@@ -969,7 +978,8 @@ const env = new Function('sandbox', `
       stats: { HP: '<svg/>' }, note: '<script>n</script>',
     };
     env.setView('record');
-    const recordTags = els['lab-record'].innerHTML.match(/<(script|img|iframe|svg)[ >/]/g) || [];
+    const recordTags = els['lab-record'].innerHTML
+      .replace(OWN_ICONS, '').match(/<(script|img|iframe|svg)[ >/]/g) || [];
     check('nothing in your own record can become a tag',
       recordTags.length === 0, [...new Set(recordTags)].join(' '));
     check('and it comes back as entities',

@@ -77,7 +77,7 @@ function tableHtml(table) {
     <header class="loot-table-head">
       <h2 class="loot-table-name">${escHtml(table.name)}</h2>
       <button class="loot-roll" onclick="rollTable('${escHtml(table.id)}')"
-        title="Roll ${escHtml(table.die)} on this table">🎲 ${escHtml(table.die)}</button>
+        title="Roll ${escHtml(table.die)} on this table"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/></svg>${escHtml(table.die)}</button>
       ${rolled ? `<button class="loot-clear" onclick="clearRoll('${escHtml(table.id)}')" title="Clear the roll">✕</button>` : ''}
     </header>
     ${table.source ? `<p class="loot-source">${escHtml(table.source)}</p>` : ''}

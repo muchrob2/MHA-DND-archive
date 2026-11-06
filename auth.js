@@ -33,7 +33,7 @@
 
   window.fbDb = db;
 
-  const EMPTY_STATE = { user: null, role: null, editableCharacterIds: [] };
+  const EMPTY_STATE = { user: null, role: null, editableCharacterIds: [], editableCharacterFiles: [] };
   let resolveReady;
   window.fbAuthReady = new Promise((res) => { resolveReady = res; });
 
@@ -55,6 +55,22 @@
     if (currentState.role === 'admin') return true;
     if (characterId != null && currentState.role === 'editor') {
       return currentState.editableCharacterIds.includes(characterId);
+    }
+    return false;
+  };
+
+  /* The same question asked in the other key space.
+
+     An inventory document is named for a roster file ("kibi_kankei.json");
+     canEdit() above works in the fbCharacterKey space ("Student (1-A)::Kibi
+     Kankei"). They are not interchangeable, and firestore.rules scopes
+     inventory writes on the file, so this is the helper to ask before
+     offering somebody their own purse to edit. admin.js writes both lists
+     from the same checkboxes, so they stay in step. */
+  window.canEditCharacterFile = function (file) {
+    if (currentState.role === 'admin') return true;
+    if (file != null && currentState.role === 'editor') {
+      return currentState.editableCharacterFiles.includes(file);
     }
     return false;
   };
@@ -380,15 +396,16 @@
     if (!user) {
       state = EMPTY_STATE;
     } else {
-      let role = null, editableCharacterIds = [];
+      let role = null, editableCharacterIds = [], editableCharacterFiles = [];
       try {
         const snap = await db.collection('users').doc(user.uid).get();
         if (snap.exists) {
           role = snap.data().role || null;
           editableCharacterIds = snap.data().editableCharacterIds || [];
+          editableCharacterFiles = snap.data().editableCharacterFiles || [];
         }
       } catch {}
-      state = { user, role, editableCharacterIds };
+      state = { user, role, editableCharacterIds, editableCharacterFiles };
     }
     currentState = state;
     if (document.readyState === 'loading') {

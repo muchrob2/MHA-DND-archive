@@ -103,14 +103,22 @@ let canWrite = false;
    The Inventory tab holds two different kinds of thing, and they get two
    different answers.
 
-   MONEY — currency, crafting parts, points — is not the players' to move.
-   It arrives by being earned, granted from the admin page, or bought in
-   the Shop, and every one of those routes leaves a line on the Bank
-   statement. A player typing themselves ¥10,000 skips all three. So those
-   inputs stay disabled for everyone, DM included: the grant panel writes
-   the inventory and its ledger entry in one transaction, and a second
-   write path here would be a way to change someone's money without any
-   record of it. canEditInventory is that gate, and nothing sets it true.
+   CURRENCY is a player's own to set, on their own sheet. It used to be
+   nobody's: the inputs were disabled for everyone including the DM,
+   because the grant panel wrote the inventory and its ledger entry in one
+   transaction and a second write path here would have been a way to move
+   money with no record of it. That objection was right, so the second
+   write path answers it rather than dodging it — saveInventoryCurrency
+   writes the purse and its Bank-statement line in a single transaction,
+   exactly as the grant panel does. The gate is canEditOwnCurrency, which
+   is ownership, not role: the DM, or the player this character belongs to.
+   firestore.rules enforces the same thing, keyed on the roster file.
+
+   PARTS AND POINTS are still nobody's. They are unchanged and still ride
+   on canEditInventory below, which nothing sets true. They have no
+   handbook exchange rate, so the purse rule in firestore.rules cannot
+   value them, and an audit line for them would reconcile against nothing.
+   If they ever become editable they need the same treatment currency got.
 
    ITEMS are. A player picking up a rope, using the last of a medkit or
    noting where something came from is bookkeeping, not economy: no
@@ -126,6 +134,15 @@ let canWrite = false;
    themselves are unvalued and unguarded — which is the right trade, since
    an item is worth nothing the database could count anyway. */
 let canEditInventory = false;
+
+/* Ownership, in the key space the inventories collection actually uses.
+   canEdit() in auth.js works on "Student (1-A)::Kibi Kankei"; an inventory
+   document is named "kibi_kankei.json", and firestore.rules scopes a purse
+   edit on the file. canEditCharacterFile() is the helper for that spelling. */
+function canEditOwnCurrency(c) {
+  return !!c && !!c._file && typeof canEditCharacterFile === 'function'
+    && canEditCharacterFile(c._file);
+}
 
 // Whether the signed-in user may add, edit and remove item rows on `c`.
 // Needs a document in the inventories collection to write to: only the DM
@@ -161,6 +178,36 @@ function buildBundle() {
 // the Inventory tab and its totals keep working unchanged. The only thing
 // this page ever writes back is the items array (see saveInventoryItems).
 const FS_INVENTORIES = db.collection('inventories');
+
+/* ── The ledger ─────────────────────────────────────────────────────
+   This file is the fourth writer of mha-dnd/ledger: the shop records what
+   a player spent, the admin page what the DM gave them, the Eats app what
+   they ate, and this records a player correcting their own purse on their
+   sheet. That last one is why the currency inputs could be unlocked at
+   all — an adjustment nobody can see is the thing the old rule existed to
+   prevent, so the write and its statement line go in one transaction.
+
+   The ENTRY SHAPE is documented in full at the top of shop.js and must
+   stay identical in all the writers; verify-ledger.js fails if they
+   drift, and CURRENCY_TO_YEN below is likewise kept in step.
+   ─────────────────────────────────────────────────────────────────── */
+const FS_LEDGER_DOC = db.collection('mha-dnd').doc('ledger');
+const MAX_LEDGER_ENTRIES = 400;
+
+function ledgerEntry(file, kind, label, unit, amount, yenValue) {
+  return { id: genId('led'), ts: Date.now(), file, kind, label, unit, amount, yen: yenValue };
+}
+
+// Takes the transaction's own read of the ledger and returns the document to
+// write back. Oldest entries fall off the front once the cap is reached.
+function appendToLedger(snap, additions) {
+  const data = (snap && snap.exists && snap.data()) || {};
+  const existing = Array.isArray(data.entries) ? data.entries : [];
+  const merged = existing.concat(additions);
+  return Object.assign({}, data, {
+    entries: merged.length > MAX_LEDGER_ENTRIES ? merged.slice(merged.length - MAX_LEDGER_ENTRIES) : merged,
+  });
+}
 
 // Which characters actually have a document in that collection. Only the DM's
 // migration creates one, so this doubles as the answer to "is there anything
@@ -1539,7 +1586,7 @@ function renderInventoryTab(c) {
     <div class="inv-currency-block">
       <label>${CURRENCY_LABELS[k]}</label>
       <input class="inv-currency-input" type="number" min="0" value="${currency[k]||0}"
-        ${canEditInventory ? `onchange="onCurrencyChange('${k}',this.value)"` : 'disabled'} title="${CURRENCY_LABELS[k]}">
+        ${canEditOwnCurrency(c) ? `onchange="onCurrencyChange('${k}',this.value)"` : 'disabled'} title="${CURRENCY_LABELS[k]}">
     </div>`).join('');
 
   const partsYen = PART_DEFS.reduce((sum, p) => sum + (parts[p.key]||0) * p.yen, 0);
@@ -1657,12 +1704,68 @@ function renderInventoryTab(c) {
   `;
 }
 
+/* Set one denomination on the character's own purse.
+
+   This used to call scheduleCharSave, which writes relationships-bundle —
+   and the purse does not live there, it lives in the inventories
+   collection. The gate above was permanently false so it never ran and
+   never showed; flipping the gate alone would have looked like it worked
+   and quietly persisted nothing. Hence a real write path. */
 function onCurrencyChange(key, value) {
-  if (!canEditInventory) return;
+  const c = selected;
+  if (!canEditOwnCurrency(c)) return;
   const num = Math.max(0, parseInt(value) || 0);
-  selected.inventory.currency[key] = num;
-  scheduleCharSave(selected);
-  renderInventoryTab(selected);
+  c.inventory = c.inventory || {};
+  c.inventory.currency = c.inventory.currency || {};
+  c.inventory.currency[key] = num;
+  renderInventoryTab(c);
+  saveInventoryCurrency(c._file, key, num);
+}
+
+/* Write one denomination, and the Bank-statement line that explains it, in
+   one transaction — the same shape as the admin page's grant.
+
+   The value the player typed is absolute ("my yen is 5,000"), so that is
+   what is written. The ledger amount, though, is computed from the purse
+   read inside the transaction rather than from whatever was on screen: if a
+   shop purchase landed between the render and the blur, the statement
+   should say what actually changed, not what the page assumed. An edit that
+   turns out to be a no-op writes no ledger line at all. */
+async function saveInventoryCurrency(file, key, value) {
+  setSaveStatus('saving', 'Saving…');
+  try {
+    await fbAuthReady;
+    const ref = FS_INVENTORIES.doc(file);
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      if (!snap.exists) {
+        throw new Error('No inventory for this character yet — the DM needs to run the migration on the admin page.');
+      }
+      const ledgerSnap = await tx.get(FS_LEDGER_DOC);
+      const currency = Object.assign({}, snap.data().currency || {});
+      const before = currency[key] || 0;
+      if (before === value) return;
+      currency[key] = value;
+      // `currency` alone: items, parts and points are not in this write, so
+      // nothing beside the purse can be lost by editing it.
+      tx.update(ref, { currency });
+      const delta = value - before;
+      tx.set(FS_LEDGER_DOC, appendToLedger(ledgerSnap, [ledgerEntry(
+        file, 'currency',
+        'Adjusted on the character sheet',
+        key, delta, delta * (CURRENCY_TO_YEN[key] || 0),
+      )]));
+    });
+    if (isDirty() || _dirtyItemFiles.size) setSaveStatus('dirty', 'Unsaved changes');
+    else setSaveStatus('saved', 'Saved ' + new Date().toLocaleTimeString());
+  } catch (e) {
+    // Put the server's value back on screen rather than leaving a number the
+    // database refused: a refused purse edit that still reads 5,000 is worse
+    // than one that snaps back.
+    await loadInventories();
+    renderInventoryTab(selected);
+    setSaveStatus('error', e.message || 'Could not save money');
+  }
 }
 
 function onPartChange(key, value) {

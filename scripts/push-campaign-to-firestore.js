@@ -6,11 +6,20 @@
  * therefore has no effect on the live site — the campaign has to be written to
  * the document as well.
  *
- * The live doc is authoritative and is NOT a copy of the repo file: it carries
+ * The live data is authoritative and is NOT a copy of the repo file: it carries
  * campaigns that exist nowhere else (hand-written ones added through the app)
  * and edited versions of the ones that are in the repo. So this script appends
  * or replaces exactly one campaign by id and leaves every other entry byte-for-
  * byte as it found it. It never uploads the repo's copy of the whole array.
+ *
+ * Storage comes in two shapes and this script handles both, deciding by the
+ * `sharded` flag on mha-dnd/campaigns:
+ *   · SHARDED (current) — a manifest of metadata, plus one content document
+ *     per campaign at mha-dnd/campaign-<id>. Each campaign has its own 1 MiB,
+ *     and a push cannot touch another campaign's content by construction.
+ *   · SINGLE (pre-migration) — everything in mha-dnd/campaigns. Kept working
+ *     so this script is safe either side of the migration and a rollback.
+ * See scripts/shard-campaigns-to-firestore.js.
  *
  * Auth comes from the Firebase CLI's own stored credentials — the script reads
  * them at run time; nothing else ever handles the token. Run `firebase login`
@@ -84,6 +93,43 @@ function accessToken() {
   return t.access_token;
 }
 
+/* Firestore map fields are unordered: a document does not come back with its
+ * keys in the order it went in, and campaigns hand-built through the app have
+ * scrambled key order to begin with (camp-tzh0jaz starts `tone, estimate,
+ * icon, links, id`). So "did this survive the round trip" has to be asked
+ * about the data, not the bytes — a plain JSON.stringify comparison reports a
+ * reordered key as data loss and refuses a migration that is perfectly sound.
+ */
+function canon(v) {
+  if (Array.isArray(v)) return v.map(canon);
+  if (v && typeof v === 'object') {
+    const out = {};
+    for (const k of Object.keys(v).sort()) out[k] = canon(v[k]);
+    return out;
+  }
+  return v;
+}
+const same = (a, b) => JSON.stringify(canon(a)) === JSON.stringify(canon(b));
+
+const CONTENT_KEYS = ['background', 'chapters', 'appendix', 'links'];
+const LIMIT = 1024 * 1024;
+
+function manifestEntry(c) {
+  const out = {};
+  for (const [k, v] of Object.entries(c)) {
+    if (CONTENT_KEYS.includes(k)) continue;
+    out[k] = v;
+  }
+  out.chapterCount = (c.chapters || []).length;
+  return out;
+}
+function shardDoc(c) {
+  const out = { id: c.id };
+  for (const k of CONTENT_KEYS) if (c[k] !== undefined) out[k] = c[k];
+  return out;
+}
+const sizeOf = fields => JSON.stringify({ fields: Object.fromEntries(Object.entries(fields).map(([k, v]) => [k, encode(v)])) }).length;
+
 (async () => {
   const repoPath = path.join(__dirname, '..', 'CAMPAIGN', 'campaigns.json');
   const local = JSON.parse(fs.readFileSync(repoPath, 'utf8'));
@@ -106,6 +152,69 @@ function accessToken() {
 
   const before = liveCampaigns.map(c => c.id);
   const idx = liveCampaigns.findIndex(c => c.id === campaignId);
+
+  console.log(`live doc updateTime : ${raw.updateTime}`);
+  console.log(`backup written to   : ${path.relative(process.cwd(), backup)}`);
+  console.log(`storage             : ${live.sharded ? 'one document per campaign' : 'single document (pre-migration)'}`);
+  console.log(`live campaigns      : ${before.join(', ')}`);
+  console.log(`action              : ${idx >= 0 ? 'REPLACE existing' : 'APPEND new'} "${campaignId}"`);
+
+  /* ── Sharded: the campaign's content is its own document ─────────────── */
+  if (live.sharded) {
+    // Nothing else can be touched by construction — the content goes to a
+    // document only this campaign uses, and the manifest entry is replaced by
+    // id. The old "refusing to write: X would change" guard is now structural.
+    const shard = shardDoc(entry);
+    const meta = manifestEntry(entry);
+    const mergedManifest = liveCampaigns.slice();
+    if (idx >= 0) mergedManifest[idx] = meta; else mergedManifest.push(meta);
+
+    const shardSize = sizeOf(shard);
+    const manifestSize = sizeOf({ sharded: true, campaigns: mergedManifest });
+    console.log(`content document    : ${(shardSize / 1024).toFixed(0)} KB of its own 1 MiB (${((shardSize / LIMIT) * 100).toFixed(0)}%), ${((LIMIT - shardSize) / 1024).toFixed(0)} KB spare`);
+    console.log(`manifest            : ${(manifestSize / 1024).toFixed(1)} KB`);
+    if (shardSize > LIMIT) throw new Error(`"${campaignId}" exceeds the 1 MiB document limit on its own`);
+    if (manifestSize > LIMIT) throw new Error('the manifest exceeds the 1 MiB document limit');
+
+    for (const c of mergedManifest) {
+      if (c.id === campaignId) continue;
+      const orig = liveCampaigns.find(o => o.id === c.id);
+      if (!same(orig, c)) throw new Error(`refusing to write: manifest entry "${c.id}" would change`);
+    }
+
+    if (!doWrite) { console.log('\nDRY RUN — nothing written. Re-run with --write to commit.'); return; }
+
+    // Content first: until the manifest names it, a half-written shard is
+    // invisible to the site.
+    const shardUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents/mha-dnd/campaign-${campaignId}`;
+    const put = await fetch(shardUrl, {
+      method: 'PATCH',
+      headers: { ...auth, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields: Object.fromEntries(Object.entries(shard).map(([k, v]) => [k, encode(v, '$.' + k)])) }),
+    });
+    if (!put.ok) throw new Error(`content write failed: HTTP ${put.status} ${(await put.text()).slice(0, 600)}`);
+
+    const backRes = await fetch(shardUrl, { headers: auth });
+    if (!backRes.ok) throw new Error(`verify failed: HTTP ${backRes.status}`);
+    const back = Object.fromEntries(Object.entries((await backRes.json()).fields || {}).map(([a, b]) => [a, decode(b)]));
+    if (!same(back, shard)) throw new Error('the content document did not come back identical — manifest left untouched');
+
+    if (idx < 0 || !same(liveCampaigns[idx], meta)) {
+      const man = await fetch(`${BASE}?updateMask.fieldPaths=campaigns`, {
+        method: 'PATCH',
+        headers: { ...auth, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: { campaigns: encode(mergedManifest, '$.campaigns') } }),
+      });
+      if (!man.ok) throw new Error(`manifest write failed: HTTP ${man.status} ${(await man.text()).slice(0, 600)}`);
+      console.log('manifest updated');
+    } else {
+      console.log('manifest unchanged — metadata is identical');
+    }
+    console.log(`\nWRITTEN. "${campaignId}" is live.`);
+    return;
+  }
+
+  /* ── Pre-migration: one fat document ─────────────────────────────────── */
   const merged = liveCampaigns.slice();
   if (idx >= 0) merged[idx] = entry; else merged.push(entry);
 
@@ -118,14 +227,10 @@ function accessToken() {
 
   const body = { fields: { campaigns: encode(merged, '$.campaigns') } };
   const payload = JSON.stringify(body);
-
-  console.log(`live doc updateTime : ${raw.updateTime}`);
-  console.log(`backup written to   : ${path.relative(process.cwd(), backup)}`);
-  console.log(`live campaigns before: ${before.join(', ')}`);
-  console.log(`live campaigns after : ${merged.map(c => c.id).join(', ')}`);
-  console.log(`action              : ${idx >= 0 ? 'REPLACE existing' : 'APPEND new'} "${campaignId}"`);
   console.log(`payload             : ${(payload.length / 1024).toFixed(0)} KB (Firestore doc limit is 1 MiB)`);
-  if (payload.length > 1024 * 1024) throw new Error('payload exceeds the 1 MiB document limit');
+  if (payload.length > LIMIT) {
+    throw new Error('payload exceeds the 1 MiB document limit — run scripts/shard-campaigns-to-firestore.js to split the document, which removes this ceiling');
+  }
 
   if (!doWrite) {
     console.log('\nDRY RUN — nothing written. Re-run with --write to commit.');

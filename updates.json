@@ -16,6 +16,58 @@
   ],
   "updates": [
     {
+      "version": "1.0.278",
+      "build": 278,
+      "date": "2026-11-06",
+      "commit": "6125831",
+      "title": "Players can set their own money",
+      "tags": [
+        "toolkit",
+        "heropad"
+      ],
+      "items": [
+        "The currency row on the Inventory tab is editable on your own character. Yen and every coin denomination — set them to whatever they should be. Previously these were locked for everybody, the DM included, and only a grant or a purchase could move them.",
+        "Every adjustment writes its own line to the Bank statement, so the DM can see what changed and when. That audit line is the reason this could be unlocked: an edit nobody can see was the thing the old restriction existed to prevent.",
+        "You can only do this to your own character. Somebody else's purse still cannot be raised by you, which is also what keeps the Shop and the food app working.",
+        "Crafting parts and hero points are unchanged and still the DM's to set — they have no yen value, so there would be nothing for the statement to reconcile against."
+      ]
+    },
+    {
+      "version": "1.0.277",
+      "build": 277,
+      "date": "2026-11-06",
+      "commit": "a64a72f",
+      "title": "Campaigns each get their own megabyte",
+      "tags": [
+        "campaign",
+        "data"
+      ],
+      "items": [
+        "Every campaign used to share a single database record, and it was nearly full — 871 KB of a hard 1,024 KB limit once the ninth chapter went in. Another chapter would not have published at all.",
+        "Each campaign now has its own record, so each has its own megabyte. The largest is the story volume at 638 KB, with 386 KB spare in it. The campaign list loads just the titles and opens a module's text when you open the module, so the library page is lighter than it was.",
+        "Searching every module at once still works the same way: it fetches the whole library the first time you search, which is the same download the page used to do on every visit.",
+        "Two people editing different chapters of the same campaign no longer overwrite each other."
+      ]
+    },
+    {
+      "version": "1.0.276",
+      "build": 276,
+      "date": "2026-11-06",
+      "commit": "fa4cf11",
+      "title": "A ninth chapter, and a teahouse in Yanaka",
+      "tags": [
+        "campaign",
+        "reader",
+        "encounter"
+      ],
+      "items": [
+        "Chapter 9, \"The Correction\" (levels 12-14), is in The Shortlist: After Hours. A month after the hearing the archive has four thousand annotations on it, about one in nine untrue, and nobody has ever had to check it before. The Commission wants a licensed verifier. The class will need a third answer.",
+        "Tsukebarai is the fifth Underground faction — a registered teahouse four streets behind the Yanaka cemetery that will sell you anything and will not take money for it. Full write-up, stat blocks, a discovery ladder and a d8 of prices. It is eight minutes' walk from the Ledger's own haunt, which was never a coincidence.",
+        "Six supporting characters who have been on the Characters tab for a year and never in a session finally have scenes: Mizushima Dayo, Tobari Jin, Makoto Tsurugi, Haruno Setsuko, Shirai Kenzo and Kurosawa Emi.",
+        "New in Free Time: a Yanaka ward page, a second list of twenty odd jobs, and a third forty of little things. The encounter manager gains eight presets and two groups, including the removal at Ōmori."
+      ]
+    },
+    {
       "version": "1.0.268",
       "build": 268,
       "date": "2026-10-31",

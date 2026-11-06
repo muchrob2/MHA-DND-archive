@@ -31,27 +31,37 @@ service cloud.firestore {
        twenty characters checking whose purse moved. One document per
        character makes the question answerable.
 
-       The rule below is the whole point:
+       The rule below was, for most of this project's life:
 
          a player may write an inventory, but never one whose purse is
          worth more than the purse already there.
 
-       Spending is a decrease, so the Shop and the Eats app work
-       untouched. Giving yourself ¥10,000 is an increase, so it is refused
-       by the database rather than by a check in a page the player
-       controls. The DM is unrestricted — grants are supposed to add money.
+       Spending is a decrease, so the Shop and the Eats app worked
+       untouched, and giving yourself ¥10,000 was refused by the database
+       rather than by a check in a page the player controls.
+
+       That has been relaxed, deliberately: a player may now set their OWN
+       purse to anything, because at a real table the player is the one who
+       knows what they were just handed, and the DM was spending their
+       evening typing it in. What stops that being a hole is that the edit
+       is not silent — it writes its own line to the Bank statement in the
+       same transaction, so the DM can see every adjustment and who made
+       it. The monotonic rule still governs everybody else's purse, which
+       is what keeps the Shop working and keeps a player out of another
+       player's money. The DM remains unrestricted.
 
        ── What this does NOT stop ──────────────────────────────────────
        · Adding items, parts or points out of thin air. Only the purse is
          valued, because only the purse has a handbook exchange rate to
          value it by.
-       · One player spending another player's money. Editors are not tied
-         to particular inventories here — editableCharacterIds is stored
-         inconsistently across the app (see the note in verify-inventory-
-         rules.js), and a rule built on it would lock honest players out
-         of buying. A tighter ownership rule is worth doing once that is
-         cleaned up; refusing to *create* money is the protection that
-         matters and it works today.
+       · One player spending another player's money. Spending is a
+         decrease, so the third clause below permits it for any editor —
+         which is what lets the Shop work at all. Ownership now scopes who
+         may *raise* a purse, not who may lower one.
+       · A player raising their own purse without the DM noticing. It is
+         allowed on purpose now, and the audit trail rather than the rule
+         is what makes it answerable: the write and its Bank-statement line
+         land in one transaction (see saveInventoryCurrency).
        ─────────────────────────────────────────────────────────────── */
     function purseValue(inv) {
       return inv.get('currency', {}).get('yen', 0)
@@ -69,7 +79,29 @@ service cloud.firestore {
       // is admin-only — the migration on the admin page does it.
       allow create: if isAdmin();
 
+      /* Three ways an inventory may be written, in descending trust:
+
+         · THE DM, without restriction. Grants are supposed to add money.
+
+         · ITS OWNER, in any direction. A player may set their own purse to
+           whatever it should be — they are the one at the table who knows
+           what they were handed. Every such edit writes a line to the Bank
+           statement from the same transaction, so "no record of it" — the
+           reason this was once refused outright — is no longer the trade.
+
+           Keyed on editableCharacterFiles, NOT editableCharacterIds. The two
+           are different key spaces and conflating them is why this rule was
+           unscoped for so long: an inventory document is named for a roster
+           file ("kibi_kankei.json") while editableCharacterIds holds
+           "Student (1-A)::Kibi Kankei". admin.js writes both.
+
+         · ANYBODY WHO MAY EDIT SHEETS, but only downwards. This is what the
+           Shop and the Eats app ride on, and it is kept exactly as it was so
+           a purchase cannot be refused mid-checkout. It also still refuses a
+           player inventing money on somebody else's sheet. */
       allow update: if isAdmin()
+        || (isEditor()
+            && characterFile in userDoc().get('editableCharacterFiles', []))
         || (isEditor()
             && purseValue(request.resource.data) <= purseValue(resource.data));
 

@@ -281,20 +281,85 @@ function campaignLibraryHits(campaigns, query, limit) {
 }
 
 /* ─── State ──────────────────────────────────────────── */
+/* One document per campaign.
+ *
+ * All campaigns used to live in a single `mha-dnd/campaigns` document, and
+ * that document hit Firestore's 1 MiB ceiling: the third season took the
+ * encoded payload to 1015 KB of 1024, so the next chapter could not be
+ * published at all. Splitting the *array* would not have helped, because the
+ * limit is per document and every campaign shared one.
+ *
+ * So the content moved out. `mha-dnd/campaigns` is now a manifest — the
+ * handful of fields the library cards actually read — and each campaign's
+ * background, chapters, appendix and links live in `mha-dnd/campaign-<id>`,
+ * fetched when that module is opened. Every campaign now has its own 1 MiB;
+ * the largest today is 640 KB.
+ *
+ * Three things make this cheaper than it looks:
+ *   · firestore.rules already covers it. `match /mha-dnd/{doc}` grants
+ *     read-to-all and admin-or-editor write to any document directly under
+ *     mha-dnd/, so a sibling doc needs no rule change. (A *subcollection*
+ *     would not be covered — that is the trap.)
+ *   · In memory nothing changed. campaignsData.campaigns is still one array
+ *     of whole campaign objects, so every renderer, lookup and CRUD function
+ *     below works untouched. Only loading and saving know about shards.
+ *   · The manifest carries a `sharded: true` flag. Without it this code
+ *     treats the document as the old fat one and uses it as-is, so the page
+ *     keeps working before the migration runs and if it is ever rolled back.
+ *
+ * A stub is a campaign whose metadata is loaded and whose content is not.
+ * hydrate() fills one in; the static CAMPAIGN/campaigns.json fallback is
+ * always whole, so offline and unmigrated both land fully hydrated.
+ */
 const FS_CAMPAIGNS_DOC = db.collection('mha-dnd').doc('campaigns');
+const shardRef = id => db.collection('mha-dnd').doc('campaign-' + id);
+
+// The split: everything else on a campaign object is metadata and rides in
+// the manifest. chapterCount is derived, so the cards can still say "9
+// chapters" without loading nine chapters.
+const CONTENT_KEYS = ['background', 'chapters', 'appendix', 'links'];
+const CONTENT_ID_ARRAYS = CONTENT_KEYS.map(path => ({ path, idKey: 'id' }));
+
+function manifestEntry(c) {
+  const out = {};
+  for (const [k, v] of Object.entries(c)) {
+    if (CONTENT_KEYS.includes(k) || k === '_stub') continue;
+    out[k] = v;
+  }
+  out.chapterCount = (c.chapters || []).length;
+  return out;
+}
+function shardDoc(c) {
+  const out = { id: c.id };
+  for (const k of CONTENT_KEYS) if (c[k] !== undefined) out[k] = c[k];
+  return out;
+}
+
 let campaignsData = null;
 let currentCampaignId = null;
 let editMode = false;
 let openEditId = null;
 let canWriteCampaigns = false;
-// Last campaigns doc this client knows was on the server — diffed against on
-// save so concurrent edits to different campaigns don't clobber each other.
-let _lastSyncedCampaigns = null;
+// False when the live document is still the pre-migration fat one, in which
+// case content is already in hand and nothing below needs to fetch a shard.
+let shardedMode = false;
+// Campaign ids whose content is loaded. A stub is in campaignsData but not here.
+const hydrated = new Set();
+// In-flight hydrations, so two renders of the same campaign share one read.
+const hydrating = new Map();
+// Last manifest this client knows was on the server, and the same per shard —
+// the 3-way baselines fsMergeSave diffs against so concurrent edits to
+// different campaigns, and now different chapters, don't clobber each other.
+let _lastSyncedManifest = null;
+const _lastSyncedShards = new Map();
 // True from the moment a save is kicked off until it actually lands (or
 // fails). openEditId already flips back to null before this resolves (the
 // edit form closes immediately), so isCampaignsEditing() alone isn't enough
 // to keep a live snapshot from applying mid-save — this closes that window.
 let _campaignSaveInFlight = false;
+
+function isStub(c) { return !!c && c._stub === true; }
+function needsHydrating(id) { return shardedMode && !hydrated.has(id); }
 
 async function loadCampaigns() {
   try {
@@ -302,11 +367,78 @@ async function loadCampaigns() {
     const snap = await FS_CAMPAIGNS_DOC.get();
     const d = snap.exists ? snap.data() : null;
     if (!d || !Array.isArray(d.campaigns)) throw new Error('empty');
+    if (d.sharded) {
+      shardedMode = true;
+      return { sharded: true, campaigns: d.campaigns.map(c => ({ ...c, _stub: true })) };
+    }
+    // Pre-migration: the fat document still holds everything.
+    shardedMode = false;
+    for (const c of d.campaigns) hydrated.add(c.id);
     return d;
   } catch {
+    // Offline, signed out, or no document: the static file is whole.
+    shardedMode = false;
     const res = await fetch('CAMPAIGN/campaigns.json');
-    return res.json();
+    const d = await res.json();
+    for (const c of d.campaigns || []) hydrated.add(c.id);
+    return d;
   }
+}
+
+// Fill a stub in place. Resolves true once the campaign's content is in
+// campaignsData; false if it could not be fetched, which leaves the stub
+// alone so the caller can say so rather than render an empty module.
+async function hydrate(id) {
+  if (!needsHydrating(id)) return true;
+  if (hydrating.has(id)) return hydrating.get(id);
+
+  const job = (async () => {
+    const target = (campaignsData.campaigns || []).find(c => c.id === id);
+    if (!target) return false;
+    let content = null;
+    try {
+      await fbAuthReady;
+      const snap = await shardRef(id).get();
+      if (snap.exists) content = snap.data();
+    } catch (e) {
+      console.error('[campaigns] could not load ' + id + ':', e);
+    }
+    if (!content) {
+      // A manifest entry with no shard yet — a campaign created since the
+      // migration and not given content, or a failed read. The static file
+      // is the same fallback loadCampaigns() uses.
+      try {
+        const res = await fetch('CAMPAIGN/campaigns.json');
+        const d = await res.json();
+        content = (d.campaigns || []).find(c => c.id === id) || {};
+      } catch { content = {}; }
+    }
+    for (const k of CONTENT_KEYS) target[k] = content[k] || [];
+    delete target._stub;
+    hydrated.add(id);
+    _lastSyncedShards.set(id, fsCloneDoc(shardDoc(target)));
+    return true;
+  })();
+
+  hydrating.set(id, job);
+  try { return await job; } finally { hydrating.delete(id); }
+}
+
+// Library-wide search reads every campaign's prose, so it is the one feature
+// that still needs all of them. Fetching the lot on the first search is the
+// same bytes the page used to download on every load — deferred, not added.
+let _hydrateAllJob = null;
+function hydrateAll() {
+  if (!shardedMode) return Promise.resolve(true);
+  if (!_hydrateAllJob) {
+    _hydrateAllJob = Promise.all((campaignsData.campaigns || []).map(c => hydrate(c.id)))
+      .then(rs => rs.every(Boolean))
+      .finally(() => { _hydrateAllJob = null; });
+  }
+  return _hydrateAllJob;
+}
+function allHydrated() {
+  return !shardedMode || (campaignsData.campaigns || []).every(c => hydrated.has(c.id));
 }
 
 async function saveCampaigns() {
@@ -314,8 +446,25 @@ async function saveCampaigns() {
   _campaignSaveInFlight = true;
   try {
     await fbAuthReady;
-    const merged = await fsMergeSave(FS_CAMPAIGNS_DOC, campaignsData, _lastSyncedCampaigns, [{ path: 'campaigns', idKey: 'id' }]);
-    _lastSyncedCampaigns = merged;
+    if (!shardedMode) {
+      const merged = await fsMergeSave(FS_CAMPAIGNS_DOC, campaignsData, _lastSyncedManifest, [{ path: 'campaigns', idKey: 'id' }]);
+      _lastSyncedManifest = merged;
+    } else {
+      // The manifest is small and metadata can change from either view, so it
+      // is always written. The open campaign's content is written with it —
+      // and only the open one, because that is the only content this page can
+      // have edited.
+      const localManifest = { sharded: true, campaigns: (campaignsData.campaigns || []).map(manifestEntry) };
+      const mergedManifest = await fsMergeSave(FS_CAMPAIGNS_DOC, localManifest, _lastSyncedManifest, [{ path: 'campaigns', idKey: 'id' }]);
+      _lastSyncedManifest = mergedManifest;
+
+      const open = currentCampaignId && hydrated.has(currentCampaignId)
+        ? findCampaign(currentCampaignId) : null;
+      if (open && !isStub(open)) {
+        const mergedShard = await fsMergeSave(shardRef(open.id), shardDoc(open), _lastSyncedShards.get(open.id), CONTENT_ID_ARRAYS);
+        _lastSyncedShards.set(open.id, mergedShard);
+      }
+    }
     notice.textContent = 'Saved ✓';
     notice.classList.remove('err');
     notice.classList.add('show');
@@ -334,13 +483,48 @@ async function saveCampaigns() {
 // while an edit form is open so a remote update can't blow away in-progress,
 // unsaved text in a field.
 let _pendingRemoteCampaigns = null;
+let _pendingRemoteShards = new Map();
 function isCampaignsEditing() { return openEditId !== null || _campaignSaveInFlight; }
+
 function applyRemoteCampaigns(data) {
-  campaignsData = data;
-  campaignsData.campaigns = campaignsData.campaigns || [];
-  _lastSyncedCampaigns = fsCloneDoc(data); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
+  if (!data.sharded) {
+    campaignsData = data;
+    campaignsData.campaigns = campaignsData.campaigns || [];
+    for (const c of campaignsData.campaigns) hydrated.add(c.id);
+    _lastSyncedManifest = fsCloneDoc(data); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
+    render();
+    return;
+  }
+  // Sharded: the manifest carries metadata only, so merge it over what is
+  // here rather than replacing — a wholesale swap would throw away content
+  // this client has already hydrated and send every open module back to a
+  // loading state on somebody else's unrelated title edit.
+  const byId = new Map((campaignsData.campaigns || []).map(c => [c.id, c]));
+  campaignsData.campaigns = (data.campaigns || []).map(entry => {
+    const have = byId.get(entry.id);
+    if (!have) return { ...entry, _stub: true };
+    const next = { ...have, ...entry };
+    delete next.chapterCount;
+    if (hydrated.has(entry.id)) delete next._stub;
+    return next;
+  });
+  for (const id of [...hydrated]) {
+    if (!campaignsData.campaigns.some(c => c.id === id)) { hydrated.delete(id); _lastSyncedShards.delete(id); }
+  }
+  _lastSyncedManifest = fsCloneDoc(data);
   render();
 }
+
+function applyRemoteShard(id, content) {
+  const target = findCampaign(id);
+  if (!target) return;
+  for (const k of CONTENT_KEYS) target[k] = content[k] || [];
+  delete target._stub;
+  hydrated.add(id);
+  _lastSyncedShards.set(id, fsCloneDoc(shardDoc(target)));
+  render();
+}
+
 async function startCampaignsLiveSync() {
   await fbAuthReady;
   FS_CAMPAIGNS_DOC.onSnapshot(snap => {
@@ -357,11 +541,35 @@ async function startCampaignsLiveSync() {
     applyRemoteCampaigns(data);
   }, err => console.error('[campaigns] live sync stopped:', err));
 }
+
+// One content listener at a time: the campaign being read. Watching every
+// shard would undo the point of not downloading them.
+let _openShardUnsub = null;
+let _openShardId = null;
+function watchOpenShard(id) {
+  if (!shardedMode || _openShardId === id) return;
+  if (_openShardUnsub) { _openShardUnsub(); _openShardUnsub = null; }
+  _openShardId = id;
+  if (!id) return;
+  _openShardUnsub = shardRef(id).onSnapshot(snap => {
+    if (!snap.exists || snap.metadata?.fromCache) return;
+    const content = snap.data();
+    if (isCampaignsEditing()) { _pendingRemoteShards.set(id, content); return; }
+    applyRemoteShard(id, content);
+  }, err => console.error('[campaigns] content sync stopped for ' + id + ':', err));
+}
+
 setInterval(() => {
-  if (_pendingRemoteCampaigns && !isCampaignsEditing()) {
+  if (isCampaignsEditing()) return;
+  if (_pendingRemoteCampaigns) {
     const data = _pendingRemoteCampaigns;
     _pendingRemoteCampaigns = null;
     applyRemoteCampaigns(data);
+  }
+  if (_pendingRemoteShards.size) {
+    const pending = _pendingRemoteShards;
+    _pendingRemoteShards = new Map();
+    for (const [id, content] of pending) applyRemoteShard(id, content);
   }
 }, 800);
 
@@ -387,6 +595,11 @@ function closeEdit() { openEditId = null; render(); }
 
 /* ─── Lookups ────────────────────────────────────────── */
 function findCampaign(id) { return (campaignsData.campaigns||[]).find(c => c.id === id); }
+// Works on a stub as well as a loaded campaign: one counts, the other is told.
+function campaignChapterCount(c) {
+  if (!c) return 0;
+  return Array.isArray(c.chapters) ? c.chapters.length : (c.chapterCount || 0);
+}
 function findChapter(c, chId) { return (c.chapters||[]).find(ch => ch.id === chId); }
 function findSection(ch, secId) { return (ch.sections||[]).find(s => s.id === secId); }
 function findChapterOfSection(c, secId) { return (c.chapters||[]).find(ch => (ch.sections||[]).some(s => s.id === secId)); }
@@ -447,7 +660,13 @@ function deleteCampaign(id) {
   const c = findCampaign(id);
   if (!confirm(`Delete "${c.title}"? This removes the entire campaign profile, including every chapter. This cannot be undone.`)) return;
   campaignsData.campaigns = campaignsData.campaigns.filter(x => x.id !== id);
+  hydrated.delete(id);
+  _lastSyncedShards.delete(id);
+  if (_openShardId === id) watchOpenShard(null);
   saveCampaigns();
+  // The manifest entry is what makes a campaign exist; the content document is
+  // dead weight once it is gone. Failing to delete it is not worth blocking on.
+  if (shardedMode) shardRef(id).delete().catch(e => console.error('[campaigns] could not delete content for ' + id + ':', e));
   if (currentCampaignId === id) { location.hash = ''; } else { render(); }
 }
 
@@ -628,7 +847,39 @@ function deleteLink(campId, linkId) {
 
 /* ─── Render: dispatch ───────────────────────────────── */
 function render() {
-  if (currentCampaignId) { renderCampaignView(); } else { renderLibrary(); }
+  if (!currentCampaignId) { watchOpenShard(null); renderLibrary(); return; }
+  // A module's content may not be in hand yet: with one document per campaign
+  // it arrives on demand. Show that it is coming rather than an empty module,
+  // and re-render once it lands.
+  if (needsHydrating(currentCampaignId)) {
+    renderCampaignLoading(currentCampaignId);
+    const id = currentCampaignId;
+    hydrate(id).then(ok => {
+      if (currentCampaignId !== id) return; // navigated away while it loaded
+      if (!ok) { renderCampaignLoadFailed(id); return; }
+      watchOpenShard(id);
+      render();
+    });
+    return;
+  }
+  watchOpenShard(currentCampaignId);
+  renderCampaignView();
+}
+
+function campaignShellHtml(id, inner) {
+  const c = findCampaign(id);
+  document.body.classList.add('reading');
+  document.getElementById('view-library').style.display = 'none';
+  const view = document.getElementById('view-campaign');
+  view.style.display = '';
+  document.getElementById('crumb-campaign').innerHTML = c ? escHtml(c.title) : '';
+  view.innerHTML = `<div class="camp-head"><h1>${escHtml(c ? c.title : 'Campaign')}</h1></div>${inner}`;
+}
+function renderCampaignLoading(id) {
+  campaignShellHtml(id, '<div class="empty-note">Loading this module\u2026</div>');
+}
+function renderCampaignLoadFailed(id) {
+  campaignShellHtml(id, '<div class="empty-note">Could not load this module. Check your connection and reload.</div>');
 }
 
 /* ─── Render: library ────────────────────────────────── */
@@ -650,7 +901,7 @@ function renderLibrary() {
       <div class="camp-card-icon">${escHtml(c.icon||'📘')}</div>
       <div class="camp-card-title">${escHtml(c.title)}</div>
       <div class="camp-card-tagline">${escHtml(c.tagline||'')}</div>
-      <div class="camp-card-meta">${[c.levelRange, (c.chapters?.length ? c.chapters.length+' chapter'+(c.chapters.length===1?'':'s') : null)].filter(Boolean).map(escHtml).join(' · ')}</div>
+      <div class="camp-card-meta">${[c.levelRange, (campaignChapterCount(c) ? campaignChapterCount(c)+' chapter'+(campaignChapterCount(c)===1?'':'s') : null)].filter(Boolean).map(escHtml).join(' · ')}</div>
       <div class="camp-card-actions edit-only">
         <button class="mini-btn danger" onclick="event.stopPropagation();deleteCampaign('${c.id}')">${ico('trash')}Delete</button>
       </div>
@@ -773,6 +1024,17 @@ function renderLibrarySearch() {
     wrap.innerHTML = '';
     if (count) count.textContent = '';
     if (grid) grid.style.display = '';
+    return;
+  }
+  // This is the one feature that needs every campaign's prose at once, which
+  // with one document per campaign is no longer already downloaded. Fetch the
+  // lot the first time somebody searches — the same bytes the page used to
+  // pull on every load, just deferred — and redraw when they land.
+  if (!allHydrated()) {
+    if (grid) grid.style.display = 'none';
+    if (count) count.textContent = 'loading\u2026';
+    wrap.innerHTML = '<div class="search-none">Loading every module to search it\u2026</div>';
+    hydrateAll().then(() => { if (libraryQuery.trim() === q) renderLibrarySearch(); });
     return;
   }
   const hits = campaignLibraryHits(campaignsData.campaigns || [], q, LIBRARY_SEARCH_LIMIT);
@@ -1350,7 +1612,9 @@ function renderLinksSection(c) {
 async function init() {
   campaignsData = await loadCampaigns();
   campaignsData.campaigns = campaignsData.campaigns || [];
-  _lastSyncedCampaigns = fsCloneDoc(campaignsData); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
+  _lastSyncedManifest = fsCloneDoc(shardedMode
+    ? { sharded: true, campaigns: campaignsData.campaigns.map(manifestEntry) }
+    : campaignsData); // cloned: a baseline must never alias live state (see auth.js cloneDoc)
   document.getElementById('loading').style.display = 'none';
   currentCampaignId = parseHash();
   render();

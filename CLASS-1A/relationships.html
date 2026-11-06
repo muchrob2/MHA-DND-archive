@@ -143,7 +143,7 @@
         <button onclick="exportData()" style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Download a local backup">↓ Export</button>
         <label style="padding:3px 10px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text-muted);cursor:pointer;" title="Restore from a backup file">↑ Import<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
         <button id="rel-save-btn" onclick="manualSaveRelationships()" disabled title="No unsaved changes"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M9 3v5h6V3"/><path d="M8 21v-6h8v6"/></svg>Save</button>
-        <span id="save-status"></span>
+        <span id="save-status" role="status" aria-live="polite"></span>
       </div>
     </div>
 

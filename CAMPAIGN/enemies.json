@@ -505,6 +505,44 @@
           "count": 4
         }
       ]
+    },
+    {
+      "id": "meiyo_removal",
+      "name": "The removal at Ōmori",
+      "category": "Supporting Cast",
+      "map": "factory",
+      "note": "Chapter 9. A self-storage unit behind a car dealership, a van backed up to the loading bay with its hazards on, and twenty minutes before the boxes leave. Licensed contractors with a lawful instruction who will not start a fight and will film one. Delay it past seven and nobody has to swing.",
+      "members": [
+        {
+          "id": "meiyo_security",
+          "count": 4
+        },
+        {
+          "id": "meiyo_supervisor",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "ch9_hospital_street",
+      "name": "The hospital street, day four",
+      "category": "Byakko",
+      "map": "hospital",
+      "note": "Chapter 9, and only if the class never took Kurosawa Emi to Tobari Jin. Her name has been public for three days and she informed on the gang’s patrol timings for three years, so whoever holds that turf has a Stripe Law to apply and somebody has to come and do it. Procedural, not villainous, which is worse. A PC holding a stripe can stop it without a roll.",
+      "members": [
+        {
+          "id": "byakko_claw",
+          "count": 3
+        },
+        {
+          "id": "byakko_murase_nettle",
+          "count": 1
+        },
+        {
+          "id": "byakko_sawaguchi_quiet",
+          "count": 1
+        }
+      ]
     }
   ],
   "enemies": [
@@ -2034,7 +2072,7 @@
         "Deadbolt (Action) — Places a hand on a surface and twists, anchoring everything within a 180-ft square in space for 2 minutes — halting all movement and shifting terrain. Causes one level of exhaustion afterward; only one Deadbolt active at a time.",
         "WEAKNESS — Requires direct physical contact with the target to initiate a lock, and locking down larger or more complex objects/creatures inflicts two levels of exhaustion on him from the strain of anchoring them in space."
       ],
-      "tactics": "Underground hero, Kurogane Wharf. Criminal investigation and takedowns. Arc 3 (Agency Visit), Arc 5 (The Fracture Problem), Arc 6 (Convergence) — he is the closest thing the class has to a ground-level ally for the Ruin investigation.",
+      "tactics": "Underground hero, Kurogane Wharf, investigation and takedowns. Chapter 9: he reads Wireframe’s wall, agrees with all of it, can act on none of it, and gives the class an address and an alibi without ever saying the thing out loud. He has known about Kurosawa Emi for two years and has never knocked, because knocking is what gets her hurt — \"if you bring her to me, I can do something.\"",
       "stats_source": "CAMPAIGN/npcs.json stat block."
     },
     {
@@ -2079,7 +2117,7 @@
         "Tornado Formation (Action (5th level)) — Summons a tornado within 60 feet with a 10-ft radius lasting 1 minute, used for battlefield control and rescue lift.",
         "WEAKNESS — Requires focus and control — strong winds can harm allies or destroy terrain. Using multiple tornadoes or extreme speeds in a single turn forces a DC 15 Constitution save or she takes 2d6 true damage from exhaustion."
       ],
-      "tactics": "Rescue specialist hero. Consults at U.A. for Shimoda Iku's field operations classes. Tier 1 training touchstone. Arc 5 and 6 first responder. Her early relationship with the class pays off when she's the one pulling them out of something in the endgame.",
+      "tactics": "Rescue specialist, consults at U.A. one day a week on field operations and rescue. Chapter 9: she was second on scene at the Ōmori collapse and wrote the report whose ninth paragraph did not survive into the published inquiry, and she has never shown anybody. She hands it over to anybody who brings her a plan that survives two questions, and being named costs her the Thursday timetable.",
       "stats_source": "CAMPAIGN/npcs.json stat block."
     },
     {
@@ -2111,7 +2149,7 @@
         "Persistent Insight (Passive) — At 5th level, permanently stores detailed location, condition, weakness, and behavior information for up to 10 individuals, recallable instantly without needing to rescan them.",
         "WEAKNESS — Repeated use can mentally overwhelm him, making him susceptible to deception. He must maintain concentration — if damaged, distracted, or tracking too many targets, he must succeed on a DC 14 Constitution check at the end of his turn or lose track of all monitored targets. Subjects can also falsify biological samples to mislead the scan."
       ],
-      "tactics": "Investigative journalist, Tokyo Herald. Currently investigating Ruin. Arc 5 trigger. His story is the stone that starts the avalanche. Arc 6 — he's either the person who helps the class understand what they're fighting, or a liability depending on what's happened to him.",
+      "tactics": "Investigative, Tokyo Herald, and the only reporter in Tokyo treating the annotation field as a beat. Chapter 9: two sources or it does not run, stated three times and applied to himself every time. He grades everything the class bring him — nothing, a rumour, half a source, a source, a story — and that grading is their quest log. His Commission source of six years died in February.",
       "stats_source": "CAMPAIGN/npcs.json stat block."
     },
     {
@@ -2199,7 +2237,7 @@
         "Foresight (Bonus Action/Reaction) — After touching a target and making eye contact, predicts the next turn of visible creatures within 60 feet up to his Proficiency Bonus in number. While active, he knows every creature's current HP, AC, and initiative within 60 feet and automatically applies the Read Enemy action to all of them. A target may attempt a Wisdom save against his Quirk DC to alter one declared choice.",
         "WEAKNESS — Requires uninterrupted vision — if blinded, loses line of sight, or his view is obscured, the effect ends. After using it, he must succeed on a DC 14 Constitution save or gain one level of Concussed, and a failed DC 13 Perception check locks him out of using it again for three rounds."
       ],
-      "tactics": "Hero Safety Commission senior liaison to U.A. High. The person Natsuki Kaori's clearance requests go to. Background threat from Arc 1 onwards. Becomes active plot in Arc 5 when the class realises their Chain evidence isn't going anywhere. Central to Arc 6.",
+      "tactics": "Hero Safety Commission senior liaison to U.A. High, and the person Natsuki Kaori’s clearance requests go to. Chapter 9 is his: he asks for the meeting himself, proposes the Verification Office, states the objection to his own proposal out loud, and keeps every word he gives. Never a combatant and never sly — the pressure comes entirely from his being right about the danger.",
       "stats_source": "CAMPAIGN/npcs.json stat block."
     },
     {
@@ -2238,7 +2276,7 @@
         "Construction-Done-Kwik (Weldcraft) (Bonus Action/Reaction) — Forces a target to make a Dexterity save against her Quirk DC or be unable to react to her next Weld Touch.",
         "WEAKNESS — Requires direct hand contact with at least two objects or creatures to activate."
       ],
-      "tactics": "Operations coordinator at Tobari Jin's agency. Handles logistics, resource mapping, and intel structuring. Arc 3 (Agency Visit) — the contact who changes what the investigation looks like. Arc 5 — her data is a critical piece. She is in danger once Ruin realises she has it.",
+      "tactics": "Operations coordinator at Tobari Jin’s agency: logistics, resource mapping, intel structuring. Chapter 9 opens on her wall — four thousand annotations printed, pinned and threaded, with the eleven reused claims found and a red ring round the one that is written like a person. She is explicit that she is not a field hero and does not want to be, and will not join the class.",
       "stats_source": "CAMPAIGN/npcs.json stat block."
     },
     {
@@ -2317,7 +2355,7 @@
         "Gravity Plus (Bonus Action (5th level)) — When he uses Zero Gravity to lift a creature, he can immediately attempt to slam it back down.",
         "WEAKNESS — Exerts tremendous pressure on his body each time he defies gravity — each use grants 1 level of Gravity Strain, and if total strain equals or exceeds his Level + double his Proficiency Bonus, he gains the Queasy condition. Strain clears on a short or long rest."
       ],
-      "tactics": "Exchange student from Shiketsu High. At U.A. for one semester. Natural rival to multiple Class 1-A students. Arc 2 (Dorm Life) introduction. Arc 4 (Sports Festival) as a wildcard competitor. Potentially returns in Tier 2 when the stakes get real — Shiketsu's teachers have noticed what's happening in Tokyo too.",
+      "tactics": "Exchange student from Shiketsu, a semester at U.A., and a natural rival to several of the class. Chapter 9: he rings them uninvited, because Shiketsu has the same archive with the same annotation box and four hundred untrue claims in it, and he wants to know what rule they will propose so he can decide whether to be the first name on it from outside U.A. He signs first of six schools and tells them not to read anything into it.",
       "stats_source": "CAMPAIGN/npcs.json stat block."
     },
     {
@@ -2355,7 +2393,7 @@
         "Tracking Plug (Bonus Action) — Plugs her Earphone Jacks into the ground to gain advantage on checks to track items or creatures (cannot roll lower than 10), though it does not work on silent or flying creatures.",
         "WEAKNESS — Her earlobes count as her ears and are vulnerable to damage; using the Quirk more than her Level + double her Proficiency Bonus times causes a rank of unreducible bleed on each subsequent use until she takes a short rest."
       ],
-      "tactics": "Unwilling Chain informant, Kurogane Wharf. Monitors and reports hero patrol timing. Arc 3 or 5 encounter. Her records are the piece of evidence that connects the patrol coverage to Ruin's operations. She is also in immediate danger if Ruin suspects she's been contacted by heroes.",
+      "tactics": "Coerced since before the class arrived, on the hospital street at Kurogane Wharf, handing over hero patrol timings every week and keeping a copy of all of it. Chapter 9 is scored on her: whether the class spend a free-time slot walking her four streets to Tobari Jin before her name goes on a signed correction. Her records are what corroborate the removals log.",
       "stats_source": "CAMPAIGN/npcs.json stat block."
     },
     {
@@ -4663,6 +4701,281 @@
       ],
       "tactics": "Courteous, unhurried, and not a sophist. A middle-aged man doing lawful work that hurts children, who knows the second half of that and has decided it is not his half.",
       "stats_source": "Written for The Shortlist: After Hours, second season (Chapters 7–8)."
+    },
+    {
+      "id": "tsuke_munakata_haru",
+      "name": "Munakata Haru (part-time)",
+      "category": "Underground",
+      "cr": "1/2",
+      "tier": 1,
+      "description": "Tsukebarai. Seventeen, apron, genuinely pleased to see customers. Bought something at fourteen and will not say what, and has four years left on it. Registered quirk: Good Ear, which is true and dull.",
+      "hp": 38,
+      "ac": 12,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": {
+        "STR": 10,
+        "DEX": 14,
+        "CON": 12,
+        "INT": 13,
+        "WIS": 11,
+        "CHA": 15
+      },
+      "attacks": [],
+      "traits": [
+        "GOOD EAR — he hears a lie in a sentence. Advantage on Insight, and he never says so out loud in front of a customer.",
+        "HE WARNS THEM — the only member of staff who will. If the class are about to buy something stupid he finds a reason to drop a tray.",
+        "IF ATTACKED — hands up, apologises, genuinely upset. He does not defend the House and does not need to."
+      ],
+      "tactics": "Not a fight. He is the reason the fifth door is not cruel: the one person behind that counter who will tell a customer to listen to the whole price.",
+      "stats_source": "Written for The Shortlist: After Hours, third season, on the campaign’s three-tier scale."
+    },
+    {
+      "id": "tsuke_utsugi_nao",
+      "name": "Utsugi Nao (Keeper, collections)",
+      "category": "Underground",
+      "cr": "5",
+      "tier": 2,
+      "description": "Tsukebarai. Thirty, polite, carries an empty furoshiki when she goes out and does not carry it back empty. She arrives on the day a tab comes due, takes the agreed thing, takes nothing else, and thanks the household.",
+      "hp": 96,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 4,
+      "ability_scores": {
+        "STR": 12,
+        "DEX": 18,
+        "CON": 14,
+        "INT": 15,
+        "WIS": 18,
+        "CHA": 16
+      },
+      "attacks": [
+        {
+          "name": "Unarmed strike",
+          "to_hit": "+7",
+          "damage": "1d6+4 bludgeoning",
+          "range": "Melee",
+          "notes": "Two per action. She fights to leave, never to win."
+        }
+      ],
+      "traits": [
+        "SHE IS NOT AN ENCOUNTER — she states what she has come for, takes it, and leaves. No roll to resist, because the thing was agreed.",
+        "AGREED AND WRITTEN — she can take only the named price, only once, and only from the person who named it. No save, no attack roll, no exception, and no substitute accepted in the moment even if it is better.",
+        "REFUSING IS NOT A FIGHT — she says \"then it stays open,\" writes nothing, and goes.",
+        "AT HALF HP — she stops, bows, and walks out through whoever is in the doorway. The tab is still open and the House still serves them next week."
+      ],
+      "tactics": "Run her flat and courteous and never raise her voice. She is the most frightening block in this file and she has no offensive trait worth the name.",
+      "stats_source": "Written for The Shortlist: After Hours, third season, on the campaign’s three-tier scale."
+    },
+    {
+      "id": "tsuke_kisaragi_towa",
+      "name": "Kisaragi Towa, the Proprietress (not a fight)",
+      "category": "Underground",
+      "cr": "0",
+      "tier": 1,
+      "description": "Tsukebarai. Ageless, amused, straight with everybody. Owns every tab in Tokyo and cannot cross her own doorstep — not by custom, by the terms of her own account. The only character in the module who answers any question truthfully and for free.",
+      "hp": 22,
+      "ac": 10,
+      "speed": "0 ft (she cannot leave the House)",
+      "dex_mod": 0,
+      "ability_scores": {
+        "STR": 8,
+        "DEX": 10,
+        "CON": 10,
+        "INT": 20,
+        "WIS": 20,
+        "CHA": 20
+      },
+      "attacks": [],
+      "traits": [
+        "THESE NUMBERS ARE CORRECT AND THEY ARE A TRAP — twenty-two hit points, no armour, no attacks, will not be moved from the room. Anybody can kill her. Nobody has.",
+        "QUESTIONS ARE FREE — she answers anything put to her straight, truthfully, at no charge, including about herself and the other four factions. Information is not her stock.",
+        "SHE NAMES A PRICE ONCE — never twice, never lower, never in writing.",
+        "IF A PC KILLS HER — every tab in Tokyo comes due that night, all at once, to whoever holds them. Nothing in this module is prepared for that. Stop the session and ask them to be sure."
+      ],
+      "tactics": "Never a combatant. If the encounter manager has her on the board, something has gone wrong at the table and the DM should say so out loud.",
+      "stats_source": "Written for The Shortlist: After Hours, third season, on the campaign’s three-tier scale."
+    },
+    {
+      "id": "tsuke_the_cat",
+      "name": "The cat that is not a cat",
+      "category": "Underground",
+      "cr": "0",
+      "tier": 1,
+      "description": "Tsukebarai. It counts the customers. That is its entire function, and it is why Towa knows how many people came in, in what order, and which one spoke first.",
+      "hp": 1,
+      "ac": 13,
+      "speed": "40 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 3,
+        "DEX": 16,
+        "CON": 8,
+        "INT": 10,
+        "WIS": 16,
+        "CHA": 7
+      },
+      "attacks": [],
+      "traits": [
+        "ONE HIT POINT AND IT CANNOT BE HIT — the attack always lands somewhere the cat has just stopped being.",
+        "IT COUNTS — nothing else.",
+        "DO NOT EXPLAIN IT — it is a cat in a teahouse. Let somebody at the table decide it is important and be unable to prove it."
+      ],
+      "tactics": "Scenery with a function. Put it on the board only so that a player can fail to do anything about it.",
+      "stats_source": "Written for The Shortlist: After Hours, third season, on the campaign’s three-tier scale."
+    },
+    {
+      "id": "tsuke_tachikawa_sumire",
+      "name": "Tachikawa Sumire (ranked, with a tab)",
+      "category": "Underground",
+      "cr": "6",
+      "tier": 2,
+      "description": "Tsukebarai. A ranked Pro Hero in her fifties, in plain clothes, in the corner of a teahouse. Bought something in 1997 and has paid the instalment every year since, and the instalment is that she cannot remember her sister. She wants to stop.",
+      "hp": 78,
+      "ac": 16,
+      "speed": "30 ft",
+      "dex_mod": 3,
+      "ability_scores": {
+        "STR": 16,
+        "DEX": 16,
+        "CON": 15,
+        "INT": 13,
+        "WIS": 14,
+        "CHA": 14
+      },
+      "attacks": [
+        {
+          "name": "Service weapon, baton",
+          "to_hit": "+8",
+          "damage": "1d8+5 bludgeoning",
+          "range": "Melee",
+          "notes": "She is a competent ranked pro and will never use this on the class."
+        }
+      ],
+      "traits": [
+        "THE OFFER — she will transfer the tab, with both parties present and agreeing out loud, and give the PC anything she has, and she is not pretending it is a good deal.",
+        "SHE IS A PLACED TRACE — use her once, in the queue, leaving when she is recognised.",
+        "BOTH ANSWERS ARE CORRECT — a PC who says no has failed nothing. A PC who says yes has a line on their page and a woman who can remember her sister."
+      ],
+      "tactics": "Not an opponent. The negotiation this faction is built around, made quietly, to one PC, outside on the lane afterwards.",
+      "stats_source": "Written for The Shortlist: After Hours, third season, on the campaign’s three-tier scale."
+    },
+    {
+      "id": "meiyo_security",
+      "name": "Private security, licensed (Meiyo)",
+      "category": "Supporting Cast",
+      "cr": "2",
+      "tier": 1,
+      "description": "A contractor in soft body armour with a company crest on it, on a Saturday, on overtime, with paperwork. Licensed, lawful, and not briefed on what is in the boxes.",
+      "hp": 45,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": {
+        "STR": 15,
+        "DEX": 14,
+        "CON": 14,
+        "INT": 10,
+        "WIS": 12,
+        "CHA": 11
+      },
+      "attacks": [
+        {
+          "name": "Baton",
+          "to_hit": "+4",
+          "damage": "1d6+2 bludgeoning",
+          "range": "Melee",
+          "notes": "Defensive only. They will not start it."
+        },
+        {
+          "name": "Restraint",
+          "to_hit": "—",
+          "damage": "—",
+          "range": "Melee",
+          "notes": "STR DC 13 to grapple rather than strike. Their first choice every time."
+        }
+      ],
+      "traits": [
+        "THEY DO NOT WANT A FIGHT — they stand in front of the van, call it in, film the class on a body camera, and keep loading.",
+        "BODY CAMERAS — every second is recorded. A provisional licence holder assaulting licensed security on private property is a licence matter by Monday morning.",
+        "LAWFUL AND CORRECT — they have a written removal instruction and the class have no authority there at all.",
+        "THEY CLOCK OFF AT SEVEN — and will not work unpaid for a reputation firm. Anything that costs twenty minutes wins."
+      ],
+      "tactics": "Competent, lawful self-defence and nothing more. The encounter is not meant to be beaten by damage; the four ways through it are in Chapter 9, \"The Unit in Ōmori.\"",
+      "stats_source": "Written for The Shortlist: After Hours, third season, on the campaign’s three-tier scale."
+    },
+    {
+      "id": "meiyo_supervisor",
+      "name": "Security supervisor, Meiyo (clipboard)",
+      "category": "Supporting Cast",
+      "cr": "3",
+      "tier": 1,
+      "description": "Hand up, friendly, genuinely not alarmed, holding a clipboard. \"I’m licensed, this is a lawful removal, I’ve got the unit holder’s written instruction, and you’ve got no authority here at all.\" He is entirely correct on every point.",
+      "hp": 58,
+      "ac": 15,
+      "speed": "30 ft",
+      "dex_mod": 2,
+      "ability_scores": {
+        "STR": 14,
+        "DEX": 14,
+        "CON": 15,
+        "INT": 13,
+        "WIS": 14,
+        "CHA": 14
+      },
+      "attacks": [
+        {
+          "name": "Baton",
+          "to_hit": "+5",
+          "damage": "1d6+2 bludgeoning",
+          "range": "Melee",
+          "notes": "Defensive only."
+        }
+      ],
+      "traits": [
+        "THE INSTRUCTION IS REAL AND THE SIGNATURE IS NOT ENOUGH — it is signed by an account manager, not a director. CHA DC 16 with the storage company’s duty manager stops the removal for twenty-four hours pending verification. That is the cleanest win available.",
+        "HIS ONE GOOD LINE — told what is in the boxes: \"Right. And I’m paid till seven.\"",
+        "HE IS NOT A MONSTER — a man with a clipboard who has decided it is not his half, the way Ebata Kyōsuke decided it was not his."
+      ],
+      "tactics": "He negotiates, films, and keeps loading. If the class swing first he defends his people competently and the consequence lands in the next section rather than in this one.",
+      "stats_source": "Written for The Shortlist: After Hours, third season, on the campaign’s three-tier scale."
+    },
+    {
+      "id": "ch9_kanno_daisuke",
+      "name": "Kanno Daisuke (Bulwark) — not a fight",
+      "category": "Supporting Cast",
+      "cr": "8",
+      "tier": 3,
+      "description": "Ranked, popular, and genuinely good at his job. Made a fast cordon call on bad information at Ōmori two years ago, and his agency’s legal team had the annotation about it removed without telling him. He does not know it happened.",
+      "hp": 120,
+      "ac": 18,
+      "speed": "30 ft",
+      "dex_mod": 1,
+      "ability_scores": {
+        "STR": 19,
+        "DEX": 12,
+        "CON": 18,
+        "INT": 12,
+        "WIS": 14,
+        "CHA": 15
+      },
+      "attacks": [
+        {
+          "name": "Guard",
+          "to_hit": "+9",
+          "damage": "2d8+6 bludgeoning",
+          "range": "Melee",
+          "notes": "He will never use it on a student and the class will never fight him."
+        }
+      ],
+      "traits": [
+        "HE IS NOT THE VILLAIN AND THE CLASS WILL NOT BELIEVE THAT FOR TWO SESSIONS.",
+        "NOBODY HAS EVER ASKED HIM ABOUT ŌMORI — not the inquiry, not his agency, not a journalist. That is the thing Haruno Setsuko minds.",
+        "IF HE AND HARUNO ARE EVER IN A ROOM — run it, let it be two professionals talking, and let it be the least dramatic scene in the chapter.",
+        "IF THE STORY RUNS WITHOUT THE RECORDS — he rings the Herald himself the day after, because nobody had told him."
+      ],
+      "tactics": "A stat block for a man the class should never fight, provided because a table will ask what he could do. The answer is: hold a cordon, very well, which is exactly what went wrong.",
+      "stats_source": "Written for The Shortlist: After Hours, third season, on the campaign’s three-tier scale."
     }
   ]
 }

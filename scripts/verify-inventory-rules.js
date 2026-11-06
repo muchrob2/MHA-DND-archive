@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Checks the rule that stops players giving themselves money.
+// Checks the rules governing who may move money.
 //
 //   node scripts/verify-inventory-rules.js
 //
@@ -15,6 +15,14 @@
 //      version changes with it and the expectations catch the error.
 //   2. Checks the clients only ever write inventories in ways the rule will
 //      accept, so a refused write never surprises a player mid-purchase.
+//
+// WHAT CHANGED: a player may now set their OWN purse in either direction.
+// That used to be refused outright, and the objection to allowing it was
+// that it would be a way to move money with no record of it — so the thing
+// to check is no longer "can a purse grow" but "can a purse grow without a
+// Bank-statement line". Hence the audit-trail section at the bottom. Three
+// clauses now govern an update, and all three are pinned below:
+//   the DM freely · the owner either way · anyone else downwards only.
 
 const fs = require('fs');
 const path = require('path');
@@ -38,9 +46,42 @@ check('only the DM may create an inventory', /allow create: if isAdmin\(\)/.test
 check('only the DM may delete one', /allow delete: if isAdmin\(\)/.test(block));
 check('the DM may update freely', /allow update: if isAdmin\(\)/.test(block),
   'grants are supposed to add money');
-check('a player update is gated on the purse not growing',
+check('a non-owner update is gated on the purse not growing',
   /purseValue\(request\.resource\.data\) <= purseValue\(resource\.data\)/.test(block),
-  'this single comparison is the entire protection');
+  'this comparison is what keeps a player out of another player\'s money, and what lets the Shop work');
+check('an owner may update their own inventory either way',
+  /characterFile in userDoc\(\)\.get\('editableCharacterFiles', \[\]\)/.test(block),
+  'scoped on the roster file, because that is what an inventory document is named for');
+// The two key spaces are the bug this rule had for most of the project's
+// life. editableCharacterIds holds "Student (1-A)::Kibi Kankei"; an inventory
+// document is "kibi_kankei.json". Scoping on the wrong one silently matches
+// nothing, which reads as "the field is disabled and nobody knows why".
+check('and is NOT scoped on editableCharacterIds, which is the other key space',
+  !/characterFile in userDoc\(\)\.editableCharacterIds/.test(block)
+  && !/isEditorFor\(characterFile\)/.test(block),
+  'an inventory is keyed by roster file, not by fbCharacterKey');
+check('the owner list is read defensively',
+  /\.get\('editableCharacterFiles', \[\]\)/.test(block),
+  'a user document written before this field existed must not error the rule');
+
+/* ── admin.js writes both key spaces from one set of checkboxes ──── */
+const adminRules = read('admin.js');
+check('admin.js writes editableCharacterFiles alongside editableCharacterIds',
+  /editableCharacterIds,\s*editableCharacterFiles/.test(adminRules),
+  'both spellings come from the same checkboxes, so they cannot drift apart');
+check('and sources the files from the roster entry',
+  /dataset\.file/.test(adminRules) && /file: s\.file/.test(adminRules));
+// Without this, every player assigned before the field existed opens their
+// sheet to disabled inputs and no explanation.
+check('admin.js backfills the field onto older user documents',
+  /async function backfillEditableFiles/.test(adminRules)
+  && /editableCharacterFiles: files/.test(adminRules));
+check('and the backfill skips users that already have it',
+  /if \(Array\.isArray\(data\.editableCharacterFiles\)\) return;/.test(adminRules),
+  'it runs on every admin page load, so it has to be idempotent');
+check('auth.js exposes the file-keyed ownership check',
+  /window\.canEditCharacterFile = function/.test(read('auth.js')),
+  'the client needs to ask the same question the rule asks');
 
 /* ── The arithmetic, lifted from the rule itself ────────────────── */
 // Rebuilt from the source so a changed rate in firestore.rules changes this
@@ -105,17 +146,18 @@ const order = (padSrc.match(/async function orderFood\([\s\S]*?\n\}/) || [])[0] 
 check('an Eats order only ever deducts', /spendFromWallet\(/.test(order));
 check('an Eats order writes the inventory document', /tx\.set\(invRef/.test(order));
 
-/* The toolkit writes items, and only items. Players keep their own kit on the
-   Inventory tab, so this page is a fourth writer of the inventories
-   collection — but a deliberately narrow one. The rule above values only the
-   purse, so an update that never names `currency` is one it cannot refuse,
-   and a purse that is never written is a purse that cannot be lost. Both
-   halves are checked: what the write carries, and what still gates the
-   money inputs. */
+/* The toolkit has two inventory write paths, and the whole point is that
+   each one carries exactly one kind of thing:
+
+     saveInventoryItems     items only — never the purse beside them
+     saveInventoryCurrency  the purse only, with its ledger line
+
+   Keeping them apart is what stops an item edit losing a purchase and a
+   purse edit losing somebody's rope. Both are checked for what they carry,
+   and the currency one is checked for its audit trail as well. */
 const toolkitSrc = read('CLASS-1A/relationships.js');
 const toolkitWrite = (toolkitSrc.match(/async function saveInventoryItems\([\s\S]*?\n\}/) || [])[0] || '';
-check('the toolkit has exactly one inventory write path', !!toolkitWrite,
-  'items are editable there; nothing else about an inventory is');
+check('the toolkit has an items write path', !!toolkitWrite);
 check('it writes the items array and nothing else',
   /tx\.update\(ref, \{ items \}\)/.test(toolkitWrite),
   'a write carrying currency would be judged by the rule above, and could lose a purchase');
@@ -124,12 +166,49 @@ check('it writes the items array and nothing else',
 check('it never touches currency, parts or points',
   !/currency|\bparts\b|\bpoints\b/.test(toolkitWrite.replace(/\/\/.*$/gm, '')));
 
-// One assignment, and it is to false. Written as "collect them and look"
-// rather than a negative lookahead, which quietly passes the declaration
-// itself by backtracking over the space before the value.
+/* ── The currency path: the purse, and the line that explains it ── */
+const curWrite = (toolkitSrc.match(/async function saveInventoryCurrency\([\s\S]*?\n\}/) || [])[0] || '';
+check('the toolkit has a currency write path', !!curWrite,
+  'flipping the old gate alone would have written the character bundle, where the purse does not live');
+check('it writes the currency map and nothing else',
+  /tx\.update\(ref, \{ currency \}\)/.test(curWrite),
+  'carrying items would make an item edit and a money edit race each other');
+check('it never touches items, parts or points',
+  !/\bitems\b|\bparts\b|\bpoints\b/.test(curWrite.replace(/\/\/.*$/gm, '')));
+check('it runs in a transaction', /runTransaction/.test(curWrite));
+// The audit trail is the entire justification for unlocking these fields, so
+// it is not optional and it is not a separate write that could fail alone.
+check('it writes a ledger entry in the SAME transaction',
+  /tx\.set\(FS_LEDGER_DOC, appendToLedger\(/.test(curWrite),
+  'an adjustment nobody can see is what the old rule existed to prevent');
+check('it reads the ledger before writing anything',
+  curWrite.indexOf('tx.get(FS_LEDGER_DOC)') > -1
+  && curWrite.indexOf('tx.get(FS_LEDGER_DOC)') < curWrite.indexOf('tx.update(ref'),
+  'Firestore refuses a transaction that writes before all its reads');
+check('it records the real delta, not the number typed in',
+  /const before = currency\[key\] \|\| 0/.test(curWrite) && /value - before/.test(curWrite),
+  'a purchase landing mid-edit must not make the statement lie');
+check('a no-op edit writes no ledger line',
+  /if \(before === value\) return;/.test(curWrite));
+
+/* ── The gates: currency by ownership, parts and points by nobody ── */
+check('the currency inputs are gated on ownership, not role',
+  /canEditOwnCurrency\(c\) \?/.test(toolkitSrc),
+  'the DM, or the player this character belongs to');
+check('and that gate asks the file-keyed question',
+  /canEditCharacterFile\(c\._file\)/.test(toolkitSrc),
+  'the same key space firestore.rules scopes on');
+check('the handler re-checks the gate rather than trusting the markup',
+  /function onCurrencyChange[\s\S]{0,120}if \(!canEditOwnCurrency\(c\)\) return;/.test(toolkitSrc),
+  'a disabled attribute is not a boundary');
+
+// Parts and points are unchanged: still nobody's, still on the old gate. One
+// assignment, and it is to false. Written as "collect them and look" rather
+// than a negative lookahead, which quietly passes the declaration itself by
+// backtracking over the space before the value.
 const gateWrites = (toolkitSrc.match(/canEditInventory\s*=\s*[^;]+/g) || [])
   .map((m) => m.replace(/\s+/g, ' ').trim());
-check('the money fields are still gated on canEditInventory',
+check('parts and points are still gated on canEditInventory',
   gateWrites.length === 1, JSON.stringify(gateWrites));
 check('and nothing anywhere sets that gate true',
   gateWrites[0] === 'canEditInventory = false',

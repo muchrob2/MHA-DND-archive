@@ -32,7 +32,7 @@
     <a class="anchor-btn" href="#sec-scripts"><svg class="anchor-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v8a1.5 1.5 0 0 1-1.5 1.5H9l-5 4z"/><path d="M8 8h8M8 11.2h5"/></svg>DM Scripts</a>
   </div>
   <div class="nav-right">
-    <span class="nav-saved" id="scripts-saved-notice">Saved ✓</span>
+    <span class="nav-saved" id="scripts-saved-notice" role="status" aria-live="polite">Saved ✓</span>
     <button type="button" class="nav-btn" id="scripts-edit-toggle-btn" onclick="toggleScriptEditMode()" style="display:none;"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19.4 8.6a2.05 2.05 0 0 0-2.9-2.9L5 17.2z"/><path d="M14.5 7.5l2.9 2.9"/></svg>Edit</button>
     <button type="button" class="nav-btn save-btn" id="scripts-save-btn" onclick="saveAllScripts()" style="display:none;"><svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M9 3v5h6V3"/><path d="M8 21v-6h8v6"/></svg>Save</button>
     <button type="button" class="nav-btn" id="scripts-add-script-btn" onclick="toggleAddScriptForm()" style="display:none;">+ Add Script</button>
@@ -51,7 +51,7 @@
   <button id="bm-toggle-btn" onclick="toggleBmDrawer()" title="Bookmarks" aria-label="Bookmarks"><svg class="bm-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3h11v18L12 16.4 6.5 21z"/></svg></button>
 </div>
 
-<div class="copy-flash" id="scripts-copy-flash">Copied to clipboard</div>
+<div class="copy-flash" id="scripts-copy-flash" role="status" aria-live="polite">Copied to clipboard</div>
 
 <div id="main">
   <div id="loading">Loading campaign data…</div>

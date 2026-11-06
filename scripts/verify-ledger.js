@@ -3,11 +3,12 @@
 //
 //   node scripts/verify-ledger.js
 //
-// The ledger has three files in it and no type system between them:
+// The ledger has four files in it and no type system between them:
 //
-//   shop.js     writes an entry per basket line on checkout
-//   admin.js    writes an entry per recipient when the DM grants
-//   heropad.js  reads them and renders the statement
+//   shop.js              writes an entry per basket line on checkout
+//   admin.js             writes an entry per recipient when the DM grants
+//   relationships.js     writes one when a player corrects their own purse
+//   heropad.js           reads them and renders the statement
 //
 // A field renamed in one and not the others fails silently — the money still
 // moves, the statement just quietly renders "undefined" or drops the line.
@@ -28,6 +29,7 @@ const read = p => fs.readFileSync(path.join(repoRoot, p), 'utf8');
 const shopSrc = read('shop.js');
 const adminSrc = read('admin.js');
 const padSrc = read('heropad.js');
+const toolkitSrc = read('CLASS-1A/relationships.js');
 
 let failed = 0;
 function check(label, ok, detail) {
@@ -36,14 +38,14 @@ function check(label, ok, detail) {
 }
 
 /* ── One document, one name ─────────────────────────────────────── */
-for (const [name, src] of [['shop.js', shopSrc], ['admin.js', adminSrc], ['heropad.js', padSrc]]) {
+for (const [name, src] of [['shop.js', shopSrc], ['admin.js', adminSrc], ['heropad.js', padSrc], ['relationships.js', toolkitSrc]]) {
   check(`${name} addresses mha-dnd/ledger`, /doc\('ledger'\)/.test(src));
 }
 
 /* ── The entry shape ────────────────────────────────────────────── */
 // Both writers build entries through an identically-shaped ledgerEntry().
 const FIELDS = ['id', 'ts', 'file', 'kind', 'label', 'unit', 'amount', 'yen'];
-for (const [name, src] of [['shop.js', shopSrc], ['admin.js', adminSrc]]) {
+for (const [name, src] of [['shop.js', shopSrc], ['admin.js', adminSrc], ['relationships.js', toolkitSrc]]) {
   const fn = src.match(/function ledgerEntry\([^)]*\)\s*\{[\s\S]*?\n\}/);
   check(`${name} defines ledgerEntry()`, !!fn);
   if (!fn) continue;

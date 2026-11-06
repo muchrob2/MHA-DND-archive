@@ -85,6 +85,15 @@ try {
   process.exit(2);
 }
 
+// A note with no --pr can still be repaired after a squash, but only by
+// matching its title against a commit subject, which needs the two to stay
+// in step. The PR number is exact. See scripts/restamp-updates.js.
+if (!args.pr) {
+  console.error('NOTE: no --pr given. If this lands via a squash merge, the entry\'s');
+  console.error('      commit and build will go stale, and restamp-updates.js will have');
+  console.error('      to match on the title instead of the PR number. Prefer --pr N.\n');
+}
+
 const entry = {
   version: `1.0.${build}`,
   build,
@@ -114,3 +123,4 @@ doc.updates = [entry, ...(doc.updates || [])].sort((a, b) => b.build - a.build);
 fs.writeFileSync(docPath, JSON.stringify(doc, null, 2) + '\n');
 console.log(`\nAdded to updates.json as ${entry.version}. ${doc.updates.length} entries now.`);
 console.log('Run `node scripts/verify-updates.js` to check it against the history.');
+console.log('After a squash merge, `node scripts/restamp-updates.js` repairs the stamp.');

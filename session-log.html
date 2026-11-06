@@ -26,12 +26,12 @@
   <a id="back-btn" href="index.html">← Dashboard</a>
   <span class="nav-title">Session Log</span>
   <div class="nav-right">
-    <span class="nav-saved" id="saved-notice">Saved ✓</span>
+    <span class="nav-saved" id="saved-notice" role="status" aria-live="polite">Saved ✓</span>
     <button class="nav-btn save-btn" id="add-session-btn" onclick="openNewForm()" style="display:none;">+ New Session</button>
   </div>
 </nav>
 
-<div id="load-error-banner" style="display:none;">
+<div id="load-error-banner" role="alert" style="display:none;">
   <div class="banner-inner">Couldn't load the session log from the server. Reload to try again.</div>
 </div>
 

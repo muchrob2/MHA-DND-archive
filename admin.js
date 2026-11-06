@@ -17,7 +17,7 @@ async function loadCharacterOptions() {
   try {
     const roster = await fetch('CLASS-1A/roster.json').then(r => r.json());
     for (const s of (roster.students || [])) {
-      if (s.file) out.push({ id: fbCharacterKey('Student (1-A)', s.name), name: s.name });
+      if (s.file) out.push({ id: fbCharacterKey('Student (1-A)', s.name), name: s.name, file: s.file });
     }
   } catch {}
   try {
@@ -30,8 +30,35 @@ async function loadCharacterOptions() {
   return out;
 }
 
+/* editableCharacterFiles is newer than the user documents it belongs on.
+
+   Inventory writes are scoped on the roster file, and every user assigned
+   before that field existed has only the fbCharacterKey spelling. Without a
+   backfill those players would open their sheet, find the money fields still
+   disabled, and have no way to know why — so the ids are translated to files
+   here, once, from the same roster the checkboxes are built from. Idempotent:
+   a user who already has the field is left alone, and anybody with no
+   assignments has nothing to translate. */
+async function backfillEditableFiles(snap) {
+  const fileById = new Map(allCharacterOptions.filter(c => c.file).map(c => [c.id, c.file]));
+  const writes = [];
+  snap.forEach(doc => {
+    const data = doc.data();
+    if (Array.isArray(data.editableCharacterFiles)) return;
+    const ids = data.editableCharacterIds || [];
+    if (!ids.length) return;
+    const files = ids.map(id => fileById.get(id)).filter(Boolean);
+    writes.push(db.collection('users').doc(doc.id).update({ editableCharacterFiles: files }));
+  });
+  if (!writes.length) return 0;
+  await Promise.all(writes);
+  return writes.length;
+}
+
 async function loadUsers() {
-  const snap = await db.collection('users').get();
+  let snap = await db.collection('users').get();
+  const filled = await backfillEditableFiles(snap).catch(() => 0);
+  if (filled) snap = await db.collection('users').get();
   const tbody = document.getElementById('users-tbody');
   const tableWrap = document.getElementById('table-wrap');
   const emptyEl = document.getElementById('users-empty');
@@ -55,7 +82,7 @@ async function loadUsers() {
       <td>
         <div class="char-picker" id="chars-${uid}">
           ${allCharacterOptions.map(c => `
-            <label><input type="checkbox" value="${escHtml(c.id)}" ${editable.has(c.id) ? 'checked' : ''}> ${escHtml(c.name)}</label>
+            <label><input type="checkbox" value="${escHtml(c.id)}" data-file="${escHtml(c.file || '')}" ${editable.has(c.id) ? 'checked' : ''}> ${escHtml(c.name)}</label>
           `).join('')}
         </div>
         <button class="save-row-btn" onclick="saveUser('${uid}')">Save</button>
@@ -70,8 +97,15 @@ async function saveUser(uid) {
   const role = document.getElementById('role-' + uid).value;
   const checks = document.querySelectorAll('#chars-' + uid + ' input[type=checkbox]:checked');
   const editableCharacterIds = [...checks].map(c => c.value);
+  /* The same assignment, spelled the way the inventories collection is keyed.
+     editableCharacterIds holds "Student (1-A)::Kibi Kankei"; an inventory
+     document is named "kibi_kankei.json". firestore.rules needs the second
+     spelling to scope a purse edit to its owner, so both are written here
+     from one set of checkboxes and cannot drift. Custom characters have no
+     roster file and so contribute nothing — they have no inventory either. */
+  const editableCharacterFiles = [...checks].map(c => c.dataset.file).filter(Boolean);
   try {
-    await db.collection('users').doc(uid).update({ role, editableCharacterIds });
+    await db.collection('users').doc(uid).update({ role, editableCharacterIds, editableCharacterFiles });
     const notice = document.getElementById('saved-' + uid);
     notice.classList.add('show');
     setTimeout(() => notice.classList.remove('show'), 1500);

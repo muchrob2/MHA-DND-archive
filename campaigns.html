@@ -7,6 +7,29 @@
 <meta name="theme-color" content="#f7f6f4">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <title>Campaigns — MHA D&D</title>
+<script>
+  /* ── DM-only page ────────────────────────────────────────────────
+     Bounce anyone who has not picked the DM role on the dashboard, before
+     a byte of this page's markup parses. Everything below this line is
+     either campaign text, the cast as the DM knows it, or a note about
+     what happens next, and none of it survives being read early.
+
+     Synchronous and inline on purpose: a deferred or external gate paints
+     the page first, which is the one thing a spoiler gate must never do.
+     It fails CLOSED — a browser that refuses sessionStorage gets sent
+     back rather than let through.
+
+     This is spoiler containment, not access control. The documents behind
+     it are world-readable by rule (see firestore.rules), so a player with
+     a console can still reach them; what this stops is the accident —
+     a bookmark, a stray tap, a shared screen. Access control lives in the
+     Firestore rules and nowhere else. */
+  try {
+    if (sessionStorage.getItem('mha-role') !== 'dm') location.replace('index.html');
+  } catch (e) {
+    location.replace('index.html');
+  }
+</script>
 <link rel="preload" href="css/fonts/eb-garamond-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="css/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/tokens.css">

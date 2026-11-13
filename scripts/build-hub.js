@@ -102,6 +102,13 @@ const GROUPS = [
         blurb: 'The whole cast, filed' },
       { href: 'session-log.html', icon: 'notebook', accent: 'amber', name: 'Session Log',
         blurb: 'What actually happened' },
+      /* The update notes are a changelog of the campaign as much as of the
+         toolkit — "Chapter 9, The Correction" and "Tsukebarai is the fifth
+         Underground faction" are release lines. They used to sit in
+         Reference, next to the rulebooks, where a player would read them
+         first. They belong on this side of the block. */
+      { href: 'updates.html', icon: 'spark', accent: 'purple', name: "What's New",
+        blurb: 'Every change, dated' },
     ] },
   ] },
   { section: 'Reference', sectionSub: 'The rules, summarised and in full.', dm: false, groups: [
@@ -113,8 +120,6 @@ const GROUPS = [
         icon: 'file', accent: 'gold', name: 'Handbook', blurb: 'MHA5e core · PDF', external: true },
       { href: 'RULEBOOKS/-%20My%20Hero%20Academia_%20Quirk%20Compedium%20-%20The%20Homebrewery.pdf',
         icon: 'compass', accent: 'gold', name: 'Compendium', blurb: '160 quirks · PDF', external: true },
-      { href: 'updates.html', icon: 'spark', accent: 'purple', name: "What's New",
-        blurb: 'Every change, dated' },
     ] },
   ] },
 ];

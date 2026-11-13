@@ -134,41 +134,64 @@ const updates = doc.updates || [];
   }
 }
 
-/* ── 4. the notes on the players' phone ──
-   The dashboard header is a thing the DM looks at; the players never see it.
-   The pad shows the same file through its own app, and the badge contract
-   that page documents — badge() returns a count or null, onOpen marks read. */
+/* ── 4. the notes are the DM's ──
+   This section used to assert the opposite: that the pad carried the same
+   notes, because "the dashboard header is a thing the DM looks at and the
+   players never see it". True of the header, false of the notes. A release
+   line here names a chapter the table has not reached and a faction it has
+   not met — the notes are a changelog of the campaign as much as of the
+   toolkit, so every player-facing route into them is now closed, and these
+   checks are what stop one being reopened by accident. */
 {
   const pad = read('heropad.js');
-  check('the heropad registers an Updates app', /id: 'updates'/.test(pad));
-  check('which renders the same notes file',
-    /fetch\('updates\.json'/.test(pad) && /function renderUpdatesApp/.test(pad));
-  // Inside the init block specifically: there are several `await fbAuthReady`
-  // in the file, so comparing against the first one anywhere says nothing.
-  const init = pad.slice(pad.lastIndexOf('(async () => {'));
-  check('and fetches it outside the auth gate, since it needs no account',
-    init.indexOf('loadPadUpdates()') !== -1
-      && init.indexOf('loadPadUpdates()') < init.indexOf('await fbAuthReady'),
-    'a static file should not wait on Firebase to load');
-  check('its badge is a count or nothing, never a permanent dot',
-    /badge: \(\) => \{\s*const n = unreadUpdateCount\(\);\s*return n \|\| null;/.test(pad));
-  check('opening it marks them read', /onOpen: markUpdatesRead/.test(pad));
-  check('a first visit shows nothing unread rather than twenty-eight',
-    /if \(!seen\) \{[\s\S]{0,220}return 0;/.test(pad),
-    'arriving at a phone with "28 new" on it is noise, not news');
-  check('the unread count is measured in builds, not timestamps',
-    /Number\(u\.build\) > seen/.test(pad));
-  // Each of the four fields it prints, named rather than counted — a count
-  // passes just as well when one field is escaped twice and another not at all.
-  const app = pad.slice(pad.indexOf('function renderUpdatesApp'), pad.indexOf('function renderUpdatesApp') + 1600);
-  for (const field of ['u.version', 'u.title', 'i', 't']) {
-    check(`the app escapes ${field === 'i' ? 'each line' : field === 't' ? 'each tag' : field}`,
-      app.includes(`escHtml(${field})`), app.slice(0, 80));
-  }
-  const padCss = read('css/pages/heropad.css');
-  for (const sel of ['.up-card', '.up-card.is-new', '.up-items', '.up-tag']) {
-    check(`${sel} is styled on the pad`, padCss.includes(sel));
-  }
+  check('the heropad no longer registers an Updates app',
+    !/id: 'updates'/.test(pad),
+    'a changelog with unreleased chapters in it does not belong in a pocket');
+  check('and fetches the notes nowhere',
+    !/updates\.json'/.test(pad.replace(/\/\*[\s\S]*?\*\//g, '')),
+    'only the comment explaining the removal may mention the file');
+  check('the removal is explained where the app used to be',
+    /UPDATES — removed, deliberately/.test(pad),
+    'so the next person does not helpfully add it back');
+  check('but the recaps app stays — a recap is what the table already played',
+    /id: 'recaps'/.test(pad) && /function renderRecapsApp/.test(pad));
+  check("and still withholds the DM's \u201cnext time\u201d line",
+    !/r\.next/.test(pad.slice(pad.indexOf('function renderRecapsApp'),
+      pad.indexOf('function renderRecapsApp') + 2000)));
+}
+
+/* ── 4b. and the page itself only opens for the DM ── */
+{
+  const html = read('updates.html');
+  check('updates.html bounces anyone who is not the DM',
+    /sessionStorage\.getItem\('mha-role'\) !== 'dm'/.test(html)
+      && /location\.replace\('index\.html'\)/.test(html));
+  check('the gate is synchronous and in the head, so nothing paints first',
+    html.indexOf("mha-role") < html.indexOf('</head>')
+      && !/defer[^>]*dm-role|async/.test(html.slice(0, html.indexOf('</head>'))));
+  check('and it fails closed when storage is refused',
+    /catch \(e\) \{\s*location\.replace\('index\.html'\);/.test(html));
+
+  const index = read('index.html');
+  const dmStart = index.indexOf('<div id="dm-only">');
+  const dmEnd = index.indexOf('<!-- /dm-only');
+  const tile = index.indexOf('href="updates.html"', index.indexOf('<main>'));
+  check('the dashboard tile sits inside the DM block',
+    dmStart !== -1 && tile > dmStart && tile < dmEnd,
+    `dm-only ${dmStart}-${dmEnd}, tile at ${tile}`);
+
+  const hub = read('scripts/build-hub.js');
+  const refSection = hub.slice(hub.indexOf("section: 'Reference'"));
+  check('and the hub table does not put it back in Reference',
+    !refSection.includes("updates.html"),
+    'build-hub.js is the source of the tile grid; index.html is generated');
+
+  const idx = read('index.js');
+  check('the version badge is only shown to the DM',
+    /function isDmView/.test(idx) && /versionLoaded && isDmView\(\)/.test(idx),
+    'the badge is a link straight into the notes');
+  check('and the unread count is not even fetched on a player device',
+    /if \(!isDmView\(\)\) return;/.test(idx));
 }
 
 /* ── 5. the unread dot, and marking them read ── */

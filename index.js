@@ -13,6 +13,47 @@
   const DM_PIN = '6560';
   let pinEntry = '';
 
+  /* The update notes are a changelog of the campaign, not just of the
+     toolkit — release lines name unreleased chapters and factions by name.
+     So the version badge, which is a link straight into them, is the DM's
+     to see; the tile that used to sit in Reference has moved inside
+     #dm-only (see scripts/build-hub.js). The badge markup stays in the page
+     either way and this decides whether it is ever shown. */
+  function isDmView() {
+    try { return sessionStorage.getItem('mha-role') === 'dm'; } catch { return false; }
+  }
+
+  // The version arrives over the network and the role is picked by hand, in
+  // whichever order. Both call this rather than either revealing the badge
+  // itself, so a role chosen after the fetch still gets it right.
+  let versionLoaded = false;
+  function syncBadgeVisibility() {
+    const el = document.getElementById('version-badge');
+    if (!el) return;
+    el.classList.toggle('hidden', !(versionLoaded && isDmView()));
+  }
+
+  /* The two reads that are the DM's alone: the changelog, and the recap of
+     the last session with its "next time" line. Neither may touch a
+     player's device, so neither can simply run on load — but the role is
+     picked by hand, possibly after this script has finished, so neither can
+     only run on load either. This runs once, the first moment both are
+     true: the page is built, and the person at it is the DM.
+
+     `booted` is what keeps it honest. Both functions below close over
+     consts declared further down the file, so calling them from applyRole()
+     during the early restore — which happens above those declarations —
+     would hit the temporal dead zone. The bottom of the file sets the flag
+     and makes the first call; applyRole() only ever retries. */
+  let booted = false;
+  let dmLoadsStarted = false;
+  function startDmOnlyLoads() {
+    if (!booted || dmLoadsStarted || !isDmView()) return;
+    dmLoadsStarted = true;
+    markUnreadUpdates();
+    loadLastSession();
+  }
+
   function chooseRole(role) {
     sessionStorage.setItem('mha-role', role);
     applyRole(role);
@@ -29,6 +70,8 @@
       document.getElementById('dm-only').style.display = '';
       document.getElementById('header-label').textContent = 'U.A. High School — DM Command';
     }
+    syncBadgeVisibility();
+    startDmOnlyLoads();
   }
 
   function switchRole() {
@@ -188,7 +231,8 @@
         built && !isNaN(built) ? 'built ' + built.toLocaleString() : null,
         'Click for what changed',
       ].filter(Boolean).join(' · ');
-      el.classList.remove('hidden');
+      versionLoaded = true;
+      syncBadgeVisibility();
     } catch {
       // leave the badge hidden rather than render a wrong or empty version
     }
@@ -209,6 +253,9 @@
   async function markUnreadUpdates() {
     const badge = document.getElementById('version-badge');
     if (!badge) return;
+    // A dot on a badge a player cannot see is harmless; fetching the notes
+    // onto their device to count it is not. Nothing to do on their screen.
+    if (!isDmView()) return;
     let entries;
     try {
       const doc = await (await fetch('updates.json', { cache: 'no-cache' })).json();
@@ -228,7 +275,6 @@
     badge.dataset.unread = String(n);
     badge.title = `${n} update${n === 1 ? '' : 's'} you have not read · ` + badge.title;
   }
-  markUnreadUpdates();
   /* ── Where we left off ─────────────────────────────────────
      The dashboard knew nothing about the campaign it is the front door to.
      This reads the most recent session out of the session log and puts it at
@@ -378,6 +424,15 @@
 
   async function loadLastSession() {
     if (!document.getElementById('last-session')) return;
+    /* The strip renders inside #dm-only, which was taken to be enough. It is
+       not: `display:none` hides the recap from a player's eyes while this
+       function still pulls it onto their device and writes it into their
+       DOM — including the "next time" line, which is the DM's note about
+       what has not happened yet. Hidden is not absent, and devtools, a
+       reader mode or one stray stylesheet is the difference.
+
+       So the fetch itself is now the DM's, not just the element. */
+    if (!isDmView()) return;
     try {
       const res = await fetch(FS_REST, { cache: 'no-cache' });
       if (!res.ok) throw new Error('bad status');
@@ -389,5 +444,9 @@
       // Stays hidden. The log itself is one click away either way.
     }
   }
-  loadLastSession();
+  // The page is built. If the DM role was already restored at the top, this
+  // is what actually starts their two reads; for a player it does nothing,
+  // and for a role picked later applyRole() calls it again.
+  booted = true;
+  startDmOnlyLoads();
 

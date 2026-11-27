@@ -25,16 +25,20 @@ boardCanEdit = false;
 const FS_ENCOUNTER_DOC = db.collection('mha-dnd').doc('encounter-state');
 let encSaveTimer = null;
 let _lastSyncedEncounter = null;
-// True from the moment a change is made (mousedown->drop already ended, so
-// boardState.dragging is back to false) until the debounced save actually
-// lands. Without this, a remote snapshot arriving during the 600ms debounce
-// window would wholesale-replace `encounter` with server data that predates
-// this move, snapping the token back before it's ever saved.
-let _encSavePending = false;
+// Tracks whether a change is still on its way to the server (mousedown->drop
+// has already ended by then, so boardState.dragging is back to false), and
+// dates incoming snapshots against the writes that land while they wait.
+// Without it, a remote snapshot arriving during the 600ms debounce window, or
+// during the write that follows it, would wholesale-replace `encounter` with
+// server data that predates this move, snapping the token back before it's
+// ever saved. See boardMakeSaveGate in board-shared.js for why this is a
+// counter and not a boolean.
+const encSaveGate = boardMakeSaveGate();
 
 function encSave() {
   localStorage.setItem('mha_encounter_v1', JSON.stringify(encounter));
-  _encSavePending = true;
+  // Taken before the debounce, not inside it — see encounter.js's encSave.
+  const seq = boardGateDirty(encSaveGate);
   clearTimeout(encSaveTimer);
   encSaveTimer = setTimeout(async () => {
     try {
@@ -47,6 +51,7 @@ function encSave() {
         ...boardLayerMergePaths(),
       ]);
       _lastSyncedEncounter = merged;
+      boardGateWrote(encSaveGate, seq);
     } catch (e) {
       // This was a bare `catch {}`, and that silence is why a token moving
       // back or a team dot flipping back is so hard to account for: writes to
@@ -54,8 +59,7 @@ function encSave() {
       // invisible — the edit stays on screen until the next snapshot arrives
       // and quietly replaces it with the server's copy. Say so instead.
       console.error('[board] save failed — this edit will revert on the next sync:', e);
-    } finally {
-      _encSavePending = false;
+      boardGateSettled(encSaveGate, seq); // nothing landed, but nothing is in flight either
     }
   }, 600);
 }
@@ -90,11 +94,16 @@ function isRangeInputFocused() {
   return document.activeElement === document.getElementById('board-range-input');
 }
 function isBoardBusy() {
-  return !!(boardState.dragging || boardState.draggingProp || boardPan || isRangeInputFocused() || _encSavePending);
+  return !!(boardState.dragging || boardState.draggingProp || boardPan || isRangeInputFocused()
+            || boardGateSavePending(encSaveGate));
 }
 
-let _pendingRemoteEncounter = null;
+// A snapshot that arrives at a bad moment is held here with the stamp it
+// arrived on, and drained by the interval below once the moment passes.
+let _pendingRemoteEncounter = null; // { data, stamp } | null
 function applyRemoteEncounter(data) {
+  // Our own write coming back around — see encounter.js's applyRemoteEncounter.
+  if (boardSameDoc(data, _lastSyncedEncounter)) return;
   encounter = data;
   encounter.attackLog = encounter.attackLog || [];
   boardEnsureLayers(encounter);
@@ -114,16 +123,19 @@ async function startEncLiveSync() {
     // "undone" by data older than the write. See relationships.html.
     if (snap.metadata?.fromCache) return;
     const data = snap.data();
-    if (isBoardBusy()) { _pendingRemoteEncounter = data; return; }
+    const stamp = boardGateStampSnapshot(encSaveGate);
+    if (isBoardBusy()) { _pendingRemoteEncounter = { data, stamp }; return; }
     applyRemoteEncounter(data);
   }, err => console.error('[board] live sync stopped:', err));
 }
 setInterval(() => {
-  if (_pendingRemoteEncounter && !isBoardBusy()) {
-    const data = _pendingRemoteEncounter;
-    _pendingRemoteEncounter = null;
-    applyRemoteEncounter(data);
-  }
+  if (!_pendingRemoteEncounter || isBoardBusy()) return;
+  const { data, stamp } = _pendingRemoteEncounter;
+  _pendingRemoteEncounter = null;
+  // Held back by a save of our own, whose transaction already merged the
+  // server's side into the baseline — see encounter.js's drain.
+  if (boardGateSnapshotIsStale(encSaveGate, stamp)) return;
+  applyRemoteEncounter(data);
 }, 800);
 
 // The grid/tokens/drag/touch engine (constants, rendering, event wiring)

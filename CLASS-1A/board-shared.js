@@ -98,6 +98,107 @@ function encRepairDuplicateIds(enc) {
   return repaired;
 }
 
+/* ── The save gate ────────────────────────────────────────
+   Both pages hold `encounter` in memory, write it to Firestore through a
+   600ms debounce, and replace it wholesale when the live listener hands them
+   a newer copy. That last part is what makes "I changed something and it
+   changed itself back a second later" possible at all: if a snapshot lands
+   while a local change has not reached the server yet, the local change is
+   overwritten by server data that predates it — and the baseline advances
+   with it, so the still-pending save then writes the reverted state out as
+   though the DM had asked for it.
+
+   The pages already defer snapshots during a gesture (drag, drawing, a
+   focused input) and "while a save is pending". The pending part used to be
+   a boolean set by encSave() and cleared in the save's own `finally`, and
+   that is the hole this gate closes. Clearing is wrong whenever a *second*
+   edit arrives after the first save's timer has fired but before its write
+   resolves — a completely ordinary pace of clicking, since the debounce is
+   600ms and a transaction takes a few hundred more:
+
+     t=0     edit A            → pending = true,  save A scheduled
+     t=600   save A's write starts
+     t=650   edit B            → pending = true (already), save B scheduled
+     t=800   save A resolves   → finally: pending = false   ← edit B is unsaved
+     t=850   save A's own echo arrives, nothing defers it   ← edit B reverts
+     t=1250  save B writes the reverted state back          ← edit B is gone
+
+   So pendingness is counted, not flagged: every local change takes the next
+   `dirtySeq`, a settled write carries the seq it was holding, and a save is
+   pending while `settledSeq < dirtySeq`. Save A settling seq 1 cannot clear
+   edit B's seq 2. Failed writes settle too — the edit stays on screen with a
+   console error (see encSave) rather than wedging the gate shut and freezing
+   the page out of sync forever.
+
+   `clock` orders the two events that have to be compared — "this snapshot
+   arrived" and "our write landed" — without consulting a wall clock, so a
+   deferred snapshot can be told apart from a fresh one deterministically.
+   A snapshot that arrived before our last write resolved carries nothing we
+   need: that write's transaction read the server document and merged it with
+   ours, so whatever the snapshot was going to tell us is in the result it
+   returned, which is now the baseline. Applying it after the fact would only
+   undo the write. (A foreign commit delivered in the narrow gap between our
+   own commit and its acknowledgement is dropped too, and does not reappear
+   until the next write by anyone re-delivers the document. That is the one
+   thing traded away here, and it is worth it: the alternative is the revert
+   above, which happens constantly.) */
+function boardMakeSaveGate() {
+  return { dirtySeq: 0, settledSeq: 0, clock: 0, lastWriteAt: 0 };
+}
+// A local change was just made. The returned seq belongs to the save that
+// ends up carrying it, and is what that save settles with.
+function boardGateDirty(gate) {
+  return ++gate.dirtySeq;
+}
+// A write finished, landed or not: the seq is no longer in flight and stops
+// counting as pending. Nothing new is on the server when it did not land
+// (permission denied, offline), so lastWriteAt stays where it was.
+function boardGateSettled(gate, seq) {
+  if (seq > gate.settledSeq) gate.settledSeq = seq;
+}
+// A write finished *and* landed — its result is the new baseline.
+function boardGateWrote(gate, seq) {
+  boardGateSettled(gate, seq);
+  gate.lastWriteAt = ++gate.clock;
+  return gate.lastWriteAt;
+}
+function boardGateSavePending(gate) {
+  return gate.settledSeq < gate.dirtySeq;
+}
+// Stamp an incoming snapshot on arrival, so a deferred one can be dated
+// against the writes that happen while it waits.
+function boardGateStampSnapshot(gate) {
+  return ++gate.clock;
+}
+function boardGateSnapshotIsStale(gate, stamp) {
+  return stamp < gate.lastWriteAt;
+}
+
+/* The live listener delivers a fresh snapshot for every commit, this client's
+   own included, so most of what arrives is an echo of a save that just went
+   out — nothing in it is news, because the baseline was taken from the merge
+   result that write returned. Re-applying it is a wholesale replacement of
+   `encounter` and a full re-render for no reason, which closes open rows and
+   throws the initiative list's scroll position away mid-edit: the other half
+   of "it keeps refreshing on me".
+
+   Key order is not content, and Firestore hands a document back in its own
+   order, so the comparison has to sort keys rather than trust
+   JSON.stringify's insertion order. */
+function boardStableJson(value) {
+  if (Array.isArray(value)) return '[' + value.map(boardStableJson).join(',') + ']';
+  if (value !== null && typeof value === 'object') {
+    return '{' + Object.keys(value).sort()
+      .filter(k => value[k] !== undefined)
+      .map(k => JSON.stringify(k) + ':' + boardStableJson(value[k]))
+      .join(',') + '}';
+  }
+  return JSON.stringify(value) ?? 'null';
+}
+function boardSameDoc(a, b) {
+  return boardStableJson(a) === boardStableJson(b);
+}
+
 /* ── Board Mode ───────────────────────────────────────── */
 const BOARD_COLS = 100;
 const BOARD_ROWS = 100;

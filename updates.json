@@ -19,7 +19,7 @@
       "version": "1.0.273",
       "build": 273,
       "date": "2026-11-27",
-      "commit": "8330afb",
+      "commit": "0d13245",
       "pr": 178,
       "title": "The battle board stops undoing what you just did",
       "tags": [

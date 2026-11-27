@@ -73,17 +73,22 @@ let encSaveTimer = null;
 // someone else changed" so concurrent edits to different combatants don't
 // clobber each other.
 let _lastSyncedEncounter = null;
-// True from the moment a change is made until the debounced save actually
-// lands. The drag/drawing/editing guards below only cover the gesture itself
+// Tracks whether a local change is still on its way to the server, and dates
+// incoming snapshots against the writes that land while they wait. The
+// drag/drawing/editing guards below only cover the gesture itself
 // (mousedown..mouseup, focus..blur) — without this, a remote snapshot
-// arriving during the 600ms debounce window would wholesale-replace
-// `encounter` with server data that predates the change, reverting it before
-// it's ever saved.
-let _encSavePending = false;
+// arriving during the 600ms debounce window, or during the write that follows
+// it, would wholesale-replace `encounter` with server data that predates the
+// change, reverting it before it's ever saved. See boardMakeSaveGate in
+// board-shared.js for why this is a counter and not a boolean.
+const encSaveGate = boardMakeSaveGate();
 
 function encSave() {
   localStorage.setItem('mha_encounter_v1', JSON.stringify(encounter));
-  _encSavePending = true;
+  // Taken before the debounce, not inside it: a change made while an earlier
+  // save is mid-write has to count as pending from this moment, or the
+  // earlier write settling clears the way for a snapshot that reverts it.
+  const seq = boardGateDirty(encSaveGate);
   clearTimeout(encSaveTimer);
   encSaveTimer = setTimeout(async () => {
     try {
@@ -97,6 +102,7 @@ function encSave() {
         ...boardLayerMergePaths(),
       ]);
       _lastSyncedEncounter = merged;
+      boardGateWrote(encSaveGate, seq);
     } catch (e) {
       // This was a bare `catch {}`, and that silence is why a token moving
       // back or a team dot flipping back is so hard to account for: writes to
@@ -104,8 +110,7 @@ function encSave() {
       // invisible — the edit stays on screen until the next snapshot arrives
       // and quietly replaces it with the server's copy. Say so instead.
       console.error('[encounter] save failed — this edit will revert on the next sync:', e);
-    } finally {
-      _encSavePending = false;
+      boardGateSettled(encSaveGate, seq); // nothing landed, but nothing is in flight either
     }
   }, 600);
 }
@@ -134,7 +139,9 @@ async function encLoad() {
 }
 
 // Live feed: push board/encounter updates to every open tab in real time.
-let _pendingRemoteEncounter = null;
+// A snapshot that arrives at a bad moment is held here with the stamp it
+// arrived on, and drained by the interval below once the moment passes.
+let _pendingRemoteEncounter = null; // { data, stamp } | null
 function isBoardOpen() { return document.getElementById('board-overlay')?.classList.contains('open'); }
 function isTurnModalOpen() { return document.getElementById('turn-modal-overlay')?.classList.contains('open'); }
 function isEncEditing() {
@@ -147,7 +154,20 @@ function isEncEditing() {
 // `encounter` (and therefore the in-progress, not-yet-saved
 // board-layer edit) with server data from before the gesture started.
 function isBoardDrawing() { return !!(boardState.drawingStroke || _boardPainting || boardState.draggingProp); }
+// One predicate, read by both the listener and the drain below. The two used
+// to spell the same six conditions out separately, in two long lines that had
+// to be kept identical by hand — a guard added to one of them and not the
+// other is a reverted edit nobody can reproduce on demand.
+function isEncBusy() {
+  return !!(boardState.dragging || boardPan || isEncEditing() || isTurnModalOpen()
+            || isBoardDrawing() || boardGateSavePending(encSaveGate));
+}
 function applyRemoteEncounter(data) {
+  // Our own write coming back around. The baseline is the merge result that
+  // write returned, so a snapshot matching it holds nothing this page doesn't
+  // already have, and replacing `encounter` with it would re-render the list
+  // (losing scroll position and open rows) to arrive exactly where it is.
+  if (boardSameDoc(data, _lastSyncedEncounter)) return;
   encounter = data;
   encounter.attackLog = encounter.attackLog || [];
   boardEnsureLayers(encounter);
@@ -170,20 +190,24 @@ async function startEncLiveSync() {
     // "undone" by data older than the write. See relationships.html.
     if (snap.metadata?.fromCache) return;
     const data = snap.data();
+    const stamp = boardGateStampSnapshot(encSaveGate);
     // Defer while a local drag/edit/turn-modal-view is in progress — or a
     // change made moments ago is still debouncing/saving — so the remote
     // update doesn't yank the token, input, or displayed combatant mid-gesture
     // or revert an edit before it's had a chance to persist.
-    if (boardState.dragging || boardPan || isEncEditing() || isTurnModalOpen() || isBoardDrawing() || _encSavePending) { _pendingRemoteEncounter = data; return; }
+    if (isEncBusy()) { _pendingRemoteEncounter = { data, stamp }; return; }
     applyRemoteEncounter(data);
   }, err => console.error('[encounter] live sync stopped:', err));
 }
 setInterval(() => {
-  if (_pendingRemoteEncounter && !boardState.dragging && !boardPan && !isEncEditing() && !isTurnModalOpen() && !isBoardDrawing() && !_encSavePending) {
-    const data = _pendingRemoteEncounter;
-    _pendingRemoteEncounter = null;
-    applyRemoteEncounter(data);
-  }
+  if (!_pendingRemoteEncounter || isEncBusy()) return;
+  const { data, stamp } = _pendingRemoteEncounter;
+  _pendingRemoteEncounter = null;
+  // What held this snapshot back was, usually, a save of our own — and that
+  // save's transaction already merged the server's side of the story into
+  // the baseline. Applying the older copy now would just undo the write.
+  if (boardGateSnapshotIsStale(encSaveGate, stamp)) return;
+  applyRemoteEncounter(data);
 }, 800);
 
 function encAddFromRoster() {

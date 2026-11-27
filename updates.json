@@ -16,6 +16,26 @@
   ],
   "updates": [
     {
+      "version": "1.0.273",
+      "build": 273,
+      "date": "2026-11-27",
+      "commit": "8330afb",
+      "pr": 178,
+      "title": "The battle board stops undoing what you just did",
+      "tags": [
+        "board",
+        "encounter",
+        "fix"
+      ],
+      "items": [
+        "Changing two things on the battle board in quick succession no longer undoes the second one. A token you had just dragged, a team colour you had just set or an HP figure you had just typed could snap back about a second later — and then get saved that way.",
+        "The board holds off other people's updates until your own change has reached the database, and that wait was being cut short by the save of the change before it. Anything done within about a second and a half of the thing before it was at risk, which is most of how the board gets used.",
+        "The board also no longer redraws itself for its own saves. Every save came back around as if it were news from somebody else and rebuilt the initiative list, throwing away where you had scrolled to and closing any row you had open. It now recognises its own work.",
+        "An update that arrives while your change is still being written is discarded rather than applied afterwards: by then the save has already merged in whatever it was going to say. Two people moving different tokens at the same time still both land, as before.",
+        "If the database refuses a write — which it does for anybody who is not the DM — the page keeps taking live updates instead of going quietly deaf to them for the rest of the session."
+      ]
+    },
+    {
       "version": "1.0.270",
       "build": 270,
       "date": "2026-11-06",

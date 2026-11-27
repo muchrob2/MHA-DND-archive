@@ -487,6 +487,239 @@ function docWithDuplicateIds() {
   results.push(['two tabs repairing the same document agree on the new id', ok]);
 })();
 
+// ── The apply path: "it refreshes before I've finished and undoes it" ──────
+// Everything above guards the *write* path. This last group guards the other
+// half — what happens when a live snapshot lands while a local change has
+// not reached the server yet — which is where the surviving report lived:
+// a change made on the battle board reverting itself a second later.
+//
+// The pages deferred snapshots "while a save is pending", and pendingness was
+// a boolean set by encSave() and cleared in that save's own `finally`. A
+// second change made after the first save's timer fired but before its write
+// resolved therefore had its pendingness cleared by the *first* save, and
+// the first save's own echo — which the listener always delivers — arrived
+// with nothing to defer it and replaced the change with the state before it.
+// boardMakeSaveGate's header in board-shared.js has the full timeline.
+const gateHelpers = {};
+for (const name of ['boardMakeSaveGate', 'boardGateDirty', 'boardGateSettled', 'boardGateWrote',
+                    'boardGateSavePending', 'boardGateStampSnapshot', 'boardGateSnapshotIsStale',
+                    'boardStableJson', 'boardSameDoc']) {
+  const m = readFile(boardSharedPath).match(new RegExp('function ' + name + '\\([\\s\\S]*?\\n\\}'));
+  if (!m) throw new Error('Could not find ' + name + '() in board-shared.js — has the save gate changed shape?');
+  eval(m[0]);
+  gateHelpers[name] = eval(name);
+}
+
+// Scenario 23: an older write settling must not clear a newer change's claim
+// on the gate. This is the boolean bug reduced to three lines.
+(function olderWriteDoesNotClearNewerEditScenario() {
+  const gate = boardMakeSaveGate();
+  const a = boardGateDirty(gate);  // edit A, save A armed
+  const b = boardGateDirty(gate);  // edit B, made while save A is mid-write
+  boardGateWrote(gate, a);         // save A lands — the old boolean cleared here
+  const stillPending = boardGateSavePending(gate);
+  boardGateWrote(gate, b);
+  results.push(['an older write settling does not clear a newer edit',
+    stillPending && !boardGateSavePending(gate)]);
+})();
+
+// Scenario 24: a write that failed (encounter-state is admin-only, so a
+// non-admin tab's writes are rejected outright) must settle too. If it didn't
+// the gate would stay shut and the page would never take another update.
+// It must not pretend anything landed, either: the next snapshot is the one
+// that corrects the screen, so it cannot be dated away as stale.
+(function failedWriteDoesNotWedgeTheGateScenario() {
+  const gate = boardMakeSaveGate();
+  const seq = boardGateDirty(gate);
+  boardGateSettled(gate, seq); // the catch branch
+  const ok = !boardGateSavePending(gate)
+          && gate.lastWriteAt === 0
+          && !boardGateSnapshotIsStale(gate, boardGateStampSnapshot(gate));
+  results.push(['a failed write settles the gate without dating snapshots away', ok]);
+})();
+
+// Scenario 25: a snapshot that arrived while our write was in flight carries
+// nothing that write's own transaction didn't already merge, so applying it
+// afterwards would only undo the write. One that arrives after it must still
+// go through.
+(function deferredSnapshotFromBeforeOurWriteIsStaleScenario() {
+  const gate = boardMakeSaveGate();
+  const seq = boardGateDirty(gate);
+  const early = boardGateStampSnapshot(gate); // held back by the pending save
+  boardGateWrote(gate, seq);
+  const late = boardGateStampSnapshot(gate);
+  results.push(['a snapshot predating our own write is stale, a later one is not',
+    boardGateSnapshotIsStale(gate, early) && !boardGateSnapshotIsStale(gate, late)]);
+})();
+
+// Scenario 26: the listener delivers a snapshot for every commit, this tab's
+// own included, and re-applying one replaces `encounter` wholesale and
+// re-renders — throwing the initiative list's scroll position and open rows
+// away for a document the page already has. Firestore returns the document in
+// its own key order, so the comparison has to sort keys; insertion-order
+// JSON.stringify would call every echo a change and re-render on all of them.
+(function ourOwnEchoIsRecognisedScenario() {
+  const mine = { round: 2, currentIndex: 1, combatants: [{ id: 'c1', boardX: 5, team: null }] };
+  const echo = { combatants: [{ team: null, boardX: 5, id: 'c1' }], currentIndex: 1, round: 2 };
+  const news = { round: 2, currentIndex: 1, combatants: [{ id: 'c1', boardX: 6, team: null }] };
+  results.push(['our own echo is recognised regardless of key order',
+    boardSameDoc(mine, echo) && !boardSameDoc(mine, news)]);
+})();
+
+// A fake page and a fake server, stepped by hand so the interleaving is
+// reproducible rather than a matter of network timing. The client mirrors
+// encounter.js: encSave() claims a seq and arms the debounce, the debounce's
+// write merges through mergeCompute (what fsMergeSave runs) and settles the
+// gate, and the listener either applies a snapshot or defers it with the
+// stamp it arrived on. Commit and resolution are separate steps because they
+// really are: the echo is generated when the write lands on the server, which
+// is before the client hears back about it.
+function makeWorld(doc) {
+  return { doc: helpers.cloneDoc(doc), feed: [] }; // feed: snapshots not yet handed to the listener
+}
+function makeClient(world, opts) {
+  const writeFails = !!(opts && opts.writeFails);
+  const c = {
+    enc: helpers.cloneDoc(world.doc),
+    baseline: helpers.cloneDoc(world.doc),
+    gate: boardMakeSaveGate(),
+    armed: null,    // the debounced save, waiting to fire
+    writing: null,  // the write, in flight
+    deferred: null,
+  };
+  c.busy = () => boardGateSavePending(c.gate); // the real pages also defer mid-drag/mid-typing
+  c.encSave = () => { c.armed = boardGateDirty(c.gate); }; // clearTimeout: only the latest timer survives
+  c.debounceFires = () => {
+    if (c.armed === null) return;
+    c.writing = { seq: c.armed, local: helpers.cloneDoc(c.enc), baseline: helpers.cloneDoc(c.baseline) };
+    c.armed = null;
+  };
+  c.writeCommits = () => {
+    if (writeFails) return;
+    const w = c.writing;
+    w.merged = mergeCompute(world.doc, w.local, w.baseline, combatantsPath);
+    world.doc = helpers.cloneDoc(w.merged);
+    world.feed.push(helpers.cloneDoc(w.merged)); // the echo, on its way to every listener
+  };
+  c.writeResolves = () => {
+    const w = c.writing;
+    c.writing = null;
+    if (writeFails) { boardGateSettled(c.gate, w.seq); return; }
+    c.baseline = helpers.cloneDoc(w.merged);
+    boardGateWrote(c.gate, w.seq);
+  };
+  c.deliver = () => { // onSnapshot
+    if (!world.feed.length) return;
+    const data = world.feed.shift();
+    const stamp = boardGateStampSnapshot(c.gate);
+    if (c.busy()) { c.deferred = { data, stamp }; return; }
+    c.apply(data);
+  };
+  c.drain = () => { // the 800ms interval
+    if (!c.deferred || c.busy()) return;
+    const { data, stamp } = c.deferred;
+    c.deferred = null;
+    if (boardGateSnapshotIsStale(c.gate, stamp)) return;
+    c.apply(data);
+  };
+  c.apply = (data) => { // applyRemoteEncounter
+    if (boardSameDoc(data, c.baseline)) return;
+    c.enc = data;
+    c.baseline = helpers.cloneDoc(data);
+  };
+  return c;
+}
+function twoTokensAtOne() {
+  return { round: 1, currentIndex: 0, combatants: [
+    { id: 'c1', name: 'Ren', boardX: 1, boardY: 1 },
+    { id: 'c2', name: 'Nomu', boardX: 1, boardY: 2 },
+  ] };
+}
+
+// Scenario 27: the report itself, at the pace it actually happens — two moves
+// about three quarters of a second apart, the second landing while the first
+// is still being written. The second must stay on screen and must reach the
+// server.
+(function editDuringAnInFlightSaveSurvivesScenario() {
+  const world = makeWorld(twoTokensAtOne());
+  const dm = makeClient(world);
+
+  dm.enc.combatants[0].boardX = 5; dm.encSave(); // t=0    drag Ren
+  dm.debounceFires();                            // t=600  save A starts writing
+  dm.enc.combatants[1].boardX = 9; dm.encSave(); // t=650  drag Nomu
+  dm.writeCommits();                             // t=790  save A lands; its echo is queued
+  dm.writeResolves();                            // t=800  save A resolves
+  dm.deliver();                                  // t=850  the echo — predates Nomu's move
+  dm.drain();
+  const keptOnScreen = dm.enc.combatants[1].boardX === 9;
+
+  dm.debounceFires(); dm.writeCommits(); dm.writeResolves(); // t=1250 save B
+  dm.deliver(); dm.drain();
+  const onServer = world.doc.combatants.find(c => c.id === 'c2').boardX === 9;
+  const renToo = world.doc.combatants.find(c => c.id === 'c1').boardX === 5;
+  results.push(['a move made while the previous save is in flight is not reverted',
+    keptOnScreen && onServer && renToo]);
+})();
+
+// Scenario 28: the mirror image — the deferral must not swallow news. A move
+// somebody else makes has to reach the screen, including when it arrives
+// while a save of this tab's own is pending (it waits, then applies).
+(function remoteMoveStillReachesTheScreenScenario() {
+  const world = makeWorld(twoTokensAtOne());
+  const dm = makeClient(world);
+
+  world.doc.combatants[0].boardX = 7;                  // a player moves Ren in their tab
+  world.feed.push(helpers.cloneDoc(world.doc));
+  dm.deliver(); dm.drain();
+  const appliedIdle = dm.enc.combatants[0].boardX === 7;
+
+  dm.enc.combatants[1].boardX = 4; dm.encSave();       // this tab is now mid-save
+  world.doc.combatants[0].boardY = 8;                  // and the player moves Ren again
+  world.feed.push(helpers.cloneDoc(world.doc));
+  dm.deliver();                                        // deferred, not dropped
+  const held = dm.enc.combatants[0].boardY === 1 && !!dm.deferred;
+  dm.debounceFires(); dm.writeCommits(); dm.writeResolves();
+  dm.drain();                                          // stale now — save B merged it in
+  const mergedIn = world.doc.combatants.find(c => c.id === 'c1').boardY === 8
+                && world.doc.combatants.find(c => c.id === 'c2').boardX === 4;
+  results.push(['a remote move reaches the screen, and survives a concurrent local save',
+    appliedIdle && held && mergedIn]);
+})();
+
+// Scenario 29: a tab whose writes are rejected (a player's, under
+// firestore.rules) must keep taking updates rather than freezing on the gate.
+(function rejectedWriteStillTakesUpdatesScenario() {
+  const world = makeWorld(twoTokensAtOne());
+  const player = makeClient(world, { writeFails: true });
+  player.enc.combatants[0].boardX = 5; player.encSave();
+  player.debounceFires(); player.writeCommits(); player.writeResolves(); // rejected
+
+  world.doc.combatants[1].boardX = 6;                  // the DM moves Nomu
+  world.feed.push(helpers.cloneDoc(world.doc));
+  player.deliver(); player.drain();
+  results.push(['a tab whose writes are rejected still takes live updates',
+    player.enc.combatants[1].boardX === 6]);
+})();
+
+// Scenario 30: both pages have to actually drive the gate — the scenarios
+// above test the mechanism, not its wiring, and the bug was in the wiring.
+// Nothing may still be keeping the boolean, either.
+(function bothPagesDriveTheSaveGateScenario() {
+  const boardPath = (path ? path.join(repoRoot, 'CLASS-1A', 'board.js') : 'CLASS-1A/board.js');
+  for (const [label, src] of [['encounter.js', encSrc], ['board.js', readFile(boardPath)]]) {
+    const ok = /const encSaveGate = boardMakeSaveGate\(\)/.test(src)
+            && /const seq = boardGateDirty\(encSaveGate\)/.test(src)
+            && /boardGateWrote\(encSaveGate, seq\)/.test(src)
+            && /boardGateSettled\(encSaveGate, seq\)/.test(src)
+            && /boardGateSavePending\(encSaveGate\)/.test(src)
+            && /boardGateStampSnapshot\(encSaveGate\)/.test(src)
+            && /boardGateSnapshotIsStale\(encSaveGate, stamp\)/.test(src)
+            && /boardSameDoc\(data, _lastSyncedEncounter\)/.test(src)
+            && !/_encSavePending/.test(src);
+    results.push([label + ' drives the save gate on every path', ok]);
+  }
+})();
+
 let allPass = true;
 for (const [name, ok] of results) {
   console.log((ok ? 'PASS' : 'FAIL') + ' — ' + name);
